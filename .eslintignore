@@ -1,0 +1,10 @@
+/lambda/
+/scripts
+/config
+.history
+**/*.md
+/node_modules
+/dist
+/build
+.umi
+.umi-production

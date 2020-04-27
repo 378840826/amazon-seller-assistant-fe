@@ -1,0 +1,23 @@
+@headMenuLineHeight: 44px;
+
+.right {
+  flex: 1;
+  text-align: right;
+}
+
+.headerMenu {
+  :global(.ant-dropdown-menu-item) {
+    min-width: 160px;
+    color: @primary-color;
+    text-align: center;
+  }
+
+  .menuItem {
+    line-height: @headMenuLineHeight;
+
+    .menuIcon {
+      float: left;
+      line-height: @headMenuLineHeight;
+    }
+  }
+}

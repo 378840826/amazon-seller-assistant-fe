@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "suppressImplicitAnyIndexErrors": true,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@tmp/*": ["src/pages/.umi/*"]
+    },
+    "allowSyntheticDefaultImports": true
+  },
+    "exclude": [
+      "node_modules",
+      "build",
+      "dist",
+      "scripts",
+      "acceptance-tests",
+      "webpack",
+      "jest",
+      "tslint:latest",
+      "tslint-config-prettier"
+    ]
+}
