@@ -14,7 +14,7 @@ export interface IHeaderDropdownProps extends Omit<DropDownProps, 'overlay'> {
 
 const HeaderDropdown: React.FC<IHeaderDropdownProps> = ({ ...restProps }) => {
   return (
-    <Dropdown overlayClassName={styles.container} {...restProps} />
+    <Dropdown overlayClassName={styles.container} placement="bottomCenter" {...restProps} />
   );
 };
 

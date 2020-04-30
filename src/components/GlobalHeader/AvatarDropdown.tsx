@@ -1,8 +1,7 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import React from 'react';
 import { Menu, Spin } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import { ClickParam } from 'antd/es/menu';
-import React from 'react';
 import { connect } from 'dva';
 import { router } from 'umi';
 import { IConnectProps, IConnectState } from '@/models/connect';
@@ -13,8 +12,16 @@ import styles from './index.less';
 const { Item: MenuItem, Divider: MenuDivider } = Menu;
 
 export interface IGlobalHeaderRightProps extends IConnectProps {
-  currentUser?: ICurrentUser;
+  currentUser: ICurrentUser;
 }
+
+const munuIcon = function(type: string): React.ReactElement {
+  return (
+    <Iconfont type={type} className={styles.menuIcon} />
+  );
+};
+
+<Iconfont type="icon-fuwushouquan" className={styles.menuIcon} />;
 
 class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   onMenuClick = (event: ClickParam) => {
@@ -32,18 +39,33 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
     const menuHeaderDropdown: React.ReactElement = (
       <Menu className={styles.headerMenu} selectedKeys={[]} onClick={this.onMenuClick}>
         <MenuItem key="center" className={styles.menuItem}>
-          <UserOutlined className={styles.menuIcon} />
+          { munuIcon('icon-gerenzhongxin2') }
           个人中心
         </MenuItem>
         <MenuDivider />
+        <MenuItem key="shop" className={styles.menuItem}>
+          { munuIcon('icon-gerenzhongxin2') }
+          店铺管理
+        </MenuItem>
+        <MenuDivider />
+        <MenuItem key="ad-shop" className={styles.menuItem}>
+          { munuIcon('icon-fuwushouquan') }
+          广告授权
+        </MenuItem>
+        <MenuDivider />
         <MenuItem key="message" className={styles.menuItem}>
-          <SettingOutlined className={styles.menuIcon} />
+          { munuIcon('icon-fuwushouquan') }
           消息中心
         </MenuItem>
         <MenuDivider />
+        <MenuItem key="sub-account" className={styles.menuItem}>
+          { munuIcon('icon-guanlizhongxin') }
+          子账号管理
+        </MenuItem>
+        <MenuDivider />
         <MenuItem key="logout" className={styles.menuItem}>
-          <LogoutOutlined className={styles.menuIcon} />
-          退出登录
+          { munuIcon('icon-tuichu') }
+          注销 {currentUser.username}
         </MenuItem>
       </Menu>
     );

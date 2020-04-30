@@ -1,13 +1,22 @@
-@headMenuLineHeight: 44px;
+@headMenuLineHeight: 40px;
 
 .right {
-  flex: 1;
-  text-align: right;
+  .searchContainer {
+    position: relative;
+    display: inline-block;
+    width: 220px;
+  }
+
+  .weixin {
+    margin: 0 26px;
+    font-size: 24px;
+    color: @primary-color;
+  }
 }
 
 .headerMenu {
   :global(.ant-dropdown-menu-item) {
-    min-width: 160px;
+    min-width: 200px;
     color: @primary-color;
     text-align: center;
   }
@@ -18,6 +27,7 @@
     .menuIcon {
       float: left;
       line-height: @headMenuLineHeight;
+      font-size: 16px;
     }
   }
 }
