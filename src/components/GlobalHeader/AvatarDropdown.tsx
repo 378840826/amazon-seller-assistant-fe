@@ -1,27 +1,27 @@
 import React from 'react';
-import { Menu, Spin } from 'antd';
+import { Menu, Spin, Badge } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import { ClickParam } from 'antd/es/menu';
 import { connect } from 'dva';
 import { router } from 'umi';
 import { IConnectProps, IConnectState } from '@/models/connect';
 import { ICurrentUser } from '@/models/user';
+import { IUnreadNotices } from '@/models/global';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
-const { Item: MenuItem, Divider: MenuDivider } = Menu;
-
 export interface IGlobalHeaderRightProps extends IConnectProps {
   currentUser: ICurrentUser;
+  unreadNotices: IUnreadNotices;
 }
+
+const { Item: MenuItem, Divider: MenuDivider } = Menu;
 
 const munuIcon = function(type: string): React.ReactElement {
   return (
     <Iconfont type={type} className={styles.menuIcon} />
   );
 };
-
-<Iconfont type="icon-fuwushouquan" className={styles.menuIcon} />;
 
 class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   onMenuClick = (event: ClickParam) => {
@@ -34,7 +34,22 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   };
 
   render(): React.ReactNode {
-    const { currentUser } = this.props;
+    const { currentUser, unreadNotices } = this.props;
+
+    console.log('this.props', this.props);
+
+    const unreadCount = Object.values(unreadNotices).reduce(
+      (a, b) => (a + b)
+    );
+
+    const Avatar = unreadCount
+      ?
+      <span className={styles.avatarContainer}>
+        <Iconfont type="icon-gerenzhongxin2" style={{ fontSize: 20, cursor: 'pointer' }} />
+        <Badge color="red" className={styles.badge} />
+      </span>
+      :
+      <Iconfont type="icon-gerenzhongxin2" style={{ fontSize: 20, cursor: 'pointer' }} />;
 
     const menuHeaderDropdown: React.ReactElement = (
       <Menu className={styles.headerMenu} selectedKeys={[]} onClick={this.onMenuClick}>
@@ -54,7 +69,8 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
         </MenuItem>
         <MenuDivider />
         <MenuItem key="message" className={styles.menuItem}>
-          { munuIcon('icon-fuwushouquan') }
+          { munuIcon('icon-xiaoxi') }
+          { unreadCount ? <Badge color="red" className={styles.badge} /> : null }
           消息中心
         </MenuItem>
         <MenuDivider />
@@ -65,14 +81,14 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
         <MenuDivider />
         <MenuItem key="logout" className={styles.menuItem}>
           { munuIcon('icon-tuichu') }
-          注销 {currentUser.username}
+          注销 <span className={styles.username}>{currentUser.username}</span>
         </MenuItem>
       </Menu>
     );
 
     return currentUser && currentUser.username ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
-        <Iconfont type="icon-gerenzhongxin2" style={{ fontSize: 20, cursor: 'pointer' }} />
+        {Avatar}
       </HeaderDropdown>
     ) : (
       <Spin
@@ -86,6 +102,7 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   }
 }
 
-export default connect(({ user }: IConnectState) => ({
+export default connect(({ user, global }: IConnectState) => ({
   currentUser: user.currentUser,
+  unreadNotices: global.unreadNotices,
 }))(AvatarDropdown);

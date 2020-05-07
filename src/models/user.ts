@@ -4,21 +4,15 @@ import { Reducer } from 'redux';
 import { queryCurrent } from '@/services/user';
 
 export interface ICurrentUser {
-  avatar?: string;
-  username?: string;
-  title?: string;
-  group?: string;
-  signature?: string;
-  tags?: {
-    key: string;
-    label: string;
-  }[];
-  userid?: string;
-  unreadCount?: number;
+  id: number;
+  username: string;
+  email: string;
+  phone: string;
+  isMainAccount: boolean;
 }
 
 export interface IUserModelState {
-  currentUser?: ICurrentUser;
+  currentUser: ICurrentUser;
 }
 
 export interface IUserModelType {
@@ -36,7 +30,13 @@ const UserModel: IUserModelType = {
   namespace: 'user',
 
   state: {
-    currentUser: {},
+    currentUser: {
+      id: -1,
+      username: '请登录',
+      email: '',
+      phone: '',
+      isMainAccount: false,
+    },
   },
 
   effects: {

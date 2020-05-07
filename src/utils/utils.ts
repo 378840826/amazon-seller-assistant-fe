@@ -4,7 +4,7 @@ type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_569488_b98yqo85cwi.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_tkabw0v0iyd.js',
 });
 
 // 获取亚马逊站点基本链接

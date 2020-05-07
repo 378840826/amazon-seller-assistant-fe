@@ -16,3 +16,9 @@ interface IQueryCurrent extends API.IDataResponse {
     name: string;
   };
 }
+
+interface IQueryUnreadNotices extends API.IDataResponse {
+  data: {
+    unreadNotices: object;
+  };
+}

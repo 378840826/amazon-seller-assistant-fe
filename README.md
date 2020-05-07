@@ -51,8 +51,11 @@
 * 测试用例统一放在 ```src/*/**/__test__``` 目录
 * yarn test 会匹配所有 .test.ts|tsx 和 .e2e.ts|tsx 结尾的文件
 * 使用 Less 作为 css 处理器
+* TS 避免使用 any，如果因为某些原因必须用，则只在这一行代码前注释 eslint disable
 * 所有 interface 以大写字母 I 开头
 * iconfont 使用 Symbol 方式，引用在 utils/utils 工具中
+* 使用新的 iconfont 项目（Amzics），图标居中放置， padding 和大小设置为基本相同
+* 减少图片的使用，用 iconfont 代替
 * 别名 '@' 指向 /src 目录
 * 减少 class 组件的使用
 * 使用函数调用方式使用函数组件
@@ -66,4 +69,5 @@
 * 使用 stylelint 规范 css 代码，现有规则:
     *  stylelint-config-standard
 * 使用 husky 和 lint-staged 提交代码时进行检查
+* 谨慎修改全局配置和全局数据格式
 

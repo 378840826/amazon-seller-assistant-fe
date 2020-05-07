@@ -12,6 +12,18 @@
     font-size: 24px;
     color: @primary-color;
   }
+
+  .avatarContainer {
+    position: relative;
+
+    .badge {
+      position: absolute;
+      line-height: 0;
+      width: 3px;
+      top: 0;
+      right: 0;
+    }
+  }
 }
 
 .headerMenu {
@@ -23,11 +35,28 @@
 
   .menuItem {
     line-height: @headMenuLineHeight;
+    position: relative;
 
     .menuIcon {
       float: left;
       line-height: @headMenuLineHeight;
-      font-size: 16px;
+      font-size: 18px;
+    }
+
+    .badge {
+      position: absolute;
+      line-height: 0;
+      top: 15px;
+      left: 30px;
+    }
+
+    .username {
+      display: inline-block;
+      max-width: 90px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
     }
   }
 }

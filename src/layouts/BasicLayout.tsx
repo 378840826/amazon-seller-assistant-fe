@@ -37,6 +37,9 @@ class BasicLayout extends React.Component<IProps, IState> {
       dispatch({
         type: 'user/fetchCurrent',
       });
+      dispatch({
+        type: 'global/fetchUnreadNotices',
+      });
     }
   }
   
