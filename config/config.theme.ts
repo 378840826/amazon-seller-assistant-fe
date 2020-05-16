@@ -75,8 +75,9 @@ export default {
   '@table-body-sort-bg': 'null',
   // 全局 Header 相关
   '@layout-header-padding': '0 30px',
-  '@layout-header-height': '53px',
+  '@layout-header-height': '52px',
   '@layout-header-background': '#fff',
+  '@layout-header-inputBackgroundColor': '#f5f5f5',
   // xl 屏幕
-  '@screen-xl': '1200px',
+  '@screen-xl': '1400px',
 }

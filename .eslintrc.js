@@ -53,7 +53,6 @@ module.exports = {
     'no-else-return': error,
     'no-empty-function': error,
     'no-implicit-globals': warn,
-    'no-invalid-this': error,
     'no-lone-blocks': error,
     'no-loop-func': error,
     'no-script-url': error,

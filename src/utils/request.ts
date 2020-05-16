@@ -28,13 +28,10 @@ const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
   if (response && response.status) {
     const { status: status1 } = response;
-    console.log('status1', status1, typeof status1);
-    
     const errorText = codeMessage[status1] || response.statusText;
-    const { status, url } = response;
-
+    const { status } = response;
     notification.error({
-      message: `请求错误 ${status}: ${url}`,
+      message: `请求错误 ${status}`,
       description: errorText,
     });
   } else if (!response) {
@@ -46,14 +43,34 @@ const errorHandler = (error: { response: Response }): Response => {
   return response;
 };
 
-/**
- * 配置request请求时的默认参数
- */
+// 增加请求配置
 const request = extend({
   // 默认错误处理
   errorHandler,
   // 默认请求是否带上 cookie
   credentials: 'include',
+  // 带上 token
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Token': localStorage.getItem('Token') || '',
+  },
+});
+
+// response 拦截
+request.interceptors.response.use(async response => {
+  const data = await response.clone().json();
+  const { token, code, message } = data;
+  // 若 token 有更新，存储 token
+  if (token !== undefined) {
+    localStorage.setItem('Token', token);
+  }
+  // 请求异常
+  if (code !== 200) {
+    notification.error({
+      message: message || codeMessage[code],
+    });
+  }
+  return response;
 });
 
 export default request;

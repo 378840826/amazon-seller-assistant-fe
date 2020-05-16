@@ -5,14 +5,12 @@ import { ClickParam } from 'antd/es/menu';
 import { connect } from 'dva';
 import { router } from 'umi';
 import { IConnectProps, IConnectState } from '@/models/connect';
-import { ICurrentUser } from '@/models/user';
-import { IUnreadNotices } from '@/models/global';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
 export interface IGlobalHeaderRightProps extends IConnectProps {
-  currentUser: ICurrentUser;
-  unreadNotices: IUnreadNotices;
+  currentUser: API.ICurrentUser;
+  unreadNotices: API.IUnreadNotices;
 }
 
 const { Item: MenuItem, Divider: MenuDivider } = Menu;
@@ -26,18 +24,17 @@ const munuIcon = function(type: string): React.ReactElement {
 class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   onMenuClick = (event: ClickParam) => {
     const { key } = event;
-    if (key === 'logout') {
+    if (key === '/logout') {
       console.log('退出登录');
       return;
     }
-    router.push(`/${key}`);
+    router.push(key);
   };
 
-  render(): React.ReactNode {
+  render() {
     const { currentUser, unreadNotices } = this.props;
 
-    console.log('this.props', this.props);
-
+    // 全部未读消息数量
     const unreadCount = Object.values(unreadNotices).reduce(
       (a, b) => (a + b)
     );
@@ -51,42 +48,41 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
       :
       <Iconfont type="icon-gerenzhongxin2" style={{ fontSize: 20, cursor: 'pointer' }} />;
 
-    const menuHeaderDropdown: React.ReactElement = (
+    const menuHeaderDropdown = (
       <Menu className={styles.headerMenu} selectedKeys={[]} onClick={this.onMenuClick}>
         <MenuItem key="center" className={styles.menuItem}>
           { munuIcon('icon-gerenzhongxin2') }
           个人中心
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="shop" className={styles.menuItem}>
+        <MenuItem key="/mws/shop" className={styles.menuItem}>
           { munuIcon('icon-gerenzhongxin2') }
           店铺管理
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="ad-shop" className={styles.menuItem}>
+        <MenuItem key="/ppc/shop" className={styles.menuItem}>
           { munuIcon('icon-fuwushouquan') }
           广告授权
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="message" className={styles.menuItem}>
+        <MenuItem key="/message" className={styles.menuItem}>
           { munuIcon('icon-xiaoxi') }
           { unreadCount ? <Badge color="red" className={styles.badge} /> : null }
           消息中心
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="sub-account" className={styles.menuItem}>
+        <MenuItem key="/sub-account" className={styles.menuItem}>
           { munuIcon('icon-guanlizhongxin') }
           子账号管理
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="logout" className={styles.menuItem}>
+        <MenuItem key="/logout" className={styles.menuItem}>
           { munuIcon('icon-tuichu') }
           注销 <span className={styles.username}>{currentUser.username}</span>
         </MenuItem>
       </Menu>
     );
-
-    return currentUser && currentUser.username ? (
+    return currentUser && currentUser.id !== -1 ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         {Avatar}
       </HeaderDropdown>
@@ -94,8 +90,8 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
       <Spin
         size="small"
         style={{
-          marginLeft: 8,
-          marginRight: 8,
+          marginLeft: 3,
+          marginRight: 3,
         }}
       />
     );

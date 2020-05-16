@@ -5,8 +5,22 @@ import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { IUserModelState } from './user';
 import { StateType } from './login';
+import { Effect, Subscription } from 'dva';
+import { Reducer } from 'redux';
 
 export { IGlobalModelState, SettingModelState, IUserModelState };
+
+export interface IModelType {
+  effects?: {
+    [key: string]: Effect;
+  };
+  reducers?: {
+    [key: string]: Reducer;
+  };
+  subscriptions?: {
+    [key: string]: Subscription;
+  };
+}
 
 export interface ILoading {
   global: boolean;

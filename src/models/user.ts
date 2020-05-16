@@ -1,29 +1,13 @@
-import { Effect } from 'dva';
-import { Reducer } from 'redux';
-
+import { IModelType } from './connect';
 import { queryCurrent } from '@/services/user';
 
-export interface ICurrentUser {
-  id: number;
-  username: string;
-  email: string;
-  phone: string;
-  isMainAccount: boolean;
-}
-
 export interface IUserModelState {
-  currentUser: ICurrentUser;
+  currentUser: API.ICurrentUser;
 }
 
-export interface IUserModelType {
+interface IUserModelType extends IModelType {
   namespace: 'user';
   state: IUserModelState;
-  effects: {
-    fetchCurrent: Effect;
-  };
-  reducers: {
-    saveCurrentUser: Reducer<IUserModelState>;
-  };
 }
 
 const UserModel: IUserModelType = {

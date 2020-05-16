@@ -42,6 +42,8 @@ const GlobalSearch: React.FC = () => {
   return (
     <>
       <Input
+        className={styles.Input}
+        maxLength={20}
         placeholder="输入ASIN或SKU"
         allowClear={true}
         onChange={handleChange}

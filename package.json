@@ -18,10 +18,12 @@
     "dva": "^2.6.0-beta.6",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "umi": "^2.9.0",
     "umi-request": "^1.2.19"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.10",
+    "@types/express": "^4.17.6",
     "@types/jest": "^23.3.12",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
@@ -42,7 +44,6 @@
     "stylelint": "^13.3.3",
     "stylelint-config-standard": "^20.0.0",
     "typescript": "^3.8.3",
-    "umi": "^2.9.0",
     "umi-plugin-react": "^1.8.0",
     "umi-types": "^0.3.0",
     "yarn": "^1.22.4"

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Tooltip, Space } from 'antd';
+import { Tooltip } from 'antd';
 import Avatar from './AvatarDropdown';
-import GlobalSearch from '../GlobalSearch';
-import ShopSelector from '../ShopSelector';
+import Link from 'umi/link';
 import { Iconfont } from '@/utils/utils';
 import weixin from '../../assets/weixin.png';
 import styles from './index.less';
@@ -18,14 +17,17 @@ const GlobalHeaderRight: React.FC = () => {
   
   return (
     <div className={styles.right}>
-      <Space size="middle">
-        <ShopSelector />
-        <GlobalSearch />
-      </Space>
-      <Tooltip placement="bottomRight" title={img} overlayStyle={{ background: '#fff' }}>
+      <Tooltip placement="bottom" title={img} overlayStyle={{ background: '#fff' }}>
         <Iconfont type="icon-gongzhonghaoguanli" className={styles.weixin} />
       </Tooltip>
       <Avatar />
+      <Link
+        to="/mws/overview"
+        style={{ color: '#666', marginLeft: 50, marginRight: 5, fontSize: 16 }}
+      >
+        进入系统
+      </Link>
+      <Iconfont type="icon-xiangyoujiantou" style={{ color: '#999', fontSize: 16 }} />
     </div>
   );
 };
