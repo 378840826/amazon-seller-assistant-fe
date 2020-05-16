@@ -1,12 +1,26 @@
 import { AnyAction } from 'redux';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouterTypes } from 'umi';
-import { GlobalModelState } from './global';
+import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
-import { UserModelState } from './user';
+import { IUserModelState } from './user';
 import { StateType } from './login';
+import { Effect, Subscription } from 'dva';
+import { Reducer } from 'redux';
 
-export { GlobalModelState, SettingModelState, UserModelState };
+export { IGlobalModelState, SettingModelState, IUserModelState };
+
+export interface IModelType {
+  effects?: {
+    [key: string]: Effect;
+  };
+  reducers?: {
+    [key: string]: Reducer;
+  };
+  subscriptions?: {
+    [key: string]: Subscription;
+  };
+}
 
 export interface ILoading {
   global: boolean;
@@ -21,10 +35,10 @@ export interface ILoading {
 }
 
 export interface IConnectState {
-  global: GlobalModelState;
+  global: IGlobalModelState;
   loading: ILoading;
   settings: SettingModelState;
-  user: UserModelState;
+  user: IUserModelState;
   login: StateType;
 }
 

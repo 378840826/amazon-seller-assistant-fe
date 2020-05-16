@@ -1371,6 +1371,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/body-parser@*":
+  version "1.19.0"
+  resolved "https://registry.npm.taobao.org/@types/body-parser/download/@types/body-parser-1.19.0.tgz#0685b3c47eb3006ffed117cdd55164b61f80538f"
+  dependencies:
+    "@types/connect" "*"
+    "@types/node" "*"
+
 "@types/cheerio@^0.22.10":
   version "0.22.17"
   resolved "https://registry.npm.taobao.org/@types/cheerio/download/@types/cheerio-0.22.17.tgz?cache=0&sync_timestamp=1584719564614&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fcheerio%2Fdownload%2F%40types%2Fcheerio-0.22.17.tgz#e54f71c3135f71ebc16c8dc62edad533872c9e72"
@@ -1385,6 +1392,12 @@
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/@types/color-name/download/@types/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
 
+"@types/connect@*":
+  version "3.4.33"
+  resolved "https://registry.npm.taobao.org/@types/connect/download/@types/connect-3.4.33.tgz#31610c901eca573b8713c3330abc6e6b9f588546"
+  dependencies:
+    "@types/node" "*"
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/@types/eslint-visitor-keys/download/@types/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -1392,6 +1405,23 @@
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
+
+"@types/express-serve-static-core@*":
+  version "4.17.7"
+  resolved "https://registry.npm.taobao.org/@types/express-serve-static-core/download/@types/express-serve-static-core-4.17.7.tgz?cache=0&sync_timestamp=1588884647944&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fexpress-serve-static-core%2Fdownload%2F%40types%2Fexpress-serve-static-core-4.17.7.tgz#dfe61f870eb549dc6d7e12050901847c7d7e915b"
+  dependencies:
+    "@types/node" "*"
+    "@types/qs" "*"
+    "@types/range-parser" "*"
+
+"@types/express@^4.17.6":
+  version "4.17.6"
+  resolved "https://registry.npm.taobao.org/@types/express/download/@types/express-4.17.6.tgz?cache=0&sync_timestamp=1588200345095&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fexpress%2Fdownload%2F%40types%2Fexpress-4.17.6.tgz#6bce49e49570507b86ea1b07b806f04697fac45e"
+  dependencies:
+    "@types/body-parser" "*"
+    "@types/express-serve-static-core" "*"
+    "@types/qs" "*"
+    "@types/serve-static" "*"
 
 "@types/glob@^7.1.1":
   version "7.1.1"
@@ -1445,6 +1475,10 @@
   version "4.14.149"
   resolved "https://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
 
+"@types/mime@*":
+  version "2.0.1"
+  resolved "https://registry.npm.taobao.org/@types/mime/download/@types/mime-2.0.1.tgz?cache=0&sync_timestamp=1588201894076&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fmime%2Fdownload%2F%40types%2Fmime-2.0.1.tgz#dc488842312a7f075149312905b5e3c0b054c79d"
+
 "@types/minimatch@*", "@types/minimatch@^3.0.3":
   version "3.0.3"
   resolved "https://registry.npm.taobao.org/@types/minimatch/download/@types/minimatch-3.0.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fminimatch%2Fdownload%2F%40types%2Fminimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
@@ -1480,6 +1514,14 @@
 "@types/q@^1.5.1":
   version "1.5.2"
   resolved "https://registry.npm.taobao.org/@types/q/download/@types/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
+
+"@types/qs@*":
+  version "6.9.2"
+  resolved "https://registry.npm.taobao.org/@types/qs/download/@types/qs-6.9.2.tgz#faab98ec4f96ee72c829b7ec0983af4f4d343113"
+
+"@types/range-parser@*":
+  version "1.2.3"
+  resolved "https://registry.npm.taobao.org/@types/range-parser/download/@types/range-parser-1.2.3.tgz?cache=0&sync_timestamp=1588201899266&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Frange-parser%2Fdownload%2F%40types%2Frange-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
 
 "@types/react-dom@^16.0.11":
   version "16.9.6"
@@ -1535,6 +1577,13 @@
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
+
+"@types/serve-static@*":
+  version "1.13.3"
+  resolved "https://registry.npm.taobao.org/@types/serve-static/download/@types/serve-static-1.13.3.tgz#eb7e1c41c4468272557e897e9171ded5e2ded9d1"
+  dependencies:
+    "@types/express-serve-static-core" "*"
+    "@types/mime" "*"
 
 "@types/shallowequal@^1.1.1":
   version "1.1.1"

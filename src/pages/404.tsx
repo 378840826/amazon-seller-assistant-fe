@@ -1,16 +1,18 @@
+import { Button, Result } from 'antd';
 import React from 'react';
+import { router } from 'umi';
 
-const My: React.FC = function() {
-  const lo = localStorage.a;
-  const msg = 0;
-  const o = { a: 0, b: 1 };
-  const { a } = o;
-  return (
-    <div>
-      404
-      <h1>{msg}{a}{lo}</h1>
-    </div>
-  );
-};
+const NoFoundPage: React.FC<{}> = () => (
+  <Result
+    status="404"
+    title="404"
+    subTitle="Sorry, the page you visited does not exist."
+    extra={
+      <Button type="primary" onClick={() => router.push('/')}>
+        Back Home
+      </Button>
+    }
+  />
+);
 
-export default My;
+export default NoFoundPage;

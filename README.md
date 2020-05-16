@@ -46,24 +46,40 @@
 └── package.json
 ```
 
-### 其他说明
-* 使用 Jest 作为测试工具
-* 测试用例统一放在 ```src/*/**/__test__``` 目录
-* yarn test 会匹配所有 .test.ts|tsx 和 .e2e.ts|tsx 结尾的文件
-* 使用 Less 作为 css 处理器
-* 所有 interface 以大写字母 I 开头
-* iconfont 使用 Symbol 方式，引用在 utils/utils 工具中
-* 别名 '@' 指向 /src 目录
-* 减少 class 组件的使用
-* 使用函数调用方式使用函数组件
-* 使用 hooks
-* 使用 gitflow 方式提交代码
-* 无需兼容 IE
-* 使用 ESlint 规范 js 代码，现有 lint 规则：
+### 新增页面步骤
+1. 创建页面级组件
+2. 在 ```config/config.routes.ts``` 添加路由
+3. 如果是功能页需要添加导航，在 ```src/layouts/BasicLayout/navigation``` 中添加到对应导航菜单
+4. 如果是 index 或 user 等页面需要添加导航，在 ```src/layouts/``` 下对应的布局中添加导航菜单
+
+### 分支管理说明
+* 遵循新的 git 代码管理流程
+* 每个功能分支/修复分支都必须从 master 分支检出
+* git 功能分支以 feature/ 开头命名, 修复分支以 fix/ 开头命名
+* 环境分支不能直接提交代码，只能接受合并
+* 其他详情： https://con.workics.cn/pages/viewpage.action?pageId=127572006
+  
+### 代码风格和规范说明
+* 使用了 ESlint 规范 js 代码，现有 lint 规则：
     *  eslint 官方推荐规则
     *  eslint-plugin-react 规则
     *  .eslintrc.js 中的自定义 rules
-* 使用 stylelint 规范 css 代码，现有规则:
+* 使用了 stylelint 规范 css 代码，现有规则:
     *  stylelint-config-standard
-* 使用 husky 和 lint-staged 提交代码时进行检查
+* 使用了 husky 和 lint-staged 提交代码时进行检查
+* 所有 interface 以大写字母 I 开头
+* 减少图片的使用，用 iconfont 代替
+* 减少 class 组件的使用，使用函数组件或 hooks
+* TS 避免使用 any，如果必须使用，则只在这一行代码前注释 eslint disable
 
+### 其他说明
+* 使用了 Less 作为 css 处理器
+* 使用了 Jest 作为测试工具
+* 测试用例统一放在 ```src/*/**/__test__``` 目录
+* yarn test 会匹配所有 .test.ts|tsx 和 .e2e.ts|tsx 结尾的文件
+* iconfont 使用 Symbol 方式，引用在 ```utils/utils``` 工具中
+* 使用新的 iconfont 项目（Amzics），图标居中放置， padding 和大小设置为基本相同
+* 别名 '@' 指向 /src 目录
+* 全局数据放在 ```models/global```
+* api 相关的通用数据类型定义在 service/API.d.ts
+* 谨慎修改全局配置和全局数据类型格式，修改前与相关人员沟通

@@ -1,0 +1,43 @@
+@width: 220px;
+
+.Input {
+  width: @width;
+  background: @layout-header-inputBackgroundColor;
+  border-color: @layout-header-inputBackgroundColor;
+
+  input {
+    background: @layout-header-inputBackgroundColor;
+  }
+}
+
+.optionsUl {
+  width: @width;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-base;
+  padding: 10px 0;
+
+  li {
+    &:hover {
+      background-color: #f1f4f7;
+    }
+
+    a {
+      display: block;
+      cursor: pointer;
+      padding: 0 20px;
+      color: @text-color;
+      line-height: @li-line-height-base;
+    }
+
+    span {
+      display: inline-block;
+      vertical-align: bottom;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

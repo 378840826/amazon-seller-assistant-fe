@@ -1,42 +1,26 @@
-import { Effect } from 'dva';
-import { Reducer } from 'redux';
-
+import { IModelType } from './connect';
 import { queryCurrent } from '@/services/user';
 
-export interface ICurrentUser {
-  avatar?: string;
-  username?: string;
-  title?: string;
-  group?: string;
-  signature?: string;
-  tags?: {
-    key: string;
-    label: string;
-  }[];
-  userid?: string;
-  unreadCount?: number;
-}
-
 export interface IUserModelState {
-  currentUser?: ICurrentUser;
+  currentUser: API.ICurrentUser;
 }
 
-export interface IUserModelType {
+interface IUserModelType extends IModelType {
   namespace: 'user';
   state: IUserModelState;
-  effects: {
-    fetchCurrent: Effect;
-  };
-  reducers: {
-    saveCurrentUser: Reducer<IUserModelState>;
-  };
 }
 
 const UserModel: IUserModelType = {
   namespace: 'user',
 
   state: {
-    currentUser: {},
+    currentUser: {
+      id: -1,
+      username: '请登录',
+      email: '',
+      phone: '',
+      isMainAccount: false,
+    },
   },
 
   effects: {

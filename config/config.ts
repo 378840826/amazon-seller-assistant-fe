@@ -21,7 +21,7 @@ const config: IConfig =  {
           level: 3,
         },
         favicon: '/favicon.ico',
-        // title: '安知助手',
+        title: '安知助手',
         dll: false,
         routes: {
           exclude: [

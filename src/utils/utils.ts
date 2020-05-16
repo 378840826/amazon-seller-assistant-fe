@@ -4,7 +4,7 @@ type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_569488_b98yqo85cwi.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_eernoa4mxk8.js',
 });
 
 // 获取亚马逊站点基本链接
@@ -41,3 +41,29 @@ export const isRepeatArray = function (array: Array<string | number>): boolean {
   return false;
 };
 
+// localstorage 方法
+export const storage = {
+  set(key: string, value: unknown) {
+    if (typeof value === 'string') {
+      window.localStorage[key] = value;
+    } else {
+      window.localStorage[key] = JSON.stringify(value);
+    }
+  },
+
+  get(key: string) {
+    const data = window.localStorage[key];
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        return data;
+      }
+    }
+    return '';
+  },
+  
+  remove(key: string) {
+    window.localStorage.removeItem(key);
+  },
+};

@@ -44,6 +44,7 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": off,
     // 要求 interface 以大写字母 I 开头
     '@typescript-eslint/interface-name-prefix': [error, 'always'],
+    "react/display-name": 0,
     // 关闭 props 验证(已有 TS)
     'react/prop-types': off,
     // 不允许未命名的组件
@@ -52,7 +53,6 @@ module.exports = {
     'no-else-return': error,
     'no-empty-function': error,
     'no-implicit-globals': warn,
-    'no-invalid-this': error,
     'no-lone-blocks': error,
     'no-loop-func': error,
     'no-script-url': error,

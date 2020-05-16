@@ -1,9 +1,9 @@
 import request from '@/utils/request';
 
-export async function queryCurrent(): Promise<IQueryCurrent> {
-  return request('/api/currentUser');
+export async function queryCurrent() {
+  return request<API.ICurrentUser>('/api/currentUser');
 }
 
-export async function testRequest(): Promise<API.IDataResponse> {
+export async function testRequest() {
   return request('https://darkroom.cc/api/blog');
 }
