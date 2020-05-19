@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip, Space } from 'antd';
+import { Tooltip } from 'antd';
 import Avatar from './AvatarDropdown';
 import GlobalSearch from '../GlobalSearch';
 import ShopSelector from '../ShopSelector';
@@ -18,10 +18,12 @@ const GlobalHeaderRight: React.FC = () => {
   
   return (
     <div className={styles.right}>
-      <Space size="middle">
+      <div className={styles.ShopSelectorContainer}>
         <ShopSelector />
+      </div>
+      <div className={styles.GlobalSearchContainer}>
         <GlobalSearch />
-      </Space>
+      </div>
       <Tooltip placement="bottomRight" title={img} overlayStyle={{ background: '#fff' }}>
         <Iconfont type="icon-gongzhonghaoguanli" className={styles.weixin} />
       </Tooltip>

@@ -10,6 +10,7 @@ const { confirm } = Modal;
 export interface IGlobalModelState {
   unreadNotices: API.IUnreadNotices;
   shop: IShopSelector;
+  breadcrumbs: string;
 }
 
 export interface IShopSelector {
@@ -52,6 +53,8 @@ const GlobalModel: IGlobalModelType = {
       mws: [],
       ppc: [],
     },
+    // 面包屑
+    breadcrumbs: '',
   },
 
   effects: {
