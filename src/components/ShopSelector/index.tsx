@@ -2,48 +2,40 @@
  * 功能页的店铺选择器
  */
 import React, { useState, useEffect } from 'react';
-import { connect } from 'dva';
+import { useDispatch, useSelector } from 'umi';
 import { Select } from 'antd';
-import { IConnectProps, IConnectState, ILoading } from '@/models/connect';
-import { IShopSelector } from '@/models/global';
+import { IConnectState } from '@/models/connect';
 import styles from './index.less';
 import classnames from 'classnames';
 
 const { Option } = Select;
 
-interface IProps extends IConnectProps {
-  shop: IShopSelector;
-  loading: ILoading;
-}
-
-const ShopSelector: React.FC<IProps> = (props) => {
+const ShopSelector: React.FC = () => {
   const [filterText, setFilterText] = useState<string>('');
+  const dispatch = useDispatch();
+  const loadingEffect = useSelector((state: IConnectState) => state.loading);
+  const loading = loadingEffect.effects['global/fetchShopList'];
+  const shop = useSelector((state: IConnectState) => state.global.shop);
 
   useEffect(() => {
-    const { dispatch } = props;
     const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
     dispatch({
       type: 'global/fetchShopList',
       payload: { type },
     });
-  }, []);
+  }, [dispatch]);
 
   const handleChange = (value: number) => {
-    const { dispatch } = props;
     dispatch({
       type: 'global/setCurrentShop',
       payload: { id: value },
     });
   };
 
-  const {
-    shop,
-    loading: { effects: { 'global/fetchShopList': loading } },
-  } = props;
   const { type, current, status } = shop;
   const { id: currentId, shopName: currentShopName } = current;
   const shopList = shop[type];
-  const disabled = shop.status === 'disabled' || loading ? true : false;
+  const disabled = status === 'disabled' || loading ? true : false;
   return (
     status === 'hidden'
       ?
@@ -82,7 +74,4 @@ const ShopSelector: React.FC<IProps> = (props) => {
   );
 };
 
-export default connect(({ global, loading }: IConnectState) => ({
-  shop: global.shop,
-  loading: loading,
-}))(ShopSelector);
+export default ShopSelector;

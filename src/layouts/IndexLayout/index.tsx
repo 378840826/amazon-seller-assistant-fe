@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { connect } from 'dva';
 import logo from '@/assets/logo.png';
-import Link from 'umi/link';
+import { Link, connect } from 'umi';
 import IndexRightContent from '@/components/GlobalHeader/IndexRightContent';
 import { Layout, Menu } from 'antd';
 import { IConnectProps, IConnectState } from '@/models/connect';

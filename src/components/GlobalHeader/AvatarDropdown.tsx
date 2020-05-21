@@ -2,8 +2,7 @@ import React from 'react';
 import { Menu, Spin, Badge } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import { ClickParam } from 'antd/es/menu';
-import { connect } from 'dva';
-import { router } from 'umi';
+import { history, connect } from 'umi';
 import { IConnectProps, IConnectState } from '@/models/connect';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
@@ -28,7 +27,7 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
       console.log('退出登录');
       return;
     }
-    router.push(key);
+    history.push(key);
   };
 
   render() {

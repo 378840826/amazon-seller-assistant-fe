@@ -3,14 +3,13 @@ import { queryUnreadNotices } from '@/services/notices';
 import { queryMwsShopList, queryPpcShopList } from '@/services/shop';
 import { storage } from '@/utils/utils';
 import { Modal } from 'antd';
-import { router } from 'umi';
+import { history } from 'umi';
 
 const { confirm } = Modal;
 
 export interface IGlobalModelState {
   unreadNotices: API.IUnreadNotices;
   shop: IShopSelector;
-  breadcrumbs: string;
 }
 
 export interface IShopSelector {
@@ -53,8 +52,6 @@ const GlobalModel: IGlobalModelType = {
       mws: [],
       ppc: [],
     },
-    // 面包屑
-    breadcrumbs: '',
   },
 
   effects: {
@@ -84,10 +81,7 @@ const GlobalModel: IGlobalModelType = {
 
   reducers: {
     saveUnreadNotices(state, { payload }) {
-      return {
-        ...state,
-        unreadNotices: payload.data.unreadNotices,
-      };
+      state.unreadNotices = payload.data.unreadNotices;
     },
 
     // 保存店铺数据
@@ -99,15 +93,12 @@ const GlobalModel: IGlobalModelType = {
         ? currentShop
         : list[0];
       storage.set('currentShop', current);
-      return {
-        ...state,
-        shop: {
-          ...state.shop,
-          mws: payload.mws,
-          ppc: payload.ppc,
-          type: payload.type,
-          current,
-        },
+      state.shop = {
+        status: state.shop.status,
+        mws: payload.mws,
+        ppc: payload.ppc,
+        type: payload.type,
+        current,
       };
     },
 
@@ -123,13 +114,7 @@ const GlobalModel: IGlobalModelType = {
         }
       });
       storage.set('currentShop', current);
-      return {
-        ...state,
-        shop: {
-          ...state.shop,
-          current,
-        },
-      };
+      state.shop.current = current;
     },
 
     // 切换店铺类型
@@ -159,19 +144,13 @@ const GlobalModel: IGlobalModelType = {
           okText: `去${text}`,
           cancelText: '取消',
           onOk() {
-            router.push(url);
+            history.push(url);
           },
         });
       }
       storage.set('currentShop', current);
-      return {
-        ...state,
-        shop: {
-          ...state.shop,
-          type,
-          current,
-        },
-      };
+      state.shop.type = type;
+      state.shop.current = current;
     },
 
     // 切换店铺选择器状态
@@ -180,13 +159,7 @@ const GlobalModel: IGlobalModelType = {
       if (state.shop.status === status) {
         return { ...state };
       }
-      return {
-        ...state,
-        shop: {
-          ...state.shop,
-          status: payload.status,
-        },
-      };
+      state.shop.status = status;
     },
   },
 

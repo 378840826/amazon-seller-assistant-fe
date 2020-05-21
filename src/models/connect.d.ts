@@ -1,12 +1,9 @@
-import { AnyAction } from 'redux';
 import { MenuDataItem } from '@ant-design/pro-layout';
-import { RouterTypes } from 'umi';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { IUserModelState } from './user';
 import { StateType } from './login';
-import { Effect, Subscription } from 'dva';
-import { Reducer } from 'redux';
+import { Effect, ImmerReducer, Subscription, Dispatch } from 'umi';
 
 export { IGlobalModelState, SettingModelState, IUserModelState };
 
@@ -15,7 +12,7 @@ export interface IModelType {
     [key: string]: Effect;
   };
   reducers?: {
-    [key: string]: Reducer;
+    [key: string]: ImmerReducer;
   };
   subscriptions?: {
     [key: string]: Subscription;
@@ -50,5 +47,5 @@ export interface IRoute extends MenuDataItem {
  * @type T: Params matched in dynamic routing
  */
 export interface IConnectProps<T = {}> extends Partial<RouterTypes<Route, T>> {
-  dispatch?: Dispatch<AnyAction>;
+  dispatch?: Dispatch<Action>;
 }
