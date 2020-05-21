@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 import Avatar from './AvatarDropdown';
-import Link from 'umi/link';
+import { Link } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import weixin from '../../assets/weixin.png';
 import styles from './index.less';

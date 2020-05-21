@@ -2,9 +2,8 @@
  * 功能页布局
  */
 import React from 'react';
-import { connect } from 'dva';
 import logo from '@/assets/logo.png';
-import Link from 'umi/link';
+import { Link, connect } from 'umi';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { Layout, Menu, Dropdown } from 'antd';
 import { IConnectProps, IConnectState } from '@/models/connect';

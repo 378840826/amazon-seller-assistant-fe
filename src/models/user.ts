@@ -34,11 +34,8 @@ const UserModel: IUserModelType = {
   },
 
   reducers: {
-    saveCurrentUser(state, action): IUserModelState {
-      return {
-        ...state,
-        currentUser: action.payload.data || {},
-      };
+    saveCurrentUser(state, { payload }) {
+      state.currentUser = payload.data || {};
     },
   },
 };

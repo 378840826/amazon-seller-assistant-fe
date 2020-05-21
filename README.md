@@ -88,6 +88,7 @@
 * 减少图片的使用，用 iconfont 代替
 * 减少 class 组件的使用，使用函数组件或 hooks
 * TS 避免使用 any，如果必须使用，则只在这一行代码前注释 eslint disable
+* 开启了 immer，可简写 reducers
 
 ### 其他说明
 * 使用了 Less 作为 css 处理器
@@ -100,4 +101,3 @@
 * 全局数据放在 ```models/global```
 * api 相关的通用数据类型定义在 service/API.d.ts
 * 谨慎修改全局配置和全局数据类型格式，修改前与相关人员沟通
-

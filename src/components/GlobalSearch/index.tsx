@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Input } from 'antd';
-import Link from 'umi/link';
+import { Link } from 'umi';
 import styles from './index.less';
 
 const GlobalSearch: React.FC = () => {
