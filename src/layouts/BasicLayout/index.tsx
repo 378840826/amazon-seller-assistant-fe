@@ -101,6 +101,9 @@ class BasicLayout extends React.Component<IProps> {
         {
           navigation.map(item => {
             const titlePathname = item.menu[0].path;
+            if (item.visible === false) {
+              return;
+            }
             return (
               <MenuItem key={titlePathname} className={styles.MenuItem}>
                 <Dropdown overlay={getSubMenu(item.menu)} placement="bottomCenter">
