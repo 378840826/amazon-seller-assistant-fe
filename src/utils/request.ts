@@ -6,10 +6,10 @@ import { extend } from 'umi-request';
 import { notification } from 'antd';
 
 const codeMessage = {
-  200: '请求成功',
-  201: '新建或修改数据成功。',
-  202: '一个请求已经进入后台排队（异步任务）。',
-  204: '删除成功。',
+  // 200: '请求成功',
+  // 201: '新建或修改数据成功。',
+  // 202: '一个请求已经进入后台排队（异步任务）。',
+  // 204: '删除成功。',
   400: '发出的请求有错误，服务器没有进行数据的操作。',
   401: '没有权限（令牌、用户名、密码错误）。',
   403: '访问被禁止。',
@@ -52,17 +52,31 @@ const request = extend({
   // 带上 token
   headers: {
     'Content-Type': 'application/json; charset=utf-8',
-    'Token': localStorage.getItem('Token') || '',
   },
+});
+
+// request 拦截
+request.interceptors.request.use((url, options) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const headers: any = options.headers;
+  const token = localStorage.getItem('Token');
+  token ? headers.Token = token : delete headers.Token;
+  return {
+    url,
+    options: { ...options, headers: { ...headers } },
+  };
 });
 
 // response 拦截
 request.interceptors.response.use(async response => {
-  const data = await response.clone().json();
-  const { token, code, message } = data;
-  // 若 token 有更新，存储 token
-  if (token !== undefined) {
+  const resBody = await response.clone().json();
+  const { code, message } = resBody;
+  const token = response.headers.get('Token');
+  // 存储或更新 token
+  if (token !== null) {
     localStorage.setItem('Token', token);
+  } else {
+    delete localStorage.Token;
   }
   // 请求异常
   if (code !== 200) {
