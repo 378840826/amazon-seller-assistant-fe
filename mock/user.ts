@@ -4,6 +4,9 @@ import { Response, Request } from 'express';
 export default {
   'GET /api/currentUser': (_: Request, res: Response) => {
     setTimeout(() => {
+      res.header({
+        Token: 'aaaaa',
+      });
       res.send({
         code: 200,
         token: 'test-token',
