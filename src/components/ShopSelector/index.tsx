@@ -25,7 +25,7 @@ const ShopSelector: React.FC = () => {
     });
   }, [dispatch]);
 
-  const handleChange = (value: number) => {
+  const handleChange = (value: string) => {
     dispatch({
       type: 'global/setCurrentShop',
       payload: { id: value },
@@ -33,7 +33,7 @@ const ShopSelector: React.FC = () => {
   };
 
   const { type, current, status } = shop;
-  const { id: currentId, shopName: currentShopName } = current;
+  const { id: currentId, storeName: currentShopName } = current;
   const shopList = shop[type];
   const disabled = status === 'disabled' || loading ? true : false;
   return (
@@ -47,7 +47,7 @@ const ShopSelector: React.FC = () => {
         bordered={false}
         loading={loading}
         value={currentId}
-        defaultValue={-1}
+        defaultValue={'-1'}
         disabled={disabled}
         optionFilterProp="children"
         onChange={handleChange}
@@ -55,15 +55,16 @@ const ShopSelector: React.FC = () => {
         filterOption={false}
       >
         {
-          currentId < 0 ? <Option key={currentId} value={currentId}>{currentShopName}</Option> :
+          currentId === '-1' ? <Option key={currentId} value={currentId}>{currentShopName}</Option> :
             shopList.map((shop: API.IShop) => {
-              if (shop.shopName.includes(filterText)) {
+              if (shop.storeName.includes(filterText)) {
                 return (
                   <Option key={shop.id} value={shop.id}>
                     <div className={styles.SelectItem}>
-                      <i className={classnames(styles.flag, styles[`flag-${shop.site}`])}></i>
-                      <span className={styles.site}>{shop.site}</span>
-                      <span className={styles.shopName}>{shop.shopName}</span>
+                      <i className={classnames(styles.flag, styles[`flag-${shop.marketplace}`])}>
+                      </i>
+                      <span className={styles.site}>{shop.marketplace}</span>
+                      <span className={styles.shopName}>{shop.storeName}</span>
                     </div>
                   </Option>
                 );

@@ -39,12 +39,12 @@ const GlobalModel: IGlobalModelType = {
       status: 'normal',
       type: window.location.pathname.includes('/ppc') ? 'ppc' : 'mws',
       current: {
-        id: -1,
-        site: 'US',
-        shopName: '正在加载店铺数据',
+        id: '-1',
+        marketplace: 'US',
+        storeName: '正在加载店铺数据',
         sellerId: '',
         token: '',
-        switch: false,
+        autoPrice: false,
         currency: '$',
         tokenInvalid: false,
         timezone: '',
@@ -71,8 +71,8 @@ const GlobalModel: IGlobalModelType = {
       yield put({
         type: 'saveShopList',
         payload: {
-          mws: mws.data,
-          ppc: ppc.data,
+          mws: mws.data.records,
+          ppc: ppc.data.records,
           type,
         },
       });
@@ -128,7 +128,7 @@ const GlobalModel: IGlobalModelType = {
       const newShopList = state.shop[type];
       for (let index = 0; index < newShopList.length; index++) {
         const shop = newShopList[index];
-        if (shop.sellerId === oldShop.sellerId && shop.site === oldShop.site) {
+        if (shop.sellerId === oldShop.sellerId && shop.marketplace === oldShop.marketplace) {
           current = shop;
           break;
         }
@@ -136,11 +136,11 @@ const GlobalModel: IGlobalModelType = {
       // 若没有相同的店铺，显示第一个店铺，并提示去添加店铺
       if (current === undefined) {
         current = newShopList[0];
-        const { shopName, site } = current;
+        const { storeName, marketplace } = current;
         const text = type === 'ppc' ? '授权' : '绑定';
         const url = type === 'ppc' ? '/' : '/';
         confirm({
-          title: `店铺 ${site} : ${shopName} 未${text}`,
+          title: `店铺 ${marketplace} : ${storeName} 未${text}`,
           okText: `去${text}`,
           cancelText: '取消',
           onOk() {

@@ -17,14 +17,14 @@ declare namespace API {
   }
 
   interface IShop {
-    id: number;
-    site: string;
-    shopName: string;
+    id: string;
+    storeName: string;
+    marketplace: string;
     sellerId: string;
     token: string;
-    switch: boolean;
+    autoPrice: boolean;
+    timezone: string;
     currency: string;
     tokenInvalid: boolean;
-    timezone: string;
   }
 }

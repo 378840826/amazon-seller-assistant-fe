@@ -1,40 +1,50 @@
 import { Response, Request } from 'express';
 
 export default {
-  'GET /api/shop/list': (_: Request, res: Response) => {
+  'GET /api/mws/store/list': (_: Request, res: Response) => {
     setTimeout(() => {
       res.header({
         Token: 'bbbbb',
       });
       res.send({
         code: 200,
-        token: 'test-token-1',
-        data: [
-          {
-            id: 1,
-            site: 'US',
-            shopName: 'storeName1',
-            sellerId: 'sellerId001',
-            token: 'token001',
-            switch: true,
-            currency: '$',
-            tokenInvalid: true,
-            timezone: '时区1',
-          },
-          {
-            id: 2,
-            site: 'UK',
-            shopName: 'name2',
-            sellerId: 'sellerId002',
-            token: 'token002',
-            switch: true,
-            currency: '￥',
-            tokenInvalid: true,
-            timezone: '时区2',
-          },
-        ],
+        data: {
+          records: [
+            {
+              id: '1',
+              storeName: 'store-name-1',
+              marketplace: 'US',
+              sellerId: 'sellerId-1',
+              token: 'token-1',
+              autoPrice: false,
+              timezone: 'America/ Los_Angeles',
+              currency: '$',
+              tokenInvalid: false,
+            }, {
+              id: '2',
+              storeName: 'store-name-2',
+              marketplace: 'UK',
+              sellerId: 'sellerId-2',
+              token: 'token-2',
+              autoPrice: true,
+              timezone: 'America/ Los_Angeles',
+              currency: '£',
+              tokenInvalid: true,
+            }, {
+              id: '3',
+              storeName: 'store-name-3',
+              marketplace: 'US',
+              sellerId: 'sellerId-3',
+              token: 'token-3',
+              autoPrice: true,
+              timezone: 'America/ Los_Angeles',
+              currency: '￥',
+              tokenInvalid: false,
+            },
+          ],
+        },
       });
-    }, 1000);
+    }, 800);
   },
 
   'GET /api/adshop/list': (_: Request, res: Response) => {
@@ -44,33 +54,42 @@ export default {
       });
       res.send({
         code: 200,
-        data: [
-          {
-            id: 3,
-            site: 'US',
-            shopName: 'ppcStore1',
-            sellerId: 'sellerId003',
-            token: 'token001',
-            switch: true,
-            currency: '$',
-            tokenInvalid: true,
-            timezone: '时区1',
-            createdTime: '2020-01-01',
-          },
-          {
-            id: 4,
-            site: 'UK',
-            shopName: 'ppcStore2',
-            sellerId: 'sellerId002',
-            token: 'token002',
-            switch: true,
-            currency: '￥',
-            tokenInvalid: true,
-            timezone: '时区2',
-            createdTime: '2020-01-01',
-          },
-        ],
+        data: {
+          records: [
+            {
+              id: '10',
+              storeName: 'ppc-store-1',
+              marketplace: 'US',
+              sellerId: 'sellerId-1',
+              token: 'token-1',
+              autoPrice: false,
+              timezone: 'America/ Los_Angeles',
+              currency: '$',
+              tokenInvalid: false,
+            }, {
+              id: '20',
+              storeName: 'ppc-store-2',
+              marketplace: 'UK',
+              sellerId: 'sellerId-20',
+              token: 'token-2',
+              autoPrice: true,
+              timezone: 'America/ Los_Angeles',
+              currency: '£',
+              tokenInvalid: true,
+            }, {
+              id: '30',
+              storeName: 'ppc-store-3',
+              marketplace: 'US',
+              sellerId: 'sellerId-30',
+              token: 'token-3',
+              autoPrice: true,
+              timezone: 'America/ Los_Angeles',
+              currency: '￥',
+              tokenInvalid: false,
+            },
+          ],
+        },
       });
-    }, 1200);
+    }, 500);
   },
 };

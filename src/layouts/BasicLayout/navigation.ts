@@ -3,6 +3,7 @@
  */
 export interface INavigation {
   title: string;
+  visible?: boolean;
   menu: {
     title: string;
     path: string;
@@ -63,6 +64,14 @@ const navigation: INavigation[] = [
     title: '评论监控',
     menu: [
       { title: '评论监控', path: '/mws/comment/monitor' },
+    ],
+  },
+  {
+    title: '店铺管理',
+    visible: false,
+    menu: [
+      { title: '已绑定店铺', path: '/mws/shop/list' },
+      { title: '绑定店铺', path: '/mws/shop/bind' },
     ],
   },
 ];
