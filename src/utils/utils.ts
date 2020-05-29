@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 
 type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
@@ -31,6 +32,18 @@ export const getAmazonAsinUrl = function (asin: string, state: Site): string {
 export const getAmazonKeywordUrl = function (keyword: string, state: Site): string {
   const baseUrl = getAmazonBaseUrl(state);
   return `${baseUrl}/s?k=${keyword}`;
+};
+
+// 复制文字
+export const copyText = function (text: string, successMsg?: string): void {
+  const input = document.createElement('input');
+  input.style.opacity = '0';
+  input.value = text;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('Copy');
+  document.body.removeChild(input);
+  message.success(successMsg || '复制成功');
 };
 
 // 判断数组是否有重复值

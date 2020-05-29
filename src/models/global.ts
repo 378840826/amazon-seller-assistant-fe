@@ -1,6 +1,14 @@
 import { IModelType } from './connect';
 import { queryUnreadNotices } from '@/services/notices';
-import { queryMwsShopList, queryPpcShopList } from '@/services/shop';
+import {
+  queryMwsShopList,
+  // queryPpcShopList,
+  modifyShopAutoPrice,
+  unbindShop,
+  renameShop,
+  updateShopToken,
+  bindShop,
+} from '@/services/shop';
 import { storage } from '@/utils/utils';
 import { Modal } from 'antd';
 import { history } from 'umi';
@@ -67,7 +75,8 @@ const GlobalModel: IGlobalModelType = {
     // 获取全部店铺
     *fetchShopList({ payload: { type } }, { call, put }) {
       const mws = yield call(queryMwsShopList);
-      const ppc = yield call(queryPpcShopList);
+      // const ppc = yield call(queryPpcShopList);
+      const ppc = { data: { records: [] } };
       yield put({
         type: 'saveShopList',
         payload: {
@@ -76,6 +85,72 @@ const GlobalModel: IGlobalModelType = {
           type,
         },
       });
+    },
+
+    // 切换 mws 店铺总开关
+    *switchShopAutoPrice({ payload: { id, autoPrice }, callback }, { call, put }) {
+      const res = yield call(modifyShopAutoPrice, { id });
+      if (res.code === 200) {
+        yield put({
+          type: 'saveShopAutoPrice',
+          payload: {
+            id,
+            autoPrice,
+          },
+        });
+        callback && callback(res.message);
+      }
+    },
+
+    // 解绑 mws 店铺
+    *unbindMwsShop({ payload: { id }, callback }, { call, put }) {
+      const res = yield call(unbindShop, { id });
+      if (res.code === 200) {
+        yield put({
+          type: 'deleteMwsShop',
+          payload: { id },
+        });
+        callback && callback(res.message);
+      }
+    },
+
+    // 修改 mws 店铺名称
+    *modifyMwsShopName({ payload: { storeId, storeName }, callback }, { call, put }) {
+      const res = yield call(renameShop, { storeId, storeName });
+      if (res.code === 200) {
+        yield put({
+          type: 'renameMwsShop',
+          payload: { storeId, storeName },
+        });
+        callback && callback(res.message);
+      }
+    },
+
+    // 更新 mws 店铺 Auth Token
+    *modifyShopToken({ payload: { id, token }, callback }, { call, put }) {
+      const res = yield call(updateShopToken, { id, token });
+      if (res.code === 200) {
+        yield put({
+          type: 'updateShopToken',
+          payload: { id, token },
+        });
+        callback && callback(res.message);
+      }
+    },
+
+    // 绑定 mws 店铺
+    *bindShop({ payload, callback }, { call, put }) {
+      const { sellerId, storeName, token, europe, northAmerica } = payload;
+      const marketplaces = [].concat(northAmerica || [], europe || []);
+      const res = yield call(bindShop, { sellerId, storeName, token, marketplaces });
+      if (res.code === 200) {
+        callback && callback(res.message);
+        // 接口没有返回绑定成功的店铺，重新获取店铺列表
+        yield put({
+          type: 'fetchShopList',
+          payload: { type: 'mws' },
+        });
+      }
     },
   },
 
@@ -160,6 +235,58 @@ const GlobalModel: IGlobalModelType = {
         return { ...state };
       }
       state.shop.status = status;
+    },
+
+    // 切换店铺总开关
+    saveShopAutoPrice(state, { payload }) {
+      const { id, autoPrice } = payload;
+      const list = state.shop.mws;
+      for (let index = 0; index < list.length; index++) {
+        const shop = list[index];
+        if (shop.id === id) {
+          shop.autoPrice = autoPrice;
+          break;
+        }
+      }
+    },
+
+    // 解绑 mws 店铺
+    deleteMwsShop(state, { payload }) {
+      const { id } = payload;
+      const list = state.shop.mws;
+      for (let index = 0; index < list.length; index++) {
+        const shop = list[index];
+        if (shop.id === id) {
+          list.splice(index, 1);
+          break;
+        }
+      }
+    },
+    
+    // 重命名 mws 店铺
+    renameMwsShop(state, { payload }) {
+      const { storeId, storeName } = payload;
+      const list = state.shop.mws;
+      for (let index = 0; index < list.length; index++) {
+        const shop = list[index];
+        if (shop.id === storeId) {
+          shop.storeName = storeName;
+          break;
+        }
+      }
+    },
+
+    // 更新店铺 Auth Token
+    updateShopToken(state, { payload }) {
+      const { id, token } = payload;
+      const list = state.shop.mws;
+      for (let index = 0; index < list.length; index++) {
+        const shop = list[index];
+        if (shop.id === id) {
+          shop.token = token;
+          break;
+        }
+      }
     },
   },
 

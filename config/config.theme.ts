@@ -8,7 +8,9 @@ export default {
   // 全局主色
   '@primary-color': '#2f99fd',
   // 全局背景
-  '@body-background': '#f7f7f7',
+  '@body-background': '#f5f5f5',
+  // 布局背景
+  '@layout-body-background': '#f5f5f5',
 
   /* 场景颜色 */
   // 成功色
@@ -60,16 +62,23 @@ export default {
   '@li-line-height-base': '32px',
 
   /* 其他 */
-  // 小按钮高度
+  // 小按钮
+  '@btn-width-sm': '50px',
   '@btn-height-sm': '20px',
   // 长按钮宽度
   '@btn-long-width': '106px',
+  // 自定文字按钮颜色
+  '@btn-text-color': '#09c2a6',
+  // 自定文字按钮 hover 颜色
+  '@btn-text-hover-color': '#009881',
   // 失效按钮
   '@btn-disable-color': 'rgba(0,0,0,0.25)',
   // 输入框 padding
   '@input-padding-horizontal': '14px',
   // 表格头
   '@table-header-bg': '#f3f6fd',
+  // 简单表格表格头
+  '@simple-table-header-bg': '#fafafa',
   // 排序后的表头不需要改变颜色
   '@table-header-sort-bg': '@table-header-bg',
   '@table-body-sort-bg': 'null',

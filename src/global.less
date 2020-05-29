@@ -25,12 +25,20 @@ ol {
 }
 
 // antd 样式覆盖， 没有提供 less 变量的在这里覆盖
-.ant-btn-primary {
+.ant-btn {
   min-width: 82px;
 }
 
 .ant-btn-sm {
   min-width: 50px;
+}
+
+.ant-modal-body {
+  text-align: center;
+
+  .ant-modal-confirm-btns {
+    float: inherit;
+  }
 }
 
 @media (max-width: @screen-xl) {
