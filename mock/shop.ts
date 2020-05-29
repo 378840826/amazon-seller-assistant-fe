@@ -3,9 +3,6 @@ import { Response, Request } from 'express';
 export default {
   'GET /api/mws/store/list': (_: Request, res: Response) => {
     setTimeout(() => {
-      res.header({
-        Token: 'bbbbb',
-      });
       res.send({
         code: 200,
         data: {
@@ -49,9 +46,6 @@ export default {
 
   'GET /api/adshop/list': (_: Request, res: Response) => {
     setTimeout(() => {
-      res.header({
-        Token: 'cccc',
-      });
       res.send({
         code: 200,
         data: {

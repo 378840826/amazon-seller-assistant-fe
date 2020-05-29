@@ -53,6 +53,7 @@ const ShopSelector: React.FC = () => {
         onChange={handleChange}
         onSearch={setFilterText}
         filterOption={false}
+        listHeight={200}
       >
         {
           currentId === '-1' ? <Option key={currentId} value={currentId}>{currentShopName}</Option> :

@@ -1,3 +1,4 @@
+import { parse } from 'querystring';
 import { createFromIconfontCN } from '@ant-design/icons';
 
 type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
@@ -40,6 +41,9 @@ export const isRepeatArray = function (array: Array<string | number>): boolean {
   }
   return false;
 };
+
+// 获取解析后的 queryString 参数
+export const getPageQuery = () => parse(window.location.href.split('?')[1]);
 
 // localstorage 方法
 export const storage = {
