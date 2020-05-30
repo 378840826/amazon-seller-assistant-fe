@@ -8,6 +8,7 @@ import { history } from 'umi';
 const { confirm } = Modal;
 
 export interface IGlobalModelState {
+  isShowPageTitle: boolean;
   unreadNotices: API.IUnreadNotices;
   shop: IShopSelector;
 }
@@ -29,6 +30,8 @@ const GlobalModel: IGlobalModelType = {
   namespace: 'global',
 
   state: {
+    // 是否渲染统一的页面标题
+    isShowPageTitle: true,
     // 未读消息数量
     unreadNotices: {
       reviewRemindCount: 0,
@@ -82,6 +85,12 @@ const GlobalModel: IGlobalModelType = {
   reducers: {
     saveUnreadNotices(state, { payload }) {
       state.unreadNotices = payload.data.unreadNotices;
+    },
+
+    // 切换是否渲染统一的页面标题
+    switchShowPageTitle(state, { payload }) {
+      const { isShow } = payload;
+      state.isShowPageTitle = isShow;
     },
 
     // 保存店铺数据
@@ -200,6 +209,15 @@ const GlobalModel: IGlobalModelType = {
         dispatch({
           type: 'switchShopStatus',
           payload: { status },
+        });
+        // 不需要渲染统一样式的页面标题的页面的路由
+        const unshownPageTitleUrl = [
+          '/mws/shop/bind',
+        ];
+        const isUnshow = unshownPageTitleUrl.some(path => path === pathname);
+        dispatch({
+          type: 'switchShowPageTitle',
+          payload: { isShow: !isUnshow },
         });
       });
     },

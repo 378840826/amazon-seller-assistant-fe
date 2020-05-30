@@ -14,6 +14,7 @@ const { Header, Content } = Layout;
 const { Item: MenuItem } = Menu;
 
 interface IProps extends IConnectProps {
+  isShowPageTitle: boolean;
   menu?: boolean;
 }
 
@@ -128,9 +129,16 @@ class BasicLayout extends React.Component<IProps> {
           <RightContent />
         </Header>
         <Content className={styles.Content}>
-          <div className={styles.breadcrumbs}>
-            { this.renderBreadcrumbs() }
-          </div>
+          {
+            this.props.isShowPageTitle
+              ?
+              <div className={styles.breadcrumbs}>
+                {this.renderBreadcrumbs()}
+              </div>
+              :
+              null
+          }
+
           {this.props.children}
         </Content>
       </Layout>
@@ -138,7 +146,6 @@ class BasicLayout extends React.Component<IProps> {
   }
 }
 
-export default connect(({ user, loading }: IConnectState) => ({
-  currentUser: user.currentUser,
-  loading: loading.models.user,
+export default connect(({ global }: IConnectState) => ({
+  isShowPageTitle: global.isShowPageTitle,
 }))(BasicLayout);
