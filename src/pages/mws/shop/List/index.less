@@ -1,0 +1,22 @@
+.page {
+  position: relative;
+
+  .bindBtn {
+    width: @btn-long-width;
+    position: absolute;
+    top: -38px;
+    right: 0;
+  }
+
+  .unBindBtn {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @btn-text-hover-color;
+    }
+  }
+
+  :global(.ant-table-thead > tr > th) {
+    background-color: @simple-table-header-bg;
+  }
+}

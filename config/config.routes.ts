@@ -56,7 +56,8 @@ export default [
           { title: '跟踪设定', path: '/mws/keywords/monitor', component: './mws/GoodsList' },
           { title: '搜索排名跟踪', path: '/mws/keywords/ranking', component: './mws/GoodsList' },
           { title: '评论监控', path: '/mws/comment/monitor', component: './mws/GoodsList' },
-          { title: '店铺管理', path: '/mws/shop/list', component: './mws/Shop' },
+          { title: '店铺绑定', path: '/mws/shop/bind', component: './mws/shop/Bind' },
+          { title: '店铺管理', path: '/mws/shop/list', component: './mws/shop/List' },
           // 以下为重定向路由
           { path: '/mws', redirect: '/mws/overview' },
           { path: '/mws/goods', redirect: '/mws/goods/list' },

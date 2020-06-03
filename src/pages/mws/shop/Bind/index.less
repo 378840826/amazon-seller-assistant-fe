@@ -1,0 +1,83 @@
+.container {
+  background-color: #fff;
+  padding: 30px 0;
+}
+
+.Form {
+  width: 730px;
+  margin: 0 auto;
+}
+
+.stepsContent {
+  margin: 50px 0;
+}
+
+.hide {
+  display: none;
+}
+
+.stepTitle {
+  position: relative;
+  margin: 30px 0;
+  font-size: 19px;
+  padding-left: 20px;
+
+  i {
+    position: absolute;
+    content: "";
+    width: 13px;
+    height: 13px;
+    border: 1px solid #666;
+    border-radius: 50%;
+    top: 7px;
+    left: 0;
+    box-sizing: border-box;
+
+    &::after {
+      position: absolute;
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #666;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+    }
+  }
+}
+
+.stepContent {
+  font-size: @font-size-lg;
+
+  :global(label) {
+    font-size: @font-size-lg;
+  }
+}
+
+.inputContainer {
+  margin-top: 30px;
+
+  input {
+    width: 540px;
+  }
+}
+
+.copyBtn {
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+.siteName {
+  display: inline-block;
+  width: 4em;
+  text-align: right;
+}
+
+.stepsActionBtns {
+  text-align: center;
+
+  .prevBtn {
+    margin: 0 50px;
+  }
+}
