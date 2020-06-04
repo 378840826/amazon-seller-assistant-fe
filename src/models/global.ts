@@ -175,7 +175,7 @@ const GlobalModel: IGlobalModelType = {
       const list = payload[payload.type];
       const current = list.some((shop: API.IShop) => shop.id === currentShop.id)
         ? currentShop
-        : list[0];
+        : list[0] || {};
       storage.set('currentShop', current);
       state.shop = {
         status: state.shop.status,
@@ -184,6 +184,11 @@ const GlobalModel: IGlobalModelType = {
         type: payload.type,
         current,
       };
+      if (current.id === undefined) {
+        const { pathname } = window.location;
+        const url = payload.type === 'mws' ? '/mws/shop/list' : '/ppc/shop/list';
+        !pathname.includes('/shop/') && history.push(url);
+      }
     },
 
     // 切换店铺
@@ -201,15 +206,27 @@ const GlobalModel: IGlobalModelType = {
       state.shop.current = current;
     },
 
-    // 切换店铺类型
+    // 切换店铺类型 + 没有添加店铺跳转到添加页面
     switchShopType(state, { payload }) {
-      const { type } = payload;
-      if (state.shop.type === type) {
+      const { type, pathname } = payload;
+      // 如果没有添加店铺，跳转到对应的添加店铺页
+      const url = type === 'mws' ? '/mws/shop/list' : '/ppc/shop/list';
+      const { shop } = state;
+      if (shop.type === type) {
+        if (shop[type].length === 0 && shop.current.id > -1 && !pathname.includes('/shop/')) {
+          history.push(url);
+        }
         return { ...state };
       }
       const oldShop = storage.get('currentShop');
       let current = undefined;
       const newShopList = state.shop[type];
+      // 如果切换后的店铺类型中没有添加店铺，跳转到对应的添加店铺页
+      if ((!newShopList || newShopList.length === 0) && !pathname.includes('/shop/')) {
+        history.push(url);
+        const { shop } = state;
+        return { ...state, shop: { ...shop, type } };
+      }
       for (let index = 0; index < newShopList.length; index++) {
         const shop = newShopList[index];
         if (shop.sellerId === oldShop.sellerId && shop.marketplace === oldShop.marketplace) {
@@ -312,7 +329,7 @@ const GlobalModel: IGlobalModelType = {
         }
         type && dispatch({
           type: 'switchShopType',
-          payload: { type },
+          payload: { type, pathname },
         });
         const hiddenShopSelectorUrl = [
           '/mws/shop/list',

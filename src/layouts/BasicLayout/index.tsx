@@ -1,22 +1,17 @@
 /**
  * 功能页布局
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from '@/assets/logo.png';
-import { Link, connect } from 'umi';
+import { Link, useDispatch, useSelector } from 'umi';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { Layout, Menu, Dropdown } from 'antd';
-import { IConnectProps, IConnectState } from '@/models/connect';
+import { IConnectState } from '@/models/connect';
 import navigation from './navigation';
 import styles from './index.less';
 
 const { Header, Content } = Layout;
 const { Item: MenuItem } = Menu;
-
-interface IProps extends IConnectProps {
-  isShowPageTitle: boolean;
-  menu?: boolean;
-}
 
 interface ISubMenu {
   title: string;
@@ -55,6 +50,15 @@ const getSelectedMenu = () => {
   return result;
 };
 
+const renderBreadcrumbs = () => {
+  const { title } = getSelectedMenu();
+  return (
+    <div className={styles.title}>
+      {title}
+    </div>
+  );
+};
+
 const getSelectedKeys = () => {
   const locationPathname = window.location.pathname;
   let selectedKeys = [locationPathname];
@@ -70,82 +74,68 @@ const getSelectedKeys = () => {
   return selectedKeys;
 };
 
-class BasicLayout extends React.Component<IProps> {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-      dispatch({
-        type: 'global/fetchUnreadNotices',
-      });
-    }
-  }
-
-  renderBreadcrumbs = () => {
-    const { title } = getSelectedMenu();
-    return (
-      <div className={styles.title}>
-        {title}
-      </div>
-    );
-  };
-
-  renderNavigation = () => {
-    return (
-      <Menu
-        mode="horizontal"
-        selectedKeys={getSelectedKeys()}
-        className={styles.Menu}
-      >
-        {
-          navigation.map(item => {
-            const titlePathname = item.menu[0].path;
-            if (item.visible === false) {
-              return;
-            }
-            return (
-              <MenuItem key={titlePathname} className={styles.MenuItem}>
-                <Dropdown overlay={getSubMenu(item.menu)} placement="bottomCenter">
-                  <Link to={titlePathname}>{item.title}</Link>
-                </Dropdown>
-              </MenuItem>
-            );
-          })
-        }
-      </Menu>
-    );
-  };
-  
-  render() {
-    return (
-      <Layout>
-        <Header className={styles.Header}>
-          <a href="/">
-            <img src={logo} alt="logo" className={styles.logo} />
-          </a>
-          { this.renderNavigation() }
-          <RightContent />
-        </Header>
-        <Content className={styles.Content}>
-          {
-            this.props.isShowPageTitle
-              ?
-              <div className={styles.breadcrumbs}>
-                {this.renderBreadcrumbs()}
-              </div>
-              :
-              null
+const renderNavigation = () => {
+  return (
+    <Menu
+      mode="horizontal"
+      selectedKeys={getSelectedKeys()}
+      className={styles.Menu}
+    >
+      {
+        navigation.map(item => {
+          const titlePathname = item.menu[0].path;
+          if (item.visible === false) {
+            return;
           }
+          return (
+            <MenuItem key={titlePathname} className={styles.MenuItem}>
+              <Dropdown overlay={getSubMenu(item.menu)} placement="bottomCenter">
+                <Link to={titlePathname}>{item.title}</Link>
+              </Dropdown>
+            </MenuItem>
+          );
+        })
+      }
+    </Menu>
+  );
+};
 
-          {this.props.children}
-        </Content>
-      </Layout>
-    );
-  }
-}
+const BasicLayout: React.FC = props => {
+  const dispatch = useDispatch();
+  const isShowPageTitle = useSelector((state: IConnectState) => state.global.isShowPageTitle);
 
-export default connect(({ global }: IConnectState) => ({
-  isShowPageTitle: global.isShowPageTitle,
-}))(BasicLayout);
+  useEffect(() => {
+    dispatch({
+      type: 'user/fetchCurrent',
+    });
+    dispatch({
+      type: 'global/fetchUnreadNotices',
+    });
+  }, [dispatch]);
+  
+  return (
+    <Layout>
+      <Header className={styles.Header}>
+        <a href="/">
+          <img src={logo} alt="logo" className={styles.logo} />
+        </a>
+        { renderNavigation() }
+        <RightContent />
+      </Header>
+      <Content className={styles.Content}>
+        {
+          isShowPageTitle
+            ?
+            <div className={styles.breadcrumbs}>
+              { renderBreadcrumbs() }
+            </div>
+            :
+            null
+        }
+        { props.children }
+      </Content>
+    </Layout>
+  );
+};
+
+export default BasicLayout;

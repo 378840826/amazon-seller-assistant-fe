@@ -38,6 +38,20 @@ const request = extend({
   },
 });
 
+// request 拦截
+request.interceptors.request.use((url, options) => {
+  const { headers, data } = options;
+  if (data) {
+    // 需要插入到 headers 中的参数
+    const { headersParams } = data;
+    Object.assign(headers, headersParams);
+  }
+  return {
+    url,
+    options: { ...options, headers: { ...headers } },
+  };
+});
+
 // response 拦截
 request.interceptors.response.use(async response => {
   const resBody = await response.clone().json();

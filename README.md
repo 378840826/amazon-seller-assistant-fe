@@ -101,4 +101,5 @@
 * 别名 '@' 指向 /src 目录
 * 全局数据放在 ```models/global```
 * api 相关的通用数据类型定义在 service/API.d.ts
+* 若接口中需要 Headers 参数，在 request payload 中添加 headersParams 字段，并在其中定义具体参数
 * 谨慎修改全局配置和全局数据类型格式，修改前与相关人员沟通
