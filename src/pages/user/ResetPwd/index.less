@@ -1,0 +1,72 @@
+.container {
+  min-width: 100%;
+  min-height: 100%;
+  background-color: #fafafa;
+
+  :global {
+    .__global_footer {
+      background-color: #fff;
+      padding-left: 250px;
+    }
+  }
+
+  .logoForm {
+    padding-top: 40px;
+    padding-left: 250px;
+    padding-right: 250px;
+  }
+
+  .formContainer {
+    .form {
+      width: 460px;
+      height: 303px;
+      background-color: #fff;
+      margin: 239px auto 308px;
+
+      .title {
+        color: @heading-color;
+        height: 80px;
+        line-height: 80px;
+        font-size: 20px;
+        text-align: center;
+        border-bottom: 1px solid @divider-line-color;
+        margin-bottom: 30px;
+      }
+
+      .formMargin {
+        width: 300px;
+        margin: 0 auto;
+
+        :global {
+          .__form_cover {
+            input {
+              &::placeholder {
+                color: #ccc;
+              }
+            }
+
+            .ant-form-item {
+              margin-bottom: 30px;
+
+              &.ant-form-item-with-help {
+                margin-bottom: 0;
+              }
+            }
+
+            .ant-form-item-explain {
+              height: 30px;
+            }
+
+            .ant-input-affix-wrapper-focused {
+              box-shadow: none;
+            }
+
+            .ant-btn {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}

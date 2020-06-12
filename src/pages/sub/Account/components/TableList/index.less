@@ -1,0 +1,85 @@
+.table {
+  .username {
+    width: 193px;
+  }
+
+  .email {
+    width: 221px;
+  }
+
+  .password {
+    width: 188px;
+  }
+
+  .operaShop {
+    width: 432px;
+  }
+
+  .operaDelete {
+    width: 169px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+      background-color: #fff;
+      border-bottom: 1px solid #eee;
+
+      &:hover {
+        background-color: #fafafa;
+      }
+
+      th {
+        height: 70px;
+        font-size: 14px;
+        color: #333;
+        font-weight: 400;
+        text-align: center;
+        background-color: #fafafa;
+      }
+
+      th,
+      td {
+        &[colspan="5"] {
+          div {
+            text-align: center;
+          }
+        }
+      }
+
+      td {
+        height: 63px;
+        color: #666;
+        font-size: 14px;
+
+        .delete {
+          text-align: center;
+
+          a {
+            color: #ff6564;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+:global {
+  .__sub_pop {
+    .ant-popover-inner {
+      padding-left: 40px;
+      padding-right: 40px;
+
+      .ant-popover-message-title {
+        padding-top: 4px;
+      }
+
+      .ant-popover-buttons {
+        margin-top: 16px;
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import { response } from 'express';
 import { IModelType } from './connect';
 import { queryUnreadNotices } from '@/services/notices';
 import { queryMwsShopList, queryPpcShopList } from '@/services/shop';
@@ -58,30 +59,38 @@ const GlobalModel: IGlobalModelType = {
     // 获取未读消息数量
     *fetchUnreadNotices(_, { call, put }) {
       const response = yield call(queryUnreadNotices);
-      yield put({
-        type: 'saveUnreadNotices',
-        payload: response,
-      });
+      console.log('fetchUnreadNotices:', response);
+      if (response.code === 200){
+        yield put({
+          type: 'saveUnreadNotices',
+          payload: response,
+        });
+      }
+     
     },
 
     // 获取全部店铺
     *fetchShopList({ payload: { type } }, { call, put }) {
       const mws = yield call(queryMwsShopList);
       const ppc = yield call(queryPpcShopList);
-      yield put({
-        type: 'saveShopList',
-        payload: {
-          mws: mws.data.records,
-          ppc: ppc.data.records,
-          type,
-        },
-      });
+      if (mws.code === 200 && ppc.code === 200){
+        yield put({
+          type: 'saveShopList',
+          payload: {
+            mws: mws.data.records,
+            ppc: ppc.data.records,
+            type,
+          },
+        });
+      }
+     
     },
   },
 
   reducers: {
     saveUnreadNotices(state, { payload }) {
-      state.unreadNotices = payload.data.unreadNotices;
+      state.unreadNotices.reviewRemindCount = payload.data.reviewUnReadCount;
+      state.unreadNotices.stockRemindCount = payload.data.allUnReadCount;
     },
 
     // 保存店铺数据
@@ -184,6 +193,8 @@ const GlobalModel: IGlobalModelType = {
           '/mws/overview',
           '/ppc/overview',
           '/ppc/auth',
+          '/center',
+          '/sub-account',
         ];
         const disabledShopSelectorUrl = [
           '/ppc/campaign/add',

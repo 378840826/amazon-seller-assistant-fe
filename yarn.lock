@@ -1851,6 +1851,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/mockjs@^1.0.2":
+  version "1.0.2"
+  resolved "http://r.cnpmjs.org/@types/mockjs/download/@types/mockjs-1.0.2.tgz#89887151c9b903028e9b569a28b4ad079d79943b"
+  integrity sha1-iYhxUcm5AwKOm1aaKLStB515lDs=
+
 "@types/multer@1.4.3":
   version "1.4.3"
   resolved "https://registry.npm.taobao.org/@types/multer/download/@types/multer-1.4.3.tgz#bdff74b334c38a8ee1de9fbedb5d1d3dbc377422"

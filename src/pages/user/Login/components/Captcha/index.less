@@ -1,0 +1,56 @@
+.captcha {
+  width: 300px;
+  height: 302px;
+  box-shadow: 0 2px 20px 0 rgba(230, 230, 230, 0.75);
+  border-radius: 4px;
+  background-color: #fff;
+  padding-top: 14px;
+  padding-bottom: 99px;
+  position: absolute;
+  top: 36px;
+  left: 0;
+  z-index: 2;
+
+  .container {
+    width: 250px;
+    margin: 0 auto;
+
+    .iconfont {
+      text-align: right;
+
+      .close {
+        color: @text-color-secondary;
+        font-size: @font-size-base;
+        cursor: pointer;
+      }
+    }
+
+    .formContainer {
+      margin-top: 56px;
+      margin-bottom: 40px;
+
+      :global {
+        .__form_cover {
+          .ant-form-item-with-help {
+            margin-bottom: 24px;
+          }
+
+          .imgCodeWrapper {
+            width: 80px;
+            height: 34px;
+
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+          }
+
+          button {
+            width: 100%;
+            margin-top: 16px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,20 @@
   全局 css
 */
 
+@font-face {
+  font-family: "pingFangSC-Medium";
+  src: url('./assets/fonts/PingFang Medium_0.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "pingFangSC-Regular";
+  src: url('./assets/fonts/PingFang Regular_0.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body,
 #root {
@@ -13,6 +27,10 @@ body {
   min-width: @screen-xl;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  // font-family: Microsoft YaHei;
+  // font-family: pingFangSC-Regular, pingFangSC-Medium;
+  font-family: -apple-system, BlinkMacSystemFont, arial, PingFang SC, pingFangSC-Regular, pingFangSC-Medium Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
+  // font-family: "pingFangSC-Regular" "pingFangSC-Medium";
 }
 
 canvas {
@@ -22,6 +40,11 @@ canvas {
 ul,
 ol {
   list-style: none;
+}
+
+input {
+  outline: none;
+  border: none;
 }
 
 // antd 样式覆盖， 没有提供 less 变量的在这里覆盖

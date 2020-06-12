@@ -1,0 +1,49 @@
+.footerContainer {
+  text-align: left;
+  font-size: 14px;
+  color: #666;
+  padding-top: 12px;
+  padding-bottom: 20px;
+
+  p {
+    span {
+      padding-right: 20px;
+      display: inline-block;
+      position: relative;
+    }
+
+    & + span {
+      padding-left: 20px;
+
+      &::before {
+        content: '';
+        width: 1px;
+        height: 14px;
+        display: block;
+        background-color: #d2d2d2;
+        top: 4px;
+        left: 0;
+        position: absolute;
+      }
+    }
+
+    &.first {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      margin-bottom: 12px;
+
+      span {
+        a {
+          color: #666;
+        }
+      }
+    }
+
+    &.second,
+    &.third {
+      height: 33px;
+      line-height: 33px;
+      margin-bottom: 0;
+    }
+  }
+}

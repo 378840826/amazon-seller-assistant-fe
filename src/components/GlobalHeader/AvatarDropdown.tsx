@@ -24,13 +24,17 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   onMenuClick = (event: ClickParam) => {
     const { key } = event;
     if (key === '/logout') {
-      console.log('退出登录');
+      this.props.dispatch({
+        type: 'user/logout',
+      });
       return;
     }
     history.push(key);
   };
 
   render() {
+    console.log(this.props);
+    
     const { currentUser, unreadNotices } = this.props;
 
     // 全部未读消息数量
@@ -70,11 +74,16 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
           消息中心
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="/sub-account" className={styles.menuItem}>
-          { munuIcon('icon-guanlizhongxin') }
-          子账号管理
-        </MenuItem>
+        {currentUser.topAccount &&
+            <MenuItem key="/sub-account" className={styles.menuItem}>
+              { munuIcon('icon-guanlizhongxin') }
+              子账号管理
+            </MenuItem>
+        }
+        {currentUser.topAccount &&
         <MenuDivider />
+        }
+        
         <MenuItem key="/logout" className={styles.menuItem}>
           { munuIcon('icon-tuichu') }
           注销 <span className={styles.username}>{currentUser.username}</span>

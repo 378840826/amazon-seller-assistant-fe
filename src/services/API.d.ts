@@ -13,7 +13,7 @@ declare namespace API {
     username: string;
     email: string;
     phone: string;
-    isMainAccount: boolean;
+    topAccount: boolean;
   }
 
   interface IShop {
@@ -26,5 +26,22 @@ declare namespace API {
     timezone: string;
     currency: string;
     tokenInvalid: boolean;
+  }
+
+  interface IStoreList{
+    sellerId: string;
+    storeName: string;
+    marketplace: string;
+  }
+
+  interface IStore{
+    sellerId: string;
+    marketplace: string;
+  }
+  interface IUserList{
+    id: string;
+    username: string;
+    email: string;
+    stores: Array<IStore>;
   }
 }

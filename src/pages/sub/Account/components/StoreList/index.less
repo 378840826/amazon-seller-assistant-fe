@@ -1,0 +1,61 @@
+.container {
+  .addStyle {
+    max-height: 238px;
+    overflow: auto;
+  }
+
+  .listStyle {
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .__checkboxs {
+    .__checkbox {
+      padding-top: 6px;
+      padding-bottom: 6px;
+
+      :global {
+        .ant-checkbox + span {
+          padding-right: 0;
+        }
+      }
+    }
+
+    .national_flag {
+      display: inline-block;
+      margin-right: 6px;
+      width: 20px;
+      height: 13px;
+      background: url("~@/assets/nation.png") no-repeat;
+      vertical-align: middle;
+
+      &.UK {
+        background-position: -45px -16px;
+      }
+
+      &.US {
+        background-position: -1px -16px;
+      }
+
+      &.CA {
+        background-position: -23px -16px;
+      }
+
+      &.DE {
+        background-position: -1px -1px;
+      }
+
+      &.ES {
+        background-position: -1px -31px;
+      }
+
+      &.FR {
+        background-position: -23px -1px;
+      }
+
+      &.IT {
+        background-position: -45px -1px;
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { IUserModelState } from './user';
+import { ISubModelState } from './sub';
 import { StateType } from './login';
 import { Effect, ImmerReducer, Subscription, Dispatch } from 'umi';
 
@@ -37,6 +38,7 @@ export interface IConnectState {
   settings: SettingModelState;
   user: IUserModelState;
   login: StateType;
+  sub: ISubModelState;
 }
 
 export interface IRoute extends MenuDataItem {

@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 
 // 代码中会兼容本地 service mock 以及部署站点的静态数据
 export default {
-  'GET /api/currentUser': (_: Request, res: Response) => {
+  'GET /api/system/user/logined': (_: Request, res: Response) => {
     setTimeout(() => {
       res.header({
         Token: 'aaaaa',
@@ -16,9 +16,92 @@ export default {
           username: 'Serati Ma',
           email: 'a@b.com',
           phone: '10000',
-          isMainAccount: false,
+          topAccount: true,
         },
       });
     }, 1000);
+  },
+
+  'POST /api/system/user/modify/username': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '修改成功',
+      });
+    }, 5000);
+  },
+
+  'POST /api/system/user/modify/password': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '修改成功',
+      });
+    }, 5000);
+  },
+
+  'GET /api/system/user/exist/username': (_: Request, res: Response) => {
+    res.send({
+      code: 200,
+      data: {
+        exist: false,
+      },
+    });
+  },
+
+  'GET /api/system/user/exist/email': (_: Request, res: Response) => {
+    res.send({
+      code: 200,
+      data: {
+        exist: false,
+      },
+    });
+  },
+  'GET /api/system/user/pre-login': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          code: false,
+        },
+      });
+    }, 6000);
+  },
+  'POST /api/system/user/login': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '错误的其他',
+        data: {
+          action: 'login',
+          user: {
+            id: 1,
+            username: 'kfjdkf',
+            email: 'fdjlj@qq.com',
+            topAccount: true,
+          },
+        },
+      });
+    }, 1000);
+  },
+  'GET /api/system/user/logout': (_: Request, res: Response) => {
+    res.send({
+      code: 200,
+      message: '退出成功',
+    });
+  },
+  'POST /api/system/user/forget-password': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '验证码错误',
+      });
+    }, 1000);
+  },
+  'GET /api/system/user/active': (_: Request, res: Response) => {
+    res.send({
+      code: 200,
+      message: '激活成功',
+    });
   },
 };

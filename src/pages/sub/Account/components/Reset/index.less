@@ -1,0 +1,139 @@
+.resetWrap {
+  margin: 0 auto;
+  cursor: pointer;
+
+  .inputArea {
+    position: relative;
+
+    .inputContent {
+      width: 100%;
+      font-size: 14px;
+      height: 40px;
+      color: #666;
+      text-align: center;
+      border-radius: 4px;
+      background: transparent;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: break-all;
+    }
+
+    .iconShow {
+      position: absolute;
+      width: 27px;
+      height: 38px;
+      border-left: 1px solid #d9d9d9;
+      top: 1px;
+      right: 1px;
+      cursor: pointer;
+      line-height: 38px;
+      text-indent: 3px;
+    }
+  }
+
+  .btnsArea {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    outline: none;
+    padding: 2px 3px;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    font-size: 0;
+    display: none;
+
+    .btnArea {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+
+      & + .btnArea {
+        margin-left: 5px;
+      }
+
+      &.btnCancel {
+        &::before {
+          content: "";
+          width: 13px;
+          border-top: 1px solid #777;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        &::after {
+          content: "";
+          width: 13px;
+          border-top: 1px solid #777;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
+      }
+
+      &.btnSave {
+        border: 1px solid #0976cd;
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 2px;
+          bottom: 6px;
+          width: 12px;
+          height: 8px;
+          border-color: transparent transparent #0976cd #0976cd;
+          border-style: solid;
+          border-width: 2px;
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  &.notActive {
+    .iconShow {
+      display: none;
+    }
+
+    &:hover {
+      .inputContent {
+        padding-right: 27px;
+        border: 1px solid #d9d9d9;
+        cursor: pointer;
+      }
+
+      .iconShow {
+        display: block;
+      }
+    }
+  }
+
+  &.active {
+    position: relative;
+
+    .inputArea {
+      .iconShow {
+        display: none;
+      }
+
+      .inputContent {
+        border: 1px solid #d9d9d9;
+        border-bottom-right-radius: 0;
+      }
+    }
+
+    .btnsArea {
+      display: block;
+    }
+  }
+}

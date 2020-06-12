@@ -1,3 +1,102 @@
-.normal {
-  color: blue;
+.center {
+  background-color: #fff;
+  width: 610px;
+  margin: 200px auto;
+
+  .container {
+    .title {
+      color: #333;
+      font-size: 20px;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
+    }
+
+    .inputContainers {
+      font-size: 14px;
+      border-top: 1px solid #eee;
+      padding-top: 23px;
+      padding-bottom: 21px;
+
+      .inputContainer {
+        display: flex;
+        padding-left: 84px;
+        padding-right: 58px;
+
+        & + .inputContainer {
+          margin-top: 20px;
+        }
+
+        .left {
+          width: 85px;
+          color: #999;
+          font-size: 14px;
+          text-align: left;
+          line-height: 30px;
+        }
+
+        .right {
+          width: 385px;
+
+          .rightContainer {
+            display: flex;
+            width: 100%;
+
+            .inputNoBorder {
+              flex: 1;
+              width: 100%;
+              text-indent: 16px;
+              color: #333;
+              height: 30px;
+            }
+
+            .editUserName {
+              width: 31px;
+              height: 30px;
+              line-height: 30px;
+              color: #0083ff;
+              cursor: pointer;
+            }
+
+            .noneFocus {
+              display: flex;
+              width: 100%;
+            }
+
+            .onFocus {
+              width: 100%;
+
+              :global {
+                .__form_cover {
+                  button[type="submit"],
+                  button[type="button"] {
+                    width: 82px;
+                    height: 30px;
+                  }
+
+                  button[type="button"].buttonLoading {
+                    pointer-events: none;
+                    background-color: @disabled-color;
+                    border-color: #d9d9d9;
+                    color: @text-color-disabled;
+                  }
+
+                  button[type="button"] {
+                    margin-right: 18px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .emailInputContainer {
+        .emailInput {
+          text-indent: 16px;
+          width: 100%;
+        }
+      }
+    }
+  }
 }
