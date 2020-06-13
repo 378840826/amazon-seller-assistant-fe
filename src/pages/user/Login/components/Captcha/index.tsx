@@ -38,7 +38,10 @@ const Captcha: React.FC<ICapConnectProps> = (
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
-    getCaptcha(values.captcha, newDate);
+    if (values.captcha.trim() !== ''){
+      getCaptcha(values.captcha, newDate);
+    }
+     
   };
 
   return (

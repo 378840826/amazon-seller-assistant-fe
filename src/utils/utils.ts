@@ -83,3 +83,16 @@ export const getUrlParam = function (name: string) {
   const result = window.location.search.substr(1).match(reg);
   return result ? decodeURIComponent(result[2]) : null;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const nTs = (ary: any) => {
+  for (const i in ary) {
+    if (typeof ary[i] === 'object' && ary[i] !== null && !(Array.isArray(ary[i]) && ary[i].length === 0)) {
+      nTs(ary[i]);
+    } else {
+      if (ary[i] === null) {
+        ary[i] = '';
+      }
+    }
+  }
+};

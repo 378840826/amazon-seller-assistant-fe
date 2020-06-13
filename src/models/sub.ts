@@ -1,4 +1,5 @@
 import { IModelType } from './connect';
+import { nTs } from '@/utils/utils';
 import { getStoreList, getUserList, addUser, deleteUser, modifySUsername, modifySEmail, modifySPassword, modifyStores } from '@/services/sub';
 
 export interface ISubModelState{
@@ -80,9 +81,11 @@ const SubModel: ISubModelType = {
   },
   reducers: {
     saveStoreList(state, { payload }){
+      nTs(payload);
       state.storeList = payload.data.records || [];
     },
     saveUserList: (state, { payload }) => {
+      nTs(payload);
       state.userList = payload.data;
     },
     deleteUser: (state, { payload }) => {

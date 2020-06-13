@@ -102,7 +102,7 @@ const UserModel: IUserModelType = {
         window.location.href = '/users/login';
       }
     },
-    *resentEmail({ payload, callback }, { call }){
+    *resentEmail({ payload }, { call }){
       const response = yield call(resentEmail, payload);
       if (response.code !== 200){
         message.error(response.message);

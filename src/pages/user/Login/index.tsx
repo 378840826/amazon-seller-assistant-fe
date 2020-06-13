@@ -19,7 +19,6 @@ const status = {
   password: '',
   rememberMe: false,
   code: '',
-  random: '',
 };
 let emailSite = '';
 const regEmail = /@(\w)+((\.\w+)+)$/;
@@ -54,8 +53,6 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
       callback: (res: any) => {
         const m: RegExpMatchArray | null = sendParams.email.match(regEmail);
         if (m?.length){
-          console.log(m);
-          
           emailSite = `http://www.mail.${ m[0].substr(1)}`;
         }
         setLoginLoading(false);
@@ -118,15 +115,15 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
         if (res.code === 200 && res.data.code ){
           setShow(true);
         } else {
-          Object.assign(status, { code: '', random: '' });
+          Object.assign(status, { code: '' });
           loginRegister();
         }
       },
     });
   };
-  const getCaptcha = (code: string, random: string) => {
+  const getCaptcha = (code: string) => {
     setCodeLoading(true);
-    Object.assign(status, { code: code, random: random });
+    Object.assign(status, { code: code });
     loginRegister();
   };
   const onClose = () => {

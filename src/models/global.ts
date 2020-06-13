@@ -59,7 +59,6 @@ const GlobalModel: IGlobalModelType = {
     // 获取未读消息数量
     *fetchUnreadNotices(_, { call, put }) {
       const response = yield call(queryUnreadNotices);
-      console.log('fetchUnreadNotices:', response);
       if (response.code === 200){
         yield put({
           type: 'saveUnreadNotices',

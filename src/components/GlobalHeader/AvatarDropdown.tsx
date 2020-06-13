@@ -33,8 +33,6 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   };
 
   render() {
-    console.log(this.props);
-    
     const { currentUser, unreadNotices } = this.props;
 
     // 全部未读消息数量

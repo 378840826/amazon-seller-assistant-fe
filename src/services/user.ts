@@ -54,7 +54,7 @@ export function userNameExist(params: IUsernameExist){
 export interface ISendForgetEmail{
   email: string;
   code: string;
-  random: string;
+  // random: string;
 }
 export function sendForgetEmail(params: ISendForgetEmail){
   return request('/api/system/user/forget-password', {
@@ -100,7 +100,7 @@ export interface ILogin{
   password: string;
   code?: string;
   rememberMe: boolean;
-  random?: string;
+  // random?: string;
 
 }
 export function login(params: ILogin){

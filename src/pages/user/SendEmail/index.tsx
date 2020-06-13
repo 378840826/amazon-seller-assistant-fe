@@ -45,7 +45,6 @@ const SendEmail: React.FC<IConnectProps> = function ({ dispatch }) {
     const params = {
       email: values.email,
       code: values.captcha,
-      random: newDate,
     };
     if (values.captcha.trim() !== ''){
       setLoading(true);

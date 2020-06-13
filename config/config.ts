@@ -13,6 +13,8 @@ const config =  {
   dynamicImport: {
     loading: '@/components/PageLoading/index',
   },
+  outputPath: './dist',
+  publicPath: '/',
   hash: true,
   ignoreMomentLocale: true,
   favicon: '/favicon.ico',
