@@ -20,7 +20,7 @@ const Reset: React.FC<IResetConnectProps> = function ({ dispatch, type, showMsg,
   const onCancel = useCallback(() => {
     setInChange(false);
     if (refInput.current){
-      refInput.current.value = showMsg;
+      refInput.current.innerText = showMsg;
     }
   }, [showMsg]);
   
@@ -68,7 +68,7 @@ const Reset: React.FC<IResetConnectProps> = function ({ dispatch, type, showMsg,
         callback: (res: { code: number; message: string }) => {
           if (res.code === 200){
             if (refInput.current){
-              refInput.current.value = '*********';
+              refInput.current.innerText = '*********';
             }
             return resolve(val);
           }
@@ -95,10 +95,11 @@ const Reset: React.FC<IResetConnectProps> = function ({ dispatch, type, showMsg,
 
   //确认修改点击
   const onBtnSave = (e: React.MouseEvent) => {
+    e.nativeEvent.stopPropagation();
     e.stopPropagation();
     let inputVal = '';
     if (refInput.current){
-      inputVal = refInput.current.value;
+      inputVal = refInput.current.innerText;
     }
 
     //如果前后都没变
@@ -160,30 +161,32 @@ const Reset: React.FC<IResetConnectProps> = function ({ dispatch, type, showMsg,
     });
   };
 
-  const onClickContainer = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const onClickContainer = () => {
     setInChange(true);
     refInput.current?.focus();
     if (type === 'password'){
       if (refInput.current){
-        refInput.current.value = '';
+        refInput.current.innerText = '';
       }
     }
   };
 
   return (
     <div ref={refContainer} className={isInChange ? [styles.resetWrap, styles.active].join(' ') : [styles.resetWrap, styles.notActive].join(' ')}>
-      <div className={styles.inputArea} onClick={onClickContainer}>
-        <input type="text" 
+      <div className={styles.inputArea} >
+        <div
           className={styles.inputContent}
-          defaultValue={showMsg}
+          suppressContentEditableWarning={true}
+          contentEditable={isInChange ? true : false}
           ref={refInput}
-        />
-        <div className={styles.iconShow}>
-          <Iconfont type="icon-xiugai"/>
+        >
+          {showMsg}
         </div>
+        <span className={styles.iconShow} onClick={onClickContainer}>
+          <Iconfont className={styles.icon} type="icon-xiugai"/>
+        </span>
       </div>
-      <div className={styles.btnsArea}>
+      <div className={styles.btn_area}>
         <div className={[styles.btnArea, styles.btnCancel].join(' ')} onClick={onCancel}></div>
         <div className={[styles.btnArea, styles.btnSave].join(' ')} onClick={onBtnSave}></div>
       </div>

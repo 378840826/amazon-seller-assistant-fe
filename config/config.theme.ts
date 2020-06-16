@@ -9,6 +9,8 @@ export default {
   '@primary-color': '#2f99fd',
   // 全局背景
   '@body-background': '#f7f7f7',
+  //footer文字颜色
+  '@body-footer': '#dbddff',
 
   /* 场景颜色 */
   // 成功色

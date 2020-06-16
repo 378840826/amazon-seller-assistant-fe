@@ -21,6 +21,10 @@
         color: @text-color-secondary;
         font-size: @font-size-base;
         cursor: pointer;
+
+        &:hover {
+          color: @error-color;
+        }
       }
     }
 
@@ -32,6 +36,10 @@
         .__form_cover {
           .ant-form-item-with-help {
             margin-bottom: 24px;
+          }
+
+          .ant-form-item {
+            margin-bottom: 0;
           }
 
           .imgCodeWrapper {
@@ -46,7 +54,7 @@
 
           button {
             width: 100%;
-            margin-top: 16px;
+            margin-top: 10px;
           }
         }
       }

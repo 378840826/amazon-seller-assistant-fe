@@ -29,15 +29,17 @@ const UserModel: IUserModelType = {
   effects: {
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
+      console.log('location:', window.location);
       if (response.code === 200){
         yield put({
           type: 'saveCurrentUser',
           payload: response,
         });
       } else {
-        window.location.href = '/users/login';
+        if (window.location.pathname !== '/index'){
+          window.location.href = '/users/login';
+        }
       }
-      
     },
     *modifyUsername({ payload, callback }, { call }) {
       const response = yield call(modifyUsername, payload);

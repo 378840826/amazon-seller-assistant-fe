@@ -59,7 +59,6 @@ const TableList: React.FC<ITableListConnectProps> = function({ sub, dispatch }){
                     type="username"
                     id={item.id}
                     showMsg={item.username}
-                  
                   />
                 </div>
               </td>

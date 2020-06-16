@@ -178,7 +178,7 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
               <div className={styles.formContainer}>
                 {!regSuccess && 
                   <div className={styles.noRegSuc}>
-                    <Tabs defaultActiveKey="2" className="__tabs">
+                    <Tabs defaultActiveKey="2" className="__login_tabs">
                       <TabPane tab="微信登录" key="1"> 
                         <WeChat/>
                       </TabPane>

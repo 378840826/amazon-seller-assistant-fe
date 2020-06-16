@@ -9,10 +9,10 @@
 
     :global {
       .__globalFooter {
-        color: #fff;
+        color: @body-footer;
 
         a {
-          color: #fff;
+          color: @body-footer;
         }
       }
     }
@@ -82,15 +82,15 @@
             }
 
             :global {
-              .__tabs {
+              .__login_tabs {
                 .ant-tabs-nav-scroll {
                   text-align: center;
+                }
 
-                  .ant-tabs-tab {
-                    & + .ant-tabs-tab {
-                      margin-left: 34px;
-                    }
-                  }
+                .ant-tabs-nav-list .ant-tabs-tab {
+                  margin-left: 50px;
+                  margin-right: 50px;
+                  font-size: 16px;
                 }
               }
             }

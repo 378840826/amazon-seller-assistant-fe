@@ -62,7 +62,7 @@ const StoreList: React.FC<IStoreListConnectProps> =
   return (
     <>
       <div className={styles.container}>
-        <div className="checkAll">
+        <div className={styles.checkAll}>
           <Checkbox
             indeterminate={state.indeterminate}
             onChange={onCheckAllChange}
