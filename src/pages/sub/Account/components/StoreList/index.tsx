@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, CSSProperties } from 'react';
 import { connect } from 'dva';
 import { Checkbox, Row, Col, Typography } from 'antd';
 import { IConnectState, IConnectProps } from '@/models/connect';
@@ -15,11 +15,16 @@ interface IStoreListConnectProps extends IConnectProps{
   span?: number;
 }
 
+interface IStyle {
+  checkAll: CSSProperties;
+  text2: CSSProperties;
+  text: CSSProperties;
+}
 // eslint-disable-next-line comma-dangle
-const style = {
+const style: IStyle = {
   checkAll: { height: '30px', lineHeight: '30px' },
-  text2: { width: '148px' },
-  text: { width: '75px' },
+  text2: { width: '148px', textAlign: 'left', verticalAlign: 'middle' },
+  text: { width: '75px', textAlign: 'left', verticalAlign: 'middle' },
 };
 
 const StoreList: React.FC<IStoreListConnectProps> = 
