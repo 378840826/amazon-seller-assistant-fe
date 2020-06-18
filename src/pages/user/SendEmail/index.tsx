@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import logo from '@/assets/logoWhite.png';
 import { validate } from '@/utils/utils';
 import { IConnectProps } from '@/models/connect';
-import loginBanner from '@/assets/loginBanner.png';
+import loginBanner from '@/assets/LRBanner.png';
 import GlobalFooter from '@/components/GlobalFooter';
 import styles from './index.less';
 let newDate = new Date().getTime();

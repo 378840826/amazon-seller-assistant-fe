@@ -1,4 +1,3 @@
-import { response } from 'express';
 import { IModelType } from './connect';
 import { queryUnreadNotices } from '@/services/notices';
 import { queryMwsShopList, queryPpcShopList } from '@/services/shop';

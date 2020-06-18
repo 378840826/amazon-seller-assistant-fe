@@ -6,7 +6,7 @@ import { validate } from '@/utils/utils';
 import logo from '@/assets/logoWhite.png';
 import { IConnectProps } from '@/models/connect';
 import { ILogin } from '@/services/user';
-import loginBanner from '@/assets/loginBanner.png';
+import loginBanner from '@/assets/LRBanner.png';
 import WeChat from './components/WeChat';
 import Captcha from './components/Captcha';
 import RegSuc from './components/regSuccess';
@@ -134,7 +134,7 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
 
   const onCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    if (val === ''){
+    if (val.trim() === ''){
       setFdMessage('验证码不能为空');
       return;
     }

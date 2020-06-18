@@ -51,7 +51,7 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
 
     const menuHeaderDropdown = (
       <Menu className={styles.headerMenu} selectedKeys={[]} onClick={this.onMenuClick}>
-        <MenuItem key="center" className={styles.menuItem}>
+        <MenuItem key="/center" className={styles.menuItem}>
           { munuIcon('icon-gerenzhongxin2') }
           个人中心
         </MenuItem>
