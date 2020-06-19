@@ -22,6 +22,10 @@ const status = {
 };
 let emailSite = '';
 const regEmail = /@(\w)+((\.\w+)+)$/;
+const tabBarStyle = {
+  fontSize: '16px',
+};
+
 const Login: React.FC<IConnectProps> = function ({ dispatch }) {
   const { TabPane } = Tabs;
   const [show, setShow] = useState(false);//验证码弹出框展示与否
@@ -178,7 +182,7 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
               <div className={styles.formContainer}>
                 {!regSuccess && 
                   <div className={styles.noRegSuc}>
-                    <Tabs defaultActiveKey="2" className="__login_tabs">
+                    <Tabs defaultActiveKey="2" className="__login_tabs" tabBarStyle={tabBarStyle}>
                       <TabPane tab="微信登录" key="1"> 
                         <WeChat/>
                       </TabPane>

@@ -66,6 +66,7 @@ const StoreList: React.FC<IStoreListConnectProps> =
  
   return (
     <>
+      {plainOptions.length > 0 && 
       <div className={styles.container}>
         <div className={styles.checkAll}>
           <Checkbox
@@ -82,7 +83,7 @@ const StoreList: React.FC<IStoreListConnectProps> =
             className={styles.__checkboxs} 
             onChange={onChange}>
             <Row>
-              {plainOptions.length > 0 && plainOptions.map((item) => (
+              {plainOptions.map((item) => (
                 <Col span={ span ? span : 8} key={item.sellerId}>
                   <Checkbox value={item.sellerId} className={styles.__checkbox}>
                     <i className={[styles.national_flag, styles[item.marketplace]].join(' ')}></i>
@@ -96,6 +97,7 @@ const StoreList: React.FC<IStoreListConnectProps> =
           </Checkbox.Group>
         </div>
       </div>
+      }
     </>
   );
 };
