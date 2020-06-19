@@ -3,12 +3,12 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-16 09:48:45
+ * @LastEditTime: 2020-06-19 16:30:13
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  */ 
 'use strict';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
 import { Table, message } from 'antd';
 import TableNotData from '@/components/TableNotData';
@@ -51,7 +51,7 @@ const OrderList: React.FC = () => {
   };
 
   // 请求体
-  const requestFn = (requestData: {}) => {
+  const requestFn = useCallback((requestData: {}) => {
     new Promise((resolve, reject) => {
       dispatch({
         type: 'orderList/getOrderList',
@@ -79,7 +79,7 @@ const OrderList: React.FC = () => {
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  };
+  }, [dispatch]);
 
   // 接收工具框(子组件)的参数并重新请求
   const filtrateFn = (requestData: {}) => {
