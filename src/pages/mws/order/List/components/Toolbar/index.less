@@ -1,0 +1,104 @@
+.header {
+  background-color: #fff;
+  margin: 0 0 20px;
+
+  .search {
+    padding: 20px 0 20px 20px;
+    border: 1px solid @divider-line-color;
+
+    .inputStyle {
+      padding: 3px 12px;
+      width: 280px;
+      float: left;
+
+      &:first-child {
+        margin: 0 30px 0 0;
+      }
+
+      &:nth-child(2) {
+        margin: 0 20px 0 0;
+      }
+    }
+
+    :global(.ant-btn) {
+      float: left;
+    }
+
+    .datepicker {
+      float: right;
+      margin: 0 10px;
+      position: relative;
+    }
+  }
+}
+
+.radio_filtrate {
+  font-size: 14px;
+  padding: 20px;
+  min-width: 1340px;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+
+  > div {
+    flex: 0 0 auto;
+
+    > span {
+      color: red !important;
+    }
+
+    :global(span.ant-radio) + * {
+      padding: 0 10px 0 5px;
+    }
+
+    .layout_one_item {
+      padding-bottom: 10px;
+
+      > span {
+        min-width: 73px;
+        text-align: left;
+        display: inline-block;
+      }
+    }
+  }
+
+  .layout_one_col {
+    width: 50%;
+
+    .layout_one_row {
+      display: flex;
+      justify-content: space-between;
+
+      > div:first-child {
+        padding-bottom: 10px;
+
+        > span {
+          min-width: 73px;
+          text-align: left;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  div.order_discounts {
+    display: flex;
+
+    .icon {
+      cursor: pointer;
+      right: 0;
+      margin-left: 20px;
+
+      .i {
+        color: @primary-color;
+        font-size: 14px;
+        margin-right: 8px;
+        transition: all 0.3s;
+      }
+
+      .i:global(.active) {
+        transform: rotate(182deg);
+      }
+    }
+  }
+}

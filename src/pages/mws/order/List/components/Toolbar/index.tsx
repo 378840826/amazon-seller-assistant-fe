@@ -1,0 +1,283 @@
+import React, { useState, useEffect } from 'react';
+import styles from './index.less';
+import zhCN from 'antd/es/locale/zh_CN';
+import moment from 'moment';
+import { RadioChangeEvent } from 'antd/lib/radio';
+import { Iconfont } from '@/utils/utils';
+import {
+  Input,
+  Button,
+  ConfigProvider,
+  DatePicker,
+  Radio,
+} from 'antd';
+import { Moment } from 'moment/moment';
+
+
+const { RangePicker } = DatePicker;
+const fields = {} as MwsOrderList.IRadioFields; // 所有的单选框字段
+const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
+  const [orderInfoSearch, setOrderInfoSearch] = useState<string>(''); // 第一个 订单ID、ASIN、SKU或商品标题搜索框 
+  const [sellerSearch, setSellerSearch] = useState<string>(''); // 第二个 卖家名或笔名搜索框 
+  // 默认的日期  当前
+  const [datepickerValue, setDatepickerValue] = useState<Moment[]>([
+    moment().subtract(1, 'week').startOf('week'),
+    moment().subtract(1, 'week').endOf('week'),
+  ]);
+  const [orderStatus, setOrderStatus] = useState<string>(''); // 订单状态
+  const [deliverStatus, setDeliverStatus] = useState<string>(''); // 发货状态
+  const [businessOrder, setBusinessOrder] = useState<string | boolean>(''); // B2B订单
+  const [multiplePieces, setMultiplePieces] = useState<string | boolean>(''); // 一单多件
+  const [preferentialOrder, setPreferentialOrder] = useState<string | boolean>(''); // 优惠订单
+  const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一件多SKU
+  const [deliverMethod, setDeliverMethod] = useState<string>(''); // 发货方式
+  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('56px'); // 筛选框高度
+  const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('更多');
+  const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
+
+  const rangeList = {
+    '上周': [
+      moment().subtract(1, 'week').startOf('week'),
+      moment().subtract(1, 'week').endOf('week')],
+    '上月': [
+      moment().subtract(1, 'month').startOf('month'),
+      moment().subtract(1, 'month').endOf('month'),
+    ],
+    '最近7天': [
+      moment().subtract(6, 'day'),
+      moment().endOf('day'),
+    ],
+    '最近30天': [
+      moment().subtract(29, 'day'),
+      moment().endOf('day'),
+    ],
+    '最近60天': [
+      moment().subtract(59, 'day'),
+      moment().endOf('day'),
+    ],
+    '最近90天': [
+      moment().subtract(89, 'day'),
+      moment().endOf('day'),
+    ],
+    '最近365天': [
+      moment().subtract(365, 'day'),
+      moment().endOf('day'),
+    ],
+  };
+
+  // 日历的配置
+  const DatepickerConfig: any = {
+    ranges: rangeList,
+    dateFormat: 'YYYY-MM-DD',
+    value: datepickerValue,
+    defaultValue: datepickerValue,
+    getPopupContainer() {
+      return document.querySelector('.order-list-datepicker');
+    },
+    onChange(dates: Moment[]) {
+      setDatepickerValue(dates);
+      fields.startTime = dates[0].format('YYYY-MM-DD');
+      fields.endTime = dates[1].format('YYYY-MM-DD');
+      
+      props.handleFiltarte(fields);
+    },
+  };
+
+  // 搜索框按钮
+  const searchButton = () => {
+    fields.asinRelatedSearch = orderInfoSearch;
+    fields.buyerRelatedSearch = sellerSearch;
+
+    if (orderInfoSearch === '') {
+      delete fields.asinRelatedSearch;
+    } 
+
+    if (sellerSearch === '') {
+      delete fields.buyerRelatedSearch;
+    }
+    console.log(fields, 'fields-');
+    
+    props.handleFiltarte(fields);
+  };
+
+  useEffect(() => {
+    fields.startTime = datepickerValue[0].format('YYYY-MM-DD');
+    fields.endTime = datepickerValue[1].format('YYYY-MM-DD');
+  });
+
+  // 筛选工具栏的高度设置
+  const handleFiltrateHeight = () => {
+    if (filtrateMoreButText === '收起') {
+      setFiltrateBoxHeight('56px');
+      setFiltrateMoreButText('展开');
+      setFiltrateMoreButClass('');
+    } else {
+      setFiltrateBoxHeight('auto');
+      setFiltrateMoreButText('收起');
+      setFiltrateMoreButClass('active');
+    }
+  };
+
+  // 处理所有的单选框，并返回数据给父组件
+  const handleChangeRadio = (e: RadioChangeEvent, type: string) => {
+    const value = e.target.value;
+
+    fields.startTime = datepickerValue[0].format('YYYY-MM-DD');
+    fields.endTime = datepickerValue[1].format('YYYY-MM-DD');
+    fields.current = 1; // 将分页初始化
+    fields.size = 20; // 将分页初始化
+   
+    switch (type) {
+    case 'B2B订单':
+      setBusinessOrder(value);
+      fields.businessOrder = value;
+      break;
+    case '一单多件':
+      setMultiplePieces(value);
+      fields.multiplePieces = value;
+      break;
+    case '订单状态':
+      setOrderStatus(value as string);
+      fields.orderStatus = value;
+      break;
+    case '发货状态':
+      setDeliverStatus(value as string);
+      fields.deliverStatus = value;
+      break;
+    case '优惠订单':
+      setPreferentialOrder(value);
+      fields.preferentialOrder = value;
+      break;
+    case '发货方式':
+      setDeliverMethod(value as string);
+      fields.deliverMethod = value;
+      break;
+    case '一件多SKU':
+      setMultipleSku(value);
+      fields.multipleSku = value;
+      break;
+    default: 
+      break;
+    }
+    props.handleFiltarte(fields);
+  };
+
+  return (
+    <header className={styles.header}>
+      <div className={`${styles.search} clearfix`}>
+        <Input 
+          placeholder="请输入订单ID、ASIN、SKU或商品标题" 
+          value={orderInfoSearch} 
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOrderInfoSearch(e.target.value)}
+          className={styles.inputStyle}
+          allowClear
+        />
+        <Input 
+          value={sellerSearch}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerSearch(e.target.value)}
+          placeholder="请输入收件人姓名或卖家名称"
+          className={styles.inputStyle}
+          allowClear
+        />
+        <Button type="primary" onClick={searchButton}>搜索</Button>
+        <div className={`${styles.datepicker} order-list-datepicker`}>
+          <ConfigProvider locale={zhCN}>
+            <RangePicker {...DatepickerConfig}/>
+          </ConfigProvider>
+        </div>
+      </div>
+        
+      <div className={styles.radio_filtrate} style={{ height: filtrateBoxHeight }} >
+        <div className={styles.layout_one_col}>
+          <div className={styles.layout_one_row}>
+            <div>
+              <span>B2B订单：</span>
+              <Radio.Group 
+                onChange={(e) => handleChangeRadio(e, 'B2B订单')}
+                value={businessOrder}>
+                <Radio value="">不限</Radio>
+                <Radio value={true}>是</Radio>
+                <Radio value={false}>否</Radio>
+              </Radio.Group>
+            </div>
+            <div>
+              <span>一单多件：</span>
+              <Radio.Group 
+                onChange={(e) => handleChangeRadio(e, '一单多件')}
+                value={multiplePieces}>
+                <Radio value="">不限</Radio>
+                <Radio value={true}>是</Radio>
+                <Radio value={false}>否</Radio>
+              </Radio.Group>
+            </div>
+          </div>
+          <div className={styles.layout_one_item}>
+            <span>订单状态：</span>
+            {<Radio.Group size="large" 
+              onChange={(e) => handleChangeRadio(e, '订单状态')}
+              value={orderStatus}>
+              <Radio value="">不限</Radio>
+              <Radio value="Pending">Pending</Radio>
+              <Radio value="Cancelled" style={{ paddingLeft: 16 }}>Cancelled</Radio>
+              <Radio value="Shipping">Shipping</Radio>
+              <Radio value="Shipped">Shipped</Radio>
+            </Radio.Group>}
+          </div>
+          <div className={styles.layout_one_item}>
+            <span>发货状态：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '发货状态')}
+              value={deliverStatus}>
+              <Radio value="">不限</Radio>
+              <Radio value="Unshipped">Unshipped</Radio>
+              <Radio value="Cancelled">Cancelled</Radio>
+              <Radio value="Shipping">Shipping</Radio>
+              <Radio value="Shipped">Shipped</Radio>
+            </Radio.Group>
+          </div>
+        </div>
+        <div className={styles.layout_two_col}>
+          <div className={`${styles.layout_one_item}`}>
+            <span>优惠订单：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '优惠订单')}
+              value={preferentialOrder}>
+              <Radio value="">不限</Radio>
+              <Radio value={true}>是</Radio>
+              <Radio value={false} style={{ marginLeft: 9 }}>否</Radio>
+            </Radio.Group>
+          </div>
+          <div className={styles.layout_one_item}>
+            <span>发货方式：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '发货方式')}
+              value={deliverMethod}>
+              <Radio value="">不限</Radio>
+              <Radio value="Amazon">FBA</Radio>
+              <Radio value="Merchant">FBM</Radio>
+            </Radio.Group>
+          </div>
+        </div>
+        <div className={styles.layout_two_col}>
+          <div className={`${styles.layout_one_item}  ${styles.order_discounts}`}>
+            <span>一件多SKU：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '一件多SKU')}
+              value={multipleSku}>
+              <Radio value="">不限</Radio>
+              <Radio value={true}>是</Radio>
+              <Radio value={false}>否</Radio>
+            </Radio.Group>
+
+            <p className={styles.icon} onClick={handleFiltrateHeight}>
+              <Iconfont className={`${styles.i} ${filtrateMoreButClass === 'active' ? 'active' : ''}`} type="icon-zhankai" />
+              <span>{filtrateMoreButText}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Toolbar;
