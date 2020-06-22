@@ -3,13 +3,13 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-02 15:57:07
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 16:39:01
+ * @LastEditTime: 2020-06-22 17:04:41
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\index.tsx
  * 
  * 评论监控
  */ 
 'user stairt';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styles from './index.less';
 import Pagination from '@/components/Pagination';
 import { ColumnsType } from 'antd/lib/table';
@@ -26,10 +26,8 @@ import {
   useDispatch,
   connect,
   ConnectRC,
-  ICommentMonitorState,
   ICommentMonitorType,
   Dispatch,
-  useLocation,
 } from 'umi';
 
 import {
@@ -42,6 +40,18 @@ import {
 } from 'antd';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
+
+
+interface ICommentMonitorList {
+  code: number;
+  data: {
+    total: number;
+    current: number;
+    size: number;
+    pages: number;
+    records: [];
+  };
+}
 
 
 const requestHeader = {};
@@ -76,7 +86,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   asin ? requestData.asin = asin : delete requestData.asin;
 
   
-  const requestBody = ( params = {}): void => {
+  const requestBody = useCallback(( params = {}): void => {
     new Promise((resolve, reject) => {
       dispatch({
         type: 'commentMonitor/getCommentList',
@@ -93,7 +103,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         size,
         total,
         current,
-      } } = datas as API.ICommentMonitorList;
+      } } = datas as ICommentMonitorList;
       if ( code === 200) {
         setDataSource(records);
         setPageSize(size);
@@ -106,11 +116,11 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       setLoading(false);
       console.error(err, '首次加载出错');
     });
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     requestBody();
-  }, []);
+  }, [requestBody]);
 
   useEffect(() => {
     if (commentTableData.code === 200) {
@@ -222,21 +232,22 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         interface IDataType {
           reviewContent: string;
           imgLink: string;
-          reviewLink: string;
+          title: string;
+          titleLink: string;
         }
         const data = rowData as IDataType;
-
-        const reviewContent = data.reviewContent;
+        const title = data.title;
+        const titleLink = data.titleLink;
         return (
           <div className={styles.product_info}>
             <img src={data.imgLink || emptyImg as string} alt=""/>
             <div>
               <Tooltip 
                 getPopupContainer={() => document.querySelector('.monitor_box') as HTMLElement}
-                title={ reviewContent }>
-                <a target="_blank" rel="noopener noreferrer">
+                title={ titleLink }>
+                <a href={titleLink} target="_blank" rel="noopener noreferrer">
                   <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#999' }} />
-                  {reviewContent || ''}
+                  {title || ''}
                 </a>
               </Tooltip>
               <p>{asin}</p>
