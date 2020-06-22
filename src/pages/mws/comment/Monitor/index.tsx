@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-02 15:57:07
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 17:04:41
+ * @LastEditTime: 2020-06-22 17:23:19
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\index.tsx
  * 
  * 评论监控
@@ -244,7 +244,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
             <div>
               <Tooltip 
                 getPopupContainer={() => document.querySelector('.monitor_box') as HTMLElement}
-                title={ titleLink }>
+                title={ title }>
                 <a href={titleLink} target="_blank" rel="noopener noreferrer">
                   <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#999' }} />
                   {title || ''}
@@ -285,7 +285,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                   rel="noopener noreferrer" 
                   target="_blank" 
                   className={styles.title}>5星</a>
-                <Tooltip title="98%">
+                <Tooltip title={ starPart.five }>
                   <Progress percent={ starPart.five } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
