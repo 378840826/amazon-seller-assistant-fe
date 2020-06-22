@@ -3,8 +3,8 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-05 15:04:27
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-18 17:51:21
- * @FilePath: \amzics-react_am_10\src\pages\mws\comment\Settings\model.ts
+ * @LastEditTime: 2020-06-22 19:08:13
+ * @FilePath: \amzics-react\src\pages\mws\comment\Settings\model.ts
  */ 
 import { Effect, Reducer } from 'umi';
 import { 
@@ -77,9 +77,9 @@ const Model: ICommentSettings = {
     },
 
     // 提醒星级获取
-    *getreviewRemindStar({ payload, reject, resolve }, { call }): Generator {
+    *getreviewRemindStar({ reject, resolve }, { call }): Generator {
       try {
-        const res = yield call(getreviewRemindStar, payload);
+        const res = yield call(getreviewRemindStar);
         resolve(res);
       } catch (err) {
         reject(err);

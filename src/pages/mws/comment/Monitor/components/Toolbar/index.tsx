@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import zhCN from 'antd/es/locale/zh_CN';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import moment from 'moment';
 import { Moment } from 'moment/moment';
-import { useDispatch } from 'dva';
+import { useSelector } from 'umi';
 
 import {
   Checkbox, 
@@ -41,10 +41,10 @@ const statusList = [
   },
 ];
 
+let shopCount = 0; // 店铺切换的条件
 // 给父组件的数据
 const fields = {} as CommectMonitor.IMonitorToolBarFieldsType; 
 const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
-  const dispatch = useDispatch();
   const [radioStatus, setRadioStatus] = useState<string>(statusList[0].value); // radio 状态
   const [radioStar, setRadioStar] = useState<number[]>([
     options[0].value, 
@@ -59,6 +59,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   const [reviewerName, setReviewerName] = useState<string>(''); // 笔名
   const [reviewsNumMin, setReviewsNumMin] = useState<string>(''); // reviews起始值
   const [reviewsNumMax, setReviewsNumMax] = useState<string>(''); // reviews结束值
+  const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
   const [datepickerValue, setDatepickerValue] = useState<Moment[]>([
     moment().subtract(29, 'days'),
     moment(),
@@ -68,16 +69,16 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   const gather = (param = {}, type = false) => {
     fields.stars = radioStar; // 星级
     fields.status = radioStatus; // 状态
-    asin ? fields.asin = asin : delete fields.asin; // asin
-    scopeMin !== '' ? fields.scopeMin = scopeMin : delete fields.scopeMin; // 最小评分
-    scopeMax !== '' ? fields.scopeMax = scopeMax : delete fields.scopeMax; // 最大评分
-    dateStart !== '' ? fields.dateStart = dateStart : delete fields.dateStart; // 开始日期
-    dateEnd !== '' ? fields.dateEnd = dateEnd : delete fields.dateEnd; // 结束日期
-    reviewerName !== '' ? fields.reviewerName = reviewerName : delete fields.reviewerName; // 笔名
-    reviewsNumMin !== '' ? fields.reviewsNumMin = reviewsNumMin : delete fields.reviewsNumMin; // review起始值
-    reviewsNumMax !== '' ? fields.reviewsNumMax = reviewsNumMax : delete fields.reviewsNumMax; // review结束值
-    fields.dateStart = datepickerValue[0].format('YYYY-MM-DD');
-    fields.dateEnd = datepickerValue[1].format('YYYY-MM-DD');
+    fields.asin = asin;
+    fields.scopeMin = scopeMin; // 最小评分
+    fields.scopeMax = scopeMax; // 最大评分
+    fields.dateStart = dateStart; // 开始日期
+    fields.dateEnd = dateEnd; // 结束日期
+    fields.reviewerName = reviewerName; // 笔名
+    fields.reviewsNumMin = reviewsNumMin; // review起始值
+    fields.reviewsNumMax = reviewsNumMax; // review结束值
+    datepickerValue[0].format('YYYY-MM-DD');
+    datepickerValue[1].format('YYYY-MM-DD');
 
     Object.assign(fields, param);
 
@@ -94,13 +95,36 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     gather({ stars: list });
   };
 
+  // 店铺切换时、回到初始状态
+  useEffect(() => {
+    if (shopCount > 1) {
+      const list = [
+        options[0].value, 
+        options[1].value,
+        options[2].value,
+      ];
+      setRadioStar(list);
+      setAsin('');
+      setScopeMin('');
+      setScopeMax('');
+      setDatepickerValue([
+        moment().subtract(29, 'days'),
+        moment(),
+      ]);
+      setReviewsNumMin('');
+      setReviewsNumMax('');
+    } else {
+      shopCount++;
+    }
+  }, [current]);
+
   // asin输入框
   const changeAsin = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
     setAsin(value);
   };
 
-  // 星级处理
+  // 评分处理
   const starRange = (value: string): string => {
     value = value.replace(/[^\d\\.]/g, '');
     //只保留第一个. 清除多余的
@@ -168,6 +192,23 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     gather({}, true);
   };
 
+  // review数量  min
+  const changeReviewMin = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    const pattern = /[^\d]/;
+    value = value.replace(pattern, '');
+    setReviewsNumMin(value);
+  };
+
+  // review数量  max
+  const changeReviewMax = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    const pattern = /[^\d]/;
+    value = value.replace(pattern, '');
+    setReviewsNumMax(value);
+  };
+
+
   const rangeList = {
     '上周': [
       moment().subtract(1, 'week').startOf('week'),
@@ -203,6 +244,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     ranges: rangeList,
     value: datepickerValue,
     defaultValue: datepickerValue,
+    allowClear: false,
     onChange(dates: Moment[]): void {
       let dateStart = '';
       let dateEnd = '';
@@ -221,14 +263,13 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     },
   };
 
-
   return (
     <header className={`clearfix ${styles.monitor_toolbar}`}>
       <div className={styles.layout_one_div}>
         <span className={styles.text}>星级：</span>
         <Checkbox.Group 
           options={options} 
-          defaultValue={radioStar} 
+          value={radioStar}
           onChange={changeStar} />
       </div>
 
@@ -243,15 +284,15 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
 
       <div className={styles.layout_three_div}>
         <span className={styles.text}>评分：</span>
-        <Input 
-          placeholder="min"
+        <Input
+          placeholder="0"
           value={scopeMin}
           onChange={copeMinChange}
           onPressEnter={InputDownEnter}
         />
         <span className={styles.line}></span>
         <Input 
-          placeholder="max"
+          placeholder="5.0"
           value={scopeMax}
           onChange={copeMaxChange}
           onPressEnter={InputDownEnter}
@@ -287,13 +328,13 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
         <span className={styles.text}>Review：</span>
         <Input
           value={reviewsNumMin}
-          onChange={ e => setReviewsNumMin(e.target.value )}
+          onChange={changeReviewMin}
           onPressEnter={InputDownEnter}
         />
         <span className={styles.line}></span>
         <Input
           value={reviewsNumMax}
-          onChange={ e => setReviewsNumMax(e.target.value )}
+          onChange={ changeReviewMax }
           onPressEnter={InputDownEnter}
         />
       </div>

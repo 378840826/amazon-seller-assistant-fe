@@ -16,7 +16,6 @@ import {
   Table,
   message,
 } from 'antd';
-import { ClickParam } from 'antd/lib/menu';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 
@@ -29,14 +28,15 @@ const Settings: React.FC = () => {
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
   const [tableLoadingStatus, setTableLoadingStatus] = useState<boolean>(true); // 表格是否显示loading
-  const [currentShop] = useState<{currency: string}>(storage.get('currentShop')); // 当前选中店铺
+  const [currentShop, setCurrentShop] = useState<CommectMonitor.ICurrentShopType>(storage.get('currentShop')); // 当前选中店铺
   const [oneStar, setOneStar] = useState<boolean>(true); // 提醒星级设置1星
   const [twoStar, setTwoStar] = useState<boolean>(true); // 提醒星级设置2星
   const [threeStar, setThreeStar] = useState<boolean>(false); // 提醒星级设置3星
   const [fourStar, setFourStar] = useState<boolean>(false); // 提醒星级设置4星
   const [fiveStar, setFiveStar] = useState<boolean>(false); // 提醒星级设置5星
   const [asyncGetview] = useState<boolean>(true); // 用作 提醒星级设置获取
-
+  const [searchComponent, setSearchComponent] = useState<boolean>(false); // 是否重置搜索框内容
+  const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
 
   // 点击设置星级提醒
   const setStar = (flag: boolean) => {
@@ -44,6 +44,12 @@ const Settings: React.FC = () => {
   };
 
   useEffect(() => {
+    if (current.id === '-1') {
+      return;
+    }
+    setTableLoadingStatus(true);
+    setCurrentShop(current as CommectMonitor.ICurrentShopType);
+    setSearchComponent(true);
     dispatch({
       type: 'commectSettings/getCommectMonitorSetList',
       payload: {
@@ -53,7 +59,7 @@ const Settings: React.FC = () => {
         },
       },
     });
-  }, [dispatch, pageCurrent, pageSize]);
+  }, [dispatch, pageCurrent, pageSize, current]);
 
   // 获取星级提醒
   useEffect(() => {
@@ -62,12 +68,6 @@ const Settings: React.FC = () => {
         type: 'commectSettings/getreviewRemindStar',
         resolve,
         reject,
-        payload: {
-          data: {
-            current: pageCurrent,
-            size: pageSize,
-          },
-        },
       });
     }).then(datas => {
       const { code, data } = datas as { code: number; data: {} }
@@ -84,25 +84,27 @@ const Settings: React.FC = () => {
           threeStar: boolean;
           fourStar: boolean;
           fiveStar: boolean;
-        }
+        };
         setOneStar(oneStar);
         setTwoStar(twoStar);
         setThreeStar(threeStar);
         setFourStar(fourStar);
         setFiveStar(fiveStar);
       }
-    })
+    });
   }, [dispatch, asyncGetview]);
 
   // 接收表格数据
   useEffect(() => {
     setTableLoadingStatus(false);
-    if (datas.code && datas.code === 200) {
+    if (datas.data.code && datas.data.code === 200) {
       const { data } = datas;
       setDataSource(data.records);
       setPageSize(data.size);
       setPageTotal(data.total);
       setPageCurrent(data.current);
+    } else {
+      message.error(datas.data.msg || '网络异常！请重试');
     }
   }, [datas]);
 
@@ -123,9 +125,9 @@ const Settings: React.FC = () => {
         payload,
       });
     }).then(datas => {
-      const { code, data } = datas as {code: number; data: []};
+      const { code } = datas as {code: number; data: []};
       if (code === 200) {
-        message.success('设置成功!');
+        message.success('操作成功!');
       } else {
         // 失败的处理
         switch (type) {
@@ -145,8 +147,9 @@ const Settings: React.FC = () => {
           setFiveStar(fiveStar);
           break;
         default:
-          // 
+          break;
         } 
+        message.error('操作失败！');
       }
     });
   };
@@ -261,7 +264,7 @@ const Settings: React.FC = () => {
           <div className={styles.product_cols}>
             <img src={imgLink || sittingImg} alt=""/>
             <div>
-              <a href={ titleLink }>
+              <a href={ titleLink } target="_blank" rel="noopener noreferrer">
                 <Iconfont 
                   type="icon-lianjie" 
                   style={{ fontSize: 16, color: '#999' }}
@@ -363,7 +366,7 @@ const Settings: React.FC = () => {
     <div className={`${styles.settings_box} settings`}>
       <header>
         <div className={styles.search}>
-          <SearchDownList callback={successCb} />
+          <SearchDownList callback={successCb} reset={searchComponent} />
         </div>
         <div className="downlist" style={{ width: 108 }}>
           <Dropdown 

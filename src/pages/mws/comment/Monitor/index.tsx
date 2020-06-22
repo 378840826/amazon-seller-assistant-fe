@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-02 15:57:07
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 17:23:19
+ * @LastEditTime: 2020-06-22 21:57:17
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\index.tsx
  * 
  * 评论监控
@@ -28,6 +28,7 @@ import {
   ConnectRC,
   ICommentMonitorType,
   Dispatch,
+  useSelector,
 } from 'umi';
 
 import {
@@ -41,7 +42,6 @@ import {
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
-
 interface ICommentMonitorList {
   code: number;
   data: {
@@ -53,8 +53,8 @@ interface ICommentMonitorList {
   };
 }
 
-
-const requestHeader = {};
+let requestHeader = {};
+let shopCount = 0; // 店铺首次加载不执行
 const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => {
   const dispatch: Dispatch = useDispatch();
   const { asin = '' }: {asin?: string} = getQuery();
@@ -71,6 +71,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     moment().format('YYYY-MM-DD')
   );
   const { storeName } = storage.get('currentShop') as API.IShop; // 当前选中店铺
+  const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
 
   // 初始化请求数据
   const requestData: CommectMonitor.IRequestDataType = {
@@ -85,13 +86,21 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   // 设定过来筛选
   asin ? requestData.asin = asin : delete requestData.asin;
 
-  
   const requestBody = useCallback(( params = {}): void => {
+    setLoading(true);
+    const isempty = Boolean(Object.keys(params).length); // 判断对象是否为空
+    if (isempty) {
+      requestHeader = Object.assign({}, requestData, requestHeader, params);
+    } else {
+      requestHeader = Object.assign({}, requestData, params);
+    }
+    
+    
     new Promise((resolve, reject) => {
       dispatch({
         type: 'commentMonitor/getCommentList',
         payload: {
-          data: Object.assign(requestData, requestHeader, params),
+          data: requestHeader,
           resolve,
           reject,
         },
@@ -121,6 +130,16 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   useEffect(() => {
     requestBody();
   }, [requestBody]);
+
+
+  // 店铺切换时
+  useEffect(() => {
+    if (shopCount > 1) {
+      console.log('店铺切换时');
+      requestBody();
+    }
+    shopCount++;
+  }, [current, requestBody]);
 
   useEffect(() => {
     if (commentTableData.code === 200) {
@@ -202,8 +221,6 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       render(value, rowData){
         const data = rowData as {reviewLink: string};
         const reviewerLink = data.reviewLink;
-        console.log(reviewerLink);
-        
         return (
           <div className={styles.commect_content} >
             <Tooltip 

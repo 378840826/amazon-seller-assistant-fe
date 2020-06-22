@@ -3,12 +3,19 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 16:52:53
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-19 09:38:22
- * @FilePath: \amzics-react_am_10\src\pages\mws\comment\Settings\CommentSettings.d.ts
+ * @LastEditTime: 2020-06-22 21:23:16
+ * @FilePath: \amzics-react\src\pages\mws\comment\Settings\CommentSettings.d.ts
  */ 
 declare namespace CommectMonitor {
   interface ISearChProps {
+    reset?: boolean;
     callback: () => void;
+  }
+
+  // 当前店铺信息
+  interface ICurrentShopType {
+    currency: string;
+    id?: string;
   }
 
   interface IConnectType {
@@ -20,12 +27,23 @@ declare namespace CommectMonitor {
           size: number;
           current: number;
           total: number;
+          code: number;
+          msg: string;
         };
       };
     };
   }
 
-  
+  interface IGlobalType {
+    global: {
+      shop: {
+        current: {
+          id: string;
+        };
+      };
+    };
+  }
+
   interface IRowDataType {
     productInfo: {
       asin: string;

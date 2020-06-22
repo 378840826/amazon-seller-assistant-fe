@@ -3,8 +3,8 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-05 15:21:50
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-18 16:57:51
- * @FilePath: \amzics-react_am_10\src\pages\mws\comment\Settings\components\SearchDownList\index.tsx
+ * @LastEditTime: 2020-06-22 20:09:07
+ * @FilePath: \amzics-react\src\pages\mws\comment\Settings\components\SearchDownList\index.tsx
  * 
  * 异步请求后端数据，暂时不封装成公用组件
  * 
@@ -17,7 +17,7 @@
  * { value: '值’ , }
  * RefObject<YouComponent>
  */ 
-import React, { useState, createRef, RefObject } from 'react';
+import React, { useState, createRef, RefObject, useEffect } from 'react';
 import styles from './index.less';
 import debounce from 'lodash/debounce'; // 防抖
 import { 
@@ -64,11 +64,19 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
   const [asin, setAsin] = useState<string>('');
   const [addBtnLoading, setAddBtnLoading] = useState<boolean>(false); // 添加按钮loading
   const valueRef = createRef();
+
+  // 清空数据
+  // useEffect(() => {
+  //   if (props.reset) {
+  //     console.log('执行我吗？', props.reset);
+
+  //     setVisible(false);
+  //     setAsin('');
+  //     setAddBtnLoading(false);
+  //   }
+  // }, [props]);
   
-  const closeDownList = () => {
-    setVisible(false);
-  };
-  
+
   // 请求数据  
   const asyncRequest = debounce((asin) => {
     new Promise((resolve, reject) => {
@@ -137,6 +145,8 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
       if (code === 200) {
         message.success(msg || '添加成功！');
         props.callback();
+      } else {
+        message.error(msg || '添加失败！');
       }
     }).catch(err => {
       setAddBtnLoading(false);
@@ -147,7 +157,7 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
   // 离开区域就隐藏了下拉列表了
   const out = () => {
     setVisible(false);
-  }
+  };
 
   return (
     <div className={styles.down_list_box} onMouseLeave={out}>

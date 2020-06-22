@@ -28,12 +28,12 @@
 
   // tip文字
   :global(.ant-tooltip) {
-    min-width: 455px;
+    max-width: 455px;
     font-size: @font-size-sm;
   }
 
   :global(.ant-tooltip-inner) {
-    min-width: 455px;
+    max-width: 455px;
     background-color: #fff;
     color: @text-color;
   }
@@ -138,6 +138,9 @@
 
     // 星级分布
     .start_distribute {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
       :global(.ant-progress) {
         width: 100px;
       }
@@ -153,7 +156,6 @@
       .layout_one_row,
       .layout_two_row {
         display: flex;
-        width: 295px;
 
         > div {
           display: flex;
@@ -163,9 +165,10 @@
           }
         }
       }
-
       .layout_three_row {
         display: flex;
+        position: relative;
+        left: -77px;
       }
     }
 

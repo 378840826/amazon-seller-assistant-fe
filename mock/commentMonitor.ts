@@ -3,8 +3,8 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-03 15:03:53
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-06 11:57:34
- * @FilePath: \amzics-react_am_10\mock\commentMonitor.ts
+ * @LastEditTime: 2020-06-22 20:11:25
+ * @FilePath: \amzics-react\mock\commentMonitor.ts
  * 
  * 监控评价模块
  */ 
@@ -71,7 +71,7 @@ export default {
     },
   }),
   
-  'GET /api/mws/review/monitoring-settings/search/': Mock.mock({
+  'GET dddd/api/mws/review/monitoring-settings/search/': Mock.mock({
     code: 200,
     'data|2-100': [
       {

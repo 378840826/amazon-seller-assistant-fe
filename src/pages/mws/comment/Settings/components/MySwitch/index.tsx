@@ -46,7 +46,7 @@ const MySwitch: React.FC<ISwitchType> = (props) => {
         setFlag(checked);
         message.success(msg || '操作成功！');
       } else {
-        message.success(msg || '操作失败！');
+        message.error(msg || '操作失败！');
       }
     }).catch(err => {
       setLoading(false);
