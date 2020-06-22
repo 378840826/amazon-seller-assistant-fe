@@ -33,7 +33,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一件多SKU
   const [deliverMethod, setDeliverMethod] = useState<string>(''); // 发货方式
   const [shipServiceLevel, setShipServiceLevel] = useState<string>(''); // 配送服务
-  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('auto'); // 筛选框高度
+  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('54px'); // 筛选框高度
   const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('更多');
   const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
 
