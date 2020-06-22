@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-19 16:30:13
+ * @LastEditTime: 2020-06-22 15:34:43
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  */ 
@@ -14,12 +14,12 @@ import { Table, message } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import Pagination from '@/components/Pagination';
 import { connect } from 'dva';
-import { useDispatch } from 'umi';
+import { useDispatch, useSelector } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-import { storage } from '@/utils/utils';
+import { storage, getAmazonBaseUrl } from '@/utils/utils';
 import imgUrl from '@/assets/stamp.png';
 import Toolbar from './components/Toolbar';
 import { Moment } from 'moment/moment';
@@ -34,14 +34,15 @@ const OrderList: React.FC = () => {
   const [endTime] = useState<Moment>(
     moment().subtract(1, 'week').endOf('week')
   ); // 日历默认结束日期
-  const [currentShop] = useState<{currency: string}>(storage.get('currentShop')); // 当前选中店铺
+  const [currentShop, setCurrentShop] = useState<API.IShop>(storage.get('currentShop')); // 当前选中店铺
   const [tableLoadingStatus, setTableLoadingStatus] = useState<boolean>(true); // 表格是否显示loading
   const [dataSource, setDataSource] = useState<[]>([]); // 表格数据
   const [pageTotal, setPageTotal] = useState<number>(0); // 分页数量
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
+  const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
   let rowNumber = 0; // 行key
-  
+
   // 请求数据 
   const requestDatas = {
     current: pageCurrent,
@@ -51,7 +52,7 @@ const OrderList: React.FC = () => {
   };
 
   // 请求体
-  const requestFn = useCallback((requestData: {}) => {
+  const requestFn = useCallback((requestData = requestDatas) => {
     new Promise((resolve, reject) => {
       dispatch({
         type: 'orderList/getOrderList',
@@ -79,13 +80,13 @@ const OrderList: React.FC = () => {
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  }, [dispatch]);
+  }, [dispatch, requestDatas]);
 
   // 接收工具框(子组件)的参数并重新请求
   const filtrateFn = (requestData: {}) => {
     setTableLoadingStatus(true);
 
-    hisrotyRequest = Object.assign(requestDatas, hisrotyRequest, requestData);
+    hisrotyRequest = Object.assign({}, requestDatas, hisrotyRequest, requestData);
 
     // 筛选掉单选框里面的不限选择
     for (const key in hisrotyRequest ) {
@@ -98,11 +99,44 @@ const OrderList: React.FC = () => {
     setPageSize(20);
     requestFn(hisrotyRequest);
   };
-
-  // 请求表格数据
-  useEffect( () => {
-    requestFn(requestDatas);
-  }, [dispatch]);
+  
+  // 请求表格信息
+  useEffect(() => {
+    setCurrentShop(storage.get('currentShop'));
+    setTableLoadingStatus(true);
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: 'orderList/getOrderList',
+        payload: {
+          resolve,
+          reject,
+          data: {
+            current: 1,
+            size: 20,
+            startTime: startTime.format('YYYY-MM-DD'),
+            endTime: endTime.format('YYYY-MM-DD'),
+          },
+        },
+      });
+    }).then(datas => {
+      setTableLoadingStatus(false);
+      const {
+        code = 1000,
+        data,
+      } = datas as MwsOrderList.IResponseTableData;
+      
+      if (code === 200) {
+        setDataSource(data.records);
+        setPageSize(data.size);
+        setPageTotal(data.total);
+        setPageCurrent(data.current);
+      } else {
+        message.error('数据异常！');
+      }
+    }).catch(() => {
+      setTableLoadingStatus(false);
+    });
+  }, [dispatch, current, startTime, endTime]);
 
 
   // 分页配置
@@ -114,7 +148,7 @@ const OrderList: React.FC = () => {
       setTableLoadingStatus(true);
       setPageCurrent(current);
       setPageSize(size);
-      hisrotyRequest = Object.assign(requestDatas, hisrotyRequest, { current, size });
+      hisrotyRequest = Object.assign({}, requestDatas, hisrotyRequest, { current, size });
       requestFn(hisrotyRequest);
     },
   };
@@ -227,11 +261,13 @@ const OrderList: React.FC = () => {
                         width: '31.7%',
                         render(value, rows: MwsOrderList.IRowChildDataType) {
                           const { unitPrice } = rows;
+                          const site = currentShop.marketplace;
+                          const url = getAmazonBaseUrl(site as 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT');
                           return (
                             <div className={`${styles.table_product_col} clearfix`}>
                               <img src={rows.imgUrl || imgUrl } alt=""/>
                               <div className={`${styles.datails} `}>
-                                <a href="" className={styles.title}>
+                                <a href={`${url}/dp/${rows.asin}`} rel="noopener noreferrer" target="_blank" className={styles.title}>
                                   <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#666' }} />
                                   {rows.productName || ''}
                                 </a>

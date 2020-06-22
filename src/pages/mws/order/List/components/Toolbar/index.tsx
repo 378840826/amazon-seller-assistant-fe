@@ -12,6 +12,7 @@ import {
   Radio,
 } from 'antd';
 import { Moment } from 'moment/moment';
+import { DatabaseFilled } from '@ant-design/icons';
 
 
 const { RangePicker } = DatePicker;
@@ -31,7 +32,8 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [preferentialOrder, setPreferentialOrder] = useState<string | boolean>(''); // 优惠订单
   const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一件多SKU
   const [deliverMethod, setDeliverMethod] = useState<string>(''); // 发货方式
-  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('56px'); // 筛选框高度
+  const [shipServiceLevel, setShipServiceLevel] = useState<string>(''); // 配送服务
+  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('auto'); // 筛选框高度
   const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('更多');
   const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
 
@@ -69,6 +71,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const DatepickerConfig: any = {
     ranges: rangeList,
     dateFormat: 'YYYY-MM-DD',
+    allowClear: false,
     value: datepickerValue,
     defaultValue: datepickerValue,
     getPopupContainer() {
@@ -78,7 +81,6 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
       setDatepickerValue(dates);
       fields.startTime = dates[0].format('YYYY-MM-DD');
       fields.endTime = dates[1].format('YYYY-MM-DD');
-      
       props.handleFiltarte(fields);
     },
   };
@@ -88,15 +90,14 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
     fields.asinRelatedSearch = orderInfoSearch;
     fields.buyerRelatedSearch = sellerSearch;
 
-    if (orderInfoSearch === '') {
-      delete fields.asinRelatedSearch;
-    } 
+    // 为啥注释掉？ 防止保留历史
+    // if (orderInfoSearch === '') {
+    //   delete fields.asinRelatedSearch;
+    // } 
 
-    if (sellerSearch === '') {
-      delete fields.buyerRelatedSearch;
-    }
-    console.log(fields, 'fields-');
-    
+    // if (sellerSearch === '') {
+    //   delete fields.buyerRelatedSearch;
+    // }
     props.handleFiltarte(fields);
   };
 
@@ -122,6 +123,8 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const handleChangeRadio = (e: RadioChangeEvent, type: string) => {
     const value = e.target.value;
 
+    fields.asinRelatedSearch = orderInfoSearch;
+    fields.buyerRelatedSearch = sellerSearch;
     fields.startTime = datepickerValue[0].format('YYYY-MM-DD');
     fields.endTime = datepickerValue[1].format('YYYY-MM-DD');
     fields.current = 1; // 将分页初始化
@@ -156,10 +159,19 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
       setMultipleSku(value);
       fields.multipleSku = value;
       break;
+    case '配送服务':
+      setShipServiceLevel(value);
+      fields.shipServiceLevel = value;
+      break;
     default: 
       break;
     }
     props.handleFiltarte(fields);
+  };
+
+  // 搜索框回车
+  const downEnter = () => {
+    searchButton();
   };
 
   return (
@@ -171,13 +183,15 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOrderInfoSearch(e.target.value)}
           className={styles.inputStyle}
           allowClear
+          onPressEnter={downEnter}
         />
         <Input 
           value={sellerSearch}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerSearch(e.target.value)}
-          placeholder="请输入收件人姓名或卖家名称"
+          placeholder="请输入收件人姓名或买家名称"
           className={styles.inputStyle}
           allowClear
+          onPressEnter={downEnter}
         />
         <Button type="primary" onClick={searchButton}>搜索</Button>
         <div className={`${styles.datepicker} order-list-datepicker`}>
@@ -247,6 +261,18 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               <Radio value={false} style={{ marginLeft: 9 }}>否</Radio>
             </Radio.Group>
           </div>
+          <div className={`${styles.layout_one_item}`}>
+            <span>配送服务：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '配送服务')}
+              value={shipServiceLevel}>
+              <Radio value="">不限</Radio>
+              <Radio value="Standard">Standard</Radio>
+              <Radio value="Expedited">Expedited</Radio>
+              <Radio value="SecondDay">SecondDay</Radio>
+              <Radio value="NextDay">NextDay</Radio>
+            </Radio.Group>
+          </div>
           <div className={styles.layout_one_item}>
             <span>发货方式：</span>
             <Radio.Group 
@@ -268,7 +294,6 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               <Radio value={true}>是</Radio>
               <Radio value={false}>否</Radio>
             </Radio.Group>
-
             <p className={styles.icon} onClick={handleFiltrateHeight}>
               <Iconfont className={`${styles.i} ${filtrateMoreButClass === 'active' ? 'active' : ''}`} type="icon-zhankai" />
               <span>{filtrateMoreButText}</span>

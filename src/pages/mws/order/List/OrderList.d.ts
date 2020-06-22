@@ -9,6 +9,14 @@ declare namespace MwsOrderList {
     };
   }
 
+  interface IGlobalType {
+    global: {
+      shop: {
+        current: {};
+      };
+    };
+  }
+
   // 表格的返回信息
   interface IResponseTableData {
     code: number;
@@ -73,6 +81,7 @@ declare namespace MwsOrderList {
     endTime: string;
     current: number;
     size: number;
+    shipServiceLevel: string;
   }
 
   // toolbar 组件的回调函数

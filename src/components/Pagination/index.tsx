@@ -3,8 +3,8 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-27 14:13:29
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-13 11:34:43
- * @FilePath: \amzics-react_am_10\src\components\Pagination\index.tsx
+ * @LastEditTime: 2020-06-22 15:42:18
+ * @FilePath: \amzics-react\src\components\Pagination\index.tsx
  */ 
 
 import React, { useState, useEffect } from 'react';
@@ -26,11 +26,11 @@ interface IProps {
   total: number; // 总数量
 }
 
-const Page:React.FC<IProps> = (props) => {
+const Page: React.FC<IProps> = (props) => {
   // state
-  let [current, setCurrent] = useState<number>(props.current || 1); // 当前页数
-  let [pageSize, setPageSize] = useState<number>(props.pageSize || 20); // 页数大小
-  let [total, setTotal] = useState<number>(props.total || 0);
+  const [current, setCurrent] = useState<number>(props.current || 1); // 当前页数
+  const [pageSize, setPageSize] = useState<number>(props.pageSize || 20); // 页数大小
+  const [total, setTotal] = useState<number>(props.total || 0);
 
   // 普通
   const align: string = props.align || 'right'; // 对齐方式 默认右边
@@ -38,16 +38,16 @@ const Page:React.FC<IProps> = (props) => {
   let totalDetails: string = props.totalText || '共%d个';
   let aligStyles: string = styles.right;
   let sizeStyles: string = styles.small;
-  let isShowTotal:boolean = true; // 是否显示总数量
+  let isShowTotal = true; // 是否显示总数量
 
   console.log('执行page', current, pageSize, total);
   
 
   useEffect(() => {
-    setCurrent(props.current || 1)
-    setPageSize(props.pageSize || 20)
-    setTotal(props.total || 0)
-  }, [props])
+    setCurrent(props.current || 1);
+    setPageSize(props.pageSize || 20);
+    setTotal(props.total || 0);
+  }, [props]);
 
   // 显示方式
   if (align === 'right') {
@@ -82,6 +82,14 @@ const Page:React.FC<IProps> = (props) => {
   } else {
     totalDetails = totalDetails.replace('%d', total.toString());
   }
+
+  // 页面回到顶部
+  const changeBackTop = () => {
+    if (props.changeisBackTop === false) {
+      return;
+    }
+    document.documentElement.scrollTop = document.body.scrollTop = 0;
+  };
   
   // 页码改变的回调
   const onChange = (current: number) => {
@@ -101,14 +109,7 @@ const Page:React.FC<IProps> = (props) => {
     }
   };
 
-  // 页面回到顶部
-  const changeBackTop = () => {
-    if (props.changeisBackTop === false) {
-      return 
-    }
-    document.documentElement.scrollTop = document.body.scrollTop = 0;
-  }
-
+  
   // 分页配置 
   let pageConfig = {
     total,
@@ -124,7 +125,6 @@ const Page:React.FC<IProps> = (props) => {
   };
   
   
-
   return (
     <ConfigProvider locale={zhCN}>
       <div className={`${styles.g_page} ${aligStyles} ${sizeStyles} ${props.className}`}>
