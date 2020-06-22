@@ -97,15 +97,22 @@ const Settings: React.FC = () => {
   // 接收表格数据
   useEffect(() => {
     setTableLoadingStatus(false);
-    if (datas.data.code && datas.data.code === 200) {
+    console.log(datas);
+
+    if (!datas.code) {
+      return;
+    }
+    
+    if (datas.code === 200) {
       const { data } = datas;
       setDataSource(data.records);
       setPageSize(data.size);
       setPageTotal(data.total);
       setPageCurrent(data.current);
     } else {
-      message.error(datas.data.msg || '网络异常！请重试');
+      message.success(datas.msg || 'OOP! 网络有点问题~');
     }
+    
   }, [datas]);
 
   const handleMenuClick = (param = {}, type = 0) => {

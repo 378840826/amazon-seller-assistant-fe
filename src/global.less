@@ -59,3 +59,25 @@ ol {
     }
   }
 }
+
+// 解决没有高度问题
+.clearfix:after{
+	content: "";
+	display: block;
+	clear: both;
+}
+
+// 滑动开关
+.h-switch {
+  min-width: 40px !important;
+  height: 20px !important;
+
+  &::after {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.none {
+  display: none !important;
+}

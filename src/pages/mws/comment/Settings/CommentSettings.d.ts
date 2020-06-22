@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 16:52:53
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 21:23:16
+ * @LastEditTime: 2020-06-22 22:11:57
  * @FilePath: \amzics-react\src\pages\mws\comment\Settings\CommentSettings.d.ts
  */ 
 declare namespace CommectMonitor {
@@ -22,6 +22,7 @@ declare namespace CommectMonitor {
     commectSettings: {
       datas: {
         code: number;
+        msg: string;
         data: {
           records: [];
           size: number;
