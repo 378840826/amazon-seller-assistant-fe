@@ -1,0 +1,120 @@
+.settings_box {
+  font-family: PingFangSC-Regular, sans-seri;
+  background-color: #fff;
+  border-radius: @border-radius-base;
+  
+  a {
+    color: #0083ff;
+  }
+  
+  p {
+    padding: 0;
+    margin: 0;
+  }
+
+  :global(.ant-select-dropdown) {
+    width: 530px !important;
+  }
+
+  > header {
+    display: flex; 
+    justify-content: space-between;
+    padding: 20px;
+
+    .search {
+      display: flex; 
+
+      button {
+        margin: 0 10px;
+      }
+
+      
+    }
+  }
+  
+
+  // 表格
+  > main {
+
+    :global(.ant-table-thead) th {
+      height: 44px;
+      line-height: 44px;
+      padding: 0;
+      background-color: #fafafa;
+    }
+
+    table {
+      border: 1px solid #eee;
+      border-bottom: 0;
+    }
+
+    td {
+      border-bottom: 1px solid #eee;
+    }
+
+    // 商品信息列
+    .product_cols {
+      display: flex;
+      justify-content: center;
+
+      img {
+        width: 46px;
+        height: 46px;
+        margin: 10px 10px 0 0;
+      }
+
+      a {
+        min-width: 100px;
+        max-width: 398px;
+        line-height: 18px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: normal;
+        font-size: @font-size-sm;
+        text-align: left;
+        margin-top: 10px;
+      }
+
+      .details {
+        display: flex;
+        justify-content: space-between;
+
+        .asin {
+          padding-right: 10px;
+        }
+
+        .price {
+          color: @error-color;
+        }
+        
+        .line {
+          height: 12px;
+          display: inline-block;
+          margin: 1px 6px 0;
+          border-right: 1px solid @border-color-base;
+        }
+
+        :global(.FBA) {
+          color: @warning-color;
+        }
+
+        :global(.FBM) {
+          color: @success-color;
+        }
+      }
+    }
+
+    // 监听次数
+    .monitor span{
+      color: @text-color-secondary;
+    }
+
+  }
+
+  > footer {
+    padding: 20px;
+  }
+}

@@ -1,0 +1,92 @@
+/*
+ * @Author: Huang Chao Yi
+ * @Email: 1089109@qq.com
+ * @Date: 2020-06-03 15:12:15
+ * @LastEditors: Huang Chao Yi
+ * @LastEditTime: 2020-06-17 16:40:07
+ * @FilePath: \amzics-react_am_10\src\pages\mws\comment\Monitor\model.ts
+ * 
+ * 接口
+ */ 
+import { Effect, Reducer } from 'umi';
+import { 
+  getCommentList,
+  downloadCommentTable,
+  signHandle,
+} from '@/services/commentMonitor';
+
+export interface ICommentMonitorState {
+  code?: number;
+  data: {
+    records?: [];
+  };
+  commentTableData: {};
+}
+
+export interface ICommentMonitorType {
+  namespace: 'commentMonitor';
+
+  state: ICommentMonitorState;
+
+  reducers: {
+    changeData: Reducer;
+  };
+
+  effects: {
+    getCommentList: Effect;
+    downLoadComment: Effect;
+    signHandle: Effect;
+  };
+}
+
+const CommentMonitor: ICommentMonitorType = {
+  namespace: 'commentMonitor',
+
+  state: {
+    commentTableData: {},
+    data: {},
+  },
+
+  reducers: {
+    changeData(state, { payload }) {
+      state.commentTableData = payload;
+    },
+  },
+
+  effects: {
+    // 获取评论列表
+    *getCommentList({ payload }, { call }): Generator {
+      try {
+        const response = yield call(getCommentList, payload.data );
+        console.log(response);
+        
+        payload.resolve(response);
+      } catch (err) {
+        payload.reject(err);
+      }
+    },
+
+    // 点击下载
+    *downLoadComment({ payload }, { call }): Generator {
+      try {
+        const response = yield call(downloadCommentTable, payload.data);
+        payload.resolve(response);
+      } catch (err) {
+        payload.reject(err);
+      }
+    },
+
+    // 标记已处理
+    *signHandle({ payload }, { call }): Generator {
+      try {
+        const response = yield call(signHandle, payload.id);
+        payload.resolve(response);
+      } catch (err) {
+        payload.reject(err);
+      }
+    },
+  },
+};
+
+
+export default CommentMonitor;
