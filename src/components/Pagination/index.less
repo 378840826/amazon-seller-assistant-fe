@@ -17,14 +17,39 @@
     }
   }
 
-  // 禁用按钮的样式
-  :global(.ant-pagination-disabled) a {
-    color: #d9d9d9;
+  // 箭头 禁用按钮的样式
+  :global(.ant-pagination-disabled)  {
+    a {
+      color: #d9d9d9;
+    }
+    
+    &:hover a {
+      color: #d9d9d9;
+    }
   }
+
+  // 页数 禁用的样式
+  :global(.ant-pagination-item-disabled) {
+    pointer-events: none;
+    
+    a {
+      pointer-events: none;
+    }
+
+    &:hover {
+      border-color: @border-color-base;
+
+      a {
+        color: rgba(0, 0, 0, .25);
+      }
+    }
+
+  }
+  
 
   // 偏移按钮
   :global(.ant-pagination-item-ellipsis) {
-    color: rgba(0,0,0,.25)!important;
+    color: rgba(0, 0, 0, .25)!important;
   }
 
   // 跳转到N页
