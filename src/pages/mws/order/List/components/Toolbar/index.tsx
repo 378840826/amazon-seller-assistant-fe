@@ -133,7 +133,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   // 筛选工具栏的高度设置
   const handleFiltrateHeight = () => {
     if (filtrateMoreButText === '收起') {
-      setFiltrateBoxHeight('80px');
+      setFiltrateBoxHeight('88px');
       setFiltrateMoreButText('展开');
       setFiltrateMoreButClass('');
     } else {
@@ -233,8 +233,8 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               onChange={(e) => handleChangeRadio(e, 'B2B订单')}
               value={businessOrder}>
               <Radio value="">不限</Radio>
-              <Radio value={true}>是</Radio>
-              <Radio value={false}>否</Radio>
+              <Radio value={true} className={styles.handlePadding}>是</Radio>
+              <Radio value={false} className={styles.handlePadding}>否</Radio>
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}`}>
@@ -243,8 +243,8 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               onChange={(e) => handleChangeRadio(e, '优惠订单')}
               value={preferentialOrder}>
               <Radio value="">不限</Radio>
-              <Radio value={true}>是</Radio>
-              <Radio value={false}>否</Radio>
+              <Radio value={true} className={styles.handlePadding}>是</Radio>
+              <Radio value={false} className={styles.handlePadding}>否</Radio>
             </Radio.Group>
           </div>
           <div className={styles.layout_one_item}>
@@ -279,8 +279,12 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               onChange={(e) => handleChangeRadio(e, '一单多件')}
               value={multiplePieces}>
               <Radio value="">不限</Radio>
-              <Radio value={true}>是</Radio>
-              <Radio value={false} style={{ marginLeft: 9 }}>否</Radio>
+              <Radio value={true} className={styles.handlePadding}>是</Radio>
+              <Radio value={false} 
+                style={{ marginLeft: 9 }} 
+                className={styles.handlePadding}>
+                  否
+              </Radio>
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}  ${styles.order_discounts}`}>
@@ -289,8 +293,9 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               onChange={(e) => handleChangeRadio(e, '一件多SKU')}
               value={multipleSku}>
               <Radio value="">不限</Radio>
-              <Radio value={true}>是</Radio>
-              <Radio value={false} style={{ marginLeft: 9 }}>否</Radio>
+              <Radio value={true} className={styles.handlePadding}>是</Radio>
+              <Radio value={false} 
+                style={{ marginLeft: 9 }} className={styles.handlePadding}>否</Radio>
             </Radio.Group>
             
           </div>
@@ -300,8 +305,8 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               onChange={(e) => handleChangeRadio(e, '发货方式')}
               value={deliverMethod}>
               <Radio value="">不限</Radio>
-              <Radio value="Amazon">FBA</Radio>
-              <Radio value="Merchant">FBM</Radio>
+              <Radio value="Amazon" className={styles.handlePadding}>FBA</Radio>
+              <Radio value="Merchant" className={styles.handlePadding}>FBM</Radio>
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}`}>

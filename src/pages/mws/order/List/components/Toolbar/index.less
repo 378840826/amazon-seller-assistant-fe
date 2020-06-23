@@ -38,7 +38,6 @@
   min-width: 1340px;
   overflow: hidden;
   display: flex;
-  justify-content: space-between;
 
   > div {
     flex: 0 0 auto;
@@ -58,12 +57,16 @@
         text-align: left;
         display: inline-block;
       }
+
+      
     }
   }
 
   .left_layout,
   .right_layout {
-    width: 50%
+    .handlePadding {
+      margin-left: 20px;
+    }
   }
 
   .left_layout {
@@ -75,6 +78,7 @@
   }
 
   .right_layout {
+    margin-left: 100px;
     .layout_one_item {
       > span {
         min-width: 85px;
@@ -92,6 +96,10 @@
   
       &:global(.active) {
         top: 0;
+      }
+
+      &:hover {
+        color: @primary-color;
       }
 
       .i {

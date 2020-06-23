@@ -1,6 +1,7 @@
 .g_page {
   font-size: 12px;
   line-height: 30px;
+  color: @text-color;
 
   // 覆盖
   :global(.ant-pagination-options) {
@@ -21,12 +22,18 @@
     color: #d9d9d9;
   }
 
+  // 偏移按钮
+  :global(.ant-pagination-item-ellipsis) {
+    color: rgba(0,0,0,.25)!important;
+  }
+
   // 跳转到N页
   :global(.ant-pagination-options-quick-jumper) {
     input {
       width: 48px;
       height: 26px;
     }
+
     button {
       width: 42px;
       min-width: 42px;
@@ -54,7 +61,7 @@
       display: inline-block;
       text-align: center;
       border: 1px solid @border-color-base;
-      color: #808080;
+      
       background-color: #fff;
       cursor: pointer;
     }

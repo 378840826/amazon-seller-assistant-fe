@@ -140,6 +140,8 @@
       text-align: left;
       min-width: 211px;
       padding: 0 0 0 15px;
+      display: table;
+      margin: 0 auto;
 
       p.p_one_and_two {
         span:nth-child(3) {
@@ -148,7 +150,7 @@
       }
 
       p.p_three {
-        color: @heading-color;
+        color: #000;
       }
     }
 
@@ -175,7 +177,7 @@
       }
 
       :global(.shipped) {
-        color: @success-color;
+        color: #09a949;
       }
     }
 
@@ -189,13 +191,10 @@
       .buyer_info_layout_one {
         display: flex;
         line-height: 26px;
+        color: @text-color;
 
         p:first-child {
           width: 180px;
-        }
-
-        span.title {
-          color: @text-color-secondary;
         }
       }
 
