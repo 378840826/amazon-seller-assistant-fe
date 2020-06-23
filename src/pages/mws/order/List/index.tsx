@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 15:34:43
+ * @LastEditTime: 2020-06-23 14:25:39
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  */ 
@@ -29,7 +29,7 @@ let hisrotyRequest = {};// 保存所有筛选信息
 const OrderList: React.FC = () => {
   const dispatch = useDispatch();
   const [startTime] = useState<Moment>(
-    moment().subtract(1, 'week').startOf('week')
+    moment().subtract(4, 'week').startOf('week')
   ); // 日历默认开始日期
   const [endTime] = useState<Moment>(
     moment().subtract(1, 'week').endOf('week')
@@ -67,6 +67,7 @@ const OrderList: React.FC = () => {
       const {
         code = 1000,
         data,
+        message: msg,
       } = datas as MwsOrderList.IResponseTableData;
       
       if (code === 200) {
@@ -75,7 +76,7 @@ const OrderList: React.FC = () => {
         setPageTotal(data.total);
         setPageCurrent(data.current);
       } else {
-        message.error('数据异常！');
+        message.error(msg || '数据异常！');
       }
     }).catch(() => {
       setTableLoadingStatus(false);
@@ -89,12 +90,12 @@ const OrderList: React.FC = () => {
     hisrotyRequest = Object.assign({}, requestDatas, hisrotyRequest, requestData);
 
     // 筛选掉单选框里面的不限选择
-    for (const key in hisrotyRequest ) {
-      const item = hisrotyRequest[key]; // 值
-      if (item === '') {
-        delete hisrotyRequest[key];
-      }
-    }
+    // for (const key in hisrotyRequest ) {
+    //   const item = hisrotyRequest[key]; // 值
+    //   if (item === '') {
+    //     delete hisrotyRequest[key];
+    //   }
+    // }
     setPageCurrent(1); 
     setPageSize(20);
     requestFn(hisrotyRequest);
@@ -123,15 +124,15 @@ const OrderList: React.FC = () => {
       const {
         code = 1000,
         data,
+        message: msg,
       } = datas as MwsOrderList.IResponseTableData;
-      
       if (code === 200) {
         setDataSource(data.records);
         setPageSize(data.size);
         setPageTotal(data.total);
         setPageCurrent(data.current);
       } else {
-        message.error('数据异常！');
+        message.error(msg || '数据异常！');
       }
     }).catch(() => {
       setTableLoadingStatus(false);
@@ -225,6 +226,8 @@ const OrderList: React.FC = () => {
         {...tableConfig}
         pagination={false}
         className={styles.table_style}
+        id="abc"
+        scroll={{ y: 770, x: 'auto' }}
         columns = {
           [{
             title: rowColumns,
@@ -239,7 +242,9 @@ const OrderList: React.FC = () => {
               }
               return (
                 <div className={styles.row}>
-                  <p className={styles.empty}></p>
+                  {
+                    rowIndex === 0 ? '' : <p className={styles.empty} data-index={rowIndex}></p>
+                  }
                   <header className={`clearfix ${styles.order_head}`}>
                     <span>下单时间：{row.purchaseDate}</span>
                     <span>订单ID：{row.orderId as string}</span>
@@ -251,7 +256,6 @@ const OrderList: React.FC = () => {
                     dataSource={row.orderDetails}
                     bordered
                     key={rowIndex}
-                    className="abcdeee"
                     data-index={rowIndex}
                     rowKey={setRowKey}
                     columns={[
@@ -268,7 +272,7 @@ const OrderList: React.FC = () => {
                               <img src={rows.imgUrl || imgUrl } alt=""/>
                               <div className={`${styles.datails} `}>
                                 <a href={`${url}/dp/${rows.asin}`} rel="noopener noreferrer" target="_blank" className={styles.title}>
-                                  <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#666' }} />
+                                  <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#666', marginRight: 2 }} />
                                   {rows.productName || ''}
                                 </a>
                                 <p>
@@ -346,10 +350,10 @@ const OrderList: React.FC = () => {
                           return {
                             children: (
                               <div className={styles.table_order_status}>
-                                <p>{row.orderStatus || ''}</p>
+                                <p className={`${row.orderStatus.toLowerCase()}`}>{row.orderStatus || ''}</p>
                                 <p>
-                                  <span className={styles.status}>{rows.deliverStatus || ''}</span>
-                                  <span>（{row.deliverMethod || ''}）</span>
+                                  <span>{row.shipServiceLevel || ''}</span>
+                                  <span className={styles.method}>（{row.deliverMethod || ''}）</span>
                                 </p>
                               </div>
                             ),

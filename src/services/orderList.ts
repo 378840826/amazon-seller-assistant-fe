@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-29 10:29:40
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 15:59:49
+ * @LastEditTime: 2020-06-23 14:32:58
  * @FilePath: \amzics-react\src\services\orderList.ts
  * 订单列表API
  */ 
@@ -19,9 +19,9 @@ export async function getOrderLists(params: {}) {
 }
 
 
-export async function Test(data: any) {
-  return request('/api/system/user/login', {
-    method: 'POST',
-    data,
-  });
-}
+// export async function Test(data: any) {
+//   return request('/api/system/user/login', {
+//     method: 'POST',
+//     data,
+//   });
+// }

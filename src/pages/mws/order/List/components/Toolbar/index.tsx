@@ -11,11 +11,11 @@ import {
   DatePicker,
   Radio,
 } from 'antd';
+import { useSelector } from 'umi';
 import { Moment } from 'moment/moment';
-import { DatabaseFilled } from '@ant-design/icons';
-
 
 const { RangePicker } = DatePicker;
+let shopCount = 0;
 const fields = {} as MwsOrderList.IRadioFields; // 所有的单选框字段
 const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [orderInfoSearch, setOrderInfoSearch] = useState<string>(''); // 第一个 订单ID、ASIN、SKU或商品标题搜索框 
@@ -33,9 +33,28 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一件多SKU
   const [deliverMethod, setDeliverMethod] = useState<string>(''); // 发货方式
   const [shipServiceLevel, setShipServiceLevel] = useState<string>(''); // 配送服务
-  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('54px'); // 筛选框高度
-  const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('更多');
+  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('80px'); // 筛选框高度
+  const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('展开');
   const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
+  const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
+
+  // 店铺切换时、让导航回到默认状态
+  useEffect(() => {
+    if (shopCount > 1) {
+      setOrderInfoSearch('');
+      setSellerSearch('');
+      setOrderStatus('');
+      setDeliverStatus('');
+      setBusinessOrder('');
+      setMultiplePieces('');
+      setPreferentialOrder('');
+      setMultipleSku('');
+      setDeliverMethod('');
+      setShipServiceLevel('');
+    } else {
+      shopCount++;
+    }
+  }, [current]);
 
   const rangeList = {
     '上周': [
@@ -68,6 +87,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   };
 
   // 日历的配置
+  // eslint-disable-next-line 
   const DatepickerConfig: any = {
     ranges: rangeList,
     dateFormat: 'YYYY-MM-DD',
@@ -109,7 +129,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   // 筛选工具栏的高度设置
   const handleFiltrateHeight = () => {
     if (filtrateMoreButText === '收起') {
-      setFiltrateBoxHeight('56px');
+      setFiltrateBoxHeight('80px');
       setFiltrateMoreButText('展开');
       setFiltrateMoreButClass('');
     } else {
@@ -196,34 +216,32 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
         <Button type="primary" onClick={searchButton}>搜索</Button>
         <div className={`${styles.datepicker} order-list-datepicker`}>
           <ConfigProvider locale={zhCN}>
-            <RangePicker {...DatepickerConfig}/>
+            <RangePicker {...DatepickerConfig} className="h-range-picker"/>
           </ConfigProvider>
         </div>
       </div>
         
       <div className={styles.radio_filtrate} style={{ height: filtrateBoxHeight }} >
-        <div className={styles.layout_one_col}>
-          <div className={styles.layout_one_row}>
-            <div>
-              <span>B2B订单：</span>
-              <Radio.Group 
-                onChange={(e) => handleChangeRadio(e, 'B2B订单')}
-                value={businessOrder}>
-                <Radio value="">不限</Radio>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
-            </div>
-            <div>
-              <span>一单多件：</span>
-              <Radio.Group 
-                onChange={(e) => handleChangeRadio(e, '一单多件')}
-                value={multiplePieces}>
-                <Radio value="">不限</Radio>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
-            </div>
+        <div className={styles.left_layout}>
+          <div className={styles.layout_one_item}>
+            <span>B2B订单：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, 'B2B订单')}
+              value={businessOrder}>
+              <Radio value="">不限</Radio>
+              <Radio value={true}>是</Radio>
+              <Radio value={false}>否</Radio>
+            </Radio.Group>
+          </div>
+          <div className={`${styles.layout_one_item}`}>
+            <span>优惠订单：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '优惠订单')}
+              value={preferentialOrder}>
+              <Radio value="">不限</Radio>
+              <Radio value={true}>是</Radio>
+              <Radio value={false}>否</Radio>
+            </Radio.Group>
           </div>
           <div className={styles.layout_one_item}>
             <span>订单状态：</span>
@@ -250,15 +268,36 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
         </div>
-        <div className={styles.layout_two_col}>
-          <div className={`${styles.layout_one_item}`}>
-            <span>优惠订单：</span>
+        <div className={styles.right_layout}>
+          <div className={styles.layout_one_item}>
+            <span>一单多件：</span>
             <Radio.Group 
-              onChange={(e) => handleChangeRadio(e, '优惠订单')}
-              value={preferentialOrder}>
+              onChange={(e) => handleChangeRadio(e, '一单多件')}
+              value={multiplePieces}>
               <Radio value="">不限</Radio>
               <Radio value={true}>是</Radio>
               <Radio value={false} style={{ marginLeft: 9 }}>否</Radio>
+            </Radio.Group>
+          </div>
+          <div className={`${styles.layout_one_item}  ${styles.order_discounts}`}>
+            <span>一件多SKU：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '一件多SKU')}
+              value={multipleSku}>
+              <Radio value="">不限</Radio>
+              <Radio value={true}>是</Radio>
+              <Radio value={false} style={{ marginLeft: 9 }}>否</Radio>
+            </Radio.Group>
+            
+          </div>
+          <div className={styles.layout_one_item}>
+            <span>发货方式：</span>
+            <Radio.Group 
+              onChange={(e) => handleChangeRadio(e, '发货方式')}
+              value={deliverMethod}>
+              <Radio value="">不限</Radio>
+              <Radio value="Amazon">FBA</Radio>
+              <Radio value="Merchant">FBM</Radio>
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}`}>
@@ -272,30 +311,13 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
               <Radio value="SecondDay">SecondDay</Radio>
               <Radio value="NextDay">NextDay</Radio>
             </Radio.Group>
-          </div>
-          <div className={styles.layout_one_item}>
-            <span>发货方式：</span>
-            <Radio.Group 
-              onChange={(e) => handleChangeRadio(e, '发货方式')}
-              value={deliverMethod}>
-              <Radio value="">不限</Radio>
-              <Radio value="Amazon">FBA</Radio>
-              <Radio value="Merchant">FBM</Radio>
-            </Radio.Group>
-          </div>
-        </div>
-        <div className={styles.layout_two_col}>
-          <div className={`${styles.layout_one_item}  ${styles.order_discounts}`}>
-            <span>一件多SKU：</span>
-            <Radio.Group 
-              onChange={(e) => handleChangeRadio(e, '一件多SKU')}
-              value={multipleSku}>
-              <Radio value="">不限</Radio>
-              <Radio value={true}>是</Radio>
-              <Radio value={false}>否</Radio>
-            </Radio.Group>
-            <p className={styles.icon} onClick={handleFiltrateHeight}>
-              <Iconfont className={`${styles.i} ${filtrateMoreButClass === 'active' ? 'active' : ''}`} type="icon-zhankai" />
+            <p className={`${styles.icon} 
+              ${filtrateMoreButClass === 'active' ? 'active' : ''}`}
+            onClick={handleFiltrateHeight}>
+              <Iconfont className={`
+                ${styles.i} ${filtrateMoreButClass === 'active' ? 'active' : ''}`
+              }
+              type="icon-zhankai" />
               <span>{filtrateMoreButText}</span>
             </p>
           </div>

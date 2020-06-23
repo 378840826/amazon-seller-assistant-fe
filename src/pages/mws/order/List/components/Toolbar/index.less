@@ -1,3 +1,10 @@
+:global(.h-range-picker) {
+  span:global(.ant-picker-suffix),
+  span:global(.ant-picker-separator) {
+    color: rgba(0,0,0,.25);;
+  }
+}
+
 .header {
   background-color: #fff;
   margin: 0 0 20px;
@@ -34,7 +41,7 @@
 
 .radio_filtrate {
   font-size: 14px;
-  padding: 20px;
+  padding: 20px 20px 10px;
   min-width: 1340px;
   overflow: hidden;
   display: flex;
@@ -55,47 +62,44 @@
       padding-bottom: 10px;
 
       > span {
-        min-width: 73px;
         text-align: left;
         display: inline-block;
       }
     }
   }
 
-  .layout_one_col {
-    width: 40%;
+  .left_layout,
+  .right_layout {
+    width: 50%
+  }
 
-    .layout_one_row {
-      display: flex;
-      justify-content: space-between;
-
-      > div:first-child {
-        padding-bottom: 10px;
-
-        > span {
-          min-width: 73px;
-          text-align: left;
-          display: inline-block;
-        }
+  .left_layout {
+    .layout_one_item {
+      > span {
+        min-width: 73px;
       }
     }
   }
 
-  .layout_two_col {
-    width: 40%;
-  }
-
-  .layout_three_col {
-    width: 20%;
-  }
-
-  div.order_discounts {
-    display: flex;
-
+  .right_layout {
+    .layout_one_item {
+      > span {
+        min-width: 85px;
+        display: inline-block;
+      }
+    }
+    
     .icon {
       cursor: pointer;
-      right: 0;
       margin-left: 20px;
+      display: inline-block;
+      position: relative;
+      top: -63px;
+      transition: all 0.3s;
+  
+      &:global(.active) {
+        top: 0;
+      }
 
       .i {
         color: @primary-color;
@@ -103,7 +107,7 @@
         margin-right: 8px;
         transition: all 0.3s;
       }
-
+  
       .i:global(.active) {
         transform: rotate(182deg);
       }

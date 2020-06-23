@@ -111,6 +111,18 @@ const BasicLayout: React.FC = props => {
     dispatch({
       type: 'global/fetchUnreadNotices',
     });
+
+    // 登录接口(暂时)
+    // dispatch({
+    //   type: 'orderList/test',
+    //   payload: {
+    //     data: {
+    //       email: '10086@qq.com',
+    //       password: 'hello2020',
+    //       rememberMe: true,
+    //     },
+    //   },
+    // });
   }, [dispatch]);
   
   return (

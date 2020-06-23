@@ -3,11 +3,11 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-29 10:39:05
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-19 15:24:00
+ * @LastEditTime: 2020-06-23 14:32:37
  * @FilePath: \amzics-react\src\pages\mws\order\List\model.ts
  */ 
 
-import { getOrderLists } from '@/services/orderList';
+import { getOrderLists, Test } from '@/services/orderList';
 import { Effect, Reducer } from 'umi';
 
 interface IState {
@@ -50,6 +50,16 @@ const OrderList: IOrderList = {
         payload.reject(error);
       }
     },
+
+    // *test({ payload }, { call }) {
+    //   // try {
+    //   // const response = yield call(Test, payload.data);
+    //   yield call(Test, payload.data);
+    //   //   payload.resolve(response);
+    //   // } catch(error) {
+    //   //   payload.reject(error)
+    //   // }
+    // },
   },
 };
 

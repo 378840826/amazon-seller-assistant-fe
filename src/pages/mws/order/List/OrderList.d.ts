@@ -26,6 +26,7 @@ declare namespace MwsOrderList {
       size: number;
       current: number;
     };
+    message: string;
   }
 
   // 订单
@@ -37,6 +38,7 @@ declare namespace MwsOrderList {
     orderStatus: string;
     deliverMethod: string;
     actuallyPaid: string;
+    shipServiceLevel: string;
     buyerMessage: {
       buyerName: string;
       telephone: string | number;

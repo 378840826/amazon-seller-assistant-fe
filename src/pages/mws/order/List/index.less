@@ -27,10 +27,6 @@
     padding: 0;
   }
 
-  :global(.antd-talbe) {
-    font-size: @font-size-sm !important;
-  }
-
   // 表头
   .table_header {
     border: 1px solid @divider-line-color;
@@ -42,9 +38,15 @@
       line-height: 44px !important;
       background-color: #fafafa;
       border: none !important;
-      font-size: @font-size-sm !important;
+      color: #333;
+    }
+
+    td {
+      border: none;
+      background-color: @simple-table-header-bg;
     }
   }
+
 
   .row {
     width: 100%;
@@ -58,7 +60,7 @@
       line-height: 42px;
       color: @text-color;
       background-color: #fff;
-      font-size: @font-size-sm !important;
+      // font-size: @font-size-sm !important;
 
       span:first-child {
         float: left;
@@ -80,10 +82,6 @@
     tbody {
       tr[data-row-key=1] p.empty {
         display: none;
-      }
-
-      td {
-        font-size: 12px !important;
       }
 
       tr {
@@ -118,7 +116,11 @@
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;
           white-space: normal;
-          font-size: 12px;
+          color: #0083ff;
+        }
+
+        .title:hover  * {
+          color: #0083ff;
         }
 
         p:nth-child(2) {
@@ -139,16 +141,15 @@
       text-align: left;
       min-width: 211px;
       padding: 0 0 0 15px;
-      color: @text-color-secondary;
 
       p.p_one_and_two {
-        span:nth-child(2) {
-          color: #666;
+        span:nth-child(3) {
+          color: @text-color-secondary;
         }
       }
 
-      p.p_three span:last-child {
-        color: #33332d;
+      p.p_three {
+        color: @heading-color;
       }
     }
 
@@ -157,8 +158,25 @@
       line-height: 25px;
       min-width: 130px;
 
-      span.status {
+      span.method {
         color: @text-color-secondary;
+      }
+
+      // 订单状态不同状态不同颜色
+      :global(.pending) {
+        color: @text-color;
+      }
+
+      :global(.cancelled) {
+        color: @text-color-secondary;
+      }
+
+      :global(.shipping) {
+        color: @error-color;
+      }
+
+      :global(.shipped) {
+        color: @success-color;
       }
     }
 
