@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-23 14:25:39
+ * @LastEditTime: 2020-06-23 14:40:26
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  */ 
@@ -29,7 +29,7 @@ let hisrotyRequest = {};// 保存所有筛选信息
 const OrderList: React.FC = () => {
   const dispatch = useDispatch();
   const [startTime] = useState<Moment>(
-    moment().subtract(4, 'week').startOf('week')
+    moment().subtract(1, 'week').startOf('week')
   ); // 日历默认开始日期
   const [endTime] = useState<Moment>(
     moment().subtract(1, 'week').endOf('week')

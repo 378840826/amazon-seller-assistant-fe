@@ -51,6 +51,10 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
       setMultipleSku('');
       setDeliverMethod('');
       setShipServiceLevel('');
+      setDatepickerValue([
+        moment().subtract(1, 'week').startOf('week'),
+        moment().subtract(1, 'week').endOf('week'),
+      ]);
     } else {
       shopCount++;
     }
