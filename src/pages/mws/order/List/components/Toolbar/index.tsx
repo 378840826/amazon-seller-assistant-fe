@@ -220,7 +220,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
         <Button type="primary" onClick={searchButton}>搜索</Button>
         <div className={`${styles.datepicker} order-list-datepicker`}>
           <ConfigProvider locale={zhCN}>
-            <RangePicker {...DatepickerConfig} className="h-range-picker"/>
+            <RangePicker {...DatepickerConfig} dropdownClassName="h-range-picker" className="h-range-picker"/>
           </ConfigProvider>
         </div>
       </div>

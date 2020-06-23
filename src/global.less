@@ -60,10 +60,19 @@ ol {
   }
 }
 
-// 日历范围的两个小图标
+// 重写双日历的样式
 .h-range-picker {
-  span:global(.ant-picker-suffix),
-  span:global(.ant-picker-separator) {
-    color: rgba(0, 0, 0, 0.25);;
+  span.ant-picker-suffix,
+  span.ant-picker-separator {
+    color: rgba(0, 0, 0, 0.25);
+  }
+
+  .ant-picker-cell {
+    color: rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+  
+  .ant-picker-cell-in-view {
+    color: @text-color;
   }
 }
