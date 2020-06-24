@@ -55,7 +55,7 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
         </MenuItem>
         <MenuDivider />
         <MenuItem key="/mws/shop/list" className={styles.menuItem}>
-          { munuIcon('icon-gerenzhongxin2') }
+          { munuIcon('icon-dianpuguanli1') }
           店铺管理
         </MenuItem>
         <MenuDivider />

@@ -7,8 +7,20 @@
   .heardContainer {
     display: flex;
     margin: 0 auto;
-    width: 1440px;
+    width: 1220px;
     height: @layout-header-height;
+  }
+
+  @media screen and (min-width: 1800px) {
+    .heardContainer {
+      width: 1443px;
+    }
+  }
+
+  @media screen and (max-width: 1440px) and (min-width: 1360px) {
+    .heardContainer {
+      width: 1220px;
+    }
   }
 
   .menuItem {

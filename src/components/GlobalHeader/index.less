@@ -27,10 +27,17 @@
 }
 
 .headerMenu {
+  padding-left: 18px;
+  padding-right: 18px;
+
   :global(.ant-dropdown-menu-item) {
     min-width: 200px;
     color: @primary-color;
     text-align: center;
+  }
+
+  :global(.ant-dropdown-menu-item-divider) {
+    background-color: @divider-line-color;
   }
 
   .menuItem {
@@ -38,16 +45,17 @@
     position: relative;
 
     .menuIcon {
-      float: left;
-      line-height: @headMenuLineHeight;
+      position: absolute;
+      left: 0;
+      top: 14px;
       font-size: 18px;
     }
 
     .badge {
       position: absolute;
       line-height: 0;
-      top: 15px;
-      left: 30px;
+      top: 13px;
+      left: 16px;
     }
 
     .username {
