@@ -3,8 +3,8 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-03 15:12:15
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-17 16:40:07
- * @FilePath: \amzics-react_am_10\src\pages\mws\comment\Monitor\model.ts
+ * @LastEditTime: 2020-06-24 15:30:25
+ * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\model.ts
  * 
  * 接口
  */ 
@@ -13,6 +13,7 @@ import {
   getCommentList,
   downloadCommentTable,
   signHandle,
+  // Test
 } from '@/services/commentMonitor';
 
 export interface ICommentMonitorState {
@@ -36,6 +37,7 @@ export interface ICommentMonitorType {
     getCommentList: Effect;
     downLoadComment: Effect;
     signHandle: Effect;
+    // test: Effect;
   };
 }
 
@@ -85,6 +87,11 @@ const CommentMonitor: ICommentMonitorType = {
         payload.reject(err);
       }
     },
+
+    // *test({ payload }, { call }) {
+    //   yield call(Test, payload.data);
+    // },
+
   },
 };
 

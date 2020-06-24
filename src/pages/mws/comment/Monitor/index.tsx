@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-02 15:57:07
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 21:57:17
+ * @LastEditTime: 2020-06-24 15:30:01
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\index.tsx
  * 
  * 评论监控
@@ -42,6 +42,7 @@ import {
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
+
 interface ICommentMonitorList {
   code: number;
   data: {
@@ -52,6 +53,68 @@ interface ICommentMonitorList {
     records: [];
   };
 }
+
+
+const OrderComponent: React.FC<CommectMonitor.IOrderType> = (props) => {
+  const {
+    title = '标题', // 显示的文字
+    value = '', // 排序值
+    orderValue = '', // 用于显示哪个组件排序(和标题比较)、配合state
+    callback,
+    isTabBoolean = false, // 返回时是否转换成布尔值、true就是asc，false就是desc
+    tip = '点击排序', // 鼠标移动上去的提示文字
+  } = props;
+  const [currentOrder, setCurrentOrder] = useState('');
+  let classNames = '';
+  
+  useEffect(() => {
+    if (value !== orderValue) {
+      setCurrentOrder('');
+    }
+  }, [value, orderValue]);
+
+  if (currentOrder === '') {
+    classNames = styles.not;
+  } else if (currentOrder === 'desc') {
+    classNames = styles.asc;
+  } else {
+    classNames = styles.desc;
+  }
+
+  const orderer = () => {
+    let order: boolean|string = '';
+    if (currentOrder === 'asc') {
+      setCurrentOrder('desc');
+      order = 'desc';
+      classNames = styles.asc;
+    } else {
+      order = 'asc';
+      setCurrentOrder('asc');
+      classNames = styles.desc;
+    }
+
+    if (isTabBoolean) {
+      order = order === 'asc' ? true : false;
+    }
+
+    callback ? callback({
+      value,
+      order,
+    }) : null;
+  };
+
+
+  return (
+    <Tooltip title={tip}>
+      <div className={styles.sort_components} onClick={orderer}>
+        <span>{title}</span>
+        <div className={`${styles.sort_icon} ${classNames}`}>
+          <Iconfont type="icon-xiangxiajiantou" />
+        </div>
+      </div>
+    </Tooltip>
+  );
+};
 
 let requestHeader = {};
 let shopCount = 0; // 店铺首次加载不执行
@@ -72,6 +135,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   );
   const { storeName } = storage.get('currentShop') as API.IShop; // 当前选中店铺
   const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
+  const [currentOrder, setCurrentOrder] = useState(''); // 当前排序的列字段
+
 
   // 初始化请求数据
   const requestData: CommectMonitor.IRequestDataType = {
@@ -94,7 +159,6 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     } else {
       requestHeader = Object.assign({}, requestData, params);
     }
-    
     
     new Promise((resolve, reject) => {
       dispatch({
@@ -125,7 +189,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       setLoading(false);
       console.error(err, '首次加载出错');
     });
-  }, [dispatch]);
+  }, [dispatch]);// eslint-disable-line
 
   useEffect(() => {
     requestBody();
@@ -135,7 +199,6 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   // 店铺切换时
   useEffect(() => {
     if (shopCount > 1) {
-      console.log('店铺切换时');
       requestBody();
     }
     shopCount++;
@@ -195,22 +258,54 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     }
   };
 
+  const handleOrder = (obj: { value: string; order: string|boolean }) => {
+    setCurrentOrder(obj.value);
+    const objs = {
+      order: obj.value,
+      asc: obj.order,
+    };
+
+    const data = Object.assign(requestData, requestHeader, objs);
+    setLoading(true);
+    requestBody(data);
+  };
+
   const columns: ColumnsType = [
     {
-      title: '日期',
+      title: <OrderComponent 
+        title="日期" 
+        isTabBoolean 
+        orderValue={currentOrder} 
+        value="reviewTime" 
+        callback={handleOrder} />,
       dataIndex: 'reviewTime',
       key: 'name',
       align: 'center',
+      width: '100px', 
+      render(value) {
+        return (
+          <div className={styles.date}>
+            {value}
+          </div>
+        );
+      },
     }, {
-      title: '星级',
+      title: <OrderComponent 
+        title="星级" 
+        isTabBoolean 
+        value="star" 
+        orderValue={currentOrder} 
+        callback={handleOrder} />,
       dataIndex: 'star',
       key: 'age',
       align: 'center',
+      width: '150px',
       render(value) {
         return <Rate 
           allowHalf 
           disabled 
-          defaultValue={value} 
+          defaultValue={value}
+          style={{ color: '#ffaf4d', opacity: 1, marginLeft: 10 }}
           className={styles.star} />;
       },
     }, {
@@ -218,6 +313,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       dataIndex: 'reviewContent',
       key: 'reviewContent',
       align: 'center',
+      width: 330,
+      className: styles.commect_content,
       render(value, rowData){
         const data = rowData as {reviewLink: string};
         const reviewerLink = data.reviewLink;
@@ -228,8 +325,15 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
               getPopupContainer={() => document.querySelector('.monitor_box') as HTMLElement}
             >
               <a href={reviewerLink} target="_blank" rel="noopener noreferrer">
-                <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#999' }} />
+                <Iconfont type="icon-lianjie" style={{ fontSize: 12, color: '#999', marginRight: 2 }} />
                 {value}
+                Lorem ipsum dolor sit amet 
+                consectetur adipisicing elit. 
+                Quam magnam veritatis dolorem 
+                exercitationem excepturi neque
+                amet accusamus labore, unde adipisci 
+                temporibus illum suscipit molestias 
+                odit eligendi nesciunt fugit. Amet, vitae?
               </a>
             </Tooltip>
           </div>
@@ -240,11 +344,26 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       dataIndex: 'reviewerName',
       key: 'reviewerName',
       align: 'center',
+      width: 140,
+      render(value, row) {
+        const { reviewerLink } = row as { reviewerLink: string };
+        return (
+          <a 
+            href={ reviewerLink }
+            className={styles.username}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#0083ff', fontSize: 12 }}>
+            {value}
+          </a>
+        );
+      },
     }, {
       title: '商品信息',
       dataIndex: 'asin',
       key: 'asin',
       align: 'center',
+      width: 250,
       render(asin, rowData) {
         interface IDataType {
           reviewContent: string;
@@ -257,14 +376,15 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         const titleLink = data.titleLink;
         return (
           <div className={styles.product_info}>
-            <img src={data.imgLink || emptyImg as string} alt=""/>
+            <img src={data.imgLink || emptyImg as string}/>
             <div>
               <Tooltip 
                 getPopupContainer={() => document.querySelector('.monitor_box') as HTMLElement}
                 title={ title }>
                 <a href={titleLink} target="_blank" rel="noopener noreferrer">
-                  <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#999' }} />
-                  {title || ''}
+                  <Iconfont type="icon-lianjie" 
+                    style={{ fontSize: 12, color: '#999', marginRight: 2 }} />
+                  {title || ''} &nbsp;
                 </a>
               </Tooltip>
               <p>{asin}</p>
@@ -273,10 +393,16 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         );
       },
     }, {
-      title: 'Review',
+      title: <OrderComponent 
+        title="Review" 
+        isTabBoolean
+        orderValue={currentOrder} 
+        value="reviewNum" 
+        callback={handleOrder} />,
       dataIndex: 'reviewScore',
       key: 'reviewScore',
       align: 'center',
+      width: 120, 
       render(value, row) {
         const { reviewScore, reviewNum } = row as CommectMonitor.IRowDataType;
         return (
@@ -290,28 +416,34 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       title: '星级分布',
       key: 'starPart',
       align: 'center',
-      width: '320px',
+      width: 320,
       render(value, row) {
         const { starPart } = row as CommectMonitor.IRowDataType;
         return (
           <div className={`${styles.start_distribute} clearfix`}>
             <div className={styles.layout_one_row}>
               <div>
-                <a 
-                  href={ starPart.fiveStarLink } 
-                  rel="noopener noreferrer" 
-                  target="_blank" 
-                  className={styles.title}>5星</a>
+                {
+                  starPart.fiveStarLink ? <a 
+                    href={ starPart.fiveStarLink } 
+                    rel="noopener noreferrer" 
+                    target="_blank" 
+                    className={styles.title}>5星</a>
+                    : '5星'
+                }
                 <Tooltip title={ starPart.five }>
                   <Progress percent={ starPart.five } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
               <div>
-                <a 
-                  href={ starPart.fourStarLink } 
-                  rel="noopener noreferrer" 
-                  target="_blank" 
-                  className={styles.title}>4星</a>
+                {
+                  starPart.fourStarLink ? <a 
+                    href={ starPart.fourStarLink } 
+                    rel="noopener noreferrer" 
+                    target="_blank" 
+                    className={styles.title}>4星</a>
+                    : '4星'
+                }
                 <Tooltip title={ starPart.four }>
                   <Progress percent={ starPart.four } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
@@ -319,31 +451,41 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
             </div>
             <div className={styles.layout_two_row}>
               <div>
-                <a 
-                  href={ starPart.threeStarLink } 
-                  rel="noopener noreferrer" 
-                  target="_blank" 
-                  className={styles.title}>3星</a>
+                { 
+                  starPart.threeStarLink ? <a 
+                    href={ starPart.threeStarLink } 
+                    rel="noopener noreferrer" 
+                    target="_blank" 
+                    className={styles.title}>3星</a>
+                    : '3星'
+                }
                 <Tooltip title={ starPart.three }>
                   <Progress percent={ starPart.three } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
               <div>
-                <a 
-                  href={ starPart.twoStarLink } 
-                  rel="noopener noreferrer" 
-                  target="_blank" 
-                  className={styles.title}>2星</a>
+                {
+                  starPart.twoStarLink ? <a 
+                    href={ starPart.twoStarLink } 
+                    rel="noopener noreferrer" 
+                    target="_blank" 
+                    className={styles.title}>2星</a>
+                    : '2星'
+                }
                 <Tooltip title={ starPart.two }>
                   <Progress percent={ starPart.two } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
             </div>
             <div className={styles.layout_three_row}>
-              <a href={ starPart.oneStarLink } 
-                rel="noopener noreferrer" 
-                target="_blank" 
-                className={styles.title}>1星</a>
+              {
+                starPart.oneStarLink ? <a 
+                  href={ starPart.oneStarLink } 
+                  rel="noopener noreferrer" 
+                  target="_blank" 
+                  className={styles.title}>1星</a>
+                  : '1星'
+              }
               <Tooltip title={ starPart.one }>
                 <Progress percent={ starPart.one } strokeColor="#ffaf4d" showInfo={false} />
               </Tooltip>
@@ -356,16 +498,24 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       dataIndex: 'id',
       key: 'address',
       align: 'center',
-      width: '136px',
+      width: 120,
       render(value, row) {
-        const { handled, hasOrder } = row as CommectMonitor.IRowDataType;
+        const { 
+          handled,
+          hasOrder,
+          asin,
+          reviewerName,
+        } = row as CommectMonitor.IRowDataType;
         return (
           <div className={styles.handleBth}>
             <SignHandle id={value} status={handled}></SignHandle>
             {
               // 是否有匹配订单
               hasOrder ?
-                <Link to="" className={styles.hasOrder}>匹配订单</Link>
+                <Link to={{
+                  pathname: 'mws/order/list',
+                  search: `?asin=${asin}&buyer=${reviewerName}`,
+                }} className={styles.hasOrder}>匹配订单</Link>
                 : ''
             }
           </div>
@@ -407,6 +557,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
             key="id" rowKey="id" 
             {...tableConfig}
             pagination={false} 
+            scroll={{ y: 584 }}
           />
           <div className={styles.page}>
             <Pagination {...pageConfig}/>

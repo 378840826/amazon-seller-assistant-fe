@@ -1,12 +1,7 @@
 .settings_box {
-  // font-family: PingFangSC-Regular, sans-seri;
   background-color: #fff;
   border-radius: @border-radius-base;
-  
-  a {
-    color: #0083ff;
-  }
-  
+
   p {
     padding: 0;
     margin: 0;
@@ -17,25 +12,21 @@
   }
 
   > header {
-    display: flex; 
+    display: flex;
     justify-content: space-between;
     padding: 20px;
 
     .search {
-      display: flex; 
+      display: flex;
 
       button {
         margin: 0 10px;
       }
-
-      
     }
   }
-  
 
   // 表格
   > main {
-
     :global(.ant-table-thead) th {
       height: 44px;
       line-height: 44px;
@@ -55,12 +46,13 @@
     // 商品信息列
     .product_cols {
       display: flex;
-      justify-content: center;
+      // justify-content: center;
 
       img {
         width: 46px;
         height: 46px;
         margin: 10px 10px 0 0;
+        flex: 0 0 auto;
       }
 
       a {
@@ -76,6 +68,7 @@
         font-size: @font-size-sm;
         text-align: left;
         margin-top: 10px;
+        color: #0083ff;
       }
 
       .details {
@@ -89,7 +82,7 @@
         .price {
           color: @error-color;
         }
-        
+
         .line {
           height: 12px;
           display: inline-block;
@@ -108,13 +101,12 @@
     }
 
     // 监听次数
-    .monitor span{
+    .monitor span {
       color: @text-color-secondary;
     }
-
   }
 
   > footer {
-    padding: 20px;
+    padding: 10px 20px;
   }
 }

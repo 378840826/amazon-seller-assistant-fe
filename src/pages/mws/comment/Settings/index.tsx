@@ -17,6 +17,7 @@ import {
   message,
 } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import moment from 'moment';
 
 
 const Settings: React.FC = () => {
@@ -70,7 +71,7 @@ const Settings: React.FC = () => {
         reject,
       });
     }).then(datas => {
-      const { code, data } = datas as { code: number; data: {} }
+      const { code, data } = datas as { code: number; data: {} };
       if (code === 200) {
         const {
           oneStar,
@@ -97,8 +98,6 @@ const Settings: React.FC = () => {
   // 接收表格数据
   useEffect(() => {
     setTableLoadingStatus(false);
-    console.log(datas);
-
     if (!datas.code) {
       return;
     }
@@ -112,7 +111,6 @@ const Settings: React.FC = () => {
     } else {
       message.success(datas.msg || 'OOP! 网络有点问题~');
     }
-    
   }, [datas]);
 
   const handleMenuClick = (param = {}, type = 0) => {
@@ -251,6 +249,21 @@ const Settings: React.FC = () => {
       key: 'updateTime',
       align: 'center',
       width: '15%',
+      render(value: string) {
+        let date = '';
+        let time = '';
+        if (value) {
+          date = moment(value).format('YYYY-MM-DD');
+          time = moment(value).format('HH:mm:ss');
+        }
+        return (
+          <div>
+            {date}
+            <br />
+            {time}
+          </div>
+        );
+      },
     },
     {
       title: '商品信息',

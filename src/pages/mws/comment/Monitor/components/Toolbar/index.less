@@ -33,7 +33,6 @@ header.monitor_toolbar {
 
   // 工具栏有大小屏
   @media screen and (max-width: 1847px) {
-
     .layout_five_div {
       margin: 0 0 0 100px;
     }
@@ -71,6 +70,14 @@ header.monitor_toolbar {
   .layout_one_div {
     display: flex;
     margin: 3px 0 0;
+
+    :global(.ant-checkbox-group) {
+      white-space: nowrap;
+
+      label {
+        margin-right: 11px;
+      }
+    }
   }
 
   // 第二个div
@@ -83,7 +90,7 @@ header.monitor_toolbar {
       width: 280px;
     }
   }
-  
+
   // 第三个div
   .layout_three_div {
     input {
@@ -94,7 +101,6 @@ header.monitor_toolbar {
 
   // 第四个div
   .layout_four_div {
-    
     :global(.ant-picker) {
       width: 280px;
       height: 30px;
@@ -104,18 +110,18 @@ header.monitor_toolbar {
   // 第五个
   .layout_five_div {
     display: flex;
-    
-    > div  {    
+
+    > div {
       width: 100%;
       display: flex;
       justify-content: space-between;
     }
 
-    :global(.ant-radio + * ) {
+    :global(.ant-radio + *) {
       padding-right: 0;
     }
 
-    :global(.ant-radio-wrapper)  {
+    :global(.ant-radio-wrapper) {
       margin-right: 0;
     }
   }
@@ -134,7 +140,6 @@ header.monitor_toolbar {
       width: 280px;
       flex: 0 0 auto;
       position: relative;
-      // left: -8px;
     }
   }
 
@@ -152,8 +157,8 @@ header.monitor_toolbar {
 
   .btns {
     text-align: right;
-    padding: 20px 0px 0 0;
-    
+    padding: 20px 0 0 0;
+
     button {
       margin-left: 20px;
     }

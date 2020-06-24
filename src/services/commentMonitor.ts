@@ -14,6 +14,8 @@ export async function getCommentList( data: { current: number; size: number } ) 
     params: {
       current: data.current,
       size: data.size,
+      order: data.order,
+      asc: data.asc,
     },
     data,
     headers: {
@@ -100,5 +102,13 @@ export async function setcommentMonitorSettingsSwitch(params: {}) {
     headers: {
       StoreId: '1261140381664944130',
     },
+  });
+}
+
+
+export async function Test(data: any) {
+  return request('/api/system/user/login', {
+    method: 'POST',
+    data,
   });
 }

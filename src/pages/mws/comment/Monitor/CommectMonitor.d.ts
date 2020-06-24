@@ -3,8 +3,8 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-13 15:03:11
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-18 11:47:52
- * @FilePath: \amzics-react_am_10\src\pages\mws\comment\Monitor\CommectMonitor.d.ts
+ * @LastEditTime: 2020-06-24 12:02:37
+ * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\CommectMonitor.d.ts
  */ 
 
 declare namespace CommectMonitor {
@@ -42,12 +42,13 @@ declare namespace CommectMonitor {
       fourStarLink: string;
       five: number;
       fiveStarLink: string;
-      
     };
     handled: boolean;
     hasOrder: boolean;
     reviewScore: string;
     reviewNum: number;
+    asin: string;
+    reviewerName: string;
   }
 
   // 工具栏的字段
@@ -64,5 +65,12 @@ declare namespace CommectMonitor {
     reviewsNumMax: string;
   }
 
-  
+  interface IOrderType {
+    title?: string;
+    value: string;
+    orderValue: string;
+    isTabBoolean: boolean;
+    tip?: string;
+    callback?: (param: {value: string; order: string|boolean}) => void;
+  }
 }

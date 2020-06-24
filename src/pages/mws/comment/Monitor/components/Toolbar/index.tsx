@@ -240,6 +240,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   };
   
   // 日历配置
+  // eslint-disable-next-line
   const RangePicker: any = {
     ranges: rangeList,
     value: datepickerValue,
@@ -248,17 +249,11 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     onChange(dates: Moment[]): void {
       let dateStart = '';
       let dateEnd = '';
-
       setDatepickerValue(dates);
-      if (dates) {
-        dateStart = dates[0].format('YYYY-MM-DD');
-        dateEnd = dates[1].format('YYYY-MM-DD');
-        setDateStart(dateStart);
-        setDateEnd(dateEnd);
-      } else {
-        setDateStart('');
-        setDateEnd('');
-      }
+      dateStart = dates[0].format('YYYY-MM-DD');
+      dateEnd = dates[1].format('YYYY-MM-DD');
+      setDateStart(dateStart);
+      setDateEnd(dateEnd);
       gather({ dateStart, dateEnd });
     },
   };
@@ -279,20 +274,21 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
           value={asin} 
           onChange={changeAsin}
           onPressEnter={InputDownEnter}
+          maxLength={10}
         />
       </div>
 
       <div className={styles.layout_three_div}>
         <span className={styles.text}>评分：</span>
         <Input
-          placeholder="0"
+          placeholder="min"
           value={scopeMin}
           onChange={copeMinChange}
           onPressEnter={InputDownEnter}
         />
         <span className={styles.line}></span>
         <Input 
-          placeholder="5.0"
+          placeholder="max"
           value={scopeMax}
           onChange={copeMaxChange}
           onPressEnter={InputDownEnter}
@@ -302,7 +298,11 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
       <div className={styles.layout_four_div}>
         <span className={styles.text}>日期：</span>
         <ConfigProvider locale={zhCN}>
-          <DatePicker.RangePicker {...RangePicker}/>
+          <DatePicker.RangePicker 
+            {...RangePicker} 
+            dropdownClassName="h-range-picker" 
+            className="h-range-picker"
+          />
         </ConfigProvider>
       </div>
 
