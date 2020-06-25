@@ -22,7 +22,7 @@ interface IProps {
   current?: number; // 当前页
   pageSize?: number; // 大小
   totalText?: string; // 总数量的文字描述 %d为占位符 例：列表数量为%d个
-  changeisBackTop?: boolean; // 分页改变时页面是否回到顶部，操作DOM 找不到更好的解决方式
+  // changeisBackTop?: boolean; // 分页改变时页面是否回到顶部，操作DOM 找不到更好的解决方式
   total: number; // 总数量
 }
 
@@ -84,17 +84,17 @@ const Page: React.FC<IProps> = (props) => {
   }
 
   // 页面回到顶部
-  const changeBackTop = () => {
-    if (props.changeisBackTop === false) {
-      return;
-    }
-    document.documentElement.scrollTop = document.body.scrollTop = 0;
-  };
+  // const changeBackTop = () => {
+  //   if (props.changeisBackTop === false) {
+  //     return;
+  //   }
+  //   document.documentElement.scrollTop = document.body.scrollTop = 0;
+  // };
   
   // 页码改变的回调
   const onChange = (current: number) => {
     setCurrent(current);
-    changeBackTop();
+    // changeBackTop();
     if (props.callback) {
       props.callback(current, pageSize);
     }
@@ -103,7 +103,7 @@ const Page: React.FC<IProps> = (props) => {
   // 改变每页大小
   const clickPageSize = (pageSize: string): void => {
     setPageSize(Number(pageSize));
-    changeBackTop();
+    // changeBackTop();
     if (props.callback) {
       props.callback(1, Number(pageSize));
     }
@@ -111,7 +111,7 @@ const Page: React.FC<IProps> = (props) => {
 
   
   // 分页配置 
-  let pageConfig = {
+  const pageConfig = {
     total,
     current,
     pageSize: pageSize,

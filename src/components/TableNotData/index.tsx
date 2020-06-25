@@ -8,7 +8,7 @@ interface IProps {
 }
 
 
-const TableNotData:React.FC<IProps> = (props) => {
+const TableNotData: React.FC<IProps> = (props) => {
   return (
     <div className={`${styles.table_not_data} ${props.className}`}>
       <img src={require('@/assets/notFind.png')} alt="空数据图片"/>

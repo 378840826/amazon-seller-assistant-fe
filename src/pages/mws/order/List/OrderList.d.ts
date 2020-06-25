@@ -90,4 +90,13 @@ declare namespace MwsOrderList {
   interface IToolbarProps {
     handleFiltarte: (param) => void;
   }
+
+  interface IRequestDatas {
+    current: number;
+    size: number;
+    startTime: string;
+    endTime: string;
+    asinRelatedSearch?: string;
+    buyerRelatedSearch?: string;
+  }
 }

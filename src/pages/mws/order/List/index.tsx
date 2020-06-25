@@ -6,6 +6,10 @@
  * @LastEditTime: 2020-06-23 17:10:44
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
+ * 
+ * 查询字符串
+ * asin = 订单id,asin,sku或标题搜索框
+ * 
  */ 
 'use strict';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -23,6 +27,7 @@ import { storage, getAmazonBaseUrl } from '@/utils/utils';
 import imgUrl from '@/assets/stamp.png';
 import Toolbar from './components/Toolbar';
 import { Moment } from 'moment/moment';
+import { getQuery } from '@/utils/huang';
 
 
 let hisrotyRequest = {};// 保存所有筛选信息
@@ -42,15 +47,22 @@ const OrderList: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
   const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
   let rowNumber = 0; // 行key
+  const { asin = '', buyer = '' } = getQuery() as {asin: string; buyer: string};
 
   // 请求数据 
-  const requestDatas = {
+  const requestDatas: MwsOrderList.IRequestDatas = {
     current: pageCurrent,
     size: pageSize,
     startTime: startTime.format('YYYY-MM-DD'),
     endTime: endTime.format('YYYY-MM-DD'),
   };
 
+  requestDatas.asinRelatedSearch = asin;
+  requestDatas.buyerRelatedSearch = buyer;
+  
+  
+  console.log(requestDatas);
+  
   // 请求体
   const requestFn = useCallback((requestData = requestDatas) => {
     new Promise((resolve, reject) => {
@@ -69,7 +81,6 @@ const OrderList: React.FC = () => {
         data,
         message: msg,
       } = datas as MwsOrderList.IResponseTableData;
-      
       if (code === 200) {
         setDataSource(data.records);
         setPageSize(data.size);
@@ -100,8 +111,16 @@ const OrderList: React.FC = () => {
     setPageSize(20);
     requestFn(hisrotyRequest);
   };
+
+  // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
+  useEffect(() => {
+    const dom = document.querySelector('.ant-table-body');
+    if (dom) {
+      dom.scrollTop = 0;
+    }
+  }, [dataSource]);
   
-  // 请求表格信息
+  // 首次 请求表格信息
   useEffect(() => {
     setCurrentShop(storage.get('currentShop'));
     setTableLoadingStatus(true);
@@ -116,6 +135,8 @@ const OrderList: React.FC = () => {
             size: 20,
             startTime: startTime.format('YYYY-MM-DD'),
             endTime: endTime.format('YYYY-MM-DD'),
+            asinRelatedSearch: asin,
+            buyerRelatedSearch: buyer,
           },
         },
       });
@@ -137,7 +158,7 @@ const OrderList: React.FC = () => {
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  }, [dispatch, current, startTime, endTime]);
+  }, [dispatch, current, startTime, endTime, asin, buyer]);
 
 
   // 分页配置
@@ -227,7 +248,7 @@ const OrderList: React.FC = () => {
         pagination={false}
         className={styles.table_style}
         id="abc"
-        scroll={{ y: 770, x: 'auto' }}
+        scroll={{ y: 770, scrollToFirstRowOnChange: true }}
         columns = {
           [{
             title: rowColumns,
@@ -257,6 +278,7 @@ const OrderList: React.FC = () => {
                     bordered
                     key={rowIndex}
                     data-index={rowIndex}
+                    className="abc"
                     rowKey={setRowKey}
                     columns={[
                       {
@@ -270,8 +292,11 @@ const OrderList: React.FC = () => {
                           return (
                             <div className={`${styles.table_product_col} clearfix`}>
                               <img src={rows.imgUrl || imgUrl } alt=""/>
-                              <div className={`${styles.datails} `}>
-                                <a href={`${url}/dp/${rows.asin}`} rel="noopener noreferrer" target="_blank" className={styles.title}>
+                              <div className={`${styles.datails}`}>
+                                <a href={`${url}/dp/${rows.asin}`} 
+                                  rel="noopener noreferrer" 
+                                  target="_blank" 
+                                  className={`${styles.title} line-animation`}>
                                   <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#666', marginRight: 2 }} />
                                   {rows.productName || ''}
                                 </a>

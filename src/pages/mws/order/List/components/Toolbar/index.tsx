@@ -13,6 +13,8 @@ import {
 } from 'antd';
 import { useSelector } from 'umi';
 import { Moment } from 'moment/moment';
+import { getQuery } from '@/utils/huang';
+
 
 const { RangePicker } = DatePicker;
 let shopCount = 0;
@@ -37,6 +39,14 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('展开');
   const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
   const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
+  const { asin = '', buyer = '' } = getQuery() as {asin: string; buyer: string};
+
+  
+  // 筛选查询
+  useEffect(() => {
+    setOrderInfoSearch(asin);
+    setSellerSearch(buyer);
+  }, [asin, buyer]);
 
   // 店铺切换时、让导航回到默认状态
   useEffect(() => {

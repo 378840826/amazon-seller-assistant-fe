@@ -17,39 +17,14 @@
     }
   }
 
-  // 箭头 禁用按钮的样式
-  :global(.ant-pagination-disabled)  {
-    a {
-      color: #d9d9d9;
-    }
-    
-    &:hover a {
-      color: #d9d9d9;
-    }
+  // 禁用按钮的样式
+  :global(.ant-pagination-disabled) a {
+    color: #d9d9d9;
   }
-
-  // 页数 禁用的样式
-  :global(.ant-pagination-item-disabled) {
-    pointer-events: none;
-    
-    a {
-      pointer-events: none;
-    }
-
-    &:hover {
-      border-color: @border-color-base;
-
-      a {
-        color: rgba(0, 0, 0, .25);
-      }
-    }
-
-  }
-  
 
   // 偏移按钮
   :global(.ant-pagination-item-ellipsis) {
-    color: rgba(0, 0, 0, .25)!important;
+    color: rgba(0, 0, 0, 0.25) !important;
   }
 
   // 跳转到N页
@@ -86,18 +61,17 @@
       display: inline-block;
       text-align: center;
       border: 1px solid @border-color-base;
-      
       background-color: #fff;
       cursor: pointer;
     }
-  
+
     span:hover {
-      border: 1px solid #1289F8 !important;
+      border: 1px solid #1289f8 !important;
     }
 
     :global(span.active) {
-      color: #1289F8;
-      border: 1px solid #1289F8 !important;
+      color: #1289f8;
+      border: 1px solid #1289f8 !important;
     }
 
     // 第一个每页显示按钮
@@ -123,7 +97,7 @@
 // 分页在中间
 .g_page.center {
   .total {
-    float:left;
+    float: left;
   }
 
   .g_page_box {
@@ -149,19 +123,9 @@
   }
 
   // 每列显示
-  .select_list > span{
+  .select_list > span {
     width: 38px;
     height: 26px;
     line-height: 26px;
   }
-}
-
-// 中
-.g_page.default {
-  
-}
-
-// 大
-.g_page.large {
-
 }
