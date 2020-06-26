@@ -21,12 +21,12 @@ import Toolbar from './components/Toolbar';
 import { storage } from '@/utils/utils';
 import SignHandle from './components/SignHandle';
 import { getQuery } from '@/utils/huang';
+import SortComponent from './components/Sort';
 import {
   Link,
   useDispatch,
   connect,
   ConnectRC,
-  ICommentMonitorType,
   Dispatch,
   useSelector,
 } from 'umi';
@@ -54,67 +54,6 @@ interface ICommentMonitorList {
   };
 }
 
-
-const OrderComponent: React.FC<CommectMonitor.IOrderType> = (props) => {
-  const {
-    title = '标题', // 显示的文字
-    value = '', // 排序值
-    orderValue = '', // 用于显示哪个组件排序(和标题比较)、配合state
-    callback,
-    isTabBoolean = false, // 返回时是否转换成布尔值、true就是asc，false就是desc
-    tip = '点击排序', // 鼠标移动上去的提示文字
-  } = props;
-  const [currentOrder, setCurrentOrder] = useState('');
-  let classNames = '';
-  
-  useEffect(() => {
-    if (value !== orderValue) {
-      setCurrentOrder('');
-    }
-  }, [value, orderValue]);
-
-  if (currentOrder === '') {
-    classNames = styles.not;
-  } else if (currentOrder === 'desc') {
-    classNames = styles.asc;
-  } else {
-    classNames = styles.desc;
-  }
-
-  const orderer = () => {
-    let order: boolean|string = '';
-    if (currentOrder === 'asc') {
-      setCurrentOrder('desc');
-      order = 'desc';
-      classNames = styles.asc;
-    } else {
-      order = 'asc';
-      setCurrentOrder('asc');
-      classNames = styles.desc;
-    }
-
-    if (isTabBoolean) {
-      order = order === 'asc' ? true : false;
-    }
-
-    callback ? callback({
-      value,
-      order,
-    }) : null;
-  };
-
-
-  return (
-    <Tooltip title={tip}>
-      <div className={styles.sort_components} onClick={orderer}>
-        <span>{title}</span>
-        <div className={`${styles.sort_icon} ${classNames}`}>
-          <Iconfont type="icon-xiangxiajiantou" />
-        </div>
-      </div>
-    </Tooltip>
-  );
-};
 
 let requestHeader = {};
 let shopCount = 0; // 店铺首次加载不执行
@@ -195,6 +134,14 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     requestBody();
   }, [requestBody]);
 
+  // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
+  useEffect(() => {
+    const dom = document.querySelector('.ant-table-body');
+    if (dom) {
+      dom.scrollTop = 0;
+    }
+  }, [dataSource]);
+
 
   // 店铺切换时
   useEffect(() => {
@@ -272,9 +219,10 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
 
   const columns: ColumnsType = [
     {
-      title: <OrderComponent 
+      title: <SortComponent 
         title="日期" 
-        isTabBoolean 
+        isTabBoolean
+        defaultSort="asc"
         orderValue={currentOrder} 
         value="reviewTime" 
         callback={handleOrder} />,
@@ -290,10 +238,11 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         );
       },
     }, {
-      title: <OrderComponent 
+      title: <SortComponent 
         title="星级" 
         isTabBoolean 
-        value="star" 
+        value="star"
+        defaultSort="asc"
         orderValue={currentOrder} 
         callback={handleOrder} />,
       dataIndex: 'star',
@@ -393,9 +342,10 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         );
       },
     }, {
-      title: <OrderComponent 
+      title: <SortComponent 
         title="Review" 
         isTabBoolean
+        defaultSort="asc"
         orderValue={currentOrder} 
         value="reviewNum" 
         callback={handleOrder} />,
@@ -512,7 +462,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
             {
               // 是否有匹配订单
               hasOrder ?
-                <Link to={{
+                <Link target="_blank" to={{
                   pathname: 'mws/order/list',
                   search: `?asin=${asin}&buyer=${reviewerName}`,
                 }} className={styles.hasOrder}>匹配订单</Link>
@@ -568,7 +518,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   );
 };
 
-function mapStatetoProps({ commentMonitor }: {commentMonitor: ICommentMonitorType}) {
+function mapStatetoProps({ commentMonitor }: {commentMonitor: {}}) {
   return commentMonitor;
 }
 

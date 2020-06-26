@@ -66,11 +66,12 @@ declare namespace CommectMonitor {
   }
 
   interface IOrderType {
-    title?: string;
-    value: string;
     orderValue: string;
-    isTabBoolean: boolean;
+    value: string;
+    title?: string;
+    isTabBoolean?: boolean;
     tip?: string;
+    defaultSort?: string;
     callback?: (param: {value: string; order: string|boolean}) => void;
   }
 }

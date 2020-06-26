@@ -95,6 +95,14 @@ const Settings: React.FC = () => {
     });
   }, [dispatch, asyncGetview]);
 
+  // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
+  useEffect(() => {
+    const dom = document.querySelector('.ant-table-body');
+    if (dom) {
+      dom.scrollTop = 0;
+    }
+  }, [dataSource]);
+
   // 接收表格数据
   useEffect(() => {
     setTableLoadingStatus(false);
@@ -400,7 +408,11 @@ const Settings: React.FC = () => {
         </div>
       </header>
       <main>
-        <Table {...tableConfig} pagination={false} columns={columns as []} />
+        <Table {...tableConfig} 
+          pagination={false} 
+          columns={columns as []} 
+          scroll={{ y: 666 }} 
+        />
       </main>
       <footer>
         <Pagination {...pageConfig} />
