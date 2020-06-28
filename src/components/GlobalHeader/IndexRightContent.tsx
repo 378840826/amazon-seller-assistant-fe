@@ -11,13 +11,13 @@ const GlobalHeaderRight: React.FC = () => {
   const img = (
     <div>
       <img src={weixin} />
-      <div style={{ textAlign: 'center', marginTop: 5 }}>扫码关注微信公众号</div>
+      <div style={{ textAlign: 'center', marginTop: 5, color: '#666' }}>扫码关注微信公众号</div>
     </div>
   );
   
   return (
     <div className={styles.right}>
-      <Tooltip placement="bottom" title={img} overlayStyle={{ background: '#fff' }}>
+      <Tooltip placement="bottom" title={img} overlayClassName={styles.__index_tooltip}>
         <Iconfont type="icon-gongzhonghaoguanli" className={styles.weixin} />
       </Tooltip>
       <Avatar />

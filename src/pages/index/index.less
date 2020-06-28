@@ -1,7 +1,20 @@
 .homeContainer {
-  margin-top: 70px;
   text-align: center;
+  margin-top: 52px;
   font-size: @font-size-lg;
+
+  :global {
+    .animated {
+      -webkit-animation-duration: 3s;
+      animation-duration: 3s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    .fadeIn {
+      animation-name: fadeIn;
+    }
+  }
 
   .w {
     margin: 0 auto;
@@ -91,6 +104,11 @@
 
   .grey {
     background-color: #fafafa;
+
+    .__index {
+      padding-top: 16px;
+      padding-bottom: 13px;
+    }
   }
 
   .white {
