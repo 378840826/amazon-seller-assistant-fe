@@ -1,0 +1,52 @@
+.text-container {
+  width: 100%;
+  position: relative;
+
+  .content {
+    display: inline-block;
+    width: 100%;
+    padding-right: 85px;
+  }
+
+  .hidden-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .content-btn {
+    font-size: @font-size-base;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: @text-color-secondary;
+
+    .icon {
+      margin-left: 7px;
+      transition: all 0.3s;
+    }
+
+    > * {
+      cursor: pointer;
+    }
+
+    // 收起样式
+    .text-container-off {
+      color: @primary-color;
+
+      .icon {
+        color: #0083ff;
+      }
+    }
+  }
+
+  .content-btn:hover {
+    color: @primary-color;
+
+    .icon {
+      color: #0083ff;
+    }
+  }
+}

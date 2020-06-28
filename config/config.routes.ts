@@ -20,6 +20,16 @@ export default [
       { path: '/index', component: './index', title: '首页' },
     ],
   },
+  // 消息中心
+  {
+    path: '/message',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { path: '/message/all', component: './message/', title: '消息中心'},
+      // 重定向
+      { path: '/message', redirect: '/message/all' },
+    ],
+  },
   // 功能系统
   {
     path: '/',
