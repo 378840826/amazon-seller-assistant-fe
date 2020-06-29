@@ -14,7 +14,7 @@ interface ICenterConnectProps extends IConnectProps {
 const Data: React.FC<ICenterConnectProps> = function( { user } ){
   const id = user.currentUser.id;
   return (
-    <div className={styl.AD}>
+    <div className={styl.data_wrap}>
       <div className={styl.left}>
         <div className={styl.title}>数据大盘</div>
         <div className={styl.contentContainer}>                            
@@ -45,7 +45,7 @@ const Data: React.FC<ICenterConnectProps> = function( { user } ){
           </div>
         }
       </div>
-      <div className={styl.right}>
+      <div className={styl.data_unique}>
         <img src={I1} alt="图片"/>
       </div>
     </div>
