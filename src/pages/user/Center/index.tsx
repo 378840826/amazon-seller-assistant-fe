@@ -20,8 +20,6 @@ const tailLayout = {
 };
 
 const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
-
-  const id = user.currentUser.id;
   const curUsername = user.currentUser.username;
   const email = user.currentUser.email;
 
@@ -158,34 +156,38 @@ const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
                       }
                       onFinish={onUserNameFinish}
                     >
-                      <Form.Item name="username" className="__username" rules={[
-                        () => ({
-                          validator: (rule, value) => new Promise((resolve, reject) => {
-                            if (!value){
-                              reject('用户名不能为空');
-                              return;
-                            }
-                            if (value){
-                              if (!validate.username.test(value)){
-                                reject('长度4~16，支持字母、数字、下划线，不允许为纯数字');
+                      <Form.Item name="username" className="__username"
+                        validateTrigger={['onBlur', 'onFocus']}
+                        rules={[{ message: '', validateTrigger: 'onFocus' },
+                          () => ({
+                            validator: (rule, value) => new Promise((resolve, reject) => {
+                              if (!value){
+                                reject('用户名不能为空');
                                 return;
                               }
-                              dispatch({
-                                type: 'user/existUsername',
-                                payload: {
-                                  username: value,
-                                },
-                                callback: (res: {data: {exist: boolean}}) => {
-                                  if (res.data.exist){
-                                    reject('用户名已存在');
-                                  }
-                                  resolve();
-                                },
-                              });
-                            }
+                              if (value){
+                                if (!validate.username.test(value)){
+                                  reject('长度4~16，支持字母、数字、下划线，不允许为纯数字');
+                                  return;
+                                }
+                                dispatch({
+                                  type: 'user/existUsername',
+                                  payload: {
+                                    username: value,
+                                  },
+                                  callback: (res: {data: {exist: boolean}}) => {
+                                    if (res.data.exist){
+                                      reject('用户名已存在');
+                                    }
+                                    resolve();
+                                  },
+                                });
+                              }
+                            },
+                            ),
+                            validateTrigger: 'onBlur',
                           }),
-                        }),
-                      ]} >
+                        ]} >
                         <Input autoComplete="off" value = {curUsername} />
                       </Form.Item>
                       <Form.Item {...tailLayout}>
@@ -213,7 +215,7 @@ const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
               <div className={styles.rightContainer}>
                 {!rePwd &&
                   <div className={styles.noneFocus}>
-                    <input type="text" className={styles.inputNoBorder} defaultValue="************" readOnly />
+                    <input type="text" style={{ color: '#666' }} className={styles.inputNoBorder} defaultValue="************" readOnly />
                     <div className={styles.editUserName} onClick={onEditPwd}>修改</div>
                   </div>
                 }
@@ -230,16 +232,19 @@ const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
                     <Form.Item 
                       className="__password"
                       name="password"
-                      rules={[{ required: true, message: '新密码不能为空' },
-                        { pattern: validate.password, message: '新密码格式不正确' }]}
+                      validateTrigger={['onBlur', 'onFocus']}
+                      rules={[{ required: true, message: '新密码不能为空', validateTrigger: 'onBlur' },
+                        { pattern: validate.password, message: '新密码格式不正确', validateTrigger: 'onBlur' },
+                        { message: '', validateTrigger: 'onFocus' }]}
                     >
                       <Input.Password placeholder="新密码，长度4~16之间，至少包含字母、数字和英文符号中的两种" autoComplete="off"/>
                     </Form.Item>
                     <Form.Item 
                       name="confirm"
                       className="__password_confirm"
+                      validateTrigger={['onBlur', 'onFocus']}
                       dependencies={['password']}
-                      rules={[{ required: true, message: '确认密码不能为空' },
+                      rules={[{ required: true, message: '确认密码不能为空', validateTrigger: 'onBlur' },
                         ({ getFieldValue }) => ({
                           validator(rule, value) {
                             if (!value || getFieldValue('password') === value) {
@@ -247,7 +252,9 @@ const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
                             }
                             return Promise.reject('两次密码输入不一致');
                           },
+                          validateTrigger: 'onBlur',
                         }),
+                        { message: '', validateTrigger: 'onFocus' },
                       ]}
                     >
                       <Input.Password placeholder="确认新密码" autoComplete="off"/>

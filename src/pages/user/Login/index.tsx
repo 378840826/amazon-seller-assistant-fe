@@ -112,11 +112,9 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
       payload: {
         username: values.email,
       },
-   
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      callback: (res: any) => {
-        setLoginLoading(false);
+      callback: (res: { code: number; data: { code: boolean } }) => {
         if (res.code === 200 && res.data.code ){
+          setLoginLoading(false);
           setShow(true);
         } else {
           Object.assign(status, { code: '' });
@@ -136,12 +134,13 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
     setFdMessage('');
   };
 
-  const onCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onBlurCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (val.trim() === ''){
       setFdMessage('验证码不能为空');
-      return;
     }
+  };
+  const onCodeChange = () => {
     setFdMessage('');
   };
   const onPwdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,6 +153,10 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
       setFeedbackPwdMessage('长度在6~16，至少包含字母、数字、和英文符号中的两种');
       return;
     }
+    setFeedbackPwdMessage('');
+  };
+
+  const onPwdFocus = () => {
     setFeedbackPwdMessage('');
   };
 
@@ -190,8 +193,10 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
                         <LR 
                           onClickLR={onClickLR} 
                           onPwdChange={onPwdChange} 
+                          onPwdFocus={onPwdFocus}
                           feedbackPwdMessage={feedbackPwdMessage} 
-                          loginLoading={loginLoading}/>
+                          loginLoading={loginLoading}
+                        />
                         <div className={styles.activeContainer}>
                           {active && 
                           <div className={styles.activeWrapper}>
@@ -202,6 +207,7 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
                     </Tabs>
                     {show && <Captcha getCaptcha={getCaptcha} codeLoading={codeLoading} 
                       feedbackMessage={feedbackMessage} onCodeChange={onCodeChange}
+                      onBlurCodeChange={onBlurCodeChange}
                       onClose={onClose}/>}
                   </div>
                 }

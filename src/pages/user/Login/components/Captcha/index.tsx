@@ -9,7 +9,8 @@ interface ICapConnectProps extends IConnectProps{
   codeLoading: boolean;
   onClose: () => void;
   feedbackMessage: string;
-  onCodeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onCodeChange: () => void;
+  onBlurCodeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 const layout = {
   wrapperCol: { span: 24 },
@@ -19,7 +20,7 @@ const tailLayout = {
 };
 let newDate = new Date().getTime();
 const Captcha: React.FC<ICapConnectProps> = (
-  { getCaptcha, codeLoading, onClose, feedbackMessage, onCodeChange }
+  { getCaptcha, codeLoading, onClose, feedbackMessage, onCodeChange, onBlurCodeChange }
 ) => {
   let imgUrl = `/api/system/user/code?random=${newDate}`;
   const refImg = useRef<HTMLImageElement>(null);
@@ -53,7 +54,8 @@ const Captcha: React.FC<ICapConnectProps> = (
         <div className={styles.formContainer}>
           <Form
             {...layout}
-            name="basic"
+            name="login_basic"
+            autoComplete="new-basic"
             onFinish={onFinish}
             className="__form_cover"
           >
@@ -67,7 +69,7 @@ const Captcha: React.FC<ICapConnectProps> = (
                     name="captcha"
                     noStyle
                   >
-                    <Input placeholder="请输入验证码" onChange={onCodeChange}/>
+                    <Input onFocus={onCodeChange} onBlur={onBlurCodeChange} autoComplete="off" placeholder="请输入验证码"/>
                   </Form.Item>
                 </Col>
                 <Col span={10}>
@@ -78,7 +80,7 @@ const Captcha: React.FC<ICapConnectProps> = (
               </Row>
             </Form.Item>
             <Form.Item {...tailLayout} className="__button">
-              <Button htmlType="submit" type="primary" loading={codeLoading}>发送链接</Button>
+              <Button htmlType="submit" type="primary" loading={codeLoading}>确定</Button>
             </Form.Item>
           </Form>
         </div>

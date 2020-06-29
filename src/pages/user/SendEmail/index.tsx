@@ -86,38 +86,42 @@ const SendEmail: React.FC<IConnectProps> = function ({ dispatch }) {
                   {...layout}
                   name="basic"
                   onFinish={onFinish}
+                  autoComplete="new-basic"
                   className="__form_cover"
 
                 >
-                  <Form.Item name="email" rules={[
-                    () => ({
-                      validator: (rule, value) => new Promise((resolve, reject) => {
-                        if (!value){
-                          reject('邮箱不能为空');
-                          return;
-                        }
-                        if (value){
-                          if (!validate.email.test(value)){
-                            reject('邮箱格式不正确');
+                  <Form.Item name="email" 
+                    validateTrigger={['onBlur', 'onFocus']}
+                    rules={[
+                      { message: '', validateTrigger: 'onFocus' },
+                      () => ({
+                        validator: (rule, value) => new Promise((resolve, reject) => {
+                          if (!value){
+                            reject('邮箱不能为空');
                             return;
                           }
-                          dispatch({
-                            type: 'user/existEmail',
-                            payload: {
-                              email: value,
-                            },
-                            callback: (res: { data: { exist: boolean } }) => {
-                              if (!res.data.exist){
-                                reject('邮箱不存在'); 
-                              }
-                              resolve();
-                            },
-                          });
-                        }  
+                          if (value){
+                            if (!validate.email.test(value)){
+                              reject('邮箱格式不正确');
+                              return;
+                            }
+                            dispatch({
+                              type: 'user/existEmail',
+                              payload: {
+                                email: value,
+                              },
+                              callback: (res: { data: { exist: boolean } }) => {
+                                if (!res.data.exist){
+                                  reject('邮箱不存在'); 
+                                }
+                                resolve();
+                              },
+                            });
+                          }  
+                        }),
+                        validateTrigger: 'onBlur',
                       }),
-                    
-                    }),
-                  ]}
+                    ]}
                   >
                     <Input placeholder="请输入注册邮箱" autoComplete="off"/>
                   </Form.Item>
@@ -130,9 +134,13 @@ const SendEmail: React.FC<IConnectProps> = function ({ dispatch }) {
                         <Form.Item
                           name="captcha"
                           noStyle
-                          rules={[{ required: true, message: '验证码不能为空' }]}
+                          validateTrigger={['onBlur', 'onFocus']}
+                          rules={[
+                            { required: true, message: '验证码不能为空', validateTrigger: 'onBlur' },
+                            // { message: '', validateTrigger: 'onFocus' },
+                          ]}
                         >
-                          <Input placeholder="请输入验证码" onChange={onCodeChange}/>
+                          <Input placeholder="请输入验证码" autoComplete="off" onFocus={onCodeChange}/>
                         </Form.Item>
                       </Col>
                       <Col span={10}>

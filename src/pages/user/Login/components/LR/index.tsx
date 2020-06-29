@@ -12,14 +12,18 @@ interface ILRConnectProps extends IConnectProps{
   loginLoading: boolean;
   feedbackPwdMessage: string;
   onPwdChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPwdFocus: () => void;
 }
 const LR: React.FC<ILRConnectProps> = ({ onClickLR, loginLoading, 
-  feedbackPwdMessage, onPwdChange }) => {
+  feedbackPwdMessage, onPwdChange, onPwdFocus }) => {
  
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
-    !feedbackPwdMessage && onClickLR(values);
+    console.log(values);
+    if (values.password.trim() !== ''){
+      onClickLR(values);
+    }
   };
  
 
@@ -38,12 +42,13 @@ const LR: React.FC<ILRConnectProps> = ({ onClickLR, loginLoading,
         initialValues={{ rememberMe: false }}
         className="__form_cover"
       >
-        <Form.Item className="__email" name="email" rules={[{ required: true, message: '邮箱不能为空' },
-          { pattern: validate.email, message: '邮箱格式不正确' }]}>
+        <Form.Item className="__email" name="email" validateTrigger={['onBlur', 'onFocus']} rules={[{ required: true, message: '邮箱不能为空', validateTrigger: 'onBlur' },
+          { pattern: validate.email, message: '邮箱格式不正确', validateTrigger: 'onBlur' },
+          { message: '', validateTrigger: 'onFocus' }]}>
           <Input placeholder="请输入邮箱" autoComplete="off"/>
         </Form.Item>
         <Form.Item className="__password" name="password" validateStatus={feedbackPwdMessage ? 'error' : 'success'} help={feedbackPwdMessage}>
-          <Input.Password placeholder="请输入密码" onChange={onPwdChange} autoComplete="off"/>
+          <Input.Password placeholder="请输入密码" onFocus={onPwdFocus} onBlur={onPwdChange}/>
         </Form.Item>
         <Form.Item className="__remember_forgot">
           <Form.Item name="rememberMe" valuePropName="checked" noStyle>
