@@ -8,9 +8,8 @@ interface IMenuItemProps {
 }
 
 const { Link } = Anchor;
-console.log('location:', location);
-
-const menuList: Array<IMenuItemProps> = location.pathname === '/index/' ? [
+console.log('location:', location.pathname);
+const menuList: Array<IMenuItemProps> = ['/index', '/index/'].indexOf(location.pathname) > -1 ? [
   { href: '#home', name: '首页', top: 0 },
   { href: '#fun', name: '功能', top: 864 },
   { href: '#pay', name: '付费', top: 1644 },

@@ -37,9 +37,10 @@
         .desc {
           font-size: 16px;
           color: @text-color;
-          line-height: 40px;
+          line-height: 28px;
           text-align: left;
           margin-bottom: 55px;
+          margin-top: 20px;
         }
 
         .logined {
@@ -106,6 +107,12 @@
     .__index {
       padding-top: 16px;
       padding-bottom: 13px;
+
+      span {
+        a:hover {
+          color: #0083ff;
+        }
+      }
     }
   }
 
@@ -140,7 +147,6 @@
 
       .iconfont {
         font-size: 18px;
-        transform: rotate(90deg);
       }
     }
   }
@@ -181,6 +187,16 @@
     .icon {
       color: @text-color-inverse;
       background-color: #52abff;
+    }
+
+    &:hover {
+      .font {
+        background-color: #178eff;
+      }
+
+      .icon {
+        background-color: #40a2ff;
+      }
     }
   }
 }

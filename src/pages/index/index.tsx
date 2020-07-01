@@ -42,13 +42,13 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
                   <Link className={[styles.regButton, styles.buttons].join(' ')} to="/users/login">
                     <div className={styles.font}>免费注册</div>
                     <div className={styles.icon}>
-                      <Iconfont className={styles.iconfont} type="icon-shangsheng-copy"/>
+                      <Iconfont className={styles.iconfont} type="icon-2"/>
                     </div>
                   </Link>
                   <Link to="/users/login" className={[styles.loginButton, styles.buttons].join(' ')}>
                     <div className={styles.font}>登录</div>
                     <div className={styles.icon}>
-                      <Iconfont className={styles.iconfont} type="icon-shangsheng-copy"/>
+                      <Iconfont className={styles.iconfont} type="icon-2"/>
                     </div>
                   </Link>
                 </div>
@@ -60,7 +60,7 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
                   <Link to="/users/login" className={[styles.loginedButton, styles.buttons].join(' ')}>
                     <div className={styles.font}>立即体验</div>
                     <div className={styles.icon}>
-                      <Iconfont className={styles.iconfont} type="icon-shangsheng-copy"/>
+                      <Iconfont className={styles.iconfont} type="icon-2"/>
                     </div>
                   </Link>
                 </div>

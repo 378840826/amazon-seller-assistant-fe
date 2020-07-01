@@ -3,7 +3,7 @@ import { Tooltip } from 'antd';
 import Avatar from './AvatarDropdown';
 import { Link } from 'umi';
 import { Iconfont } from '@/utils/utils';
-import weixin from '../../assets/weixin.png';
+import weixin from '../../assets/index/qr.png';
 import styles from './index.less';
 
 
@@ -23,11 +23,13 @@ const GlobalHeaderRight: React.FC = () => {
       <Avatar />
       <Link
         to="/mws/overview"
-        style={{ color: '#666', marginLeft: 50, marginRight: 5, fontSize: 16 }}
+        className={styles.link_into}
+        style={{ marginLeft: 50, marginRight: 5, fontSize: 16 }}
       >
         进入系统
+        <Iconfont type="icon-xiangyoujiantou" style={{ fontSize: 16 }} />
       </Link>
-      <Iconfont type="icon-xiangyoujiantou" style={{ color: '#999', fontSize: 16 }} />
+      
     </div>
   );
 };
