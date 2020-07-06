@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-27 14:13:29
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 15:42:18
+ * @LastEditTime: 2020-07-06 11:50:02
  * @FilePath: \amzics-react\src\components\Pagination\index.tsx
  */ 
 
@@ -39,9 +39,6 @@ const Page: React.FC<IProps> = (props) => {
   let aligStyles: string = styles.right;
   let sizeStyles: string = styles.small;
   let isShowTotal = true; // 是否显示总数量
-
-  console.log('执行page', current, pageSize, total);
-  
 
   useEffect(() => {
     setCurrent(props.current || 1);
@@ -127,7 +124,13 @@ const Page: React.FC<IProps> = (props) => {
   
   return (
     <ConfigProvider locale={zhCN}>
-      <div className={`${styles.g_page} ${aligStyles} ${sizeStyles} ${props.className}`}>
+      <div className={`
+        ${styles.g_page} 
+        ${aligStyles} 
+        ${sizeStyles} 
+        ${props.className}
+        g-page
+      `}>
         <div className={styles.total} style={{ visibility: isShowTotal ? 'visible' : 'hidden' }}>{totalDetails}</div>
         <div className={styles.g_page_box}>
           <div className={styles.select_list}>

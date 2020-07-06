@@ -3,8 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 11:14:36
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-18 11:36:19
- * @FilePath: \amzics-react_am_10\src\utils\huang.ts
+ * @FilePath: \amzics-react\src\utils\huang.ts
  */ 
 
 // 解析 queryString，可不传参
@@ -39,3 +38,25 @@ export function getQuery(queryString = ''): {} {
   return obj;
 }
 
+// 拿元素的高度（height + border + padding + margin
+export function outerHeight(selector: string): number|undefined {
+  const el = document.querySelector(selector) as Element;
+  if (el === null) {
+    console.error('不存在的选择器');
+    return;
+  }
+  const style = getComputedStyle(el, null);
+  const height = Number(style.height.slice(0, -2));
+  const marginTop = Number(style.marginTop.slice(0, -2));
+  const marginBottom = Number(style.marginBottom.slice(0, -2));
+  const borderTopWidth = Number(style.borderTopWidth.slice(0, -2));
+  const borderBottomWidth = Number(style.borderBottomWidth.slice(0, -2));
+  
+  return (
+    height +
+    marginTop + 
+    marginBottom +
+    borderTopWidth + 
+    borderBottomWidth
+  );
+}

@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-23 17:10:44
+ * @LastEditTime: 2020-07-06 15:02:57
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  * 
@@ -18,7 +18,7 @@ import { Table, message } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import Pagination from '@/components/Pagination';
 import { connect } from 'dva';
-import { useDispatch, useSelector } from 'umi';
+import { useDispatch, useLocation } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
@@ -27,12 +27,13 @@ import { storage, getAmazonBaseUrl } from '@/utils/utils';
 import imgUrl from '@/assets/stamp.png';
 import Toolbar from './components/Toolbar';
 import { Moment } from 'moment/moment';
-import { getQuery } from '@/utils/huang';
+import { outerHeight } from '@/utils/huang';
 
 
 let hisrotyRequest = {};// 保存所有筛选信息
 const OrderList: React.FC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const [startTime] = useState<Moment>(
     moment().subtract(1, 'week').startOf('week')
   ); // 日历默认开始日期
@@ -45,10 +46,12 @@ const OrderList: React.FC = () => {
   const [pageTotal, setPageTotal] = useState<number>(0); // 分页数量
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
-  const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
+  const [tableHeight, setTableHeight] = useState<number>(500); // 默认500
   let rowNumber = 0; // 行key
-  const { asin = '', buyer = '' } = getQuery() as {asin: string; buyer: string};
-
+  // eslint-disable-next-line 
+  const query: any = location.query; // eslint-disable-line
+  const { asin = '', buyer = '' } = query as {asin: string; buyer: string};
+  
   // 请求数据 
   const requestDatas: MwsOrderList.IRequestDatas = {
     current: pageCurrent,
@@ -60,8 +63,21 @@ const OrderList: React.FC = () => {
   requestDatas.asinRelatedSearch = asin;
   requestDatas.buyerRelatedSearch = buyer;
   
+
+  // 表格最大高度
+  const setTbodyHeigght = () => {
+    const windowHeight = document.documentElement.clientHeight;
+    const navHeight = outerHeight('.g-header-nav') as number;
+    const childnavHeight = outerHeight('.g-secondary-nav') as number;
+    const toolbarHeight = outerHeight('.order-list-toolbar') as number;
+    const pageHeight = outerHeight('.g-page') as number;
+    console.log(navHeight, childnavHeight, toolbarHeight, pageHeight);
+    
+    const tableHeight = windowHeight - (navHeight + childnavHeight + toolbarHeight + pageHeight);
+    
+    setTableHeight(tableHeight - 50);
+  };
   
-  console.log(requestDatas);
   
   // 请求体
   const requestFn = useCallback((requestData = requestDatas) => {
@@ -71,7 +87,18 @@ const OrderList: React.FC = () => {
         payload: {
           resolve,
           reject,
-          data: requestData,
+          data: Object.assign(
+            {},
+            requestData, 
+            { 
+              headersParams: {
+                StoreId: currentShop.id,
+              },
+            }
+          ),
+          headersParams: {
+            StoreId: currentShop.id,
+          },
         },
       });
     }).then(datas => {
@@ -86,13 +113,14 @@ const OrderList: React.FC = () => {
         setPageSize(data.size);
         setPageTotal(data.total);
         setPageCurrent(data.current);
+        setTbodyHeigght();
       } else {
         message.error(msg || '数据异常！');
       }
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  }, [dispatch, requestDatas]);
+  }, [dispatch]); // eslint-disable-line
 
   // 接收工具框(子组件)的参数并重新请求
   const filtrateFn = (requestData: {}) => {
@@ -137,6 +165,9 @@ const OrderList: React.FC = () => {
             endTime: endTime.format('YYYY-MM-DD'),
             asinRelatedSearch: asin,
             buyerRelatedSearch: buyer,
+            headersParams: {
+              StoreId: currentShop.id,
+            },
           },
         },
       });
@@ -152,13 +183,14 @@ const OrderList: React.FC = () => {
         setPageSize(data.size);
         setPageTotal(data.total);
         setPageCurrent(data.current);
+        setTbodyHeigght();
       } else {
         message.error(msg || '数据异常！');
       }
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  }, [dispatch, current, startTime, endTime, asin, buyer]);
+  }, [dispatch, startTime, endTime, asin, buyer]); // eslint-disable-line
 
 
   // 分页配置
@@ -247,8 +279,8 @@ const OrderList: React.FC = () => {
         {...tableConfig}
         pagination={false}
         className={styles.table_style}
-        id="abc"
-        scroll={{ y: 770, scrollToFirstRowOnChange: true }}
+        id="id-table"
+        scroll={{ y: tableHeight, scrollToFirstRowOnChange: true }}
         columns = {
           [{
             title: rowColumns,

@@ -11,15 +11,15 @@ import {
   DatePicker,
   Radio,
 } from 'antd';
-import { useSelector } from 'umi';
+import { useSelector, useLocation } from 'umi';
 import { Moment } from 'moment/moment';
-import { getQuery } from '@/utils/huang';
 
 
 const { RangePicker } = DatePicker;
 let shopCount = 0;
 const fields = {} as MwsOrderList.IRadioFields; // 所有的单选框字段
 const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
+  const location = useLocation();
   const [orderInfoSearch, setOrderInfoSearch] = useState<string>(''); // 第一个 订单ID、ASIN、SKU或商品标题搜索框 
   const [sellerSearch, setSellerSearch] = useState<string>(''); // 第二个 卖家名或笔名搜索框 
   // 默认的日期  当前
@@ -32,14 +32,16 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [businessOrder, setBusinessOrder] = useState<string | boolean>(''); // B2B订单
   const [multiplePieces, setMultiplePieces] = useState<string | boolean>(''); // 一单多件
   const [preferentialOrder, setPreferentialOrder] = useState<string | boolean>(''); // 优惠订单
-  const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一件多SKU
+  const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一单多SKU
   const [deliverMethod, setDeliverMethod] = useState<string>(''); // 发货方式
   const [shipServiceLevel, setShipServiceLevel] = useState<string>(''); // 配送服务
   const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('88px'); // 筛选框高度
   const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('展开');
   const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
   const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
-  const { asin = '', buyer = '' } = getQuery() as {asin: string; buyer: string};
+  // eslint-disable-next-line 
+  const query: any = location.query; // eslint-disable-line
+  const { asin = '', buyer = '' } = query as {asin: string; buyer: string};
 
   
   // 筛选查询
@@ -189,7 +191,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
       setDeliverMethod(value as string);
       fields.deliverMethod = value;
       break;
-    case '一件多SKU':
+    case '一单多SKU':
       setMultipleSku(value);
       fields.multipleSku = value;
       break;
@@ -209,7 +211,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   };
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} order-list-toolbar`}>
       <div className={`${styles.search} clearfix`}>
         <Input 
           placeholder="请输入订单ID、ASIN、SKU或商品标题" 
@@ -298,9 +300,9 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}  ${styles.order_discounts}`}>
-            <span>一件多SKU：</span>
+            <span>一单多SKU：</span>
             <Radio.Group 
-              onChange={(e) => handleChangeRadio(e, '一件多SKU')}
+              onChange={(e) => handleChangeRadio(e, '一单多SKU')}
               value={multipleSku}>
               <Radio value="">不限</Radio>
               <Radio value={true} className={styles.handlePadding}>是</Radio>

@@ -13,6 +13,7 @@ declare namespace MwsOrderList {
     global: {
       shop: {
         current: {};
+        id: number;
       };
     };
   }
