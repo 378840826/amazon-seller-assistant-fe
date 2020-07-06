@@ -1,4 +1,5 @@
 .cell {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,10 +10,25 @@
 
   .editableBtn {
     cursor: pointer;
-    float: right;
+    position: absolute;
+    right: 32px;
+    color: #999;
 
     &:hover {
       color: @primary-color;
+
+      & + .cellValue {
+        box-shadow: 0 1px 0 #d9d9d9;
+      }
+    }
+  }
+
+  .deleteBtn {
+    margin-left: 16px;
+    color: #999;
+
+    &:hover {
+      color: @error-color;
     }
   }
 }

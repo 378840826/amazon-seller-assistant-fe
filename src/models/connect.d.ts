@@ -1,4 +1,5 @@
 import { MenuDataItem } from '@ant-design/pro-layout';
+import { IGoodsListModelState } from './goodsList';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { IUserModelState } from './user';
@@ -33,6 +34,7 @@ export interface ILoading {
 
 export interface IConnectState {
   global: IGlobalModelState;
+  goodsList: IGoodsListModelState;
   loading: ILoading;
   settings: SettingModelState;
   user: IUserModelState;

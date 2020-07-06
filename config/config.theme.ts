@@ -76,9 +76,11 @@ export default {
   // 输入框 padding
   '@input-padding-horizontal': '14px',
   // 表格头
-  '@table-header-bg': '#f3f6fd',
+  '@table-header-bg': '#f2f6fb',
   // 简单表格表格头
   '@simple-table-header-bg': '#fafafa',
+  // 表格行 hover 背景色, 和表头一样
+  '@table-row-hover-bg': '@table-header-bg',
   // 排序后的表头不需要改变颜色
   '@table-header-sort-bg': '@table-header-bg',
   '@table-body-sort-bg': 'null',

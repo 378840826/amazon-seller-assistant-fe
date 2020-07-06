@@ -1,0 +1,204 @@
+.page {
+  position: relative;
+
+  .Switch {
+    transform: scale(0.909);
+  }
+
+  .goodsInfoContainer {
+    display: flex;
+    align-items: center;
+  }
+
+  .goodsImgContainer {
+    position: relative;
+    width: 46px;
+    height: 46px;
+  }
+
+  .goodsInfoContent {
+    margin-left: 20px;
+    text-align: left;
+    min-width: 240px;
+  }
+
+  .goodsImg {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 46px;
+  }
+
+  .goodsTitle {
+    margin-bottom: 0;
+  }
+
+  .darkRow td {
+    background-color: #fafafa;
+  }
+
+  .iconContainer > span {
+    margin-right: 6px;
+  }
+
+  .Text-FBA {
+    color: @warning-color;
+  }
+
+  .Text-FBM {
+    color: @text-color-up;
+  }
+
+  .up {
+    color: @text-color-up;
+  }
+
+  .down {
+    color: @text-color-down;
+  }
+
+  .ranking {
+    cursor: pointer;
+    color: @warning-color;
+  }
+
+  .reviewCount {
+    color: @primary-color;
+  }
+
+  .options {
+    color: #09c2a6;
+
+    a {
+      color: #09c2a6;
+    }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 10px 0;
+
+    .iconExample {
+      margin-right: 100px;
+
+      & > span {
+        margin: 0 10px;
+        white-space: nowrap;
+      }
+    }
+
+    ul {
+      white-space: nowrap;
+    }
+  }
+
+  :global {
+    .ant-btn {
+      min-width: 40px;
+    }
+
+    .ant-table-container,
+    .ant-select {
+      font-size: @font-size-sm;
+    }
+
+    .ant-checkbox {
+      transform: scale(0.875);
+    }
+
+    .ant-table-column-sorter {
+      margin-left: 0;
+
+      svg {
+        display: none;
+      }
+
+      .ant-table-column-sorter-up {
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-color: transparent transparent @text-color-secondary @text-color-secondary;
+          border-style: solid;
+          border-width: 1px;
+          transform: rotate(135deg) translate(-5px, -6px);
+        }
+      }
+
+      .ant-table-column-sorter-down {
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-color: transparent transparent @text-color-secondary @text-color-secondary;
+          border-style: solid;
+          border-width: 1px;
+          transform: rotate(-45deg) translate(6px, 5px);
+        }
+      }
+
+      .ant-table-column-sorter-inner {
+        & > span {
+          display: none;
+        }
+
+        & > span.active {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.SelectDropdown * {
+  font-size: @font-size-sm;
+}
+
+.titleMenu li {
+  font-size: @font-size-sm;
+  color: @primary-color;
+}
+
+.tableAddGroup {
+  padding: 6px;
+  height: 100px;
+  margin-top: 16px;
+
+  .tableAddGroupTitle {
+    color: @heading-color;
+    margin: 0 2px;
+  }
+
+  input {
+    border: none;
+    padding: 0 2px;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  :global {
+    .ant-input-search {
+      margin: 10px 0;
+      border-bottom: 1px solid @border-color-base;
+    }
+
+    .ant-input-group-addon {
+      position: absolute;
+      top: 32px;
+      left: 20px;
+
+      button {
+        border-radius: 4px !important;
+        color: @primary-color;
+        background-color: #fff;
+      }
+    }
+  }
+}

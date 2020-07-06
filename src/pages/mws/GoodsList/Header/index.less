@@ -1,0 +1,342 @@
+// body {
+//   :global {
+//     .ant-modal-mask {
+//       z-index: 1051;
+//     }
+//   }
+// }
+
+.header {
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+
+.goodsFiltrate {
+  margin-bottom: 20px;
+  padding: 20px 20px 0 20px;
+}
+
+.filtrateBtns {
+  text-align: right;
+
+  button {
+    width: 82px;
+    margin: 0 10px;
+  }
+}
+
+// 用于下拉弹出框继承的
+.dropdown {
+  background-color: #fff;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+  border-radius: 4px;
+}
+
+.groupsMenuDropdown {
+  width: 250px;
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+  border-radius: 4px;
+
+  & > div {
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  .editCellContainer {
+    margin-top: 12px;
+  }
+
+  :global {
+    .ant-btn {
+      min-width: 46px;
+      width: 46px;
+      padding: 0;
+    }
+  }
+}
+
+.cycleMenuDropdown {
+  composes: dropdown;
+  width: 270px;
+  padding: 20px;
+  text-align: center;
+
+  input {
+    width: 176px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  button {
+    margin: 0 6px;
+  }
+}
+
+.importFileMenuDropdown {
+  composes: dropdown;
+  width: 292px;
+  padding: 30px 30px 20px 30px;
+}
+
+.errorText {
+  color: @error-color;
+  margin-left: 20px;
+}
+
+.fileBtn {
+  position: relative;
+  padding: 0;
+  display: block;
+}
+
+.fileInput {
+  opacity: 0;
+  width: 82px;
+  height: @height-base;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.fileName {
+  margin: 5px 0;
+}
+
+.fileIcon {
+  margin-right: 5px;
+}
+
+.fileFooter {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid @divider-line-color;
+  margin-top: 20px;
+  padding-top: 12px;
+
+  span {
+    font-size: 11px;
+    margin-left: 4px;
+  }
+}
+
+.statusFormItem {
+  :global {
+    .ant-radio-wrapper {
+      margin-right: 6px;
+
+      span.ant-radio + * {
+        padding: 2px;
+      }
+    }
+  }
+}
+
+.acFormItem {
+  :global(.ant-form-item-label) {
+    white-space: inherit;
+    overflow: visible;
+  }
+}
+
+.Search {
+  width: 280px;
+}
+
+.batchSearch {
+  margin: 0 30px 0 20px;
+}
+
+.batchSearchDropdown {
+  composes: dropdown;
+  width: 308px;
+  padding: 20px;
+  text-align: center;
+
+  .TextArea {
+    width: 268px;
+    line-height: 1.1;
+  }
+
+  button {
+    margin: 20px 10px 0 10px;
+  }
+}
+
+.btnFiltrate {
+  width: @btn-long-width;
+
+  :global(.anticon) {
+    font-size: 10px;
+  }
+}
+
+.btnActive {
+  border-color: @primary-color;
+}
+
+.Form {
+  padding: 20px 40px 0 20px;
+  background-color: #fafafa;
+}
+
+.FormRangeItem {
+  display: inline-block;
+  width: calc(50% - 12px);
+
+  input {
+    text-align: center;
+  }
+}
+
+.hyphen {
+  display: inline-block;
+  width: 24px;
+  line-height: @height-base;
+  text-align: center;
+  color: #979797;
+  font-size: 10px;
+}
+
+.secondary {
+  color: @text-color-secondary;
+}
+
+.crumbs {
+  padding: 20px 20px 6px 20px;
+  background-color: #fafafa;
+}
+
+.tag {
+  padding-left: 10px;
+  margin: 0 10px 14px 0;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.tagName {
+  color: #999;
+}
+
+.empty {
+  color: #d9d9d9;
+}
+
+.tagCloseIcon {
+  display: inline-block;
+  width: 30px;
+  line-height: 22px;
+  margin-left: 4px;
+  text-align: center;
+  color: @error-color;
+  font-size: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: @error-color;
+    color: #fff;
+  }
+}
+
+.settingBar {
+  margin-top: 20px;
+  padding: 0 20px 20px 20px;
+
+  & > button {
+    margin-right: 30px;
+  }
+
+  & > span {
+    float: right;
+  }
+}
+
+.batchSetDropdown {
+  composes: dropdown;
+  width: 480px;
+
+  & > div {
+    padding: 10px 20px;
+  }
+
+  :global(.ant-form-inline .ant-form-item) {
+    margin-right: 0;
+  }
+
+  form {
+    margin: 20px 0;
+  }
+}
+
+.batchSetTitle {
+  line-height: @height-base;
+  width: 88px;
+}
+
+.batchPriceExpr {
+  width: 270px;
+  display: flex;
+}
+
+.batchPriceAlertMask {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.batchPriceAlert,
+.batchFastPriceAlert {
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  background: #fff;
+  border-radius: @border-radius-base;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+  padding: 20px;
+
+  button {
+    margin: 20px 5px 0 5px;
+  }
+}
+
+.batchPriceAlert {
+  top: 60px;
+  left: 108px;
+  width: 270px;
+}
+
+.batchFastPriceAlert {
+  bottom: 5px;
+  right: 10px;
+  width: 320px;
+}
+
+.batchSetDropdownFast {
+  padding: 20px 20px;
+  border-top: 1px solid @divider-line-color;
+
+  & > span {
+    font-size: @font-size-lg;
+  }
+
+  & > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    & > button {
+      width: 190px;
+      margin: 10px 0;
+    }
+  }
+}
+
+.bfcDiv {
+  overflow: hidden;
+  border-top: 1px solid #eee;
+}

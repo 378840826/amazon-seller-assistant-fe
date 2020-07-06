@@ -1,0 +1,94 @@
+@blue: #0083ff;
+@golden: #ffaf4d;
+
+.icon {
+  display: inline-block;
+  width: 24px;
+  line-height: 14px;
+  border: 1px solid;
+  border-radius: 2px;
+  text-align: center;
+  cursor: help;
+}
+
+.add {
+  composes: icon;
+  color: @blue;
+  width: 30px;
+}
+
+.ac {
+  composes: icon;
+  color: #000;
+
+  .C {
+    color: @golden;
+  }
+}
+
+.bs {
+  composes: icon;
+  color: @golden;
+}
+
+.nr {
+  composes: bs;
+}
+
+.prime {
+  composes: ac;
+  cursor: initial;
+}
+
+.promotion {
+  composes: icon;
+  color: @blue;
+  cursor: initial;
+}
+
+.coupon {
+  composes: bs;
+}
+
+.seller {
+  display: inline-flex;
+  width: 36px;
+  line-height: 16px;
+  background-color: #77c2ff;
+  border-radius: 2px;
+  text-align: center;
+  color: #fff;
+  cursor: help;
+}
+
+.iconRenshu {
+  flex: 1;
+  font-size: 11px;
+}
+
+.sellerNum {
+  flex: 1;
+}
+
+.cart {
+  color: #ff5958;
+  cursor: help;
+}
+
+.question {
+  color: @text-color-secondary;
+  margin-left: 4px;
+  cursor: help;
+
+  :hover {
+    color: @warning-color;
+  }
+}
+
+.hongqi {
+  color: @text-color-down;
+}
+
+.link {
+  color: @text-color-secondary;
+}
