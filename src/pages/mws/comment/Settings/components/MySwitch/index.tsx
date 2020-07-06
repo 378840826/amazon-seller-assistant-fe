@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'umi';
+import { useDispatch, useSelector } from 'umi';
 import {
   Switch,
   Spin,
@@ -16,6 +16,7 @@ const MySwitch: React.FC<ISwitchType> = (props) => {
   const { checked } = props;
   const [flag, setFlag] = useState<boolean>(checked || false);
   const [loading, setLoading] = useState<boolean>(false);
+  const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
 
   message.config({
     maxCount: 1,
@@ -32,6 +33,9 @@ const MySwitch: React.FC<ISwitchType> = (props) => {
           data: {
             asin: props.asin,
             switchStatus: checked,
+            headersParams: {
+              StoreId: current.id,
+            },
           },
         },
       });

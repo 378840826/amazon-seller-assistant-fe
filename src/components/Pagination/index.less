@@ -1,0 +1,131 @@
+.g_page {
+  font-size: 12px;
+  line-height: 30px;
+  color: @text-color;
+
+  // 覆盖
+  :global(.ant-pagination-options) {
+    padding: 0 0 0 30px;
+  }
+
+  :global(.ant-pagination) {
+    display: inline-block;
+    line-height: 0;
+
+    li {
+      margin: 0 7px 0 0;
+    }
+  }
+
+  // 禁用按钮的样式
+  :global(.ant-pagination-disabled) a {
+    color: #d9d9d9;
+  }
+
+  // 偏移按钮
+  :global(.ant-pagination-item-ellipsis) {
+    color: rgba(0, 0, 0, 0.25) !important;
+  }
+
+  // 跳转到N页
+  :global(.ant-pagination-options-quick-jumper) {
+    input {
+      width: 48px;
+      height: 26px;
+    }
+
+    button {
+      width: 42px;
+      min-width: 42px;
+      height: 26px;
+      padding: 0;
+      margin: 0 0 0 10px;
+    }
+  }
+
+  .g_page_box {
+    display: flex;
+  }
+
+  // 每列显示
+  .select_list {
+    display: inline-block;
+    padding: 0 30px 0 10px;
+
+    em.pageshowText {
+      font-style: normal;
+      padding: 0 10px;
+    }
+
+    span {
+      display: inline-block;
+      text-align: center;
+      border: 1px solid @border-color-base;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    span:hover {
+      border: 1px solid #1289f8 !important;
+    }
+
+    :global(span.active) {
+      color: #1289f8;
+      border: 1px solid #1289f8 !important;
+    }
+
+    // 第一个每页显示按钮
+    span:nth-child(2) {
+      border-radius: @border-radius-base 0 0 @border-radius-base;
+      border-right-color: transparent;
+    }
+
+    // 最后一个每页显示按钮
+    span:last-child {
+      border-radius: 0 @border-radius-base  @border-radius-base 0;
+      border-left-color: transparent;
+    }
+  }
+}
+
+// 分页在右边
+.g_page.right {
+  display: flex;
+  justify-content: space-between;
+}
+
+// 分页在中间
+.g_page.center {
+  .total {
+    float: left;
+  }
+
+  .g_page_box {
+    justify-content: center;
+  }
+}
+
+// 分页在左边
+.g_page.left {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+
+// 小
+.g_page.small {
+  :global(li.ant-pagination-item),
+  :global(li.ant-pagination-prev),
+  :global(li.ant-pagination-next) {
+    height: 26px;
+    line-height: 26px;
+    padding: 0;
+  }
+
+  // 每列显示
+  .select_list > span {
+    width: 38px;
+    height: 26px;
+    line-height: 26px;
+  }
+}

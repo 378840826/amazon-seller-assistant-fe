@@ -72,13 +72,11 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     fields.asin = asin;
     fields.scopeMin = scopeMin; // 最小评分
     fields.scopeMax = scopeMax; // 最大评分
-    fields.dateStart = dateStart; // 开始日期
-    fields.dateEnd = dateEnd; // 结束日期
+    fields.dateStart = datepickerValue[0].format('YYYY-MM-DD'); // 开始日期
+    fields.dateEnd = datepickerValue[1].format('YYYY-MM-DD'); // 结束日期
     fields.reviewerName = reviewerName; // 笔名
     fields.reviewsNumMin = reviewsNumMin; // review起始值
     fields.reviewsNumMax = reviewsNumMax; // review结束值
-    datepickerValue[0].format('YYYY-MM-DD');
-    datepickerValue[1].format('YYYY-MM-DD');
 
     Object.assign(fields, param);
 
@@ -259,7 +257,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   };
 
   return (
-    <header className={`clearfix ${styles.monitor_toolbar}`}>
+    <header className={`clearfix ${styles.monitor_toolbar} monitor-list-toolbar`}>
       <div className={styles.layout_one_div}>
         <span className={styles.text}>星级：</span>
         <Checkbox.Group 

@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-13 15:03:11
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-24 12:02:37
+ * @LastEditTime: 2020-07-06 16:54:54
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\CommectMonitor.d.ts
  */ 
 
@@ -21,6 +21,9 @@ declare namespace CommectMonitor {
     dateStart: string;
     dateEnd: string;
     asin?: string;
+    headersParams: {
+      StoreId: string|number;
+    };
   }
 
   interface IMonitorToolProps {

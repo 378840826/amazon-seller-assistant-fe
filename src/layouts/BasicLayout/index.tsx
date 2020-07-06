@@ -53,7 +53,7 @@ const getSelectedMenu = () => {
 const renderBreadcrumbs = () => {
   const { title } = getSelectedMenu();
   return (
-    <div className={styles.title}>
+    <div className={`${styles.title} g-secondary-nav`}>
       {title}
     </div>
   );
@@ -126,7 +126,7 @@ const BasicLayout: React.FC = props => {
   
   return (
     <Layout>
-      <Header className={styles.Header}>
+      <Header className={`${styles.Header} g-header-nav`}>
         <a href="/">
           <img src={logo} alt="logo" className={styles.logo} />
         </a>

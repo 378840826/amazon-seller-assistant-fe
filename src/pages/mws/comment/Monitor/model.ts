@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-03 15:12:15
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-24 15:30:25
+ * @LastEditTime: 2020-07-06 17:01:21
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\model.ts
  * 
  * 接口
@@ -60,8 +60,6 @@ const CommentMonitor: ICommentMonitorType = {
     *getCommentList({ payload }, { call }): Generator {
       try {
         const response = yield call(getCommentList, payload.data );
-        console.log(response);
-        
         payload.resolve(response);
       } catch (err) {
         payload.reject(err);

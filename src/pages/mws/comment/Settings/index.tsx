@@ -51,12 +51,16 @@ const Settings: React.FC = () => {
     setTableLoadingStatus(true);
     setCurrentShop(current as CommectMonitor.ICurrentShopType);
     setSearchComponent(true);
+    const headersParams = {
+      StoreId: current.id,
+    };
     dispatch({
       type: 'commectSettings/getCommectMonitorSetList',
       payload: {
         data: {
           current: pageCurrent,
           size: pageSize,
+          headersParams,
         },
       },
     });
@@ -64,11 +68,20 @@ const Settings: React.FC = () => {
 
   // 获取星级提醒
   useEffect(() => {
+    if (current.id === '-1') {
+      return;
+    }
+    
     new Promise((resolve, reject) => {
       dispatch({
         type: 'commectSettings/getreviewRemindStar',
         resolve,
         reject,
+        payload: {
+          headersParams: {
+            StoreId: current.id,
+          },
+        },
       });
     }).then(datas => {
       const { code, data } = datas as { code: number; data: {} };
@@ -93,7 +106,7 @@ const Settings: React.FC = () => {
         setFiveStar(fiveStar);
       }
     });
-  }, [dispatch, asyncGetview]);
+  }, [dispatch, asyncGetview, current]);
 
   // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
   useEffect(() => {
@@ -121,6 +134,7 @@ const Settings: React.FC = () => {
     }
   }, [datas]);
 
+  // 修改评论提醒
   const handleMenuClick = (param = {}, type = 0) => {
     new Promise((resolve, reject) => {
       const payload = {
@@ -129,6 +143,9 @@ const Settings: React.FC = () => {
         threeStar,
         fourStar,
         fiveStar,
+        headersParams: {
+          StoreId: current.id,
+        },
       };
       Object.assign(payload, param);
       dispatch({
@@ -202,7 +219,7 @@ const Settings: React.FC = () => {
     handleMenuClick({ fiveStar: value });
   };
 
-  // 星级菜单 
+  // 评论提醒菜单 
   const menu = (
     <Menu>
       <Menu.Item key="1">
@@ -291,7 +308,7 @@ const Settings: React.FC = () => {
         return (
           <div className={styles.product_cols}>
             <img src={imgLink || sittingImg} alt=""/>
-            <div>
+            <div className={styles.product_box}>
               <a href={ titleLink } target="_blank" rel="noopener noreferrer">
                 <Iconfont 
                   type="icon-lianjie" 
@@ -379,12 +396,16 @@ const Settings: React.FC = () => {
 
   // 添加一条监控评论成功后的回调
   const successCb = () => {
+    const headersParams = {
+      StoreId: current.id,
+    };
     dispatch({
       type: 'commectSettings/getCommectMonitorSetList',
       payload: {
         data: {
           current: 1,
           size: 20,
+          headersParams,
         },
       },
     });
@@ -402,7 +423,7 @@ const Settings: React.FC = () => {
             onVisibleChange={setStar}
             visible={starIsVisible} >
             <Button>
-              星级提醒 <DownOutlined />
+              评论提醒 <DownOutlined />
             </Button>
           </Dropdown>
         </div>

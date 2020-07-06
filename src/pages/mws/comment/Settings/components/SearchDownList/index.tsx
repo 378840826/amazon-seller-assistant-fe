@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-05 15:21:50
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 20:09:07
+ * @LastEditTime: 2020-07-06 17:45:15
  * @FilePath: \amzics-react\src\pages\mws\comment\Settings\components\SearchDownList\index.tsx
  * 
  * 异步请求后端数据，暂时不封装成公用组件
@@ -17,7 +17,7 @@
  * { value: '值’ , }
  * RefObject<YouComponent>
  */ 
-import React, { useState, createRef, RefObject, useEffect } from 'react';
+import React, { useState, createRef, RefObject } from 'react';
 import styles from './index.less';
 import debounce from 'lodash/debounce'; // 防抖
 import { 
@@ -28,6 +28,7 @@ import {
 } from 'antd';
 import { 
   useDispatch,
+  useSelector,
 } from 'umi';
 
 
@@ -64,18 +65,7 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
   const [asin, setAsin] = useState<string>('');
   const [addBtnLoading, setAddBtnLoading] = useState<boolean>(false); // 添加按钮loading
   const valueRef = createRef();
-
-  // 清空数据
-  // useEffect(() => {
-  //   if (props.reset) {
-  //     console.log('执行我吗？', props.reset);
-
-  //     setVisible(false);
-  //     setAsin('');
-  //     setAddBtnLoading(false);
-  //   }
-  // }, [props]);
-  
+  const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
 
   // 请求数据  
   const asyncRequest = debounce((asin) => {
@@ -86,6 +76,9 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
         resolve,
         payload: {
           asin,
+          headersParams: {
+            StoreId: current.id,
+          },
         },
       });
     }).then(datas => {
@@ -119,12 +112,6 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
     } 
   };
 
-  // 下拉列表li点击的回调
-  const clickCallback = (asin: string) => {
-    setAsin(asin);
-    setVisible(false);
-  };
-
   // 添加ASIN到列表
   const addAsin = () => {
     setAddBtnLoading(true);
@@ -135,12 +122,13 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
         resolve,
         payload: {
           asin,
+          headersParams: {
+            StoreId: current.id,
+          },
         },
       });
     }).then(datas => {
       setAddBtnLoading(false);
-      console.log(datas);
-      
       const { code, message: msg } = datas as { code: number; message: string };
       if (code === 200) {
         message.success(msg || '添加成功！');
@@ -152,6 +140,13 @@ const SearchDownList: React.FC<CommectMonitor.ISearChProps> = (props) => {
       setAddBtnLoading(false);
       message.error(err || '添加失败!');
     });
+  };
+
+  // 下拉列表li点击的回调
+  const clickCallback = (asin: string) => {
+    setAsin(asin);
+    setVisible(false);
+    addAsin();
   };
   
   // 离开区域就隐藏了下拉列表了

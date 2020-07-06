@@ -3,7 +3,6 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-02 15:57:07
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-24 15:30:01
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\index.tsx
  * 
  * 评论监控
@@ -20,7 +19,7 @@ import TableNotData from '@/components/TableNotData';
 import Toolbar from './components/Toolbar';
 import { storage } from '@/utils/utils';
 import SignHandle from './components/SignHandle';
-import { getQuery } from '@/utils/huang';
+import { outerHeight } from '@/utils/huang';
 import SortComponent from './components/Sort';
 import {
   Link,
@@ -29,6 +28,7 @@ import {
   ConnectRC,
   Dispatch,
   useSelector,
+  useLocation,
 } from 'umi';
 
 import {
@@ -56,11 +56,11 @@ interface ICommentMonitorList {
 
 
 let requestHeader = {};
-let shopCount = 0; // 店铺首次加载不执行
 const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => {
   const dispatch: Dispatch = useDispatch();
-  const { asin = '' }: {asin?: string} = getQuery();
-  
+  const location = useLocation();
+  const query: any = location.query; // eslint-disable-line
+  const { asin = '' } = query as {asin: string};
   const [dataSource, setDataSource] = useState<{recores?: {}}[]>([]); // 表格数据
   const [pageTotal, setPageTotal] = useState<number>(0); // 分页数量
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
@@ -75,7 +75,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   const { storeName } = storage.get('currentShop') as API.IShop; // 当前选中店铺
   const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
   const [currentOrder, setCurrentOrder] = useState(''); // 当前排序的列字段
-
+  const [tableHeight, setTableHeight] = useState<number>(500); // 表格的高度
 
   // 初始化请求数据
   const requestData: CommectMonitor.IRequestDataType = {
@@ -85,6 +85,21 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     size: pageSize,
     dateStart,
     dateEnd,
+    headersParams: {
+      StoreId: current.id,
+    },
+  };
+
+  // 表格最大高度
+  const setTbodyHeigght = () => {
+    const windowHeight = document.documentElement.clientHeight;
+    const navHeight = outerHeight('.g-header-nav') as number;
+    const childnavHeight = outerHeight('.g-secondary-nav') as number;
+    const toolbarHeight = outerHeight('.monitor-list-toolbar') as number;
+    const pageHeight = outerHeight('.g-page') as number;
+    const tableHeight = windowHeight - (navHeight + childnavHeight + toolbarHeight + pageHeight);
+    
+    setTableHeight(tableHeight - 50 - 36); // 表格的头部 marginTop 
   };
   
   // 设定过来筛选
@@ -128,11 +143,20 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       setLoading(false);
       console.error(err, '首次加载出错');
     });
-  }, [dispatch]);// eslint-disable-line
+  }, [dispatch, dateStart, dateEnd]);// eslint-disable-line
 
+  // 加载
   useEffect(() => {
-    requestBody();
-  }, [requestBody]);
+    // 店铺未加载完毕时不请求
+    if (Number(current.id) === -1 ) {
+      return;
+    }
+    const headersParams = {
+      StoreId: current.id,
+    };
+
+    requestBody({ headersParams });
+  }, [current, requestBody]);
 
   // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
   useEffect(() => {
@@ -140,16 +164,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     if (dom) {
       dom.scrollTop = 0;
     }
+    setTbodyHeigght();
   }, [dataSource]);
-
-
-  // 店铺切换时
-  useEffect(() => {
-    if (shopCount > 1) {
-      requestBody();
-    }
-    shopCount++;
-  }, [current, requestBody]);
 
   useEffect(() => {
     if (commentTableData.code === 200) {
@@ -160,12 +176,16 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   // 下载列表
   const download = (data: {}) => {
     new Promise((resolve, reject) => {
+      const headersParams = {
+        StoreId: current.id,
+      };
+
       dispatch({
         type: 'commentMonitor/downLoadComment',
         payload: {
           resolve,
           reject,
-          data,
+          data: Object.assign({}, data, { headersParams }),
         },
       });
     }).then(res => { 
@@ -507,7 +527,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
             key="id" rowKey="id" 
             {...tableConfig}
             pagination={false} 
-            scroll={{ y: 584 }}
+            scroll={{ y: tableHeight, scrollToFirstRowOnChange: true }}
           />
           <div className={styles.page}>
             <Pagination {...pageConfig}/>

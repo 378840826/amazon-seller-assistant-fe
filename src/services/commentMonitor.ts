@@ -3,14 +3,15 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-03 15:33:11
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 19:11:22
  * @FilePath: \amzics-react\src\services\commentMonitor.ts
  * 监控评价模块API
  */ 
 import request from '@/utils/request';
 
-export async function getCommentList( data: { current: number; size: number } ) {
-  return request.post<API.ICommentMonitorList>( `/api/mws/review/reviews`, {
+// 获取评论列表
+export async function getCommentList( data: { 
+  current: number; size: number; order: string; asc: string; } ) {
+  return request.post(`/api/mws/review/reviews`, {
     params: {
       current: data.current,
       size: data.size,
@@ -18,9 +19,6 @@ export async function getCommentList( data: { current: number; size: number } ) 
       asc: data.asc,
     },
     data,
-    headers: {
-      StoreId: '1261140381664944130',
-    },
   });
 }
 
@@ -31,9 +29,6 @@ export async function downloadCommentTable( data: { current: number; size: numbe
     params: {
       current: data.current,
       size: data.size,
-    },
-    headers: {
-      StoreId: '1261140381664944130',
     },
     data,
   });
@@ -46,32 +41,26 @@ export async function signHandle(id: string) {
 
 
 // 监控评论设定列表
-export async function commentMonitorSettingsList(params: {}) {
+export async function commentMonitorSettingsList(params: { headersParams: {} }) {
   return request(`/api/mws/review/monitoring-settings/list`, {
     params,
-    headers: {
-      StoreId: '1261140381664944130',
-    },
+    data: { headersParams: params.headersParams },
   });
 }
 
 // 获取建议ASIN  (搜索下拉框)
-export async function getSearchAsinList(asin: string) {
+export async function getSearchAsinList(params: { asin: string; headersParams: {} }) {
   return request('/api/mws/review/monitoring-settings/search/', {
-    params: { asin },
-    headers: {
-      StoreId: '1261140381664944130',
-    },
+    params: { asin: params.asin },
+    data: { headersParams: params.headersParams },
   });
 }
 
 // 监控列表设定 - 添加一条设定
-export async function addMonitorSetting(asin: string) {
+export async function addMonitorSetting(params: { asin: string; headersParams: {} }) {
   return request.post('/api/mws/review/monitoring-settings/add-asin', {
-    params: { asin },
-    headers: {
-      StoreId: '1261140381664944130',
-    },
+    params: { asin: params.asin },
+    data: { headersParams: params.headersParams },
   });
 }
 
@@ -79,9 +68,6 @@ export async function addMonitorSetting(asin: string) {
 export async function getreviewRemindStar(data: {}) {
   return request('/api/mws/review/reviews/list', {
     data,
-    headers: {
-      StoreId: '1261140381664944130',
-    },
   });
 }
 
@@ -89,23 +75,18 @@ export async function getreviewRemindStar(data: {}) {
 export async function setreviewRemindStar(data: {}) {
   return request.post('/api/mws/review/reviews/setting', {
     data,
-    headers: {
-      StoreId: '1261140381664944130',
-    },
   });
 }
 
 // 监控评论设定列表 - 监控开关
-export async function setcommentMonitorSettingsSwitch(params: {}) {
+export async function setcommentMonitorSettingsSwitch(params: { headersParams: {} }) {
   return request.post(`/api/mws/review/monitoring-settings/switch`, {
     params,
-    headers: {
-      StoreId: '1261140381664944130',
-    },
+    data: { headersParams: params.headersParams },
   });
 }
 
-
+// eslint-disable-next-line
 export async function Test(data: any) {
   return request('/api/system/user/login', {
     method: 'POST',

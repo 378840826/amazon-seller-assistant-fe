@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-05 15:04:27
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 19:08:13
+ * @LastEditTime: 2020-07-06 17:49:12
  * @FilePath: \amzics-react\src\pages\mws\comment\Settings\model.ts
  */ 
 import { Effect, Reducer } from 'umi';
@@ -59,7 +59,7 @@ const Model: ICommentSettings = {
     // 获取建议ASIN  (搜索下拉框)
     *getSearchAsinList({ payload, reject, resolve }, { call }): Generator {
       try {
-        const res = yield call(getSearchAsinList, payload.asin);
+        const res = yield call(getSearchAsinList, payload);
         resolve(res);
       } catch (err) {
         reject(err);
@@ -69,7 +69,7 @@ const Model: ICommentSettings = {
     // 添加一条监控设定
     *addMonitorSetting({ payload, reject, resolve }, { call }): Generator {
       try {
-        const res = yield call(addMonitorSetting, payload.asin);
+        const res = yield call(addMonitorSetting, payload);
         resolve(res);
       } catch (err) {
         reject(err);
@@ -77,9 +77,9 @@ const Model: ICommentSettings = {
     },
 
     // 提醒星级获取
-    *getreviewRemindStar({ reject, resolve }, { call }): Generator {
+    *getreviewRemindStar({ reject, resolve, payload }, { call }): Generator {
       try {
-        const res = yield call(getreviewRemindStar);
+        const res = yield call(getreviewRemindStar, payload);
         resolve(res);
       } catch (err) {
         reject(err);
