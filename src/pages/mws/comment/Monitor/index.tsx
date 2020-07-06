@@ -402,8 +402,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>5星</a>
                     : '5星'
                 }
-                <Tooltip title={ starPart.five }>
-                  <Progress percent={ starPart.five } strokeColor="#ffaf4d" showInfo={false} />
+                <Tooltip title={ `${starPart.five * 100 } %` }>
+                  <Progress percent={ starPart.five * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
               <div>
@@ -415,8 +415,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>4星</a>
                     : '4星'
                 }
-                <Tooltip title={ starPart.four }>
-                  <Progress percent={ starPart.four } strokeColor="#ffaf4d" showInfo={false} />
+                <Tooltip title={ `${starPart.four * 100 } %`}>
+                  <Progress percent={ starPart.four * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
             </div>
@@ -430,8 +430,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>3星</a>
                     : '3星'
                 }
-                <Tooltip title={ starPart.three }>
-                  <Progress percent={ starPart.three } strokeColor="#ffaf4d" showInfo={false} />
+                <Tooltip title={ `${starPart.three * 100 } %` }>
+                  <Progress percent={ starPart.three * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
               <div>
@@ -443,8 +443,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>2星</a>
                     : '2星'
                 }
-                <Tooltip title={ starPart.two }>
-                  <Progress percent={ starPart.two } strokeColor="#ffaf4d" showInfo={false} />
+                <Tooltip title={ `${starPart.two * 100 } %` }>
+                  <Progress percent={ starPart.two * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
             </div>
@@ -457,8 +457,8 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                   className={styles.title}>1星</a>
                   : '1星'
               }
-              <Tooltip title={ starPart.one }>
-                <Progress percent={ starPart.one } strokeColor="#ffaf4d" showInfo={false} />
+              <Tooltip title={ `${starPart.one * 100 } %` }>
+                <Progress percent={ starPart.one * 100 } strokeColor="#ffaf4d" showInfo={false} />
               </Tooltip>
             </div>
           </div>
