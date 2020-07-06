@@ -8,7 +8,7 @@ export default {
         data: {
           records: [
             {
-              id: '1',
+              id: '1261140381664944130',
               storeName: 'store-name-1',
               marketplace: 'US',
               sellerId: 'sellerId-1',
@@ -18,7 +18,7 @@ export default {
               currency: '$',
               tokenInvalid: false,
             }, {
-              id: '2',
+              id: '1261140381664944131',
               storeName: 'store-name-store-name-2',
               marketplace: 'UK',
               sellerId: 'sellerId-2',

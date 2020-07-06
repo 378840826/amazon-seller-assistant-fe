@@ -1,0 +1,15 @@
+/* tip文字 */ 
+.ant-tooltip {
+  max-width: 455px;
+  font-size: 12px;
+}
+
+.ant-tooltip-inner {
+  max-width: 455px;
+  background-color: #fff;
+  color: #666;
+}
+
+.ant-tooltip-arrow::before {
+  background-color: #fff;
+}

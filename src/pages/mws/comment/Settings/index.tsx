@@ -122,7 +122,8 @@ const Settings: React.FC = () => {
     if (!datas.code) {
       return;
     }
-    
+    const { message: msg } = datas as { message?: string };
+
     if (datas.code === 200) {
       const { data } = datas;
       setDataSource(data.records);
@@ -130,7 +131,7 @@ const Settings: React.FC = () => {
       setPageTotal(data.total);
       setPageCurrent(data.current);
     } else {
-      message.success(datas.msg || 'OOP! 网络有点问题~');
+      message.error(msg || 'OOP! 网络有点问题~');
     }
   }, [datas]);
 

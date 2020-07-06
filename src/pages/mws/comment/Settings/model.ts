@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-05 15:04:27
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 17:49:12
+ * @LastEditTime: 2020-07-06 18:08:12
  * @FilePath: \amzics-react\src\pages\mws\comment\Settings\model.ts
  */ 
 import { Effect, Reducer } from 'umi';

@@ -10,6 +10,7 @@
 'user stairt';
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from './index.less';
+import './index.css';
 import Pagination from '@/components/Pagination';
 import { ColumnsType } from 'antd/lib/table';
 import { Iconfont } from '@/utils/utils';

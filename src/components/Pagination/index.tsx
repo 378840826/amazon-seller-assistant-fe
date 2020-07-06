@@ -3,7 +3,6 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-27 14:13:29
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 11:50:02
  * @FilePath: \amzics-react\src\components\Pagination\index.tsx
  */ 
 
