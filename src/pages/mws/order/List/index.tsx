@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 15:02:57
+ * @LastEditTime: 2020-07-06 15:34:04
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  * 
@@ -18,7 +18,7 @@ import { Table, message } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import Pagination from '@/components/Pagination';
 import { connect } from 'dva';
-import { useDispatch, useLocation } from 'umi';
+import { useDispatch, useLocation, useSelector } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
@@ -46,6 +46,7 @@ const OrderList: React.FC = () => {
   const [pageTotal, setPageTotal] = useState<number>(0); // 分页数量
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
+  const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
   const [tableHeight, setTableHeight] = useState<number>(500); // 默认500
   let rowNumber = 0; // 行key
   // eslint-disable-next-line 
@@ -62,7 +63,6 @@ const OrderList: React.FC = () => {
 
   requestDatas.asinRelatedSearch = asin;
   requestDatas.buyerRelatedSearch = buyer;
-  
 
   // 表格最大高度
   const setTbodyHeigght = () => {
@@ -71,8 +71,6 @@ const OrderList: React.FC = () => {
     const childnavHeight = outerHeight('.g-secondary-nav') as number;
     const toolbarHeight = outerHeight('.order-list-toolbar') as number;
     const pageHeight = outerHeight('.g-page') as number;
-    console.log(navHeight, childnavHeight, toolbarHeight, pageHeight);
-    
     const tableHeight = windowHeight - (navHeight + childnavHeight + toolbarHeight + pageHeight);
     
     setTableHeight(tableHeight - 50);
@@ -190,7 +188,7 @@ const OrderList: React.FC = () => {
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  }, [dispatch, startTime, endTime, asin, buyer]); // eslint-disable-line
+  }, [dispatch, current, startTime, endTime, asin, buyer]); // eslint-disable-line
 
 
   // 分页配置
