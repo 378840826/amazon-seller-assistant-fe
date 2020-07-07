@@ -50,7 +50,6 @@ const EditableCell: React.FC<IProps> = props => {
       okText: '确定',
       cancelText: '取消',
       onOk() {
-        console.log('删除');
         deleteCallback();
       },
     });

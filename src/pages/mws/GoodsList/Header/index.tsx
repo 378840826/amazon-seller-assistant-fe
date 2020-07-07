@@ -169,7 +169,6 @@ const Header: React.FC = () => {
 
   // 修改分组名称
   const handleGroupEditCallback = (id: string, value: string) => {
-    console.log('修改分组', id, value);
     if (groups.some(group => group.groupName === value)) {
       message.error('分组名称不能重复');
       return;
@@ -187,7 +186,6 @@ const Header: React.FC = () => {
 
   // 删除分组
   const handleGroupDelete = (id: string) => {
-    console.log('删除分组', id);
     dispatch({
       type: 'goodsList/removeGroup',
       payload: { id },
@@ -197,7 +195,6 @@ const Header: React.FC = () => {
 
   // 添加分组
   const handleGroupAdd = (groupName: string) => {
-    console.log('添加分组', groupName);
     if (groups.length >= 10) {
       message.error('最多只能添加10个分组！');
       return;
@@ -218,7 +215,6 @@ const Header: React.FC = () => {
 
   // 设置补货周期
   const handleSetCycle = () => {
-    console.log('修改补货周期', cycleValue);
     if (!cycleValue) {
       message.error('请输入补货周期');
       return;

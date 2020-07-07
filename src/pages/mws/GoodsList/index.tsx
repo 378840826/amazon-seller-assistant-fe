@@ -36,8 +36,6 @@ interface IUpdateGoodsUserDefined {
 }
 
 const GoodsList: React.FC = () => {
-  console.log('渲染 index');
-
   const dispatch = useDispatch();
   const loadingAdjustSwitch = false;
   // 商品
@@ -58,7 +56,6 @@ const GoodsList: React.FC = () => {
     defaultPageSize: 20,
     pageSizeOptions: ['20', '50', '100'],
     showQuickJumper: true,
-    hideOnSinglePage: true,
     showTotal: (total: number) => `共 ${total} 个`,
     onChange: (current: number) => {
       dispatch({
@@ -66,6 +63,16 @@ const GoodsList: React.FC = () => {
         payload: {
           headersParams,
           searchParams: { current },
+        },
+        callback: requestErrorFeedback,
+      });
+    },
+    onShowSizeChange: (current: number, size: number) => {
+      dispatch({
+        type: 'goodsList/fetchGoodsList',
+        payload: {
+          headersParams,
+          searchParams: { current, size },
         },
         callback: requestErrorFeedback,
       });
@@ -97,8 +104,7 @@ const GoodsList: React.FC = () => {
 
   // 勾选商品
   const rowSelection = {
-    onChange: (selectedRowKeys: ReactText[], selectedRows: API.IGoods[]) => {
-      console.log('选择', selectedRows, selectedRowKeys);
+    onChange: (selectedRowKeys: ReactText[]) => {
       dispatch({
         type: 'goodsList/updateCheckGoods',
         payload: selectedRowKeys,
@@ -165,7 +171,6 @@ const GoodsList: React.FC = () => {
 
   // 操作-改价
   const handleFastPrice = (record: API.IGoods, { key }: ClickParam) => {
-    console.log('操作-快捷改价', key, headersParams);
     judgeFastPrice(key, [record]) && dispatch({
       type: 'goodsList/fastUpdate',
       payload: {
@@ -179,7 +184,6 @@ const GoodsList: React.FC = () => {
 
   // 添加分组并设置分组
   const handleNewGroup = (groupName: string, goodsId: string) => {
-    console.log('添加分组并设置分组', groupName, goodsId);
     if (groups.length >= 10) {
       message.error('最多只能添加10个分组！');
       return;
@@ -202,7 +206,6 @@ const GoodsList: React.FC = () => {
   // 各种方式修改售价（按百分比，增量，目标值修改）
   const updatePrice: IUpdatePrice = (options) => {
     const { type, ids, price, operator, unit, changeValue } = options;
-    console.log('修改售价', type, ids, price, operator, unit, changeValue);
     dispatch({
       type: 'goodsList/updatePrice',
       payload: {

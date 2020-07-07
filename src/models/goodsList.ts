@@ -117,7 +117,6 @@ const GoodsListModel: IGoodsListModelType = {
         return Object.assign({}, state.goodsList.searchParams, state.goodsList.filtrateParams);
       });
       const newParams = Object.assign(oldParams, searchParams, filtrateParams);
-      console.log('查询商品参数', newParams);
       // 后端不能处理空字符串的 ID
       if (newParams.groupId === '') {
         delete newParams.groupId;
@@ -202,12 +201,11 @@ const GoodsListModel: IGoodsListModelType = {
           payload: { records },
         });
       }
-      callback && callback(res.message);
+      callback && callback(res.code, res.message);
     },
 
     // 快捷设置价格相关,价格，最低价，最高价（批量/单个）
     *fastUpdate({ payload: { ids, key, headersParams }, callback }, { call, put }) {
-      console.log('快捷设置价格相关', key);
       const res = yield call(updatePriceFast, { ids, key, headersParams });
       if (res.code === 200) {
         const { data: { records } } = res;
@@ -258,7 +256,6 @@ const GoodsListModel: IGoodsListModelType = {
 
     // 添加分组并设置商品的分组为新分组
     *newGroup({ payload, callback }, { call, put }) {
-      console.log('payload', payload);
       const res = yield call(addGroup, payload);
       if (res.code === 200) {
         const { data } = res;
@@ -378,6 +375,7 @@ const GoodsListModel: IGoodsListModelType = {
         const goods = goodsList[index];
         records.forEach((newGoods: API.IGoods) => {
           if (goods.id === newGoods.id) {
+            console.log('商品修改后更新商品列表数据', goods.groupName, newGoods.groupName);
             Object.assign(goods, newGoods);
           }
         });
@@ -391,7 +389,6 @@ const GoodsListModel: IGoodsListModelType = {
 
     // 更新勾选商品
     updateCheckGoods(state, { payload }) {
-      console.log('payload', payload);
       state.checkedGoodsIds = payload;
     },
   },

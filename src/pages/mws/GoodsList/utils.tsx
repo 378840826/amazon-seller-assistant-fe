@@ -36,7 +36,7 @@ export const judgeFastPrice = function (key: string, goodsRecord: API.IGoods[]) 
       break;
     // 最低价 = 佣金 + FBAfee
     case 'minPrice':
-      if (goods.commission + goods.fbaFee >= goods.maxPrice) {
+      if (goods.maxPrice && goods.commission + goods.fbaFee >= goods.maxPrice) {
         msg = '最低价必须小于最高价，设置失败!';
         break;
       }

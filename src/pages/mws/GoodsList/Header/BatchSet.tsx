@@ -73,7 +73,6 @@ const BatchSet: React.FC<IProps> = props => {
 
   // 批量设置（调价规则，分组，最高价，最低价）
   const handleBatchFinish = (values: { [key: string]: string | number }, key: string) => {
-    console.log('批量设置', values, key);
     dispatch({
       type: 'goodsList/updateBatchGoods',
       payload: {

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Modal, Input } from 'antd';
-import { request, Link } from 'umi';
+import { request, Link, useDispatch } from 'umi';
 import styles from './index.less';
 import { Iconfont, storage } from '@/utils/utils';
 
 const ImportFile: React.FC = () => {
+  const dispatch = useDispatch();
   const [uploading, setUploading] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [file, setFile] = useState<any>();
@@ -18,14 +19,24 @@ const ImportFile: React.FC = () => {
       method: 'POST',
       headers: { 'StoreId': storage.get('currentShop').id },
       data: formData,
-    }).then(function ({ message }) {
+    }).then(function ({ data }) {
       setUploading(false);
+      const { productUpdateVos, errorSize, successSize, totalSize, message } = data;
+      const msg = message || `共导入${totalSize}个商品数据。其中${successSize}个商品数据匹配成功，
+        ${errorSize}个商品数据有误，详情请看错误报告`;
       Modal.info({
         icon: undefined,
-        width: '340px',
+        width: '360px',
         okText: '确定',
         zIndex: 1052,
-        content: message || '导入成功',
+        content: msg,
+      });
+      // 更新商品列表
+      dispatch({
+        type: 'goodsList/updateGoodsList',
+        payload: {
+          records: productUpdateVos,
+        },
       });
     }).catch(function () {
       setUploading(false);

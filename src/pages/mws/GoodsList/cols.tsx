@@ -79,6 +79,7 @@ export const getFullColumns = (params: any) => {
           dropdownClassName={styles.SelectDropdown}
           bordered={false}
           defaultValue={record.groupId}
+          value={record.groupId}
           listHeight={330}
           onChange={newGroupId => {
             handleGroupChange(newGroupId, record);
@@ -176,7 +177,7 @@ export const getFullColumns = (params: any) => {
         </span>
       ),
       sorter: true,
-      sortOrder: sort === 'sku' ? order : null,
+      sortOrder: sort === 'openDate' ? order : null,
       dataIndex: 'sku',
       key: 'sku-openDate',
       align: 'center',
@@ -665,7 +666,7 @@ export const getFullColumns = (params: any) => {
           maxLength: 20,
           confirmCallback: value => {
             const minPrice = parseFloat(value);
-            if (minPrice >= record.maxPrice) {
+            if (record.maxPrice && minPrice >= record.maxPrice) {
               message.error('最低价必须小于最高价');
               return;
             }
