@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-03 15:12:15
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 17:01:21
+ * @LastEditTime: 2020-07-09 10:31:54
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\model.ts
  * 
  * 接口

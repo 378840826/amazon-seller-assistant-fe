@@ -363,7 +363,7 @@ const Settings: React.FC = () => {
           <Link to={{
             pathname: '/mws/comment/monitor',
             search: `asin=${asin}`,
-          }} target="_blank" style={{ color: '#009881' }}>查看</Link>
+          }} target="_blank" className={styles.look}>查看</Link>
         </div>;
       },
     },
