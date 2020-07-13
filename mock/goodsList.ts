@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 
 export default {
   // 查询商品列表（单个查询）
-  'GET /api/mws/product/page/search': (_: Request, res: Response) => {
+  'POST /api/mws/product/page/search': (_: Request, res: Response) => {
     setTimeout(() => {
       const goodsCell = {
         title: 'ier Reading manyReadingReading pos ier Reading many pos ier Reading many posReading',
@@ -544,4 +544,13 @@ export default {
     }, 300);
   },
   
+  // 获取补货周期
+  'GET /api/mws/product/find/replenishment-cycle': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: '15',
+      });
+    }, 300);
+  },
 };

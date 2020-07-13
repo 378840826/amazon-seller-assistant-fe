@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'umi';
 import { Checkbox, Row, Col, Dropdown, Button } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { storage } from '@/utils/utils';
 import styles from './index.less';
@@ -69,7 +69,7 @@ const CustomCols: React.FC<IProps> = props => {
     <div className={styles.customColumnContainer}>
       <Checkbox.Group style={{ width: '100%' }} defaultValue={customColsValue}>
         <Row className={styles.Row1}>
-          <Col span={8}>
+          <Col span={9}>
             {
               renderCheckboxGroup('商品信息', [
                 { value: 'group', name: '分组' },
@@ -83,7 +83,7 @@ const CustomCols: React.FC<IProps> = props => {
               ])
             }
           </Col>
-          <Col span={8}>
+          <Col span={9}>
             {
               renderCheckboxGroup('库存信息', [
                 { value: 'fulfillmentChannel', name: '发货方式' },
@@ -94,7 +94,7 @@ const CustomCols: React.FC<IProps> = props => {
               ])
             }
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             {
               renderCheckboxGroup('价格信息', [
                 { value: 'price', name: '售价' },
@@ -110,7 +110,7 @@ const CustomCols: React.FC<IProps> = props => {
           </Col>
         </Row>
         <Row className={styles.Row2}>
-          <Col span={8}>
+          <Col span={9}>
             {
               renderCheckboxGroup('销售表现', [
                 { value: 'dayOrder7Count', name: '7天订单' },
@@ -123,7 +123,7 @@ const CustomCols: React.FC<IProps> = props => {
               ])
             }
           </Col>
-          <Col span={8}>
+          <Col span={9}>
             {
               renderCheckboxGroup('调价设置', [
                 { value: 'minPrice', name: '最低价' },
@@ -146,7 +146,7 @@ const CustomCols: React.FC<IProps> = props => {
       onVisibleChange={(flag) => setVisible(flag)}
     >
       <Button>
-        自定义数据 <DownOutlined />
+        自定义数据 { visible ? <UpOutlined className="anticon-down" /> : <DownOutlined /> }
       </Button>
     </Dropdown>
   );

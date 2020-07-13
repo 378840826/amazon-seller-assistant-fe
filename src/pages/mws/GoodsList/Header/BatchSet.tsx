@@ -73,6 +73,18 @@ const BatchSet: React.FC<IProps> = props => {
 
   // 批量设置（调价规则，分组，最高价，最低价）
   const handleBatchFinish = (values: { [key: string]: string | number }, key: string) => {
+    if (key === 'minPrice') {
+      if (Number(values.minPrice) === 0) {
+        message.error('最低价不能为0');
+        return;
+      }
+    }
+    if (key === 'maxPrice') {
+      if (Number(values.maxPrice) === 0) {
+        message.error('最高价不能为0');
+        return;
+      }
+    }
     dispatch({
       type: 'goodsList/updateBatchGoods',
       payload: {
@@ -168,7 +180,7 @@ const BatchSet: React.FC<IProps> = props => {
           onFinish={handleBatchPriceFinish}
           initialValues={{
             operator: '+',
-            unit: currency,
+            unit: 'currency',
           }}
         >
           <span className={styles.batchSetTitle}>售价：</span>
@@ -190,6 +202,7 @@ const BatchSet: React.FC<IProps> = props => {
                   <Select
                     style={{ width: 80 }}
                     onChange={value => setBatchPriceExpr(value !== '=')}
+                    // value={currency}
                   >
                     <Option value="currency">{currency}</Option>
                     <Option value="percent">%</Option>

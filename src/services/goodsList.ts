@@ -137,3 +137,10 @@ export async function updateCycle(params: API.IParams) {
     data: params,
   });
 }
+
+// 获取补货周期
+export async function getCycle(params: API.IParams) {
+  return request('/api/mws/product/find/replenishment-cycle', {
+    data: params,
+  });
+}

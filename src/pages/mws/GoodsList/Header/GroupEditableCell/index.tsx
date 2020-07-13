@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Input, Modal } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import classnames from 'classnames';
@@ -23,6 +23,12 @@ const EditableCell: React.FC<IProps> = props => {
   const [value, setValue] = useState<string>(inputValue);
   const [editable, setEditable] = useState<boolean>(false);
   const inputEl = useRef<Input>(null);
+
+  useEffect(() => {
+    if (inputEl.current) {
+      inputEl.current.focus();
+    }
+  }, [editable]);
 
   const handelClickEdit = () => {
     setEditable(true);
@@ -49,6 +55,8 @@ const EditableCell: React.FC<IProps> = props => {
       content: '删除分组，组内商品恢复未分组状态，确定删除？',
       okText: '确定',
       cancelText: '取消',
+      centered: true,
+      maskClosable: true,
       onOk() {
         deleteCallback();
       },
@@ -80,18 +88,15 @@ const EditableCell: React.FC<IProps> = props => {
       </div>
       :
       <div className={styles.cell}>
-        <Iconfont
-          className={styles.editableBtn}
-          type="icon-xiugai"
-          title="修改"
-          onClick={handelClickEdit}
-        />
-        <div className={styles.cellValue}>
-          {prefix}{inputValue}
+        <div onClick={handelClickEdit} title="点击修改" className={styles.editCell}>
+          <span className={styles.cellValue}>
+            {prefix}{inputValue}
+          </span>
+          <Iconfont className={styles.editableBtn} type="icon-xiugai" />
         </div>
         <Iconfont
           className={styles.deleteBtn}
-          type="icon-guanbi1"
+          type="icon-cuo"
           title="删除"
           onClick={handelClickDelte}
         />

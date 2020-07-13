@@ -99,6 +99,13 @@ const GoodsList: React.FC = () => {
         },
         callback: requestErrorFeedback,
       });
+      dispatch({
+        type: 'goodsList/fetchCycle',
+        payload: {
+          headersParams: { StoreId: currentShopId },
+        },
+        callback: requestErrorFeedback,
+      });
     }
   }, [dispatch, currentShopId]);
 
@@ -151,7 +158,12 @@ const GoodsList: React.FC = () => {
       type: 'goodsList/fetchGoodsList',
       payload: {
         headersParams,
-        searchParams: { sort, order, current: 1 },
+        searchParams: {
+          // order 为空时， 不传 sort
+          sort: order ? sort : undefined,
+          order,
+          current: 1,
+        },
       },
       callback: requestErrorFeedback,
     });
@@ -291,13 +303,13 @@ const GoodsList: React.FC = () => {
       />
       <div className={styles.footer}>
         <div className={styles.iconExample}>
-          <span>Add-on item：{ GoodsIcon.add() }</span>
-          <span>Amazon&apos;s Choice：{ GoodsIcon.ac() }</span>
-          <span>Best Seller：{ GoodsIcon.bs() }</span>
-          <span>New Releases：{ GoodsIcon.nr() }</span>
-          <span>Prime：{ GoodsIcon.prime }</span>
-          <span>Promotion：{ GoodsIcon.promotion }</span>
-          <span>Coupon：{ GoodsIcon.coupon() }</span>
+          <span>{ GoodsIcon.add() }：Add-on item</span>
+          <span>{ GoodsIcon.ac() }：Amazon&apos;s Choice</span>
+          <span>{ GoodsIcon.bs() }：Best Seller</span>
+          <span>{ GoodsIcon.nr() }：New Releases</span>
+          <span>{ GoodsIcon.prime }：Prime</span>
+          <span>{ GoodsIcon.promotion }：Promotion</span>
+          <span>{ GoodsIcon.coupon() }：Coupon</span>
         </div>
         <ConfigProvider locale={zhCN}>
           <Pagination {...paginationProps} />

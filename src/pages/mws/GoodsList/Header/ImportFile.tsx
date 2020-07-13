@@ -30,6 +30,7 @@ const ImportFile: React.FC = () => {
         okText: '确定',
         zIndex: 1052,
         content: msg,
+        centered: true,
       });
       // 更新商品列表
       dispatch({
@@ -43,6 +44,7 @@ const ImportFile: React.FC = () => {
       Modal.error({
         okText: '确定',
         content: '网络有点问题，导入失败！',
+        centered: true,
       });
     });
   };
@@ -50,7 +52,7 @@ const ImportFile: React.FC = () => {
   const handleChange = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
     // 大小不超过 5242880
     if (files) {
-      if (files[0].size > 5242880) {
+      if (files[0].size > 10) {
         setErrorText('文件不能超过5M');
       }
       setFile(files[0]);
@@ -79,17 +81,15 @@ const ImportFile: React.FC = () => {
           :
           null
       }
-      {
-        (errorText && file)
-          ? <div className={styles.errorText}>{errorText}</div>
-          : null
-      }
+      <div className={styles.errorText}>
+        { (errorText && file) ? errorText : null }
+      </div>
       <Button
         type="primary"
         onClick={handleUpload}
         disabled={!file || !!errorText}
         loading={uploading}
-        style={{ marginTop: 16 }}
+        style={{ marginTop: 4 }}
       >
         { uploading ? '正在导入' : '导入' }
       </Button>

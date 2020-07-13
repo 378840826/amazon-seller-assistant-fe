@@ -42,7 +42,7 @@ export default {
   // 下降文本色
   '@text-color-down': '#ff5958', 
   // 链接文本色
-  '@link-color': '#2f99fd',
+  '@link-color': '#0083ff',
   // 反白色
   '@text-color-inverse': '#fff',
   // 面包屑导航

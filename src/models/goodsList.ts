@@ -11,6 +11,7 @@ import {
   deleteGroup,
   addGroup,
   updateCycle,
+  getCycle,
 } from '@/services/goodsList';
 import { storage } from '@/utils/utils';
 
@@ -36,6 +37,7 @@ export interface IGoodsListModelState {
   };
   checkedGoodsIds: string[];
   tableLoading: boolean;
+  cycle: string;
 }
 
 interface IGoodsListModelType extends IModelType {
@@ -105,6 +107,8 @@ const GoodsListModel: IGoodsListModelType = {
     checkedGoodsIds: [],
     // 商品列表 loading （因为性能的原因，没使用 umi 的 state.loading）
     tableLoading: true,
+    // 补货周期
+    cycle: '15',
   },
 
   effects: {
@@ -123,6 +127,10 @@ const GoodsListModel: IGoodsListModelType = {
       }
       if (newParams.ruleId === '') {
         delete newParams.ruleId;
+      }
+      // 去掉头尾的空格
+      if (newParams.code) {
+        newParams.code = newParams.code.replace(/(^\s*)|(\s*$)/g, '');
       }
       const res = yield call(queryGoodsList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -285,6 +293,23 @@ const GoodsListModel: IGoodsListModelType = {
           type: 'updateGoodsList',
           payload: { records },
         });
+        yield put({
+          type: 'saveCycle',
+          payload: { data: payload.cycle },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 获取补货周期
+    *fetchCycle({ payload, callback }, { call, put }) {
+      const res = yield call(getCycle, payload);
+      if (res.code === 200) {
+        const { data } = res;
+        yield put({
+          type: 'saveCycle',
+          payload: { data },
+        });
       }
       callback && callback(res.code, res.message);
     },
@@ -375,7 +400,6 @@ const GoodsListModel: IGoodsListModelType = {
         const goods = goodsList[index];
         records.forEach((newGoods: API.IGoods) => {
           if (goods.id === newGoods.id) {
-            console.log('商品修改后更新商品列表数据', goods.groupName, newGoods.groupName);
             Object.assign(goods, newGoods);
           }
         });
@@ -390,6 +414,11 @@ const GoodsListModel: IGoodsListModelType = {
     // 更新勾选商品
     updateCheckGoods(state, { payload }) {
       state.checkedGoodsIds = payload;
+    },
+
+    // 保存补货周期
+    saveCycle(state, { payload }) {
+      state.cycle = payload.data;
     },
   },
 };

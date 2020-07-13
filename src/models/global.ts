@@ -244,6 +244,7 @@ const GlobalModel: IGlobalModelType = {
           title: `店铺 ${marketplace} : ${storeName} 未${text}`,
           okText: `去${text}`,
           cancelText: '取消',
+          centered: true,
           onOk() {
             history.push(url);
           },

@@ -19,6 +19,7 @@ const ShopList: React.FC = () => {
     const { id } = record;
     confirm({
       maskClosable: true,
+      centered: true,
       title: '店铺操作',
       content: `${text}店铺的所有功能设置？`,
       okText: '确定',
@@ -38,6 +39,7 @@ const ShopList: React.FC = () => {
   const handleUnbind = (record: API.IShop) => {
     confirm({
       maskClosable: true,
+      centered: true,
       title: '店铺操作',
       content: '解绑将清除该账号的所有数据，确定解绑？',
       okText: '确定',

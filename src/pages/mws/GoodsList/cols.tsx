@@ -17,6 +17,7 @@ import GoodsIcon from './GoodsIcon';
 import { day, strToMoneyStr } from '@/utils/utils';
 import { renderSortIcon } from './utils';
 import editable from '@/pages/components/EditableCell';
+import GoodsImg from '@/pages/components/GoodsImg';
 import styles from './index.less';
 
 const { Option } = Select;
@@ -70,12 +71,12 @@ export const getFullColumns = (params: any) => {
       dataIndex: 'groupId',
       key: 'group',
       align: 'center',
-      width: 116,
+      width: 156,
       fixed: 'left',
       render: (_, record) => (
         <Select
           size="small"
-          style={{ minWidth: '100%' }}
+          style={{ minWidth: '100%', textAlign: 'center' }}
           dropdownClassName={styles.SelectDropdown}
           bordered={false}
           defaultValue={record.groupId}
@@ -88,7 +89,7 @@ export const getFullColumns = (params: any) => {
             <div>
               {menu}
               <div className={styles.tableAddGroup}>
-                <span className={styles.tableAddGroupTitle}>新建分组</span>
+                <div className={styles.tableAddGroupTitle}>新建分组</div>
                 <Search
                   // 用 Search 组件改造的新建分组
                   placeholder="请输入分组名称"
@@ -113,9 +114,7 @@ export const getFullColumns = (params: any) => {
       fixed: 'left',
       render: (title, record) => (
         <div className={styles.goodsInfoContainer}>
-          <div className={styles.goodsImgContainer}>
-            <img className={styles.goodsImg} src={record.imgUrl} alt="商品图" />
-          </div>
+          <GoodsImg src={record.imgUrl} alt="商品图" width={46} />
           <div className={styles.goodsInfoContent}>
             {
               customCols.title
@@ -178,21 +177,21 @@ export const getFullColumns = (params: any) => {
       ),
       sorter: true,
       sortOrder: sort === 'openDate' ? order : null,
-      dataIndex: 'sku',
+      dataIndex: 'openDate',
       key: 'sku-openDate',
       align: 'center',
       width: 120,
-      render: (sku, record) => (
+      render: (openDate, record) => (
         <>
           {
             customCols.sku
             &&
-            <div>{sku}</div>
+            <div style={{ marginBottom: 2 }}>{record.sku}</div>
           }
           {
             customCols.openDate
             &&
-            <Text type="secondary">{record.openDate}</Text>
+            <Text type="secondary">{openDate}</Text>
           }
         </>
       ),
@@ -309,7 +308,7 @@ export const getFullColumns = (params: any) => {
       sortOrder: sort === 'price' ? order : null,
       dataIndex: 'price',
       key: 'price-postage',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (price, record) => (
         <Space direction="vertical">
@@ -337,7 +336,7 @@ export const getFullColumns = (params: any) => {
           {
             customCols.postage && record.postage
               ?
-              <Text type="secondary">
+              <Text type="secondary" style={{ marginRight: 17 }}>
                 +{currency}{record.postage}
               </Text>
               :
@@ -351,7 +350,7 @@ export const getFullColumns = (params: any) => {
       sortOrder: sort === 'cost' ? order : null,
       dataIndex: 'cost',
       key: 'cost',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (price, record) => (
         editable({
@@ -374,7 +373,7 @@ export const getFullColumns = (params: any) => {
       sortOrder: sort === 'freight' ? order : null,
       dataIndex: 'freight',
       key: 'freight',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (freight, record) => (
         editable({
@@ -400,7 +399,7 @@ export const getFullColumns = (params: any) => {
       ),
       dataIndex: 'commission',
       key: 'commission-fbaFee',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (commission, record) => (
         <Space direction="vertical">
@@ -431,17 +430,42 @@ export const getFullColumns = (params: any) => {
         </Space>
       ),
     }, {
-      title: () => (
-        <span>
-          利润
-          { GoodsIcon.question('利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%') }
-        </span>
-      ),
-      sorter: true,
-      sortOrder: sort === 'profit' ? order : null,
+      title: () => {
+        const onClick = ({ key }: ClickParam) => {
+          const [newSort, newOrder] = key.split('-');
+          handleSortChange(newSort, newOrder);
+        };
+        const menu = (
+          <Menu className={styles.titleMenu} onClick={onClick}>
+            <MenuItem key="profit-ascend">
+              利润升序
+            </MenuItem>
+            <MenuItem key="profit-descend">
+              利润降序
+            </MenuItem>
+            <MenuItem key="profitMargin-ascend">
+              利润率升序
+            </MenuItem>
+            <MenuItem key="profitMargin-descend">
+              利润率降序
+            </MenuItem>
+          </Menu>
+        );
+        return (
+          <Dropdown overlay={menu} placement="bottomRight">
+            <span style={{ cursor: 'pointer' }}>
+              利润
+              {GoodsIcon.question('利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%')}
+              {
+                (sort === 'profit' || sort === 'profitMargin') ? renderSortIcon(order) : null
+              }
+            </span>
+          </Dropdown>
+        );
+      },
       dataIndex: 'profit',
       key: 'profit-profitMargin',
-      align: 'center',
+      align: 'right',
       width: 80,
       render: (profit, record) => (
         profit
@@ -610,10 +634,10 @@ export const getFullColumns = (params: any) => {
         const menu = (
           <Menu className={styles.titleMenu} onClick={onClick}>
             <MenuItem key="reviewScore-ascend">
-              review升序
+              评分升序
             </MenuItem>
             <MenuItem key="reviewScore-descend">
-              review降序
+              评分降序
             </MenuItem>
             <MenuItem key="reviewCount-ascend">
               评论数升序
@@ -656,7 +680,7 @@ export const getFullColumns = (params: any) => {
       sortOrder: sort === 'minPrice' ? order : null,
       dataIndex: 'minPrice',
       key: 'minPrice',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (minPrice, record) => (
         editable({
@@ -666,6 +690,10 @@ export const getFullColumns = (params: any) => {
           maxLength: 20,
           confirmCallback: value => {
             const minPrice = parseFloat(value);
+            if (minPrice === 0) {
+              message.error('最低价不能为0');
+              return;
+            }
             if (record.maxPrice && minPrice >= record.maxPrice) {
               message.error('最低价必须小于最高价');
               return;
@@ -684,7 +712,7 @@ export const getFullColumns = (params: any) => {
       sortOrder: sort === 'maxPrice' ? order : null,
       dataIndex: 'maxPrice',
       key: 'maxPrice',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (maxPrice, record) => (
         editable({
@@ -694,6 +722,10 @@ export const getFullColumns = (params: any) => {
           maxLength: 20,
           confirmCallback: value => {
             const maxPrice = parseFloat(value);
+            if (maxPrice === 0) {
+              message.error('最高价不能为0');
+              return;
+            }
             if (maxPrice <= record.minPrice) {
               message.error('最高价必须大于最低价');
               return;
@@ -725,9 +757,9 @@ export const getFullColumns = (params: any) => {
       dataIndex: 'ruleName',
       key: 'ruleName',
       align: 'center',
-      width: 120,
+      width: 136,
       render: () => (
-        <Select defaultValue="未开发的功能0" style={{ width: 120 }} bordered={false}>
+        <Select defaultValue="未开发的功能0" style={{ width: 136 }} bordered={false}>
           <Option value="未开发的功能0">未开发的功能0</Option>
           <Option value="未开发的功能1">未开发的功能1</Option>
           <Option value="未开发的功能2">未开发的功能2</Option>
@@ -777,7 +809,7 @@ export const getFullColumns = (params: any) => {
           <Space direction="vertical" className={styles.options}>
             <Space>
               <Dropdown overlay={priceMenu} placement="bottomCenter">
-                <span style={{ cursor: 'pointer' }}>
+                <span className={styles.optionsItem}>
                   改价
                 </span>
               </Dropdown>
@@ -790,7 +822,7 @@ export const getFullColumns = (params: any) => {
                 订单
               </Link>
               <Dropdown overlay={monitorMenu} placement="bottomCenter">
-                <span style={{ cursor: 'pointer' }}>
+                <span className={styles.optionsItem}>
                   监控
                 </span>
               </Dropdown>

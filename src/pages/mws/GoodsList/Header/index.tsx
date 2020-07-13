@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Store } from 'redux';
 import { useDispatch, useSelector } from 'umi';
 import { Input, Dropdown, Button, message } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import { requestErrorFeedback, requestFeedback, Iconfont, strToUnsignedIntStr } from '@/utils/utils';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { requestErrorFeedback, requestFeedback, Iconfont } from '@/utils/utils';
 import { IConnectState } from '@/models/connect';
 import { ParamsValue } from '@/models/goodsList';
 import CustomCols from '../CustomCols';
@@ -11,6 +11,7 @@ import Filtrate from './Filtrate';
 import BatchSet from './BatchSet';
 import ImportFile from './ImportFile';
 import GroupEditableCell from './GroupEditableCell';
+import CycleSet from './CycleSet';
 import { listingStatusDict } from '../cols';
 import classnames from 'classnames';
 import styles from './index.less';
@@ -20,7 +21,14 @@ const { Search, TextArea } = Input;
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const goodsListPage = useSelector((state: IConnectState) => state.goodsList);
-  const { groups, customCols, filtrateParams, checkedGoodsIds, goods: { records } } = goodsListPage;
+  const {
+    groups,
+    customCols,
+    filtrateParams,
+    checkedGoodsIds,
+    goods: { records },
+    cycle,
+  } = goodsListPage;
   const currentShop = useSelector((state: IConnectState) => state.global.shop.current);
   const { currency, id: currentShopId } = currentShop;
   const headersParams = { StoreId: currentShopId };
@@ -30,12 +38,9 @@ const Header: React.FC = () => {
     filtrate: false,
     importFile: false,
     groups: false,
-    cycle: false,
   });
   // 批量查询的 value
   const [batchText, setBatchText] = useState<string>('');
-  // 补货周期 value
-  const [cycleValue, setCycleValue] = useState<string>('15');
   const groupsOptions = groups.map(group => ({ value: group.id, name: group.groupName }));
 
   // 获取空筛选条件
@@ -214,12 +219,11 @@ const Header: React.FC = () => {
   };
 
   // 设置补货周期
-  const handleSetCycle = () => {
+  const handleSetCycle = (cycleValue: string) => {
     if (!cycleValue) {
       message.error('请输入补货周期');
       return;
     }
-    setVisible({ ...visible, cycle: false });
     dispatch({
       type: 'goodsList/updateCycle',
       payload: {
@@ -338,20 +342,6 @@ const Header: React.FC = () => {
     }
   };
 
-  // 补货周期下拉
-  const cycleSetMenu = (
-    <div className={styles.cycleMenuDropdown}>
-      <Input
-        placeholder="天"
-        value={cycleValue}
-        maxLength={3}
-        onChange={e => setCycleValue(strToUnsignedIntStr(e.target.value))}
-      />
-      <Button onClick={() => setVisible({ ...visible, cycle: false })}>取消</Button>
-      <Button type="primary" htmlType="submit" onClick={() => handleSetCycle()}>确定</Button>
-    </div>
-  );
-
   // 分组管理下拉
   const groupsMenu = (
     <div className={styles.groupsMenuDropdown}>
@@ -392,7 +382,9 @@ const Header: React.FC = () => {
           className={styles.Search}
           placeholder="输入标题、ASIN、SKU"
           onSearch={value => handleSearch(false, value)}
-          enterButton
+          enterButton={
+            <Iconfont type="icon-sousuo" style={{ fontSize: 19, paddingTop: 2 }} />
+          }
         />
         <Dropdown
           className={styles.batchSearch}
@@ -411,7 +403,7 @@ const Header: React.FC = () => {
           }
           onClick={handleClickFiltrate}
         >
-          筛选 <DownOutlined />
+          筛选 { visible.filtrate ? <UpOutlined /> : <DownOutlined /> }
         </Button>
       </div>
       {
@@ -440,16 +432,18 @@ const Header: React.FC = () => {
             />}
             trigger={['click']}
             visible={visible.batchSet}
+            className={visible.batchSet ? styles.active : ''}
             onVisibleChange={flag => setVisible({ ...visible, batchSet: flag })}
           >
-            <Button>
-              批量设置 <DownOutlined />
+            <Button title="勾选下方多个商品，可进行批量快速设置">
+              批量设置 { visible.batchSet ? <UpOutlined className="anticon-down" /> : <DownOutlined /> }
             </Button>
           </Dropdown>
           <Dropdown
             overlay={<ImportFile />}
             trigger={['click']}
             visible={visible.importFile}
+            className={visible.importFile ? styles.active : ''}
             onVisibleChange={flag => setVisible({ ...visible, importFile: flag })}
           >
             <Button>文件导入</Button>
@@ -458,18 +452,12 @@ const Header: React.FC = () => {
             overlay={groupsMenu}
             trigger={['click']}
             visible={visible.groups}
+            className={visible.groups ? styles.active : ''}
             onVisibleChange={flag => setVisible({ ...visible, groups: flag })}
           >
             <Button>分组管理</Button>
           </Dropdown>
-          <Dropdown
-            overlay={cycleSetMenu}
-            trigger={['click']}
-            visible={visible.cycle}
-            onVisibleChange={flag => setVisible({ ...visible, cycle: flag })}
-          >
-            <Button>补货周期</Button>
-          </Dropdown>
+          <CycleSet cycle={cycle} handleSetCycle={handleSetCycle} />
           <span>
             <CustomCols colsItems={customCols} />
           </span>

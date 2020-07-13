@@ -2,18 +2,12 @@
   position: relative;
 
   .Switch {
-    transform: scale(0.909);
+    transform: scale(0.818);
   }
 
   .goodsInfoContainer {
     display: flex;
     align-items: center;
-  }
-
-  .goodsImgContainer {
-    position: relative;
-    width: 46px;
-    height: 46px;
   }
 
   .goodsInfoContent {
@@ -22,24 +16,21 @@
     min-width: 240px;
   }
 
-  .goodsImg {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    min-width: 46px;
+  .iconContainer > span {
+    margin-right: 6px;
   }
 
   .goodsTitle {
     margin-bottom: 0;
+    color: @link-color;
+
+    &:hover > span {
+      color: @link-color;
+    }
   }
 
   .darkRow td {
     background-color: #fafafa;
-  }
-
-  .iconContainer > span {
-    margin-right: 6px;
   }
 
   .Text-FBA {
@@ -64,7 +55,7 @@
   }
 
   .reviewCount {
-    color: @primary-color;
+    color: @link-color;
   }
 
   .options {
@@ -72,6 +63,18 @@
 
     a {
       color: #09c2a6;
+
+      &:hover {
+        color: @primary-color;
+      }
+    }
+
+    .optionsItem {
+      cursor: pointer;
+
+      &:hover {
+        color: @primary-color;
+      }
     }
   }
 
@@ -80,6 +83,7 @@
     justify-content: space-between;
     background: #fff;
     padding: 10px 14px;
+    border-top: 1px solid @divider-line-color;
 
     .iconExample {
       margin-right: 100px;
@@ -103,6 +107,11 @@
     .ant-table-container,
     .ant-select {
       font-size: @font-size-sm;
+    }
+
+    .ant-table-tbody td,
+    .ant-table-thead th {
+      border: none;
     }
 
     .ant-checkbox {
@@ -155,8 +164,12 @@
   }
 }
 
-.SelectDropdown * {
-  font-size: @font-size-sm;
+.SelectDropdown {
+  text-align: center;
+
+  * {
+    font-size: @font-size-sm;
+  }
 }
 
 .titleMenu li {
@@ -165,11 +178,12 @@
 }
 
 .tableAddGroup {
-  padding: 6px;
+  padding: 6px 25px;
   height: 100px;
   margin-top: 16px;
 
   .tableAddGroupTitle {
+    text-align: left;
     color: @heading-color;
     margin: 0 2px;
   }

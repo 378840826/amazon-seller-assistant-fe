@@ -26,6 +26,11 @@ const EditableCell: React.FC<IProps> = (props) => {
     }
   }, [editable]);
 
+  // 因为有些数据可以用除了这个组件之外的地方修改
+  useEffect(() => {
+    setValue(inputValue);
+  }, [inputValue]);
+
   const handelClickEdit = () => {
     setEditable(true); 
   };
@@ -57,6 +62,7 @@ const EditableCell: React.FC<IProps> = (props) => {
           maxLength={maxLength}
           className={styles.Input}
           value={value}
+          defaultValue={inputValue}
           onChange={handelInput}
         />
         <div className={styles.btns}>
@@ -71,16 +77,11 @@ const EditableCell: React.FC<IProps> = (props) => {
         </div>
       </div>
       : 
-      <div className={styles.cell}>
+      <div className={styles.cell} onClick={handelClickEdit} title="点击修改">
         <div className={styles.cellValue}>
           {prefix}{inputValue}
         </div>
-        <Iconfont
-          className={styles.editableBtn}
-          type="icon-xiugai"
-          title="修改"
-          onClick={handelClickEdit}
-        />
+        <Iconfont className={styles.editableBtn} type="icon-xiugai" />
       </div>
   );
 };

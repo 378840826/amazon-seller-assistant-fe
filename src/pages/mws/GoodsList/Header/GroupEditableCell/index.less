@@ -9,16 +9,21 @@
   }
 
   .editableBtn {
-    cursor: pointer;
-    position: absolute;
-    right: 32px;
     color: #999;
+    position: absolute;
+    right: 30px;
+    top: 4px;
+  }
+
+  .editCell {
+    flex: 1;
+    cursor: pointer;
 
     &:hover {
-      color: @primary-color;
+      box-shadow: 0 1px 0 #d9d9d9;
 
-      & + .cellValue {
-        box-shadow: 0 1px 0 #d9d9d9;
+      .editableBtn {
+        color: @primary-color;
       }
     }
   }
@@ -45,9 +50,7 @@
   }
 
   .btns {
-    position: absolute;
-    right: 0;
-    z-index: 1;
+    text-align: right;
   }
 
   .btn {

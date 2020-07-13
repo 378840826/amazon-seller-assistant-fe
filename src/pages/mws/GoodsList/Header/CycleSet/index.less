@@ -1,40 +1,55 @@
-.cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.container {
+  display: inline-block;
+  line-height: 28px;
 
-  .cellValue {
-    flex: 1;
+  .cycle {
+    display: inline-block;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px 0 0 4px;
+    padding: 0 16px 0 10px;
   }
 
   .editableBtn {
-    float: right;
-    margin-left: 5px;
-  }
+    display: inline-block;
+    border: 1px solid #d9d9d9;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    text-align: center;
+    width: 30px;
+    color: @text-color-secondary;
+    cursor: pointer;
 
-  &:hover {
-    .editableBtn {
+    &:hover {
       color: @primary-color;
     }
   }
 }
 
+.tishi {
+  display: inline-block;
+  color: @text-color-secondary;
+  font-size: 12px;
+  margin-left: 7px;
+  cursor: help;
+
+  &:hover {
+    color: @warning-color;
+  }
+}
+
 .editableContainer {
   position: relative;
+  display: inline-block;
 
   .Input {
-    resize: none;
-    border-radius: 4px 4px 0 4px;
-    height: 30px;
+    width: 116px;
+    border-radius: @border-radius-base @border-radius-base 0 @border-radius-base;
     text-align: center;
-    padding: 3px;
   }
 
   .btns {
     position: absolute;
     right: 0;
-    z-index: 1;
   }
 
   .btn {

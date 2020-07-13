@@ -57,23 +57,6 @@
   }
 }
 
-.cycleMenuDropdown {
-  composes: dropdown;
-  width: 270px;
-  padding: 20px;
-  text-align: center;
-
-  input {
-    width: 176px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  button {
-    margin: 0 6px;
-  }
-}
-
 .importFileMenuDropdown {
   composes: dropdown;
   width: 292px;
@@ -83,6 +66,7 @@
 .errorText {
   color: @error-color;
   margin-left: 20px;
+  height: 22px;
 }
 
 .fileBtn {
@@ -101,7 +85,7 @@
 }
 
 .fileName {
-  margin: 5px 0;
+  margin-top: 8px;
 }
 
 .fileIcon {
@@ -142,6 +126,10 @@
 
 .Search {
   width: 280px;
+
+  :global(.ant-input-search-button) {
+    padding: 3px 8px;
+  }
 }
 
 .batchSearch {
@@ -156,7 +144,8 @@
 
   .TextArea {
     width: 268px;
-    line-height: 1.1;
+    line-height: 1.5;
+    padding: 14px;
   }
 
   button {
@@ -251,6 +240,11 @@
   & > span {
     float: right;
   }
+
+  .active {
+    color: @link-color;
+    border-color: @primary-color;
+  }
 }
 
 .batchSetDropdown {
@@ -337,6 +331,6 @@
 }
 
 .bfcDiv {
-  overflow: hidden;
+  // overflow: hidden;
   border-top: 1px solid #eee;
 }
