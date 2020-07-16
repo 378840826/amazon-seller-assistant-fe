@@ -23,7 +23,7 @@ interface IStatus {
   footer: null;
   visible: boolean;
   confirmLoading: boolean;
-  checkedIdList: CheckboxValueType[];
+  checkedIndexList: CheckboxValueType[];
 }
 
 interface IStoreListConnectProps extends IConnectProps{
@@ -38,16 +38,16 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
     footer: null, //dialog页脚取消确认按钮消失
     visible: false, //dialog出现与否
     confirmLoading: false, //点击确认按钮发送请求是否出现loading图案
-    checkedIdList: [],
+    checkedIndexList: [],
   });
 
   const [form] = Form.useForm();
 
-  const checkboxChange = (checkedIdList: CheckboxValueType[]) => {
+  const checkboxChange = (checkedIndexList: CheckboxValueType[]) => {
     setStatus((status) => {
       return {
         ...status,
-        checkedIdList: checkedIdList,
+        checkedIndexList: checkedIndexList,
       };
     });
     
@@ -68,17 +68,17 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
         ...status,
         visible: false,
         confirmLoading: false,
-        checkedIdList: [],
+        checkedIndexList: [], //被选中元素的索引
       };
     });
   };
   const onFinish = (values: Store) => {
-    const checkedList = storeList.filter( (item: { sellerId: CheckboxValueType }) => {
-      return status.checkedIdList.indexOf(item.sellerId) > -1;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }).map((item: { sellerId: any; marketplace: any }) => {
+    const checkedList = storeList.filter((item, index) => {
+      return status.checkedIndexList.indexOf(index) > -1;
+    }).map((item: { sellerId: string; marketplace: string }) => {
       return { sellerId: item.sellerId, marketplace: item.marketplace };
     });
+
     const params = {
       username: values.username,
       email: values.email,
@@ -204,7 +204,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
             </Form.Item>
             <Form.Item name="checkboxs" label="负责店铺：">
               
-              <StoreList checkedList={status.checkedIdList} checkboxChange={checkboxChange}/>
+              <StoreList checkedList={status.checkedIndexList} checkboxChange={checkboxChange}/>
                
             </Form.Item>
            

@@ -30,8 +30,8 @@ const style: IStyle = {
 const StoreList: React.FC<IStoreListConnectProps> = 
 ({ sub, checkedList, checkboxChange, span }) => { 
   const plainOptions = sub.storeList;
-  const plainIdOptions = plainOptions.map(item => {
-    return item.sellerId;
+  const plainIndexOptions = plainOptions.map((item, index) => {
+    return index;
   });
 
   const [state, setState] = useState({
@@ -43,7 +43,7 @@ const StoreList: React.FC<IStoreListConnectProps> =
     checkboxChange(checkedList);
   };
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    const checkedList = e.target.checked ? plainIdOptions : [];
+    const checkedList = e.target.checked ? plainIndexOptions : [];
     emitCheckBox(checkedList);
     setState({
       checkedList: checkedList,
@@ -83,9 +83,9 @@ const StoreList: React.FC<IStoreListConnectProps> =
             className={styles.__checkboxs} 
             onChange={onChange}>
             <Row>
-              {plainOptions.map((item) => (
-                <Col span={ span ? span : 8} key={item.sellerId}>
-                  <Checkbox value={item.sellerId} className={styles.__checkbox}>
+              {plainOptions.map((item, index) => (
+                <Col span={ span ? span : 8} key={index}>
+                  <Checkbox value={index} className={styles.__checkbox}>
                     <i className={[styles.national_flag, styles[item.marketplace]].join(' ')}></i>
                     <Text ellipsis={true} style={ span ? style.text2 : style.text}>
                       {item.storeName}

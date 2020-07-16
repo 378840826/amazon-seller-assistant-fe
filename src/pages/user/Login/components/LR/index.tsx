@@ -20,7 +20,6 @@ const LR: React.FC<ILRConnectProps> = ({ onClickLR, loginLoading,
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
-    console.log(values);
     if (values.password.trim() !== ''){
       onClickLR(values);
     }

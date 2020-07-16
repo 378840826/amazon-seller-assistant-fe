@@ -19,10 +19,10 @@ const config =  {
   ignoreMomentLocale: true,
   favicon: '/favicon.ico',
   title: '安知助手',
-  mock:false,
+  mock: false,
   proxy: {
     '/api': {
-      'target': 'http://dev.workics.cn',
+      'target': 'https://test.workics.cn',
       'changeOrigin': true,
       // 'pathRewrite': { '^/api' : '' },
     },

@@ -20,6 +20,7 @@ const cancelButtonProps = {
 
 const TableList: React.FC<ITableListConnectProps> = function({ sub, dispatch }){
   const userList = sub.userList; 
+  const storeList = sub.storeList;
   const popConfirm = (id: string) => {
     dispatch({
       type: 'sub/deleteUser',
@@ -81,7 +82,7 @@ const TableList: React.FC<ITableListConnectProps> = function({ sub, dispatch }){
               </td>
               <td>
                 <div >
-                  <OperaShop stores={item.stores} id={item.id}/>
+                  <OperaShop stores={item.stores} id={item.id} storeList={storeList}/>
                 </div>
               </td>
               <td>

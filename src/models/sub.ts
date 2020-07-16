@@ -19,14 +19,16 @@ const SubModel: ISubModelType = {
     userList: [],
   },
   effects: {
-    *getStoreList(_, { call, put }){
+    *getStoreList({ callback }, { call, put }){
       const response = yield call(getStoreList);
       if (response.code === 200 ){
         yield put({
           type: 'saveStoreList',
           payload: response,
         });
+        callback();
       }
+      
     },    
     *addUser({ payload, callback }, { call, put }){
       const response = yield call(addUser, payload);

@@ -29,7 +29,6 @@ const UserModel: IUserModelType = {
   effects: {
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
-      console.log('location:', window.location);
       if (response.code === 200){
         yield put({
           type: 'saveCurrentUser',

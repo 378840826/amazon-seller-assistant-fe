@@ -13,11 +13,13 @@ const SubAccount: React.FC<ICenterConnectProps> = function({ user, dispatch }){
   useEffect(() => {
     dispatch({
       type: 'sub/getStoreList',
+      callback: () => {
+        dispatch({
+          type: 'sub/getUserList',
+        });
+      },
     });
-
-    dispatch({
-      type: 'sub/getUserList',
-    });
+   
 
   }, [dispatch]);
   return (
