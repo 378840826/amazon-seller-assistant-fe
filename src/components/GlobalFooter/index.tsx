@@ -11,8 +11,8 @@ const GlobalFooter: React.FC<IGlobalFooter> = (props) => {
     <>
       <div className={classnames(styles.footerContainer, className)}>
         <p className={styles.first}>
-          <span><Link to="/">更新日志</Link></span>
-          <span><Link to="/">Privacy Notice</Link></span>
+          <span><Link to="/index/logs">更新日志</Link></span>
+          <span><Link to="/index/privacy">Privacy Notice</Link></span>
         </p>
         <p className={styles.second}>技术支持： support@amzics.com</p>
         <p className={styles.third}>

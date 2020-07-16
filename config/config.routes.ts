@@ -18,6 +18,8 @@ export default [
     component: '../layouts/IndexLayout',
     routes: [
       { path: '/index', component: './index', title: '首页' },
+      { path: '/index/privacy', component: './privacy', title: '隐私政策' },
+      { path: '/index/logs', component: './logs', title: '更新日志' },
     ],
   },
   // 功能系统
