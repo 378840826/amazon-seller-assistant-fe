@@ -11,6 +11,7 @@
     margin: 0 26px;
     font-size: 24px;
     color: @primary-color;
+    cursor: pointer;
   }
 
   .avatarContainer {
@@ -26,11 +27,53 @@
   }
 }
 
+.link_into {
+  color: #666;
+
+  span {
+    color: #999;
+  }
+
+  &:hover {
+    span {
+      color: #0083ff;
+    }
+  }
+}
+
+.__index_tooltip {
+  background-color: #fff;
+
+  :global {
+    .ant-tooltip-inner {
+      background-color: #fff;
+    }
+
+    .ant-tooltip-arrow::before {
+      background-color: #fff;
+    }
+  }
+}
+
 .headerMenu {
-  :global(.ant-dropdown-menu-item) {
-    min-width: 200px;
-    color: @primary-color;
-    text-align: center;
+  padding-left: 18px;
+  padding-right: 18px;
+
+  :global {
+    .ant-dropdown-menu-item {
+      min-width: 200px;
+      color: @primary-color;
+      text-align: center;
+
+      &:hover {
+        color: #0083ff;
+      }
+    }
+
+    .ant-dropdown-menu-item-divider {
+      background-color: @divider-line-color;
+      margin: 0;
+    }
   }
 
   .menuItem {
@@ -38,16 +81,17 @@
     position: relative;
 
     .menuIcon {
-      float: left;
-      line-height: @headMenuLineHeight;
+      position: absolute;
+      left: 0;
+      top: 14px;
       font-size: 18px;
     }
 
     .badge {
       position: absolute;
       line-height: 0;
-      top: 15px;
-      left: 30px;
+      top: 13px;
+      left: 16px;
     }
 
     .username {

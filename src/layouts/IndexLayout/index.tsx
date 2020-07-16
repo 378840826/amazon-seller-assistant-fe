@@ -4,13 +4,15 @@
 
 import React from 'react';
 import logo from '@/assets/logo.png';
-import { Link, connect } from 'umi';
+import { connect } from 'umi';
 import IndexRightContent from '@/components/GlobalHeader/IndexRightContent';
-import { Layout, Menu } from 'antd';
+import { Layout } from 'antd';
 import { IConnectProps, IConnectState } from '@/models/connect';
 import styles from './index.less';
+import MenuCom from './components/Menu';
 
 const { Header, Content } = Layout;
+
 
 interface IProps extends IConnectProps {
   menu?: boolean;
@@ -19,29 +21,6 @@ interface IProps extends IConnectProps {
 interface IState extends IConnectState {
   isReady?: boolean;
 }
-
-interface IMenuItemProps {
-  href: string;
-  name: string;
-}
-
-const menu: React.FC<IMenuItemProps[]> = menuList => {
-  const selectedKeys = [menuList[0].href];
-  return (
-    <Menu mode="horizontal" defaultSelectedKeys={selectedKeys} style={{ flex: 1, fontSize: 16 }}>
-      {
-        menuList.map((item: IMenuItemProps) => {
-          const { href, name } = item;
-          return (
-            <Menu.Item key={href} className={styles.menuItem}>
-              <Link to={href}>{name}</Link>
-            </Menu.Item>
-          );
-        })
-      }
-    </Menu>
-  );
-};
 
 class BasicLayout extends React.Component<IProps, IState> {
   componentDidMount() {
@@ -68,14 +47,7 @@ class BasicLayout extends React.Component<IProps, IState> {
             <a href="/">
               <img src={logo} alt="logo" style={{ verticalAlign: 'sub' }} />
             </a>
-            {
-              menu([
-                { href: '#home', name: '首页' },
-                { href: '#fun', name: '功能' },
-                { href: '#pay', name: '付费' },
-                { href: '#fqa', name: 'FAQ' },
-              ])
-            }
+            <MenuCom/>
             <IndexRightContent />
           </div>
         </Header>
