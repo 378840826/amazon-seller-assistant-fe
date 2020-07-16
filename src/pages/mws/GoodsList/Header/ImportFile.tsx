@@ -52,7 +52,7 @@ const ImportFile: React.FC = () => {
   const handleChange = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
     // 大小不超过 5242880
     if (files) {
-      if (files[0].size > 10) {
+      if (files[0].size > 5242880) {
         setErrorText('文件不能超过5M');
       }
       setFile(files[0]);

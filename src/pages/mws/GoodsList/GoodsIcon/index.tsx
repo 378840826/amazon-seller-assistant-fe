@@ -5,7 +5,7 @@ import styles from './index.less';
 export default {
   prime: (<span className={styles.prime}>Pr</span>),
   promotion: (<span className={styles.promotion}>促</span>),
-  buyBoxcart: (<Iconfont type="icon-shezhi1" className={styles.cart} />),
+  buyBoxcart: (<Iconfont type="icon-gouwuche" className={styles.cart} />),
   link: (<Iconfont className={styles.link} type="icon-lianjie" />),
   hongqi: (<Iconfont type="icon-dangqian" className={styles.hongqi} />),
   add: (addOnItem?: string) => <span className={styles.add} title={addOnItem}>Add</span>,

@@ -132,6 +132,9 @@ const GoodsListModel: IGoodsListModelType = {
       if (newParams.code) {
         newParams.code = newParams.code.replace(/(^\s*)|(\s*$)/g, '');
       }
+      if (newParams.search) {
+        newParams.search = newParams.search.replace(/(^\s*)|(\s*$)/g, '');
+      }
       const res = yield call(queryGoodsList, { ...newParams, headersParams });
       if (res.code === 200) {
         const { data: goods } = res;

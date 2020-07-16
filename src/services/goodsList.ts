@@ -2,24 +2,21 @@ import request from '@/utils/request';
 
 // 查询商品
 export async function queryGoodsList(params: API.IParams) {
-  // 区分批量查询和单个查询接口
-  const myParams = { ...params };
-  const { code } = myParams;
+  const { code } = params;
   const qs = {
-    current: myParams.current,
-    size: myParams.size,
-    order: myParams.sort,
-    asc: myParams.order === 'ascend' ? 'true' : 'false',
+    current: params.current,
+    size: params.size,
+    order: params.sort,
+    asc: params.order === 'ascend' ? 'true' : 'false',
   };
   let url = '/api/mws/product/page/search';
-  if (code && (code.includes('\n') || code.includes('\r') || code.includes('\r\n'))) {
+  // 如果是批量查询
+  if (code) {
     url = '/api/mws/product/batch/page';
-  } else {
-    myParams.search = myParams.code;
   }
   return request(url, {
     method: 'POST',
-    data: myParams,
+    data: params,
     params: qs,
   });
 }

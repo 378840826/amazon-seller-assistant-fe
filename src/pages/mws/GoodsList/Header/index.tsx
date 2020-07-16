@@ -39,6 +39,8 @@ const Header: React.FC = () => {
     importFile: false,
     groups: false,
   });
+  // 单个查询的 value
+  const [searchText, setSearchText] = useState<string>('');
   // 批量查询的 value
   const [batchText, setBatchText] = useState<string>('');
   const groupsOptions = groups.map(group => ({ value: group.id, name: group.groupName }));
@@ -95,22 +97,26 @@ const Header: React.FC = () => {
   };
 
   // 执行查询和批量查询
-  const handleSearch = (isBatch?: boolean, value?: string) => {
-    let code;
-    if (isBatch) {
-      code = batchText;
-    } else {
-      code = value;
-    }
+  const handleSearch = () => {
     dispatch({
       type: 'goodsList/fetchGoodsList',
       payload: {
         headersParams,
-        filtrateParams: { code },
+        filtrateParams: {
+          code: batchText,
+          search: searchText,
+        },
         searchParams: { current: 1, order: null },
       },
       callback: requestErrorFeedback,
     });
+  };
+
+  // 查询输入框 change
+  const handleSearchTextChange = (event: { target: { value: string } }) => {
+    const { target: { value } } = event;
+    setSearchText(value);
+    setBatchText('');
   };
 
   // 批量搜索输入框 change
@@ -123,6 +129,7 @@ const Header: React.FC = () => {
       value = valueArr.join('\n');
     }
     setBatchText(value);
+    setSearchText('');
   };
 
   // 批量查询框
@@ -137,7 +144,7 @@ const Header: React.FC = () => {
       />
       <div className={styles.btns}>
         <Button onClick={handleHideSearchDropdown}>取消</Button>
-        <Button type="primary" onClick={() => handleSearch(true)}>确定</Button>
+        <Button type="primary" onClick={handleSearch}>确定</Button>
       </div>
     </div>
   );
@@ -161,6 +168,8 @@ const Header: React.FC = () => {
 
   // 清空筛选
   const handleClickEmpty = () => {
+    setBatchText('');
+    setSearchText('');
     dispatch({
       type: 'goodsList/fetchGoodsList',
       payload: {
@@ -261,7 +270,7 @@ const Header: React.FC = () => {
     case 'status':
       name = listingStatusDict[String(value)];
       break;
-    case 'code':
+    case 'code': case 'search':
       name = value;
       break;          
     default:
@@ -317,7 +326,8 @@ const Header: React.FC = () => {
         ac: 'Amazon\'s Choice',
         fulfillmentChannel: '发货方式',
         status: '状态',
-        code: '查询',
+        code: '批量查询',
+        search: '查询',
       };
       const obj: {
         [key: string]: (Array<ParamsValue>) | undefined;
@@ -378,14 +388,29 @@ const Header: React.FC = () => {
   return (
     <div className={styles.header}>
       <div className={styles.goodsFiltrate}>
-        <Search
-          className={styles.Search}
-          placeholder="输入标题、ASIN、SKU"
-          onSearch={value => handleSearch(false, value)}
-          enterButton={
-            <Iconfont type="icon-sousuo" style={{ fontSize: 19, paddingTop: 2 }} />
+        <span className={styles.SearchContainer}>
+          <Search
+            className={styles.Search}
+            placeholder="输入标题、ASIN、SKU"
+            onChange={handleSearchTextChange}
+            onSearch={handleSearch}
+            value={searchText}
+            enterButton={
+              <Iconfont type="icon-sousuo" style={{ fontSize: 19, paddingTop: 2 }} />
+            }
+          />
+          {
+            searchText
+              ?
+              <Iconfont 
+                type="icon-close"
+                className={styles.emptySearch}
+                onClick={() => setSearchText('')}
+              />
+              :
+              null
           }
-        />
+        </span>
         <Dropdown
           className={styles.batchSearch}
           overlay={searchDropdownDom}

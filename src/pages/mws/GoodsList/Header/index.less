@@ -124,6 +124,23 @@
   }
 }
 
+.SearchContainer {
+  position: relative;
+}
+
+.emptySearch {
+  position: absolute;
+  right: 46px;
+  top: 4px;
+  z-index: 1;
+  color: @text-color-secondary;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
 .Search {
   width: 280px;
 
