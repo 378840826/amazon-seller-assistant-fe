@@ -98,6 +98,13 @@ declare namespace API {
     sellerName: string;
   }
 
+  interface IErrorReport {
+    id: string;
+    importTime: string;
+    count: number;
+    errorDesc: string;
+  }
+
   interface IGroup {
     id: string;
     groupName: string;

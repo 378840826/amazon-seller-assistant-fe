@@ -357,6 +357,7 @@ const GlobalModel: IGlobalModelType = {
         });
         // 不需要渲染统一样式的页面标题的页面的路由
         const unshownPageTitleUrl = [
+          '/mws/goods/error-report',
           '/mws/shop/bind',
         ];
         const isUnshow = unshownPageTitleUrl.some(path => path === pathname);

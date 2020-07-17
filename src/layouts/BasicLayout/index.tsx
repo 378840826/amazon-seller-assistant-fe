@@ -7,23 +7,22 @@ import { Link, useDispatch, useSelector } from 'umi';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { Layout, Menu, Dropdown } from 'antd';
 import { IConnectState } from '@/models/connect';
-import navigation from './navigation';
+import navigation, { IMenu } from './navigation';
 import styles from './index.less';
 
 const { Header, Content } = Layout;
 const { Item: MenuItem } = Menu;
 
-interface ISubMenu {
-  title: string;
-  path: string;
-}
-
 // 获取下拉菜单
-const getSubMenu = (subMenuArr: ISubMenu[]) => (
+const getSubMenu = (subMenuArr: IMenu[]) => (
   <Menu selectable selectedKeys={[window.location.pathname]}>
     {
       subMenuArr.map(sub => (
-        <MenuItem key={sub.path} className={styles.subMenu}>
+        <MenuItem
+          key={sub.path}
+          className={styles.subMenu}
+          style={{ display: sub.hide ? 'none' : '' }}
+        >
           <Link to={sub.path}>{sub.title}</Link>
         </MenuItem>
       ))
@@ -33,9 +32,10 @@ const getSubMenu = (subMenuArr: ISubMenu[]) => (
 
 const getSelectedMenu = () => {
   const locationPathname = window.location.pathname;
-  const result = {
+  const result: IMenu = {
     path: '',
     title: '',
+    hide: false,
   };
   for (let index = 0; index < navigation.length; index++) {
     const { menu } = navigation[index];
@@ -44,6 +44,7 @@ const getSelectedMenu = () => {
       if (menuItem.path === locationPathname) {
         result.path = menuItem.path;
         result.title = menuItem.title;
+        result.hide = menuItem.hide;
       }
     }
   }

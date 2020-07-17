@@ -12,6 +12,7 @@ import {
   addGroup,
   updateCycle,
   getCycle,
+  getErrorReport,
 } from '@/services/goodsList';
 import { storage } from '@/utils/utils';
 
@@ -38,6 +39,12 @@ export interface IGoodsListModelState {
   checkedGoodsIds: string[];
   tableLoading: boolean;
   cycle: string;
+  errorReport: {
+    total: number;
+    size: number;
+    current: number;
+    records: API.IErrorReport[];
+  };
 }
 
 interface IGoodsListModelType extends IModelType {
@@ -109,6 +116,13 @@ const GoodsListModel: IGoodsListModelType = {
     tableLoading: true,
     // 补货周期
     cycle: '15',
+    // 错误报告
+    errorReport: {
+      total: 0,
+      size: 20,
+      current: 1,
+      records: [],
+    },
   },
 
   effects: {
@@ -316,6 +330,19 @@ const GoodsListModel: IGoodsListModelType = {
       }
       callback && callback(res.code, res.message);
     },
+
+    // 获取错误报告
+    *fetchErrorReport({ payload, callback }, { call, put }) {
+      const res = yield call(getErrorReport, payload);
+      if (res.code === 200) {
+        const { data } = res;
+        yield put({
+          type: 'saveErrorReport',
+          payload: { data },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
   },
 
   reducers: {
@@ -422,6 +449,11 @@ const GoodsListModel: IGoodsListModelType = {
     // 保存补货周期
     saveCycle(state, { payload }) {
       state.cycle = payload.data;
+    },
+
+    // 保存错误报告
+    saveErrorReport(state, { payload }) {
+      state.errorReport = payload.data;
     },
   },
 };

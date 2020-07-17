@@ -1,13 +1,17 @@
 /**
  * 功能页的菜单结构
  */
+export interface IMenu {
+  title: string;
+  path: string;
+  // 有些二级菜单不需要显示在一级菜单的下拉框， 比如商品管理>错误报告
+  hide?: boolean;
+}
+
 export interface INavigation {
   title: string;
   visible?: boolean;
-  menu: {
-    title: string;
-    path: string;
-  }[];
+  menu: IMenu[];
 }
 
 const navigation: INavigation[] = [
@@ -24,6 +28,7 @@ const navigation: INavigation[] = [
     menu: [
       { title: '商品列表', path: '/mws/goods/list' },
       { title: 'ASIN动态', path: '/mws/goods/change' },
+      { title: '错误报告', path: '/mws/goods/error-report', hide: true },
     ],
   },
   {

@@ -141,3 +141,14 @@ export async function getCycle(params: API.IParams) {
     data: params,
   });
 }
+
+// 获取错误报告
+export async function getErrorReport(params: API.IParams) {
+  return request('/api/mws/product/report/error', {
+    params: {
+      size: params.size,
+      current: params.current,
+    },
+    data: params,
+  });
+}
