@@ -1,0 +1,166 @@
+header.monitor_toolbar {
+  background-color: #fff;
+  padding: 0 20px 20px;
+  display: flex;
+  flex-wrap: wrap;
+
+  > div {
+    width: 343px;
+    padding: 20px 0 0 0;
+
+    // 文本
+    span.text {
+      min-width: 62px;
+      display: inline-block;
+      color: @heading-color;
+    }
+
+    // 横线
+    span.line {
+      width: 10px;
+      display: inline-block;
+      border-bottom: 1px solid #979797;
+      margin: 0 6px;
+      position: relative;
+      top: -4px;
+    }
+  }
+
+  input,
+  button {
+    height: 30px;
+  }
+
+  // 工具栏有大小屏
+  @media screen and (max-width: 1847px) {
+    .layout_five_div {
+      margin: 0 0 0 100px;
+    }
+
+    .layout_six_div {
+      margin: 0 0 0 119px;
+    }
+
+    .btns {
+      margin: 0 0 0 559px;
+    }
+  }
+
+  @media screen and (min-width: 1848px) {
+    padding: 20px 70px;
+
+    .layout_six_div {
+      margin: 0 0 0 103px;
+    }
+
+    .layout_four_div {
+      margin: 0 0 0 116px;
+    }
+
+    .layout_seven_div {
+      margin: 0 0 0 113px;
+    }
+
+    .btns {
+      margin: 0 0 0 114px;
+    }
+  }
+
+  // 第一个div
+  .layout_one_div {
+    display: flex;
+    margin: 3px 0 0;
+
+    :global(.ant-checkbox-group) {
+      white-space: nowrap;
+
+      label {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  // 第二个div
+  .layout_two_div {
+    display: flex;
+    line-height: 30px;
+    margin: 0 115px 0 100px;
+
+    input {
+      width: 280px;
+    }
+  }
+
+  // 第三个div
+  .layout_three_div {
+    input {
+      width: 128px;
+      text-align: center;
+    }
+  }
+
+  // 第四个div
+  .layout_four_div {
+    :global(.ant-picker) {
+      width: 280px;
+      height: 30px;
+    }
+  }
+
+  // 第五个
+  .layout_five_div {
+    display: flex;
+
+    > div {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    :global(.ant-radio + *) {
+      padding-right: 0;
+    }
+
+    :global(.ant-radio-wrapper) {
+      margin-right: 0;
+    }
+  }
+
+  // 第六个
+  .layout_six_div {
+    display: flex;
+
+    span.text {
+      min-width: 72px;
+      line-height: 30px;
+      margin: 0 0 0 -13px;
+    }
+
+    input {
+      width: 280px;
+      flex: 0 0 auto;
+      position: relative;
+    }
+  }
+
+  // 第七个
+  .layout_seven_div {
+    .text {
+      line-height: 24px;
+    }
+
+    input {
+      width: 128px;
+      flex: 0 0 auto;
+    }
+  }
+
+  .btns {
+    text-align: right;
+    padding: 20px 0 0 0;
+
+    button {
+      margin-left: 20px;
+    }
+  }
+}

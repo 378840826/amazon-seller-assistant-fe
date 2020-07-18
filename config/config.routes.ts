@@ -58,7 +58,8 @@ export default [
           { title: '调价记录', path: '/mws/reprice/history', component: './mws/GoodsList' },
           { title: '跟踪设定', path: '/mws/keywords/monitor', component: './mws/GoodsList' },
           { title: '搜索排名跟踪', path: '/mws/keywords/ranking', component: './mws/GoodsList' },
-          { title: '评论监控', path: '/mws/comment/monitor', component: './mws/GoodsList' },
+          { title: '评论监控', path: '/mws/comment/monitor', component: './mws/comment/Monitor' },
+          { title: '评论监控设定', path: '/mws/comment/settings', component: './mws/comment/Settings' },
           { title: '店铺绑定', path: '/mws/shop/bind', component: './mws/shop/Bind' },
           { title: '店铺管理', path: '/mws/shop/list', component: './mws/shop/List' },
           // 以下为重定向路由

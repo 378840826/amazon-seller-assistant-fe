@@ -69,6 +69,7 @@ const navigation: INavigation[] = [
     title: '评论监控',
     menu: [
       { title: '评论监控', path: '/mws/comment/monitor' },
+      { title: '评论监控设定', path: '/mws/comment/settings' },
     ],
   },
   {

@@ -1,0 +1,266 @@
+.monitor_box {
+  min-width: 1300;
+
+  p {
+    padding: 0;
+    margin: 0;
+  }
+
+  &:global(.ant-checkbox) {
+    width: 14px;
+    height: 14px;
+
+    + span {
+      padding-left: 5px;
+    }
+
+    :global(.ant-checkbox-input) {
+      width: 14px;
+      height: 14px;
+    }
+
+    :global(.ant-checkbox-inner) {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .content {
+    margin: 20px auto 0;
+    background-color: #fff;
+    min-width: 1300px;
+    font-size: @font-size-sm;
+
+    :global(.ant-table-row:hover) {
+      border-bottom: 1px solid #d5ebff;
+    }
+
+    thead th {
+      background-color: #fafafa;
+      font-size: @font-size-sm;
+      height: 44px;
+      padding: 0;
+    }
+
+    td {
+      border-top: 1px solid transparent;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    tr:last-child {
+      border-bottom: 1px solid transparent;
+
+      td {
+        border-bottom: 1px solid transparent;
+      }
+    }
+
+    tr:hover {
+      td {
+        background: #f4faff !important;
+        border-bottom: 1px solid #d5ebff;
+        // border-top: 1px solid #D5EBFF;
+      }
+    }
+
+    .date {
+      white-space: nowrap;
+    }
+
+    // 星级
+    .star {
+      font-size: 14px;
+      white-space: nowrap;
+
+      > li {
+        margin-right: 6px;
+      }
+    }
+
+    // 评论内容
+    .commect_content {
+      max-width: 460px;
+      min-width: 235px;
+      padding: 0;
+
+      a {
+        min-width: 235px;
+        line-height: 18px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        white-space: normal;
+        font-size: 12px;
+        color: #0083ff;
+      }
+
+      a:hover * {
+        color: #0083ff;
+      }
+    }
+
+    // 用户笔名
+    .username {
+      color: #0083ff;
+      // word-break: break-all;
+      // white-space: pre-wrap;
+      line-height: 16px;
+      padding: 0 10px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    // 产品信息
+    .product_info {
+      font-size: 12px;
+      text-align: left;
+      display: inline-flex;
+      justify-content: start;
+      float: left;
+      max-width: 320px;
+
+      img {
+        width: 46px;
+        height: 46px;
+        flex: 0 0 auto;
+        margin: 0 8px 0 0;
+        display: inline-block;
+      }
+
+      div {
+        display: inline-block;
+      }
+
+      a {
+        height: 30px;
+        line-height: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: normal;
+        text-align: left;
+        color: #0083ff;
+      }
+
+      a:hover * {
+        color: #0083ff;
+      }
+
+      p {
+        text-align: left;
+      }
+    }
+
+    // 评分和review数量
+    .reviewScore {
+      span {
+        color: @text-color-secondary;
+      }
+    }
+
+    // 星级分布
+    .start_distribute {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      :global(.ant-progress) {
+        width: 100px;
+        margin-left: 10px;
+      }
+
+      :global(.ant-progress-inner),
+      :global(.ant-progress-bg) {
+        height: 10px !important;
+        border-radius: 6px;
+      }
+
+      .title {
+        display: inline-block;
+        width: 24px;
+        font-size: @font-size-sm;
+        flex: 0 0 auto;
+        line-height: 24px;
+      }
+
+      .layout_one_row,
+      .layout_two_row {
+        display: flex;
+
+        > div {
+          display: flex;
+
+          &:first-child {
+            padding-right: 27px;
+          }
+        }
+      }
+
+      .layout_three_row {
+        display: flex;
+        position: relative;
+        left: -80px;
+      }
+    }
+
+    // 操作列
+    .handleBth {
+      display: flex;
+      flex-direction: column;
+
+      button,
+      a {
+        width: 80px;
+        height: 26px;
+        line-height: 26px;
+        padding: 0;
+        border-radius: 14px;
+        display: inline-block;
+        font-size: @font-size-sm;
+        margin: 0 auto;
+        margin-bottom: 10px;
+      }
+
+      button:first-child {
+        margin-top: 10px;
+      }
+
+      button:last-child {
+        margin-bottom: 10px;
+      }
+
+      .handle {
+        color: @success-color;
+        border-color: @success-color;
+
+        &:hover {
+          color: @text-color-inverse;
+          background-color: @success-color;
+        }
+      }
+
+      .hasOrder {
+        border: 1px solid #0083ff;
+        color: #0083ff;
+        transition: all 0.3s;
+
+        &:hover {
+          color: @text-color-inverse;
+          background-color: #0083ff;
+        }
+      }
+    }
+
+    .page {
+      padding: 10px 20px 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+  }
+}

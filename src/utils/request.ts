@@ -53,7 +53,12 @@ request.interceptors.request.use((url, options) => {
 });
 
 // response 拦截
-request.interceptors.response.use(async response => {
+request.interceptors.response.use(async (response, options) => {
+  // 文件流不作处理 直接返回
+  if ( options.responseType === 'blob') {
+    return response;
+  } 
+
   const resBody = await response.clone().json();
   const { code, message } = resBody;
   // 请求异常

@@ -102,6 +102,15 @@ a:hover {
   }
 }
 
+// 解决没有高度问题
+.clearfix {
+  &::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
 // 重写双日历的样式
 .h-range-picker {
   span.ant-picker-suffix,
@@ -135,4 +144,19 @@ a:hover {
   .ant-picker-cell-disabled .ant-picker-cell-inner {
     color: rgba(0, 0, 0, 0.25);
   }
+}
+
+// 滑动开关
+.h-switch {
+  min-width: 40px !important;
+  height: 20px !important;
+
+  &::after {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.none {
+  display: none !important;
 }
