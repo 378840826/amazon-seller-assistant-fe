@@ -1,0 +1,86 @@
+.message_box {
+  margin: 50px -30px 0;
+
+  p,
+  ul,
+  li {
+    padding: 0;
+    margin: 0;
+  }
+
+  .message {
+    width: 1300px;
+    margin: 0 auto;
+
+    > nav {
+      width: 1300px;
+      margin: 14px 0;
+      position: relative;
+
+      span {
+        position: absolute;
+        border-left: 4px solid #2f99fd;
+        padding-left: 8px;
+        line-height: 16px;
+        font-size: 16px;
+        top: -30px;
+      }
+    }
+
+    > header {
+      .menu {
+        padding: 0 20px;
+        font-size: @font-size-lg;
+
+        li {
+          margin-right: 55px;
+          display: inline-flex;
+          transition: none;
+          height: 57px;
+          line-height: 57px;
+        }
+
+        li:hover {
+          border: 0;
+
+          span.text {
+            border-bottom: 2px solid;
+          }
+        }
+
+        // 选中样式
+        :global(.ant-menu-item-selected) {
+          border-bottom: 0;
+
+          .text {
+            border-bottom: 2px solid;
+          }
+        }
+
+        :global(.ant-scroll-number) {
+          height: 16px;
+          line-height: 16px;
+          background: @error-color;
+        }
+
+        .badge {
+          margin: 16px 0 0 8px;
+        }
+      }
+    }
+
+    main.list {
+      padding: 0 21px;
+      font-size: @font-size-base;
+      width: 1300px;
+      background-color: #fff;
+    }
+
+    > footer {
+      width: 1300px;
+      padding: 20px;
+      border-top: 1px solid @divider-line-color;
+      background-color: #fff;
+    }
+  }
+}

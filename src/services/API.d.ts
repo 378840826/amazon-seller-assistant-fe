@@ -12,6 +12,7 @@ declare namespace API {
   interface IUnreadNotices {
     reviewRemindCount: number;
     stockRemindCount: number;
+    allUnReadCount: number;
   }
 
   interface ICurrentUser {

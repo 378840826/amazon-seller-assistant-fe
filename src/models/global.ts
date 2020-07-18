@@ -42,8 +42,9 @@ const GlobalModel: IGlobalModelType = {
     isShowPageTitle: true,
     // 未读消息数量
     unreadNotices: {
-      reviewRemindCount: 0,
-      stockRemindCount: 0,
+      reviewRemindCount: 0, // 监控评论未读数
+      stockRemindCount: 0, // 库存未读数
+      allUnReadCount: 0, // 全部未读数
     },
     // 店铺选择
     shop: {
@@ -159,7 +160,14 @@ const GlobalModel: IGlobalModelType = {
 
   reducers: {
     saveUnreadNotices(state, { payload }) {
-      state.unreadNotices = payload.data.unreadNotices;
+      if (payload.code === 200) {
+        const {
+          reviewUnReadCount,
+          allUnReadCount,
+        } = payload.data;
+        state.unreadNotices.reviewRemindCount = reviewUnReadCount;
+        state.unreadNotices.allUnReadCount = allUnReadCount;
+      }
     },
 
     // 切换是否渲染统一的页面标题

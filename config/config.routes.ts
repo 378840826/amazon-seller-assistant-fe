@@ -22,6 +22,16 @@ export default [
       { path: '/index/logs', component: './logs', title: '更新日志' },
     ],
   },
+  // 消息中心
+  {
+    path: '/message',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { path: '/message/all', component: './message/', title: '消息中心'},
+      // 重定向
+      { path: '/message', redirect: '/message/all' },
+    ],
+  },
   // 功能系统
   {
     path: '/',

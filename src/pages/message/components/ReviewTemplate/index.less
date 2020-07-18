@@ -1,0 +1,90 @@
+div.list_item {
+  border-bottom: 1px solid @divider-line-color;
+  padding: 0 0 15px;
+
+  div.layout_one_row {
+    display: flex;
+    padding: 15px 0 0;
+
+    .asin {
+      span:first-child {
+        color: #0083ff;
+      }
+
+      span:last-child {
+        padding: 0 80px 0 0;
+      }
+    }
+
+    .date span:last-child {
+      padding: 0 80px 0 0;
+    }
+
+    button {
+      width: 80px;
+      height: 22px;
+      line-height: 22px;
+      padding: 0;
+      margin-left: auto;
+      font-size: @font-size-sm;
+      border-radius: 11px;
+    }
+
+    button[type=button] {
+      background-color: #f8f8f8;
+      color: @text-color-disabled;
+    }
+
+    // 已处理
+    &:global(button.undisposed) {
+      background-color: #fff;
+      color: @success-color;
+      border-color: @success-color;
+      cursor: pointer;
+    }
+
+    &:global(button.undisposed:hover) {
+      background-color: @success-color;
+      color: @text-color-inverse;
+    }
+  }
+
+  div.layout_two_row {
+    display: flex;
+    padding: 5px 0 0;
+
+    span.title {
+      min-width: 60px;
+      flex: 0 0 auto;
+    }
+
+    .reviewLink {
+      width: 100%;
+      word-wrap: break-word;
+      color: #0083ff;
+    }
+
+    // 评论内容
+    .contents {
+      width: 980px;
+
+      .icon {
+        font-size: 14px;
+        color: #999;
+        float: left;
+        margin: 5px 2px;
+      }
+    }
+
+    .date {
+      margin: 5px 0 0 auto;
+      padding: 0 0 0 130px;
+      min-width: 55px;
+      flex: 0 0 auto;
+    }
+  }
+}
+
+div.list_item:last-child {
+  border-width: 0;
+}
