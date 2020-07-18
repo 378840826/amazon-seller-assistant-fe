@@ -553,4 +553,36 @@ export default {
       });
     }, 300);
   },
+
+  // 获取错误报告
+  'GET /api/mws/product/report/error': (_: Request, res: Response) => {
+    setTimeout(() => {
+      const report = {
+        id: '1',
+        importTime: '2020-02-02 22:22:22',
+        count: '33',
+        errorDesc: '（B00LLS5GZ4-SUPERSTAR W-W）成本格式有误；（B00LLS5GZ4- SUPERSTAR W - W）运费格式有误；',
+      };
+      const records = [];
+      for (let index = 1; index < 21; index++) {
+        const cell = { ...report };
+        if (index % 2 > 0) {
+          cell.errorDesc = `（B00LLS5GZ4-SUPERSTAR W-W）成本格式有误；
+          B019I151Y6-070325_USAP/最低价大于或等于最高价,sku不匹配,成本格式错误；
+          （B00LLS5GZ4- SUPERSTAR W - W）运费格式有误；`;
+        }
+        records.push(cell);
+      }
+      res.send({
+        code: 200,
+        data: {
+          total: 1221,
+          size: 20,
+          current: 1,
+          pages: 62,
+          records,
+        },
+      });
+    }, 300);
+  },
 };

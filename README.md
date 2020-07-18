@@ -50,9 +50,10 @@
 1. 创建页面级组件
 2. 在 ```config/config.routes.ts``` 添加路由
 3. 如果是功能页需要添加导航，在 ```src/layouts/BasicLayout/navigation``` 中添加到对应导航菜单
-4. 如果是 index 或 user 等页面需要添加导航，在 ```src/layouts/``` 下对应的布局中添加导航菜单
-5. 如果页面需要隐藏或禁用店铺选择器，在 ```src/model/global``` 下的 hiddenShopSelectorUrl 或 disabledShopSelectorUrl 添加页面的路由
-6. 如果页面不需要渲染统一样式的页面标题，参考上一条， 在 unshownPageTitleUrl 中添加页面路由
+4. 如果是需要高亮一级导航但是不需要二级导航的页面(例如商品管理>错误报告)，在上一条的基础上并增加字段 ```hide: true```
+5. 如果是 index 或 user 等页面需要添加导航，在 ```src/layouts/``` 下对应的布局中添加导航菜单
+6. 如果页面需要隐藏或禁用店铺选择器，在 ```src/model/global``` 下的 hiddenShopSelectorUrl 或 disabledShopSelectorUrl 添加页面的路由
+7. 如果页面不需要渲染统一样式的页面标题，参考上一条， 在 unshownPageTitleUrl 中添加页面路由
 
 ### 分支管理说明
 * 遵循新的 git 代码管理流程

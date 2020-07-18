@@ -95,7 +95,7 @@ const ImportFile: React.FC = () => {
       </Button>
       <div className={styles.fileFooter}>
         <a href="/api/mws/product/report/template-download">下载导入模版</a>
-        <Link to="/">错误报告<Iconfont type="icon-zhankai-copy" /></Link>
+        <Link to="/mws/goods/error-report">错误报告<Iconfont type="icon-zhankai-copy" /></Link>
       </div>
     </div>
   );
