@@ -11,6 +11,8 @@ export default {
   '@body-background': '#f5f5f5',
   // 布局背景
   '@layout-body-background': '#f5f5f5',
+  //footer文字颜色
+  '@body-footer': '#dbddff',
 
   /* 场景颜色 */
   // 成功色
@@ -20,7 +22,7 @@ export default {
   // 错误色
   '@error-color': '#ff5958',
   // 失效色
-  // '@disabled-color': '#f8f8f8',
+  '@disabled-color': '#f8f8f8',
   // 边框色
   '@border-color-base': '#d9d9d9',
   // 分割线色

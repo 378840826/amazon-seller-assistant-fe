@@ -54,7 +54,7 @@ const getSelectedMenu = () => {
 const renderBreadcrumbs = () => {
   const { title } = getSelectedMenu();
   return (
-    <div className={styles.title}>
+    <div className={`${styles.title} g-secondary-nav`}>
       {title}
     </div>
   );
@@ -112,11 +112,23 @@ const BasicLayout: React.FC = props => {
     dispatch({
       type: 'global/fetchUnreadNotices',
     });
+
+    // 登录接口(暂时)
+    // dispatch({
+    //   type: 'orderList/test',
+    //   payload: {
+    //     data: {
+    //       email: '10086@qq.com',
+    //       password: 'hello2020',
+    //       rememberMe: true,
+    //     },
+    //   },
+    // });
   }, [dispatch]);
   
   return (
     <Layout>
-      <Header className={styles.Header}>
+      <Header className={`${styles.Header} g-header-nav`}>
         <a href="/">
           <img src={logo} alt="logo" className={styles.logo} />
         </a>
