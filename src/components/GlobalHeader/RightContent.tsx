@@ -18,9 +18,7 @@ const GlobalHeaderRight: React.FC = () => {
   
   return (
     <div className={styles.right}>
-      <div className={styles.ShopSelectorContainer}>
-        <ShopSelector />
-      </div>
+      <ShopSelector />
       <div className={styles.GlobalSearchContainer}>
         <GlobalSearch />
       </div>

@@ -5,6 +5,7 @@ import { Table, Switch, Button, Modal, message } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import editable from '@/pages/components/EditableCell';
 import tokenEditable from './TokenEditableCell';
+import { requestFeedback } from '@/utils/utils';
 import styles from './index.less';
 
 const { confirm } = Modal;
@@ -28,9 +29,7 @@ const ShopList: React.FC = () => {
         dispatch({
           type: 'global/switchShopAutoPrice',
           payload: { id, autoPrice: !checked },
-          callback: (msg: string) => {
-            message.success(msg);
-          },
+          callback: requestFeedback,
         });
       },
     });
@@ -47,10 +46,8 @@ const ShopList: React.FC = () => {
       onOk() {
         dispatch({
           type: 'global/unbindMwsShop',
-          payload: { id: record.id },
-          callback: (msg: string) => {
-            message.success(msg);
-          },
+          payload: { storeId: record.id },
+          callback: requestFeedback,
         });
       },
     });
@@ -73,15 +70,18 @@ const ShopList: React.FC = () => {
             inputValue: storeName,
             maxLength: 20,
             confirmCallback: value => {
+              const storeName = value.replace(/(^\s*)|(\s*$)/g, '');
+              if (!storeName) {
+                message.error('请输入店铺名称');
+                return;
+              }
               dispatch({
                 type: 'global/modifyMwsShopName',
                 payload: {
                   storeId: record.id,
-                  storeName: value,
+                  storeName: storeName,
                 },
-                callback: (msg: string) => {
-                  message.success(msg);
-                },
+                callback: requestFeedback,
               });
             },
           })
@@ -104,17 +104,20 @@ const ShopList: React.FC = () => {
           tokenEditable({
             tokenInvalid,
             inputValue: token,
-            maxLength: 20,
+            maxLength: 100,
             confirmCallback: value => {
+              const token = value.replace(/(^\s*)|(\s*$)/g, '');
+              if (!token) {
+                message.error('请输入MWS Auth Token');
+                return;
+              }
               dispatch({
                 type: 'global/modifyShopToken',
                 payload: {
                   id: record.id,
-                  token: value,
+                  token,
                 },
-                callback: (msg: string) => {
-                  message.success(msg);
-                },                
+                callback: requestFeedback,                
               });
             },
           })

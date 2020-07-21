@@ -1,4 +1,4 @@
-import { IModelType } from './connect';
+import { IModelType, IConnectState } from './connect';
 import { queryUnreadNotices } from '@/services/notices';
 import {
   queryMwsShopList,
@@ -105,20 +105,30 @@ const GlobalModel: IGlobalModelType = {
             autoPrice,
           },
         });
-        callback && callback(res.message);
       }
+      callback && callback(res.code, res.message);
     },
 
     // 解绑 mws 店铺
-    *unbindMwsShop({ payload: { id }, callback }, { call, put }) {
-      const res = yield call(unbindShop, { id });
+    *unbindMwsShop({ payload: { storeId }, callback }, { select, call, put }) {
+      const res = yield call(unbindShop, { storeId });
       if (res.code === 200) {
-        yield put({
-          type: 'deleteMwsShop',
-          payload: { id },
+        const currentShop = yield select((state: IConnectState) => {
+          return state.global.shop.current;
         });
-        callback && callback(res.message);
+        // 如果删除的是当前选中的店铺，刷新页面避免店铺选择器错误
+        if (storeId === currentShop.id) {
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        } else {
+          yield put({
+            type: 'deleteMwsShop',
+            payload: { id: storeId },
+          });
+        }
       }
+      callback && callback(res.code, res.message);
     },
 
     // 修改 mws 店铺名称
@@ -129,8 +139,8 @@ const GlobalModel: IGlobalModelType = {
           type: 'renameMwsShop',
           payload: { storeId, storeName },
         });
-        callback && callback(res.message);
       }
+      callback && callback(res.code, res.message);
     },
 
     // 更新 mws 店铺 Auth Token
@@ -141,14 +151,14 @@ const GlobalModel: IGlobalModelType = {
           type: 'updateShopToken',
           payload: { id, token },
         });
-        callback && callback(res.message);
       }
+      callback && callback(res.code, res.message);
     },
 
     // 绑定 mws 店铺
     *bindShop({ payload, callback }, { call, put }) {
-      const { sellerId, storeName, token, europe, northAmerica } = payload;
-      const marketplaces = [].concat(northAmerica || [], europe || []);
+      const { sellerId, storeName, token, europe, northAmerica, asiaPacific } = payload;
+      const marketplaces = [].concat(northAmerica || [], europe || [], asiaPacific || []);
       const res = yield call(bindShop, { sellerId, storeName, token, marketplaces });
       if (res.code === 200) {
         callback && callback(res.message);

@@ -4,42 +4,51 @@
 }
 
 .SelectItem {
+  display: flex;
+  align-items: center;
+
   .flag {
-    display: inline-block;
+    flex-shrink: 0;
     background-image: url('~@/assets/nation.png');
-    width: 20px;
-    height: 13px;
+    width: 28px;
+    height: 16px;
+  }
+
+  .flag-JP {
+    background-position: -37px -13px;
   }
 
   .flag-UK {
-    background-position: -45px -16px;
+    background-position: -438px -13px;
   }
 
   .flag-US {
-    background-position: -1px -16px;
+    background-position: -95px -13px;
   }
 
   .flag-CA {
-    background-position: -23px -16px;
+    background-position: -152px -13px;
   }
 
   .flag-DE {
-    background-position: -1px -1px;
+    background-position: -267px -13px;
   }
 
   .flag-ES {
-    background-position: -1px -31px;
+    background-position: -324px -13px;
   }
 
   .flag-FR {
-    background-position: -23px -1px;
+    background-position: -209px -13px;
   }
 
   .flag-IT {
-    background-position: -45px -1px;
+    background-position: -381px -13px;
   }
 
   .site {
+    display: inline-block;
+    text-align: center;
     width: 32px;
     margin: 0 5px;
   }
@@ -48,5 +57,7 @@
     display: inline-block;
     width: 150px;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

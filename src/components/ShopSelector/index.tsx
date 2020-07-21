@@ -49,7 +49,6 @@ const ShopSelector: React.FC = () => {
         value={currentId}
         defaultValue={'-1'}
         disabled={disabled}
-        optionFilterProp="children"
         onChange={handleChange}
         onSearch={setFilterText}
         filterOption={false}
@@ -58,7 +57,7 @@ const ShopSelector: React.FC = () => {
         {
           currentId === '-1' ? <Option key={currentId} value={currentId}>{currentShopName}</Option> :
             shopList.map((shop: API.IShop) => {
-              if (shop.storeName.includes(filterText)) {
+              if (shop.storeName.toLowerCase().includes(filterText.toLowerCase())) {
                 return (
                   <Option key={shop.id} value={shop.id}>
                     <div className={styles.SelectItem}>

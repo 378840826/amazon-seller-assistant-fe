@@ -12,8 +12,11 @@ export async function modifyShopAutoPrice() {
   return request('/api/mws/store/modify/auto-price');
 }
 
-export async function unbindShop() {
-  return request('/api/mws/store/unbind');
+export async function unbindShop(params: API.IParams) {
+  return request('/api/mws/store/unbind', {
+    method: 'POST',
+    data: params,
+  });
 }
 
 export async function renameShop(params: API.IParams) {
