@@ -9,7 +9,7 @@ export default {
           records: [
             {
               id: '1261140381664944130',
-              storeName: 'store-name-1',
+              storeName: 'store-name-1-store-name-1',
               marketplace: 'US',
               sellerId: 'sellerId-1',
               token: 'amzn.mws.ecb25605-138b-62fb-56e6-83652c2b0d35',
@@ -99,7 +99,7 @@ export default {
     }, 600);
   },
 
-  'GET /api/mws/store/unbind': (_: Request, res: Response) => {
+  'POST /api/mws/store/unbind': (_: Request, res: Response) => {
     setTimeout(() => {
       res.header({
         Token: 'cccc',
