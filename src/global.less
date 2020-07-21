@@ -68,6 +68,24 @@ a:hover {
   }
 }
 
+.ant-table-wrapper {
+  // 表头字体改细
+  .ant-table-thead > tr > th {
+    font-weight: 400;
+  }
+
+  // 表格横向滚动阴影改浅
+  .ant-table-ping-right .ant-table-cell-fix-right-first::after,
+  .ant-table-ping-right .ant-table-cell-fix-right-last::after {
+    box-shadow: inset -8px 0 8px -8px rgba(0, 0, 0, 0.1);
+  }
+
+  .ant-table-ping-left .ant-table-cell-fix-left-first::after,
+  .ant-table-ping-left .ant-table-cell-fix-left-last::after {
+    box-shadow: inset 8px 0 8px -8px rgba(0, 0, 0, 0.1);
+  }
+}
+
 @media (max-width: @screen-xl) {
   .ant-table {
     width: 100%;

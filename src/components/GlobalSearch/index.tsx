@@ -8,13 +8,13 @@ const GlobalSearch: React.FC = () => {
   const [ulVisible, setUlVisible] = useState<boolean>(false);
 
   const dict = {
-    调价设定: '/a',
-    调价记录: '/b',
-    关键词: '/c',
-    订单: '/d',
-    评论: '/e',
-    报表: '/f',
-    动态: '/g',
+    调价设定: '/mws/goods/list?search=',
+    调价记录: '/mws/reprice/history?code=',
+    关键词: '/mws/keywords/monitor?code=',
+    订单: '/mws/order/list?asinRelatedSearch=',
+    评论: '/mws/comment/monitor?asin=',
+    报表: '/mws/order/unscramble?combination=',
+    动态: '/mws/goods/change?asin=',
   };
   
   const handleChange = (event: { target: { value: string } }) => {
@@ -33,7 +33,7 @@ const GlobalSearch: React.FC = () => {
 
   const searchOptions = Object.keys(dict).map((item: string) => (
     <li key={item}>
-      <Link to={`${dict[item]}?asin=${text}`} onClick={handleClick}>
+      <Link to={`${dict[item]}${text}`} onClick={handleClick}>
         搜索<span>&ldquo;{text}&rdquo;</span>的{item}
       </Link>
     </li>

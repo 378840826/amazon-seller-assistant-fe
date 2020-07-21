@@ -205,10 +205,13 @@ const GlobalModel: IGlobalModelType = {
         type: payload.type,
         current,
       };
+      // 如果没有店铺跳转到添加店铺页面
       if (current.id === undefined) {
         const { pathname } = window.location;
-        const url = payload.type === 'mws' ? '/mws/shop/list' : '/ppc/shop/list';
-        !pathname.includes('/shop/') && history.push(url);
+        if (pathname.includes('/mws/') || pathname.includes('/ppc/')) {
+          const url = payload.type === 'mws' ? '/mws/shop/list' : '/ppc/shop/list';
+          !pathname.includes('/shop/') && history.push(url);
+        }
       }
     },
 
@@ -344,9 +347,9 @@ const GlobalModel: IGlobalModelType = {
     listen({ dispatch, history }) {
       return history.listen(async ({ pathname }) => {
         let type = '';
-        if (pathname.includes('/ppc')) {
+        if (pathname.includes('/ppc/')) {
           type = 'ppc';
-        } else if (pathname.includes('/mws')) {
+        } else if (pathname.includes('/mws/')) {
           type = 'mws';
         }
         type && dispatch({
