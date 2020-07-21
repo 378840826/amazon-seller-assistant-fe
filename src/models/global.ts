@@ -70,10 +70,13 @@ const GlobalModel: IGlobalModelType = {
     // 获取未读消息数量
     *fetchUnreadNotices(_, { call, put }) {
       const response = yield call(queryUnreadNotices);
-      yield put({
-        type: 'saveUnreadNotices',
-        payload: response,
-      });
+      if (response.code === 200){
+        yield put({
+          type: 'saveUnreadNotices',
+          payload: response,
+        });
+      }
+     
     },
 
     // 获取全部店铺
@@ -346,6 +349,8 @@ const GlobalModel: IGlobalModelType = {
           '/mws/overview',
           '/ppc/overview',
           '/ppc/auth',
+          '/center',
+          '/sub-account',
         ];
         const disabledShopSelectorUrl = [
           '/ppc/campaign/add',

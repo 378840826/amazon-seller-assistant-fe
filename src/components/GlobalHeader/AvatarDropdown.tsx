@@ -24,7 +24,9 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
   onMenuClick = (event: ClickParam) => {
     const { key } = event;
     if (key === '/logout') {
-      console.log('退出登录');
+      this.props.dispatch({
+        type: 'user/logout',
+      });
       return;
     }
     history.push(key);
@@ -49,7 +51,7 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
 
     const menuHeaderDropdown = (
       <Menu className={styles.headerMenu} selectedKeys={[]} onClick={this.onMenuClick}>
-        <MenuItem key="center" className={styles.menuItem}>
+        <MenuItem key="/center" className={styles.menuItem}>
           { munuIcon('icon-gerenzhongxin2') }
           个人中心
         </MenuItem>
@@ -70,11 +72,16 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
           消息中心
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="/sub-account" className={styles.menuItem}>
-          { munuIcon('icon-guanlizhongxin') }
-          子账号管理
-        </MenuItem>
+        {currentUser.topAccount &&
+            <MenuItem key="/sub-account" className={styles.menuItem}>
+              { munuIcon('icon-guanlizhongxin') }
+              子账号管理
+            </MenuItem>
+        }
+        {currentUser.topAccount &&
         <MenuDivider />
+        }
+        
         <MenuItem key="/logout" className={styles.menuItem}>
           { munuIcon('icon-tuichu') }
           注销 <span className={styles.username}>{currentUser.username}</span>

@@ -36,7 +36,7 @@ const Data: React.FC<ICenterConnectProps> = function( { user } ){
         {
           id !== -1 && 
           <div className={styles.logined}>
-            <Link to="/users/login" className={[styles.loginedButton, styles.buttons].join(' ')}>
+            <Link to="/mws/overview" className={[styles.loginedButton, styles.buttons].join(' ')}>
               <div className={styles.font}>立即体验</div>
               <div className={styles.icon}>
                 <Iconfont className={styles.iconfont} type="icon-2"/>

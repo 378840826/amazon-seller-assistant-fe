@@ -1,0 +1,57 @@
+.login_register {
+  :global {
+    .__form_cover {
+      margin-top: 14px;
+
+      .ant-tabs-bar {
+        margin-bottom: 30px;
+      }
+
+      //去掉input框自动填充的背景颜色
+      input:-webkit-autofill {
+        box-shadow: 0 0 0 1000px #fff inset;
+        -webkit-box-shadow: 0 0 0 1000px #fff inset;
+
+        &:focus {
+          box-shadow: 0 0 0 1000px #fff inset !important;
+          -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+        }
+      }
+
+      .__email {
+        .ant-input {
+          padding: 5px 14px;
+        }
+      }
+
+      .__password {
+        .ant-input-password {
+          padding: 5px 14px;
+        }
+
+        &.ant-form-item {
+          margin-bottom: 0;
+        }
+      }
+
+      .ant-form-item-explain {
+        font-size: 12px;
+      }
+
+      .__remember_forgot {
+        .ant-form-item-control-input-content {
+          display: flex;
+          justify-content: space-between;
+
+          .ant-checkbox-wrapper {
+            color: @text-color-secondary;
+          }
+        }
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

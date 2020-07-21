@@ -5,12 +5,19 @@ export default [
   // 账户
   {
     path: '/users',
-    component: '../layouts/UserLayout',
+    // component: '../layouts/UserLayout',
     routes: [
-      { path: '/users/center', component: './user/Center', title: '个人中心' },
       { path: '/users/login', component: './user/Login', title: '登录' },
-      { path: '/users/register', component: './user/Register', title: '注册' },
+      { path: '/users/password/forgot', component: './user/ResetPwd', title: '设置新密码' },
+      { path: '/users/send-email', component: './user/SendEmail', title: '密码重置' },
+      { path: '/users/active', component: './user/Active', title: '激活' },
     ],
+  },
+   //个人中心
+   {
+    path:'/center',
+    component: '../layouts/BasicLayout',
+    routes:[{ path: '/center', component: './user/Center', title: '个人中心' }]
   },
   // 首页
   {
@@ -32,6 +39,13 @@ export default [
       { path: '/message', redirect: '/message/all' },
     ],
   },
+  //子账号
+  {
+    path:'/sub-account',
+    component: '../layouts/BasicLayout',
+    routes:[{ path: '/sub-account', component: './sub/Account', title: '子账号' }]
+  },
+ 
   // 功能系统
   {
     path: '/',

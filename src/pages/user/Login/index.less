@@ -1,0 +1,125 @@
+.container {
+  background-color: #2f99fd;
+  min-height: 100%;
+  min-width: 100%;
+
+  .containerWrap {
+    width: 1218px;
+    margin: 0 auto;
+
+    :global {
+      .__globalFooter {
+        color: @body-footer;
+
+        a {
+          color: @body-footer;
+        }
+      }
+    }
+
+    .logoContainer {
+      padding-top: 30px;
+    }
+
+    .mainContainer {
+      width: 1001px;
+      height: 750px;
+      display: flex;
+      align-items: center;
+      margin: 0 auto;
+      background: url('~@/assets/loginBannerSmall.png') no-repeat center;
+
+      .tipWhite {
+        margin: 0 auto;
+
+        .tip {
+          text-align: center;
+          color: #fff;
+          font-size: 14px;
+          padding-top: 15px;
+        }
+
+        .activeContainer {
+          height: 22px;
+          line-height: 22px;
+
+          .activeWrapper {
+            text-align: center;
+            color: @text-color;
+
+            a {
+              color: #0083ff;
+            }
+          }
+        }
+
+        .whiteContainer {
+          background-color: #fff;
+          border-radius: 8px;
+          width: 916px;
+          height: 396px;
+          padding-left: 100px;
+          padding-right: 96px;
+          display: flex;
+          justify-content: space-between;
+
+          .imgContainer {
+            width: 309px;
+            display: flex;
+            align-items: center;
+
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+          }
+
+          .formContainer {
+            .noRegSuc {
+              width: 315px;
+              padding-top: 54px;
+              position: relative;
+            }
+
+            :global {
+              .__login_tabs {
+                .ant-tabs-nav-scroll {
+                  text-align: center;
+
+                  .ant-tabs-tab {
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 1921px) {
+    .containerWrap {
+      width: 1416px;
+      margin: 0 auto;
+      padding-top: 40px;
+
+      .mainContainer {
+        width: 1001px;
+        height: 750px;
+        background: url('~@/assets/loginBannerBig.png') no-repeat center;
+      }
+    }
+  }
+
+  @media screen and (max-width: 1366px) {
+    .containerWrap {
+      width: 1218px;
+      margin: 0 auto;
+
+      .mainContainer {
+        background: url('~@/assets/loginBannerSmall.png') no-repeat center;
+      }
+    }
+  }
+}

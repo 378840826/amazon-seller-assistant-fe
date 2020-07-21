@@ -205,8 +205,36 @@ export const storage = {
     }
     return '';
   },
-  
+
   remove(key: string) {
     window.localStorage.removeItem(key);
   },
+};
+//用户名，邮箱，密码正则
+export const validate = {
+  email: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/, //
+  username: /^(?![0-9]+$)\w{4,16}$/, //用户名格式验证 长度4~16，支持字母、数字、下划线，不允许为纯数字
+  password: /(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^.{6,16}$/, //长度在6~16，至少包含字母、数字、和英文符号中的两种
+};
+
+
+//获取url参数
+export const getUrlParam = function (name: string) {
+  // name=123&age=111
+  const reg = new RegExp(`(^|&)${ name }=([^&]*)(&|$)`);
+  const result = window.location.search.substr(1).match(reg);
+  return result ? decodeURIComponent(result[2]) : null;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const nTs = (ary: any) => {
+  for (const i in ary) {
+    if (typeof ary[i] === 'object' && ary[i] !== null && !(Array.isArray(ary[i]) && ary[i].length === 0)) {
+      nTs(ary[i]);
+    } else {
+      if (ary[i] === null) {
+        ary[i] = '';
+      }
+    }
+  }
 };
