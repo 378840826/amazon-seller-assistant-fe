@@ -8,20 +8,20 @@ interface IMenuItemProps {
 }
 
 const { Link } = Anchor;
-console.log('location:', location.pathname);
-const menuList: Array<IMenuItemProps> = ['/index', '/index/'].indexOf(location.pathname) > -1 ? [
-  { href: '#home', name: '首页', top: 0 },
-  { href: '#fun', name: '功能', top: 864 },
-  { href: '#pay', name: '付费', top: 1644 },
-  { href: '#fqa', name: 'FAQ', top: 2359 },
-] : [
-  { href: '/index/#home', name: '首页', top: 0 },
-  { href: '/index/#fun', name: '功能', top: 864 },
-  { href: '/index/#pay', name: '付费', top: 1644 },
-  { href: '/index/#fqa', name: 'FAQ', top: 2359 },
-];
 
+console.log('还会加载吗？');
 const MenuCom: React.FC = () => {
+  const menuList: Array<IMenuItemProps> = ['/'].indexOf(location.pathname) > -1 ? [
+    { href: '#home', name: '首页', top: 0 },
+    { href: '#fun', name: '功能', top: 864 },
+    { href: '#pay', name: '付费', top: 1644 },
+    { href: '#fqa', name: 'FAQ', top: 2359 },
+  ] : [
+    { href: '/#home', name: '首页', top: 0 },
+    { href: '/#fun', name: '功能', top: 864 },
+    { href: '/#pay', name: '付费', top: 1644 },
+    { href: '/#fqa', name: 'FAQ', top: 2359 },
+  ];
   return (
     <div className={styles.menu}>
       <Anchor affix={false}>

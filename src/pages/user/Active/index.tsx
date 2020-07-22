@@ -37,7 +37,7 @@ const Active: React.FC<IConnectProps> = function ({ dispatch }) {
   }, []);
 
   if (count === 1){
-    history.push('/index');
+    history.push('/');
   }
   return (
     <>

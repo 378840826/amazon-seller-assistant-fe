@@ -78,11 +78,9 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
               type: 'user/saveCurrentUser',
               payload: res.data.user,
               callback: () => {
-                window.location.href = '/index';
+                history.push('/');
               },
             });
-            //登录
-            history.push('/index');
           }
           return;
         }

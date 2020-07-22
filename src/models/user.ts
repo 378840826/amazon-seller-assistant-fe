@@ -35,7 +35,7 @@ const UserModel: IUserModelType = {
           payload: response,
         });
       } else {
-        if (window.location.pathname !== '/index'){
+        if (window.location.pathname !== '/'){
           window.location.href = '/users/login';
         }
       }
