@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Input } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import classnames from 'classnames';
@@ -15,6 +15,10 @@ const CycleSet: React.FC<IProps> = props => {
   const [value, setValue] = useState<string>(cycle);
   const [editable, setEditable] = useState<boolean>(false);
   const inputEl = useRef<Input>(null);
+
+  useEffect(() => {
+    setValue(cycle);
+  }, [cycle]);
 
   const handelClickEdit = () => {
     setEditable(true);
