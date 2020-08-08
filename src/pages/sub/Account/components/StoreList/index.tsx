@@ -23,8 +23,8 @@ interface IStyle {
 // eslint-disable-next-line comma-dangle
 const style: IStyle = {
   checkAll: { height: '30px', lineHeight: '30px' },
-  text2: { width: '148px', textAlign: 'left', verticalAlign: 'middle' },
-  text: { width: '75px', textAlign: 'left', verticalAlign: 'middle' },
+  text2: { width: '141px', textAlign: 'left', verticalAlign: 'middle' },
+  text: { width: '68px', textAlign: 'left', verticalAlign: 'middle' },
 };
 
 const StoreList: React.FC<IStoreListConnectProps> = 

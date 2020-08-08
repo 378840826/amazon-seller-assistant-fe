@@ -1,13 +1,16 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 import Avatar from './AvatarDropdown';
-import { Link } from 'umi';
+import { Link, connect } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import weixin from '../../assets/index/qr.png';
 import styles from './index.less';
 
-
-const GlobalHeaderRight: React.FC = () => {
+interface ICenterConnectProps extends IConnectProps {
+  user: IUserModelState;
+}
+const GlobalHeaderRight: React.FC<ICenterConnectProps> = ({ user }) => {
+  const id = user.currentUser.id;
   const img = (
     <div>
       <img src={weixin} />
@@ -20,18 +23,26 @@ const GlobalHeaderRight: React.FC = () => {
       <Tooltip placement="bottom" title={img} overlayClassName={styles.__index_tooltip}>
         <Iconfont type="icon-gongzhonghaoguanli" className={styles.weixin} />
       </Tooltip>
-      <Avatar />
-      <Link
-        to="/mws/overview"
-        className={styles.link_into}
-        style={{ marginLeft: 50, marginRight: 5, fontSize: 16 }}
-      >
+      {
+        id > 0 && 
+        <>
+          <Avatar />
+          <Link
+            to="/mws/overview"
+            className={styles.link_into}
+            style={{ marginLeft: 50, marginRight: 5, fontSize: 16 }}
+          >
         进入系统
-        <Iconfont type="icon-xiangyoujiantou" style={{ fontSize: 16 }} />
-      </Link>
+            <Iconfont type="icon-xiangyoujiantou" style={{ fontSize: 16 }} />
+          </Link>
+        </>
+      }
+      
       
     </div>
   );
 };
 
-export default GlobalHeaderRight;
+export default connect(({ user }: IConnectState) => ({
+  user,
+}))(GlobalHeaderRight);

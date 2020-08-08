@@ -60,13 +60,18 @@ request.interceptors.response.use(async (response, options) => {
   } 
 
   const resBody = await response.clone().json();
+  const whiteList = [
+    '/', 
+    '/index/privacy', 
+    '/index/logs',
+  ];
   const { code, message } = resBody;
   // 请求异常
   switch (code) {
-  case 401:
-    if (window.location.pathname !== '/user/login') {
+  case 401://用户未登录
+    if (whiteList.indexOf(window.location.pathname) < 0 ) {
       history.replace({
-        pathname: '/user/login',
+        pathname: '/users/login',
         search: stringify({
           redirect: window.location.href,
         }),

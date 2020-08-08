@@ -37,7 +37,7 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
                 <div className={styles.desc}>
             提供强大的智能调价，智能广告功能，是亚马逊卖家的高端店铺管家                        
                 </div>
-                {id === -1 && 
+                {id < 0 && 
                 <div className={styles.unLogin}>
                   <Link className={[styles.regButton, styles.buttons].join(' ')} to="/users/login">
                     <div className={styles.font}>免费注册</div>
@@ -55,7 +55,7 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
                 }
               
                 {
-                  id !== -1 && 
+                  id > 0 && 
                 <div className={styles.logined}>
                   <Link to="/mws/overview" className={[styles.loginedButton, styles.buttons].join(' ')}>
                     <div className={styles.font}>立即体验</div>

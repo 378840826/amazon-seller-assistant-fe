@@ -7,12 +7,11 @@ import { Iconfont } from '@/utils/utils';
 import weixin from '../../assets/weixin.png';
 import styles from './index.less';
 
-
 const GlobalHeaderRight: React.FC = () => {
   const img = (
     <div>
       <img src={weixin} />
-      <div style={{ textAlign: 'center', marginTop: 5 }}>扫码关注微信公众号</div>
+      <div style={{ textAlign: 'center', marginTop: 5, color: '#666' }}>扫码关注微信公众号</div>
     </div>
   );
   
@@ -22,7 +21,7 @@ const GlobalHeaderRight: React.FC = () => {
       <div className={styles.GlobalSearchContainer}>
         <GlobalSearch />
       </div>
-      <Tooltip placement="bottomRight" title={img} overlayStyle={{ background: '#fff' }}>
+      <Tooltip placement="bottomRight" title={img} overlayClassName={styles.__index_tooltip}>
         <Iconfont type="icon-gongzhonghaoguanli" className={styles.weixin} />
       </Tooltip>
       <Avatar />

@@ -5,7 +5,6 @@ export default [
   // 账户
   {
     path: '/users',
-    // component: '../layouts/UserLayout',
     routes: [
       { path: '/users/login', component: './user/Login', title: '登录' },
       { path: '/users/password/forgot', component: './user/ResetPwd', title: '设置新密码' },
