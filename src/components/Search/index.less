@@ -1,0 +1,60 @@
+.search {
+  display: flex;
+  width: 280px;
+
+  span:global(.ant-input-affix-wrapper) {
+    width: 240px;
+  }
+
+  input:global(.ant-input) {
+    height: 30px;
+    line-height: 30px;
+    border-radius: @border-radius-base 0 0 @border-radius-base;
+  }
+
+  .btn {
+    width: 40px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    display: inline-block;
+    background-color: @primary-color;
+    color: #fff;
+    border-radius: 0 @border-radius-base @border-radius-base 0;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    .icon {
+      font-size: 17px;
+      font-weight: bold;
+      margin: 7px 0 0 0;
+    }
+  }
+
+  .btn:hover {
+    opacity: 0.8;
+  }
+
+  // 禁止搜索
+  .btn_disabled {
+    cursor: not-allowed;
+  }
+
+  .btn_disabled:hover {
+    opacity: 1;
+  }
+
+  // isEnpty 搜索框为空时搜索按钮样式
+  .btn_empty_style {
+    background: #eee;
+    pointer-events: none;
+    border: 1px solid @border-color-base;
+    border-left: none;
+    cursor: not-allowed;
+  }
+
+  .loading {
+    color: #fff;
+    margin-top: 5px;
+  }
+}

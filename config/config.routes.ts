@@ -86,6 +86,21 @@ export default [
     ],
   },
 
+  {
+    path: '/asin',
+    component: '../layouts/AsinPandectLayout',
+    wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
+    routes: [
+      { path: '/asin/base', title: 'ASIN总览', component: './asinPandect/Base' },
+      { path: '/asin/dsell', title: 'ASIN总览 - 地区销售', component: './asinPandect/Dsell' },
+      { path: '/asin/order', title: 'ASIN总览 - 订单解读', component: './asinPandect/Order' },
+      { path: '/asin/ra', title: 'ASIN总览 - 退货分析', component: './asinPandect/ReturnProduct' },
+
+      // 重定向
+      { path: '/asin', redirect: '/asin/base' },
+    ]
+  },
+
   // 首页
   {
     path: '/',

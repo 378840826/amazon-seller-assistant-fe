@@ -1,0 +1,147 @@
+.order {
+  margin: 20px 30px;
+}
+
+div:global(.ant-table-body) {
+  max-height: 630px;
+  overflow-y: auto !important;
+}
+
+.order > .head {
+  background-color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+
+  .head_right {
+    display: flex;
+
+    .define {
+      width: 280px;
+      margin-left: 20px;
+    }
+  }
+}
+
+.echarts {
+  min-width: 1306px;
+  background-color: #fff;
+  margin: 0 auto 20px;
+  display: flex;
+
+  // 折线图
+  .lineCharts_box {
+    width: 65%;
+    height: 426px;
+    border-right: 1px solid @divider-line-color;
+    position: relative;
+
+    header {
+      display: flex;
+      justify-content: flex-end;
+      line-height: 32px;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      z-index: 999;
+    }
+  }
+
+  // 直柱图
+  .barCharts_box {
+    width: 35%;
+
+    > header {
+      display: flex;
+      justify-content: space-between;
+      padding: 25px 50px 0 20px;
+
+      h2 {
+        color: @heading-color;
+        font-size: @font-size-lg;
+        font-weight: bold;
+      }
+    }
+
+    .barCharts {
+      height: 365px;
+    }
+  }
+}
+
+main.table {
+  background-color: #fff;
+  padding: 15px 23px 0;
+
+  header.head {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 13px;
+
+    h2 {
+      color: @heading-color;
+      font-weight: bold;
+      font-size: @font-size-lg;
+    }
+  }
+
+  div:global(.ant-table-body) {
+    border: 1px solid #eee;
+  }
+
+  thead {
+    background-color: @table-header-bg;
+
+    th {
+      padding-top: 0;
+      padding-bottom: 0;
+      color: #333;
+      white-space: nowrap;
+      height: 44px;
+    }
+  }
+
+  tfoot td {
+    height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  tbody {
+    td {
+      height: 44px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    tr:nth-child(odd) td {
+      background: #fafafa;
+    }
+
+    tr:hover td {
+      background: #f4faff !important;
+    }
+  }
+}
+
+// 表格列pageView_session
+.pageView_session {
+  .detail {
+    color: @btn-text-color;
+
+    &:hover {
+      font-weight: bold;
+      color: @primary-color;
+      cursor: pointer;
+    }
+  }
+}
+
+.page {
+  padding: 10px 0;
+}
+
+:global(.asin-order-bar-tooltip) {
+  color: @heading-color;
+  font-weight: 400;
+}

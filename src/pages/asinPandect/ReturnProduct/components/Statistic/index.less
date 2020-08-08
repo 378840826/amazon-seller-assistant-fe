@@ -1,0 +1,48 @@
+.stbox {
+  display: flex;
+  height: 32px;
+  line-height: 32px;
+
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+
+    li {
+      width: 32px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      flex: 0 0 auto;
+      border: 1px solid #eaeaea;
+      cursor: pointer;
+
+      &:hover {
+        border-color: @primary-color;
+      }
+
+      &:first-child {
+        border-radius: @border-radius-base 0 0 @border-radius-base;
+      }
+
+      &:last-child {
+        border-radius: 0 @border-radius-base @border-radius-base 0;
+      }
+
+      &:nth-child(2) {
+        border-width: 1px 0 1px 0;
+      }
+
+      &:nth-child(2):hover {
+        border-width: 1px;
+      }
+
+      // 激活状态
+      &.active {
+        background-color: @primary-color;
+        color: #fff;
+        border: 1px solid @primary-color;
+      }
+    }
+  }
+}
