@@ -86,6 +86,19 @@ export default [
     ],
   },
 
+  {
+    path: '/asin',
+    component: '../layouts/AsinPandectLayout',
+    wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
+    routes: [
+      { path: '/asin/b2b', title: 'ASIN总览 - B2B销售', component: './asinPandect/B2B' },
+
+      // 重定向
+      { path: '/asin', redirect: '/asin/base' },
+    ]
+  },
+
+
   // 首页
   {
     path: '/',
