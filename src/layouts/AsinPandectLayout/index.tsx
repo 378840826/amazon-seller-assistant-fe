@@ -162,6 +162,12 @@ const AsinBase: React.FC = (props) => {
         
         if (query.asin) {
           urlAsin = query.asin;
+          dispatch({
+            type: 'asinGlobal/changeAsin',
+            payload: {
+              asin: query.asin,
+            },
+          });
         }
       }
 
@@ -288,6 +294,8 @@ const AsinBase: React.FC = (props) => {
     <BasicLoyout></BasicLoyout>
     <nav className={styles.head }>
       <span className={styles.classify}>ASIN总览</span>
+      <Iconfont type="icon-zhankai-copy" className={styles.arrow}></Iconfont>
+      <span className={styles.asin}>{storeAsin}</span>
     </nav>
     <header className={styles.head_nav}>
       <div className={styles.navs}>
