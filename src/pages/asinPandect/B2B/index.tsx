@@ -115,7 +115,7 @@ const B2B: React.FC = () => {
         data,
       } = datas as AsinB2B.IResponse;
       if (isObject(data)) {
-        console.log(data, 'datas');
+        // console.log(data, 'datas');
         judgeWeekMonth();
         setLineChartData(data.lineChart as AsinB2B.ILineChartData[]);
         setUpdate(data.updateTime);

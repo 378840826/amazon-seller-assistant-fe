@@ -97,6 +97,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
           right: 50,
           bottom: 20,
           containLabel: true,
+          
         },
         xAxis: {
           type: 'category',

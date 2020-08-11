@@ -32,8 +32,6 @@ const Toolbar: React.FC<IProps> = (props) => {
     if (label === '') {
       return;
     }
-    console.log(douFuList, 'douFuList');
-    
 
     if (selectDouFu.length >= maxLength) {
       if (selectDouFu.indexOf(label) > -1) {
@@ -90,11 +88,6 @@ const Toolbar: React.FC<IProps> = (props) => {
     return colors[index];
   };
 
-  useEffect(() => {
-    console.log(douFuList, 'douFuList');
-    
-  }, [douFuList]);
-
   return (
     <div className={styles.toolbar}>
       {
@@ -104,9 +97,9 @@ const Toolbar: React.FC<IProps> = (props) => {
           let isInt = 0; // 整数或小数点2位
 
           if (
-            item.label === '销售额'
-            || item.label === '平均售价'
-            || item.label === '平均客单价'
+            item.label === 'B2B销售额'
+            || item.label === 'B2B平均售价'
+            || item.label === 'B2B平均客单价'
           ) {
             showSymbol = true;
             isInt = 2;
@@ -144,8 +137,8 @@ const Toolbar: React.FC<IProps> = (props) => {
               <p className={styles.title}>
                 上期：
                 <span className={styles.text}>
-                  <span className={ item.lastData ? '' : 'none'}>{(showSymbol ? currency : '')}</span>
-                  { item.lastData ? 
+                  <span className={ item.lastData === null ? '' : 'none'}>{(showSymbol ? currency : '')}</span>
+                  { item.lastData === null ? 
                     item.lastData : 
                     <span style={{
                       color: '#999',

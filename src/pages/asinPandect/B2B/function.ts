@@ -115,6 +115,7 @@ export function lineChartConfig(name = '', data: string[] = [], yAxisIndex = 0) 
     type: 'line',
     data: data,
     symbol: 'none',
+    smooth: true,
     yAxisIndex,
     splitLine: {
       show: true,
