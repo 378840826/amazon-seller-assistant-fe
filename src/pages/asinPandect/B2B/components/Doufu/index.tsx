@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styles from './index.less';
 import { useSelector, useDispatch } from 'umi';
 import Rate from '@/components/Rate';
-import { moneyFormat } from '@/utils/huang';
 
 interface IProps {
   list: AsinB2B.IDouFuListTyep[];
@@ -94,7 +93,6 @@ const Toolbar: React.FC<IProps> = (props) => {
         douFuList.map((item, i) => {
           let showSymbol = false; // 是否显示货币符号
           let percent = false; // 百分比货号
-          let isInt = 0; // 整数或小数点2位
 
           if (
             item.label === 'B2B销售额'
@@ -102,7 +100,6 @@ const Toolbar: React.FC<IProps> = (props) => {
             || item.label === 'B2B平均客单价'
           ) {
             showSymbol = true;
-            isInt = 2;
           }
 
           if (item.label === '转化率') {
@@ -111,13 +108,7 @@ const Toolbar: React.FC<IProps> = (props) => {
 
           if (item.label === '转化率') {
             percent = true;
-            isInt = 2;
           }
-
-          if (item.label === '销量/订单量') {
-            isInt = 2;
-          }
-
 
           return <div className={`${styles.item}`} 
             style={{
@@ -129,7 +120,7 @@ const Toolbar: React.FC<IProps> = (props) => {
             key={i}>
             <div className={styles.left_div} > 
               <span className={styles.title}>
-                { showSymbol ? currency : ''}{moneyFormat(item.data, isInt)}{percent ? '%' : ''}
+                { showSymbol ? currency : ''}{item.data}{percent ? '%' : ''}
               </span>
               <span className={styles.text}>{item.label}</span>
             </div>

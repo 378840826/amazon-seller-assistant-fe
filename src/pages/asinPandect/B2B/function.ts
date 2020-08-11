@@ -17,30 +17,20 @@ import moment from 'moment';
 export function handleChiese(value: string, flag = false): string {
   if (flag) {
     switch (value) {
-    case '订单量':
+    case 'B2B订单量':
       return 'orderQuantity';
-    case '销量':
+    case 'B2B销量':
       return 'salesQuantity';
-    case 'Session':
-      return 'session';
-    case '优惠订单':
-      return 'couponOrderQuantity';
-    case '关联销售':
-      return 'relatedSalesFrequency';
-    case 'PageView':
-      return 'pageViews';
-    case 'PageView/Session':
-      return 'pageViewsDivSessions';
-    case '销量/订单量':
+    case 'B2B销量/订单量':
       return 'salesQuantityDivOrderQuantity';
-    case '销量额':
+    case 'B2B销量额':
       return 'sales';
-    case '平均售价':
+    case 'B2B平均售价':
       return 'avgPrice';
-    case '平均客单价':
+    case 'B2B平均客单价':
       return 'pct';
-    case '转化率':
-      return 'takeRates';
+    case 'B2B销售额占比':
+      return 'percentageB2bSales';
     default:
       return '';
     }
@@ -93,6 +83,8 @@ export function lineChartSymbol(type: string, value = '', symbol = '') {
     return symbol + value;
   case 'takeRates':
     return `${value}%`;
+  case 'percentageB2bSales':
+    return value;
   default:
     return '';
   }
@@ -155,12 +147,11 @@ export function handleLineCahrtTooltip(params: {
   const axisValue = Number(data1.axisValue);
   const xDate = moment(axisValue).format('YYYY-MM-DD'); // X轴的日期
   const dataIndex = data1.dataIndex; // 当前鼠标移动到哪一个值上
-  // console.log(param);
+  console.log(param);
 
   let html1 = '',
     html2 = '',
-    html3 = '',
-    temsku = '';
+    html3 = '';
   param.forEach(item => {
     const seriesName = item.seriesName;
     const color = item.color;
@@ -208,36 +199,15 @@ export function handleLineCahrtTooltip(params: {
       if (html1 === '') {
         html1 += `<p class="title">${xDate}</p>`;
       }
-      if (seriesName.indexOf('-SKU-') !== -1) {
-        const arr = seriesName.split('-SKU-');
-        const name = arr[0];
-        const english = handleChiese(name, true);
-        const value = lineChartSymbol(english, item.value, symbol);
-        if (temsku === '') {
-          html1 += `<p class="sku-title">${arr[1]}</p>`;
-          temsku = arr[1];
-        } else {
-          if (temsku !== arr[1]) {
-            html1 += `<p class="sku-title">${arr[1]}</p>`;
-            temsku = arr[1];
-          }
-        }
-        html1 += `
-        <p class="data">
-          <i class="icon" style="background-color: ${color}"></i>
-            ${name}：
-            <span class="number">${value || '-'}</span>
-        </p>`;
-      } else {
-        const english = handleChiese(seriesName, true);
-        const value = lineChartSymbol(english, item.value, symbol);
-        html1 += `
-        <p class="data">
-          <i class="icon" style="background-color: ${color}"></i>
-            ${seriesName}：
-            <span class="number">${value}</span>
-        </p>`;
-      }
+
+      const english = handleChiese(seriesName, true);
+      const value = lineChartSymbol(english, item.value, symbol);
+      html1 += `
+      <p class="data">
+        <i class="icon" style="background-color: ${color}"></i>
+          ${seriesName}：
+          <span class="number">${value}</span>
+      </p>`;
     }
   });
 
