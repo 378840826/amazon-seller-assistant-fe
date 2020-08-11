@@ -48,29 +48,19 @@ export function handleChiese(value: string, flag = false): string {
 
   switch (value) {
   case 'orderQuantity':
-    return '订单量';
+    return 'B2B订单量';
   case 'salesQuantity':
-    return '销量';
-  case 'session':
-    return 'Session';
-  case 'couponOrderQuantity':
-    return '优惠订单';
-  case 'relatedSalesFrequency':
-    return '关联销售';
-  case 'pageViews':
-    return 'PageView';
-  case 'pageViewsDivSessions':
-    return 'PageView/Session';
+    return 'B2B销量';
   case 'salesQuantityDivOrderQuantity':
-    return '销量/订单量';
+    return 'B2B销量/订单量';
   case 'sales':
-    return '销量额';
+    return 'B2B销量额';
   case 'avgPrice':
-    return '平均售价';
+    return 'B2B平均售价';
   case 'pct':
-    return '平均客单价';
-  case 'takeRates':
-    return '转化率';
+    return 'B2B平均客单价';
+  case 'percentageB2bSales':
+    return 'B2B销售额占比';
   default:
     return '';
   }
@@ -258,9 +248,14 @@ export function handleLineCahrtTooltip(params: {
     html2 = `<div class="layout-div layout-div2">${html2}</div>`;
   }
 
+  if (html3 !== '') {
+    html3 = `<div class="layout-div layout-div3">${html3}</div>`;
+  }
+
   return `<div class="asin-b2b-line-charts-tooltip">
     ${html1}
     ${html2}
+    ${html3}
   </div>`;
 }
 

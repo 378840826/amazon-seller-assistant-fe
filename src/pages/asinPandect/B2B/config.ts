@@ -19,7 +19,7 @@ export const doufuSelectList = [
   },
   {
     label: 'B2B销量',
-    value: 'sales1',
+    value: 'salesQuantity',
     show: true,
     data: 0,
     lastData: 0,
@@ -27,7 +27,7 @@ export const doufuSelectList = [
   },
   {
     label: 'B2B销售额占比',
-    value: 'salesQuantity',
+    value: 'percentageB2bSales',
     show: true,
     data: 0,
     lastData: 0,
