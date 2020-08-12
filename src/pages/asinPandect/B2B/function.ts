@@ -84,7 +84,7 @@ export function lineChartSymbol(type: string, value = '', symbol = '') {
   case 'takeRates':
     return `${value}%`;
   case 'percentageB2bSales':
-    return value;
+    return `${value}%`;
   default:
     return '';
   }
@@ -97,7 +97,7 @@ export function lineChartConfig(name = '', data: string[] = [], yAxisIndex = 0) 
     type: 'line',
     data: data,
     symbol: 'none',
-    smooth: true,
+    smooth: false,
     yAxisIndex,
     splitLine: {
       show: true,
@@ -147,7 +147,7 @@ export function handleLineCahrtTooltip(params: {
   const axisValue = Number(data1.axisValue);
   const xDate = moment(axisValue).format('YYYY-MM-DD'); // X轴的日期
   const dataIndex = data1.dataIndex; // 当前鼠标移动到哪一个值上
-  console.log(param);
+  // console.log(param);
 
   let html1 = '',
     html2 = '',

@@ -53,7 +53,7 @@ const B2B: React.FC = () => {
   const [doufuList, setDoufuList] = useState<AsinB2B.IDouFuListTyep[]>(
     doufuSelectList
   );
-  const [lineChartData, setLineChartData] = useState<AsinB2B.ILineChartData[]>([]);
+  const [lineChartData, setLineChartData] = useState<AsinB2B.ILineChartData>();
 
   const getParams = useCallback((params = {}) => {
     // eslint-disable-next-line
@@ -117,9 +117,13 @@ const B2B: React.FC = () => {
       if (isObject(data)) {
         // console.log(data, 'datas');
         judgeWeekMonth();
-        setLineChartData(data.lineChart as AsinB2B.ILineChartData[]);
+        setLineChartData(data.lineChart);
         setUpdate(data.updateTime);
+        
         setDoufuList([...handleDouFu(doufuSelectList, data.tofuBlocData)]); // 豆腐块数据
+        console.log(data.tofuBlocData, 'data.tofuBlocData');
+        console.log([...handleDouFu(doufuSelectList, data.tofuBlocData)], '[...handleDouFu(doufuSelectList, data.tofuBlocData)]');
+        
       } else {
         message.error(data.toString());
       }

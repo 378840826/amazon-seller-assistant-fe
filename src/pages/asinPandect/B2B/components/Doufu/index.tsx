@@ -93,7 +93,9 @@ const Toolbar: React.FC<IProps> = (props) => {
         douFuList.map((item, i) => {
           let showSymbol = false; // 是否显示货币符号
           let percent = false; // 百分比货号
-
+          const flag = item.lastData === null || item.lastData === undefined;
+          console.log(item.label, item.lastData, item);
+          
           if (
             item.label === 'B2B销售额'
             || item.label === 'B2B平均售价'
@@ -102,11 +104,7 @@ const Toolbar: React.FC<IProps> = (props) => {
             showSymbol = true;
           }
 
-          if (item.label === '转化率') {
-            percent = true;
-          }
-
-          if (item.label === '转化率') {
+          if (item.label === 'B2B销售额占比') {
             percent = true;
           }
 
@@ -128,12 +126,12 @@ const Toolbar: React.FC<IProps> = (props) => {
               <p className={styles.title}>
                 上期：
                 <span className={styles.text}>
-                  <span className={ item.lastData === null ? '' : 'none'}>{(showSymbol ? currency : '')}</span>
-                  { item.lastData === null ? 
-                    item.lastData : 
+                  <span className={ flag ? 'none' : ''}>{(showSymbol ? currency : '')}</span>
+                  { flag ? 
                     <span style={{
                       color: '#999',
-                    }}>—</span>}
+                    }}>—</span> : item.lastData
+                  }
                 </span>
               </p>
               <p>
