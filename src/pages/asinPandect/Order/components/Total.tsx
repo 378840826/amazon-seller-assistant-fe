@@ -31,7 +31,7 @@ const Total: React.FC<IProps> = (props) => {
       <tr>
         <td align="center" style={{
           color: '#333',
-        }}>总结</td>
+        }}>总计</td>
         <td align="right">{symbol}{sales}</td>
         <td align="center">{orderQuantity}</td>
         <td align="center">{salesQuantity}</td>

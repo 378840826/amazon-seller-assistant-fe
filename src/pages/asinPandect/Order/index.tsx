@@ -594,7 +594,7 @@ const Order: React.FC = () => {
       title: <PageViewSession />,
       dataIndex: 'relatedSalesFrequency',
       align: 'center',
-      width: 120,
+      width: 130,
       render(value: number, row: {historyTime: string}) {
         const req = {
           asin: currentAsin,
