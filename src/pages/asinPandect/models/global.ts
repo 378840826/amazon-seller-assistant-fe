@@ -18,6 +18,7 @@ interface IAsinGlobalType {
   namespace: 'asinGlobal';
   state: {
     asin: string;
+    isAsin: boolean;
   };
 
   reducers: {
@@ -34,6 +35,7 @@ const AsinGlobal: IAsinGlobalType = {
   namespace: 'asinGlobal',
   state: {
     asin: '',
+    isAsin: false, // 验证ASIN是否存在的条件，为false不加载组件
   },
 
   reducers: {
@@ -46,30 +48,27 @@ const AsinGlobal: IAsinGlobalType = {
     // 异步更改后的修改
     serverAsin(state, { payload }): void {
       if (!payload.data) {
-        message.error(payload.message || '没有相关ASIN');
+        state.isAsin = false;
+        message.error('ASIN或SKU不存在');
         return;
       }
+      state.isAsin = true;
       state.asin = payload.data.asin;
     },
   },
 
   effects: {
     *getAsin({ payload, resolve, reject }, { call, put }): Generator {
-      // try {
-      //   const res = yield call(getServersAsin, payload);
-      //   yield put({
-      //     type: 'serverAsin',
-      //     payload: res,
-      //   });
-      //   resolve(res);
-      // } catch (err) {
-      //   reject(err);
-      // }
-      const res = yield call(getServersAsin, payload);
-      yield put({
-        type: 'serverAsin',
-        payload: res,
-      });
+      try {
+        const res = yield call(getServersAsin, payload);
+        yield put({
+          type: 'serverAsin',
+          payload: res,
+        });
+        resolve ? resolve(res) : null;
+      } catch (err) {
+        reject ? reject(err) : null;
+      }
     },
 
     *getSiblingsAsin({ payload, resolve, reject }, { call }): Generator {

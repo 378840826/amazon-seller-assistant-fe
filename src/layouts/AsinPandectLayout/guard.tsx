@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-30 14:50:27
  * @LastEditors: Huang Chao Yi
- * @FilePath: \amzics-react\src\layouts\AsinLayout\guard.tsx
+ * @FilePath: \amzics-react\src\layouts\AsinPandectLayout\guard.tsx
  */ 
 import React from 'react';
 import {

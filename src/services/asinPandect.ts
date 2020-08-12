@@ -117,3 +117,24 @@ export async function orderTableDownload(params: { headersParams: {StoreId: stri
   });
 }
 // ------------>>>>>>>>>>>>> 订单解读 end //
+
+
+// ------------>>>>>>>>>>>>> B2B销售 start //
+// 如果选择的是这个按周按月的周期时间 :那么必须传的参数是 timeMethod  startTime  endTime cycle 不要传或者传null
+// 选择这个最近多少天之类的 必须 传 cycle  ,  timeMethod  startTime  endTime这三个可以不传或者null
+
+// 初始化数据
+export async function getB2BinitData(data: {}) {
+  return request.post('/api/mws/order/analysis/bs', {
+    data,
+  });
+}
+
+// 折线图数据
+export async function getB2BlineChartData(data: {}) {
+  return request.post('/api/mws/order/analysis/bs/line-change', {
+    data,
+  });
+}
+
+// ------------>>>>>>>>>>>>> B2B销售 end //

@@ -22,6 +22,8 @@ export const storageKeys = {
   asinOrderDateRange: 'asinOrderDateRange', // ASIN总览 -订单解读周期
   asinOrderCheckbox: 'asinOrderCheckboxs', // ASIN总览 - 订单解读自定义数据
   asinOrderCheckDoufu: 'asinOrderCheckDoufu', // ASIN总览 - 订单解读选中的豆腐块
+  asinB2BCheckDoufu: 'asinB2BCheckDoufu', // ASIN总览 - B2B销售 选中的豆腐块
+  asinB2BDateRange: 'asinB2BDateRange', // ASIN总览 - B2B销售 周期
 };
 
 // 判断对象是否为空
@@ -183,4 +185,13 @@ export function moneyFormat(
     s[1] += new Array(prec - s[1].length + 1).join('0');
   }
   return s.join(dec);
+}
+
+
+/**
+ * 判断是否为真正的对象
+ * @param any
+ */
+export function isObject(param: any) { // eslint-disable-line
+  return Object.prototype.toString.call(param) === '[object Object]';
 }

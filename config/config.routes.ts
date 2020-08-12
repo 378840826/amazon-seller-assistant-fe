@@ -94,6 +94,7 @@ export default [
       { path: '/asin/dsell', title: 'ASIN总览 - 地区销售', component: './asinPandect/Dsell' },
       { path: '/asin/order', title: 'ASIN总览 - 订单解读', component: './asinPandect/Order' },
       { path: '/asin/ra', title: 'ASIN总览 - 退货分析', component: './asinPandect/ReturnProduct' },
+      { path: '/asin/b2b', title: 'ASIN总览 - B2B销售', component: './asinPandect/B2B' },
 
       // 重定向
       { path: '/asin', redirect: '/asin/base' },
