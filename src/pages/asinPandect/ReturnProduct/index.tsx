@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-07-30 09:47:27
  * @LastEditors: Huang Chao Yi
- * @FilePath: \amzics-react\src\pages\asinPandect\returnProduct\index.tsx
+ * @FilePath: \amzics-react\src\pages\asinPandect\ReturnProduct\index.tsx
  */ 
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
@@ -242,7 +242,7 @@ const ReturnProduct: React.FC = () => {
           name: '退货量',
           type: 'line',
           data: returnNums,
-          smooth: true,
+          smooth: false,
           color: '#49b5ff',
           symbol: 'none',
         }, 
@@ -254,7 +254,7 @@ const ReturnProduct: React.FC = () => {
           yAxisIndex: 1,
           symbol: 'none',
           color: '#ffc175',
-          smooth: true,
+          smooth: false,
           showSymbol: false,
         }],
       };
