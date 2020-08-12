@@ -12,6 +12,7 @@ div:global(.ant-table-body) {
   padding: 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   .head_right {
     display: flex;
@@ -98,6 +99,7 @@ main.table {
       color: #333;
       white-space: nowrap;
       height: 44px;
+      border: 0;
     }
   }
 
@@ -112,6 +114,7 @@ main.table {
       height: 44px;
       padding-top: 0;
       padding-bottom: 0;
+      border: 0;
     }
 
     tr:nth-child(odd) td {
@@ -144,4 +147,10 @@ main.table {
 :global(.asin-order-bar-tooltip) {
   color: @heading-color;
   font-weight: 400;
+}
+
+th.pw:hover {
+  span:global(.anticon-question-circle) {
+    color: @warning-color !important;
+  }
 }

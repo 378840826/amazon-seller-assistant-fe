@@ -184,7 +184,7 @@ const Order: React.FC = () => {
       const option = {
         grid: {
           top: 28,
-          right: 40,
+          right: 50,
           left: 20,
           bottom: 20,
           containLabel: true,
@@ -229,8 +229,8 @@ const Order: React.FC = () => {
           axisLabel: {
             color: '#999',
             rotate: -35,
-            fontSize: 10,
-            margin: 15,            
+            fontSize: 12,
+            margin: 12,         
           },
           axisTick: {
             show: false,
@@ -595,6 +595,7 @@ const Order: React.FC = () => {
       dataIndex: 'relatedSalesFrequency',
       align: 'center',
       width: 130,
+      className: styles.pw,
       render(value: number, row: {historyTime: string}) {
         const req = {
           asin: currentAsin,
@@ -631,7 +632,7 @@ const Order: React.FC = () => {
       />;
     },
     scroll: {
-      y: 630,
+      y: 620,
     },
   };
 

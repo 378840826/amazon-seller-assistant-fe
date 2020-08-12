@@ -153,7 +153,7 @@ const ReturnProduct: React.FC = () => {
         legend: {
           data: ['退货量', '退货率'],
           left: 20,
-          itemGap: 25,
+          itemGap: 16,
           selected,
         },
         grid: {

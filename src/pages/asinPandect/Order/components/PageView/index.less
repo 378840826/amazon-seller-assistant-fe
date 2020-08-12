@@ -4,12 +4,16 @@
   background-color: #fff;
 
   > header {
-    padding: 25px;
+    padding: 15px 13px 0 13px;
     display: flex;
     justify-content: space-between;
     font-size: @font-size-lg;
     font-weight: bold;
     color: @heading-color;
+
+    span:global(.anticon-close) {
+      color: @text-color-secondary;
+    }
   }
 
   .list {
@@ -22,6 +26,7 @@
       display: flex;
       margin: 0 25px;
       padding: 15px 0;
+      align-items: center;
 
       .box {
         width: 278px;
@@ -103,6 +108,5 @@
 
   &:hover {
     color: @primary-color;
-    transform: scale(1.2);
   }
 }

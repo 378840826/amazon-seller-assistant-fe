@@ -90,6 +90,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
           data: [yLeftName, yRightName],
           left: 15,
           top: 5,
+          itemGap: 16,
         },
         grid: {
           left: 25,
@@ -97,7 +98,6 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
           right: 50,
           bottom: 20,
           containLabel: true,
-          
         },
         xAxis: {
           type: 'category',

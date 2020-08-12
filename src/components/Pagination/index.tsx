@@ -113,7 +113,7 @@ const Page: React.FC<IProps> = (props) => {
     pageSize: pageSize,
     onChange,
     showQuickJumper: {
-      goButton: <Button>GO</Button>,
+      goButton: <Button className={styles.go}>GO</Button>,
     },
     showSizeChanger: false,
     showLessItems: false,
