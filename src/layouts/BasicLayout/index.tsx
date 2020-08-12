@@ -21,7 +21,9 @@ const getSubMenu = (subMenuArr: IMenu[]) => (
         <MenuItem
           key={sub.path}
           className={styles.subMenu}
-          style={{ display: sub.hide ? 'none' : '' }}
+          style={{
+            display: sub.hide ? 'none' : '',
+          }}
         >
           <Link to={sub.path}>{sub.title}</Link>
         </MenuItem>

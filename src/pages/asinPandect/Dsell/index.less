@@ -1,0 +1,75 @@
+div.box {
+  font-family: "微软雅黑", sans-serif;
+  margin: 0 30px;
+
+  nav.head {
+    padding: 14px 20px;
+  }
+
+  header.head_nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    .navs {
+      button {
+        margin: 0 4px;
+        background-color: #ececec;
+        color: @text-color;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      button:hover {
+        color: #fff;
+        background-color: @primary-color;
+      }
+    }
+
+    .filltrate {
+      display: flex;
+      justify-content: center;
+
+      input {
+        background: transparent;
+      }
+    }
+  }
+
+  main.main {
+    background-color: #fff;
+    margin-top: 20px;
+
+    > header {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 20px 0;
+    }
+  }
+
+  //
+  .map_rows {
+    display: flex;
+    flex-direction: row-reverse;
+    color: @text-color;
+    position: relative;
+    top: -20px;
+    // right: 10px;
+
+    p {
+      height: 14px;
+      line-height: 14px;
+      display: flex;
+      margin: 0 20px;
+      cursor: pointer;
+    }
+
+    span.icon {
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
+}

@@ -1,0 +1,49 @@
+.ant-table-body {
+  overflow-y: auto !important;
+
+  table {
+    border-top: 0 !important;
+
+    tr:hover td {
+      background-color: #f4faff !important;
+    }
+  }
+}
+
+.ant-table-wrapper {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  border-bottom-left-radius: @border-radius-base;
+  border-bottom-right-radius: @border-radius-base;
+}
+
+// 折线图相关
+.echarts-line-tooltip {
+  padding: 10px 20px;
+  background-color: #fff !important;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+
+  .title {
+    color: @text-color-secondary;
+    padding-bottom: 12px;
+  }
+
+  .detail {
+    color: @text-color;
+
+    .icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: @primary-color;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .money {
+      color: @heading-color;
+      font-weight: 400;
+    }
+  }
+}
