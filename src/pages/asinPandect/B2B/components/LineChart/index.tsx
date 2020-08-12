@@ -110,7 +110,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
           axisLabel: {
             show: true,
             textStyle: {
-              color: '#333',
+              color: '#999',
             },
             formatter(val: string) {
               return moment(Number(val)).format('MM-DD');
