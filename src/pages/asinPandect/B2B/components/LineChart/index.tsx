@@ -12,6 +12,7 @@ import {
   lineChartSymbol,
   lineChartConfig,
   handleLineCahrtTooltip,
+  tooltipPosition,
 } from '../../function';
 import './global.less';
 
@@ -77,6 +78,9 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
           trigger: 'axis',
           padding: 0,
           backgroundColor: 'transparent',
+          position(pos: number[], params:{}, dom: any, rect: {}, size: { contentSize: number[]; viewSize: number[]}) { // eslint-disable-line
+            return tooltipPosition(pos, size, { minY: 60 });
+          },
           formatter(params: AsinB2B.ILineChartsTooltip[]) {
             return handleLineCahrtTooltip({
               param: params,
@@ -88,12 +92,12 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
         },
         legend: {
           data: [yLeftName, yRightName],
-          left: 15,
+          left: 50,
           top: 5,
           itemGap: 16,
         },
         grid: {
-          left: 25,
+          left: 50,
           top: 60,
           right: 50,
           bottom: 20,

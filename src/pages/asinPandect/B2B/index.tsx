@@ -119,11 +119,7 @@ const B2B: React.FC = () => {
         judgeWeekMonth();
         setLineChartData(data.lineChart);
         setUpdate(data.updateTime);
-        
         setDoufuList([...handleDouFu(doufuSelectList, data.tofuBlocData)]); // 豆腐块数据
-        console.log(data.tofuBlocData, 'data.tofuBlocData');
-        console.log([...handleDouFu(doufuSelectList, data.tofuBlocData)], '[...handleDouFu(doufuSelectList, data.tofuBlocData)]');
-        
       } else {
         message.error(data.toString());
       }

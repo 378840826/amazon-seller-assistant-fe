@@ -282,3 +282,69 @@ export function handleDouFu(arr: AsinB2B.IDouFuListTyep[], data: any = {}) {
   });
   return arr;
 }
+
+// 将echarts tooltip的提示框入限制在容器内
+export function tooltipPosition(// eslint-disable-line
+  pos: number[], // tooltip的pos参数
+  sizes: { // tooltip的size参数
+    viewSize: number[];
+    contentSize: number[];
+  },
+  restrict: {
+    minX?: number; // 限定X轴坐标最小值(预留，逻辑没写)
+    minY?: number; // 限定Y轴坐标最小值
+    maxX?: number; // 限定X轴坐标最大值(预留，逻辑没写)
+    maxY?: number; // 限定Y轴坐标最大值
+  } = {},
+) {
+  
+  const mouseX = pos[0]; // 鼠标在容器X轴坐标
+  const mouseY = pos[1]; // 鼠标在容器Y轴坐标
+  const tooltipWidth = sizes.contentSize[0]; // 提示框宽度
+  const tooltipHeight = sizes.contentSize[1]; // 提示框高度
+  const boxWidth = sizes.viewSize[0]; // 容器宽度
+  const boxHeight = sizes.viewSize[1]; // 容器高度
+  let x = 0, y = 0; // 返回值的坐标
+
+  const {
+    minX = 0,
+    minY = 0,
+    maxX = boxWidth,
+    maxY = boxHeight,
+  } = restrict as {
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number;
+  };
+  
+  
+  if (mouseX > (boxWidth - tooltipWidth)) {
+    x = mouseX - tooltipWidth;
+  } else {
+    x = mouseX;
+
+    if (x <= minX) {
+      x = minX;
+    }
+
+    if (x >= maxX) {
+      x = maxX;
+    }
+  }
+
+  if (mouseY > (boxHeight - tooltipHeight)) {
+    y = mouseY - tooltipHeight;
+  } else {
+    y = mouseY - (tooltipHeight / 2);
+
+    if ( y <= minY) {
+      y = minY;
+    }
+    
+    if ( y >= maxY) {
+      y = maxY;
+    }
+  }
+  return [x, y];
+}

@@ -13,6 +13,7 @@ import {
   handleLineCahrtTooltip,
   lineChartConfig,
   lineChartSymbol,
+  tooltipPosition,
 } from '../../function';
 
 /**
@@ -62,7 +63,6 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
       const {
         polylineX, // 本期的X轴数据
       } = datas.thisPeriod; // 本期数据
-
       
       if (datas.firstWeekOrMonthHalf) {
         weekMonthXData = datas.firstWeekOrMonthHalf.polylineX;
@@ -70,7 +70,6 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
 
       yLeftName = handleChiese(selectDouFu[0]);
       yRightName = handleChiese(selectDouFu[1]);
-
 
       // eslint-disable-next-line
       let option: any = {
@@ -96,6 +95,9 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
         tooltip: {
           trigger: 'axis',
           padding: 0,
+          position(pos: number[], params:{}, dom: any, rect: {}, size: { contentSize: number[]; viewSize: number[]}) { // eslint-disable-line
+            return tooltipPosition(pos, size, { minY: 80 });
+          },
           backgroundColor: 'transparent',
           formatter(params: AsinOrder.ILineChartsTooltip[]) {
             return handleLineCahrtTooltip({

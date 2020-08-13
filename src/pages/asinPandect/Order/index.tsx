@@ -12,7 +12,7 @@ import Total from './components/Total';
 import DouFu from './components/Doufu';
 import LineChartsComponent from './components/LineChart';
 import { storageKeys } from '@/utils/huang';
-import { handleDouFu, handleRange } from './function';
+import { handleDouFu, handleRange, tooltipPosition } from './function';
 import { storage } from '@/utils/utils';
 import echarts from 'echarts';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
@@ -196,6 +196,9 @@ const Order: React.FC = () => {
           backgroundColor: '#fff',
           textStyle: {
             color: '#666',
+          },
+          position(pos: number[], params:{}, dom: any, rect: {}, size: { contentSize: number[]; viewSize: number[]}) { // eslint-disable-line
+            return tooltipPosition(pos, size);
           },
           formatter(datas: {}) {
             const { data } = datas[0];
@@ -632,7 +635,7 @@ const Order: React.FC = () => {
       />;
     },
     scroll: {
-      y: 620,
+      y: 618,
     },
   };
 

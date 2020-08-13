@@ -94,8 +94,6 @@ const Toolbar: React.FC<IProps> = (props) => {
           let showSymbol = false; // 是否显示货币符号
           let percent = false; // 百分比货号
           const flag = item.lastData === null || item.lastData === undefined;
-          console.log(item.label, item.lastData, item);
-          
           if (
             item.label === 'B2B销售额'
             || item.label === 'B2B平均售价'

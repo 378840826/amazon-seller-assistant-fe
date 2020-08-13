@@ -109,7 +109,6 @@ const ReturnProduct: React.FC = () => {
       setUpdateTime(res.updateTime);
       setReturnInfo(res.returnInfos);
       setLineChartData(res.lineChartDatas);
-      console.log(res.returnReasons);
       setDataSource(res.returnReasons || []);
     }
   }, [res]);

@@ -32,8 +32,6 @@ const Toolbar: React.FC<IProps> = (props) => {
     if (label === '') {
       return;
     }
-    console.log(label);
-    
 
     if (selectDouFu.length >= maxLength) {
       if (selectDouFu.indexOf(label) > -1) {
