@@ -34,7 +34,7 @@ export function handleDouFu(arr: AsinOrder.IDouFuListTyep[], data: any = {}) {
       item.ratio = data.ratioSalesQuantity;
       break;
     case 'Session':
-      item.data = data.session;
+      item.data = data.sessions;
       item.lastData = data.previousSession;
       item.ratio = data.ratioSession;
       break;
@@ -50,7 +50,7 @@ export function handleDouFu(arr: AsinOrder.IDouFuListTyep[], data: any = {}) {
       break;
     case '平均售价':
       item.data = data.avgPrice;
-      item.lastData = data.previouAvgPrice;
+      item.lastData = data.previousAvgPrice;
       item.ratio = data.ratioAvgPrice;
       break;
     case '平均客单价':
@@ -60,7 +60,7 @@ export function handleDouFu(arr: AsinOrder.IDouFuListTyep[], data: any = {}) {
       break;
     case '销量/订单量':
       item.data = data.salesQuantityDivOrderQuantity;
-      item.lastData = data.previouSalesQuantityDivOrderQuantity;
+      item.lastData = data.previousSalesQuantityDivOrderQuantity;
       item.ratio = data.ratioSalesQuantityDivOrderQuantity;
       break;
     case '关联销售':
@@ -410,3 +410,102 @@ export function tooltipPosition(// eslint-disable-line
   return [x, y];
 }
 
+// 豆腐默认的数据
+export const douFuDefaultList = [
+  {
+    label: '销售额',
+    value: 'sales',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '订单量',
+    value: 'orderQuantity',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '销量',
+    value: 'salesQuantity',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '关联销售',
+    value: 'relatedSalesFrequency',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: 'Session',
+    value: 'sessions',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '转化率',
+    value: 'takeRates',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '平均售价',
+    value: 'avgPrice',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '平均客单价',
+    value: 'pct',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '销量/订单量',
+    value: 'salesQuantityDivOrderQuantity',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: '优惠订单',
+    value: 'couponOrderQuantity',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: 'PageView',
+    value: 'pageViews',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+  {
+    label: 'PageView/Session',
+    value: 'pageViewsDivSessions',
+    show: true,
+    data: 0,
+    lastData: 0,
+    ratio: 0,
+  },
+];

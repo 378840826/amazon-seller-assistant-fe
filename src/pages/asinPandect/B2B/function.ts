@@ -258,7 +258,7 @@ export function handleDouFu(arr: AsinB2B.IDouFuListTyep[], data: any = {}) {
       break;
     case 'B2B平均售价':
       item.data = data.avgPrice;
-      item.lastData = data.previouAvgPrice;
+      item.lastData = data.previousAvgPrice;
       item.ratio = data.ratioAvgPrice;
       break;
     case 'B2B平均客单价':
@@ -268,7 +268,7 @@ export function handleDouFu(arr: AsinB2B.IDouFuListTyep[], data: any = {}) {
       break;
     case 'B2B销量/订单量':
       item.data = data.salesQuantityDivOrderQuantity;
-      item.lastData = data.previouSalesQuantityDivOrderQuantity;
+      item.lastData = data.previousSalesQuantityDivOrderQuantity;
       item.ratio = data.ratioSalesQuantityDivOrderQuantity;
       break;
     case 'B2B销售额占比':

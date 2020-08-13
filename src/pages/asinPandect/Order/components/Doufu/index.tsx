@@ -94,7 +94,9 @@ const Toolbar: React.FC<IProps> = (props) => {
         douFuList.map((item, i) => {
           let showSymbol = false; // 是否显示货币符号
           let percent = false; // 百分比货号
-          let isInt = 0; // 整数或小数点2位
+          const mianflag = item.data === undefined || item.data === null; // 主要数据是否为空
+          const flag = item.lastData === undefined || item.lastData === null; // 上期
+          let lastDataSymbol = '';
 
           if (
             item.label === '销售额'
@@ -102,22 +104,12 @@ const Toolbar: React.FC<IProps> = (props) => {
             || item.label === '平均客单价'
           ) {
             showSymbol = true;
-            isInt = 2;
           }
 
           if (item.label === '转化率') {
             percent = true;
+            lastDataSymbol = '%';
           }
-
-          if (item.label === '转化率') {
-            percent = true;
-            isInt = 2;
-          }
-
-          if (item.label === '销量/订单量') {
-            isInt = 2;
-          }
-
 
           return <div className={`${styles.item}`} 
             style={{
@@ -129,7 +121,19 @@ const Toolbar: React.FC<IProps> = (props) => {
             key={i}>
             <div className={styles.left_div} > 
               <span className={styles.title}>
-                { showSymbol ? currency : ''}{moneyFormat(item.data, isInt)}{percent ? '%' : ''}
+                <span style={{
+                  display: mianflag ? 'none' : 'inline-block',
+                }}>{ showSymbol ? currency : ''}</span>
+                <span style={{
+                  display: mianflag ? 'none' : 'inline-block',
+                }}>{item.data}</span>
+                <span style={{
+                  display: mianflag ? 'none' : 'inline-block',
+                }}>{percent ? '%' : ''}</span>
+                <span style={{
+                  display: !mianflag ? 'none' : 'inline-block',
+                  color: '#999',
+                }}>—</span>
               </span>
               <span className={styles.text}>{item.label}</span>
             </div>
@@ -137,12 +141,15 @@ const Toolbar: React.FC<IProps> = (props) => {
               <p className={styles.title}>
                 上期：
                 <span className={styles.text}>
-                  <span className={ item.lastData ? '' : 'none'}>{(showSymbol ? currency : '')}</span>
-                  { item.lastData ? 
+                  <span className={ !flag ? '' : 'none'}>{(showSymbol ? currency : '')}</span>
+                  { !flag ? 
                     item.lastData : 
                     <span style={{
                       color: '#999',
                     }}>—</span>}
+                  <span style={{
+                    display: !flag ? '' : 'inline-block',
+                  }}>{lastDataSymbol}</span>
                 </span>
               </p>
               <p>

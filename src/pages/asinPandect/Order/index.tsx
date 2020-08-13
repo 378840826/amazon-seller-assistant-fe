@@ -12,7 +12,7 @@ import Total from './components/Total';
 import DouFu from './components/Doufu';
 import LineChartsComponent from './components/LineChart';
 import { storageKeys } from '@/utils/huang';
-import { handleDouFu, handleRange, tooltipPosition } from './function';
+import { handleDouFu, handleRange, tooltipPosition, douFuDefaultList } from './function';
 import { storage } from '@/utils/utils';
 import echarts from 'echarts';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
@@ -64,69 +64,9 @@ const Order: React.FC = () => {
   const [dateRangeItem, setDateRangeItem] = useState<string>(localDateType || '7'); // 选中
   
   // 自定义数据及豆腐块
-  const [selectList, setSelectList] = useState<AsinOrder.IDouFuListTyep[]>(localDataCols || [
-    {
-      label: '销售额',
-      value: 'sales',
-      show: true,
-    },
-    {
-      label: '订单量',
-      value: 'orderQuantity',
-      show: true,
-    },
-    {
-      label: '销量',
-      value: 'salesQuantity',
-      show: true,
-    },
-    {
-      label: '关联销售',
-      value: 'relatedSalesFrequency',
-      show: true,
-    },
-    {
-      label: 'Session',
-      value: 'session',
-      show: true,
-    },
-    {
-      label: '转化率',
-      value: 'takeRates',
-      show: true,
-    },
-    {
-      label: '平均售价',
-      value: 'avgPrice',
-      show: true,
-    },
-    {
-      label: '平均客单价',
-      value: 'pct',
-      show: true,
-    },
-    {
-      label: '销量/订单量',
-      value: 'salesQuantityDivOrderQuantity',
-      show: true,
-    },
-    {
-      label: '优惠订单',
-      value: 'couponOrderQuantity',
-      show: true,
-    },
-    {
-      label: 'PageView',
-      value: 'pageViews',
-      show: true,
-    },
-    {
-      label: 'PageView/Session',
-      value: 'pageViewsDivSessions',
-      show: true,
-      width: 180,
-    },
-  ]);
+  const [selectList, setSelectList] = useState<AsinOrder.IDouFuListTyep[]>(
+    localDataCols || douFuDefaultList  
+  );
   // 选中的豆腐块
   const attributes = useSelector((state: AsinOrder.IDFChecke) => state.asinOrder.dfCheckedTypes);
 

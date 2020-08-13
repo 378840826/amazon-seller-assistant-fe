@@ -94,6 +94,8 @@ const Toolbar: React.FC<IProps> = (props) => {
           let showSymbol = false; // 是否显示货币符号
           let percent = false; // 百分比货号
           const flag = item.lastData === null || item.lastData === undefined;
+          const mianflag = item.data === undefined || item.data === null; // 主要数据是否为空
+
           if (
             item.label === 'B2B销售额'
             || item.label === 'B2B平均售价'
@@ -116,7 +118,21 @@ const Toolbar: React.FC<IProps> = (props) => {
             key={i}>
             <div className={styles.left_div} > 
               <span className={styles.title}>
-                { showSymbol ? currency : ''}{item.data}{percent ? '%' : ''}
+                <span className={styles.title}>
+                  <span style={{
+                    display: mianflag ? 'none' : 'inline-block',
+                  }}>{ showSymbol ? currency : ''}</span>
+                  <span style={{
+                    display: mianflag ? 'none' : 'inline-block',
+                  }}>{item.data}</span>
+                  <span style={{
+                    display: mianflag ? 'none' : 'inline-block',
+                  }}>{percent ? '%' : ''}</span>
+                  <span style={{
+                    display: !mianflag ? 'none' : 'inline-block',
+                    color: '#999',
+                  }}>—</span>
+                </span>
               </span>
               <span className={styles.text}>{item.label}</span>
             </div>
