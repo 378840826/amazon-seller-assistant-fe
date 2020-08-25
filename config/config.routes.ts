@@ -101,6 +101,23 @@ export default [
     ]
   },
 
+  // 跟卖监控
+  {
+    path: '/follow',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { path: '/follow/monitor', title: '跟卖监控', component: './follow/Monitor'},
+      { path: '/follow/list', title: '跟卖列表', component: './follow/List'},
+      { path: '/follow/history', title: '跟卖历史', component: './follow/History'},
+    ]
+  },
+
+  // {
+  //   path: '/demo',
+  //   component: './demo',
+  //   title: '测试专用',
+  // },
+
   // 首页
   {
     path: '/',

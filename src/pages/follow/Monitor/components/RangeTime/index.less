@@ -1,0 +1,51 @@
+.rangeTime {
+  width: 280px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: @border-radius-base;
+  border: 1px solid @border-color-base;
+  background-color: #fff;
+  display: flex;
+  padding: 0 14px 0 0;
+  position: relative;
+
+  .icon1 {
+    line-height: 30px;
+    color: @text-color-secondary;
+    position: relative;
+    left: -14px;
+  }
+
+  .icon2 {
+    color: @text-color-secondary;
+    position: absolute;
+    right: 14px;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .tomorrow {
+    color: @text-color-secondary;
+    position: absolute;
+    right: 32px;
+    z-index: 99;
+    font-size: @font-size-sm;
+  }
+}
+
+.timepicker {
+  border: 0;
+  text-align: center;
+  width: 110px;
+  padding-left: 14px;
+  box-shadow: 0 0 0 0 rgba(47, 153, 253, 0);
+  margin: 0 auto;
+}
+
+div:global(.h-range-time) {
+  li:global(.ant-picker-ok) button {
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+  }
+}

@@ -45,6 +45,7 @@ const GlobalModel: IGlobalModelType = {
       reviewRemindCount: 0, // 监控评论未读数
       stockRemindCount: 0, // 库存未读数
       allUnReadCount: 0, // 全部未读数
+      followUnReadCount: 0, // 跟卖未读消息数
     },
     // 店铺选择
     shop: {
@@ -177,9 +178,11 @@ const GlobalModel: IGlobalModelType = {
         const {
           reviewUnReadCount,
           allUnReadCount,
+          followUnReadCount,
         } = payload.data;
         state.unreadNotices.reviewRemindCount = reviewUnReadCount;
         state.unreadNotices.allUnReadCount = allUnReadCount;
+        state.unreadNotices.followUnReadCount = followUnReadCount;
       }
     },
 
@@ -368,6 +371,8 @@ const GlobalModel: IGlobalModelType = {
         const disabledShopSelectorUrl = [
           '/ppc/campaign/add',
           '/ppc/group/add',
+          '/follow/history',
+          '/follow/list',
         ];
         const isHidden = hiddenShopSelectorUrl.some(path => path === pathname);
         const isDisabled = disabledShopSelectorUrl.some(path => path === pathname);

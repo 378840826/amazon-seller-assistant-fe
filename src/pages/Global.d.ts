@@ -9,13 +9,21 @@
  */ 
 declare namespace Global {
   // dva 仓库中拿出来的选中店铺
+  type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
   interface IGlobalShopType {
     global: {
       shop: {
+        // current: API.IShop;
         current: {
           id: string;
           storeName: string;
+          marketplace: Site;
+          sellerId: string;
+          token: string;
+          autoPrice: boolean;
+          timezone: string;
           currency: string;
+          tokenInvalid: boolean;
         };
       };
     };

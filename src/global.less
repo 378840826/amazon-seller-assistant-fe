@@ -201,6 +201,10 @@ a:hover {
     width: 16px !important;
     height: 16px !important;
   }
+
+  .ant-switch-handle {
+    top: 1px;
+  }
 }
 
 .none {
@@ -210,5 +214,59 @@ a:hover {
 .ant-checkbox {
   .ant-checkbox-inner {
     border-radius: 2px;
+  }
+}
+
+// 滚动条
+.h-scroll {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar { /* 滚动条整体样式 */
+    width: 10px;    /* 高宽分别对应横竖滚动条的尺寸 */
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {/* 滚动条里面小方块 */
+    width: 10px;
+    height: 30px;
+    background: #c1c1c1;
+    border-radius: 15px;
+  }
+
+  &::-webkit-scrollbar-track { /* 滚动条里面轨道 */
+    background: #f1f1f1;
+  }
+}
+
+// 分页小屏的样式
+.h-page-small {
+  text-align: right;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+
+  // 总数据放在左边
+  .ant-pagination-total-text {
+    float: left;
+  }
+
+  .ant-pagination-total-text,
+  .ant-pagination-prev,
+  .ant-pagination-next,
+  .ant-pagination-item,
+  .ant-select-selector,
+  .ant-pagination-options-quick-jumper {
+    height: 26px !important;
+    line-height: 26px !important;
+    font-size: @font-size-sm;
+  }
+
+  .ant-pagination-options-quick-jumper input {
+    height: 26px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  li.ant-pagination-item {
+    min-width: 32px;
   }
 }
