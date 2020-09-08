@@ -93,4 +93,6 @@ export default {
   '@layout-header-inputBackgroundColor': '#f5f5f5',
   // xl 屏幕
   '@screen-xl': '1400px',
+  //table
+  '@table-font-size':'12px',
 }

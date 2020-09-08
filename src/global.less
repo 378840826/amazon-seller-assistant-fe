@@ -123,13 +123,11 @@ a:hover {
 @keyframes fadeInLeft {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(-100%, 0, 0);
     transform: translate3d(-100%, 0, 0);
   }
 
   to {
     opacity: 1;
-    -webkit-transform: none;
     transform: none;
   }
 }
@@ -137,13 +135,11 @@ a:hover {
 @keyframes fadeInRight {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(100%, 0, 0);
     transform: translate3d(100%, 0, 0);
   }
 
   to {
     opacity: 1;
-    -webkit-transform: none;
     transform: none;
   }
 }
@@ -205,6 +201,10 @@ a:hover {
 
 .none {
   display: none !important;
+}
+//将typography中的margin-bottom:1em去掉
+div.ant-typography {
+  margin-bottom: 0 !important;
 }
 //安装ui要求，页面所有的复选框改为圆角2px
 .ant-checkbox {

@@ -1,0 +1,88 @@
+.dialogue {
+  & + .dialogue {
+    margin-top: 24px;
+  }
+
+  .icon_person {
+    font-size: 32px;
+    color: #ccc;
+    width: 50px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 8px;
+  }
+
+  .main_content {
+    max-width: calc(100% - 77px);
+    display: inline-block;
+    position: relative;
+    border-radius: 4px;
+    padding: 10px 17px;
+
+    .content {
+      word-wrap: break-word;
+      line-height: 20px;
+    }
+  }
+
+  .icon_error {
+    color: #ff5958;
+    vertical-align: top;
+    font-size: 17px;
+    width: 27px;
+    margin-top: 8px;
+  }
+
+  &.customer {
+    .icon_person {
+      text-align: left;
+    }
+
+    .icon_error {
+      text-align: right;
+    }
+
+    .main_content {
+      background-color: #f2f2f2;
+      text-align: left;
+
+      &::before {
+        position: absolute;
+        content: '';
+        border: 7px solid;
+        top: 12px;
+        left: -14px;
+        border-color: transparent #f2f2f2 transparent transparent;
+      }
+    }
+  }
+
+  &.me {
+    text-align: right;
+
+    .icon_person {
+      text-align: right;
+    }
+
+    .icon_error {
+      text-align: left;
+    }
+
+    .main_content {
+      background-color: #d1e9ff;
+
+      .content {
+        text-align: left;
+      }
+
+      &::after {
+        position: absolute;
+        content: '';
+        border: 7px solid;
+        top: 12px;
+        right: -14px;
+        border-color: transparent  transparent transparent #d1e9ff;
+      }
+    }
+  }
+}

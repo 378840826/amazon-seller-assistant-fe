@@ -1,0 +1,47 @@
+.bold {
+  div {
+    font-weight: 800;
+  }
+}
+
+.dark_row {
+  background-color: #fafafa;
+}
+
+:global {
+  .__table {
+    th {
+      height: 44px;
+    }
+
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td,
+    .ant-table tfoot > tr > th,
+    .ant-table tfoot > tr > td {
+      padding: 0 !important;
+    }
+  }
+}
+
+.orange {
+  color: #ffaf4d;
+}
+
+.subject {
+  margin-bottom: 0 !important;
+}
+
+.operator {
+  span {
+    color: #09c2a6;
+    cursor: pointer;
+
+    & + span {
+      margin-left: 14px;
+    }
+
+    &:hover {
+      color: #0083ff;
+    }
+  }
+}

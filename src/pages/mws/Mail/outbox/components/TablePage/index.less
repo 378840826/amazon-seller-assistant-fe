@@ -1,0 +1,26 @@
+.__table {
+  .fail {
+    color: #ff5958;
+  }
+
+  .operator {
+    color: #09c2a6;
+
+    &:hover {
+      color: #0083ff;
+    }
+  }
+
+  :global {
+    th {
+      height: 44px;
+    }
+
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td,
+    .ant-table tfoot > tr > th,
+    .ant-table tfoot > tr > td {
+      padding: 0 !important;
+    }
+  }
+}

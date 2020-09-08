@@ -5,6 +5,9 @@ import themeConfig from './config.theme';
 const config =  {
   theme: themeConfig,
   routes: routesConfig,
+  locale:{
+    default: 'zh-CN',
+  },
   antd: {},
   dva: {
     hmr: true,
@@ -19,7 +22,7 @@ const config =  {
   ignoreMomentLocale: true,
   favicon: '/favicon.ico',
   title: '安知助手',
-  mock: false,
+  // mock: false,
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',

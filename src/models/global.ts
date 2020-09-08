@@ -385,6 +385,17 @@ const GlobalModel: IGlobalModelType = {
         const unshownPageTitleUrl = [
           '/mws/goods/error-report',
           '/mws/shop/bind',
+          '/mws/mail/summary',
+          '/mws/mail/inbox',
+          '/mws/mail/reply',
+          '/mws/mail/no-reply',
+          '/mws/mail/outbox',
+          '/mws/mail/send-success',
+          '/mws/mail/send-fail',
+          '/mws/mail/sending',
+          '/mws/mail/rule',
+          '/mws/mail/template',
+
         ];
         const isUnshow = unshownPageTitleUrl.some(path => path === pathname);
         dispatch({

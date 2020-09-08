@@ -8,7 +8,7 @@ type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_1799129_mra884d2vr.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_kskuwbez1kg.js',
 });
 
 // 获取亚马逊站点基本链接
@@ -226,6 +226,7 @@ export const getUrlParam = function (name: string) {
   return result ? decodeURIComponent(result[2]) : null;
 };
 
+//递归将对象中所有为null的值改为空字符
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const nTs = (ary: any) => {
   for (const i in ary) {
@@ -237,4 +238,14 @@ export const nTs = (ary: any) => {
       }
     }
   }
+};
+
+//将单位为ms秒的时间戳转换为时分
+export const changeHS = (second: number) => {
+  // 1H = 60 min = 3600s  1s=1000ms
+  let H: number | string = Math.floor(second / (3600 * 1000 ));
+  let M: number | string = Math.floor((second - 3600 * 1000 * H ) / (60 * 1000)) ;
+  H = H > 10 ? H : `0${H}`;
+  M = M > 10 ? M : `0${M}`;
+  return `${H}:${M}`;
 };
