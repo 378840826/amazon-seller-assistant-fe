@@ -31,6 +31,10 @@ div:global(.ant-table) {
     padding: 0;
   }
 
+  div:global(.ant-table-body) {
+    overflow: visible;
+  }
+
   // 表头
   .table_header {
     border: 1px solid @divider-line-color;
@@ -64,6 +68,7 @@ div:global(.ant-table) {
       line-height: 42px;
       color: @text-color;
       background-color: #fff;
+      border-bottom: 1px solid @divider-line-color;
 
       span:first-child {
         float: left;
@@ -90,6 +95,10 @@ div:global(.ant-table) {
       tr {
         height: 100px;
         max-height: 100px;
+
+        &:hover td {
+          background-color: transparent;
+        }
       }
     }
 

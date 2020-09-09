@@ -96,6 +96,10 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
       moment().subtract(89, 'day'),
       moment().endOf('day'),
     ],
+    '最近180天': [
+      moment().subtract(179, 'day'),
+      moment().endOf('day'),
+    ],
     '最近365天': [
       moment().subtract(365, 'day'),
       moment().endOf('day'),
@@ -240,7 +244,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
       <div className={styles.radio_filtrate} style={{ height: filtrateBoxHeight }} >
         <div className={styles.left_layout}>
           <div className={styles.layout_one_item}>
-            <span>B2B订单：</span>
+            <span className={styles.text}>B2B订单：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, 'B2B订单')}
               value={businessOrder}>
@@ -250,7 +254,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}`}>
-            <span>优惠订单：</span>
+            <span className={styles.text}>优惠订单：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '优惠订单')}
               value={preferentialOrder}>
@@ -260,7 +264,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={styles.layout_one_item}>
-            <span>订单状态：</span>
+            <span className={styles.text}>订单状态：</span>
             {<Radio.Group size="large" 
               onChange={(e) => handleChangeRadio(e, '订单状态')}
               value={orderStatus}>
@@ -272,7 +276,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>}
           </div>
           <div className={styles.layout_one_item}>
-            <span>发货状态：</span>
+            <span className={styles.text}>发货状态：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '发货状态')}
               value={deliverStatus}>
@@ -286,7 +290,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
         </div>
         <div className={styles.right_layout}>
           <div className={styles.layout_one_item}>
-            <span>一单多件：</span>
+            <span className={styles.text}>一单多件：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '一单多件')}
               value={multiplePieces}>
@@ -300,7 +304,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}  ${styles.order_discounts}`}>
-            <span>一单多SKU：</span>
+            <span className={styles.text}>一单多SKU：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '一单多SKU')}
               value={multipleSku}>
@@ -312,7 +316,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             
           </div>
           <div className={styles.layout_one_item}>
-            <span>发货方式：</span>
+            <span className={styles.text}>发货方式：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '发货方式')}
               value={deliverMethod}>
@@ -322,7 +326,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}`}>
-            <span>配送服务：</span>
+            <span className={styles.text}>配送服务：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '配送服务')}
               value={shipServiceLevel}>

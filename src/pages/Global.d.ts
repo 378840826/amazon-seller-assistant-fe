@@ -16,6 +16,7 @@ declare namespace Global {
           id: string;
           storeName: string;
           currency: string;
+          marketplace: string;
         };
       };
     };
