@@ -257,7 +257,7 @@ const Order: React.FC = () => {
       setTableLoading(false);
       console.error(err);
     });
-  }, [dispatch, shopId, dateRangeItem, statistic]);  // eslint-disable-line
+  }, [dispatch, shopId, dateRangeItem, statistic, currentAsin]);  // eslint-disable-line
 
   // 折线图的数据请求
   const changeLineChart = (params = {}) => {
