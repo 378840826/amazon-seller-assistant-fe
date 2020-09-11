@@ -97,7 +97,10 @@ export function getRangeDate(
   query: string|number,
   date: Date|{} = {}
 ): {start: string; end: string} {
-  const moment = require('moment'); // eslint-disable-line
+  const moment = require('moment-timezone'); // eslint-disable-line
+  moment.tz.setDefault('Europe/Paris');
+  console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+  
   date = isEmptyObj(date) ? moment() : date;
 
   // 最近N天
