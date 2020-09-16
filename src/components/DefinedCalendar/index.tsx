@@ -109,7 +109,7 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
       if (storage.get(storageKey) === '') {
         // 首次进入页面时初始化值
         storage.set(storageKey, selectItem);
-        const { start, end } = getRangeDate(selectItem);
+        const { start, end } = getRangeDate(selectItem, false);
         setStartDate(start);
         setEndDate(end);
         return;
@@ -124,12 +124,12 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
         setStartDate(arr[0]);
         setEndDate(arr[1]);
       } else {
-        const { start, end } = getRangeDate(selectItem);
+        const { start, end } = getRangeDate(selectItem, false);
         setStartDate(start);
         setEndDate(end);
       }
     } else {
-      const { start, end } = getRangeDate(selectItem);
+      const { start, end } = getRangeDate(selectItem, false);
       setStartDate(start);
       setEndDate(end);
     }
@@ -167,7 +167,7 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
     default: // 最近N天
       setMonthValue(null as null); // 清空选中的月
       setWeekValue(null as null); // 清空选中的周
-      obj = getRangeDate(key);
+      obj = getRangeDate(key, false);
       setStartDate(obj.start);
       setEndDate(obj.end);
       setSelectItem(key);
@@ -183,7 +183,7 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
 
   // 处理月/周的函数
   const handleWeebMonth = (type: string, date: Moment | null| Date) => {
-    const { start, end } = getRangeDate(type, date as Date);
+    const { start, end } = getRangeDate(type, false, date as Date);
     setStartDate(start); // 页面开始日期
     setEndDate(end); // 页面结束日期
     setSelectItem(type); // 记录选中的下拉列表

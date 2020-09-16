@@ -114,7 +114,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
           axisLabel: {
             show: true,
             textStyle: {
-              color: '#999',
+              color: '#888',
             },
             formatter(val: string) {
               return moment(Number(val)).format('MM-DD');
@@ -139,7 +139,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
               show: false,
             },
             axisLabel: {
-              color: '#999',
+              color: '#888',
               interval: true,
               formatter(val: string) {
                 return lineChartSymbol(selectDouFu[0], val, currency);
@@ -163,7 +163,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
               show: false,
             },
             axisLabel: {
-              color: '#999',
+              color: '#888',
               interval: true,
               formatter(val: string) {
                 return lineChartSymbol(selectDouFu[1], val, currency);
