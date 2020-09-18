@@ -1,0 +1,178 @@
+@formItemWidth: 363px; // 每列的宽度
+
+// 高级筛选
+.filternItem {
+  padding: 11px min(50px) 0;
+
+  .title {
+    color: #000;
+    font-weight: bold;
+  }
+}
+
+div.layoutBox {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, @formItemWidth);
+  column-gap: max(50px);
+  row-gap: 14px;
+  justify-content: space-between;
+  // justify-content: space-evenly;
+  // justify-content: space-evenly;
+
+  .layoutItem {
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 108px;
+      text-align: center;
+    }
+
+    span.line {
+      display: inline-block;
+      width: 24px;
+      line-height: 30px;
+      text-align: center;
+      color: #979797;
+      font-size: 10px;
+    }
+
+    .textName {
+      width: 125px;
+      color: @heading-color;
+      white-space: nowrap;
+
+      .colon {
+        color: @text-color;
+      }
+
+      .percent {
+        color: @text-color-secondary;
+      }
+
+      .secondary {
+        color: @text-color-secondary;
+        padding: 0 2px;
+      }
+    }
+
+    .item {
+      margin: 0;
+
+      label {
+        width: 117px;
+      }
+    }
+  }
+}
+
+.other {
+  padding: 15px min(50px) 0;
+
+  .radioStatus,
+  .radioType {
+    div:global(.ant-radio-group) {
+      display: flex;
+    }
+
+    div:global(.ant-form-item-label) {
+      margin-top: 2px;
+    }
+
+    div:global(.ant-row) {
+      display: flex;
+      flex-wrap: nowrap;
+      margin: 0;
+    }
+
+    .radio {
+      padding: 0;
+
+      &:last-child {
+        margin: 0;
+      }
+
+      span:global(.ant-radio) {
+        width: 14px;
+        height: 14px;
+
+        &:global(.ant-radio + *) {
+          padding-right: 0;
+          padding-left: 4px;
+          position: relative;
+          top: 2px;
+        }
+
+        span:global(.ant-radio-inner) {
+          width: 14px;
+          height: 14px;
+
+          &::after {
+            top: 2px;
+            left: 2px;
+          }
+        }
+      }
+    }
+  }
+
+  // 下拉列表
+  .selectBox {
+    height: 30px;
+
+    .formSelect {
+      width: @formItemWidth;
+      display: flex;
+      justify-content: space-between;
+
+      div:global(.ant-form-item-control) {
+        max-width: 240px;
+      }
+    }
+  }
+
+  .btns {
+    display: flex;
+    grid-column-start: 4;
+    grid-column-end: 4;
+
+    @media screen and (max-width: 1778px) {
+      grid-column-start: 3;
+      grid-column-end: 3;
+    }
+
+    button.btn {
+      height: 30px;
+      margin-right: 20px;
+    }
+
+    .clear {
+      color: @link-color;
+      line-height: 30px;
+      cursor: pointer;
+
+      &:hover {
+        color: @error-color;
+      }
+    }
+  }
+
+  // 保存偏好
+  .savePreferential {
+    position: relative;
+    // margin-right: 20px;
+
+    .btn {
+      width: 106px;
+    }
+
+    .alert {
+      position: absolute;
+      z-index: 999;
+      height: 60px;
+      width: 200px;
+      background: #fff;
+      border-radius: @border-radius-base;
+    }
+  }
+}

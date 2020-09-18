@@ -6,6 +6,7 @@ import { Moment } from 'moment/Moment';
 import 'moment/locale/zh-cn';
 import { storage } from '@/utils/utils';
 import { getRangeDate } from '@/utils/huang';
+import { list } from './selectList';
 import {
   Input,
   Dropdown,
@@ -23,6 +24,8 @@ interface IProps {
   checkedItem?: string; // 默认选中的key 
   cb?: (dateInfo: DefinedCalendar.IChangeParams) => void; // 初始化触发、改变时也会触发
   change?: (dateInfo: DefinedCalendar.IChangeParams) => void; // 点击改变时才触发
+  selectList?: DefinedCalendar.IDownListType[];
+  index?: number; // ... 不想传下拉列表选项过来?.... 写在selectList.ts文件里吧 selectList优先级更高
 }
 
 interface IDownListType {
@@ -30,18 +33,20 @@ interface IDownListType {
   key: string;
 }
 /**
- * 选中周/月时，会以${storageKey}_${selectItem}做localStorage储存
+ * 选中周/月/季时，会以${storageKey}_${selectItem}做localStorage储存
  * 选中其它时，删除周/月的记录
  * 日期保存在 storage.get(`${storageKey}_date`)
  * 再保存一个值 本地保存选中项  storageKey存在时保存  storage.get(`${storageKey}_date_checked`)
  */
-const DefinedCalendar: React.FC<IProps> = (props) => {
+const DefinedCalendar: React.FC<IProps> = props => {
   const {
     storageKey,
     className,
     cb,
     change,
     checkedItem,
+    selectList,
+    index = 0,
   } = props;
 
   const [startDate, setStartDate] = useState<string>(''); // 开始日期
@@ -56,49 +61,12 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
   const [monthCalendar, setMonthCalendar] = useState<boolean>(false); // 月日历是否显示
   const [monehtValue, setMonthValue] = useState<Moment | null>(null); // 目前只用来做清空作用
 
+  // 季相关
+  const [quarterCalendar, setQuarterCalendar] = useState<boolean>(false); // 季日历是否显示
+  const [quarterValue, setQuarterValue] = useState<Moment | null>(null); // 目前只用来做清空作用
+
   // 下拉列表选项
-  const downlist: IDownListType[] = [
-    {
-      text: '按月查看',
-      key: 'month',
-    },
-    {
-      text: '按周查看',
-      key: 'week',
-    },
-    {
-      text: '最近7天',
-      key: '7',
-    },
-    {
-      text: '最近30天',
-      key: '30',
-    },
-    {
-      text: '最近60天',
-      key: '60',
-    },
-    {
-      text: '最近90天',
-      key: '90',
-    },
-    {
-      text: '最近180天',
-      key: '180',
-    },
-    {
-      text: '最近365天',
-      key: '365',
-    },
-    {
-      text: '今年',
-      key: 'year',
-    },
-    {
-      text: '去年',
-      key: 'lastYear',
-    },
-  ];
+  const downlist = selectList || list[index];
 
   // 渲染初始化日期
   useEffect(() => {
@@ -117,8 +85,8 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
       // 保存选中项
       setSelectItem(String(storage.get(storageKey)));
 
-      // 如果选中的是按月、按周查看、拿出选中的日期
-      if (selectItem === 'week' || selectItem === 'month') {
+      // 如果选中的是按月、按周查看、按季、拿出选中的日期
+      if (selectItem === 'week' || selectItem === 'month' || selectItem === 'quarter') {
         const strDate = storage.get(`${storageKey}_${selectItem}`);
         const arr: string[] = strDate.split('至');
         setStartDate(arr[0]);
@@ -156,7 +124,8 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
   const changeSelect = (current: any) => { // eslint-disable-line 
     const key = current.key;
     let obj = {} as { start: string; end: string } ;
-
+    console.log(key, 'key');
+    
     switch (key) {
     case 'month': // 选择的是月查看
       setMonthCalendar(true);
@@ -164,9 +133,13 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
     case 'week': // 选择的是周查看
       setWeekCalendar(true);
       break;
+    case 'quarter': // 选择的是季查看
+      setQuarterCalendar(true);
+      break;
     default: // 最近N天
       setMonthValue(null as null); // 清空选中的月
       setWeekValue(null as null); // 清空选中的周
+      setQuarterValue(null as null); // 清空选中的季
       obj = getRangeDate(key, false);
       setStartDate(obj.start);
       setEndDate(obj.end);
@@ -181,8 +154,10 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
     }
   };
 
-  // 处理月/周的函数
+  // 处理季/月/周的函数
   const handleWeebMonth = (type: string, date: Moment | null| Date) => {
+    console.log(date, 'date,,');
+    
     const { start, end } = getRangeDate(type, false, date as Date);
     setStartDate(start); // 页面开始日期
     setEndDate(end); // 页面结束日期
@@ -200,7 +175,8 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
   const changeWeek = (date: Moment | null| Date) => {
     setWeekCalendar(!weekCalendar);
     handleWeebMonth('week', date);
-    storage.remove(`${storageKey}_month`);
+    storageKey ? storage.remove(`${storageKey}_month`) : null;
+    storageKey ? storage.remove(`${storageKey}_quarter`) : null;
     setWeekValue(date as Moment);
   };
 
@@ -208,21 +184,32 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
   const changeMonth = (date: Moment | null | Date) => {
     setMonthCalendar(!monthCalendar);
     handleWeebMonth('month', date);
-    storage.remove(`${storageKey}_week`);
+    storageKey ? storage.remove(`${storageKey}_week`) : null;
+    storageKey ? storage.remove(`${storageKey}_quarter`) : null;
     setMonthValue(date as Moment);
+  };
+
+  // 季日历改变时
+  const changeQuarter = (date: Moment | null | Date) => {
+    setQuarterCalendar(!quarterCalendar);
+    handleWeebMonth('quarter', date);
+    storageKey ? storage.remove(`${storageKey}_week`) : null;
+    storageKey ? storage.remove(`${storageKey}_month`) : null;
+    setQuarterValue(date as Moment);
   };
 
   // input获取焦点时 隐藏月/周的日期
   const inputFocus = () => {
     setWeekCalendar(false);
     setMonthCalendar(false);
+    setQuarterCalendar(false);
   };
 
   const menu = (
     <Menu onClick={changeSelect} selectedKeys={[selectItem]}> 
       {
         downlist.map((item: IDownListType) => {
-          return <Menu.Item key={item.key}>{item.text}</Menu.Item>;
+          return <Menu.Item key={item.key} className={styles.calendarItem}>{item.text}</Menu.Item>;
         })
       }
     </Menu>
@@ -245,7 +232,7 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
           </div>
         </Dropdown>
         <DatePicker 
-          onChange={changeWeek} 
+          onChange={changeWeek}
           picker="week" 
           open={weekCalendar}
           value={weekValue}
@@ -257,6 +244,13 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
           open={monthCalendar}
           value={monehtValue}
           className={styles.weekCalendar}
+        />
+        <DatePicker
+          onChange={changeQuarter} 
+          picker="quarter" 
+          open={quarterCalendar}
+          value={quarterValue}
+          className={styles.quarterCalendar}
         />
       </ConfigProvider>
     </div>

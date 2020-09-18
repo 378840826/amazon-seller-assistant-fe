@@ -4,7 +4,7 @@ import 'moment/locale/zh-cn';
 import { message } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 
-type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
+export type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
@@ -155,7 +155,7 @@ export const strToReviewScoreStr = function (value: string) {
     newValue = '0.';
   }
   // 大于 5 时
-  if (newValue > '5') {
+  if (Number(newValue) > 5) {
     newValue = '5';
   }
   return newValue;

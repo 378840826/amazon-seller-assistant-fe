@@ -1,0 +1,148 @@
+@bg-color: #f7f7f7;
+
+.childAsin {
+  width: 100%;
+
+  :global(.ant-table-body) {
+    overflow-y: auto !important;
+  }
+
+  div:global(.ant-table) {
+    margin: 0 !important;
+  }
+
+  thead {
+    th {
+      border-width: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      // padding: 0 !important;
+      height: 44px;
+      line-height: 44px;
+    }
+  }
+
+  tbody tr {
+    td {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      // padding: 0 !important;
+      color: @text-color;
+    }
+
+    &:hover * {
+      background-color: @bg-color !important;
+    }
+  }
+
+  // asin外面的容器行
+  .asinRowStyle {
+    > td {
+      border-width: 0 !important;
+    }
+
+    &:nth-child(odd) td {
+      background-color: @bg-color;
+    }
+  }
+
+  // 表头
+  .headTable {
+    tbody {
+      display: none;
+    }
+  }
+
+  th.childAsinCol {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+  }
+
+  .childAsinCol {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+    padding: 0;
+  }
+
+  th.skuCol {
+    width: 186px;
+    min-width: 186px;
+    max-width: 186px;
+  }
+
+  td.skuCol {
+    width: 186px;
+    min-width: 186px;
+    max-width: 186px;
+  }
+
+  // 商品列
+  .productCol {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+
+    img {
+      width: 46px;
+      height: 46px;
+      margin-right: 6px;
+    }
+
+    .details {
+      text-align: left;
+
+      .linkIcon {
+        color: @text-color-secondary;
+        margin-right: 2px;
+      }
+
+      .title {
+        width: 155px;
+        overflow: hidden;
+        line-height: 18px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: normal;
+
+        &:hover .linkIcon {
+          color: @link-color;
+        }
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+
+        span:first-child {
+          color: @link-color;
+        }
+
+        span:last-child {
+          color: @warning-color;
+        }
+      }
+    }
+  }
+
+  // 小计
+  .summary {
+    height: 48px;
+    line-height: 48px;
+
+    td.base {
+      border-top: 1px solid @divider-line-color;
+      border-bottom: 0;
+      height: 48px;
+      line-height: 48px;
+      color: @heading-color !important;
+
+      p {
+        line-height: 16px;
+      }
+    }
+  }
+}

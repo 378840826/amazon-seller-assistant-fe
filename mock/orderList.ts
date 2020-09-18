@@ -25,7 +25,7 @@ export default {
               deliverStatus: 'Cancelled', // 发货状态
               deliverMethod: 'FBA', // 发货方式
               productName: random.upper(random.title(5, 200)), // 标题
-              asin: random.word(10, 14),	
+              asin: random.word(10, 14),
               sku: random.word(10, 14),
               'quantity|1-99999': 2222, // 商品数量
               'price|1-299999': 252525, // 价格合计

@@ -18,7 +18,7 @@ import {
 } from 'antd';
 
 interface ISearchProps {
-  style?: {};
+  style?: React.CSSProperties;
   className?: string;
   maxLength?: number;
   defaultValue?: string;
