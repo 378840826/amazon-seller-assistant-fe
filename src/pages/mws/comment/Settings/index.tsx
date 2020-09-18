@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { DownOutlined } from '@ant-design/icons';
-import Pagination from '@/components/Pagination';
 import { Link, useDispatch, useSelector } from 'umi';
 import { Iconfont, storage } from '@/utils/utils';
 import SearchDownList from './components/SearchDownList';
@@ -255,7 +254,6 @@ const Settings: React.FC = () => {
       </Menu.Item>
     </Menu>
   );
-
   
   const columns = [
     {
@@ -310,10 +308,15 @@ const Settings: React.FC = () => {
           <div className={styles.product_cols}>
             <img src={imgLink || sittingImg} alt=""/>
             <div className={styles.product_box}>
-              <a href={ titleLink } target="_blank" rel="noopener noreferrer">
+              <a href={ titleLink }
+                title={title} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={styles.title}
+              >
                 <Iconfont 
                   type="icon-lianjie" 
-                  style={{ fontSize: 16, color: '#999' }}
+                  className={styles.icon}
                 />
                 {title}
               </a>
@@ -371,13 +374,20 @@ const Settings: React.FC = () => {
   
   // 分页配置
   const pageConfig = {
+    pageSizeOptions: ['20', '50', '100'],
     total: pageTotal,
+    pageSize: 20,
     current: pageCurrent,
-    pageSize: pageSize,
-    callback: (current: number, size: number) => {
+    showQuickJumper: true, // 快速跳转到某一页
+    showTotal: (total: number) => `共 ${total} 个`,
+    onChange(current: number, size: number | undefined){
       setPageCurrent(current);
-      setPageSize(size);
+      setPageSize(size as number);
     },
+    onShowSizeChange(current: number, size: number | undefined){
+      console.log(current, size,);
+    },
+    className: 'h-page-small',
   };
 
   // 表格配置
@@ -389,9 +399,11 @@ const Settings: React.FC = () => {
       return count++;
     },
     locale: {
-      filterConfirm: '确定',
-      filterReset: '重置',
       emptyText: <TableNotData hint="左上角添加需要监控的ASIN"/>,
+    },
+    pagination: pageConfig,
+    scroll: {
+      y: 'calc(100vh - 280px)',
     },
   };
 
@@ -418,7 +430,9 @@ const Settings: React.FC = () => {
         <div className={styles.search}>
           <SearchDownList callback={successCb} reset={searchComponent} />
         </div>
-        <div className="downlist" style={{ width: 108 }}>
+        <div className="downlist" style={{
+          width: 108,
+        }}>
           <Dropdown 
             overlay={menu}
             onVisibleChange={setStar}
@@ -431,14 +445,9 @@ const Settings: React.FC = () => {
       </header>
       <main>
         <Table {...tableConfig} 
-          pagination={false} 
           columns={columns as []} 
-          scroll={{ y: 666 }} 
         />
       </main>
-      <footer>
-        <Pagination {...pageConfig} />
-      </footer>
     </div>
   );
 };

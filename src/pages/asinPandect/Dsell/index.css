@@ -9,7 +9,7 @@
   box-shadow: 0 0 3px 3px rgba(231, 231, 231, 0.75);
   background-color: #fff;
   font-family: "微软雅黑" sans-serif;
-  color: #666;
+  color: #555;
 }
 
 .map_tootip .inventory,
@@ -37,5 +37,5 @@
 
 .map_tootip span.text,
 .map_tootip  span.text {
-  color: #333;
+  color: #222;
 }

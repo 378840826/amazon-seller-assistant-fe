@@ -30,11 +30,11 @@ export default {
 
   /* 文本颜色 */
   // 标题色
-  '@heading-color': '#333',
+  '@heading-color': '#222',
   // 文本色
-  '@text-color': '#666',
+  '@text-color': '#555',
   // 次文本色
-  '@text-color-secondary': '#999',
+  '@text-color-secondary': '#888',
   // 失效文本色
   '@text-color-disabled': '#ccc', 
   // 重要文本色 / 警告文本色

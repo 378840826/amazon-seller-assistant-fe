@@ -132,7 +132,7 @@ const Toolbar: React.FC<IProps> = (props) => {
                 }}>{percent ? '%' : ''}</span>
                 <span style={{
                   display: !mianflag ? 'none' : 'inline-block',
-                  color: '#999',
+                  color: '#888',
                 }}>—</span>
               </span>
               <span className={styles.text}>{item.label}</span>
@@ -145,7 +145,7 @@ const Toolbar: React.FC<IProps> = (props) => {
                   { !flag ? 
                     item.lastData : 
                     <span style={{
-                      color: '#999',
+                      color: '#888',
                     }}>—</span>}
                   <span style={{
                     display: !flag ? '' : 'inline-block',

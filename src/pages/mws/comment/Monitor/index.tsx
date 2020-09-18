@@ -11,7 +11,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from './index.less';
 import './index.css';
-import Pagination from '@/components/Pagination';
 import { ColumnsType } from 'antd/lib/table';
 import { Iconfont } from '@/utils/utils';
 import emptyImg from '@/assets/stamp.png';
@@ -20,7 +19,7 @@ import TableNotData from '@/components/TableNotData';
 import Toolbar from './components/Toolbar';
 import { storage } from '@/utils/utils';
 import SignHandle from './components/SignHandle';
-import { outerHeight } from '@/utils/huang';
+import { getRangeDate } from '@/utils/huang';
 import SortComponent from './components/Sort';
 import {
   Link,
@@ -55,28 +54,23 @@ interface ICommentMonitorList {
   };
 }
 
-
 let requestHeader = {};
 const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => {
   const dispatch: Dispatch = useDispatch();
-  const location = useLocation();
-  const query: any = location.query; // eslint-disable-line
-  const { asin = '' } = query as {asin: string};
+  const location = useLocation() as CommectMonitor.ILocation;
+  const query = location.query;
+  const { asin = '' } = query as { asin: string };
   const [dataSource, setDataSource] = useState<{recores?: {}}[]>([]); // 表格数据
   const [pageTotal, setPageTotal] = useState<number>(0); // 分页数量
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
   const [loading, setLoading] = useState<boolean>(true); // 是否加载中
-  const [dateStart] = useState<string>( 
-    moment().subtract(29, 'days').format('YYYY-MM-DD')
-  );
-  const [dateEnd] = useState<string>( 
-    moment().format('YYYY-MM-DD')
-  );
+  const { start, end } = getRangeDate(30, false);
+  const [dateStart] = useState<string>(start);
+  const [dateEnd] = useState<string>(end);
   const { storeName } = storage.get('currentShop') as API.IShop; // 当前选中店铺
   const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
   const [currentOrder, setCurrentOrder] = useState(''); // 当前排序的列字段
-  const [tableHeight, setTableHeight] = useState<number>(500); // 表格的高度
 
   // 初始化请求数据
   const requestData: CommectMonitor.IRequestDataType = {
@@ -91,18 +85,6 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     },
   };
 
-  // 表格最大高度
-  const setTbodyHeigght = () => {
-    const windowHeight = document.documentElement.clientHeight;
-    const navHeight = outerHeight('.g-header-nav') as number;
-    const childnavHeight = outerHeight('.g-secondary-nav') as number;
-    const toolbarHeight = outerHeight('.monitor-list-toolbar') as number;
-    const pageHeight = outerHeight('.g-page') as number;
-    const tableHeight = windowHeight - (navHeight + childnavHeight + toolbarHeight + pageHeight);
-    
-    setTableHeight(tableHeight - 50 - 36); // 表格的头部 marginTop 
-  };
-  
   // 设定过来筛选
   asin ? requestData.asin = asin : delete requestData.asin;
 
@@ -165,7 +147,6 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     if (dom) {
       dom.scrollTop = 0;
     }
-    setTbodyHeigght();
   }, [dataSource]);
 
   useEffect(() => {
@@ -275,7 +256,11 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
           allowHalf 
           disabled 
           defaultValue={value}
-          style={{ color: '#ffaf4d', opacity: 1, marginLeft: 10 }}
+          style={{
+            color: '#ffaf4d',
+            opacity: 1,
+            marginLeft: 10,
+          }}
           className={styles.star} />;
       },
     }, {
@@ -290,22 +275,14 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         const reviewerLink = data.reviewLink;
         return (
           <div className={styles.commect_content} >
-            <Tooltip 
-              title={ value } 
-              getPopupContainer={() => document.querySelector('.monitor_box') as HTMLElement}
-            >
-              <a href={reviewerLink} target="_blank" rel="noopener noreferrer">
-                <Iconfont type="icon-lianjie" style={{ fontSize: 12, color: '#999', marginRight: 2 }} />
-                {value}
-                Lorem ipsum dolor sit amet 
-                consectetur adipisicing elit. 
-                Quam magnam veritatis dolorem 
-                exercitationem excepturi neque
-                amet accusamus labore, unde adipisci 
-                temporibus illum suscipit molestias 
-                odit eligendi nesciunt fugit. Amet, vitae?
-              </a>
-            </Tooltip>
+            <a href={reviewerLink} title={value} target="_blank" rel="noopener noreferrer">
+              <Iconfont type="icon-lianjie" style={{
+                fontSize: 12,
+                color: '#888',
+                marginRight: 2,
+              }} />
+              {value}
+            </a>
           </div>
         );
       },
@@ -323,7 +300,10 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
             className={styles.username}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#0083ff', fontSize: 12 }}>
+            style={{
+              color: '#0083ff',
+              fontSize: 12,
+            }}>
             {value}
           </a>
         );
@@ -353,7 +333,11 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                 title={ title }>
                 <a href={titleLink} target="_blank" rel="noopener noreferrer">
                   <Iconfont type="icon-lianjie" 
-                    style={{ fontSize: 12, color: '#999', marginRight: 2 }} />
+                    style={{
+                      fontSize: 12,
+                      color: '#888',
+                      marginRight: 2,
+                    }} />
                   {title || ''} &nbsp;
                 </a>
               </Tooltip>
@@ -484,7 +468,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
               // 是否有匹配订单
               hasOrder ?
                 <Link target="_blank" to={{
-                  pathname: 'mws/order/list',
+                  pathname: '/mws/order/list',
                   search: `?asin=${asin}&buyer=${reviewerName}`,
                 }} className={styles.hasOrder}>匹配订单</Link>
                 : ''
@@ -495,28 +479,36 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     },
   ];
 
+  // 分页配置
+  const pageConfig = {
+    pageSizeOptions: ['20', '50', '100'],
+    total: pageTotal,
+    pageSize,
+    current: pageCurrent,
+    showQuickJumper: true, // 快速跳转到某一页
+    showTotal: (total: number) => `共 ${total} 个`,
+    onChange(current: number, size: number | undefined){
+      setPageCurrent(current);
+      setPageSize(size as number);
+    },
+    onShowSizeChange(current: number, size: number | undefined){
+      console.log(current, size,);
+    },
+    className: 'h-page-small',
+  };
+
   const tableConfig = {
     dataSource,
     locale: {
-      filterConfirm: '确定',
-      filterReset: '重置',
       emptyText: <TableNotData hint="没有找到相关评论，请重新选择筛选条件"/>,
     },
     columns: columns as [],
     rowClassName: () => styles.rowStyle,
-  };
-
-  // 分页配置
-  const pageConfig = {
-    total: pageTotal,
-    current: pageCurrent,
-    pageSize: pageSize,
-    totalText: '共%d个评论',
-    callback: (current: number, size: number) => {
-      setPageCurrent(current);
-      setPageSize(size);
-      requestBody({ size, current });
+    pagination: pageConfig,
+    scroll: { 
+      y: 'calc(100vh - 370px)', 
     },
+    className: 'h-scroll',
   };
 
   return (
@@ -527,12 +519,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
           <Table 
             key="id" rowKey="id" 
             {...tableConfig}
-            pagination={false} 
-            scroll={{ y: tableHeight, scrollToFirstRowOnChange: true }}
           />
-          <div className={styles.page}>
-            <Pagination {...pageConfig}/>
-          </div>
         </div>
       </Spin>
     </div>

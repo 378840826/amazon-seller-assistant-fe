@@ -216,7 +216,7 @@ const AsinBase: React.FC = () => {
           axisLine: {
             onZero: false,
             lineStyle: {
-              color: '#666',
+              color: '#555',
             },
           },
         });
