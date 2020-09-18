@@ -101,6 +101,13 @@ export default [
     ]
   },
 
+   //子账号
+   {
+    path:'/asinTable',
+    component: '../layouts/BasicLayout',
+    routes:[{ path: '/asinTable', component: './asinTable', title: 'dddddd' }]
+  },
+
   // 首页
   {
     path: '/',

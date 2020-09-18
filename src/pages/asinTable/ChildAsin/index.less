@@ -1,0 +1,144 @@
+.childAsin {
+  width: 100%;
+
+  .table {
+    margin: 20px 0 0;
+    background-color: #fff;
+
+    :global(.ant-table-body) {
+      overflow-y: auto !important;
+    }
+
+    // 表头
+    thead th {
+      background-color: #f2f6fb;
+      height: 44px;
+      padding-bottom: 0;
+      padding-top: 0;
+      color: @heading-color;
+    }
+
+    tbody {
+      td {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      tr:nth-child(2n+1) td {
+        background-color: #f7f7f7;
+      }
+    }
+  }
+}
+
+// 关联销售
+.relatedSalesBox {
+  width: 390px;
+  position: relative;
+
+  div:global(.ant-popover-title) {
+    color: @heading-color;
+    font-size: @font-size-lg;
+    padding: 16px;
+  }
+
+  div:global(.ant-popover-inner-content) {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .loading {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 0 -16px;
+    padding-bottom: 30px;
+  }
+
+  .closeIcon {
+    position: absolute;
+    right: 50px;
+    top: 20px;
+    transition: all 0.3s;
+    color: @text-color-secondary;
+    cursor: pointer;
+
+    &:hover {
+      color: @primary-color;
+      transform: rotate(360deg);
+    }
+  }
+
+  .listBox {
+    width: 100%;
+
+    .num {
+      margin: 10px 10px 0 10px;
+    }
+
+    .productImg {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 auto;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid @divider-line-color;
+      margin: 10px 0;
+
+      .details {
+        margin: 0 20px 5px 6px;
+
+        .title {
+          overflow: hidden;
+          line-height: 18px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          white-space: normal;
+
+          .icon {
+            color: @text-color-secondary;
+          }
+
+          &:hover .icon {
+            color: @link-color;
+          }
+        }
+
+        .p {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .asin {
+          color: @link-color;
+        }
+
+        .price {
+          color: @error-color;
+        }
+
+        .ranking {
+          color: @warning-color;
+          margin-right: 12px;
+        }
+      }
+    }
+  }
+}
+
+.showRsText {
+  color: @link-color;
+  cursor: pointer;
+
+  &.active {
+    color: @btn-text-color;
+  }
+
+  &:hover {
+    color: @primary-color;
+  }
+}

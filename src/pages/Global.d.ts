@@ -8,6 +8,8 @@
  * 全局TS类型
  */ 
 declare namespace Global {
+  import { Site } from '@/utils/utils';
+  
   // dva 仓库中拿出来的选中店铺
   interface IGlobalShopType {
     global: {
@@ -16,7 +18,8 @@ declare namespace Global {
           id: string;
           storeName: string;
           currency: string;
-          marketplace: string;
+          marketplace: Site;
+          sellerId: string;
         };
       };
     };

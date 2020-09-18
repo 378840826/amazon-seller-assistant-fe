@@ -4,4 +4,12 @@ declare namespace DefinedCalendar {
     dateEnd: string; 
     selectItem: string;
   }
+
+  interface IDownListType {
+    text: string;
+    key: string;
+  }
+  interface IList {
+    [];
+  }[];
 }

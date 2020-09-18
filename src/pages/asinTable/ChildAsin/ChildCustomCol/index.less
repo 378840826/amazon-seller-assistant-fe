@@ -1,0 +1,73 @@
+.childCustom {
+  width: 518px;
+  background-color: #fff;
+
+  .leftLayout {
+    float: left;
+
+    .sales {
+      margin-top: 10px;
+    }
+
+    .flux,
+    .b2b {
+      margin-top: 7px;
+    }
+  }
+
+  .centerLayout {
+    float: left;
+    margin-left: 30px;
+
+    .adsSales,
+    .refund {
+      margin-top: 47px;
+    }
+  }
+
+  .rightLayout {
+    float: right;
+
+    .adsFlux {
+      margin-top: 7px;
+    }
+
+    .adsPut {
+      margin-top: 92px;
+    }
+  }
+
+  .common {
+    display: flex;
+    flex-direction: column;
+
+    div:global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    div:global(.ant-checkbox-group) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label:global(.ant-checkbox-group-item) {
+      margin-bottom: 4px;
+    }
+
+    span:global(.ant-checkbox) {
+      width: 14px;
+      height: 14px;
+
+      span:global(.ant-checkbox-inner) {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .title {
+      color: #000;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+  }
+}
