@@ -78,7 +78,7 @@ const proxy = {
         'type|1': ['customer', 'me'],
         'time': random.datetime(),
         // 'content': '<h1>标题名称</h1><br/>',
-        'content': '我是一只小小小小鸟，&nbsp;想要飞啊飞，却怎么也飞不高，<br/>我寻寻觅觅寻寻觅觅，一个温暖的怀抱',
+        'content': '我是一只小小小小鸟，&nbsp;想要飞啊飞<div>fjsdlfjds</div>，<a href="https://www.baidiu.com">我是百度</a>却怎么也飞不高，<br/>我寻寻觅觅寻寻觅觅，一个温暖的怀抱',
         'status|1': ['success', 'fail'],
       }],
       'orderInfo': {
@@ -199,9 +199,9 @@ const proxy = {
     code: 200,
     'data|1-10': [{
       ruleName: random.word(10),
-      'id|+1': 0,
+      'id|+1': 100,
       triggerTime: random.date(),
-      mailTemplate: random.word(8),
+      'mailTemplate|0-2': [random.word(8)],
       'status|1': true,
     }],
   }),
@@ -209,7 +209,7 @@ const proxy = {
   'GET /api/mws/mail-assistant/rule-list/add': Mock.mock({
     code: 200,
     'data|1-10': [{
-      'templateId|+1': 1,
+      'templateId|+1': 109,
       'templateName': random.title(10),
     }],
   }),
@@ -222,14 +222,14 @@ const proxy = {
       'time_number|': 30,
       start: '09:00',
       end: '10:00',
-      templateList: [{
-        templateName: random.word(9),
+      'templateList|0-10': [{
+        templateName: '哈哈哈我不是第一胎牛',
         'templateStatus|1': true,
-        'templateId|+1': 0,
+        'templateId|+1': 105,
       }],
-      'id+1': 0,
-      'sendingStatus|1': ['continue sending', 'not sending'],
-      'skuStatus': ['exclude', 'restrict'],
+      'id|+1': 20,
+      'sendingStatus|1': ['continueSending', 'notSending'],
+      'skuStatus|1': ['exclude', 'restrict'],
       'skuList|1-5': [
         'Hello',
         'Mock.js',
@@ -281,7 +281,7 @@ const proxy = {
       'templateType|1': ['Review+Feedback邀请', '常见问题回复', 'Reveiew邀请', 'Feedback邀请'],
       templateName: random.word(9),
       templateSubject: random.sentence(1, 100),
-      templateContent: random.sentence(),
+      templateContent: '你这回调的，这也不是我第一次这么烦恼了，<br/>怎么绘制合肥就是点击',
     },
   }),
   //模板修改保存
@@ -302,4 +302,4 @@ const proxy = {
 
 };
 
-export default delay(proxy, 3000);
+export default delay(proxy, 1000);

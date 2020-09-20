@@ -1,0 +1,59 @@
+.rule_form {
+  text-align: left;
+
+  :global {
+    .ant-col.ant-col-3.ant-form-item-label {
+      text-align: left;
+    }
+  }
+
+  .buttons {
+    :global {
+      .ant-form-item-control-input-content {
+        text-align: left !important;
+
+        button + button {
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+
+  .content_edit {
+    border: 1px solid @border-color-base;
+    border-radius: @border-radius-base;
+
+    :global {
+      .ant-form-item {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .click_area {
+      background-color: @simple-table-header-bg;
+      padding-left: 15px;
+
+      .title {
+        color: @heading-color;
+        padding-top: 10px;
+        padding-bottom: 14px;
+        text-align: left;
+      }
+
+      .btn_div {
+        text-align: left;
+        height: 30px;
+        line-height: 30px;
+
+        span {
+          color: @link-color;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .input_com {
+    outline: none;
+  }
+}

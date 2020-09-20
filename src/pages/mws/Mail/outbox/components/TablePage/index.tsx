@@ -11,18 +11,18 @@ interface ITablePage{
   request: (params: API.IParams) => void;
   operator: (id: number) => void;
 }
-const renderState = (status: string) => {
+export const renderState = (status: string) => {
   if (status === 'success'){
-    return <span className={styles.success}>发送成功</span>;
+    return <span className="success">发送成功</span>;
   } else if (status === 'fail'){
-    return <span className={styles.fail}>发送失败</span>;
+    return <span className="fail">发送失败</span>;
   } else if (status === 'sending'){
-    return <span className={styles.sending}>正在发送</span>;
+    return <span className="sending">正在发送</span>;
   } 
   return <div className={styles.null_bar}></div>;
 };
 
-const renderSendType = (type: string) => {
+export const renderSendType = (type: string) => {
   if (type === 'all'){
     return <span>全部</span>;
   } else if (type === 'manual'){
@@ -146,7 +146,7 @@ const TablePage: React.FC<ITablePage> = ({
   ];
   
   return (
-    <div>
+    <div className={styles.tablePadding}>
       <Table
         className={styles.__table}
         columns={columns}
@@ -159,7 +159,7 @@ const TablePage: React.FC<ITablePage> = ({
         dataSource={tableInfo.records}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {
-            return styles.darkRow;
+            return styles.dark_row;
           }
         }}
       />

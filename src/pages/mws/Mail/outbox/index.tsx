@@ -6,7 +6,7 @@ import moment from 'moment';
 import { IConnectState } from '@/models/connect';
 import SearchHeader from './components/SearchHeader';
 import TablePage from './components/TablePage';
-import ReplayPage from '../components/ReplayPage';
+import ReplayPage from './components/ReplayPage';
 
 const status = (pathname: string) => {
   if (pathname === '/mws/mail/send-success') {

@@ -1,19 +1,28 @@
-.__table {
-  .fail {
-    color: #ff5958;
-  }
+.tablePadding {
+  padding: 20px 20px 0 20px;
+}
 
+.__table {
   .operator {
     color: #09c2a6;
+    cursor: pointer;
 
     &:hover {
       color: #0083ff;
     }
   }
 
+  .dark_row {
+    background-color: #fafafa;
+  }
+
   :global {
     th {
       height: 44px;
+    }
+
+    .fail {
+      color: #ff5958;
     }
 
     .ant-table-thead > tr > th,

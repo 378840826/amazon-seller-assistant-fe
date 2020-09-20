@@ -89,5 +89,98 @@ export function getSendList(params: API.IParams){
     ...params,
   });
 }
+//自动邮件规则-规则列表
+export function getRuleList(params: API.IParams){
+  return request('/api/mws/mail-assistant/rule-list/list', {
+    method: 'GET',
+    ...params,
+  });
+}
+//自动邮件规则 - 添加规则按钮
+export function addRule(params: API.IParams){
+  return request('/api/mws/mail-assistant/rule-list/add', {
+    method: 'GET',
+    ...params,
+  });
+}
+//自动邮件规则 - 修改按钮
+export function updateRule(params: API.IParams){
+  return request('/api/mws/mail-assistant/rule-list/update', {
+    method: 'GET',
+    ...params,
+  });
+}
 
+//自动邮件规则 - 添加规则保存
+export function saveAddRule(params: API.IParams){
+  return request('/api/mws/mail-assistant/rule-list/add-rule', {
+    method: 'POST',
+    ...params,
+  });
+}
 
+//自动邮件规则- 修改规则保存
+export function saveUpdateRule(params: API.IParams){
+  return request('/api/mws/mail-assistant/rule-list/update-rule', {
+    method: 'POST',
+    ...params,
+  });
+}
+
+//自动邮件规则-规则开关
+export function switchRule(params: API.IParams){
+  return request('/api/mws/mail-assistant/rule-list/rule-switch', {
+    method: 'POST',
+    ...params,
+  });
+}
+
+//自动邮件规则-规则删除
+export function deleteRule(params: API.IParams){
+  return request('/api/mws/mail-assistant/rule-list/rule-delete', {
+    method: 'GET',
+    ...params,
+  });
+}
+//模板列表
+export function getTemplateList(params: API.IParams){
+  return request('/api/mws/mail-assistant/template-list/list', {
+    method: 'GET',
+    ...params,
+  });
+}
+//模板添加保存
+export function saveTemplate(params: API.IParams){
+  return request('/api/mws/mail-assistant/template-list/add', {
+    method: 'POST',
+    ...params,
+  });
+}
+//修改按钮
+export function updateTemplate(params: API.IParams){
+  return request('/api/mws/mail-assistant/template-list/update', {
+    method: 'GET',
+    ...params,
+  });
+}
+//模板修改保存
+export function saveUpdateTemplate(params: API.IParams){
+  return request('/api/mws/mail-assistant/template-list/update-template', {
+    method: 'POST',
+    ...params,
+  });
+}
+//模板开关
+export function switchTemplate(params: API.IParams){
+  return request('/api/mws/mail-assistant/template-list/template-switch', {
+    method: 'POST',
+    ...params,
+  });
+}
+//模板删除
+export function deleteTemplateList(params: API.IParams){
+  return request('/api/mws/mail-assistant/template-list/delete', {
+    method: 'GET',
+    ...params,
+  });
+}

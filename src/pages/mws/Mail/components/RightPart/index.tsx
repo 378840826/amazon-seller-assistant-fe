@@ -67,9 +67,12 @@ const RightPart: React.FC<IRightPart> = ({ id, StoreId, dispatch }) => {
     dispatch({
       type: 'mail/tankTemplateList',
       payload: {
-        headerParams: {
-          StoreId,
+        data: {
+          headersParams: {
+            StoreId,
+          },
         },
+       
       },
     });
 

@@ -6,7 +6,7 @@ import TablePage from './components/TablePage';
 import styles from './index.less';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { IMailModelState } from '@/models/mail';
-import ReplayPage from '../components/ReplayPage';
+import ReplayPage from './components/ReplayPage';
 import moment from 'moment';
 import { message } from 'antd';
 export interface IState {

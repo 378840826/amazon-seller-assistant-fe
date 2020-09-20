@@ -29,6 +29,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   // font-family: Microsoft YaHei;
   // font-family: pingFangSC-Regular, pingFangSC-Medium;
+
   font-family: -apple-system, BlinkMacSystemFont, arial, PingFang SC, pingFangSC-Regular, pingFangSC-Medium Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
   // font-family: "pingFangSC-Regular" "pingFangSC-Medium";
 }
@@ -206,9 +207,16 @@ a:hover {
 div.ant-typography {
   margin-bottom: 0 !important;
 }
-//安装ui要求，页面所有的复选框改为圆角2px
+//按照ui要求，页面所有的复选框改为圆角2px
 .ant-checkbox {
   .ant-checkbox-inner {
     border-radius: 2px;
   }
+}
+//表格中为空显示的横杠
+.null_bar {
+  width: 12px;
+  height: 1px;
+  background-color: #666;
+  display: inline-block;
 }
