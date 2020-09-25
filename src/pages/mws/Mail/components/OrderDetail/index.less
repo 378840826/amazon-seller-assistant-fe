@@ -13,7 +13,19 @@
 }
 
 .title_link {
-  color: @link-color;
+  .icon_link {
+    color: #999;
+  }
+
+  a {
+    color: @link-color;
+  }
+
+  &:hover {
+    .icon_link {
+      color: @link-color;
+    }
+  }
 }
 
 .same {

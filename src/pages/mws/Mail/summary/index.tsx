@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
 import { connect } from 'umi';
-import { IGlobalModelState } from '@/models/global';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { Table } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 
 interface ISummaryConnectProps extends IConnectProps{
-  global: IGlobalModelState;
+  StoreId: string;
 }
 const defaultParams = {
   size: 20,
   current: 1,
 };
-const Summary: React.FC<ISummaryConnectProps> = ({ global, dispatch }) => {
-  const headersParams = { StoreId: global.shop.current.id };
+const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
   const [state, setState] = useState({
     tableInfo: {
       total: 0,
@@ -26,7 +24,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ global, dispatch }) => {
     msg: '', //错误的返回信息
     tableLoading: false,
   });
-  const requestTable = (params = {}) => {
+  const requestTable = useCallback((params = {}) => {
     setState((state) => ({
       ...state,
       tableLoading: true,
@@ -35,7 +33,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ global, dispatch }) => {
       type: 'mail/getStatisticalList',
       payload: {
         data: {
-          headersParams, 
+          headersParams: { StoreId }, 
         },
         params: {
           ...defaultParams,
@@ -60,12 +58,14 @@ const Summary: React.FC<ISummaryConnectProps> = ({ global, dispatch }) => {
         
       },
     });
-  };
+  }, [StoreId, dispatch]);
+
   //分页
   const paginationProps = {
     current: state.tableInfo.current,
     pageSize: state.tableInfo.size,
     total: state.tableInfo.total,
+    showSizeChanger: true,
     defaultPageSize: 20,
     pageSizeOptions: ['20', '50', '100'],
     showQuickJumper: true,
@@ -73,7 +73,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ global, dispatch }) => {
   };
   useEffect(() => {
     requestTable();
-  }, [dispatch]);
+  }, [dispatch, requestTable]);
 
   const columns: ColumnProps<API.IParams>[] = [
     {
@@ -310,5 +310,5 @@ const Summary: React.FC<ISummaryConnectProps> = ({ global, dispatch }) => {
   );
 };
 export default connect(({ global }: IConnectState) => ({
-  global,
+  StoreId: global.shop.current.id,
 }))(Summary) ;

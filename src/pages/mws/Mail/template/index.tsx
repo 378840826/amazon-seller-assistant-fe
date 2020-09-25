@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'umi';
 import { Modal, Table, Button, Switch, Spin, message } from 'antd';
 import styles from './index.less';
@@ -35,32 +35,39 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
     deleteVisible: false, //删除按钮点击
     id: -1, //需要修改或者打开的
   });
-  useEffect(() => {
-    dispatch({
-      type: 'mail/getTemplateList',
-      payload: {
-        data: {
-          headersParams: { StoreId },
+
+  const requestTable = useCallback(
+    () => {
+      dispatch({
+        type: 'mail/getTemplateList',
+        payload: {
+          data: {
+            headersParams: { StoreId },
+          },
         },
-      },
-      callback: (res: {code: number; data: ITemplateData[]}) => {
-        if (res.code === 200){
-          setState((state) => ({
-            ...state,
-            data: res.data,
-            loading: false,
-          }));
-        } else {
-          setState((state) => ({
-            ...state,
-            data: [],
-            message: state.message,
-            loading: false,
-          }));
-        }
-      },
-    });
-  }, [dispatch, StoreId]); 
+        callback: (res: {code: number; data: ITemplateData[]}) => {
+          if (res.code === 200){
+            setState((state) => ({
+              ...state,
+              data: res.data,
+              loading: false,
+            }));
+          } else {
+            setState((state) => ({
+              ...state,
+              data: [],
+              message: state.message,
+              loading: false,
+            }));
+          }
+        },
+      });
+    }, [dispatch, StoreId]);
+
+
+  useEffect(() => {
+    requestTable();
+  }, [requestTable]);
 
   //模版遮罩层的打开与关闭 打开传入flag 和id，关闭传入flag即可
   const onToggleModal = (flag: boolean, id?: number) => {
@@ -69,6 +76,11 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       ...state,
       ...stats,
     }));
+  };
+
+  const onConfirm = () => {
+    onToggleModal(false);
+    requestTable();
   };
 
   //列表中删除的点击
@@ -84,12 +96,10 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
   //修改状态
   const onChange = (checked: boolean, id: number) => {
     dispatch({
-      type: 'mail/switchRule',
+      type: 'mail/switchTemplate',
       payload: {
         data: {
           headersParams: { StoreId },
-        },
-        params: {
           status: checked,
           id,
         },
@@ -200,8 +210,11 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
         return (
           status === '' ? <div className="null_bar"></div>
             :
-            <Switch defaultChecked={status} 
-              onChange={(checked: boolean) => onChange(checked, record.id)} />
+            <>
+              <Switch defaultChecked={status} 
+                onChange={(checked: boolean) => onChange(checked, record.id)} />
+            </>
+            
         );
       },
     },
@@ -235,7 +248,12 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
         title=""
         onCancel={() => onToggleModal(false)}
       >
-        <Overlay StoreId={StoreId} id={state.id} onCancel={() => onToggleModal(false)}/>
+        <Overlay 
+          StoreId={StoreId} 
+          id={state.id} 
+          onCancel={() => onToggleModal(false)}
+          onConfirm={() => onConfirm()}
+        />
       </Modal>
       <Modal
         visible={state.deleteVisible}

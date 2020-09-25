@@ -41,7 +41,7 @@ const SideMenu: React.FC<IMailConnectProps> = ({ global, dispatch, children, mai
     });
   }, [currentId, dispatch]);
   return (
-    <Layout className="site-layout-background" style={{ paddingTop: '30px ' }}>
+    <Layout className="site-layout-background" style={{ paddingTop: '30px', height: '100%' }}>
       {
         currentId !== '-1' && 
         <>

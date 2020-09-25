@@ -26,7 +26,7 @@ export interface IState {
 export interface IInbox extends IConnectProps{
   state: IMailModelState['inbox'];
   StoreId: string;
-  request?: API.IParams;
+  request: API.IParams;
 }
 const status = (pathname: string) => {
   if (pathname === '/mws/mail/reply') {
@@ -73,8 +73,17 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => {
       payload: {
         data: {
           headersParams: { StoreId },
+          dateStart: request.dateStart,
+          dateEnd: request.dateEnd,
+          cycle: request.cycle,
+          type: request.type,
+          searchContent: request.searchContent,
+          status: request.status,
         },
-        params: request,
+        params: {
+          size: request.size,
+          current: request.current,
+        },
       },
     });
   }, [StoreId, dispatch, request]);
@@ -91,28 +100,26 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => {
     });
   };
 
-  //批量标记的发送请求
+  //批量标记的发送请求 show是否显示状态改变请求的信息
   const updateStatus = (type: string, selects: ReactText[], show: boolean) => {
-    dispatch({
+    selects.length > 0 && dispatch({
       type: 'mail/updateStatus',
       payload: {
         data: {
           headersParams: { StoreId },
-        },
-        params: {
           ids: selects,
           status: type,
         },
-        callback: ( msg: string) => {
-          show && message.success(msg);
-        },
+      },
+      callback: ( msg: string) => {
+        show && message.success(msg);
       },
     });
   };
   
   //单个标记已回复点击事件
-  const rowSelect = (selects: number | ReactText[]) => {
-    if (typeof selects === 'number'){
+  const rowSelect = (selects: number | string | ReactText[]) => {
+    if (typeof selects === 'number' || typeof selects === 'string'){
       updateStatus('replied-true', [selects], true);
     } else {
       dispatch({
@@ -123,6 +130,7 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => {
   };
   //批量标记四个按钮的点击
   const rowListUpdate = (type: string) => {
+    console.log('rowSelection:', state.rowSelection);
     updateStatus(type, state.rowSelection, true);
   };
   //点击每一行出现回复页面

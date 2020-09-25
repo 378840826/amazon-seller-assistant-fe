@@ -77,7 +77,10 @@ const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
           <Paragraph ellipsis>实付金额：<span 
             className={styles.red}>{info.actuallyPaid}</span>
           </Paragraph>
-          <p>B2B订单：{info.isBusinessOrder ? `是` : `否`}</p>
+          { info.isBusinessOrder === '' ? 
+            <p>B2B订单：</p> : <p>B2B订单：{info.isBusinessOrder ? `是` : `否`}</p>
+          }
+          
         </div>
       </div>
     </div>

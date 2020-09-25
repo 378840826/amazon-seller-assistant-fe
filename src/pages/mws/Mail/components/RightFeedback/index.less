@@ -52,8 +52,6 @@
         }
 
         .__textarea {
-          padding-left: 20px;
-          padding-right: 20px;
           border: none;
           border-top: 1px solid #eee;
           border-bottom: 1px solid #eee;
@@ -61,6 +59,13 @@
           &:focus {
             box-shadow: none;
             border-color: none;
+          }
+
+          :global {
+            .public-DraftEditorPlaceholder-inner {
+              color: #d9d9d9;
+              font-size: 14px;
+            }
           }
         }
 

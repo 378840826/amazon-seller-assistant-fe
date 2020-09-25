@@ -12,7 +12,12 @@ import { IConnectState } from '@/models/connect';
 import { IInbox } from '@/pages/mws/Mail/inbox';
 
 const { Paragraph } = Typography;
-const LeftTableList: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
+interface ILeftTableList {
+  state: IInbox['state'];
+  StoreId: IInbox['StoreId'];
+  dispatch: IInbox['dispatch'];
+}
+const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch }) => {
 
   const { msg, tableInfo, tableLoading, rowSelection, id } = state;
   const rowLeftSelection = {
@@ -51,8 +56,6 @@ const LeftTableList: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
       payload: {
         data: {
           headerParams: { StoreId },
-        },
-        params: {
           ids: [item.id],
           status: item.hasReplied ? 'replied-false' : 'replied-true',
         },
@@ -63,7 +66,7 @@ const LeftTableList: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
     });
   };
   const columns: ColumnProps<API.IParams>[] = [{
-    title: '全选',
+    title: () => (<span className={styles.select_all}>全选</span>),
     width: 124,
     align: 'left',
     render: (text, item) => {
@@ -76,12 +79,12 @@ const LeftTableList: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
     },
   }, {
     title: '',
-    width: 104,
+    width: 100,
     align: 'right',
     ellipsis: true,
     render: (text, item) => {
       return (
-        <div>
+        <div style={{ paddingRight: '5px' }}>
           {
             item.hasReplied ? 
               <div className={classnames(styles.orange, styles.before_hover)}>已回复</div> 
@@ -134,7 +137,6 @@ const LeftTableList: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
           return {
             onClick: event => {
               event.stopPropagation();
-              console.log(record.id, id);
               if (record.id !== id){
                 dispatch({
                   type: 'mail/modifyInboxId',

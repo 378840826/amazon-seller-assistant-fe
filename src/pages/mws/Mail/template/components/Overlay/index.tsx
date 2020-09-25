@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import BraftEditor, { EditorState } from 'braft-editor';
+import { useAntInputCursor } from '@/utils/customHooks';
+import { Iconfont } from '@/utils/utils';
 import 'braft-editor/dist/index.css';
 import { ContentUtils } from 'braft-utils';
 import { useDispatch } from 'umi';
@@ -11,18 +13,19 @@ import {
   Button,
   Row,
   Col,
+  Modal,
 } from 'antd';
 import styles from './index.less';
 
 
 const { Option } = Select;
 const formItem1Layout = {
-  labelCol: { span: 3 },
+  labelCol: { span: 4 },
   wrapperCol: { span: 10 },
 };
 const formItem2Layout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 21 },
+  labelCol: { span: 4, align: 'middle' },
+  wrapperCol: { span: 20 },
 };
 
 
@@ -44,10 +47,13 @@ interface IOverlay{
   StoreId: string;
   id: number;
   onCancel: () => void;
+  onConfirm: () => void;
+  
 }
 const templateNames = ['Review邀请', 'Feedback邀请', 'Review+Feedback邀请', '常见问题回复'];
-const controls = [];
-const InsertList = ['product_link:product_name',
+const controls: import('braft-editor').ControlType[] | undefined = [];
+const InsertList = [
+  'product_link:product_name',
   'shop_link:seller_name',
   'order_id',
   'order_link:View Order',
@@ -55,10 +61,12 @@ const InsertList = ['product_link:product_name',
   'feedback_link:Feedback',
   'contact_link: Contact Us',
   '快递公司名称: 快递单号'];
-const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel }) => {
+const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const { setRef, getCursorPos, insertAt } = useAntInputCursor();
   const [state, setState] = useState(defaultState);
+  const [type, setType] = useState('templateContent');//默认一开始是内容选中
   const [loading, setLoading] = useState(true);//一开始就加载中
   const [confirmLoading, setConfirmLoading] = useState(false);//确定按钮的点击之后的加载状  
   useEffect(() => {
@@ -97,16 +105,24 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel }) => {
 
   }, [StoreId, dispatch, id, form]);
 
-  const handleContentChange = (editorState) => {
-    form.setFieldsValue({ templateContent: editorState });
+  const handleChange = (editorState: EditorState, type: string) => {
+    form.setFieldsValue({ [type]: editorState });
     setState((state) => ({
       ...state,
-      templateContent: editorState,
+      [type]: editorState,
     }));
+  };
+
+  const onFocus = (type: string) => {
+    setType(type);
   };
   
   const onFinish = (values: API.IParams) => {
-    const params = { ...values, templateContent: values.templateContent.toHTML() };
+    const params = { 
+      ...values,
+      templateContent: values.templateContent.toHTML(), 
+    };
+   
     setConfirmLoading(true);
     dispatch({
       type: 'mail/saveOrUpdateTemplate',
@@ -115,19 +131,39 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel }) => {
         StoreId,
         params,
       },
-      callback: () => {
-        setConfirmLoading(false);
-        onCancel();
+      callback: (res: {code: number; message: string}) => {
+        const { code, message } = res;
+        if (code === 200){
+          setConfirmLoading(false);
+          onConfirm();
+        } else {
+          Modal.error({ content: message, centered: true });
+        }
       },
     });
   };
 
   const onClickInsert = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const insetText = e.target.innerText;
-    form.setFieldsValue({ 
-      templateContent: ContentUtils.insertText(state.templateContent, `{{${insetText}}}`), 
-    });
-    
+    let insetText = e.target.innerText;
+    if (type === 'templateSubject'){
+      if (insetText !== 'order_id'){
+        Modal.error({ content: '主题只能插入order_id，不允许插入其他参数', centered: true });
+        return;
+      } 
+      insetText = `{{${insetText}}}`;
+      const textLength = insetText.length;
+      const subjectLength = form.getFieldValue('templateSubject').trim().length; 
+      if ( Number(textLength + subjectLength ) > 100){
+        return;
+      }
+
+      const pos = getCursorPos().start;
+      insertAt(pos, insetText);
+    } else {
+      form.setFieldsValue({ 
+        templateContent: ContentUtils.insertText(state.templateContent, `{{${insetText}}}`), 
+      });
+    }
   };
   return (
     <div>
@@ -139,78 +175,110 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel }) => {
           className={styles.rule_form}
           onFinish={onFinish}
         >
-          <Form.Item
-            label="模板名称 :"
-            name="templateName"
-            {...formItem1Layout}
-            required={false}
-            rules={[{ required: true, message: '模板名称不能为空!' }]}
-          >
-            <Input type="text"/>
-          </Form.Item>
-          <Form.Item
-            label="模板类型 :"
-            name="templateType"
-            {...formItem1Layout}
-          >
-            <Select style={{ textAlign: 'left' }}>
-              {templateNames.map((item, index) => {
-                return <Option key={index} value={item}>{item}</Option>;
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="主题 :"
-            name="templateSubject"
-            required={false}
-            rules={[{ required: true, message: '主题不能为空!' }]}
-            {...formItem2Layout}
-          >
-            <Input maxLength={100} type="text"/>
-          </Form.Item>
-          <Form.Item
-            label="正文 :"
-            {...formItem2Layout}
-          >
-            <Row className={styles.content_edit}>
-              <Col span={16}>
-                <Form.Item name="templateContent">
-                  <BraftEditor
-                    onChange={handleContentChange}
-                    controls={controls}
-                    placeholder="请输入正文内容"
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={8} className={styles.click_area}>
-                <div className={styles.title}>点击插入参数</div>
-
-                <div onClick={onClickInsert}>
-                  {InsertList.map((item, index) => {
-                    return (
-                      <div key={index} className={styles.btn_div}>
-                        <span>{item}</span>
-                      </div>
-                    );
+          <Row>
+            <Col span={16}>
+              <Form.Item
+                label="模板名称 :"
+                name="templateName"
+                {...formItem1Layout}
+                required={false}
+                rules={[{ required: true, message: '模板名称不能为空!' }]}
+              >
+                <Input type="text"/>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={16}>
+              <Form.Item
+                label="模板类型 :"
+                name="templateType"
+                {...formItem1Layout}
+              >
+                <Select style={{ textAlign: 'left' }}>
+                  {templateNames.map((item, index) => {
+                    return <Option key={index} value={item}>{item}</Option>;
                   })}
-                </div>
-              </Col>
-            </Row>
-          </Form.Item>
-          <Form.Item 
-            label=" "
-            className={styles.buttons}
-            style={{ marginBottom: 0 }} 
-            {...formItem1Layout}>
-            <>
-              <Button htmlType="button" disabled={confirmLoading} onClick={() => onCancel()}>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+            </Col>
+          </Row>
+        
+          <Row className={styles.content_edit}>
+            <Col span={16}>
+              <Form.Item
+                label="主题 :"
+                name="templateSubject"
+                className={styles.item_subject}
+                required={false}
+                rules={[{ required: true, message: '主题不能为空!' }]}
+                {...formItem2Layout}
+              >
+                <Input 
+                  size="large"
+                  bordered={false} 
+                  autoComplete="off" 
+                  maxLength={100} 
+                  ref={setRef} 
+                  onFocus={() => onFocus('templateSubject')}/>
+              </Form.Item>
+              <Form.Item  
+                name="templateContent" 
+                label="正文 :"
+                className={styles.item_content}
+                {...formItem2Layout}
+              >
+                <BraftEditor
+                  onChange={(editState) => handleChange(editState, 'templateContent')}
+                  controls={controls}
+                  onFocus={() => onFocus('templateContent')}
+                  contentClassName={styles.braftEditor_content}
+                  placeholder="请输入正文内容"
+                />
+              </Form.Item>
+                
+            </Col>
+            <Col span={8} className={styles.click_area}>
+              <div className={styles.title}>点击插入参数</div>
+
+              <div onClick={onClickInsert}>
+                {InsertList.map((item, index) => {
+                  return (
+                    <div key={index} className={styles.btn_div}>
+                      <span>{item}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </Col>
+          </Row>
+          <Row style={{ paddingTop: '20px' }}>
+            <Col span={16}>
+              <Form.Item 
+                label=" "
+                className={styles.buttons}
+                style={{ marginBottom: 0 }} 
+                {...formItem1Layout}>
+                <>
+                  <Button htmlType="button" disabled={confirmLoading} onClick={() => onCancel()}>
                   取消
-              </Button>
-              <Button type="primary" disabled={confirmLoading} htmlType="submit">
+                  </Button>
+                  <Button type="primary" disabled={confirmLoading} htmlType="submit">
                   保存
-              </Button>
-            </>
-          </Form.Item>
+                  </Button>
+                </>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <div className={styles.tips}>
+                <Iconfont className={styles.orange} type="icon-yiwen"/> 请勿在邮件中提及违禁字眼
+              </div>
+            </Col>
+          </Row>
         </Form>
       }
     </div>

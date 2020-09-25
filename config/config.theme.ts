@@ -67,6 +67,7 @@ export default {
   // 小按钮
   '@btn-width-sm': '50px',
   '@btn-height-sm': '20px',
+  '@btn-font-size-sm':'12px',
   // 长按钮宽度
   '@btn-long-width': '106px',
   // 自定文字按钮颜色

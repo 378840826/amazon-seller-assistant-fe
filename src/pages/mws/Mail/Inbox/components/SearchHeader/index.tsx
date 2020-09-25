@@ -57,8 +57,6 @@ const SearchHeader: React.FC<ISearchHeader> = ({
   dateEnd,
   sourceType,
 }) => {
- 
-  console.log('sourceType:', sourceType);
   const beforeRequest = (param: API.IParams) => {
     request({
       ...param,

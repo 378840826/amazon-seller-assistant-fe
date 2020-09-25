@@ -13,9 +13,11 @@ import {
   TimePicker,
   Spin,
   message,
+  Tooltip,
 } from 'antd';
 import styles from './index.less';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { Iconfont } from '@/utils/utils';
 interface IOverlay{
   id: number;
   StoreId: string;
@@ -55,7 +57,7 @@ const dayList = [1, 2, 3, 4, 5, 6, 7, 10, 14, 30];
 const defaultState = {
   message: '', //接口返回的错误信息
   ruleName: '',
-  orderStatus: '',
+  orderStatus: 'Shipped', //默认配送完成后
   timeNumber: 3, //默认时间天数3
   start: '09',
   end: '21',
@@ -136,19 +138,18 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
     const start = Number(rangeTime[0].format('HH'));
     const end = Number(rangeTime[1].format('HH')); 
     const split = skuList.split(/\n|\r\n/);
-    const trim = split.map((item: string) => item.trim());
+    const trim = split.map((item: string) => item.trim()).filter((item: string) => item !== '');
     const params = {
       ruleName: values.ruleName.trim(),
       orderStatus: values.orderStatus,
       timeNumber: values.timeNumber,
       start,
       end,
-      templateList: values.templateList,
+      templateList: values.templateList.map((item: CheckboxValueType) => Number(item)),
       sendingStatus: values.sendingStatus,
       skuStatus: values.skuStatus,
       skuList: trim,
     };
-
     setConfirmLoading(true);
     dispatch({
       type: 'mail/saveUpdateOrAddRule',
@@ -178,8 +179,8 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
           onFinish ={onFinish}
           initialValues={{
             ['ruleName']: state.ruleName,
-            ['orderStatus']: 'Shipped',
-            ['timeNumber']: 3,
+            ['orderStatus']: state.orderStatus,
+            ['timeNumber']: state.timeNumber,
             ['templateList']: getCheckedList(),
             ['rangeTime']: [moment(state.start, 'HH'), moment(state.end, 'HH')],
             ['sendingStatus']: state.sendingStatus,
@@ -190,6 +191,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
           <Form.Item 
             name="ruleName"
             label="规则名称"
+            required={false}
             {...formItemLayout}
             rules={[{ required: true, message: '规则名称不能为空!' }]}
           >
@@ -223,19 +225,27 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={11}>
+              <Col span={10}>
                 <Form.Item name="rangeTime">
                   <RangePicker
                     format="HH"
                   />
                 </Form.Item>
               </Col>
+              <Col span={1} style={{ lineHeight: '30px' }}>
+                <Tooltip placement="top" title="采用站点当地的时间，建议在下单高峰期发送">
+                  <Iconfont type="icon-yiwen" style={{ cursor: 'pointer' }}/>
+                </Tooltip>
+                
+              </Col>
             </Row>
           </Form.Item>
           <Form.Item 
             label="模板"
             name="templateList"
+            required={false}
             {...templateItemLayout}
+            rules={[{ required: true, message: '模板不能为空!' }]}
           >
             <Checkbox.Group 
               className={styles.__checkbox}
@@ -276,7 +286,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
           </Form.Item>
           <Form.Item name="skuList">
             <TextArea
-              autoSize={{ minRows: 5 }}
+              rows={5}
               placeholder="请输入SKU，一行一个"
             />
           </Form.Item>

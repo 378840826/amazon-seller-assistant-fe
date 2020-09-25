@@ -1,4 +1,5 @@
 import React from 'react';
+import defaultImage from '@/assets/stamp.png';
 import { Typography } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import styles from './index.less';
@@ -17,19 +18,25 @@ const OrderDetail: React.FC<IOrderDetail> = ({ item, key }) => {
     <div key={key}> 
       <div style={contentStyle}>
         <div className={styles.imgContainer}>
-          <img src={item.imgLink}/>
+          <img src={item.imgLink} onError={(e) => { 
+            e.target.onerror = null;e.target.src = `${defaultImage}` ; 
+          }} />
         </div>
-        <a href={item.titleLink} rel="noreferrer" target="_blank">
-          <Paragraph className={styles.title_link} ellipsis={{ rows: 2 }}>
-            <Iconfont className={styles.icon_link} type="icon-lianjie"/>
+        
+        <Paragraph className={styles.title_link} ellipsis={{ rows: 2 }}>
+          <Iconfont className={styles.icon_link} type="icon-lianjie"/>
+          <a href={item.titleLink} rel="noreferrer" target="_blank">
             {item.title}
-          </Paragraph>
-        </a>
+          </a>
+        </Paragraph>
+     
         <div className={styles.same}>
           <div>{item.asin}</div>
           <div>{item.sku}</div>
           <div>数量：{item.quantity}</div>
-          <div>单价：${item.unitPrice}</div>
+          <div>
+            单价: {item.unitPriceitem !== '' ? `${item.unitPrice}` : ''}
+          </div>
                   
           <div className={styles.ellipsis}>
             <div style={{ width: '70px' }}>价格合计：</div>

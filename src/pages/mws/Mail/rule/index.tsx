@@ -71,8 +71,6 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
       payload: {
         data: {
           headersParams: { StoreId },
-        },
-        params: {
           status: checked,
           id,
         },

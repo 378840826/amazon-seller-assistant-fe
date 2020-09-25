@@ -10,7 +10,11 @@ import { IInbox } from '@/pages/mws/Mail/inbox';
 import { renderState, renderSendType } from '../TablePage';
 
 const { Paragraph } = Typography;
-const LeftTableList: React.FC<IInbox> = ({ state, dispatch }) => {
+interface ILeftTableList{
+  state: IInbox['state'];
+  dispatch: IInbox['dispatch'];
+}
+const LeftTableList: React.FC<ILeftTableList> = ({ state, dispatch }) => {
 
   const { msg, tableInfo, tableLoading, id } = state;
   
@@ -37,7 +41,7 @@ const LeftTableList: React.FC<IInbox> = ({ state, dispatch }) => {
     align: 'left',
     render: (text, item) => {
       return (
-        <div>
+        <div className={styles.__td_1}>
           <Paragraph ellipsis className={styles.subject}>{item.subject}</Paragraph>
           <Paragraph ellipsis={{ rows: 2 }} className={styles.content}>{item.content}</Paragraph>
         </div>
@@ -50,7 +54,7 @@ const LeftTableList: React.FC<IInbox> = ({ state, dispatch }) => {
     ellipsis: true,
     render: (text, item) => {
       return (
-        <div>
+        <div className={styles.__td_2}>
           <div >
             {renderState(item.status)}
           </div>
@@ -70,7 +74,7 @@ const LeftTableList: React.FC<IInbox> = ({ state, dispatch }) => {
         className={styles.__table}
         columns={columns}
         pagination={{ ...paginationProps }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 335px)' }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 270px)' }}
         onChange={onTableChange}
         dataSource={tableInfo.records}
         loading={tableLoading}
@@ -84,7 +88,6 @@ const LeftTableList: React.FC<IInbox> = ({ state, dispatch }) => {
           return {
             onClick: event => {
               event.stopPropagation();
-              console.log(record.id, id);
               if (record.id !== id){
                 dispatch({
                   type: 'mail/modifyInboxId',

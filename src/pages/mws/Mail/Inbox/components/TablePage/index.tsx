@@ -81,7 +81,6 @@ const TablePage: React.FC<ITablePage> = ({
       title: '发送时间',
       dataIndex: 'receivingTime',
       width: 98,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
@@ -117,7 +116,7 @@ const TablePage: React.FC<ITablePage> = ({
     },
     {
       title: '订单编号',
-      dataIndex: 'id',
+      dataIndex: 'orderId',
       width: 163,
       ellipsis: true,
       align: 'center',
@@ -180,7 +179,7 @@ const TablePage: React.FC<ITablePage> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={loading}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 228px)' }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 333px)' }}
         locale={{ emptyText: msg === '' ? 'Oops! 没有更多数据啦' : msg }}
         dataSource={tableInfo.records}
         rowClassName={(record, index) => {

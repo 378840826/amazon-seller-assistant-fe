@@ -16,7 +16,7 @@ const DraggableExp = () => {
     initialwidth: 265, // 左边区块初始宽度
     showwidth: 265, // 左边区块初始宽度
     minwidth: 265, // 左边区块最小宽度
-    maxwidth: 327, // 左边区块最大宽度
+    maxwidth: 492, // 左边区块最大宽度
     dragboxbackground: 'transparent', // 拖拽盒子的背景色
   });
 
@@ -32,7 +32,7 @@ const DraggableExp = () => {
     setState((state) => ({
       ...state,
       showwidth: newLeftBoxWidth,
-      dragboxbackground: '#FFB6C1',
+      dragboxbackground: 'transparent',
     }));
   };
 

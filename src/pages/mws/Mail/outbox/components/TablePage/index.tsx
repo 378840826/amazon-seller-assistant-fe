@@ -68,7 +68,7 @@ const TablePage: React.FC<ITablePage> = ({
           text === '' ? 
             <div className="null_bar"></div>
             :
-            <Paragraph ellipsis={{ rows: 2 }} className={styles.time}>{text}</Paragraph>
+            <Paragraph ellipsis={{ rows: 2 }} className={styles.sendingTime}>{text}</Paragraph>
         );
       },
     },
@@ -81,15 +81,15 @@ const TablePage: React.FC<ITablePage> = ({
     },
     {
       title: '订单ID',
-      dataIndex: 'productInfo',
+      dataIndex: 'orderId',
       align: 'center',
-      width: '138',
-      render: (info) => {
+      width: 138,
+      render: (text) => {
         return (
-          info[0].orderId === '' ?
+          text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.orderId}>{info[0].orderId}</div>
+            <div className={styles.orderId}>{text}</div>
         );
       },
     },
@@ -154,7 +154,7 @@ const TablePage: React.FC<ITablePage> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={loading}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 228px)' }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 288px)' }}
         locale={{ emptyText: msg === '' ? 'Oops! 没有更多数据啦' : msg }}
         dataSource={tableInfo.records}
         rowClassName={(_, index) => {

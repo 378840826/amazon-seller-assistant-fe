@@ -27,11 +27,22 @@
     padding-bottom: 5px;
 
     .link_part {
-      a {
-        .typography {
-          margin-bottom: 0;
+      .typography {
+        margin-bottom: 0;
+        text-align: left;
+
+        .icon_link {
+          color: #999;
+        }
+
+        &:hover {
+          .icon_link {
+            color: #0083ff;
+          }
+        }
+
+        a {
           color: #0083ff;
-          text-align: left;
         }
       }
     }

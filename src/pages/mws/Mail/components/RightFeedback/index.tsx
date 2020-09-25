@@ -5,42 +5,96 @@ import Dialogue from '../Dialogue';
 import ModalTemplate from '../ModalTemplate';
 import { ITemplates } from '@/models/mail';
 import styles from './index.less';
+import BraftEditor, { EditorState } from 'braft-editor';
+import 'braft-editor/dist/index.css';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { RcFile } from 'antd/lib/upload';
+import moment from 'moment';
+import { UploadFile } from 'antd/lib/upload/interface';
 
-
-const { TextArea } = Input;
 interface IRightFeedback extends IConnectProps{
   mailContent: API.IParams[];
   StoreId: string;
-  id: number;
+  id: string | number;
   templateList: ITemplates[];
 }
+interface IState{
+  modal: boolean;
+  fileList: RcFile[];
+  sendStatus: boolean;
+}
+
+const filterList = (files: UploadFile[]) => {
+  return files.filter( (item: UploadFile) => item.status !== 'error');
+};
+const controls: import('braft-editor').ControlType[] | undefined = [];
 const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId, 
   dispatch, id, templateList }) => {
   const [form] = Form.useForm();
-  const [state, setState] = useState({
+  const [state, setState] = useState<IState>({
     modal: false, //控制模态框是否展示的
+    sendStatus: false, //邮件回复按钮disable状态
+    fileList: [],
   });
+ 
   const inboxPaths = ['/mws/mail/inbox', '/mws/mail/reply', '/mws/mail/no-reply'];
   //点击提交
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
-    if (values.subject === undefined){
+    console.log('onfinish:', values);
+    const content = values.content;
+    const contentHTML = `${content.toHTML()}`;
+
+    let files: UploadFile['originFileObj'][] = [];
+    if (content === undefined || contentHTML === '<p></p>'){
       message.error('正文内容不能为空!');
-    } else {
-      //
-      const formData = new FormData();
-      values.uploadItem.forEach( (file: RcFile) => {
-        formData.append('files[]', file);
-      });
-      console.log('onFinish:', values);
+      return;
+    }  
+   
+    if (values.uploadItem !== undefined){
+      files = filterList(values.uploadItem).map( (item: UploadFile) => item.originFileObj); 
     }
+  
+    const pathname = location.pathname;
+    setState((state) => ({
+      ...state,
+      sendStatus: true,
+    }));
+    dispatch({
+      type: 'mail/receiveOrSendEmailSubmit',
+      payload: {
+        pathname,
+        StoreId,
+        id,
+        subject: values.subject === undefined ? '' : values.subject,
+        content: contentHTML,
+        file: files,
+      },
+      callback: (res: {code: number;message: string}) => {
+        setState((state) => ({
+          ...state,
+          sendStatus: false,
+        }));
+        const time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        let status = 'success';
+        if (res.code === 200){
+          status = 'success';
+        } else {
+          status = 'fail';
+        }
+        mailContent.push({ content: contentHTML, status, time, type: 'me' });
+      },
+    });
+    
   };
 
   //点击清空
   const onReset = () => {
     form.resetFields();
+    setState((state) => ({
+      ...state,
+      fileList: [],
+    }));
   };
 
   //点击关闭模版
@@ -58,7 +112,6 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
     });
   };
 
-
   //点击【载入】
   const onSelectTemplateId = (templateId: number) => {
     const type = inboxPaths.indexOf(location.pathname) > -1 ? 'mail/receiveListTemplateLoad'
@@ -67,8 +120,10 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
     dispatch({
       type,
       payload: {
-        headerParams: {
-          StoreId,
+        data: {
+          headersParams: {
+            StoreId,
+          },
         },
         params: {
           templateId,
@@ -78,34 +133,62 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
       callback: (data: { subject: string; content: string }) => {
         form.setFieldsValue({
           subject: data.subject,
-          content: data.content,
+          content: BraftEditor.createEditorState(data.content),
         });
       },
     });
+  };
 
-    
+  const handleChange = (editorState: EditorState) => {
+    form.setFieldsValue({ 'content': editorState });
   };
 
   //upload相关
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const normFile = (e: any) => {
-    console.log('Upload event:', e);
+  const normFile = (e: any) => { 
     if (Array.isArray(e)) {
       return e;
     }
     return e && e.fileList;
   };
 
-  //upload 之前
-  const beforeUpload = (file: RcFile) => {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChange = ({ fileList }: any) => {
+    console.log('onChange:', fileList);
+    setState((state) => ({
+      ...state,
+      fileList,
+    }));
+  };
+  //upload 之前  超过5M，上传文件的地址，上传文件格式一样不能显示
+  const beforeUpload = (file: UploadFile) => {
+    const count = [];
+    const files = state.fileList;
     const isLimit5M = file.size / 1024 / 1024 < 5;
-    if (!isLimit5M) {
-      message.error('超过5M限制，不允许上传~');
+    const allowFileType = ['application/msword', 'text/plain', 'application/vnd.ms-excel', 'application/pdf'];
+    if (allowFileType.indexOf(file.type) < 0) {
+      file.status = 'error';
+      message.error('附件仅支持.doc .txt .xls .pdf文件'); 
+      return false;
     }
+    if (!isLimit5M) {
+      file.status = 'error';
+      message.error('超过5M限制，不允许上传~');
+      return false;
+    }
+    files.map((item, index) => {
+      if (item.name === file.name){
+        file.status = 'error';
+        count.push(index);
+      }
+    });
+    if (count.length > 0){
+      message.error('文件名相同!');
+      return false;
+    }
+    file.status = 'done';
     return false;
   } ;
-
-  
   return (
     <div className={styles.container}>
       <div className={styles.flexBox}>
@@ -136,9 +219,11 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
               <Form.Item
                 name="content"
               >
-                <TextArea 
-                  className={styles.__textarea}
-                  autoSize={{ minRows: 10 }}
+                <BraftEditor
+                  onChange={handleChange}
+                  controls={controls}
+                  contentClassName={styles.__textarea}
+                  placeholder="请输入正文内容"
                 />
               </Form.Item>
               <Form.Item
@@ -154,7 +239,9 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
                     >
                       <Upload
                         name="file"
+                        onChange={onChange}
                         beforeUpload={beforeUpload}
+                        // multiple 
                         className={styles.__upload}
                         accept=".doc,.txt,.xls,.pdf"
                       >
@@ -185,7 +272,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
                         <Button onClick={() => goBack(-1)}>取消</Button>
                       </Col>
                       <Col span={12}>
-                        <Button type="primary" htmlType="submit">回复</Button>
+                        <Button disabled={state.sendStatus} type="primary" htmlType="submit">回复</Button>
                       </Col>
                     </Row>
                   </Col>

@@ -69,17 +69,29 @@ export function sendListTemplateLoad(params: API.IParams){
 
 //收件箱邮件提交
 export function receiveListEmailSubmit(params: API.IParams){
-  return request('/api/mws/mail-assistant/receive-list/mail-submit', {
+  return fetch('/api/mws/mail-assistant/receive-list/mail-submit', {
     method: 'POST',
-    ...params,
+    headers: {
+      'Accept': 'application/json',
+      'StoreId': params.StoreId,
+    },
+    body: params.formData,
+  }).then((response) => {
+    return response.json();
   });
 }
 
 //发件箱邮件提交
 export function sendListEmailSubmit(params: API.IParams){
-  return request('/api/mws/mail-assistant/send-list/mail-submit', {
+  return fetch('/api/mws/mail-assistant/send-list/mail-submit', {
     method: 'POST',
-    ...params,
+    headers: {
+      'Accept': 'application/json',
+      'StoreId': params.StoreId,
+    },
+    body: params.formData,
+  }).then((response) => {
+    return response.json();
   });
 }
 //发件箱

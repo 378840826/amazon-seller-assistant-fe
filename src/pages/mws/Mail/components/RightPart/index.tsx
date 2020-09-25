@@ -7,7 +7,7 @@ import RightFeedback from '../RightFeedback';
 import styles from './index.less';
 
 interface IRightPart extends IConnectProps{
-  id: number;
+  id: number | string;
   StoreId: string;
 }
 

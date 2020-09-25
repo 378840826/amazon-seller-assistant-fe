@@ -12,8 +12,6 @@ import {
   tankTemplateList,
   receiveListTemplateLoad,
   sendListTemplateLoad,
-  receiveListEmailSubmit,
-  sendListEmailSubmit,
   getSendList,
   getRuleList,
   switchRule,
@@ -28,6 +26,8 @@ import {
   updateTemplate,
   saveTemplate,
   saveUpdateTemplate,
+  receiveListEmailSubmit,
+  sendListEmailSubmit,
 } from '@/services/mail';
 import { nTs } from '@/utils/utils';
 
@@ -65,7 +65,7 @@ export interface IMailModelState{
     };
     tableLoading: boolean;
     rowSelection: ReactText[];
-    id: number;
+    id: number | string;
   };
   request: API.IParams;
   templateList: ITemplates[];
@@ -118,10 +118,11 @@ const mailModel: IMailModelType = {
     //收件箱修改 已读，未读，已回复，未回复
     *updateStatus({ payload, callback }, { call, put }){
       const response = yield call(updateStatus, payload);
+      console.log('payload:', payload);
       if (response.code === 200){
         yield put({
           type: 'modifyInboxTableRecords',
-          payload: payload.params,
+          payload: payload.data,
         });
         callback && callback(response.message);
       } else {
@@ -168,27 +169,30 @@ const mailModel: IMailModelType = {
         message.error(response.message);
       }
     },
-    //手件箱邮件提交
-    *receiveListEmailSubmit({ payload }, { call }){
-      const response = yield call(receiveListEmailSubmit, payload);
-      nTs(response);
-      if (response.code === 200){
-        message.success(response.message);
+    //邮件提交
+    *receiveOrSendEmailSubmit({ payload, callback }, { call }){
+      const { pathname, StoreId, ...params } = payload;
+      const formData = new FormData();
+      Object.keys(params).map(key => {
+        console.log('key', key);
+        if (key === 'file'){
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          params.file.map( (item: any) => {
+            formData.append('file', item);
+          });
+        } else {
+          formData.append(key, params[key]);
+        }
+        
+      });
+      let response = null;
+      if (pathname === '/mws/mail/inbox'){
+        response = yield call(receiveListEmailSubmit, { StoreId, formData });
       } else {
-        message.error(response.message);
+        response = yield call(sendListEmailSubmit, { StoreId, formData });
       }
+      callback && callback(response); 
     },
-    //发件箱邮件提交
-    *sendListEmailSubmit({ payload }, { call }){
-      const response = yield call(sendListEmailSubmit, payload);
-      nTs(response);
-      if (response.code === 200){
-        message.success(response.message);
-      } else {
-        message.error(response.message);
-      }
-    },
-    //
     *getSendList({ payload }, { call, put }){
       yield put({
         type: 'modifyInboxLoadingState',
@@ -196,7 +200,7 @@ const mailModel: IMailModelType = {
       });
       const response = yield call(getSendList, payload);
       yield put({
-        type: 'saveSendList',
+        type: 'saveReceiveEmailList',
         payload: response,
       });
     },
@@ -326,15 +330,8 @@ const mailModel: IMailModelType = {
           },
         });
       }
-      const { code } = response;
-      if (code === 200){
-        message.success(response.message);
-      } else {
-        message.error(response.message);
-      }
-      callback && callback();
+      callback && callback(response);
     },
-    
   },
   reducers: {
     saveUnreadMail(state, { payload }){
@@ -344,11 +341,13 @@ const mailModel: IMailModelType = {
     modifyInboxLoadingState(state, { payload }){
       state.inbox.tableLoading = payload;
     },
+    //保存收件和发件列表
     saveReceiveEmailList(state, { payload }){
       nTs(payload);
       const { code, data, message } = payload;
       if (code === 200){
         const records = data.records;
+        const id = records.length === 0 ? -1 : records[0].id;
         records.map( (item: API.IParams, index: number) => {
           item.key = index;
         });
@@ -358,7 +357,7 @@ const mailModel: IMailModelType = {
           tableInfo: data,
           tableLoading: false,
           rowSelection: [],
-          id: Number(state.inbox.id) === -1 ? state.inbox.id : records[0].id,
+          id: Number(state.inbox.id) === -1 ? state.inbox.id : id,
         };
       } else {
         state.inbox = {
@@ -370,6 +369,7 @@ const mailModel: IMailModelType = {
             pages: 0,
             records: [],
           },
+          id: -1,
           tableLoading: false,
           msg: message,
           rowSelection: [],
@@ -432,38 +432,6 @@ const mailModel: IMailModelType = {
     reduceCountDown(state, { payload }){
       const time = state.inbox.tableInfo.records[payload].countDown;
       time > 0 ? state.inbox.tableInfo.records[payload].countDown -= 60 * 1000 : 0;
-    },
-    saveSendList: (state, { payload }) => {
-      nTs(payload);
-      const { code, data, message } = payload;
-      if (code === 200){
-        const records = data.records;
-        records.map( (item: API.IParams, index: number) => {
-          item.key = index;
-        });
-        data.records = records;
-        state.inbox = {
-          ...state.inbox,
-          tableInfo: data,
-          tableLoading: false,
-          rowSelection: [],
-          id: Number(state.inbox.id) === -1 ? state.inbox.id : records[0].id,
-        };
-      } else {
-        state.inbox = {
-          ...state.inbox,
-          tableInfo: {
-            total: 0,
-            current: 1,
-            size: 20,
-            pages: 0,
-            records: [],
-          },
-          tableLoading: false,
-          msg: message,
-          rowSelection: [],
-        };
-      }
     },
   },
 };

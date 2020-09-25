@@ -56,8 +56,18 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => {
       payload: {
         data: {
           headersParams: { StoreId },
+          dateStart: request.dateStart,
+          dateEnd: request.dateEnd,
+          cycle: request.cycle,
+          type: request.type,
+          status: request.status,
+          searchContent: request.searchContent,
+          sendType: request.sendType,
         },
-        params: request,
+        params: {
+          size: request.size,
+          current: request.current,
+        },
       },
     });
   }, [StoreId, dispatch, request]);
