@@ -241,13 +241,15 @@ export const nTs = (ary: any) => {
 };
 
 //将单位为ms秒的时间戳转换为时分
-export const changeHS = (second: number) => {
-  // 1H = 60 min = 3600s  1s=1000ms
-  let H: number | string = Math.floor(second / (3600 * 1000 ));
-  let M: number | string = Math.floor((second - 3600 * 1000 * H ) / (60 * 1000)) ;
-  H = H > 10 ? H : `0${H}`;
-  M = M > 10 ? M : `0${M}`;
-  return `${H}:${M}`;
+export const changeHS = (second: number | string) => {
+  if (typeof second === 'number'){
+    // 1H = 60 min = 3600s  1s=1000ms
+    let H: number | string = Math.floor(second / (3600 * 1000 ));
+    let M: number | string = Math.floor((second - 3600 * 1000 * H ) / (60 * 1000)) ;
+    H = H > 10 ? H : `0${H}`;
+    M = M > 10 ? M : `0${M}`;
+    return `${H}:${M}`;
+  }
 };
 
 

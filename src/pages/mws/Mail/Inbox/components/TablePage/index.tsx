@@ -99,10 +99,7 @@ const TablePage: React.FC<ITablePage> = ({
       align: 'center',
       render: (text, record) => {
         return (
-          text === '' ? 
-            <div className="null_bar"></div>
-            :
-            <CountDown className={styles.countDown} time={text} timeKey={record.key}/>
+          <CountDown className={styles.countDown} time={text} timeKey={record.key}/>
         );
       },
     },

@@ -3,7 +3,7 @@ import { changeHS } from '@/utils/utils';
 import { useDispatch } from 'umi';
 interface ICountDownProps{
   timeKey: number;
-  time: number;
+  time: number | string;
   className: string;
 }
 
@@ -22,7 +22,7 @@ const CountDown: React.FC<ICountDownProps> = ({ timeKey, className, time }) => {
   }, [dispatch, timeKey]);
   return (
     <div className={className}>
-      {changeHS(time)}
+      { time === '' ? <div className="null_bar"></div> : changeHS(time)}
     </div>
   );
 };
