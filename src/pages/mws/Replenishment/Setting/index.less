@@ -1,0 +1,101 @@
+// 设置弹窗
+.Setting {
+  text-align: left;
+  background: #fff;
+  box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+  width: 950px;
+  padding: 20px;
+  border-radius: @border-radius-base;
+
+  :global {
+    .ant-form-item-label {
+      width: 80px;
+    }
+
+    .ant-form-item {
+      margin-bottom: 14px;
+    }
+  }
+
+  input {
+    text-align: center;
+  }
+}
+
+.secondary {
+  color: @text-color-secondary;
+}
+
+.title {
+  display: inline-block;
+  width: 76px;
+  min-width: 76px;
+  line-height: 30px;
+  vertical-align: top;
+  color: @heading-color;
+}
+
+.salesFixedContainer {
+  :global {
+    .ant-form-item {
+      width: 82px;
+      margin: 0;
+    }
+  }
+}
+
+.content {
+  display: inline-block;
+
+  :global {
+    .ant-form-item-explain {
+      position: absolute;
+      left: 140px;
+      right: -180px;
+      top: 3px;
+    }
+  }
+}
+
+// .settingPeriod input {
+//   width: 80px;
+// }
+
+.settingItem {
+  display: flex;
+
+  &:first-child input {
+    width: 80px;
+  }
+}
+
+.salesContainer {
+  margin-top: 10px;
+}
+
+.salesComputeContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  :global {
+    .ant-form-item {
+      width: 70px;
+      margin: 0 6px;
+    }
+  }
+}
+
+.errorText {
+  position: absolute;
+  top: 30px;
+  color: @error-color;
+}
+
+.btnContainer {
+  margin-top: 27px;
+
+  button {
+    margin-right: 27px;
+  }
+}

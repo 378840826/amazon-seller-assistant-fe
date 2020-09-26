@@ -63,6 +63,7 @@ export default [
       { title: 'Business Report 解读', path: '/mws/report/unscramble', component: './mws/GoodsList' },
       { title: '商品列表', path: '/mws/goods/list', component: './mws/GoodsList' },
       { title: '错误报告', path: '/mws/goods/error-report', component: './mws/ErrorReport' },
+      { title: '补货计划', path: '/mws/goods/replenishment', component: './mws/Replenishment' },
       { title: 'ASIN动态', path: '/mws/goods/change', component: './mws/AsinChange' },
       { title: '订单列表', path: '/mws/order/list', component: './mws/order/List' },
       { title: '订单解读', path: '/mws/order/unscramble', component: './mws/GoodsList' },

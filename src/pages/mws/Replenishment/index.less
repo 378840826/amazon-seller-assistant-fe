@@ -1,0 +1,245 @@
+.darkRow td {
+  background-color: #fafafa;
+}
+
+.detailsDropdownConten {
+  max-width: 1300px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+  border-radius: 4px;
+
+  :global {
+    .ant-table-thead > tr > th {
+      background-color: @simple-table-header-bg;
+      padding: 8px;
+    }
+
+    .ant-table-tbody td {
+      padding: 4px;
+      line-height: 18px;
+    }
+
+    .ant-table-container {
+      font-size: 14px;
+    }
+  }
+}
+
+.page {
+  position: relative;
+  background: #fff;
+  padding: 20px 20px 0 20px;
+
+  :global {
+    .ant-table-container {
+      font-size: @font-size-sm;
+
+      .ant-table-thead tr th {
+        padding: 2px;
+      }
+
+      .ant-table-thead .ant-table-column-sorters {
+        padding: 2px;
+      }
+    }
+
+    // 高亮已排序的表头
+    .ant-table-header .ant-table-cell.sortActiveTh {
+      background: #e5e8eb;
+    }
+
+    // 分级表头的分隔线 左中右 三个
+    .leftTitle {
+      &::after {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 88%;
+        height: 1px;
+        top: 0;
+        right: 0;
+        background: #ccc;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 1px;
+        height: 100%;
+        right: 0;
+        background: #ccc;
+      }
+    }
+
+    .middleTitle {
+      &::after {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 100%;
+        height: 1px;
+        top: 0;
+        left: 0;
+        background: #ccc;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 1px;
+        height: 100%;
+        right: 0;
+        background: #ccc;
+      }
+    }
+
+    .rightTitle {
+      &::after {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 88%;
+        height: 1px;
+        top: 0;
+        left: 0;
+        background: #ccc;
+      }
+    }
+
+    .ant-table-column-sorter {
+      margin-left: 0;
+
+      svg {
+        display: none;
+      }
+
+      .ant-table-column-sorter-up {
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-color: transparent transparent @text-color-secondary @text-color-secondary;
+          border-style: solid;
+          border-width: 1px;
+          transform: rotate(135deg) translate(-5px, -6px);
+        }
+      }
+
+      .ant-table-column-sorter-down {
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-color: transparent transparent @text-color-secondary @text-color-secondary;
+          border-style: solid;
+          border-width: 1px;
+          transform: rotate(-45deg) translate(6px, 5px);
+        }
+      }
+
+      .ant-table-column-sorter-inner {
+        & > span {
+          display: none;
+        }
+
+        & > span.active {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.sortMenuBtn {
+  display: block;
+  cursor: pointer;
+}
+
+.goodsInfoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.goodsInfoContainer .goodsTitle {
+  margin-bottom: 0;
+  color: @link-color;
+
+  .link {
+    color: @text-color-secondary;
+  }
+
+  &:hover > .link {
+    color: @link-color;
+  }
+}
+
+.newProduct {
+  display: inline-block;
+  width: 32px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  background: @error-color;
+  color: #fff;
+  border-radius: 2px;
+}
+
+.goodsInfoRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.goodsInfoContent {
+  margin-left: 10px;
+  text-align: left;
+  width: 240px;
+}
+
+.detailsBtn {
+  font-size: 12px;
+  height: 24px;
+}
+
+.activeDetailsBtn {
+  color: @btn-text-color;
+}
+
+.settingBtn {
+  font-size: 12px;
+  color: @btn-text-color;
+}
+
+.activeSettingBtn {
+  color: @primary-color;
+}
+
+.up {
+  color: @text-color-up;
+}
+
+.down {
+  color: @text-color-down;
+}
+
+.label {
+  margin: 2px;
+  min-width: 20px;
+}
+
+.titleMenu li {
+  font-size: @font-size-sm;
+  color: @primary-color;
+}
+
+.inTransitQuantityTd {
+  color: @warning-color;
+}
+
+.recommendedReplenishmentVolumeTd {
+  color: @warning-color;
+}

@@ -110,6 +110,79 @@ declare namespace API {
     id: string;
     groupName: string;
   }
+
+  interface IInventoryReplenishmentLabels {
+    id: string;
+    labelName: string;
+  }
+
+  interface IInventoryReplenishment {
+    asin: string;
+    sku: string;
+    fnSku: string;
+    sharedState: number;
+    lastModifiedTime: string;
+    skuStatus: string;
+    newProduct: boolean;
+    title: string;
+    url: string;
+    img: string;
+    listingStatus: string;
+    openDate: string;
+    reviewScore: number;
+    reviewCount: number;
+    sellable: number;
+    totalInventory: number;
+    inTransitInventory: number;
+    reservedAvailable: number;
+    orderCount7day: number;
+    orderCount30day: number;
+    orderCount15day: number;
+    orderCount7dayRatio: number;
+    orderCount30dayRatio: number;
+    orderCount15dayRatio: number;
+    orderSevenNumRatioSub: number;
+    orderFifteenNumRatioSub: number;
+    orderThirtyNumRatioSub: number;
+    orderSalesCount30day: number;
+    orderSalesCount7day: number;
+    orderSalesCount15day: number;
+    orderSalesCount30dayRatio: number;
+    orderSalesCount7dayRatio: number;
+    orderSalesCount15dayRatio: number;
+    salesSevenNumRatioSub: number;
+    salesFifteenNumRatioSub: number;
+    salesThirtyNumRatioSub: number;
+    stockingCycle: number;
+    firstPass: number;
+    totalInventoryAvailableDays: number;
+    availableDaysOfExistingInventory: number;
+    estimatedOutOfStockTime: string;
+    recommendedReplenishmentVolume: number;
+    shippingMethodsList: string[];
+    labels: ILabel[];
+    // 用于设置
+    labelIds?: string[];
+  }
+
+  interface ILabel {
+    id: string;
+    labelName: string;
+  }
+
+  interface ITransitDetails {
+    shipmentId: string;
+    shipmentName: string;
+    createTime: string;
+    updateTime: string;
+    shippedQuantity: number;
+    receivedQuantity: number;
+    inTransitQuantity: number;
+    destination: string;
+    status: string;
+    estimatedArrival: string;
+  }
+
   interface IStoreList{
     sellerId: string;
     storeName: string;
