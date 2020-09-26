@@ -190,7 +190,7 @@ const ReturnProduct: React.FC = () => {
         yAxis: [{
           type: 'value',
           offset: 10,
-          splitNumber: 5,
+          splitNumber: 6,
           axisLine: {
             show: false,
             lineStyle: {
@@ -215,13 +215,16 @@ const ReturnProduct: React.FC = () => {
           type: 'value',
           position: 'right',
           offset: 10,
-          splitNumber: 5,
+          splitNumber: 6,
           axisTick: {
             show: false,
           },
           axisLabel: {
             color: '#999',
             showMinLabel: true, // 是否显示最小值 0
+            formatter(value: string) {
+              return `${value}%`;
+            },
           },
           axisLine: {
             show: false,
@@ -510,7 +513,7 @@ const ReturnProduct: React.FC = () => {
                 </p>
                 <p className={styles.ratio}>
                   <span className={styles.text}>环比：</span>
-                  <Rate value={ parseFloat(returnInfo.returnQuantityRatio) } />
+                  <Rate value={ parseFloat(returnInfo.returnQuantityRatio) } decimals={2}/>
                 </p>
               </div>
             </div>
@@ -530,7 +533,7 @@ const ReturnProduct: React.FC = () => {
                 </p>
                 <p className={styles.ratio}>
                   <span className={styles.text}>环比：</span>
-                  <Rate value={ parseFloat(returnInfo.returnRateRatio) }/>
+                  <Rate value={ parseFloat(returnInfo.returnRateRatio) } decimals={2} />
                 </p>
               </div>
             </div>

@@ -24,6 +24,7 @@ declare namespace Global {
           timezone: string;
           currency: string;
           tokenInvalid: boolean;
+          marketplace: string;
         };
       };
     };

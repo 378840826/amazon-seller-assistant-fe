@@ -1,0 +1,156 @@
+.labelsMenuDropdown {
+  width: 236px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+  border-radius: 4px;
+
+  :global {
+    .ant-btn {
+      min-width: 46px;
+      width: 46px;
+      padding: 0;
+    }
+  }
+
+  .title {
+    color: @heading-color;
+    font-size: @font-size-lg;
+    font-weight: bold;
+    margin-bottom: 13px;
+  }
+}
+
+.labelCell {
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 164px;
+}
+
+.deleteBtn {
+  color: @text-color-secondary;
+
+  &:hover {
+    color: @error-color;
+  }
+}
+
+.labelName {
+  display: inline-block;
+  width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Header {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  margin-bottom: 20px;
+  font-size: @font-size-base;
+
+  :global {
+    .ant-btn {
+      padding: 0 6px;
+    }
+
+    .ant-radio-button-wrapper {
+      padding: 0 6px;
+    }
+
+    .ant-radio-wrapper {
+      margin-right: 5px;
+    }
+
+    .anticon {
+      font-size: 10px;
+    }
+  }
+
+  & > * {
+    margin-right: 20px;
+  }
+
+  // 小屏幕下，每一个菜单减少间隔
+  @media (max-width: @screen-xl) {
+    & > * {
+      margin-right: 10px;
+    }
+
+    .right .export {
+      margin-left: 10px;
+    }
+  }
+
+  .sousouIcon {
+    font-size: 19px;
+    padding-top: 2px;
+  }
+}
+
+.leftLast {
+  margin-right: 0;
+}
+
+.right {
+  flex: 1;
+  text-align: right;
+  margin-right: 0;
+}
+
+.export {
+  min-width: 60px;
+  margin-left: 20px;
+}
+
+.updateTime {
+  position: absolute;
+  top: -36px;
+  right: 0;
+  font-size: @font-size-sm;
+
+  span {
+    color: @text-color-secondary;
+  }
+}
+
+.head {
+  color: @heading-color;
+}
+
+// 搜索框
+.SearchContainer {
+  position: relative;
+}
+
+.Search {
+  width: 280px;
+
+  :global {
+    .ant-input-search-button {
+      padding: 3px 8px;
+    }
+
+    .ant-btn {
+      min-width: 40px;
+    }
+  }
+}
+
+// 输入框清除按钮
+.emptySearch {
+  position: absolute;
+  right: 46px;
+  top: 10px;
+  z-index: 1;
+  color: @text-color-secondary;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}

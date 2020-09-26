@@ -257,7 +257,7 @@ const Order: React.FC = () => {
       setTableLoading(false);
       console.error(err);
     });
-  }, [dispatch, shopId, dateRangeItem]);  // eslint-disable-line
+  }, [dispatch, shopId, dateRangeItem, statistic, currentAsin]);  // eslint-disable-line
 
   // 折线图的数据请求
   const changeLineChart = (params = {}) => {
@@ -564,7 +564,7 @@ const Order: React.FC = () => {
       return keyCount++;
     },
     locale: {
-      emptyText: <TableNotData />,
+      emptyText: <TableNotData hint="周期内没有数据，请重新筛选条件"/>,
     },
     loading: tableLoading,
     summary: () => {

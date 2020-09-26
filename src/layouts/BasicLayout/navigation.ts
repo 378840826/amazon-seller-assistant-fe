@@ -29,6 +29,7 @@ const navigation: INavigation[] = [
       { title: '商品列表', path: '/mws/goods/list' },
       { title: 'ASIN动态', path: '/mws/goods/change' },
       { title: '错误报告', path: '/mws/goods/error-report', hide: true },
+      { title: '补货计划', path: '/mws/goods/replenishment' },
     ],
   },
   {

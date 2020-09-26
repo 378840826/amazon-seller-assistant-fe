@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-07-11 15:49:38
  * @LastEditors: Huang Chao Yi
- * @FilePath: \amzics-react\src\pages\asinPandect\returnProduct\returnProduct.d.ts
+ * @FilePath: \amzics-react\src\pages\asinPandect\ReturnProduct\returnProduct.d.ts
  */
 
 declare namespace ReturnProduct {
@@ -37,7 +37,7 @@ declare namespace ReturnProduct {
   interface ILineChartData {
     dateTime: string;
     returnQuantity: number;
-    returnRate: number;
+    returnRate: string;
   }
 
   interface IReturnReason {

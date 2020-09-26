@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 15:34:04
+ * @LastEditTime: 2020-09-09 09:43:16
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  * 
@@ -14,90 +14,73 @@
 'use strict';
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
-import { Table, message } from 'antd';
+import { Table, message, Tooltip } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import Pagination from '@/components/Pagination';
 import { connect } from 'dva';
 import { useDispatch, useLocation, useSelector } from 'umi';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, getAmazonBaseUrl } from '@/utils/utils';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-import { storage, getAmazonBaseUrl } from '@/utils/utils';
 import imgUrl from '@/assets/stamp.png';
 import Toolbar from './components/Toolbar';
 import { Moment } from 'moment/moment';
-import { outerHeight } from '@/utils/huang';
 
 
 let hisrotyRequest = {};// 保存所有筛选信息
 const OrderList: React.FC = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const location = useLocation() as MwsOrderList.ILocation;
   const [startTime] = useState<Moment>(
     moment().subtract(1, 'week').startOf('week')
   ); // 日历默认开始日期
   const [endTime] = useState<Moment>(
     moment().subtract(1, 'week').endOf('week')
   ); // 日历默认结束日期
-  const [currentShop, setCurrentShop] = useState<API.IShop>(storage.get('currentShop')); // 当前选中店铺
   const [tableLoadingStatus, setTableLoadingStatus] = useState<boolean>(true); // 表格是否显示loading
   const [dataSource, setDataSource] = useState<[]>([]); // 表格数据
   const [pageTotal, setPageTotal] = useState<number>(0); // 分页数量
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
-  const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
-  const [tableHeight, setTableHeight] = useState<number>(500); // 默认500
+  const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   let rowNumber = 0; // 行key
-  // eslint-disable-next-line 
-  const query: any = location.query; // eslint-disable-line
-  const { asin = '', buyer = '' } = query as {asin: string; buyer: string};
-  
-  // 请求数据 
-  const requestDatas: MwsOrderList.IRequestDatas = {
-    current: pageCurrent,
-    size: pageSize,
-    startTime: startTime.format('YYYY-MM-DD'),
-    endTime: endTime.format('YYYY-MM-DD'),
-  };
-
-  requestDatas.asinRelatedSearch = asin;
-  requestDatas.buyerRelatedSearch = buyer;
-
-  // 表格最大高度
-  const setTbodyHeigght = () => {
-    const windowHeight = document.documentElement.clientHeight;
-    const navHeight = outerHeight('.g-header-nav') as number;
-    const childnavHeight = outerHeight('.g-secondary-nav') as number;
-    const toolbarHeight = outerHeight('.order-list-toolbar') as number;
-    const pageHeight = outerHeight('.g-page') as number;
-    const tableHeight = windowHeight - (navHeight + childnavHeight + toolbarHeight + pageHeight);
-    
-    setTableHeight(tableHeight - 50);
+  const { asin = '', buyer = '' } = location.query as {
+    asin: string;
+    buyer: string;
   };
   
-  
+  const handleRequest = useCallback((params = {}) => {
+    let obj: any = { // eslint-disable-line
+      current: pageCurrent,
+      size: pageSize,
+      startTime: startTime.format('YYYY-MM-DD'),
+      endTime: endTime.format('YYYY-MM-DD'),
+      headersParams: {
+        StoreId: currentShop.id,
+      },
+    };
+
+    obj.asinRelatedSearch = asin;
+    obj.buyerRelatedSearch = buyer;
+
+    obj = Object.assign({}, obj, params);
+    return obj;
+  }, [currentShop, asin, buyer, startTime, endTime]); // eslint-disable-line
+
   // 请求体
-  const requestFn = useCallback((requestData = requestDatas) => {
+  const requestFn = useCallback((requestData = handleRequest()) => {
+    if (Number(currentShop.id) === -1) {
+      return;
+    } 
+    const payload = requestData;
+    setTableLoadingStatus(true);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'orderList/getOrderList',
-        payload: {
-          resolve,
-          reject,
-          data: Object.assign(
-            {},
-            requestData, 
-            { 
-              headersParams: {
-                StoreId: currentShop.id,
-              },
-            }
-          ),
-          headersParams: {
-            StoreId: currentShop.id,
-          },
-        },
+        resolve,
+        reject,
+        payload,
       });
     }).then(datas => {
       setTableLoadingStatus(false);
@@ -111,20 +94,19 @@ const OrderList: React.FC = () => {
         setPageSize(data.size);
         setPageTotal(data.total);
         setPageCurrent(data.current);
-        setTbodyHeigght();
       } else {
         message.error(msg || '数据异常！');
       }
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  }, [dispatch]); // eslint-disable-line
+  }, [dispatch, currentShop, handleRequest]);
 
   // 接收工具框(子组件)的参数并重新请求
   const filtrateFn = (requestData: {}) => {
     setTableLoadingStatus(true);
 
-    hisrotyRequest = Object.assign({}, requestDatas, hisrotyRequest, requestData);
+    hisrotyRequest = Object.assign({}, handleRequest(), hisrotyRequest, requestData);
 
     // 筛选掉单选框里面的不限选择
     // for (const key in hisrotyRequest ) {
@@ -137,59 +119,12 @@ const OrderList: React.FC = () => {
     setPageSize(20);
     requestFn(hisrotyRequest);
   };
-
-  // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
-  useEffect(() => {
-    const dom = document.querySelector('.ant-table-body');
-    if (dom) {
-      dom.scrollTop = 0;
-    }
-  }, [dataSource]);
   
   // 首次 请求表格信息
   useEffect(() => {
-    setCurrentShop(storage.get('currentShop'));
     setTableLoadingStatus(true);
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: 'orderList/getOrderList',
-        payload: {
-          resolve,
-          reject,
-          data: {
-            current: 1,
-            size: 20,
-            startTime: startTime.format('YYYY-MM-DD'),
-            endTime: endTime.format('YYYY-MM-DD'),
-            asinRelatedSearch: asin,
-            buyerRelatedSearch: buyer,
-            headersParams: {
-              StoreId: currentShop.id,
-            },
-          },
-        },
-      });
-    }).then(datas => {
-      setTableLoadingStatus(false);
-      const {
-        code = 1000,
-        data,
-        message: msg,
-      } = datas as MwsOrderList.IResponseTableData;
-      if (code === 200) {
-        setDataSource(data.records);
-        setPageSize(data.size);
-        setPageTotal(data.total);
-        setPageCurrent(data.current);
-        setTbodyHeigght();
-      } else {
-        message.error(msg || '数据异常！');
-      }
-    }).catch(() => {
-      setTableLoadingStatus(false);
-    });
-  }, [dispatch, current, startTime, endTime, asin, buyer]); // eslint-disable-line
-
+    requestFn();
+  }, [dispatch, requestFn]);
 
   // 分页配置
   const pageConfig = {
@@ -200,10 +135,19 @@ const OrderList: React.FC = () => {
       setTableLoadingStatus(true);
       setPageCurrent(current);
       setPageSize(size);
-      hisrotyRequest = Object.assign({}, requestDatas, hisrotyRequest, { current, size });
+      hisrotyRequest = Object.assign({}, handleRequest(), hisrotyRequest, { current, size });
       requestFn(hisrotyRequest);
     },
   };
+
+  // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
+  useEffect(() => {
+    const dom = document.querySelector('.ant-table-body');
+    if (dom) {
+      dom.scrollTop = 0;
+    }
+  }, [dataSource]);
+
 
   // 标题头部
   const rowColumns = (
@@ -218,37 +162,50 @@ const OrderList: React.FC = () => {
           width: '31.7%',
           align: 'center',
           render() {
-            return <div className={styles.head} style={{ minWidth: 433 }}>产品信息</div>;
+            return <div className={styles.head} style={{
+              minWidth: 433,
+            }}>产品信息</div>;
           },
         }, {
           width: '15.45%',
           align: 'center',
           render() {
-            return <div className={styles.head} style={{ minWidth: 211 }}>费用信息</div>;
+            return <div className={styles.head} style={{
+              minWidth: 211,
+            }}>费用信息</div>;
           },
         }, {
           width: '5.71%',
           align: 'center',
           render() {
-            return <div className={styles.head} style={{ minWidth: 78 }}>发货状态</div>;
+            return <div className={styles.head} style={{
+              minWidth: 78,
+            }}>发货状态</div>;
           },
         }, {
           width: '9.52%',
           align: 'center',
           render() {
-            return <div className={styles.head} style={{ minWidth: 130 }}>订单状态</div>;
+            return <div className={styles.head} style={{
+              minWidth: 130,
+            }}>订单状态</div>;
           },
         }, {
           width: '7.69%',
           align: 'center',
           render() {
-            return <div className={styles.head} style={{ minWidth: 105 }}>实付金额</div>;
+            return <div className={styles.head} style={{
+              minWidth: 105,
+            }}>实付金额</div>;
           },
         }, {
           width: '26.34%',
           align: 'center',
           render() {
-            return <div className={styles.head} style={{ minWidth: 360, width: 400 }}>买家信息</div>;
+            return <div className={styles.head} style={{
+              minWidth: 360,
+              width: 400,
+            }}>买家信息</div>;
           },
         },
       ]}
@@ -278,7 +235,7 @@ const OrderList: React.FC = () => {
         pagination={false}
         className={styles.table_style}
         id="id-table"
-        scroll={{ y: tableHeight, scrollToFirstRowOnChange: true }}
+        scroll={{ y: 'calc(100vh - 378px)' }}
         columns = {
           [{
             title: rowColumns,
@@ -323,13 +280,19 @@ const OrderList: React.FC = () => {
                             <div className={`${styles.table_product_col} clearfix`}>
                               <img src={rows.imgUrl || imgUrl } alt=""/>
                               <div className={`${styles.datails}`}>
-                                <a href={`${url}/dp/${rows.asin}`} 
-                                  rel="noopener noreferrer" 
-                                  target="_blank" 
-                                  className={`${styles.title} line-animation`}>
-                                  <Iconfont type="icon-lianjie" style={{ fontSize: 16, color: '#666', marginRight: 2 }} />
-                                  {rows.productName || ''}
-                                </a>
+                                <Tooltip title={rows.productName}>
+                                  <a href={`${url}/dp/${rows.asin}`} 
+                                    rel="noopener noreferrer" 
+                                    target="_blank" 
+                                    className={`${styles.title} line-animation`}>
+                                    <Iconfont type="icon-lianjie" style={{
+                                      fontSize: 16,
+                                      color: '#666',
+                                      marginRight: 2,
+                                    }} />
+                                    {rows.productName || ''}
+                                  </a>
+                                </Tooltip>
                                 <p>
                                   <span>{rows.sku || ''}</span>
                                   <span>{unitPrice ? currentShop.currency + unitPrice : '—' }</span>
@@ -386,7 +349,9 @@ const OrderList: React.FC = () => {
                         width: '5.71%',
                         align: 'center',
                         render(value) {
-                          return <div style={{ minWidth: '78px' }}>{value}</div>;
+                          return <div style={{
+                            minWidth: 78,
+                          }}>{value}</div>;
                         },
                       }, {
                         // 订单状态

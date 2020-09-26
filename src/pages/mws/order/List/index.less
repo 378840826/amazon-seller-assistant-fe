@@ -22,9 +22,17 @@
   }
 }
 
+div:global(.ant-table) {
+  font-size: @font-size-sm !important;
+}
+
 .table_style {
   :global(.ant-table-cell) {
     padding: 0;
+  }
+
+  div:global(.ant-table-body) {
+    overflow: visible;
   }
 
   // 表头
@@ -60,6 +68,7 @@
       line-height: 42px;
       color: @text-color;
       background-color: #fff;
+      border-bottom: 1px solid @divider-line-color;
 
       span:first-child {
         float: left;
@@ -86,6 +95,10 @@
       tr {
         height: 100px;
         max-height: 100px;
+
+        &:hover td {
+          background-color: transparent;
+        }
       }
     }
 

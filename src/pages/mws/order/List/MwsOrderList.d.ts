@@ -1,4 +1,6 @@
 declare namespace MwsOrderList {
+  import { Location } from 'umi';
+
   interface ITableData {
     tableData: {
       code: number;
@@ -99,5 +101,12 @@ declare namespace MwsOrderList {
     endTime: string;
     asinRelatedSearch?: string;
     buyerRelatedSearch?: string;
+  }
+
+  interface ILocation extends Location {
+    query?: {
+      asin: string; 
+      buyer: string;
+    };
   }
 }

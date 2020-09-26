@@ -46,9 +46,15 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
 
   const [startDate, setStartDate] = useState<string>(''); // 开始日期
   const [endDate, setEndDate] = useState<string>(''); // 结束日期
-  const [weekCalendar, setWeekCalendar] = useState<boolean>(false); // 周日历是否显示
-  const [monthCalendar, setMonthCalendar] = useState<boolean>(false); // 月日历是否显示
   const [selectItem, setSelectItem] = useState<string>(checkedItem || '7');// 下拉列表选中内容，默认是 “最近7天”
+
+  // 周日历相关
+  const [weekCalendar, setWeekCalendar] = useState<boolean>(false); // 周日历是否显示
+  const [weekValue, setWeekValue] = useState<Moment | null>(null); // 目前只用来做清空作用
+  
+  // 月日历相关
+  const [monthCalendar, setMonthCalendar] = useState<boolean>(false); // 月日历是否显示
+  const [monehtValue, setMonthValue] = useState<Moment | null>(null); // 目前只用来做清空作用
 
   // 下拉列表选项
   const downlist: IDownListType[] = [
@@ -159,6 +165,8 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
       setWeekCalendar(true);
       break;
     default: // 最近N天
+      setMonthValue(null as null); // 清空选中的月
+      setWeekValue(null as null); // 清空选中的周
       obj = getRangeDate(key);
       setStartDate(obj.start);
       setEndDate(obj.end);
@@ -193,6 +201,7 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
     setWeekCalendar(!weekCalendar);
     handleWeebMonth('week', date);
     storage.remove(`${storageKey}_month`);
+    setWeekValue(date as Moment);
   };
 
   // 月日历改变时
@@ -200,6 +209,7 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
     setMonthCalendar(!monthCalendar);
     handleWeebMonth('month', date);
     storage.remove(`${storageKey}_week`);
+    setMonthValue(date as Moment);
   };
 
   // input获取焦点时 隐藏月/周的日期
@@ -238,12 +248,14 @@ const DefinedCalendar: React.FC<IProps> = (props) => {
           onChange={changeWeek} 
           picker="week" 
           open={weekCalendar}
+          value={weekValue}
           className={styles.weekCalendar}
         />
         <DatePicker 
           onChange={changeMonth} 
           picker="month" 
           open={monthCalendar}
+          value={monehtValue}
           className={styles.weekCalendar}
         />
       </ConfigProvider>
