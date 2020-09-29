@@ -5,6 +5,7 @@ import { IConnectState } from '@/models/connect';
 import { requestErrorFeedback } from '@/utils/utils';
 import classnames from 'classnames';
 import { renderCouldNullTd } from './cols';
+import TableNotData from '@/components/TableNotData';
 import styles from './index.less';
 
 interface IProps {
@@ -102,7 +103,7 @@ const TransitDetails: React.FC<IProps> = props => {
         pagination={false}
         rowKey="shipmentId"
         dataSource={transitDetails}
-        locale={{ emptyText: '没有找到相关数据' }}
+        locale={{ emptyText: <TableNotData hint="没有找到相关数据" className={styles.detailsNotData} /> }}
       />
     </div>
   );

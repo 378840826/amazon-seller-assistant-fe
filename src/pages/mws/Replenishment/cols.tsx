@@ -50,7 +50,7 @@ export const renderCouldNullTd = (value: any) => {
 };
 
 // 排序图标
-const renderSortIcon = function (order: Order) {
+const renderSortIcon = (order: Order) => {
   let className = '';
   if (order === 'ascend') {
     className = 'ant-table-column-sorter-up';
@@ -75,6 +75,13 @@ export const getFullColumns = (params: any) => {
     order,
     compareType,
   } = params;
+
+  // 获取自定义排序下拉框的 menuItem
+  const getMenuItem = (menuItemSort: string, menuItemOrder: string, name: string) => {
+    const key = `${menuItemSort}-${menuItemOrder}`;
+    const className = (menuItemOrder === order && menuItemSort === sort) ? styles.active : null;
+    return <MenuItem key={key} className={className}>{name}</MenuItem>;
+  };
 
   // 点击下拉排序
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,7 +132,7 @@ export const getFullColumns = (params: any) => {
       sorter: true,
       sortOrder: sort === 'lastModifiedTime' ? order : null,
       align: 'center',
-      width: 86,
+      width: 94,
       fixed: 'left',
       render: value => renderCouldNullTd(value),
     }, {
@@ -158,11 +165,11 @@ export const getFullColumns = (params: any) => {
               <a title={title} href={record.url} target="_blank" rel="noopener noreferrer">{title}</a>
             </Paragraph>
             <div className={styles.goodsInfoRow}>
-              <Link to="/" title="跳转到ASIN总揽">{record.asin}</Link>
+              <Text>{record.sku}</Text>
               <Text>{record.fnSku}</Text>
             </div>
             <div className={styles.goodsInfoRow}>
-              <Text>{record.sku}</Text>
+              <Link to={`/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
               {
                 record.listingStatus === 'Active' || record.listingStatus === 'Incomplete'
                   ? <Text>{listingStatusDict[record.listingStatus]}</Text>
@@ -188,18 +195,10 @@ export const getFullColumns = (params: any) => {
       title: () => {
         const menu = (
           <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            <MenuItem key="reviewScore-ascend">
-              评分升序
-            </MenuItem>
-            <MenuItem key="reviewScore-descend">
-              评分降序
-            </MenuItem>
-            <MenuItem key="reviewCount-ascend">
-              评论数升序
-            </MenuItem>
-            <MenuItem key="reviewCount-descend">
-              评论数降序
-            </MenuItem>
+            { getMenuItem('reviewScore', 'ascend', '评分升序') }
+            { getMenuItem('reviewScore', 'descend', '评分降序') }
+            { getMenuItem('reviewCount', 'ascend', '评论数升序') }
+            { getMenuItem('reviewCount', 'descend', '评论数降序') }
           </Menu>
         );
         return (
@@ -291,18 +290,10 @@ export const getFullColumns = (params: any) => {
           title: () => {
             const menu = (
               <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                <MenuItem key="orderCount7day-ascend">
-                  7天订单量升序
-                </MenuItem>
-                <MenuItem key="orderCount7day-descend">
-                  7天订单量降序
-                </MenuItem>
-                <MenuItem key="orderFluctuation_7-ascend">
-                  7天环比升序
-                </MenuItem>
-                <MenuItem key="orderFluctuation_7-descend">
-                  7天环比降序
-                </MenuItem>
+                { getMenuItem('orderCount7day', 'ascend', '7天订单量升序') }
+                { getMenuItem('orderCount7day', 'descend', '7天订单量降序') }
+                { getMenuItem('orderFluctuation_7', 'ascend', '7天环比升序') }
+                { getMenuItem('orderFluctuation_7', 'descend', '7天环比降序') }
               </Menu>
             );
             return (
@@ -330,18 +321,10 @@ export const getFullColumns = (params: any) => {
           title: () => {
             const menu = (
               <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                <MenuItem key="orderCount15day-ascend">
-                  15天订单量升序
-                </MenuItem>
-                <MenuItem key="orderCount15day-descend">
-                  15天订单量降序
-                </MenuItem>
-                <MenuItem key="orderFluctuation_15-ascend">
-                  15天环比升序
-                </MenuItem>
-                <MenuItem key="orderFluctuation_15-descend">
-                  15天环比降序
-                </MenuItem>
+                { getMenuItem('orderCount15day', 'ascend', '15天订单量升序') }
+                { getMenuItem('orderCount15day', 'descend', '15天订单量降序') }
+                { getMenuItem('orderFluctuation_15', 'ascend', '15天环比升序') }
+                { getMenuItem('orderFluctuation_15', 'descend', '15天环比降序') }
               </Menu>
             );
             return (
@@ -369,18 +352,10 @@ export const getFullColumns = (params: any) => {
           title: () => {
             const menu = (
               <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                <MenuItem key="orderCount30day-ascend">
-                  30天订单量升序
-                </MenuItem>
-                <MenuItem key="orderCount30day-descend">
-                  30天订单量降序
-                </MenuItem>
-                <MenuItem key="orderFluctuation_30-ascend">
-                  30天环比升序
-                </MenuItem>
-                <MenuItem key="orderFluctuation_30-descend">
-                  30天环比降序
-                </MenuItem>
+                { getMenuItem('orderCount30day', 'ascend', '30天订单量升序') }
+                { getMenuItem('orderCount30day', 'descend', '30天订单量降序') }
+                { getMenuItem('orderFluctuation_30', 'ascend', '30天环比升序') }
+                { getMenuItem('orderFluctuation_30', 'descend', '30天环比降序') }
               </Menu>
             );
             return (
@@ -415,18 +390,10 @@ export const getFullColumns = (params: any) => {
           title: () => {
             const menu = (
               <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                <MenuItem key="orderSalesCount7day-ascend">
-                  7天销量升序
-                </MenuItem>
-                <MenuItem key="orderSalesCount7day-descend">
-                  7天销量降序
-                </MenuItem>
-                <MenuItem key="salesFluctuation_7-ascend">
-                  7天环比升序
-                </MenuItem>
-                <MenuItem key="salesFluctuation_7-descend">
-                  7天环比降序
-                </MenuItem>
+                { getMenuItem('orderSalesCount7day', 'ascend', '7天销量升序') }
+                { getMenuItem('orderSalesCount7day', 'descend', '7天销量降序') }
+                { getMenuItem('salesFluctuation_7', 'ascend', '7天环比升序') }
+                { getMenuItem('salesFluctuation_7', 'descend', '7天环比降序') }
               </Menu>
             );
             return (
@@ -454,18 +421,10 @@ export const getFullColumns = (params: any) => {
           title: () => {
             const menu = (
               <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                <MenuItem key="orderSalesCount15day-ascend">
-                  15天销量升序
-                </MenuItem>
-                <MenuItem key="orderSalesCount15day-descend">
-                  15天销量降序
-                </MenuItem>
-                <MenuItem key="salesFluctuation_15-ascend">
-                  15天环比升序
-                </MenuItem>
-                <MenuItem key="salesFluctuation_15-descend">
-                  15天环比降序
-                </MenuItem>
+                { getMenuItem('orderSalesCount15day', 'ascend', '15天销量升序') }
+                { getMenuItem('orderSalesCount15day', 'descend', '15天销量降序') }
+                { getMenuItem('salesFluctuation_15', 'ascend', '15天环比升序') }
+                { getMenuItem('salesFluctuation_15', 'descend', '15天环比降序') }
               </Menu>
             );
             return (
@@ -493,18 +452,10 @@ export const getFullColumns = (params: any) => {
           title: () => {
             const menu = (
               <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                <MenuItem key="orderSalesCount30day-ascend">
-                  30天销量升序
-                </MenuItem>
-                <MenuItem key="orderSalesCount30day-descend">
-                  30天销量降序
-                </MenuItem>
-                <MenuItem key="salesFluctuation_30-ascend">
-                  30天环比升序
-                </MenuItem>
-                <MenuItem key="salesFluctuation_30-descend">
-                  30天环比降序
-                </MenuItem>
+                { getMenuItem('orderSalesCount30day', 'ascend', '30天销量升序') }
+                { getMenuItem('orderSalesCount30day', 'descend', '30天销量降序') }
+                { getMenuItem('salesFluctuation_30', 'ascend', '30天环比升序') }
+                { getMenuItem('salesFluctuation_30', 'descend', '30天环比降序') }
               </Menu>
             );
             return (
@@ -611,23 +562,24 @@ export const getFullColumns = (params: any) => {
       title: '操作',
       dataIndex: '',
       align: 'center',
-      width: 80,
+      width: 40,
       fixed: 'right',
       render: (_, record) => {
         let activeClassName = '';
-        const visible = setting.visible && setting.record.sku === record.sku;
+        const visible = setting.visible && setting.sku === record.sku;
         if (visible) {
           activeClassName = styles.activeSettingBtn;
         }
         return (
           <Dropdown
-            overlay={<Setting />}
+            // 批量和单个是一起用的，避免 form initialValue 混乱，关闭弹窗后取消弹窗内容
+            overlay={visible ? <Setting /> : <></>}
             visible={visible}
             placement="bottomRight"
             trigger={['click']}
             arrow
             onVisibleChange={visible => {
-              switchSettingVisible(visible, record);
+              switchSettingVisible(visible, record.sku);
             }}
           >
             <Button type="link" className={classnames(styles.settingBtn, activeClassName)}>

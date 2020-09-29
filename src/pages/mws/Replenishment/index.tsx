@@ -5,6 +5,7 @@ import { Table, Checkbox } from 'antd';
 import { requestErrorFeedback } from '@/utils/utils';
 import Header from './Header';
 import { getFullColumns } from './cols';
+import TableNotData from '@/components/TableNotData';
 import styles from './index.less';
 
 const Replenishment: React.FC = () => {
@@ -38,6 +39,13 @@ const Replenishment: React.FC = () => {
         type: 'replenishment/fetchGoodsInventoryList',
         payload: {
           headersParams: { StoreId: currentShopId },
+          searchParams: {
+            inputContent: '',
+            current: 1,
+            order: null,
+            replenishmentExists: null,
+            skuStatus: null,
+          },
         },
         callback: requestErrorFeedback,
       });
@@ -82,23 +90,21 @@ const Replenishment: React.FC = () => {
     fixed: true,
     selectedRowKeys: checked.currentPageSkus,
     hideSelectAll: true,
+    columnWidth: 36,
   };
 
   // 切换显示设置弹窗（单个）
   const switchSettingVisible = (
     visible: boolean,
-    record: API.IInventoryReplenishment,
+    sku: string,
   ) => {
-    // 显示/隐藏弹窗
+    // 请求 sku 设置数据
     dispatch({
-      type: 'replenishment/switchSettingVisible',
+      type: 'replenishment/fetchSkuSetting',
       payload: {
+        headersParams: { StoreId: currentShopId },
         visible,
-        record: { ...record },
-        checked: {
-          dataRange: 1,
-          currentPageSkus: [record.sku],
-        },
+        sku,
       },
     });
   };
@@ -128,21 +134,28 @@ const Replenishment: React.FC = () => {
     });
   };
 
-  // 表格参数变化
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleTableChange = (pagination: any, __: any, sorter: any) => {
+  // 表格参数变化（翻页和非自定义排序变化）
+  // eslint-disable-next-line max-params
+  const handleTableChange = function (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    pagination: any, __: any, sorter: any, action: any) {
     const { current, pageSize: size } = pagination;
     const { field: sort, order } = sorter;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let params: { [key: string]: any } = {};
+    const actionType = action.action;
+    if (actionType === 'paginate') {
+      // 由翻页触发的, 只传分页参数，model 中会获取旧的排序参数
+      params = { current, size };
+    } else if (actionType === 'sort') {
+      // 由非自定义排序触发的， 重置页码为 1
+      params = { current: 1, size, sort, order };
+    }
     dispatch({
       type: 'replenishment/fetchGoodsInventoryList',
       payload: {
         headersParams,
-        searchParams: {
-          sort: order ? sort : undefined,
-          order,
-          current,
-          size,
-        },
+        searchParams: params,
       },
       callback: requestErrorFeedback,
     });
@@ -184,7 +197,7 @@ const Replenishment: React.FC = () => {
     defaultPageSize: 20,
     pageSizeOptions: ['20', '50', '100'],
     showQuickJumper: true,
-    showTotal: (total: number) => (<span className={styles.total}>共 {total} 个</span>),
+    showTotal: (total: number) => (<>共 {total} 个</>),
     onShowSizeChange: (current: number, size: number) => {
       dispatch({
         type: 'replenishment/fetchGoodsInventoryList',
@@ -219,10 +232,12 @@ const Replenishment: React.FC = () => {
   return (
     <div className={styles.page}>
       <Header />
-      <Checkbox onChange={handleCheckPageChange} indeterminate={isIndeterminate()}>选择本页</Checkbox>
-      {
-        isShowCheckAll() ? <Checkbox onChange={handleCheckAllChange}>选择全部</Checkbox> : null
-      }
+      <div className={styles.checkedAllContainer}>
+        <Checkbox onChange={handleCheckPageChange} indeterminate={isIndeterminate()}>选择本页</Checkbox>
+        {
+          isShowCheckAll() ? <Checkbox onChange={handleCheckAllChange}>选择全部</Checkbox> : null
+        }
+      </div>
       <Table
         size="middle"
         rowSelection={{ ...rowSelection }}
@@ -231,7 +246,7 @@ const Replenishment: React.FC = () => {
         columns={columns}
         rowKey="sku"
         dataSource={goodsList}
-        locale={{ emptyText: '没有找到相关数据' }}
+        locale={{ emptyText: <TableNotData hint="没有找到相关数据" /> }}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {
             return styles.darkRow;

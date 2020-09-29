@@ -7,6 +7,7 @@ import {
   deleteLabel,
   queryTransitDetails,
   queryUpdateTime,
+  querySkuSetting,
 } from '@/services/replenishment';
 import { storage, getAmazonAsinUrl } from '@/utils/utils';
 
@@ -34,14 +35,8 @@ export interface IReplenishmentModelState {
   };
   setting: {
     visible: boolean;
-    record: API.IInventoryReplenishment | {
-      sku: string | undefined;
-      skuStatus: string;
-      labels: API.ILabel[];
-      shippingMethodsList: string[];
-      // 用于设置传参
-      labelIds?: string[];
-    };
+    sku: string | undefined;
+    record: API.IInventoryReplenishmentSetting;
   };
   transitDetails: API.ITransitDetails[];
 }
@@ -59,6 +54,25 @@ const fluctuationSortDict = {
   'salesFluctuation_7': { percent: 'orderSalesCount7dayRatio', number: 'salesSevenNumRatioSub' },
   'salesFluctuation_15': { percent: 'orderSalesCount15dayRatio', number: 'salesFifteenNumRatioSub' },
   'salesFluctuation_30': { percent: 'orderSalesCount30dayRatio', number: 'salesThirtyNumRatioSub' },
+};
+
+// 设置弹窗的默认填充
+export const settingDefaultRecord = {
+  skuStatus: 'normal',
+  avgDailySalesRules: 2,
+  fixedSales: 0,
+  weightCount90sales: '0',
+  weightCount60sales: '0',
+  weightCount30sales: '15',
+  weightCount15sales: '25',
+  weightCount7sales: '60',
+  labels: [],
+  shippingMethods: [],
+  safeDays: '0',
+  firstPass: '30',
+  qualityInspection: '0',
+  purchaseLeadTime: '30',
+  shoppingList: '0',
 };
 
 const GoodsListModel: IReplenishmentModelType = {
@@ -109,12 +123,8 @@ const GoodsListModel: IReplenishmentModelType = {
     // 设置弹窗
     setting: {
       visible: false,
-      record: {
-        sku: undefined,
-        skuStatus: 'normal',
-        labels: [],
-        shippingMethodsList: [],
-      },
+      sku: undefined,
+      record: settingDefaultRecord,
     },
     // 在途详情弹窗内容
     transitDetails: [],
@@ -134,7 +144,7 @@ const GoodsListModel: IReplenishmentModelType = {
       // 去掉头尾的空格
       if (newParams.inputContent) {
         newParams.inputContent = newParams.inputContent.replace(/(^\s*)|(\s*$)/g, '');
-      }
+      }  
       const res = yield call(queryGoodsList, { ...newParams, headersParams });
       if (res.code === 200) {
         const { data: goods } = res;
@@ -165,6 +175,27 @@ const GoodsListModel: IReplenishmentModelType = {
         });
       }
       callback && callback(res.code, res.message);
+    },
+
+    // 获取 sku 保存的设置内容 并切换显示弹窗
+    *fetchSkuSetting({ payload, callback }, { call, put }) {
+      const { visible, sku } = payload;
+      // 切换显示弹窗
+      yield put({
+        type: 'switchSettingVisible',
+        payload: { visible, sku, record: settingDefaultRecord },
+      });
+      if (visible) {
+        const res = yield call(querySkuSetting, payload);
+        if (res.code === 200) {
+          const { data: record } = res;
+          yield put({
+            type: 'switchSettingVisible',
+            payload: { visible, sku, record },
+          });
+        }
+        callback && callback(res.code, res.message);
+      }
     },
 
     // 设置和批量设置
@@ -292,16 +323,11 @@ const GoodsListModel: IReplenishmentModelType = {
 
     // 切换显示设置弹窗
     switchSettingVisible(state, { payload }) {
-      const { visible, record, checked } = payload;
-      state.setting = {
-        visible,
-        record: record || {},
-      };
-      // 单个，本页，全部
-      // 如果是显示弹窗，则同时改变勾选状态，如果是关闭弹窗，不改变勾选的状态
-      if (visible) {
-        state.checked = { ...state.checked, ...checked };
+      const { visible, sku, record } = payload;
+      if (sku) {
+        state.checked = { dataRange: 1, currentPageSkus: [sku] };
       }
+      state.setting = { visible, sku, record };
     },
 
     // 删除标签

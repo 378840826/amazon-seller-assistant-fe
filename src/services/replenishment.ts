@@ -18,6 +18,14 @@ export async function queryGoodsList(params: API.IParams) {
   });
 }
 
+// 获取 sku 保存的设置内容
+export async function querySkuSetting(params: API.IParams) {
+  return request('/api/mws/fis/sku-setting', {
+    params: params,
+    data: params,
+  });
+}
+
 // 设置和批量设置
 export async function updateRule(params: API.IParams) {
   if (params.dataRange === 2) {
