@@ -89,6 +89,19 @@ a:hover {
   .ant-table-ping-left .ant-table-cell-fix-left-last::after {
     box-shadow: inset 8px 0 8px -8px rgba(0, 0, 0, 0.1);
   }
+
+  // 分页器在右边时
+  .ant-table-pagination-right {
+    // total 放在左边
+    .ant-pagination-total-text {
+      position: absolute;
+      left: 0;
+    }
+    // 整个分页器右对齐
+    .ant-pagination-options-quick-jumper input {
+      margin-right: 0;
+    }
+  }
 }
 
 @media (max-width: @screen-xl) {
