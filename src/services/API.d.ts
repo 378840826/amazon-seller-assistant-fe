@@ -165,6 +165,26 @@ declare namespace API {
     labelIds?: string[];
   }
 
+  interface IInventoryReplenishmentSetting {
+    skuStatus: string;
+    avgDailySalesRules: number;
+    fixedSales: number;
+    weightCount90sales: string;
+    weightCount60sales: string;
+    weightCount30sales: string;
+    weightCount15sales: string;
+    weightCount7sales: string;
+    labels: IInventoryReplenishmentLabels[];
+    shippingMethods: string[];
+    safeDays: string;
+    firstPass: string;
+    qualityInspection: string;
+    purchaseLeadTime: string;
+    shoppingList: string;
+    // 用于设置
+    labelIds?: string[];
+  }
+
   interface ILabel {
     id: string;
     labelName: string;

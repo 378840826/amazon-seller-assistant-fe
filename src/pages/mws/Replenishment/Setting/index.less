@@ -13,7 +13,7 @@
     }
 
     .ant-form-item {
-      margin-bottom: 14px;
+      margin-bottom: 8px;
     }
   }
 
@@ -57,22 +57,6 @@
   }
 }
 
-// .settingPeriod input {
-//   width: 80px;
-// }
-
-.settingItem {
-  display: flex;
-
-  &:first-child input {
-    width: 80px;
-  }
-}
-
-.salesContainer {
-  margin-top: 10px;
-}
-
 .salesComputeContainer {
   position: relative;
   display: flex;
@@ -86,6 +70,24 @@
   }
 }
 
+.settingItem {
+  display: flex;
+
+  &:first-child {
+    input {
+      width: 80px;
+    }
+
+    :global(.ant-form-item) {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+.salesContainer {
+  margin-top: 10px;
+}
+
 .errorText {
   position: absolute;
   top: 30px;
@@ -93,9 +95,13 @@
 }
 
 .btnContainer {
-  margin-top: 27px;
+  margin-top: 20px;
 
   button {
     margin-right: 27px;
   }
+}
+
+.loading {
+  text-align: center;
 }

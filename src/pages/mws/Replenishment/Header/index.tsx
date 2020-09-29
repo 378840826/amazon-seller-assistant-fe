@@ -10,6 +10,7 @@ import { requestErrorFeedback, requestFeedback, Iconfont, objToQueryString, day 
 import { IConnectState } from '@/models/connect';
 import CustomCols from '../CustomCols';
 import Setting from '../Setting';
+import { settingDefaultRecord } from '@/models/replenishment';
 import styles from './index.less';
 
 const { Search } = Input;
@@ -32,7 +33,7 @@ const Header: React.FC = () => {
   const { id: currentShopId, marketplace, storeName } = currentShop;
   const headersParams = { StoreId: currentShopId };
   const [createTagVisible, setCreateTagVisible] = useState(false);
-  const batchSettingVisible = setting.visible && !setting.record.sku;
+  const batchSettingVisible = setting.visible && !setting.sku;
   // 搜索的 value
   const [searchText, setSearchText] = useState<string>('');
   // 批量设置按钮是否禁用
@@ -52,6 +53,8 @@ const Header: React.FC = () => {
         headersParams,
         searchParams: {
           inputContent: searchText,
+          current: 1,
+          order: null,
         },
       },
       callback: requestErrorFeedback,
@@ -73,6 +76,7 @@ const Header: React.FC = () => {
         headersParams: { StoreId: currentShopId },
         searchParams: { 
           [key]: value,
+          current: 1,
         },
       },
       callback: requestErrorFeedback,
@@ -99,16 +103,7 @@ const Header: React.FC = () => {
   const switchSettingVisible = (visible: boolean) => {
     dispatch({
       type: 'replenishment/switchSettingVisible',
-      payload: {
-        visible,
-        record: {
-          sku: undefined,
-          skuStatus: 'normal',
-          labels: [],
-          shippingMethodsList: [],
-          firstPass: 0,
-        },
-      },
+      payload: { visible, record: settingDefaultRecord },
     });
   };
 
@@ -173,7 +168,7 @@ const Header: React.FC = () => {
           labels.map(label => {
             return (
               <div className={styles.labelCell} key={label.id}>
-                <span className={styles.labelName} title={label.labelName}>
+                <span title={label.labelName}>
                   {label.labelName}
                 </span>
                 <Iconfont
@@ -254,7 +249,9 @@ const Header: React.FC = () => {
       </span>
       <Dropdown
         disabled={batchSetBtnDisabled}
-        overlay={<Setting />}
+        // 批量和单个是一起用的，避免 form initialValue 混乱，关闭弹窗后取消弹窗内容
+        // 暂时先这样（有内存泄漏）
+        overlay={batchSettingVisible ? <Setting /> : <></>}
         visible={batchSettingVisible}
         placement="bottomRight"
         trigger={['click']}
