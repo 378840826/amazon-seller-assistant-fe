@@ -42,6 +42,7 @@ const TablePage: React.FC<ITablePage> = ({
   const paginationProps = {
     current: tableInfo.current,
     pageSize: tableInfo.size,
+    showSizeChanger: true,
     total: tableInfo.total,
     defaultPageSize: 20,
     pageSizeOptions: ['20', '50', '100'],

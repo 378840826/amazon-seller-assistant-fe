@@ -6,13 +6,13 @@
 .orderInfo {
   background-color: #fff;
   width: 272px;
-  padding-left: 28px;
-  padding-right: 28px;
+  padding-left: 24px;
+  padding-right: 24px;
   border-left: 1px solid @divider-line-color;
 
   .upper {
     border-bottom: 1px solid #eee;
-    height: 465px;
+    min-height: 427px;
     position: relative;
 
     .prev {
@@ -65,6 +65,7 @@
   color: @text-color;
   font-size: 14px;
   padding-bottom: 20px;
+  padding-top: 24px;
 
   .red {
     color: @error-color;
@@ -84,6 +85,16 @@
 
   .Cancelled {
     color: @text-color-disabled;
+  }
+
+  p {
+    line-height: 26px;
+  }
+
+  :global {
+    .ant-typography {
+      line-height: 26px !important;
+    }
   }
 }
 

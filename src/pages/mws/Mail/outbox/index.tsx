@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import { connect } from 'umi';
 import { IInbox } from '../Inbox';
@@ -32,26 +32,11 @@ const params = {
   sendType: 'all',
 };
 
-const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => {
+const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
   const pathname = location.pathname;
+  const [request, setRequest] = useState({ ...params, status: status(pathname) });
   useEffect(() => {
     dispatch({
-      type: 'mail/modifyInboxSendParams',
-      payload: {
-        ...params,
-        status: status(pathname),
-      },
-    });
-    return () => {
-      dispatch({
-        type: 'mail/receiveEmailRecover',
-      });
-    };
-  }, [dispatch, pathname]);
-
-  useEffect(() => {
-    const length = Object.keys(request as API.IParams).length;
-    length > 0 && dispatch({
       type: 'mail/getSendList',
       payload: {
         data: {
@@ -70,17 +55,20 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => {
         },
       },
     });
-  }, [StoreId, dispatch, request]);
+    return () => {
+      dispatch({
+        type: 'mail/receiveEmailRecover',
+      });
+    };
+  }, [dispatch, pathname, request, StoreId]);
+
 
   //头部搜索，邮件来源，日历的点击请求,表格页脚点击
   const requestParam = (params: API.IParams) => {
-    dispatch({
-      type: 'mail/modifyInboxSendParams',
-      payload: {
-        ...request,
-        ...params,
-      },
-    });
+    setRequest((request) => ({
+      ...request,
+      ...params,
+    }));
   };
 
   //点击沟通记录操作出现

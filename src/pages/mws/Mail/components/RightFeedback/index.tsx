@@ -17,6 +17,7 @@ interface IRightFeedback extends IConnectProps{
   StoreId: string;
   id: string | number;
   templateList: ITemplates[];
+  onAdd: (params: API.IParams) => void;
 }
 interface IState{
   modal: boolean;
@@ -28,7 +29,7 @@ const filterList = (files: UploadFile[]) => {
   return files.filter( (item: UploadFile) => item.status !== 'error');
 };
 const controls: import('braft-editor').ControlType[] | undefined = [];
-const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId, 
+const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId, 
   dispatch, id, templateList }) => {
   const [form] = Form.useForm();
   const [state, setState] = useState<IState>({
@@ -81,8 +82,9 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
           status = 'success';
         } else {
           status = 'fail';
+          message.error(res.message);
         }
-        mailContent.push({ content: contentHTML, status, time, type: 'me' });
+        onAdd({ content: contentHTML, status, time, type: 'me' });
       },
     });
     
@@ -154,7 +156,6 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChange = ({ fileList }: any) => {
-    console.log('onChange:', fileList);
     setState((state) => ({
       ...state,
       fileList,
@@ -199,7 +200,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
             }
           </div>
         </div>
-        <div className={styles.divide}></div>
+       
         <div className={styles.template_overflow}>
           <div className={styles.template}>
             <Form name="template" 
@@ -230,7 +231,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
                 className={styles.buttons}
               >
                 <Row>
-                  <Col span={16}>
+                  <Col span={14}>
                     <Form.Item 
                       name="uploadItem"
                       valuePropName="fileList"
@@ -241,8 +242,6 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
                         name="file"
                         onChange={onChange}
                         beforeUpload={beforeUpload}
-                        // multiple 
-                        className={styles.__upload}
                         accept=".doc,.txt,.xls,.pdf"
                       >
                         <Button className={styles.select_file}>+选择文件</Button>
@@ -252,7 +251,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, StoreId,
                       附件仅支持.doc  .txt  .xls  .pdf文件，大小不可超过5MB
                     </div>
                   </Col>
-                  <Col span={8}>
+                  <Col span={10}>
                     <Row gutter={[14, 16]}>
                       <Col span={12}>
                         <Button onClick={onReset}>清空</Button>

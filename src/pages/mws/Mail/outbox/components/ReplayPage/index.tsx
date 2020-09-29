@@ -15,9 +15,9 @@ const ReplayPage = () => {
   
   return (
     <div className={styles.tablePadding}>
-      <p className={styles.back}>
+      <p onClick={() => goBack(-1)} className={styles.back}>
         <Iconfont className={styles.icon_back} type="icon-zhankai-"/>
-        <span onClick={() => goBack(-1)}>返回</span>
+        <span>返回</span>
       </p>
       <div className={styles.down_part_overflow}>
         <div className={styles.down_part}>

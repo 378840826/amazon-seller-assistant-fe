@@ -34,7 +34,7 @@ import { nTs } from '@/utils/utils';
 
 const common = {
   msg: '', //列表非200的错误信息
-  tableInfo: {
+  tableInfo: { //收件箱或者发件箱表格中的信息
     total: 0,
     current: 1,
     size: 20,
@@ -45,6 +45,8 @@ const common = {
   rowSelection: [], //表格选中的复选框选项
   id: -1, //选中的邮件id,为正值出现回复页面,默认-1
 };
+
+const receiveList = ['/mws/mail/inbox', '/mws/mail/reply', '/mws/mail/no-reply'];
 
 export interface ITemplates{
   templateSubject: string;
@@ -67,7 +69,6 @@ export interface IMailModelState{
     rowSelection: ReactText[];
     id: number | string;
   };
-  request: API.IParams;
   templateList: ITemplates[];
 }
 export interface IMailModelType extends IModelType{
@@ -79,7 +80,6 @@ const mailModel: IMailModelType = {
   state: {
     unreadCount: 0,
     inbox: common,
-    request: {},
     templateList: [],
   },
   effects: {
@@ -139,7 +139,7 @@ const mailModel: IMailModelType = {
       nTs(response);
       callback && callback(response);
     },
-    //收件箱和发件箱的模版列表
+    //收件箱和发件箱的模版列表获取 同一个连接
     *tankTemplateList({ payload, callback }, { call, put }){
       const response = yield call(tankTemplateList, payload);
       nTs(response);
@@ -186,7 +186,7 @@ const mailModel: IMailModelType = {
         
       });
       let response = null;
-      if (pathname === '/mws/mail/inbox'){
+      if (receiveList.indexOf(pathname) > -1){
         response = yield call(receiveListEmailSubmit, { StoreId, formData });
       } else {
         response = yield call(sendListEmailSubmit, { StoreId, formData });
@@ -345,6 +345,7 @@ const mailModel: IMailModelType = {
     saveReceiveEmailList(state, { payload }){
       nTs(payload);
       const { code, data, message } = payload;
+      // console.log('data:', data);
       if (code === 200){
         const records = data.records;
         const id = records.length === 0 ? -1 : records[0].id;
@@ -410,17 +411,10 @@ const mailModel: IMailModelType = {
     modifyInboxId(state, { payload }){
       state.inbox.id = payload;
     },
-    modifyInboxSendParams(state, { payload, callback }){
-      state.request = {
-        ...state.request,
-        ...payload,
-      };
-      callback && callback();
-    },
-    receiveEmailRecover(state){
+    receiveEmailRecover(state, { callback }){
       state.inbox = common;
-      state.request = {};
       state.templateList = [];
+      callback && callback();
     },
     saveTemplateList(state, { payload }){
       if (payload.code === 200){

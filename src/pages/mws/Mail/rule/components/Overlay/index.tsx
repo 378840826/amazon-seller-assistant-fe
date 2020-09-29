@@ -234,7 +234,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
               </Col>
               <Col span={1} style={{ lineHeight: '30px' }}>
                 <Tooltip placement="top" title="采用站点当地的时间，建议在下单高峰期发送">
-                  <Iconfont type="icon-yiwen" style={{ cursor: 'pointer' }}/>
+                  <Iconfont className={styles.question} type="icon-yiwen" style={{ cursor: 'pointer' }}/>
                 </Tooltip>
                 
               </Col>
@@ -268,14 +268,8 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
             name="sendingStatus"
           >
             <Radio.Group>
-              <Row>
-                <Col span={12}>
-                  <Radio value="notSending">不再发送剩余模板</Radio>
-                </Col>
-                <Col span={12}>
-                  <Radio value="continueSending">继续发送剩余模板</Radio>
-                </Col>
-              </Row>
+              <Radio value="notSending">不再发送剩余模板</Radio>
+              <Radio className={styles.radio2} value="continueSending">继续发送剩余模板</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item {...limitItemLayout} label="排除/限定SKU" name="skuStatus">

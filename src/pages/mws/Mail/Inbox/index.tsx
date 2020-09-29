@@ -1,4 +1,4 @@
-import React, { useEffect, ReactText } from 'react';
+import React, { useEffect, ReactText, useState } from 'react';
 import { connect } from 'umi';
 import SearchHeader from './components/SearchHeader';
 import OperatorBar from './components/OperatorBar';
@@ -49,26 +49,11 @@ const params = {
 };
 
 
-const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => { 
+const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => { 
   const pathname = location.pathname;
+  const [request, setRequest] = useState({ ...params, status: status(pathname) });
   useEffect(() => {
     dispatch({
-      type: 'mail/modifyInboxSendParams',
-      payload: {
-        ...params,
-        status: status(pathname),
-      },
-    });
-    return () => {
-      dispatch({
-        type: 'mail/receiveEmailRecover',
-      });
-    };
-  }, [dispatch, pathname]);
- 
-  useEffect(() => {
-    const length = Object.keys(request as API.IParams).length;
-    length > 0 && dispatch({
       type: 'mail/getReceiveEmailList',
       payload: {
         data: {
@@ -86,18 +71,19 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch, request }) => {
         },
       },
     });
-  }, [StoreId, dispatch, request]);
-
-
+    return () => {
+      dispatch({
+        type: 'mail/receiveEmailRecover',
+      });
+    };
+  }, [StoreId, dispatch, pathname, request]);
+ 
   //头部搜索，邮件来源，日历的点击请求,表格页脚点击
   const requestParam = (params: API.IParams) => {
-    dispatch({
-      type: 'mail/modifyInboxSendParams',
-      payload: {
-        ...request,
-        ...params,
-      },
-    });
+    setRequest((request) => ({
+      ...request,
+      ...params,
+    }));
   };
 
   //批量标记的发送请求 show是否显示状态改变请求的信息

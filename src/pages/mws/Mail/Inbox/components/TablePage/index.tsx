@@ -54,6 +54,7 @@ const TablePage: React.FC<ITablePage> = ({
     pageSize: tableInfo.size,
     total: tableInfo.total,
     defaultPageSize: 20,
+    showSizeChanger: true,
     pageSizeOptions: ['20', '50', '100'],
     showQuickJumper: true,
     showTotal: (total: number) => `共 ${total} 个`,
@@ -129,7 +130,7 @@ const TablePage: React.FC<ITablePage> = ({
     {
       title: '订单信息',
       dataIndex: 'productInfo',
-      width: 430,
+      width: 420,
       align: 'center',
       render: (productInfo) => <ColumnOrderInfo info={productInfo}/>,
     },
@@ -146,7 +147,7 @@ const TablePage: React.FC<ITablePage> = ({
       title: '主题',
       dataIndex: 'subject',
       width: 150,
-      align: 'center',
+      align: 'left',
       render: (text) => <Paragraph className={styles.subject} ellipsis>{text}</Paragraph>,
     },
     {
@@ -166,7 +167,7 @@ const TablePage: React.FC<ITablePage> = ({
   return (
     <div>
       <Table
-        className="__table"
+        className={styles.__table}
         rowSelection={{
           type: 'checkbox',
           ...rowSelection,

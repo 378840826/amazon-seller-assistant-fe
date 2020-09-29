@@ -5,6 +5,7 @@ import styles from './index.less';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import moment from 'moment';
 import { Moment } from 'moment/moment';
+import classnames from 'classnames';
 const { Search } = Input;
 const checkboxList = [
   { name: '全部', key: 'all' },
@@ -116,7 +117,7 @@ const SearchHeader: React.FC<ISearchHeader> = ({
           disabled={tableLoading}
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>} />
       </div>
-      <div className={styles.source}>
+      <div className={classnames(styles.source, styles.source1)}>
         <span className={styles.font_source}>邮件来源：</span>
         <Radio.Group 
           onChange={changeRadio} 
@@ -132,7 +133,7 @@ const SearchHeader: React.FC<ISearchHeader> = ({
           }
         </Radio.Group>
       </div>
-      <div className={styles.source}>
+      <div className={classnames(styles.source, styles.source2)}>
         <span className={styles.font_source}>发送方式：</span>
         <Radio.Group 
           onChange={changeSendType} 

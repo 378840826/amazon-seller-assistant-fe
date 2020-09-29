@@ -27,7 +27,7 @@ const SideMenu: React.FC<IMailConnectProps> = ({ global, dispatch, children, mai
     { path: '/mws/mail/send-fail', name: '发送失败', position: 'second' },
     { path: '/mws/mail/sending', name: '正在发送', position: 'second' },
     { path: '/mws/mail/rule', name: '自动邮件规则', position: 'first' },
-    { path: '/mws/mail/template', name: '邮件模版', position: 'first' },
+    { path: '/mws/mail/template', name: '邮件模板', position: 'first' },
   ];
   useEffect(() => {
     currentId !== '-1' &&
@@ -41,7 +41,7 @@ const SideMenu: React.FC<IMailConnectProps> = ({ global, dispatch, children, mai
     });
   }, [currentId, dispatch]);
   return (
-    <Layout className="site-layout-background" style={{ paddingTop: '30px', height: '100%' }}>
+    <Layout className="site-layout-background" style={{ marginTop: '16px', height: '100%' }}>
       {
         currentId !== '-1' && 
         <>

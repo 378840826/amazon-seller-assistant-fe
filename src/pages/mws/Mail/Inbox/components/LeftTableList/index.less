@@ -34,6 +34,8 @@
 }
 
 .__table {
+  border-right: 1px solid @border-color-base;
+
   th {
     height: 35px;
     background-color: #fff !important;
@@ -76,6 +78,12 @@
         display: flex;
       }
     }
+
+    &:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
   }
 
   :global {
@@ -99,6 +107,10 @@
 
     button.ant-pagination-item-link {
       line-height: 24px;
+    }
+
+    .ant-pagination.mini {
+      border-top: 1px solid #eee;
     }
   }
 }

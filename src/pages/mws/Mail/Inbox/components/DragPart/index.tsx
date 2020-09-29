@@ -13,9 +13,9 @@ interface IDragPartProps extends HTMLAttributes<HTMLDivElement>{
 
 const DraggableExp = () => {
   const [state, setState] = useState<IDragPartProps>({
-    initialwidth: 265, // 左边区块初始宽度
-    showwidth: 265, // 左边区块初始宽度
-    minwidth: 265, // 左边区块最小宽度
+    initialwidth: 355, // 左边区块初始宽度
+    showwidth: 355, // 左边区块初始宽度
+    minwidth: 355, // 左边区块最小宽度
     maxwidth: 492, // 左边区块最大宽度
     dragboxbackground: 'transparent', // 拖拽盒子的背景色
   });

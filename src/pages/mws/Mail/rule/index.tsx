@@ -244,6 +244,7 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
       <Modal
         visible={state.visible}
         footer={null}
+        bodyStyle={{ padding: '30px' }}
         destroyOnClose={true}
         width={610}
         centered

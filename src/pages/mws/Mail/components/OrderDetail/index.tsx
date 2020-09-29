@@ -9,7 +9,7 @@ interface IOrderDetail{
 }
 const { Paragraph } = Typography;
 const contentStyle = {
-  height: '464px',
+  height: '407px',
   paddingTop: '40px',
 };
 

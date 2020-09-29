@@ -78,6 +78,13 @@ const RightPart: React.FC<IRightPart> = ({ id, StoreId, dispatch }) => {
 
   }, [dispatch, StoreId]);
 
+  const addContent = (params: API.IParams) => {
+    setState(state => ({
+      ...state,
+      mailContent: state.mailContent.concat(params),
+    }));
+
+  };
   return (
     <>
       { state.loading && 
@@ -88,7 +95,7 @@ const RightPart: React.FC<IRightPart> = ({ id, StoreId, dispatch }) => {
       {
         !state.loading && 
         <div className={styles.container}>
-          <RightFeedback mailContent={state.mailContent}/>
+          <RightFeedback mailContent={state.mailContent} onAdd={addContent}/>
           <OrderInfo info={state.orderInfo}/>
         </div>
       }

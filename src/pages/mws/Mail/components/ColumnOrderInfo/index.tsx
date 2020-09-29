@@ -13,7 +13,7 @@ const ColumnOrderInfo: React.FC<IColumnOrderProps> = ({ info }) => {
 
   if (info.length > 0){
     return (
-      <div>
+      <div className={styles.info_sum}>
         {info.map((item, index) => {
           return (
             <div key={index} className={styles.single_orderInfo}>

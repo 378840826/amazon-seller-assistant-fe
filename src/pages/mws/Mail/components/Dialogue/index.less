@@ -13,15 +13,30 @@
   }
 
   .main_content {
-    max-width: calc(100% - 77px);
+    max-width: calc(100% - 120px);
     display: inline-block;
     position: relative;
     border-radius: 4px;
     padding: 10px 17px;
 
+    div {
+      line-height: 22px !important;
+    }
+
+    p {
+      line-height: 22px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .date {
+      text-align: left;
+      color: @text-color-secondary;
+    }
+
     .content {
       word-wrap: break-word;
-      line-height: 20px;
+      line-height: 22px;
+      color: @text-color;
     }
   }
 
@@ -39,12 +54,17 @@
     }
 
     .icon_error {
-      text-align: right;
+      text-align: left;
+      position: absolute;
+      top: 50%;
+      right: -22px;
+      margin-top: -8px;
     }
 
     .main_content {
       background-color: #f2f2f2;
       text-align: left;
+      position: relative;
 
       &::before {
         position: absolute;
@@ -66,10 +86,15 @@
 
     .icon_error {
       text-align: left;
+      position: absolute;
+      top: 50%;
+      left: -22px;
+      margin-top: -8px;
     }
 
     .main_content {
       background-color: #d1e9ff;
+      position: relative;
 
       .content {
         text-align: left;

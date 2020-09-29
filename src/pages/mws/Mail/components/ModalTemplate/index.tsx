@@ -22,7 +22,7 @@ const ModalTemplate: React.FC<IModalTemplate> = ({
  
   const columns: ColumnProps<ITemplates>[] = [
     {
-      title: '模版类型',
+      title: '模板类型',
       dataIndex: 'templateType',
       align: 'center',
       ellipsis: true,
@@ -30,7 +30,7 @@ const ModalTemplate: React.FC<IModalTemplate> = ({
   
     },
     {
-      title: '模版名称',
+      title: '模板名称',
       dataIndex: 'templateName',
       align: 'center',
       ellipsis: true,
@@ -39,7 +39,7 @@ const ModalTemplate: React.FC<IModalTemplate> = ({
     {
       title: '主题',
       dataIndex: 'templateSubject',
-      align: 'center',
+      align: 'left',
       width: 343,
       render: (text) => <Paragraph ellipsis={{ rows: 2 }}>{text}</Paragraph>,
     }, {
@@ -55,8 +55,8 @@ const ModalTemplate: React.FC<IModalTemplate> = ({
       <Modal
         centered
         visible={modal}
-        closable={false}
         onCancel={cancelModal}
+        className={styles.__modal}
         footer={null}
         width={854}
         bodyStyle={{ padding: '30px 14px 30px 30px' }}

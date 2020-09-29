@@ -13,13 +13,14 @@ const Dialogue: React.FC<IDialogue> = ({ item }) => {
     <div className={classnames(styles.dialogue, styles[type])}>
       { type === 'me' ? 
         <>
-          {status === 'fail' ? <Iconfont className={styles.icon_error} type="icon-cuowutishi1"/> : ''}
+          
          
           <div className={styles.main_content}>
             <div className={styles.date}>{time}</div>
             <div dangerouslySetInnerHTML={{ __html: content }} className={styles.content}>
               {/* {content} */}
             </div>
+            {status === 'fail' ? <Iconfont className={styles.icon_error} type="icon-cuowutishi1"/> : ''}
           </div>
           <Iconfont className={styles.icon_person} type="icon-kefu"/>
         </>
@@ -31,8 +32,9 @@ const Dialogue: React.FC<IDialogue> = ({ item }) => {
             <div dangerouslySetInnerHTML={{ __html: content }} className={styles.content}>
               {/* {content} */}
             </div>
+            {status === 'fail' ? <Iconfont className={styles.icon_error} type="icon-cuowutishi1"/> : ''}
           </div>
-          {status === 'fail' ? <Iconfont className={styles.icon_error} type="icon-cuowutishi1"/> : ''}
+          
           
         </>
       }

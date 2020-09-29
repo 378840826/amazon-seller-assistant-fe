@@ -118,6 +118,10 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
   };
   
   const onFinish = (values: API.IParams) => {
+    if (values.templateSubject.trim() === ''){
+      Modal.error({ content: '模板主题不能为空!', centered: true });
+      return;
+    }
     const params = { 
       ...values,
       templateContent: values.templateContent.toHTML(), 
@@ -134,11 +138,11 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
       callback: (res: {code: number; message: string}) => {
         const { code, message } = res;
         if (code === 200){
-          setConfirmLoading(false);
           onConfirm();
         } else {
           Modal.error({ content: message, centered: true });
         }
+        setConfirmLoading(false);
       },
     });
   };
@@ -209,19 +213,17 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
           </Row>
         
           <Row className={styles.content_edit}>
-            <Col span={16}>
+            <Col span={17}>
               <Form.Item
                 label="主题 :"
                 name="templateSubject"
                 className={styles.item_subject}
-                required={false}
-                rules={[{ required: true, message: '主题不能为空!' }]}
                 {...formItem2Layout}
               >
                 <Input 
-                  size="large"
                   bordered={false} 
                   autoComplete="off" 
+                  style={{ height: '38px' }}
                   maxLength={100} 
                   ref={setRef} 
                   onFocus={() => onFocus('templateSubject')}/>
@@ -242,7 +244,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
               </Form.Item>
                 
             </Col>
-            <Col span={8} className={styles.click_area}>
+            <Col span={7} className={styles.click_area}>
               <div className={styles.title}>点击插入参数</div>
 
               <div onClick={onClickInsert}>

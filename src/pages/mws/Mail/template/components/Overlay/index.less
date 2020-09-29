@@ -2,8 +2,8 @@
   text-align: left;
 
   :global {
-    .ant-col.ant-col-3.ant-form-item-label {
-      text-align: left;
+    .ant-form-item-label {
+      text-align: left !important;
     }
   }
 
@@ -24,6 +24,14 @@
       .ant-form-item {
         margin-bottom: 0 !important;
       }
+
+      .ant-col-17 {
+        flex: 1 !important;
+      }
+
+      .ant-col-7 {
+        width: 211px !important;
+      }
     }
 
     .item_subject {
@@ -41,10 +49,6 @@
     }
 
     .item_content {
-      .braftEditor_content {
-        height: 435px;
-      }
-
       :global {
         .ant-form-item-no-colon {
           margin-top: 12px;
@@ -55,6 +59,18 @@
           border-top: 1px solid #e1e1e1;
           border-bottom: 1px solid #d9d9d9;
           border-bottom-left-radius: 4px;
+        }
+      }
+
+      .braftEditor_content {
+        height: 435px;
+        font-size: 14px;
+
+        :global {
+          .public-DraftEditorPlaceholder-inner {
+            font-size: 14px;
+            color: @text-color;
+          }
         }
       }
     }

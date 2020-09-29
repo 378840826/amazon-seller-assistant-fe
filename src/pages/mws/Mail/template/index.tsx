@@ -237,9 +237,10 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
   ];
   return (
     <div className={styles.container}>
-      <Button className={styles.customButton} onClick={() => onToggleModal(true, -1)} type="primary">添加模版</Button>
+      <Button className={styles.customButton} onClick={() => onToggleModal(true, -1)} type="primary">添加模板</Button>
       <Modal
         visible={state.visible}
+        bodyStyle={{ padding: '20px' }}
         footer={null}
         destroyOnClose={true}
         width={814}

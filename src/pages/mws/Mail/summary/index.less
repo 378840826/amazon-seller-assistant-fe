@@ -3,15 +3,15 @@
   background-color: #fff;
 
   .darkRow {
-    background-color: #f7f7f7;
+    background-color: #fafafa;
   }
 
   .text {
-    color: #666;
+    color: @text-color;
   }
 
   .orange {
-    color: #ffaf4d;
+    color: @warning-color;
   }
 
   :global {
@@ -25,14 +25,15 @@
       }
 
       .ant-table-body {
-        border-left: 1px solid #eee;
-        border-right: 1px solid #eee;
-        border-bottom: 1px solid #eee;
+        border-left: 1px solid @divider-line-color;
+        border-right: 1px solid @divider-line-color;
+        border-bottom: 1px solid @divider-line-color;
       }
 
       .ant-table-thead > tr > th,
       .ant-table-tbody > tr > td {
         padding: 0;
+        border: none;
       }
     }
   }
