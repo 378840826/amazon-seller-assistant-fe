@@ -81,7 +81,7 @@ const TablePage: React.FC<ITablePage> = ({
     {
       title: '发送时间',
       dataIndex: 'receivingTime',
-      width: 98,
+      width: 108,
       align: 'center',
       render: (text) => {
         return (
@@ -130,14 +130,14 @@ const TablePage: React.FC<ITablePage> = ({
     {
       title: '订单信息',
       dataIndex: 'productInfo',
-      width: 420,
+      width: 220,
       align: 'center',
       render: (productInfo) => <ColumnOrderInfo info={productInfo}/>,
     },
     {
       title: '发件人邮箱',
       dataIndex: 'email',
-      width: 280,
+      width: 200,
       ellipsis: true,
       align: 'center',
       render: (text) => <div className={styles.email}>
@@ -146,9 +146,11 @@ const TablePage: React.FC<ITablePage> = ({
     {
       title: '主题',
       dataIndex: 'subject',
-      width: 150,
+      width: 280,
       align: 'left',
-      render: (text) => <Paragraph className={styles.subject} ellipsis>{text}</Paragraph>,
+      render: (text) => <Paragraph 
+        className={styles.subject} 
+        ellipsis={{ rows: 2 }}>{text}</Paragraph>,
     },
     {
       title: '操作',
@@ -177,7 +179,7 @@ const TablePage: React.FC<ITablePage> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={loading}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 333px)' }}
+        scroll={{ y: 'calc(100vh - 284px)' }}
         locale={{ emptyText: msg === '' ? 'Oops! 没有更多数据啦' : msg }}
         dataSource={tableInfo.records}
         rowClassName={(record, index) => {

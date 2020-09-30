@@ -21,7 +21,7 @@ const ReplayPage: React.FC<IReplayPage> = ({ request }) => {
         <Iconfont className={styles.icon_back} type="icon-zhankai-"/>
         <span>返回</span>
       </p>
-      <div className={styles.down_part_overflow}>
+      <div style={{ paddingBottom: '20px' }}>
         <div className={styles.down_part}>
           <DragPart request={request}/>
         </div>

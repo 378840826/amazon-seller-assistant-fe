@@ -11,6 +11,7 @@ import { IConnectState, IConnectProps } from '@/models/connect';
 import { RcFile } from 'antd/lib/upload';
 import moment from 'moment';
 import { UploadFile } from 'antd/lib/upload/interface';
+import { pathList } from '../OrderInfo';
 
 interface IRightFeedback extends IConnectProps{
   mailContent: API.IParams[];
@@ -32,13 +33,14 @@ const controls: import('braft-editor').ControlType[] | undefined = [];
 const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId, 
   dispatch, id, templateList }) => {
   const [form] = Form.useForm();
+  const height = pathList.indexOf(location.pathname) > -1 ? 'calc(100vh - 245px)' : 'calc(100vh - 200px)';
   const [state, setState] = useState<IState>({
     modal: false, //控制模态框是否展示的
     sendStatus: false, //邮件回复按钮disable状态
     fileList: [],
   });
  
-  const inboxPaths = ['/mws/mail/inbox', '/mws/mail/reply', '/mws/mail/no-reply'];
+
   //点击提交
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
@@ -116,7 +118,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
 
   //点击【载入】
   const onSelectTemplateId = (templateId: number) => {
-    const type = inboxPaths.indexOf(location.pathname) > -1 ? 'mail/receiveListTemplateLoad'
+    const type = pathList.indexOf(location.pathname) > -1 ? 'mail/receiveListTemplateLoad'
       :
       'mail/sendListTemplateLoad';
     dispatch({
@@ -191,7 +193,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
     return false;
   } ;
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ height: height }}>
       <div className={styles.flexBox}>
         <div className={styles.dialogue_overflow}>
           <div className={styles.dialogues}>

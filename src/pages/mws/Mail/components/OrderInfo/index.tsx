@@ -9,7 +9,7 @@ const { Paragraph } = Typography;
 interface IOrderInfo{
   info: API.IParams;
 }
-
+export const pathList = ['/mws/mail/inbox', '/mws/mail/reply', '/mws/mail/no-reply'];
 const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
   const slide = useRef<Carousel>(null);
   const orderDetails = Object.keys(info).length === 0 ? [] : info.orderDetails;
@@ -18,6 +18,9 @@ const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
     dots: detailsLength > 1 && detailsLength < 6 ? true : false, 
     showControl: detailsLength > 5 ? true : false,
   };
+  const pathname = location.pathname;
+  const height = pathList.indexOf(pathname) > -1 ? 'calc(100vh - 245px)' : 'calc(100vh - 200px)';
+
   const onPrevious = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
     if (slide.current){
@@ -31,7 +34,7 @@ const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
     }
   };
   return (
-    <div className={styles.orderInfo_overflow}>
+    <div className={styles.orderInfo_overflow} style={{ height: height }}>
       <div className={styles.orderInfo}>
         <div className={styles.upper}>
           {

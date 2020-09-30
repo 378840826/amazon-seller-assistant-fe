@@ -36,6 +36,14 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
   const pathname = location.pathname;
   const [request, setRequest] = useState({ ...params, status: status(pathname) });
   useEffect(() => {
+    return () => {
+      dispatch({
+        type: 'mail/receiveEmailRecover',
+      });
+    };
+  }, [dispatch, pathname]);
+
+  useEffect(() => {
     dispatch({
       type: 'mail/getSendList',
       payload: {
@@ -55,12 +63,7 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
         },
       },
     });
-    return () => {
-      dispatch({
-        type: 'mail/receiveEmailRecover',
-      });
-    };
-  }, [dispatch, pathname, request, StoreId]);
+  }, [StoreId, dispatch, request]);
 
 
   //头部搜索，邮件来源，日历的点击请求,表格页脚点击

@@ -296,7 +296,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
         pagination={{ ...paginationProps }}
         loading={state.tableLoading}
         columns={columns}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 228px)' }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 193px)' }}
         dataSource={state.tableInfo.records}
         onChange={onTableChange}
         locale={{ emptyText: state.msg === '' ? 'Oops! 没有更多数据啦' : state.msg }}

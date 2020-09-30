@@ -216,7 +216,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
               </Col>
               <Col span={6}>
                 <Form.Item name="timeNumber">
-                  <Select>
+                  <Select listHeight={320}>
                     {dayList.map((item) => {
                       return (
                         <Option key={item} value={item}>{item}天</Option>

@@ -180,7 +180,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
           onFinish={onFinish}
         >
           <Row>
-            <Col span={16}>
+            <Col span={17}>
               <Form.Item
                 label="模板名称 :"
                 name="templateName"
@@ -191,11 +191,11 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
                 <Input type="text"/>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={7}>
             </Col>
           </Row>
           <Row>
-            <Col span={16}>
+            <Col span={17}>
               <Form.Item
                 label="模板类型 :"
                 name="templateType"
@@ -208,12 +208,12 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={7}>
             </Col>
           </Row>
         
           <Row className={styles.content_edit}>
-            <Col span={16}>
+            <Col span={17}>
               <Form.Item
                 label="主题 :"
                 name="templateSubject"
@@ -244,7 +244,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
               </Form.Item>
                 
             </Col>
-            <Col span={8} className={styles.click_area}>
+            <Col span={7} className={styles.click_area}>
               <div className={styles.title}>点击插入参数</div>
 
               <div onClick={onClickInsert}>
@@ -259,7 +259,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
             </Col>
           </Row>
           <Row style={{ paddingTop: '20px' }}>
-            <Col span={16}>
+            <Col span={17}>
               <Form.Item 
                 label=" "
                 className={styles.buttons}
@@ -275,7 +275,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
                 </>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={7}>
               <div className={styles.tips}>
                 <Iconfont className={styles.orange} type="icon-yiwen"/> 请勿在邮件中提及违禁字眼
               </div>

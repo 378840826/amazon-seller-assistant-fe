@@ -63,7 +63,7 @@ const TablePage: React.FC<ITablePage> = ({
       title: '发送时间',
       dataIndex: 'sendingTime',
       align: 'center',
-      width: 100,
+      width: 120,
       render: (text) => {
         return (
           text === '' ? 
@@ -97,35 +97,37 @@ const TablePage: React.FC<ITablePage> = ({
     {
       title: '订单信息',
       dataIndex: 'productInfo',
-      width: 430,
+      width: 220,
       align: 'center',
       render: (productInfo) => <ColumnOrderInfo info={productInfo}/>,
     },
     {
       title: '收件人邮箱',
       dataIndex: 'email',
-      width: 247,
+      width: 150,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <Paragraph ellipsis={{ rows: 2 }} className={styles.email}>{text}</Paragraph>
+            <Paragraph ellipsis className={styles.email}>{text}</Paragraph>
         );
       },
     },
     {
       title: '主题',
       dataIndex: 'subject',
-      width: 150,
-      align: 'center',
+      width: 280,
+      align: 'left',
       render: (text) => {
         return (
           text === '' ? 
             <div className="null_bar"></div>
             :
-            <Paragraph ellipsis className={styles.subject}>{text}</Paragraph>
+            <Paragraph ellipsis={{ rows: 2 }} className={styles.subject}>
+              {text}
+            </Paragraph>
         );
       },
     },
@@ -138,7 +140,7 @@ const TablePage: React.FC<ITablePage> = ({
     },
     {
       title: '操作',
-      width: 60,
+      width: 80,
       align: 'center',
       render: (record) => {
         return <span className={styles.operator} onClick={() => operator(record.id)}>沟通记录</span>;
@@ -155,7 +157,7 @@ const TablePage: React.FC<ITablePage> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={loading}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 288px)' }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 258px)' }}
         locale={{ emptyText: msg === '' ? 'Oops! 没有更多数据啦' : msg }}
         dataSource={tableInfo.records}
         rowClassName={(_, index) => {
