@@ -13,8 +13,9 @@ const { Paragraph } = Typography;
 interface ILeftTableList{
   state: IInbox['state'];
   dispatch: IInbox['dispatch'];
+  request: (params: API.IParams) => void;
 }
-const LeftTableList: React.FC<ILeftTableList> = ({ state, dispatch }) => {
+const LeftTableList: React.FC<ILeftTableList> = ({ state, dispatch, request }) => {
 
   const { msg, tableInfo, tableLoading, id } = state;
   
@@ -28,12 +29,9 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, dispatch }) => {
   };
   const onTableChange = (pagination: TablePaginationConfig) => {
     const { current, pageSize } = pagination;
-    dispatch({
-      type: 'mail/modifyInboxSendParams',
-      payload: {
-        current,
-        size: pageSize,
-      },
+    request({
+      current,
+      size: pageSize,
     });
   };
   const columns: ColumnProps<API.IParams>[] = [{

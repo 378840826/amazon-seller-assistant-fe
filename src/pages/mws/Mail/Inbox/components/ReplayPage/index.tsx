@@ -3,8 +3,10 @@ import { Iconfont } from '@/utils/utils';
 import { useDispatch } from 'umi';
 import DragPart from '../DragPart';
 import styles from './index.less';
-
-const ReplayPage = () => {
+interface IReplayPage{
+  request: (params: API.IParams) => void;
+}
+const ReplayPage: React.FC<IReplayPage> = ({ request }) => {
   const dispatch = useDispatch();
   const goBack = (id: number) => {
     dispatch({
@@ -21,7 +23,7 @@ const ReplayPage = () => {
       </p>
       <div className={styles.down_part_overflow}>
         <div className={styles.down_part}>
-          <DragPart/>
+          <DragPart request={request}/>
         </div>
       </div>
     </div>

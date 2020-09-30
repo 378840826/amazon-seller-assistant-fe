@@ -213,7 +213,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
           </Row>
         
           <Row className={styles.content_edit}>
-            <Col span={17}>
+            <Col span={16}>
               <Form.Item
                 label="主题 :"
                 name="templateSubject"
@@ -244,7 +244,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
               </Form.Item>
                 
             </Col>
-            <Col span={7} className={styles.click_area}>
+            <Col span={8} className={styles.click_area}>
               <div className={styles.title}>点击插入参数</div>
 
               <div onClick={onClickInsert}>

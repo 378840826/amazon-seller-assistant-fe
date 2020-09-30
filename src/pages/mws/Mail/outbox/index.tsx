@@ -98,7 +98,7 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
       }
       {
         state.id !== -1 && 
-        <ReplayPage/>
+        <ReplayPage request={requestParam}/>
       }
     </div>
   );
@@ -106,6 +106,5 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
 export default connect(({ global, mail }: IConnectState) => ({
   StoreId: global.shop.current.id,
   state: mail.inbox,
-  request: mail.request,
 }))( OutBox);
 

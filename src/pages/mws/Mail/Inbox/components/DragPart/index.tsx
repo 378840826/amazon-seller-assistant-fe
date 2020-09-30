@@ -11,7 +11,10 @@ interface IDragPartProps extends HTMLAttributes<HTMLDivElement>{
   dragboxbackground: string;
 }
 
-const DraggableExp = () => {
+interface IDraggableExp{
+  request: (params: API.IParams) => void;
+}
+const DraggableExp: React.FC<IDraggableExp> = ({ request }) => {
   const [state, setState] = useState<IDragPartProps>({
     initialwidth: 355, // 左边区块初始宽度
     showwidth: 355, // 左边区块初始宽度
@@ -49,7 +52,7 @@ const DraggableExp = () => {
     <div className={styles.container}>
      
       <div className={styles.leftContent} style={{ width: state.showwidth }}>
-        <LeftTableList />
+        <LeftTableList request={request}/>
         <Draggable
           axis="x"
           defaultPosition={{ x: 0, y: 0 }}

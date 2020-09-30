@@ -16,8 +16,9 @@ interface ILeftTableList {
   state: IInbox['state'];
   StoreId: IInbox['StoreId'];
   dispatch: IInbox['dispatch'];
+  request: (params: API.IParams) => void;
 }
-const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch }) => {
+const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch, request }) => {
 
   const { msg, tableInfo, tableLoading, rowSelection, id } = state;
   const rowLeftSelection = {
@@ -40,12 +41,9 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch }) =
   };
   const onTableChange = (pagination: TablePaginationConfig) => {
     const { current, pageSize } = pagination;
-    dispatch({
-      type: 'mail/modifyInboxSendParams',
-      payload: {
-        current,
-        size: pageSize,
-      },
+    request({
+      current,
+      size: pageSize,
     });
   };
 

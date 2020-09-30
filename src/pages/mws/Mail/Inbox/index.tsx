@@ -116,7 +116,6 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
   };
   //批量标记四个按钮的点击
   const rowListUpdate = (type: string) => {
-    console.log('rowSelection:', state.rowSelection);
     updateStatus(type, state.rowSelection, true);
   };
   //点击每一行出现回复页面
@@ -150,7 +149,9 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
         }
         {
           state.id !== -1 && 
-          <ReplayPage/>
+          <ReplayPage
+            request={requestParam}
+          />
         }
       </div>
     </div>
@@ -159,5 +160,4 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
 export default connect(({ global, mail }: IConnectState) => ({
   StoreId: global.shop.current.id,
   state: mail.inbox,
-  request: mail.request,
 }))(Inbox);
