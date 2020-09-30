@@ -75,6 +75,18 @@ export default [
       { title: '评论监控设定', path: '/mws/comment/settings', component: './mws/comment/Settings' },
       { title: '店铺绑定', path: '/mws/shop/bind', component: './mws/shop/Bind' },
       { title: '店铺管理', path: '/mws/shop/list', component: './mws/shop/List' },
+      {path:'/mws/mail',component:'./mws/Mail/components/Menu',routes:[
+        {title:'邮件统计',path:'/mws/mail/summary',component:'./mws/Mail/summary'},
+        {title:'收件箱',path:'/mws/mail/inbox',component:'./mws/Mail/Inbox'},
+        {title:'已回复',path:'/mws/mail/reply',component:'./mws/Mail/Inbox'},
+        {title:'未回复',path:'/mws/mail/no-reply',component:'./mws/Mail/Inbox'},
+        {title:'发件箱',path:'/mws/mail/outbox',component:'./mws/Mail/outbox'},
+        {title:'发送成功',path:'/mws/mail/send-success',component:'./mws/Mail/outbox'},
+        {title:'发送失败',path:'/mws/mail/send-fail',component:'./mws/Mail/outbox'},
+        {title:'正在发送',path:'/mws/mail/sending',component:'./mws/Mail/outbox'},
+        {title:'自动邮件规则',path:'/mws/mail/rule',component:'./mws/Mail/rule'},
+        {title:'邮件模版',path:'/mws/mail/template',component:'./mws/Mail/template'},
+      ]},
       // 以下为重定向路由
       { path: '/mws', redirect: '/mws/overview' },
       { path: '/mws/goods', redirect: '/mws/goods/list' },
@@ -85,7 +97,6 @@ export default [
       { path: '/mws/shop', redirect: '/mws/shop/list' },
     ],
   },
-
   {
     path: '/asin',
     component: '../layouts/AsinPandectLayout',

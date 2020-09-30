@@ -1,0 +1,53 @@
+.tablePadding {
+  padding: 20px 20px 0 20px;
+}
+
+.__table {
+  .sendingTime {
+    white-space: break-spaces;
+  }
+
+  .operator {
+    color: #09c2a6;
+    cursor: pointer;
+
+    &:hover {
+      color: #0083ff;
+    }
+  }
+
+  .dark_row {
+    background-color: #f7f7f7;
+  }
+
+  :global {
+    th {
+      height: 44px;
+    }
+
+    td {
+      height: 44px;
+    }
+
+    .fail {
+      color: #ff5958;
+    }
+
+    .ant-table-body {
+      border-left: 1px solid @divider-line-color;
+      border-right: 1px solid @divider-line-color;
+      border-bottom: 1px solid @divider-line-color;
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: none;
+    }
+
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td,
+    .ant-table tfoot > tr > th,
+    .ant-table tfoot > tr > td {
+      padding: 0 !important;
+    }
+  }
+}

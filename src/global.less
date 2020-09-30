@@ -29,6 +29,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   // font-family: Microsoft YaHei;
   // font-family: pingFangSC-Regular, pingFangSC-Medium;
+
   font-family: -apple-system, BlinkMacSystemFont, arial, PingFang SC, pingFangSC-Regular, pingFangSC-Medium Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
   // font-family: "pingFangSC-Regular" "pingFangSC-Medium";
 }
@@ -70,6 +71,39 @@ a:hover {
 
   .ant-modal-confirm-btns {
     float: inherit;
+  }
+}
+
+// 分页小屏的样式
+.h-page-small {
+  text-align: right;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+
+  // 总数据放在左边
+  .ant-pagination-total-text {
+    float: left;
+  }
+
+  .ant-pagination-total-text,
+  .ant-pagination-prev,
+  .ant-pagination-next,
+  .ant-pagination-item,
+  .ant-select-selector,
+  .ant-pagination-options-quick-jumper {
+    height: 26px !important;
+    line-height: 26px !important;
+    font-size: @font-size-sm;
+  }
+
+  .ant-pagination-options-quick-jumper input {
+    height: 26px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  li.ant-pagination-item {
+    min-width: 32px;
   }
 }
 
@@ -136,13 +170,11 @@ a:hover {
 @keyframes fadeInLeft {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(-100%, 0, 0);
     transform: translate3d(-100%, 0, 0);
   }
 
   to {
     opacity: 1;
-    -webkit-transform: none;
     transform: none;
   }
 }
@@ -150,13 +182,11 @@ a:hover {
 @keyframes fadeInRight {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(100%, 0, 0);
     transform: translate3d(100%, 0, 0);
   }
 
   to {
     opacity: 1;
-    -webkit-transform: none;
     transform: none;
   }
 }
@@ -223,7 +253,11 @@ a:hover {
 .none {
   display: none !important;
 }
-//安装ui要求，页面所有的复选框改为圆角2px
+//将typography中的margin-bottom:1em去掉
+div.ant-typography {
+  margin-bottom: 0 !important;
+}
+//按照ui要求，页面所有的复选框改为圆角2px
 .ant-checkbox {
   .ant-checkbox-inner {
     border-radius: 2px;
@@ -251,35 +285,13 @@ a:hover {
   }
 }
 
-// 分页小屏的样式
-.h-page-small {
-  text-align: right;
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-
-  // 总数据放在左边
-  .ant-pagination-total-text {
-    float: left;
-  }
-
-  .ant-pagination-total-text,
-  .ant-pagination-prev,
-  .ant-pagination-next,
-  .ant-pagination-item,
-  .ant-select-selector,
-  .ant-pagination-options-quick-jumper {
-    height: 26px !important;
-    line-height: 26px !important;
-    font-size: @font-size-sm;
-  }
-
-  .ant-pagination-options-quick-jumper input {
-    height: 26px;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  li.ant-pagination-item {
-    min-width: 32px;
-  }
+.ant-table-pagination.ant-pagination {
+  margin: 10px 0 !important;
+}
+//表格中为空显示的横杠
+.null_bar {
+  width: 12px;
+  height: 1px;
+  background-color: #666;
+  display: inline-block;
 }
