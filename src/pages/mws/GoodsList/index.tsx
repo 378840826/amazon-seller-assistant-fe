@@ -2,7 +2,6 @@ import React, { ReactText, useEffect } from 'react';
 import { useSelector, useDispatch } from 'umi';
 import { IConnectState } from '@/models/connect';
 import { Table, Pagination, message, ConfigProvider } from 'antd';
-import { ClickParam } from 'antd/es/menu';
 import { requestFeedback, requestErrorFeedback, getPageQuery } from '@/utils/utils';
 import { judgeFastPrice, judgeRuleOpen } from './utils';
 import GoodsIcon from './GoodsIcon';
@@ -83,7 +82,7 @@ const GoodsList: React.FC = () => {
     if (currentShopId !== '-1') {
       const queryParams = getPageQuery();
       // 清除 url 中的参数
-      history.replaceState(null, '', '/mws/goods/list');
+      history.replaceState(null, '', '/product/list');
       dispatch({
         type: 'goodsList/fetchShopGroups',
         payload: {
@@ -182,7 +181,8 @@ const GoodsList: React.FC = () => {
   };
 
   // 操作-改价
-  const handleFastPrice = (record: API.IGoods, { key }: ClickParam) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFastPrice = (record: API.IGoods, { key }: any) => {
     judgeFastPrice(key, [record]) && dispatch({
       type: 'goodsList/fastUpdate',
       payload: {

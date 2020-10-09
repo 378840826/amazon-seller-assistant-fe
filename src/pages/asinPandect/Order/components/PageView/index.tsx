@@ -130,7 +130,7 @@ const PageView: React.FC<IProps> = (props) => {
                           #{item.bigCategoryRank}
                         </span>
                         &nbsp;{item.bigCategory || <span style={{
-                          color: '#999',
+                          color: '#888',
                         }}>—</span>}
                       </p>
                     </div>

@@ -2,6 +2,10 @@
   background-color: #fff;
   border-radius: @border-radius-base;
 
+  ul:global(.ant-pagination) {
+    padding: 10px 20px;
+  }
+
   p {
     padding: 0;
     margin: 0;
@@ -27,11 +31,16 @@
 
   // 表格
   > main {
+    div:global(.ant-table-body) {
+      overflow-y: auto !important;
+    }
+
     :global(.ant-table-thead) th {
       height: 44px;
       line-height: 44px;
       padding: 0;
       background-color: #fafafa;
+      border: none;
     }
 
     table {
@@ -63,7 +72,7 @@
         flex: 0 0 auto;
       }
 
-      a {
+      a.title {
         min-width: 100px;
         max-width: 398px;
         line-height: 18px;
@@ -77,6 +86,15 @@
         text-align: left;
         margin-top: 10px;
         color: #0083ff;
+
+        .icon {
+          font-size: @font-size-sm;
+          color: @text-color-secondary;
+        }
+
+        &:hover .icon {
+          color: @link-color;
+        }
       }
 
       .details {
@@ -115,16 +133,11 @@
 
     // 查看
     a.look {
-      color: #009881;
+      color: #09c2a6;
 
       &:hover {
-        color: @primary-color;
+        color: #009881;
       }
     }
-  }
-
-  > footer {
-    padding: 10px 20px;
-    border-top: 1px solid #f0f0f0;
   }
 }

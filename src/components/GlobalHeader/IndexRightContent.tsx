@@ -3,6 +3,7 @@ import { Tooltip } from 'antd';
 import Avatar from './AvatarDropdown';
 import { Link, connect } from 'umi';
 import { Iconfont } from '@/utils/utils';
+import { IConnectState, IConnectProps, IUserModelState } from '@/models/connect';
 import weixin from '../../assets/index/qr.png';
 import styles from './index.less';
 
@@ -28,7 +29,7 @@ const GlobalHeaderRight: React.FC<ICenterConnectProps> = ({ user }) => {
         <>
           <Avatar />
           <Link
-            to="/mws/overview"
+            to="/overview"
             className={styles.link_into}
             style={{ marginLeft: 50, marginRight: 5, fontSize: 16 }}
           >

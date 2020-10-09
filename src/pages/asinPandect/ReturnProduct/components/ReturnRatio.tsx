@@ -4,7 +4,7 @@ const ReturnRatio = () => {
   return <>
     退货量
     <span style={{
-      color: '#999',
+      color: '#888',
     }}>（占比）</span>
   </>;
 };

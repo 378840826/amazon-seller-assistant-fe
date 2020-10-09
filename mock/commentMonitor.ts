@@ -3,7 +3,6 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-03 15:03:53
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-06-22 20:11:25
  * @FilePath: \amzics-react\mock\commentMonitor.ts
  * 
  * 监控评价模块
@@ -14,7 +13,7 @@ import Mock from 'mockjs';
 const random = Mock.Random;
  
 export default {
-  'GET /api/getCommonentList/': Mock.mock({
+  'POST /api/mws/review/reviews': Mock.mock({
     code: 200,
     data: {
       'total|500-200': 1,
@@ -31,7 +30,7 @@ export default {
         
       },
       'pages|100-200': 1,
-      'records|1-20': [
+      'records|30': [
         {
           'id|1-999': 1,
           reviewTime: random.date('yyyy-mm-dd'), // 日期
@@ -71,7 +70,7 @@ export default {
     },
   }),
   
-  'GET dddd/api/mws/review/monitoring-settings/search/': Mock.mock({
+  'GET /api/mws/review/monitoring-settings/search/': Mock.mock({
     code: 200,
     'data|2-100': [
       {
@@ -80,5 +79,30 @@ export default {
       },
     ],
   }),
-};
 
+  // 监控设定列表
+  'GET /api/mws/review/monitoring-settings/list': Mock.mock({
+    code: 200,
+    data: {
+      total: 1000,
+      current: 1,
+      hitCount: false,
+      orders: [],
+      pages: 1,
+      'records|30': [
+        {
+          monitoringNumber: 5,
+          monitoringSwitch: true,
+          productInfo: {
+            asin: 'B00C4M6T', 
+            imgLink: 'SADAJSDJASKJDAJSJAJS', 
+            title: 'ASDASDASDADA',
+          },
+          reviewNum: 11,
+          reviewScore: 4.2,
+          updateTime: '2020-05-27 23:09:31',
+        },
+      ],
+    },
+  }),
+};

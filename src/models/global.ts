@@ -211,8 +211,16 @@ const GlobalModel: IGlobalModelType = {
       // 如果没有店铺跳转到添加店铺页面
       if (current.id === undefined) {
         const { pathname } = window.location;
-        if (pathname.includes('/mws/') || pathname.includes('/ppc/')) {
-          const url = payload.type === 'mws' ? '/mws/shop/list' : '/ppc/shop/list';
+        // 不需要绑定店铺的
+        const exclude = [
+          '/users',
+          '/center',
+          '/message',
+          '/sub-account',
+        ];
+        const isExclude = exclude.some(url => pathname.includes(url));
+        if (!isExclude) {
+          const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
           !pathname.includes('/shop/') && history.push(url);
         }
       }
@@ -237,7 +245,7 @@ const GlobalModel: IGlobalModelType = {
     switchShopType(state, { payload }) {
       const { type, pathname } = payload;
       // 如果没有添加店铺，跳转到对应的添加店铺页
-      const url = type === 'mws' ? '/mws/shop/list' : '/ppc/shop/list';
+      const url = type === 'mws' ? '/shop/list' : '/ppc/shop/list';
       const { shop } = state;
       if (shop.type === type) {
         if (shop[type].length === 0 && shop.current.id > -1 && !pathname.includes('/shop/')) {
@@ -352,7 +360,7 @@ const GlobalModel: IGlobalModelType = {
         let type = '';
         if (pathname.includes('/ppc/')) {
           type = 'ppc';
-        } else if (pathname.includes('/mws/')) {
+        } else {
           type = 'mws';
         }
         type && dispatch({
@@ -360,9 +368,9 @@ const GlobalModel: IGlobalModelType = {
           payload: { type, pathname },
         });
         const hiddenShopSelectorUrl = [
-          '/mws/shop/list',
-          '/mws/shop/bind',
-          '/mws/overview',
+          '/shop/list',
+          '/shop/bind',
+          '/overview',
           '/ppc/overview',
           '/ppc/auth',
           '/center',
@@ -388,19 +396,18 @@ const GlobalModel: IGlobalModelType = {
         });
         // 不需要渲染统一样式的页面标题的页面的路由
         const unshownPageTitleUrl = [
-          '/mws/goods/error-report',
-          '/mws/shop/bind',
-          '/mws/mail/summary',
-          '/mws/mail/inbox',
-          '/mws/mail/reply',
-          '/mws/mail/no-reply',
-          '/mws/mail/outbox',
-          '/mws/mail/send-success',
-          '/mws/mail/send-fail',
-          '/mws/mail/sending',
-          '/mws/mail/rule',
-          '/mws/mail/template',
-
+          '/goods/error-report',
+          '/shop/bind',
+          '/mail/summary',
+          '/mail/inbox',
+          '/mail/reply',
+          '/mail/no-reply',
+          '/mail/outbox',
+          '/mail/send-success',
+          '/mail/send-fail',
+          '/mail/sending',
+          '/mail/rule',
+          '/mail/template',
         ];
         const isUnshow = unshownPageTitleUrl.some(path => path === pathname);
         dispatch({

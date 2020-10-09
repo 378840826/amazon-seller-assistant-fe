@@ -12,116 +12,194 @@ export default [
       { path: '/users/active', component: './user/Active', title: '激活' },
     ],
   },
-   //个人中心
-   {
-    path:'/center',
+
+  //个人中心
+  {
+    path: '/center',
     component: '../layouts/BasicLayout',
-    routes:[{ path: '/center', component: './user/Center', title: '个人中心' }]
+    routes: [{ path: '/center', component: './user/Center', title: '个人中心' }]
   },
+
   // 消息中心
   {
     path: '/message',
     component: '../layouts/BasicLayout',
     routes: [
-      { path: '/message/all', component: './message/', title: '消息中心'},
+      { path: '/message/all', component: './message/', title: '消息中心' },
       // 重定向
       { path: '/message', redirect: '/message/all' },
     ],
   },
+
   //子账号
   {
-    path:'/sub-account',
+    path: '/sub-account',
     component: '../layouts/BasicLayout',
-    routes:[{ path: '/sub-account', component: './sub/Account', title: '子账号' }]
+    routes: [{ path: '/sub-account', component: './sub/Account', title: '子账号' }]
   },
- 
+
+  // 店铺管理
+  {
+    path: '/shop',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '店铺管理', path: '/shop/list', component: './mws/shop/List' },
+      { title: '店铺绑定', path: '/shop/bind', component: './mws/shop/Bind' },
+      // 重定向
+      { path: '/shop', redirect: '/shop/list' },
+    ],
+  },
+
+  // 大盘
+  {
+    path: '/overview',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '数据大盘', path: '/overview', component: './mws/GoodsList' },
+      { title: '店铺报告', path: '/overview/shop', component: './mws/GoodsList' },
+      { title: 'BI看板', path: '/overview/bi', component: './mws/GoodsList' },
+    ],
+  },
+
+  // 商品
+  {
+    path: '/product',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '商品列表', path: '/product/list', component: './mws/GoodsList' },
+      { title: '错误报告', path: '/product/error-report', component: './mws/ErrorReport' },
+      // 重定向
+      { path: '/product', redirect: '/product/list' },
+    ],
+  },
+
+  // 动态
+  {
+    path: '/dynamic',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: 'ASIN动态汇总', path: '/dynamic/asin-overview', component: './mws/AsinChange' },
+      { title: 'ASIN动态监控设定', path: '/dynamic/asin-monitor', component: './mws/AsinChange' },
+      // 重定向
+      { path: '/dynamic', redirect: '/dynamic/asin-overview' },
+    ],
+  },
+
+  // 订单
+  {
+    path: '/order',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '订单列表', path: '/order', component: './mws/order/List' },
+    ],
+  },
+
+  // 调价
+  {
+    path: '/reprice',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '调价规则', path: '/reprice/rules', component: './mws/GoodsList' },
+      { title: '调价记录', path: '/reprice/history', component: './mws/GoodsList' },
+      // 重定向
+      { path: '/reprice', redirect: '/reprice/rules' },
+    ],
+  },
+
+  // 报表
+  {
+    path: '/report',
+    component: '../layouts/BasicLayout',
+    routes: [
+      {
+        path: '/report/asin',
+        component: '../layouts/AsinPandectLayout',
+        wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
+        routes: [
+          { path: '/report/asin/base', title: 'ASIN总览', component: './asinPandect/Base' },
+          { path: '/report/asin/dsell', title: 'ASIN总览 - 地区销售', component: './asinPandect/Dsell' },
+          { path: '/report/asin/order', title: 'ASIN总览 - 订单解读', component: './asinPandect/Order' },
+          { path: '/report/asin/ra', title: 'ASIN总览 - 退货分析', component: './asinPandect/ReturnProduct' },
+          { path: '/report/asin/b2b', title: 'ASIN总览 - B2B销售', component: './asinPandect/B2B' },
+          // 重定向
+          { path: '/report', redirect: '/report/asin/base' },
+        ]
+      },
+      { title: 'Business Rport导入', path: '/report/business', component: './mws/GoodsList' },
+    ],
+  },
+
+  // 补货
+  {
+    path: '/replenishment',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '补货计划', path: '/replenishment', component: './mws/Replenishment' },
+    ],
+  },
+
   // 广告系统
   {
     path: '/ppc',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: '广告总揽', path: '/ppc/overview', component: './ppc/Overview' },
-      { title: '店铺报告', path: '/ppc/shop', component: './ppc/Campaign' },
-      { title: 'ASIN广告解读', path: '/ppc/asin', component: './ppc/Campaign' },
       { title: '广告系列', path: '/ppc/campaign', component: './ppc/Campaign' },
       { title: '广告组', path: '/ppc/group', component: './ppc/Campaign' },
-      { title: '广告', path: '/ppc/item', component: './ppc/Campaign' },
-      { title: '关键词', path: '/ppc/keyword', component: './ppc/Campaign' },
+      { title: '广告', path: '/ppc/product', component: './ppc/Campaign' },
+      { title: 'Targeting', path: '/ppc/targeting', component: './ppc/Campaign' },
       { title: 'search term 报表', path: '/ppc/search-report', component: './ppc/Campaign' },
       // 以下为重定向路由
-      { path: '/ppc', redirect: '/ppc/overview' },
+      { path: '/ppc', redirect: '/ppc/campaign' },
     ],
   },
 
-  // 调价系统
+  // 评论
   {
-    path: '/mws',
+    path: '/review',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: '店铺总揽', path: '/mws/overview', component: './mws/GoodsList' },
-      { title: 'Business Report 导入', path: '/mws/report/import', component: './mws/GoodsList' },
-      { title: 'Business Report 解读', path: '/mws/report/unscramble', component: './mws/GoodsList' },
-      { title: '商品列表', path: '/mws/goods/list', component: './mws/GoodsList' },
-      { title: '错误报告', path: '/mws/goods/error-report', component: './mws/ErrorReport' },
-      { title: '补货计划', path: '/mws/goods/replenishment', component: './mws/Replenishment' },
-      { title: 'ASIN动态', path: '/mws/goods/change', component: './mws/AsinChange' },
-      { title: '订单列表', path: '/mws/order/list', component: './mws/order/List' },
-      { title: '订单解读', path: '/mws/order/unscramble', component: './mws/GoodsList' },
-      { title: '调价规则', path: '/mws/reprice/rules', component: './mws/GoodsList' },
-      { title: '调价记录', path: '/mws/reprice/history', component: './mws/GoodsList' },
-      { title: '跟踪设定', path: '/mws/keywords/monitor', component: './mws/GoodsList' },
-      { title: '搜索排名跟踪', path: '/mws/keywords/ranking', component: './mws/GoodsList' },
-      { title: '评论监控', path: '/mws/comment/monitor', component: './mws/comment/Monitor' },
-      { title: '评论监控设定', path: '/mws/comment/settings', component: './mws/comment/Settings' },
-      { title: '店铺绑定', path: '/mws/shop/bind', component: './mws/shop/Bind' },
-      { title: '店铺管理', path: '/mws/shop/list', component: './mws/shop/List' },
-      {path:'/mws/mail',component:'./mws/Mail/components/Menu',routes:[
-        {title:'邮件统计',path:'/mws/mail/summary',component:'./mws/Mail/summary'},
-        {title:'收件箱',path:'/mws/mail/inbox',component:'./mws/Mail/Inbox'},
-        {title:'已回复',path:'/mws/mail/reply',component:'./mws/Mail/Inbox'},
-        {title:'未回复',path:'/mws/mail/no-reply',component:'./mws/Mail/Inbox'},
-        {title:'发件箱',path:'/mws/mail/outbox',component:'./mws/Mail/outbox'},
-        {title:'发送成功',path:'/mws/mail/send-success',component:'./mws/Mail/outbox'},
-        {title:'发送失败',path:'/mws/mail/send-fail',component:'./mws/Mail/outbox'},
-        {title:'正在发送',path:'/mws/mail/sending',component:'./mws/Mail/outbox'},
-        {title:'自动邮件规则',path:'/mws/mail/rule',component:'./mws/Mail/rule'},
-        {title:'邮件模版',path:'/mws/mail/template',component:'./mws/Mail/template'},
-      ]},
-      // 以下为重定向路由
-      { path: '/mws', redirect: '/mws/overview' },
-      { path: '/mws/goods', redirect: '/mws/goods/list' },
-      { path: '/mws/report', redirect: '/mws/report/import' },
-      { path: '/mws/order', redirect: '/mws/order/list' },
-      { path: '/mws/reprice', redirect: '/mws/reprice/rules' },
-      { path: '/mws/comment', redirect: '/mws/comment/monitor' },
-      { path: '/mws/shop', redirect: '/mws/shop/list' },
-    ],
-  },
-  {
-    path: '/asin',
-    component: '../layouts/AsinPandectLayout',
-    wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
-    routes: [
-      { path: '/asin/base', title: 'ASIN总览', component: './asinPandect/Base' },
-      { path: '/asin/dsell', title: 'ASIN总览 - 地区销售', component: './asinPandect/Dsell' },
-      { path: '/asin/order', title: 'ASIN总览 - 订单解读', component: './asinPandect/Order' },
-      { path: '/asin/ra', title: 'ASIN总览 - 退货分析', component: './asinPandect/ReturnProduct' },
-      { path: '/asin/b2b', title: 'ASIN总览 - B2B销售', component: './asinPandect/B2B' },
-
+      { title: '评论列表', path: '/review/list', component: './mws/comment/Monitor' },
+      { title: '评论监控设定', path: '/review/monitor', component: './mws/comment/Settings' },
       // 重定向
-      { path: '/asin', redirect: '/asin/base' },
-    ]
+      { path: '/review', redirect: '/review/list' },
+    ],
   },
 
-  // 跟卖监控
+  // 邮件
   {
-    path: '/follow',
+    path: '/mail',
     component: '../layouts/BasicLayout',
     routes: [
-      { path: '/follow/monitor', title: '跟卖监控', component: './follow/Monitor'},
-      { path: '/follow/list', title: '跟卖列表', component: './follow/List'},
-      { path: '/follow/history', title: '跟卖历史', component: './follow/History'},
-    ]
+      {
+        path: '/mail', component: './mws/Mail/components/Menu', routes: [
+          { title: '邮件统计', path: '/mail/summary', component: './mws/Mail/summary' },
+          { title: '收件箱', path: '/mail/inbox', component: './mws/Mail/Inbox' },
+          { title: '已回复', path: '/mail/reply', component: './mws/Mail/Inbox' },
+          { title: '未回复', path: '/mail/no-reply', component: './mws/Mail/Inbox' },
+          { title: '发件箱', path: '/mail/outbox', component: './mws/Mail/outbox' },
+          { title: '发送成功', path: '/mail/send-success', component: './mws/Mail/outbox' },
+          { title: '发送失败', path: '/mail/send-fail', component: './mws/Mail/outbox' },
+          { title: '正在发送', path: '/mail/sending', component: './mws/Mail/outbox' },
+          { title: '自动邮件规则', path: '/mail/rule', component: './mws/Mail/rule' },
+          { title: '邮件模版', path: '/mail/template', component: './mws/Mail/template' },
+        ]
+      },
+      // 重定向
+      { path: '/mail', redirect: '/mail/summary' },
+    ],
+  },
+
+  // 跟卖
+  {
+    path: '/competitor',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '跟卖监控', path: '/competitor/monitor', component: './follow/Monitor' },
+      { title: '跟卖列表', path: '/competitor/list', component: './follow/List' },
+      { title: '跟卖历史', path: '/competitor/history', component: './follow/History' },
+      // 重定向
+      { path: '/competitor', redirect: '/competitor/monitor' },
+    ],
   },
 
   // {

@@ -8,13 +8,12 @@ const GlobalSearch: React.FC = () => {
   const [ulVisible, setUlVisible] = useState<boolean>(false);
 
   const dict = {
-    调价设定: '/mws/goods/list?search=',
-    调价记录: '/mws/reprice/history?code=',
-    关键词: '/mws/keywords/monitor?code=',
-    订单: '/mws/order/list?asinRelatedSearch=',
-    评论: '/mws/comment/monitor?asin=',
-    报表: '/mws/order/unscramble?combination=',
-    动态: '/mws/goods/change?asin=',
+    调价设定: '/product/list?search=',
+    调价记录: '/reprice/history?code=',
+    订单: '/order/list?asinRelatedSearch=',
+    评论: '/review/list?asin=',
+    报表: '/report/asin/base?asin=',
+    动态: '/dynamic/asin-overview?asin=',
   };
   
   const handleChange = (event: { target: { value: string } }) => {

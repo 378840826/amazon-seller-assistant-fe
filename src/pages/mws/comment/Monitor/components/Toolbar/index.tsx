@@ -6,6 +6,7 @@ import { RadioChangeEvent } from 'antd/lib/radio';
 import moment from 'moment';
 import { Moment } from 'moment/moment';
 import { useSelector } from 'umi';
+import { getRangeDate } from '@/utils/huang';
 
 import {
   Checkbox, 
@@ -54,16 +55,14 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   const [asin, setAsin] = useState<string>(props.asin || ''); // asin
   const [scopeMin, setScopeMin] = useState<string>(''); // 最小评分
   const [scopeMax, setScopeMax] = useState<string>(''); // 最大评分
-  const [dateStart, setDateStart] = useState<string>(''); // 开始日期
-  const [dateEnd, setDateEnd] = useState<string>(''); // 结束日期
+  // const [dateStart, setDateStart] = useState<string>(''); // 开始日期
+  // const [dateEnd, setDateEnd] = useState<string>(''); // 结束日期
   const [reviewerName, setReviewerName] = useState<string>(''); // 笔名
   const [reviewsNumMin, setReviewsNumMin] = useState<string>(''); // reviews起始值
   const [reviewsNumMax, setReviewsNumMax] = useState<string>(''); // reviews结束值
   const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
-  const [datepickerValue, setDatepickerValue] = useState<Moment[]>([
-    moment().subtract(29, 'days'),
-    moment(),
-  ]);
+  const { start, end } = getRangeDate(30);
+  const [datepickerValue, setDatepickerValue] = useState<Moment[]>([start, end]);
 
   // 收集请求所需数据
   const gather = (param = {}, type = false) => {
@@ -206,35 +205,19 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     setReviewsNumMax(value);
   };
 
-
+  const { start: start7, end: end7 } = getRangeDate(7);
+  const { start: start30, end: end30 } = getRangeDate(30);
+  const { start: start60, end: end60 } = getRangeDate(60);
+  const { start: start90, end: end90 } = getRangeDate(90);
+  const { start: start180, end: end180 } = getRangeDate(180);
+  const { start: start365, end: end365 } = getRangeDate(365);
   const rangeList = {
-    '上周': [
-      moment().subtract(1, 'week').startOf('week'),
-      moment().subtract(1, 'week').endOf('week')],
-    '上月': [
-      moment().subtract(1, 'month').startOf('month'),
-      moment().subtract(1, 'month').endOf('month'),
-    ],
-    '最近7天': [
-      moment().subtract(6, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近30天': [
-      moment().subtract(29, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近60天': [
-      moment().subtract(59, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近90天': [
-      moment().subtract(89, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近365天': [
-      moment().subtract(365, 'day'),
-      moment().endOf('day'),
-    ],
+    '最近7天': [start7, end7],
+    '最近30天': [start30, end30],
+    '最近60天': [start60, end60],
+    '最近90天': [start90, end90],
+    '最近180天': [start180, end180],
+    '最近365天': [start365, end365],
   };
   
   // 日历配置
@@ -250,8 +233,6 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
       setDatepickerValue(dates);
       dateStart = dates[0].format('YYYY-MM-DD');
       dateEnd = dates[1].format('YYYY-MM-DD');
-      setDateStart(dateStart);
-      setDateEnd(dateEnd);
       gather({ dateStart, dateEnd });
     },
   };
