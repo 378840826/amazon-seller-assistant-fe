@@ -132,9 +132,9 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
   return (
     <div className={styles.right_container} style={{ lineHeight: '30px' }}>
       <SearchHeader 
-        dateStart={params.dateStart}
-        dateEnd={params.dateEnd}
-        sourceType={params.type}
+        dateStart={request.dateStart}
+        dateEnd={request.dateEnd}
+        sourceType={request.type}
         request={requestParam} 
         tableLoading={state.tableLoading}/>
       <div className={styles.table_operator}>
