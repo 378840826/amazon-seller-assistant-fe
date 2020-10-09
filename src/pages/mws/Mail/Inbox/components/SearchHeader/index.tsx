@@ -38,10 +38,7 @@ const rangeList = {
   ],
 };
 const { RangePicker } = DatePicker;
-const dateRange = {
-  dateStart: '',
-  dateEnd: '',
-};
+
 
 interface ISearchHeader{
   tableLoading: boolean;
@@ -57,6 +54,10 @@ const SearchHeader: React.FC<ISearchHeader> = ({
   dateEnd,
   sourceType,
 }) => {
+  const dateRange = {
+    dateStart,
+    dateEnd,
+  };
   const beforeRequest = (param: API.IParams) => {
     request({
       ...param,
@@ -86,6 +87,9 @@ const SearchHeader: React.FC<ISearchHeader> = ({
       dateRange.dateEnd = dates[1].format('YYYY-MM-DD');
     },
     onOpenChange: (open: boolean) => {
+      if (dateRange.dateStart === dateStart && dateRange.dateEnd === dateEnd) {
+        return; 
+      }
       if (!open){
         beforeRequest({ ...dateRange });
       }

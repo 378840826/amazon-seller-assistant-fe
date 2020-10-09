@@ -44,10 +44,6 @@ const rangeList = {
   ],
 };
 const { RangePicker } = DatePicker;
-const dateRange = {
-  dateStart: '',
-  dateEnd: '',
-};
 
 interface ISearchHeader{
   tableLoading: boolean;
@@ -73,6 +69,10 @@ const SearchHeader: React.FC<ISearchHeader> = ({
       current: 1,
     });
   };
+  const rangeDate = {
+    dateStart,
+    dateEnd,
+  };
   
   //1.切换radio
   const changeRadio = (e: RadioChangeEvent) => {
@@ -97,12 +97,15 @@ const SearchHeader: React.FC<ISearchHeader> = ({
     ranges: rangeList,
     defaultValue: [moment(dateStart), moment(dateEnd)],
     onChange: (dates: Moment[]): void => {
-      dateRange.dateStart = dates[0].format('YYYY-MM-DD');
-      dateRange.dateEnd = dates[1].format('YYYY-MM-DD');
+      rangeDate.dateStart = dates[0].format('YYYY-MM-DD');
+      rangeDate.dateEnd = dates[1].format('YYYY-MM-DD');
     },
     onOpenChange: (open: boolean) => {
+      if (rangeDate.dateStart === dateStart && rangeDate.dateEnd === dateEnd) {
+        return; 
+      }
       if (!open){
-        beforeRequest({ ...dateRange });
+        beforeRequest({ ...rangeDate });
       }
     },
   };

@@ -85,10 +85,10 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
   return (
     <div className={styles.right_container} style={{ lineHeight: '30px' }}>
       <SearchHeader 
-        dateStart={params.dateStart}
-        dateEnd={params.dateEnd}
-        sourceType={params.type}
-        sendType={params.sendType}
+        dateStart={request.dateStart}
+        dateEnd={request.dateEnd}
+        sourceType={request.type}
+        sendType={request.sendType}
         request={requestParam} 
         tableLoading={state.tableLoading}/>
       {
