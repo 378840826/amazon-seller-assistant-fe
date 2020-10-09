@@ -1,7 +1,6 @@
 import React from 'react';
 import { Menu, Spin, Badge } from 'antd';
 import { Iconfont } from '@/utils/utils';
-import { ClickParam } from 'antd/es/menu';
 import { history, connect } from 'umi';
 import { IConnectProps, IConnectState } from '@/models/connect';
 import HeaderDropdown from '../HeaderDropdown';
@@ -21,8 +20,8 @@ const munuIcon = function(type: string): React.ReactElement {
 };
 
 class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
-  onMenuClick = (event: ClickParam) => {
-    const { key } = event;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onMenuClick = ({ key }: any) => {
     if (key === '/logout') {
       this.props.dispatch({
         type: 'user/logout',
@@ -56,7 +55,7 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
           个人中心
         </MenuItem>
         <MenuDivider />
-        <MenuItem key="/mws/shop/list" className={styles.menuItem}>
+        <MenuItem key="/shop/list" className={styles.menuItem}>
           { munuIcon('icon-dianpuguanli1') }
           店铺管理
         </MenuItem>

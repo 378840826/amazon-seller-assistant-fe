@@ -468,7 +468,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
               // 是否有匹配订单
               hasOrder ?
                 <Link target="_blank" to={{
-                  pathname: '/mws/order/list',
+                  pathname: '/order',
                   search: `?asin=${asin}&buyer=${reviewerName}`,
                 }} className={styles.hasOrder}>匹配订单</Link>
                 : ''

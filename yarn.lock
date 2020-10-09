@@ -1571,7 +1571,6 @@
 "@types/echarts@^4.6.4":
   version "4.6.5"
   resolved "https://registry.npm.taobao.org/@types/echarts/download/@types/echarts-4.6.5.tgz#6aba35e7d5fdb97f0852865a11ad1cd52f0b72fe"
-  integrity sha1-aro159X9uX8IUoZaEa0c1S8Lcv4=
   dependencies:
     "@types/zrender" "*"
 
@@ -1988,7 +1987,6 @@
 "@types/zrender@*":
   version "4.0.0"
   resolved "https://registry.npm.taobao.org/@types/zrender/download/@types/zrender-4.0.0.tgz#a6806f12ec4eccaaebd9b0d816f049aca6188fbd"
-  integrity sha1-poBvEuxOzKrr2bDYFvBJrKYYj70=
 
 "@typescript-eslint/eslint-plugin@^2.28.0":
   version "2.34.0"
@@ -4606,7 +4604,6 @@ ecc-jsbn@~0.1.1:
 echarts@^4.8.0:
   version "4.8.0"
   resolved "https://registry.npm.taobao.org/echarts/download/echarts-4.8.0.tgz?cache=0&sync_timestamp=1596215050021&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fecharts%2Fdownload%2Fecharts-4.8.0.tgz#b2c1cfb9229b13d368ee104fc8eea600b574d4c4"
-  integrity sha1-ssHPuSKbE9No7hBPyO6mALV01MQ=
   dependencies:
     zrender "4.3.1"
 
@@ -7900,9 +7897,19 @@ mockjs@^1.1.0:
   dependencies:
     commander "*"
 
+moment-timezone@^0.5.31:
+  version "0.5.31"
+  resolved "https://registry.npm.taobao.org/moment-timezone/download/moment-timezone-0.5.31.tgz#9c40d8c5026f0c7ab46eda3d63e49c155148de05"
+  dependencies:
+    moment ">= 2.9.0"
+
 moment@2.x, moment@^2.24.0, moment@^2.25.3:
   version "2.27.0"
   resolved "https://registry.npm.taobao.org/moment/download/moment-2.27.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmoment%2Fdownload%2Fmoment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
+
+"moment@>= 2.9.0":
+  version "2.29.0"
+  resolved "https://registry.npm.taobao.org/moment/download/moment-2.29.0.tgz?cache=0&sync_timestamp=1600761806274&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmoment%2Fdownload%2Fmoment-2.29.0.tgz#fcbef955844d91deb55438613ddcec56e86a3425"
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -12391,7 +12398,6 @@ zlib@1.0.5:
 zrender@4.3.1:
   version "4.3.1"
   resolved "https://registry.npm.taobao.org/zrender/download/zrender-4.3.1.tgz#baf8aa6dc8187a2f819692d7d5f9bedfa2b90fa3"
-  integrity sha1-uviqbcgYei+BlpLX1fm+36K5D6M=
 
 zscroller@~0.4.0:
   version "0.4.8"

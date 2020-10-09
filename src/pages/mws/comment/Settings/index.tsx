@@ -364,7 +364,7 @@ const Settings: React.FC = () => {
         const { asin = '' } = row.productInfo;
         return <div>
           <Link to={{
-            pathname: '/mws/comment/monitor',
+            pathname: '/review/monitor',
             search: `asin=${asin}`,
           }} target="_blank" className={styles.look}>查看</Link>
         </div>;

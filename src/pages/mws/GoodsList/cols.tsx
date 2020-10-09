@@ -12,7 +12,6 @@ import {
   Input,
 } from 'antd';
 import { ColumnProps } from 'antd/es/table';
-import { ClickParam } from 'antd/es/menu';
 import GoodsIcon from './GoodsIcon';
 import { day, strToMoneyStr } from '@/utils/utils';
 import { renderSortIcon } from './utils';
@@ -52,6 +51,13 @@ export const getFullColumns = (params: any) => {
     order,
     currency,
   } = params;
+
+  // 点击下拉排序
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSortMenuClick = ({ key }: any) => {
+    const [newSort, newOrder] = key.split('-');
+    handleSortChange(newSort, newOrder);
+  };
 
   // 分组下拉选择
   const groupsOptions = (
@@ -229,12 +235,8 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const onClick = ({ key }: ClickParam) => {
-          const [newSort, newOrder] = key.split('-');
-          handleSortChange(newSort, newOrder);
-        };
         const menu = (
-          <Menu className={styles.titleMenu} onClick={onClick}>
+          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
             <MenuItem key="sellable-ascend">
               库存升序
             </MenuItem>
@@ -431,12 +433,8 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const onClick = ({ key }: ClickParam) => {
-          const [newSort, newOrder] = key.split('-');
-          handleSortChange(newSort, newOrder);
-        };
         const menu = (
-          <Menu className={styles.titleMenu} onClick={onClick}>
+          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
             <MenuItem key="profit-ascend">
               利润升序
             </MenuItem>
@@ -489,12 +487,8 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const onClick = ({ key }: ClickParam) => {
-          const [newSort, newOrder] = key.split('-');
-          handleSortChange(newSort, newOrder);
-        };
         const menu = (
-          <Menu className={styles.titleMenu} onClick={onClick}>
+          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
             <MenuItem key="dayOrder7Count-ascend">
               7天订单升序
             </MenuItem>
@@ -543,12 +537,8 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const onClick = ({ key }: ClickParam) => {
-          const [newSort, newOrder] = key.split('-');
-          handleSortChange(newSort, newOrder);
-        };
         const menu = (
-          <Menu className={styles.titleMenu} onClick={onClick}>
+          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
             <MenuItem key="dayOrder30Count-ascend">
               30天订单升序
             </MenuItem>
@@ -627,12 +617,8 @@ export const getFullColumns = (params: any) => {
       },
     }, {
       title: () => {
-        const onClick = ({ key }: ClickParam) => {
-          const [newSort, newOrder] = key.split('-');
-          handleSortChange(newSort, newOrder);
-        };
         const menu = (
-          <Menu className={styles.titleMenu} onClick={onClick}>
+          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
             <MenuItem key="reviewScore-ascend">
               评分升序
             </MenuItem>
@@ -750,7 +736,7 @@ export const getFullColumns = (params: any) => {
       align: 'center',
       width: 60,
       render: competingCount => (
-        <Link to="/mws/comment/monitor">{competingCount}</Link>
+        <Link to="/review/monitor">{competingCount}</Link>
       ),
     }, {
       title: '调价规则',
@@ -787,7 +773,8 @@ export const getFullColumns = (params: any) => {
       width: 80,
       fixed: 'right',
       render: (_, record) => {
-        const handleMonitorClick = (param: ClickParam) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const handleMonitorClick = (param: any) => {
           console.log('handleMonitorClick', param, record);
         };
         const priceMenu = (

@@ -389,7 +389,7 @@ const ShopBind: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.breadcrumbs}>
-        <Link to="/mws/shop/list">店铺管理</Link>
+        <Link to="/shop/list">店铺管理</Link>
         <Iconfont type="icon-zhankai-copy" className={styles.icon} />
         <span>绑定店铺</span>
       </div>
