@@ -128,7 +128,7 @@ const BasicLayout: React.FC = props => {
   }, [dispatch]);
   
   return (
-    <Layout>
+    <Layout style={{ height: '100%' }}>
       <Header className={`${styles.Header} g-header-nav`}>
         <a href="/">
           <img src={logo} alt="logo" className={styles.logo} />

@@ -1,0 +1,92 @@
+.subject {
+  font-weight: 500;
+  color: @heading-color;
+  font-size: 14px;
+  margin-bottom: 0 !important;
+}
+
+.content {
+  color: @text-color;
+  font-size: 14px;
+  margin-bottom: 0 !important;
+}
+
+.count {
+  color: @text-color;
+  display: flex;
+  justify-content: flex-end;
+  line-height: 24px;
+}
+
+.date {
+  line-height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row_clicked {
+  background-color: #ecf6ff;
+  cursor: not-allowed;
+}
+
+.__table {
+  th {
+    height: 35px;
+    background-color: #fff !important;
+  }
+
+  td {
+    height: 80px;
+  }
+
+  .__td_1 {
+    padding-left: 10px;
+  }
+
+  .__td_2 {
+    padding-right: 10px;
+  }
+
+  :global {
+    .fail {
+      color: #ff5958;
+    }
+
+    .success {
+      color: #09c2a6;
+    }
+
+    .sending {
+      color: #666;
+    }
+
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td,
+    .ant-table tfoot > tr > th,
+    .ant-table tfoot > tr > td {
+      padding: 0 !important;
+    }
+
+    .ant-table-tbody > tr:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
+
+    .ant-table-pagination-right {
+      float: none !important;
+    }
+
+    .ant-table-pagination.ant-pagination {
+      margin: 0 !important;
+      text-align: center;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-top: 1px solid @divider-line-color;
+    }
+
+    button.ant-pagination-item-link {
+      line-height: 24px;
+    }
+  }
+}

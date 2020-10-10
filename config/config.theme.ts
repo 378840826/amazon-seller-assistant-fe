@@ -67,6 +67,7 @@ export default {
   // 小按钮
   '@btn-width-sm': '50px',
   '@btn-height-sm': '20px',
+  '@btn-font-size-sm':'12px',
   // 长按钮宽度
   '@btn-long-width': '106px',
   // 自定文字按钮颜色
@@ -93,4 +94,6 @@ export default {
   '@layout-header-inputBackgroundColor': '#f5f5f5',
   // xl 屏幕
   '@screen-xl': '1400px',
+  //table
+  '@table-font-size':'12px',
 }
