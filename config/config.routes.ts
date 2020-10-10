@@ -170,6 +170,8 @@ export default [
     path: '/mail',
     component: '../layouts/BasicLayout',
     routes: [
+      // 重定向
+      { path: '/mail', redirect: '/mail/summary' },
       {
         path: '/mail', component: './mws/Mail/components/Menu', routes: [
           { title: '邮件统计', path: '/mail/summary', component: './mws/Mail/summary' },
@@ -184,8 +186,7 @@ export default [
           { title: '邮件模版', path: '/mail/template', component: './mws/Mail/template' },
         ]
       },
-      // 重定向
-      { path: '/mail', redirect: '/mail/summary' },
+      
     ],
   },
 

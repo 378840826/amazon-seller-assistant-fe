@@ -29,10 +29,10 @@ export interface IInbox extends IConnectProps{
   request: API.IParams;
 }
 const status = (pathname: string) => {
-  if (pathname === '/mws/mail/reply') {
+  if (pathname === '/mail/reply') {
     return 'replied-true'; 
   }
-  if (pathname === '/mws/mail/no-reply') {
+  if (pathname === '/mail/no-reply') {
     return 'replied-false'; 
   }
   return '';

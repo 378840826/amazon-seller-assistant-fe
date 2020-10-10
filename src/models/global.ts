@@ -397,6 +397,7 @@ const GlobalModel: IGlobalModelType = {
         // 不需要渲染统一样式的页面标题的页面的路由
         const unshownPageTitleUrl = [
           '/goods/error-report',
+          '/product/error-report',
           '/shop/bind',
           '/mail/summary',
           '/mail/inbox',

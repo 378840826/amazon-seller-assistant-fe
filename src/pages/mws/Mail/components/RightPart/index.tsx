@@ -24,7 +24,7 @@ const RightPart: React.FC<IRightPart> = ({ id, StoreId, dispatch }) => {
   });
 
   const pathName = location.pathname;
-  const dispatchType = ['/mws/mail/inbox', '/mws/mail/reply', '/mws/mail/no-reply'].indexOf(pathName) > -1 ?
+  const dispatchType = ['/mail/inbox', '/mail/reply', '/mail/no-reply'].indexOf(pathName) > -1 ?
     'mail/receiveReplayPage' : 'mail/sendListReplayPage';
 
   useEffect(() => {
