@@ -169,7 +169,8 @@ export default [
     path: '/mail',
     component: '../layouts/BasicLayout',
     routes: [
-      { path:'/mail/',component:'./mws/Mail/components/Menu',routes:[
+      { path: '/mail', redirect: '/mail/summary' },
+      { path:'/mail',component:'./mws/Mail/components/Menu',routes:[
         {title:'邮件统计',path:'/mail/summary',component:'./mws/Mail/summary'},
         {title:'收件箱',path:'/mail/inbox',component:'./mws/Mail/Inbox'},
         {title:'已回复',path:'/mail/reply',component:'./mws/Mail/Inbox'},
