@@ -46,7 +46,7 @@ const common = {
   id: -1, //选中的邮件id,为正值出现回复页面,默认-1
 };
 
-const receiveList = ['/mws/mail/inbox', '/mws/mail/reply', '/mws/mail/no-reply'];
+const receiveList = ['/mail/inbox', '/mail/reply', '/mail/no-reply'];
 
 export interface ITemplates{
   templateSubject: string;

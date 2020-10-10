@@ -9,7 +9,7 @@ const { Paragraph } = Typography;
 interface IOrderInfo{
   info: API.IParams;
 }
-export const pathList = ['/mws/mail/inbox', '/mws/mail/reply', '/mws/mail/no-reply'];
+export const pathList = ['/mail/inbox', '/mail/reply', '/mail/no-reply'];
 const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
   const slide = useRef<Carousel>(null);
   const orderDetails = Object.keys(info).length === 0 ? [] : info.orderDetails;

@@ -18,16 +18,16 @@ const SideMenu: React.FC<IMailConnectProps> = ({ global, dispatch, children, mai
 
   
   const lists = [
-    { path: '/mws/mail/summary', name: '邮件列表', position: 'first' },
-    { path: '/mws/mail/inbox', name: `收件箱(${mail.unreadCount})`, position: 'first' },
-    { path: '/mws/mail/reply', name: '已回复', position: 'second' },
-    { path: '/mws/mail/no-reply', name: '未回复', position: 'second' },
-    { path: '/mws/mail/outbox', name: '发件箱', position: 'first' },
-    { path: '/mws/mail/send-success', name: '发送成功', position: 'second' },
-    { path: '/mws/mail/send-fail', name: '发送失败', position: 'second' },
-    { path: '/mws/mail/sending', name: '正在发送', position: 'second' },
-    { path: '/mws/mail/rule', name: '自动邮件规则', position: 'first' },
-    { path: '/mws/mail/template', name: '邮件模板', position: 'first' },
+    { path: '/mail/summary', name: '邮件列表', position: 'first' },
+    { path: '/mail/inbox', name: `收件箱(${mail.unreadCount})`, position: 'first' },
+    { path: '/mail/reply', name: '已回复', position: 'second' },
+    { path: '/mail/no-reply', name: '未回复', position: 'second' },
+    { path: '/mail/outbox', name: '发件箱', position: 'first' },
+    { path: '/mail/send-success', name: '发送成功', position: 'second' },
+    { path: '/mail/send-fail', name: '发送失败', position: 'second' },
+    { path: '/mail/sending', name: '正在发送', position: 'second' },
+    { path: '/mail/rule', name: '自动邮件规则', position: 'first' },
+    { path: '/mail/template', name: '邮件模板', position: 'first' },
   ];
   useEffect(() => {
     currentId !== '-1' &&
@@ -41,7 +41,7 @@ const SideMenu: React.FC<IMailConnectProps> = ({ global, dispatch, children, mai
     });
   }, [currentId, dispatch]);
   return (
-    <Layout className="site-layout-background" style={{ marginTop: '16px', height: 'calc(100% - 16px)' }}>
+    <Layout className="site-layout-background" style={{ marginTop: '16px', minHeight: 'calc(100% - 16px)' }}>
       {
         currentId !== '-1' && 
         <>
