@@ -9,13 +9,13 @@ import TablePage from './components/TablePage';
 import ReplayPage from './components/ReplayPage';
 
 const status = (pathname: string) => {
-  if (pathname === '/mws/mail/send-success') {
+  if (pathname === '/mail/send-success') {
     return 'success'; 
   }
-  if (pathname === '/mws/mail/send-fail') {
+  if (pathname === '/mail/send-fail') {
     return 'fail'; 
   }
-  if (pathname === '/mws/mail/sending'){
+  if (pathname === '/mail/sending'){
     return 'Sending';
   }
   return '';
