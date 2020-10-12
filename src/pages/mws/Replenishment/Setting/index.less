@@ -79,7 +79,17 @@
     }
 
     :global(.ant-form-item) {
-      margin-bottom: 12px;
+      margin-bottom: 0;
+    }
+  }
+
+  .numFormItemContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    & > div {
+      margin-right: 6px;
     }
   }
 }
@@ -100,8 +110,4 @@
   button {
     margin-right: 27px;
   }
-}
-
-.loading {
-  text-align: center;
 }
