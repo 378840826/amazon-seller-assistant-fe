@@ -82,6 +82,13 @@ const Replenishment: React.FC = () => {
   // 勾选商品
   const rowSelection = {
     onChange: (selectedRowKeys: ReactText[]) => {
+      // 取消了商品勾选就把选择全部也取消勾选
+      if (selectedRowKeys.length !== goodsList.length) {
+        dispatch({
+          type: 'replenishment/changeCheckedType',
+          payload: 1,
+        });
+      }
       dispatch({
         type: 'replenishment/updateCheckGoods',
         payload: selectedRowKeys,
@@ -116,21 +123,24 @@ const Replenishment: React.FC = () => {
       type: 'replenishment/changeCheckedType',
       payload: checkedAll ? 2 : 1,
     });
-    // 勾选全店，则勾选本页
-    if (checkedAll) {
-      dispatch({
-        type: 'replenishment/updateCheckGoods',
-        payload: goodsList.map(goods => goods.sku),
-      });
-    }
   };
 
   // 自定义的选择本页
   const handleCheckPageChange = (event: { target: { checked: boolean } }) => {
     const { target: { checked: checkedPage } } = event;
+    let keys: string[] = [];
+    if (checkedPage) {
+      keys = goodsList.map(goods => goods.sku);
+    } else {
+      // 取消选择本页，则取消选择全部
+      dispatch({
+        type: 'replenishment/changeCheckedType',
+        payload: 1,
+      });
+    }
     dispatch({
       type: 'replenishment/updateCheckGoods',
-      payload: checkedPage ? goodsList.map(goods => goods.sku) : [],
+      payload: keys,
     });
   };
 
@@ -233,10 +243,16 @@ const Replenishment: React.FC = () => {
     <div className={styles.page}>
       <Header />
       <div className={styles.checkedAllContainer}>
-        <Checkbox onChange={handleCheckPageChange} indeterminate={isIndeterminate()}>选择本页</Checkbox>
-        {
-          isShowCheckAll() ? <Checkbox onChange={handleCheckAllChange}>选择全部</Checkbox> : null
-        }
+        <Checkbox
+          onChange={handleCheckPageChange}
+          indeterminate={isIndeterminate()}
+          checked={checked.currentPageSkus.length !== 0}
+        >选择本页</Checkbox>
+        <Checkbox
+          onChange={handleCheckAllChange}
+          checked={checked.dataRange === 2}
+          className={isShowCheckAll() ? '' : styles.hide}
+        >选择全部</Checkbox>
       </div>
       <Table
         size="middle"

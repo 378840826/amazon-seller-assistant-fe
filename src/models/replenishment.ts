@@ -112,7 +112,7 @@ const GoodsListModel: IReplenishmentModelType = {
       availableDaysOfExistingInventory: true,
       estimatedOutOfStockTime: true,
       recommendedReplenishmentVolume: true,
-      shippingMethods: true,
+      shippingMethodsList: true,
       labels: true,
     },
     // 勾选的商品（批量，全店）,接口文档： 1表示页面勾选，2表示全店
@@ -135,7 +135,7 @@ const GoodsListModel: IReplenishmentModelType = {
     *fetchGoodsInventoryList({ payload, callback }, { select, call, put }) {
       const { searchParams, headersParams } = payload;
       const state = yield select((state: IConnectState) => state);
-      const { replenishment: { searchParams: oldSearchParams, compareType } } = state;
+      const { replenishment: { searchParams: oldSearchParams, compareType, checked } } = state;
       const newParams = Object.assign({}, oldSearchParams, searchParams);
       // 如果排序是订单量和销量的环比，则要区分按百分比还是数值
       if (newParams.sort && newParams.sort.includes('Fluctuation_')) {
@@ -159,6 +159,17 @@ const GoodsListModel: IReplenishmentModelType = {
         yield put({
           type: 'saveParams',
           payload: { searchParams },
+        });
+        // 如果是选择全店，则勾选这页商品，如果没选择全店，则取消所有选中
+        let checkedKeys = [];
+        if (checked.dataRange === 2) {
+          checkedKeys = goods.records.map((goods: API.IGoods) => goods.sku);
+        } else {
+          checkedKeys = [];
+        }
+        yield put({
+          type: 'updateCheckGoods',
+          payload: checkedKeys,
         });
       }
       callback && callback(res.code, res.message);

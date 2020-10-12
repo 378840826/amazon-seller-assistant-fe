@@ -217,6 +217,10 @@
 
 .activeDetailsBtn {
   color: @btn-text-color;
+
+  &:focus {
+    color: @btn-text-color;
+  }
 }
 
 .detailsNotData {
@@ -249,15 +253,15 @@
 .label {
   margin: 2px;
   min-width: 20px;
-  line-height: 26px;
+  line-height: 22px;
 }
 
 .titleMenu li {
   font-size: @font-size-sm;
-  color: @primary-color;
 
   &.active {
     background: #f0faff;
+    color: @heading-color;
   }
 }
 
@@ -267,4 +271,8 @@
 
 .recommendedReplenishmentVolumeTd {
   color: @warning-color;
+}
+
+.hide {
+  display: none;
 }

@@ -131,121 +131,118 @@ const Setting: React.FC = () => {
 
   // 生成填写备货周期的 input 自然数
   const geNaturalNumFormItem = (name: string, label: string) => (
-    <FormItem
-      name={name}
-      label={label}
-      getValueFromEvent={e => strToNaturalNumStr(e.target.value)}
-      rules={[{ required: true }]}
-    >
-      <Input suffix="天" maxLength={4} />
-    </FormItem> 
+    <div className={styles.numFormItemContainer}>
+      <FormItem
+        name={name}
+        label={label}
+        getValueFromEvent={e => strToNaturalNumStr(e.target.value)}
+        rules={[{ required: true }]}
+      >
+        <Input maxLength={4} />
+      </FormItem>
+      天
+    </div>
   );
   
   return (
     <div className={styles.Setting}>
-      {
-        getSkuLoading 
-          ?
-          <div className={styles.loading}>
-            <Spin /> 
+      <Spin spinning={getSkuLoading === undefined ? false : getSkuLoading}>
+        <Form
+          onFinish={handleFinish}
+          validateMessages={validateMessages}
+          initialValues={record}
+        >
+          <div className={styles.settingItem}>
+            <span className={styles.title}>备货周期：</span>
+            <div className={styles.content}>
+              {geNaturalNumFormItem('shoppingList', '采购计划')}
+              {geNaturalNumFormItem('purchaseLeadTime', '采购交期')}
+              {geNaturalNumFormItem('qualityInspection', '质检')}
+              {geNaturalNumFormItem('firstPass', '头程')}
+              {geNaturalNumFormItem('safeDays', '安全期')}
+            </div>
           </div>
-          :
-          <Form
-            onFinish={handleFinish}
-            validateMessages={validateMessages}
-            initialValues={record}
-          >
-            <div className={styles.settingItem}>
-              <span className={styles.title}>备货周期：</span>
-              <div className={styles.content}>
-                { geNaturalNumFormItem('shoppingList', '采购计划') }
-                { geNaturalNumFormItem('purchaseLeadTime', '采购交期') }
-                { geNaturalNumFormItem('qualityInspection', '质检') }
-                { geNaturalNumFormItem('firstPass', '头程') }
-                { geNaturalNumFormItem('safeDays', '安全期') }
-              </div>
+          <div className={styles.settingItem}>
+            <span className={styles.title}>物流方式：</span>
+            <div className={styles.content}>
+              <FormItem name="shippingMethods">
+                <Checkbox.Group options={shippingMethodsAllOption} />
+              </FormItem>
             </div>
-            <div className={styles.settingItem}>
-              <span className={styles.title}>物流方式：</span>
-              <div className={styles.content}>
-                <FormItem name="shippingMethods">
-                  <Checkbox.Group options={shippingMethodsAllOption} />
-                </FormItem>
-              </div>
+          </div>
+          <div className={styles.settingItem}>
+            <span className={styles.title}>标签：</span>
+            <div className={styles.content}>
+              {
+                allLabels.length
+                  ?
+                  <FormItem name="labelIds">
+                    <Checkbox.Group options={labelsOption} />
+                  </FormItem>
+                  :
+                  <FormItem name="labelIds">
+                    无
+                  </FormItem>
+              }
             </div>
-            <div className={styles.settingItem}>
-              <span className={styles.title}>标签：</span>
-              <div className={styles.content}>
+          </div>
+          <div className={styles.settingItem}>
+            <span className={styles.title}>停发：</span>
+            <div className={styles.content}>
+              <FormItem name="skuStatus">
+                <Radio.Group options={skuStatusOption} />
+              </FormItem>
+            </div>
+          </div>
+          <div>
+            <span className={styles.title}>日销量：</span>
+            <div className={styles.content}>
+              <FormItem name="avgDailySalesRules">
+                <Radio.Group onChange={e => setSalesType(e.target.value)} value={salesType}>
+                  <Radio value={1}>固定日销量</Radio>
+                  <Radio value={2}>动态日销量</Radio>
+                </Radio.Group>
+              </FormItem>
+              <div className={styles.salesContainer}>
                 {
-                  allLabels.length
+                  salesType === 1
                     ?
-                    <FormItem name="labelIds">
-                      <Checkbox.Group options={labelsOption} />
-                    </FormItem>
-                    : 
-                    <FormItem name="labelIds">
-                      无
-                    </FormItem>
+                    <div className={styles.salesFixedContainer}>
+                      <FormItem
+                        name="fixedSales"
+                        getValueFromEvent={e => strToNaturalNumStr(e.target.value)}
+                      >
+                        <Input maxLength={10} />
+                      </FormItem>
+                    </div>
+                    :
+                    <div className={styles.salesComputeContainer}>
+                      7天日均 X {getPercentFormItem('weightCount7sales')} +
+                      15天日均 X {getPercentFormItem('weightCount15sales')} +
+                      30天日均 X {getPercentFormItem('weightCount30sales')} +
+                      60天日均 X {getPercentFormItem('weightCount60sales')} +
+                      90天日均 X {getPercentFormItem('weightCount90sales')}
+                      {
+                        percentError
+                          ? <div className={styles.errorText}>各个百分比的和要等于100%</div>
+                          : null
+                      }
+                    </div>
                 }
               </div>
             </div>
-            <div className={styles.settingItem}>
-              <span className={styles.title}>停发：</span>
-              <div className={styles.content}>
-                <FormItem name="skuStatus">
-                  <Radio.Group options={skuStatusOption} />
-                </FormItem>
+          </div>
+          <div className={styles.settingItem}>
+            <span className={styles.title}></span>
+            <div className={styles.content}>
+              <div className={styles.btnContainer}>
+                <Button onClick={handleClose}>取消</Button>
+                <Button type="primary" htmlType="submit" loading={saveLoading}>保存</Button>
               </div>
             </div>
-            <div>
-              <span className={styles.title}>日销量：</span>
-              <div className={styles.content}>
-                <FormItem name="avgDailySalesRules">
-                  <Radio.Group onChange={e => setSalesType(e.target.value)} value={salesType}>
-                    <Radio value={1}>固定日销量</Radio>
-                    <Radio value={2}>动态日销量</Radio>
-                  </Radio.Group>
-                </FormItem>
-                <div className={styles.salesContainer}>
-                  {
-                    salesType === 1
-                      ?
-                      <div className={styles.salesFixedContainer}>
-                        <FormItem
-                          name="fixedSales"
-                          getValueFromEvent={e => strToNaturalNumStr(e.target.value)}
-                        >
-                          <Input maxLength={10} />
-                        </FormItem>
-                      </div>
-                      :
-                      <div className={styles.salesComputeContainer}>
-                        7天日均 X { getPercentFormItem('weightCount7sales') } +
-                        15天日均 X { getPercentFormItem('weightCount15sales') } +
-                        30天日均 X { getPercentFormItem('weightCount30sales') } +
-                        60天日均 X { getPercentFormItem('weightCount60sales') } +
-                        90天日均 X { getPercentFormItem('weightCount90sales') }
-                        {
-                          percentError
-                            ? <div className={styles.errorText}>各个百分比的和要等于100%</div>
-                            : null
-                        }
-                      </div>
-                  }
-                </div>
-              </div>
-            </div>
-            <div className={styles.settingItem}>
-              <span className={styles.title}></span>
-              <div className={styles.content}>
-                <div className={styles.btnContainer}>
-                  <Button onClick={handleClose}>取消</Button>
-                  <Button type="primary" htmlType="submit" loading={saveLoading}>保存</Button>
-                </div>
-              </div>
-            </div>
-          </Form>
-      }
+          </div>
+        </Form>
+      </Spin>
     </div>
   );
 };

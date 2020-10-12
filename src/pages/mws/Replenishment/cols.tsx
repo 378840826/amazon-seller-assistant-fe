@@ -190,7 +190,7 @@ export const getFullColumns = (params: any) => {
       key: 'openDate',
       align: 'center',
       width: 100,
-      render: openDate => (openDate ? <Text type="secondary">{openDate}</Text> : nullPlaceholder),
+      render: openDate => (openDate ? <Text>{openDate}</Text> : nullPlaceholder),
     }, {
       title: () => {
         const menu = (
