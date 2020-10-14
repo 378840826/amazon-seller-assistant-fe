@@ -6,14 +6,15 @@ import styles from './index.less';
 interface IOrderDetail{
   key: number;
   item: API.IParams;
+  bottom: string;
 }
 const { Paragraph } = Typography;
-const contentStyle = {
-  height: '407px',
-  paddingTop: '40px',
-};
 
-const OrderDetail: React.FC<IOrderDetail> = ({ item, key }) => {
+const OrderDetail: React.FC<IOrderDetail> = ({ item, key, bottom }) => {
+  const contentStyle = {
+    paddingTop: '40px',
+    paddingBottom: bottom,
+  };
   return (
     <div key={key}> 
       <div style={contentStyle}>

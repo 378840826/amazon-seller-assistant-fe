@@ -121,7 +121,7 @@ const SearchHeader: React.FC<ISearchHeader> = ({
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>} />
       </div>
       <div className={classnames(styles.source, styles.source1)}>
-        <span className={styles.font_source}>邮件来源：</span>
+        <span className={styles.font_source}>邮件去向：</span>
         <Radio.Group 
           onChange={changeRadio} 
           defaultValue={sourceType}

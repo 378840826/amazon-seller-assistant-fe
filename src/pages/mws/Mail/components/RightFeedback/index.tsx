@@ -12,6 +12,7 @@ import { RcFile } from 'antd/lib/upload';
 import moment from 'moment';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { pathList } from '../OrderInfo';
+import classnames from 'classnames';
 
 interface IRightFeedback extends IConnectProps{
   mailContent: API.IParams[];
@@ -33,7 +34,10 @@ const controls: import('braft-editor').ControlType[] | undefined = [];
 const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId, 
   dispatch, id, templateList }) => {
   const [form] = Form.useForm();
-  const height = pathList.indexOf(location.pathname) > -1 ? 'calc(100vh - 245px)' : 'calc(100vh - 200px)';
+  const isInbox = pathList.indexOf(location.pathname);
+  const height = isInbox > -1 ? 'calc(100vh - 245px)' : 'calc(100vh - 200px)';
+  const braftClassName = isInbox > -1 ? 'height233' : 'height276';
+  // '233px' : '276px'; 
   const [state, setState] = useState<IState>({
     modal: false, //控制模态框是否展示的
     sendStatus: false, //邮件回复按钮disable状态
@@ -44,7 +48,6 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
   //点击提交
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
-    console.log('onfinish:', values);
     const content = values.content;
     const contentHTML = `${content.toHTML()}`;
 
@@ -225,7 +228,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
                 <BraftEditor
                   onChange={handleChange}
                   controls={controls}
-                  contentClassName={styles.__textarea}
+                  contentClassName={classnames(styles.__textarea, styles[`${braftClassName}`])}
                   placeholder="请输入正文内容"
                 />
               </Form.Item>

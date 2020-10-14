@@ -94,7 +94,7 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
   };
 
   //修改状态
-  const onChange = (checked: boolean, id: number) => {
+  const onChange = (checked: boolean, id: number, key: number) => {
     dispatch({
       type: 'mail/switchTemplate',
       payload: {
@@ -103,6 +103,14 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
           status: checked,
           id,
         },
+      },
+      callback: () => {
+        const records = state.data;
+        records[key].status = checked;
+        setState(state => ({
+          ...state,
+          data: records,
+        }));
       },
     });
   };
@@ -155,7 +163,7 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       title: '序号',
       dataIndex: 'key',
       align: 'center',
-      width: 180,
+      width: 100,
       render: (text) => Number(text) + 1,
     },
     {
@@ -176,7 +184,7 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       title: '模板名称',
       dataIndex: 'templateName',
       align: 'center',
-      width: 128,
+      width: 110,
       ellipsis: true,
       render: (text) => {
         return (
@@ -189,8 +197,8 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
     {
       title: '主题',
       dataIndex: 'templateSubject',
-      align: 'center',
-      width: 128,
+      align: 'left',
+      width: 290,
       ellipsis: true,
       render: (text) => {
         return (
@@ -205,14 +213,14 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       dataIndex: 'status',
       align: 'center',
       ellipsis: true,
-      width: 140,
+      width: 100,
       render: (status, record) => {
         return (
           status === '' ? <div className="null_bar"></div>
             :
             <>
-              <Switch defaultChecked={status} 
-                onChange={(checked: boolean) => onChange(checked, record.id)} />
+              <Switch checked={status} 
+                onChange={(checked: boolean) => onChange(checked, record.id, record.key)} />
             </>
             
         );
@@ -221,7 +229,7 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
     {
       title: '操作',
       align: 'center',
-      width: 224,
+      width: 200,
       render: (m, record) => {
         return (
           <div>
@@ -243,7 +251,7 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
         bodyStyle={{ padding: '20px' }}
         footer={null}
         destroyOnClose={true}
-        width={814}
+        width={1100}
         centered
         closable={false}
         title=""

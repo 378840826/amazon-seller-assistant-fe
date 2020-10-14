@@ -20,12 +20,12 @@ import styles from './index.less';
 
 const { Option } = Select;
 const formItem1Layout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 10 },
+  labelCol: { span: 2 },
+  wrapperCol: { span: 13 },
 };
 const formItem2Layout = {
-  labelCol: { span: 4, align: 'middle' },
-  wrapperCol: { span: 20 },
+  labelCol: { span: 2, align: 'middle' },
+  wrapperCol: { span: 22 },
 };
 
 
@@ -180,7 +180,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
           onFinish={onFinish}
         >
           <Row>
-            <Col span={17}>
+            <Col span={19}>
               <Form.Item
                 label="模板名称 :"
                 name="templateName"
@@ -191,11 +191,11 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
                 <Input type="text"/>
               </Form.Item>
             </Col>
-            <Col span={7}>
+            <Col span={5}>
             </Col>
           </Row>
           <Row>
-            <Col span={17}>
+            <Col span={19}>
               <Form.Item
                 label="模板类型 :"
                 name="templateType"
@@ -208,12 +208,12 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={7}>
+            <Col span={5}>
             </Col>
           </Row>
         
           <Row className={styles.content_edit}>
-            <Col span={17}>
+            <Col span={19}>
               <Form.Item
                 label="主题 :"
                 name="templateSubject"
@@ -244,7 +244,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
               </Form.Item>
                 
             </Col>
-            <Col span={7} className={styles.click_area}>
+            <Col span={5} className={styles.click_area}>
               <div className={styles.title}>点击插入参数</div>
 
               <div onClick={onClickInsert}>
@@ -259,7 +259,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
             </Col>
           </Row>
           <Row style={{ paddingTop: '20px' }}>
-            <Col span={17}>
+            <Col span={19}>
               <Form.Item 
                 label=" "
                 className={styles.buttons}
@@ -275,7 +275,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
                 </>
               </Form.Item>
             </Col>
-            <Col span={7}>
+            <Col span={5}>
               <div className={styles.tips}>
                 <Iconfont className={styles.orange} type="icon-yiwen"/> 请勿在邮件中提及违禁字眼
               </div>
