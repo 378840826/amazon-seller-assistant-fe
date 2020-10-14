@@ -175,10 +175,10 @@ const proxy = {
         'shipServiceLevel': 'Unshipped(FBA)',
         'actuallyPaid': random.integer(),
         'isBusinessOrder': random.integer(),
-        'orderDetails|1-20': [{
-          title: random.sentence(),
-          asin: random.title(15),
-          sku: random.title(15),
+        'orderDetails|4': [{
+          title: '999',
+          asin: 'fdfdf',
+          sku: 'ooo',
           quantity: random.integer(),
           unitPrice: random.integer(),
           imgLink: random.image(),

@@ -1651,13 +1651,6 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/braft-editor@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@types/braft-editor/-/braft-editor-2.2.0.tgz#4ea310ff8e1e9ed88a49ea2e64b40254f937f026"
-  integrity sha512-X8WYVaIgWXL77Ab47xtD3EVb4FIqXzVb7LtTw1PeE8Fq1nu1l/hYAn9KbXP/oLRkMLtnNefVNlN2F3Q+Ocj1Tw==
-  dependencies:
-    braft-editor "*"
-
 "@types/cheerio@0.22.21", "@types/cheerio@^0.22.10":
   version "0.22.21"
   resolved "https://registry.npm.taobao.org/@types/cheerio/download/@types/cheerio-0.22.21.tgz?cache=0&sync_timestamp=1594181822131&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fcheerio%2Fdownload%2F%40types%2Fcheerio-0.22.21.tgz#5e37887de309ba11b2e19a6e14cad7874b31a8a3"
@@ -1708,12 +1701,8 @@
 
 "@types/echarts@^4.6.4":
   version "4.6.5"
-<<<<<<< HEAD
-  resolved "https://registry.npm.taobao.org/@types/echarts/download/@types/echarts-4.6.5.tgz#6aba35e7d5fdb97f0852865a11ad1cd52f0b72fe"
-=======
   resolved "https://registry.yarnpkg.com/@types/echarts/-/echarts-4.6.5.tgz#6aba35e7d5fdb97f0852865a11ad1cd52f0b72fe"
   integrity sha512-lzYceya5tCBAUTjYnTP2Lwd1VAlyjLfWm3pRFqS4Nzj+Lb+1ej+uX40miM/je73jqVXvO+g3FTMNzyKWDmLR1Q==
->>>>>>> feature/AM-46邮件助手
   dependencies:
     "@types/zrender" "*"
 
@@ -1881,6 +1870,13 @@
   resolved "https://registry.npm.taobao.org/@types/mkdirp/download/@types/mkdirp-0.5.2.tgz#503aacfe5cc2703d5484326b1b27efa67a339c1f"
   dependencies:
     "@types/node" "*"
+
+"@types/moment-timezone@^0.5.30":
+  version "0.5.30"
+  resolved "https://registry.yarnpkg.com/@types/moment-timezone/-/moment-timezone-0.5.30.tgz#340ed45fe3e715f4a011f5cfceb7cb52aad46fc7"
+  integrity sha512-aDVfCsjYnAQaV/E9Qc24C5Njx1CoDjXsEgkxtp9NyXDpYu4CCbmclb6QhWloS9UTU/8YROUEEdEkWI0D7DxnKg==
+  dependencies:
+    moment-timezone "*"
 
 "@types/multer@1.4.3":
   version "1.4.3"
@@ -2139,12 +2135,8 @@
 
 "@types/zrender@*":
   version "4.0.0"
-<<<<<<< HEAD
-  resolved "https://registry.npm.taobao.org/@types/zrender/download/@types/zrender-4.0.0.tgz#a6806f12ec4eccaaebd9b0d816f049aca6188fbd"
-=======
   resolved "https://registry.yarnpkg.com/@types/zrender/-/zrender-4.0.0.tgz#a6806f12ec4eccaaebd9b0d816f049aca6188fbd"
   integrity sha512-s89GOIeKFiod2KSqHkfd2rzx+T2DVu7ihZCBEBnhFrzvQPUmzvDSBot9Fi1DfMQm9Odg+rTqoMGC38RvrwJK2w==
->>>>>>> feature/AM-46邮件助手
 
 "@typescript-eslint/eslint-plugin@^2.28.0":
   version "2.34.0"
@@ -3494,7 +3486,7 @@ braft-convert@^2.3.0:
     draft-convert "^2.0.0"
     draft-js "^0.10.3"
 
-braft-editor@*, braft-editor@^2.3.9:
+braft-editor@^2.3.9:
   version "2.3.9"
   resolved "https://registry.yarnpkg.com/braft-editor/-/braft-editor-2.3.9.tgz#fd2b8e23ea71191016579a1ed8231d16ad8f5b4a"
   integrity sha512-mqdPk/zI2dhFK8tW/A4Qj/AkkARLh5L/niNw+iif5wFqb6zh15rMlrShgz1nWO/QXyAKr8XtDgxiBbR0zWwtRg==
@@ -8446,9 +8438,10 @@ mockjs@^1.1.0:
   dependencies:
     commander "*"
 
-moment-timezone@^0.5.31:
+moment-timezone@*, moment-timezone@^0.5.31:
   version "0.5.31"
-  resolved "https://registry.npm.taobao.org/moment-timezone/download/moment-timezone-0.5.31.tgz#9c40d8c5026f0c7ab46eda3d63e49c155148de05"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.31.tgz#9c40d8c5026f0c7ab46eda3d63e49c155148de05"
+  integrity sha512-+GgHNg8xRhMXfEbv81iDtrVeTcWt0kWmTEY1XQK14dICTXnWJnT0dxdlPspwqF3keKMVPXwayEsk1DI0AA/jdA==
   dependencies:
     moment ">= 2.9.0"
 

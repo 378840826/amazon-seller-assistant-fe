@@ -51,8 +51,15 @@
           border: none;
           border-top: 1px solid #eee;
           border-bottom: 1px solid #eee;
-          height: 233px;
           font-size: 14px;
+
+          &.height233 {
+            height: 233px;
+          }
+
+          &.height276 {
+            height: 276px;
+          }
 
           &:focus {
             box-shadow: none;
@@ -83,6 +90,28 @@
             color: #999;
             font-size: 12px;
             margin-top: 8px;
+          }
+
+          :global {
+            .ant-upload-list-item-error {
+              .ant-upload-list-item-info {
+                background-color: #f5f5f5;
+
+                .ant-upload-list-item-card-actions {
+                  .ant-upload-list-item-card-actions-btn {
+                    opacity: 0;
+                  }
+                }
+              }
+
+              &:hover {
+                .ant-upload-list-item-card-actions {
+                  .ant-upload-list-item-card-actions-btn {
+                    opacity: 1;
+                  }
+                }
+              }
+            }
           }
         }
       }

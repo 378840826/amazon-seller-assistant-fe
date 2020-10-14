@@ -118,7 +118,6 @@ const mailModel: IMailModelType = {
     //收件箱修改 已读，未读，已回复，未回复
     *updateStatus({ payload, callback }, { call, put }){
       const response = yield call(updateStatus, payload);
-      console.log('payload:', payload);
       if (response.code === 200){
         yield put({
           type: 'modifyInboxTableRecords',
@@ -297,6 +296,7 @@ const mailModel: IMailModelType = {
       const { code } = response;
       if (code !== 200){
         message.error(response.message);
+        return;
       }
       callback && callback();
     },
@@ -388,17 +388,15 @@ const mailModel: IMailModelType = {
           })
         );
       });
+      console.log('rowIndex:', rowIndex);
       rowIndex.map(item => {
         if (status === 'read-true'){
           records[item].hasRead = true;
-        }
-        if (status === 'read-false'){
+        } else if (status === 'read-false'){
           records[item].hasRead = false;
-        }
-        if (status === 'replied-true'){
+        } else if (status === 'replied-true'){ 
           records[item].hasReplied = true;
-        }
-        if (status === 'replied-false'){
+        } else if (status === 'replied-false'){
           records[item].hasReplied = false;
         }
       });

@@ -18,7 +18,7 @@ const SideMenu: React.FC<IMailConnectProps> = ({ global, dispatch, children, mai
 
   
   const lists = [
-    { path: '/mail/summary', name: '邮件列表', position: 'first' },
+    { path: '/mail/summary', name: '邮件统计', position: 'first' },
     { path: '/mail/inbox', name: `收件箱(${mail.unreadCount})`, position: 'first' },
     { path: '/mail/reply', name: '已回复', position: 'second' },
     { path: '/mail/no-reply', name: '未回复', position: 'second' },

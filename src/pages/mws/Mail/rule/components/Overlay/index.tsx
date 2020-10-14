@@ -145,7 +145,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
       timeNumber: values.timeNumber,
       start,
       end,
-      templateList: values.templateList.map((item: CheckboxValueType) => Number(item)),
+      templateList: values.templateList,
       sendingStatus: values.sendingStatus,
       skuStatus: values.skuStatus,
       skuList: trim,
@@ -200,6 +200,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
           <Form.Item 
             label="触发时间"
             {...rangeItemLayout}
+            className={styles.item_trigger_time}
           >
             <Row gutter={10}>
               <Col span={7}>

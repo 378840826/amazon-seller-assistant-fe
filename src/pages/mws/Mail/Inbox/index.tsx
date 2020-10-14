@@ -127,7 +127,7 @@ const Inbox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
       type: 'mail/modifyInboxId',
       payload: id,
     });
-    updateStatus('replied-true', [id], false);
+    updateStatus('read-true', [id], false);
   };
   return (
     <div className={styles.right_container} style={{ lineHeight: '30px' }}>

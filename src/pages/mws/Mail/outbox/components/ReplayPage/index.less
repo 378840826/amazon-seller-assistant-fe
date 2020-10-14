@@ -1,6 +1,8 @@
 
 .back {
   text-align: left;
+  display: inline-block;
+  cursor: pointer;
 
   .icon_back {
     font-size: 14px;
@@ -12,6 +14,12 @@
   span {
     font-size: 14px;
     color: @text-color;
+  }
+
+  &:hover {
+    span {
+      color: #0083ff;
+    }
   }
 }
 
