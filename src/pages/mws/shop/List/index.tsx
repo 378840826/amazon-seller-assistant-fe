@@ -158,7 +158,7 @@ const ShopList: React.FC = () => {
   const loading = loadingEffect.effects['global/fetchShopList'];
   return (
     <div className={styles.page}>
-      <Link to="/mws/shop/bind">
+      <Link to="/shop/bind">
         <Button type="primary" className={styles.bindBtn}>添加店铺</Button>
       </Link>
       <Table

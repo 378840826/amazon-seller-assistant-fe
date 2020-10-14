@@ -5,13 +5,13 @@ import {
 } from 'antd';
 
 const PageViewSession = () => {
-  return <Tooltip title="指该商品在周期内，被一起购买的商品，以及购买的次数，按次数从多到少排列">
+  return <Tooltip title="关联销售的SKU及关联销售次数">
     <div>
       关联销售次数
       &nbsp;
       <QuestionCircleOutlined style={{
         fontSize: 12,
-        color: '#999',
+        color: '#888',
       }}/>
     </div>
   </Tooltip>;

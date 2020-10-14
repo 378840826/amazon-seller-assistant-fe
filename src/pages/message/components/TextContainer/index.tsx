@@ -118,10 +118,19 @@ class TextContainer extends React.Component<IProps, IState, {}> {
               !showAll ? 
                 <div className="text-container-onn">
                   <span className="text">展开</span>
-                  <Iconfont type="icon-zhankai" className="icon" />
-                </div> : <div className="text-container-off">
+                  <Iconfont type="icon-zhankai"
+                    className={`icon`} style={{
+                      color: '#999',
+                    }} />
+                </div> : <div className="text-container-off" style={{
+                  color: '#999',
+                }}>
                   <span className="text">收起</span>
-                  <Iconfont type="icon-zhankai" className="icon" />
+                  <Iconfont type="icon-zhankai" 
+                    className="icon" style={{
+                      color: '#999',
+                      transform: 'rotate(182deg)',
+                    }} />
                 </div> 
             }
           </div>

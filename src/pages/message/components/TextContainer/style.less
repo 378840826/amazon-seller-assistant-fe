@@ -1,11 +1,12 @@
 .text-container {
-  width: 100%;
+  width: 920px;
   position: relative;
+  color: #0083ff;
 
   .content {
     display: inline-block;
     width: 100%;
-    padding-right: 85px;
+    padding-right: 65px;
   }
 
   .hidden-text {
@@ -21,11 +22,12 @@
     position: absolute;
     right: 0;
     top: 0;
-    color: @text-color-secondary;
+    color: @text-color;
 
     .icon {
       margin-left: 7px;
       transition: all 0.3s;
+      color: @text-color-secondary;
     }
 
     > * {
@@ -45,8 +47,8 @@
   .content-btn:hover {
     color: @primary-color;
 
-    .icon {
-      color: #0083ff;
+    * {
+      color: @primary-color;
     }
   }
 }

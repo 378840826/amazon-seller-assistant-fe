@@ -1,0 +1,195 @@
+.monitor {
+  background-color: #fff;
+  border-radius: @border-radius-base;
+
+  header.head {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+
+    .btns {
+      display: flex;
+
+      button {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  > footer {
+    padding: 10px 20px 10px;
+  }
+}
+
+// 表格
+.table {
+  padding: 0 20px;
+
+  div:global(.ant-table) {
+    font-size: @font-size-sm !important;
+  }
+
+  thead th {
+    border: 0 !important;
+    height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: #f7f7f7;
+    // border: 1px solid #000;
+  }
+
+  tbody td {
+    border-left: none !important;
+    border-right: none !important;
+    height: 66px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  tbody tr:hover td {
+    background-color: #f2f6fb !important;
+  }
+
+  // 商品列
+  .product_col {
+    display: flex;
+    min-width: 433px;
+
+    .img {
+      width: 46px;
+      height: 46px;
+    }
+
+    .details {
+      width: 100%;
+      margin-left: 10px;
+
+      .icon {
+        color: #666;
+        font-size: @font-size-sm;
+        margin-right: 2px;
+        display: inline-block;
+      }
+
+      a.title {
+        min-width: 220px;
+        line-height: 18px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: normal;
+        text-align: left;
+        word-break: break-all;
+
+        &:hover .icon {
+          color: @primary-color;
+        }
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+
+        .price {
+          color: @error-color;
+          padding-right: 10px;
+          border-right: 1px solid @border-color-base;
+          height: 10px;
+          line-height: 10px;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .history {
+    cursor: pointer;
+    color: #09c2a6;
+
+    &:hover {
+      color: #009881;
+    }
+  }
+}
+
+// 监控频率
+.frequency {
+  padding-bottom: 15px;
+
+  li {
+    background-color: transparent !important;
+  }
+
+  h2 {
+    padding: 15px;
+    font-size: @font-size-lg;
+  }
+
+  .rangetime {
+    margin: 0 0 10px 19px;
+  }
+
+  .radioItem {
+    display: block;
+    height: 31px;
+    line-height: 31px;
+
+    strong {
+      color: @text-color;
+      font-weight: normal;
+    }
+
+    span {
+      color: @text-color-secondary;
+    }
+  }
+
+  .foot_btns {
+    margin-top: 20px;
+
+    button.btn {
+      margin-left: 20px;
+    }
+  }
+}
+
+// 提醒设定
+.remind {
+  padding-bottom: 23px;
+
+  li {
+    background-color: transparent !important;
+    cursor: default;
+  }
+
+  .one {
+    padding: 17px 20px 10px;
+  }
+
+  .seller {
+    margin: 0 20px 0;
+  }
+
+  .downlist {
+    margin: 30px 20px 0;
+  }
+
+  .buybox {
+    margin: 30px 20px 0;
+  }
+
+  .dwt {
+    display: inline-block;
+    width: 32px;
+  }
+
+  .foot_btn {
+    margin-top: 25px;
+
+    button.btns {
+      margin-left: 20px;
+    }
+  }
+}

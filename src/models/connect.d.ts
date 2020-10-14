@@ -1,9 +1,11 @@
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { IGoodsListModelState } from './goodsList';
+import { IReplenishmentModelState } from './replenishment';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { IUserModelState } from './user';
 import { ISubModelState } from './sub';
+import { IMailModelState } from './mail';
 import { StateType } from './login';
 import { Effect, ImmerReducer, Subscription, Dispatch } from 'umi';
 
@@ -36,11 +38,13 @@ export interface ILoading {
 export interface IConnectState {
   global: IGlobalModelState;
   goodsList: IGoodsListModelState;
+  replenishment: IReplenishmentModelState;
   loading: ILoading;
   settings: SettingModelState;
   user: IUserModelState;
   login: StateType;
   sub: ISubModelState;
+  mail: IMailModelState;
 }
 
 export interface IRoute extends MenuDataItem {

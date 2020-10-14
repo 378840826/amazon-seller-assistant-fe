@@ -1,0 +1,196 @@
+.common {
+  .leftName {
+    width: 230px;
+    display: inline-block;
+    color: @heading-color;
+  }
+
+  .details {
+    color: @text-color;
+  }
+
+  // .details:hover {
+  //   color: @primary-color;
+
+  //   * {
+  //     color: @primary-color;
+  //   }
+  // }
+
+  a.details:hover {
+    color: @primary-color;
+
+    * {
+      color: @primary-color;
+    }
+  }
+
+  .date {
+    padding-left: 90px;
+    color: @text-color-secondary;
+  }
+}
+
+// 情况5
+.five {
+  display: flex;
+
+  .freight {
+    color: @heading-color;
+
+    .text {
+      color: @text-color;
+    }
+  }
+
+  p.details {
+    margin-left: auto;
+
+    a.details:hover {
+      color: @primary-color;
+
+      * {
+        color: @primary-color;
+      }
+    }
+  }
+}
+
+// 情况6
+.six {
+  display: flex;
+
+  // //
+  // .gatherBox {
+  //   // padding-right: 68px;
+  // }
+
+  .gather {
+    display: flex;
+
+    .seller {
+      width: 218px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: @heading-color;
+    }
+
+    .id {
+      width: 205px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: @heading-color;
+    }
+
+    .method {
+      width: 50px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: @heading-color;
+    }
+
+    .gatherText {
+      color: @text-color;
+    }
+
+    .price {
+      color: @heading-color;
+      width: 128px;
+    }
+
+    .freight {
+      color: @heading-color;
+
+      .text {
+        color: @text-color;
+      }
+    }
+  }
+
+  .dates {
+    margin-left: auto;
+  }
+}
+
+.other {
+  display: flex;
+  overflow: hidden;
+
+  .gather {
+    display: flex;
+
+    .seller {
+      width: 218px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: @heading-color;
+    }
+
+    .id {
+      width: 205px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: @heading-color;
+    }
+
+    .method {
+      width: 50px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: @heading-color;
+    }
+
+    .gatherText {
+      color: @text-color;
+    }
+
+    .price {
+      width: 110px;
+      color: @heading-color;
+    }
+
+    .freight {
+      width: 130px;
+      white-space: nowrap;
+      color: @heading-color;
+
+      .text {
+        color: @text-color;
+      }
+    }
+  }
+
+  .right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .show {
+      cursor: pointer;
+      padding-right: 7px;
+
+      .icon {
+        color: @text-color-secondary;
+      }
+
+      span:global(.anticon) {
+        margin-right: 7px;
+        transition: all 0.3s;
+      }
+
+      span:global(.anticon.active) {
+        transform: rotate(182deg);
+      }
+    }
+
+    .dates {
+      margin-left: auto;
+    }
+  }
+}

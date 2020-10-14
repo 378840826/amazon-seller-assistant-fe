@@ -1,0 +1,47 @@
+
+.rule_form {
+  text-align: left;
+
+  .item_trigger_time {
+    margin-bottom: 0 !important;
+  }
+
+  :global {
+    .ant-form-item-label {
+      text-align: left !important;
+    }
+
+    .ant-form-item-control-input-content {
+      text-align: left !important;
+
+      button[type="submit"] {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .__checkbox {
+    width: 100%;
+    display: block;
+
+    :global {
+      .ant-checkbox + span {
+        padding: 0;
+        margin-left: 6px;
+      }
+    }
+  }
+
+  .question {
+    color: @text-color-secondary;
+
+    &:hover {
+      color: #ffab2f;
+    }
+  }
+
+  .radio2 {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}

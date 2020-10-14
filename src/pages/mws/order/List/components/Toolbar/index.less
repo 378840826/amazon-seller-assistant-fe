@@ -29,6 +29,11 @@
       margin: 0 10px;
       position: relative;
     }
+
+    // 日历范围按钮
+    li:global(.ant-picker-preset) span:global(.ant-tag) {
+      padding: 0 6px;
+    }
   }
 }
 
@@ -42,10 +47,6 @@
   > div {
     flex: 0 0 auto;
 
-    > span {
-      color: red !important;
-    }
-
     :global(span.ant-radio) + * {
       padding: 0 10px 0 5px;
     }
@@ -53,7 +54,7 @@
     .layout_one_item {
       padding-bottom: 10px;
 
-      > span {
+      .text {
         text-align: left;
         display: inline-block;
       }
@@ -68,21 +69,17 @@
   }
 
   .left_layout {
-    .layout_one_item {
-      > span {
-        min-width: 73px;
-      }
+    .layout_one_item .text {
+      min-width: 73px;
     }
   }
 
   .right_layout {
     margin-left: 100px;
 
-    .layout_one_item {
-      > span {
-        min-width: 85px;
-        display: inline-block;
-      }
+    .layout_one_item .text {
+      min-width: 85px;
+      display: inline-block;
     }
 
     .icon {

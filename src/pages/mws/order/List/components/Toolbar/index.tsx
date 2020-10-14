@@ -13,20 +13,18 @@ import {
 } from 'antd';
 import { useSelector, useLocation } from 'umi';
 import { Moment } from 'moment/moment';
-
+import { getRangeDate } from '@/utils/huang';
 
 const { RangePicker } = DatePicker;
 let shopCount = 0;
 const fields = {} as MwsOrderList.IRadioFields; // 所有的单选框字段
 const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
-  const location = useLocation();
+  const location = useLocation() as MwsOrderList.ILocation;
   const [orderInfoSearch, setOrderInfoSearch] = useState<string>(''); // 第一个 订单ID、ASIN、SKU或商品标题搜索框 
   const [sellerSearch, setSellerSearch] = useState<string>(''); // 第二个 卖家名或笔名搜索框 
   // 默认的日期  当前
-  const [datepickerValue, setDatepickerValue] = useState<Moment[]>([
-    moment().subtract(1, 'week').startOf('week'),
-    moment().subtract(1, 'week').endOf('week'),
-  ]);
+  const { start: startDate, end: endDate } = getRangeDate(7, true);
+  const [datepickerValue, setDatepickerValue] = useState<Moment[]>([startDate, endDate]);
   const [orderStatus, setOrderStatus] = useState<string>(''); // 订单状态
   const [deliverStatus, setDeliverStatus] = useState<string>(''); // 发货状态
   const [businessOrder, setBusinessOrder] = useState<string | boolean>(''); // B2B订单
@@ -35,7 +33,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一单多SKU
   const [deliverMethod, setDeliverMethod] = useState<string>(''); // 发货方式
   const [shipServiceLevel, setShipServiceLevel] = useState<string>(''); // 配送服务
-  const [filtrateBoxHeight, setFiltrateBoxHeight] = useState<string>('88px'); // 筛选框高度
+  const [filtrateboxheight, setFiltrateBoxHeight] = useState<string>('88px'); // 筛选框高度
   const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('展开');
   const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
   const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
@@ -43,7 +41,6 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const query: any = location.query; // eslint-disable-line
   const { asin = '', buyer = '' } = query as {asin: string; buyer: string};
 
-  
   // 筛选查询
   useEffect(() => {
     setOrderInfoSearch(asin);
@@ -72,34 +69,23 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
     }
   }, [current]);
 
+  const { start: start7, end: end7 } = getRangeDate(7);
+  const { start: start30, end: end30 } = getRangeDate(30);
+  const { start: start60, end: end60 } = getRangeDate(60);
+  const { start: start90, end: end90 } = getRangeDate(90);
+  const { start: start180, end: end180 } = getRangeDate(180);
+  const { start: start365, end: end365 } = getRangeDate(365);
+  const { start: lastWeekStart, end: lastWeekEnd } = getRangeDate('lastWeek');
+  const { start: lastMonthStart, end: lastMonthEnd } = getRangeDate('lastMonth');
   const rangeList = {
-    '上周': [
-      moment().subtract(1, 'week').startOf('week'),
-      moment().subtract(1, 'week').endOf('week')],
-    '上月': [
-      moment().subtract(1, 'month').startOf('month'),
-      moment().subtract(1, 'month').endOf('month'),
-    ],
-    '最近7天': [
-      moment().subtract(6, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近30天': [
-      moment().subtract(29, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近60天': [
-      moment().subtract(59, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近90天': [
-      moment().subtract(89, 'day'),
-      moment().endOf('day'),
-    ],
-    '最近365天': [
-      moment().subtract(365, 'day'),
-      moment().endOf('day'),
-    ],
+    '上周': [lastWeekStart, lastWeekEnd],
+    '上月': [lastMonthStart, lastMonthEnd],
+    '最近7天': [start7, end7],
+    '最近30天': [start30, end30],
+    '最近60天': [start60, end60],
+    '最近90天': [start90, end90],
+    '最近180天': [start180, end180],
+    '最近365天': [start365, end365],
   };
 
   // 日历的配置
@@ -137,10 +123,6 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
     props.handleFiltarte(fields);
   };
 
-  useEffect(() => {
-    fields.startTime = datepickerValue[0].format('YYYY-MM-DD');
-    fields.endTime = datepickerValue[1].format('YYYY-MM-DD');
-  });
 
   // 筛选工具栏的高度设置
   const handleFiltrateHeight = () => {
@@ -237,10 +219,12 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
         </div>
       </div>
         
-      <div className={styles.radio_filtrate} style={{ height: filtrateBoxHeight }} >
+      <div className={styles.radio_filtrate} style={{
+        height: filtrateboxheight,
+      }} >
         <div className={styles.left_layout}>
           <div className={styles.layout_one_item}>
-            <span>B2B订单：</span>
+            <span className={styles.text}>B2B订单：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, 'B2B订单')}
               value={businessOrder}>
@@ -250,7 +234,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}`}>
-            <span>优惠订单：</span>
+            <span className={styles.text}>优惠订单：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '优惠订单')}
               value={preferentialOrder}>
@@ -260,19 +244,21 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={styles.layout_one_item}>
-            <span>订单状态：</span>
+            <span className={styles.text}>订单状态：</span>
             {<Radio.Group size="large" 
               onChange={(e) => handleChangeRadio(e, '订单状态')}
               value={orderStatus}>
               <Radio value="">不限</Radio>
               <Radio value="Pending">Pending</Radio>
-              <Radio value="Cancelled" style={{ paddingLeft: 16 }}>Cancelled</Radio>
+              <Radio value="Cancelled" style={{
+                paddingLeft: 16,
+              }}>Cancelled</Radio>
               <Radio value="Shipping">Shipping</Radio>
               <Radio value="Shipped">Shipped</Radio>
             </Radio.Group>}
           </div>
           <div className={styles.layout_one_item}>
-            <span>发货状态：</span>
+            <span className={styles.text}>发货状态：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '发货状态')}
               value={deliverStatus}>
@@ -286,33 +272,37 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
         </div>
         <div className={styles.right_layout}>
           <div className={styles.layout_one_item}>
-            <span>一单多件：</span>
+            <span className={styles.text}>一单多件：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '一单多件')}
               value={multiplePieces}>
               <Radio value="">不限</Radio>
               <Radio value={true} className={styles.handlePadding}>是</Radio>
               <Radio value={false} 
-                style={{ marginLeft: 9 }} 
+                style={{
+                  marginLeft: 9,
+                }} 
                 className={styles.handlePadding}>
                   否
               </Radio>
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}  ${styles.order_discounts}`}>
-            <span>一单多SKU：</span>
+            <span className={styles.text}>一单多SKU：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '一单多SKU')}
               value={multipleSku}>
               <Radio value="">不限</Radio>
               <Radio value={true} className={styles.handlePadding}>是</Radio>
               <Radio value={false} 
-                style={{ marginLeft: 9 }} className={styles.handlePadding}>否</Radio>
+                style={{
+                  marginLeft: 9,
+                }} className={styles.handlePadding}>否</Radio>
             </Radio.Group>
             
           </div>
           <div className={styles.layout_one_item}>
-            <span>发货方式：</span>
+            <span className={styles.text}>发货方式：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '发货方式')}
               value={deliverMethod}>
@@ -322,7 +312,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
             </Radio.Group>
           </div>
           <div className={`${styles.layout_one_item}`}>
-            <span>配送服务：</span>
+            <span className={styles.text}>配送服务：</span>
             <Radio.Group 
               onChange={(e) => handleChangeRadio(e, '配送服务')}
               value={shipServiceLevel}>

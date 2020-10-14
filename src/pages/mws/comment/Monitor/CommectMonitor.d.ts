@@ -3,11 +3,18 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-13 15:03:11
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 16:54:54
+ * @LastEditTime: 2020-09-15 09:47:40
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\CommectMonitor.d.ts
  */ 
 
 declare namespace CommectMonitor {
+  import { Location } from 'umi';
+
+  interface ILocation extends Location {
+    query?: {
+      asin: string; 
+    };
+  }
 
   interface IPageProps {
     commentTableData: ICommentMonitorState;

@@ -6,7 +6,6 @@ import PageView from './components/PageView';
 import DefineCalendar from '@/components/DefinedCalendar';
 import CheckboxDownList from '@/components/CheckboxDownList';
 import TableNotData from '@/components/TableNotData';
-import Page from '@/components/Pagination';
 import Statistic from './components/Statistic';
 import Total from './components/Total';
 import DouFu from './components/Doufu';
@@ -170,7 +169,7 @@ const Order: React.FC = () => {
             '22:01 - 24:00',
           ],
           axisLabel: {
-            color: '#999',
+            color: '#888',
             rotate: -35,
             fontSize: 12,
             margin: 12,         
@@ -193,7 +192,7 @@ const Order: React.FC = () => {
             },
           },
           axisLabel: {
-            color: '#999', // 字体颜色
+            color: '#888', // 字体颜色
             formatter: `{value} %`,
           },
           // max: 100, // 最大值
@@ -257,7 +256,7 @@ const Order: React.FC = () => {
       setTableLoading(false);
       console.error(err);
     });
-  }, [dispatch, shopId, dateRangeItem, statistic]);  // eslint-disable-line
+  }, [dispatch, shopId, dateRangeItem, statistic, currentAsin]);  // eslint-disable-line
 
   // 折线图的数据请求
   const changeLineChart = (params = {}) => {
@@ -381,7 +380,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return <span style={{
@@ -396,7 +395,7 @@ const Order: React.FC = () => {
       render(value: number) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return `${currency}${value}`;
@@ -409,7 +408,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return value;
@@ -422,7 +421,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return value;
@@ -435,7 +434,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return value;
@@ -448,7 +447,7 @@ const Order: React.FC = () => {
       render(value: number) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return `${currency}${value}`;
@@ -461,7 +460,7 @@ const Order: React.FC = () => {
       render(value: number) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return `${currency}${value}`;
@@ -474,7 +473,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return value;
@@ -487,7 +486,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return value;
@@ -500,7 +499,7 @@ const Order: React.FC = () => {
       render(value: number) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return `${value}%`;
@@ -513,7 +512,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return value;
@@ -527,7 +526,7 @@ const Order: React.FC = () => {
       render(value: string) {
         if (value === null) {
           return <span style={{
-            color: '#999',
+            color: '#888',
           }}>—</span>;
         }
         return value;
@@ -555,6 +554,23 @@ const Order: React.FC = () => {
       },
     },
   ];
+
+  const pageConfig = {
+    pageSizeOptions: ['20', '50', '100'],
+    total,
+    pageSize: size,
+    current: pcurrent,
+    showQuickJumper: true, // 快速跳转到某一页
+    showTotal: (total: number) => `共 ${total} 个`,
+    onChange(current: number, size: number | undefined){
+      setPcurrent(current);
+      setSize(size as number);
+    },
+    onShowSizeChange(current: number, size: number | undefined){
+      console.log(current, size,);
+    },
+    className: 'h-page-small',
+  };
   
   let keyCount = 0;
   const tableConfig = {
@@ -577,12 +593,7 @@ const Order: React.FC = () => {
     scroll: {
       y: 618,
     },
-  };
-
-  // 表格分页的回调
-  const pageCb = (current: number, size: number) => {
-    setPcurrent(current);
-    setSize(size);
+    pagination: pageConfig,
   };
 
   // 统计周期回调
@@ -746,15 +757,7 @@ const Order: React.FC = () => {
           <h2>列表</h2>
           <Button onClick={exportTable}>导出</Button>
         </header>
-        <Table {...tableConfig} pagination={false}/>
-        <div className={styles.page}>
-          <Page 
-            current={pcurrent} 
-            total={total} 
-            pageSize={size}
-            callback={pageCb}
-          />
-        </div>
+        <Table {...tableConfig}/>
       </main>
     </div>
   );

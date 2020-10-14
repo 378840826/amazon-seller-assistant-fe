@@ -115,7 +115,7 @@ const ErrorReport: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.breadcrumbs}>
-        <Link to="/mws/goods/list">商品管理</Link>
+        <Link to="/product/list">商品管理</Link>
         <Iconfont type="icon-zhankai-copy" className={styles.icon} />
         <span>导入错误报告</span>
       </div>

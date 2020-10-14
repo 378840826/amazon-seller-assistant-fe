@@ -2,6 +2,7 @@ import request from '@/utils/request';
 
 // 查询商品
 export async function queryGoodsList(params: API.IParams) {
+  console.log('params:', params);
   const { code } = params;
   const qs = {
     current: params.current,
