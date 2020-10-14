@@ -65,7 +65,8 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
   }, [StoreId, dispatch, getRuleList]);
 
   //切换switch
-  const onChange = (checked: boolean, id: number) => {
+  const onChange = (checked: boolean, id: number, key: number) => {
+    console.log('checked:', checked, key);
     dispatch({
       type: 'mail/switchRule',
       payload: {
@@ -74,6 +75,14 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
           status: checked,
           id,
         },
+      },
+      callback: () => {
+        const records = state.data;
+        records[key].status = checked;
+        setState((state) => ({
+          ...state,
+          data: records,
+        }));
       },
     });
   };
@@ -213,8 +222,8 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
         return (
           status === '' ? <div className="null_bar"></div>
             :
-            <Switch defaultChecked={status} 
-              onChange={(checked: boolean) => onChange(checked, record.id)} />
+            <Switch checked={status} 
+              onChange={(checked: boolean) => onChange(checked, record.id, record.key)} />
         );
       },
     },

@@ -10,7 +10,7 @@
 
   .upper {
     border-bottom: 1px solid #eee;
-    min-height: 427px;
+    min-height: 400px;
     position: relative;
 
     .prev {
@@ -63,7 +63,7 @@
   color: @text-color;
   font-size: 14px;
   padding-bottom: 20px;
-  padding-top: 24px;
+  padding-top: 14px;
 
   .red {
     color: @error-color;
@@ -98,6 +98,10 @@
 
 .__carousel {
   :global {
+    .slick-dots-bottom {
+      bottom: 0 !important;
+    }
+
     .slick-dots li {
       width: 12px !important;
       height: 12px !important;

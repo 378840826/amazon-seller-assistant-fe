@@ -85,9 +85,9 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch, req
         <div style={{ paddingRight: '5px' }}>
           {
             item.hasReplied ? 
-              <div className={classnames(styles.orange, styles.before_hover)}>已回复</div> 
+              <div className={styles.before_hover}>已回复</div> 
               : 
-              <div className={styles.before_hover}>未回复</div>}
+              <div className={classnames(styles.orange, styles.before_hover)}>未回复</div>}
           {item.hasReplied ? 
             <div className={styles.after_hover} 
               onClick={(e) => updateReplay(e, item)}>

@@ -4,19 +4,24 @@
   text-align: left;
   display: inline-block;
   margin-bottom: 3px;
+  cursor: pointer;
 
   .icon_back {
     font-size: 14px;
     color: @text-color-secondary;
     margin-right: 6px;
     overflow-y: auto;
-    cursor: pointer;
   }
 
   span {
     font-size: 14px;
-    cursor: pointer;
     color: @text-color;
+  }
+
+  &:hover {
+    span {
+      color: #0083ff;
+    }
   }
 }
 

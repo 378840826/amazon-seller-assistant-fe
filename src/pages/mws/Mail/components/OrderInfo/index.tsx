@@ -54,7 +54,7 @@ const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
             {
               orderDetails.map( (item: API.IParams, index: number) => {
                 return (
-                  <OrderDetail key={index} item={item} />
+                  <OrderDetail key={index} item={item} bottom={carouselProps.dots ? '40px' : '10px'}/>
                 );
               })
             }
