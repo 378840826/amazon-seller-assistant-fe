@@ -1,0 +1,147 @@
+// 设置弹窗
+.Setting {
+  text-align: left;
+  background: #fff;
+  box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+  width: 880px;
+  padding: 20px;
+  border-radius: @border-radius-base;
+
+  :global {
+    .ant-form-item-label {
+      width: 80px;
+    }
+
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  input {
+    text-align: center;
+  }
+}
+
+.secondary {
+  color: @text-color-secondary;
+}
+
+.title {
+  display: inline-block;
+  width: 76px;
+  min-width: 76px;
+  line-height: 30px;
+  vertical-align: top;
+  color: @heading-color;
+}
+
+.salesFixedContainer {
+  :global {
+    .ant-form-item {
+      width: 82px;
+      margin: 0;
+    }
+  }
+}
+
+.content {
+  display: inline-block;
+  width: 740px;
+
+  :global {
+    .ant-form-item-explain {
+      position: absolute;
+      left: 140px;
+      right: -180px;
+      top: 3px;
+    }
+  }
+}
+
+.salesComputeContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  :global {
+    .ant-form-item {
+      width: 60px;
+      margin: 0 6px;
+
+      .ant-input-affix-wrapper {
+        padding: 3px 6px;
+      }
+    }
+  }
+}
+
+.Setting .saveBtn {
+  position: absolute;
+  right: 0;
+}
+
+.settingItemSales {
+  position: relative;
+  margin-top: 8px;
+  border-bottom: none;
+
+  .content {
+    width: 760px;
+  }
+
+  .saveBtn {
+    top: 2px;
+  }
+}
+
+.settingItem {
+  display: flex;
+  position: relative;
+  border-bottom: 1px solid @divider-line-color;
+  padding: 10px 0;
+
+  &:first-child {
+    padding: 0;
+
+    input {
+      width: 80px;
+    }
+
+    .saveBtn {
+      bottom: 10px;
+    }
+
+    :global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+  }
+
+  .numFormItemContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    & > div {
+      margin-right: 6px;
+    }
+  }
+}
+
+.salesContainer {
+  margin-top: 10px;
+}
+
+.errorText {
+  position: absolute;
+  top: 30px;
+  color: @error-color;
+}
+
+.btnContainer {
+  margin-top: 20px;
+  text-align: right;
+
+  button:first-child {
+    margin-right: 20px;
+  }
+}

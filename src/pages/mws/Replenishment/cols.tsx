@@ -572,7 +572,7 @@ export const getFullColumns = (params: any) => {
         }
         return (
           <Dropdown
-            // 批量和单个是一起用的，避免 form initialValue 混乱，关闭弹窗后取消弹窗内容
+            // 多个商品一起用的，避免 form initialValue 等重复或混乱，关闭弹窗后卸载弹窗组件
             overlay={visible ? <Setting /> : <></>}
             visible={visible}
             placement="bottomRight"
