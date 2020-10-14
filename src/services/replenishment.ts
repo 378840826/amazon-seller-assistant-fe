@@ -37,6 +37,26 @@ export async function updateRule(params: API.IParams) {
   });
 }
 
+// 批量设置单项数据
+export async function updateRuleSingle(params: API.IParams) {
+  if (params.dataRange === 2) {
+    delete params.currentPageSkus;
+  }
+  const lastPathDict = {
+    period: 'expand',
+    shipping: 'shipping',
+    label: 'label',
+    status: 'status',
+    rule: 'rule',
+  };
+  const lastPath = lastPathDict[params.settingType];
+  delete params.settingType;
+  return request(`/api/mws/fis/update-rule/${lastPath}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 获取全部标签
 export async function queryLabels(params: API.IParams) {
   return request('/api/mws/fis/labels', {

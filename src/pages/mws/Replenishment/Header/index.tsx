@@ -9,8 +9,7 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { requestErrorFeedback, requestFeedback, Iconfont, objToQueryString, day } from '@/utils/utils';
 import { IConnectState } from '@/models/connect';
 import CustomCols from '../CustomCols';
-import Setting from '../Setting';
-import { settingDefaultRecord } from '@/models/replenishment';
+import BatchSetting from '../BatchSetting';
 import styles from './index.less';
 
 const { Search } = Input;
@@ -24,7 +23,7 @@ const Header: React.FC = () => {
     searchParams,
     checked,
     labels,
-    setting,
+    batchSettingVisible,
     updateTime,
   } = replenishment;
   
@@ -33,7 +32,6 @@ const Header: React.FC = () => {
   const { id: currentShopId, marketplace, storeName } = currentShop;
   const headersParams = { StoreId: currentShopId };
   const [createTagVisible, setCreateTagVisible] = useState(false);
-  const batchSettingVisible = setting.visible && !setting.sku;
   // 搜索的 value
   const [searchText, setSearchText] = useState<string>('');
   // 批量设置按钮是否禁用
@@ -41,9 +39,10 @@ const Header: React.FC = () => {
   if (checked.dataRange === 2 || (checked.currentPageSkus && checked.currentPageSkus.length)) {
     batchSetBtnDisabled = false;
   }
+  const loadingEffects = useSelector((state: IConnectState) => state.loading.effects);
+  const addLabelLoading = loadingEffects['replenishment/fetchSettingRecord'];
   // 导出按钮 loading
   const [exportBtnLoading, setExportBtnLoading] = useState<boolean>(false);
-
 
   // 执行搜索
   const handleSearch = () => {
@@ -99,14 +98,6 @@ const Header: React.FC = () => {
     });
   };
 
-  // 切换显示批量设置弹窗
-  const switchSettingVisible = (visible: boolean) => {
-    dispatch({
-      type: 'replenishment/switchSettingVisible',
-      payload: { visible, record: settingDefaultRecord },
-    });
-  };
-
   // 添加标签
   const handleLabelAdd = (labelName: string) => {
     const name = labelName.replace(/(^\s*)|(\s*$)/g, '');
@@ -155,12 +146,21 @@ const Header: React.FC = () => {
     });
   };
 
+  // 切换批量设置弹窗显示
+  const switchBatchSettingVisible = (visible: boolean) => {
+    dispatch({
+      type: 'replenishment/switchBatchSettingVisible',
+      payload: { visible },
+    });
+  };
+
   // 标签管理下拉
   const labelsMenu = (
     <div className={styles.labelsMenuDropdown}>
       <div className={styles.title}>标签</div>
       <Search
         enterButton="添加"
+        loading={addLabelLoading}
         onSearch={value => handleLabelAdd(value)}
       />
       <div>
@@ -249,16 +249,12 @@ const Header: React.FC = () => {
       </span>
       <Dropdown
         disabled={batchSetBtnDisabled}
-        // 批量和单个是一起用的，避免 form initialValue 混乱，关闭弹窗后取消弹窗内容
-        // 暂时先这样（有内存泄漏）
-        overlay={batchSettingVisible ? <Setting /> : <></>}
+        overlay={<BatchSetting />}
         visible={batchSettingVisible}
         placement="bottomRight"
         trigger={['click']}
         arrow
-        onVisibleChange={visible => {
-          switchSettingVisible(visible);
-        }}
+        onVisibleChange={flag => switchBatchSettingVisible(flag)}
       >
         <Button type="primary">
           批量设置规则 {batchSettingVisible ? <UpOutlined /> : <DownOutlined />}

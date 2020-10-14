@@ -1,6 +1,11 @@
+/**
+ * 批量设置的弹窗，区别于单个sku设置，可单独保存某一项数据
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Store } from 'redux';
 import { IConnectState } from '@/models/connect';
+import { settingType } from '@/models/replenishment';
 import { Radio, Input, Button, Form, Checkbox, Spin } from 'antd';
 import { useSelector, useDispatch } from 'umi';
 import { strToNaturalNumStr, requestFeedback } from '@/utils/utils';
@@ -12,17 +17,18 @@ const validateMessages = {
   required: '${label} 是必填项!',
 };
 
-const Setting: React.FC = () => {
+const BatchSetting: React.FC = () => {
   const dispatch = useDispatch();
   const page = useSelector((state: IConnectState) => state.replenishment);
   const currentShopId = useSelector((state: IConnectState) => state.global.shop.current.id);
   const loadingEffects = useSelector((state: IConnectState) => state.loading.effects);
-  const saveLoading = loadingEffects['replenishment/setRule'];
-  const getSkuLoading = loadingEffects['replenishment/fetchSkuSetting'];
+  const getSkuLoading = loadingEffects['replenishment/fetchSettingRecord'];
+  const saveLoading = loadingEffects['replenishment/batchSet'] || loadingEffects['replenishment/batchSetSingle'];
   const { labels: allLabels, setting } = page;
   const [form] = Form.useForm();
-  // 填充的内容
-  const { record } = setting;  
+  // 显示状态和内容
+  const { record } = setting;
+  
   // 日销量固定还是公式
   const [salesType, setSalesType] = useState<number>(record.avgDailySalesRules);
   // 百分比是否等于 100
@@ -33,13 +39,10 @@ const Setting: React.FC = () => {
       return label.id;
     });
   }
-
+  // record 更新时更新 salesType, (暂时先这样)
   useEffect(() => {
-    // record 更新时更新 salesType, (暂时先这样)
     setSalesType(record.avgDailySalesRules);
-    // record 更新后重置 form 的默认值
-    form.resetFields();
-  }, [record, form]);
+  }, [record]);
 
   // 物流方式
   const shippingMethodsAllOption = [
@@ -64,12 +67,87 @@ const Setting: React.FC = () => {
   // 关闭弹窗
   const handleClose = () => {
     dispatch({
-      type: 'replenishment/switchSettingVisible',
+      type: 'replenishment/switchBatchSettingVisible',
       payload: { visible: false },
     });
   };
 
-  // 保存设置
+  // 保存单个设置
+  const handleSaveSingle = (type: settingType) => {
+    let values;
+    const periodFields = [
+      'shoppingList',
+      'purchaseLeadTime',
+      'qualityInspection',
+      'firstPass',
+      'safeDays',
+    ];
+    switch (type) {
+    // 备货周期
+    case 'period':
+      // 有字段填写错误不给提交
+      if (
+        form.getFieldsError(periodFields).some(item => item.errors.length)
+      ) {
+        return;
+      }
+      values = form.getFieldsValue(periodFields);
+      break;
+    // 物流方式
+    case 'shipping':
+      values = form.getFieldsValue(['shippingMethods']);
+      break;
+    // 标签
+    case 'label':
+      values = form.getFieldsValue(['labelIds']);
+      break;
+    // sku停发状态
+    case 'status':
+      values = form.getFieldsValue(['skuStatus']);
+      break;
+    // 日销量规则
+    case 'rule':
+      values = form.getFieldsValue([
+        'avgDailySalesRules',
+        'fixedSales',
+        'weightCount7sales',
+        'weightCount15sales',
+        'weightCount30sales',
+        'weightCount60sales',
+        'weightCount90sales',
+      ]);
+      // 动态日销量相加必须等于 100
+      if (
+        salesType === 2 &&
+        Number(values.weightCount7sales) +
+        Number(values.weightCount15sales) +
+        Number(values.weightCount30sales) +
+        Number(values.weightCount60sales) +
+        Number(values.weightCount90sales) !== 100
+      ) {
+        setPercentError(true);
+        return;
+      }
+      break;
+    default:
+      return;
+    }
+    dispatch({
+      type: 'replenishment/batchSetSingle',
+      payload: {
+        settingType: type,
+        ...values,
+        headersParams: { StoreId: currentShopId },
+      },
+      callback: (code: number, message: string) => {
+        requestFeedback(code, message);
+        handleClose();
+        setPercentError(false);
+      },
+    });
+  };
+
+  // 保存全部设置
   const handleFinish = ( values: { [key: string]: Store }) => {
     // 动态日销量相加必须等于 100
     const { 
@@ -96,7 +174,7 @@ const Setting: React.FC = () => {
       return;
     }    
     dispatch({
-      type: 'replenishment/setRule',
+      type: 'replenishment/batchSet',
       payload: {
         ...values,
         // number
@@ -140,6 +218,17 @@ const Setting: React.FC = () => {
     </div>
   );
   
+  // 生成单个保存按钮
+  const getSaveBtn = (settingType: settingType) => (
+    <Button
+      ghost
+      type="primary"
+      className={styles.saveBtn}
+      onClick={() => handleSaveSingle(settingType)}
+      loading={saveLoading}
+    >保存</Button>
+  );
+
   return (
     <div className={styles.Setting}>
       <Spin spinning={getSkuLoading === undefined ? false : getSkuLoading}>
@@ -158,6 +247,7 @@ const Setting: React.FC = () => {
               { geNaturalNumFormItem('firstPass', '头程') }
               { geNaturalNumFormItem('safeDays', '安全期') }
             </div>
+            { getSaveBtn('period') }
           </div>
           <div className={styles.settingItem}>
             <span className={styles.title}>物流方式：</span>
@@ -166,6 +256,7 @@ const Setting: React.FC = () => {
                 <Checkbox.Group options={shippingMethodsAllOption} />
               </FormItem>
             </div>
+            { getSaveBtn('shipping') }
           </div>
           <div className={styles.settingItem}>
             <span className={styles.title}>标签：</span>
@@ -182,6 +273,7 @@ const Setting: React.FC = () => {
                   </FormItem>
               }
             </div>
+            { getSaveBtn('label') }
           </div>
           <div className={styles.settingItem}>
             <span className={styles.title}>停发：</span>
@@ -190,8 +282,9 @@ const Setting: React.FC = () => {
                 <Radio.Group options={skuStatusOption} />
               </FormItem>
             </div>
+            { getSaveBtn('status') }
           </div>
-          <div>
+          <div className={styles.settingItemSales}>
             <span className={styles.title}>日销量：</span>
             <div className={styles.content}>
               <FormItem name="avgDailySalesRules">
@@ -228,15 +321,11 @@ const Setting: React.FC = () => {
                 }
               </div>
             </div>
+            { getSaveBtn('rule') }
           </div>
-          <div className={styles.settingItem}>
-            <span className={styles.title}></span>
-            <div className={styles.content}>
-              <div className={styles.btnContainer}>
-                <Button onClick={handleClose}>取消</Button>
-                <Button type="primary" htmlType="submit" loading={saveLoading}>保存</Button>
-              </div>
-            </div>
+          <div className={styles.btnContainer}>
+            <Button onClick={handleClose}>取消</Button>
+            <Button type="primary" htmlType="submit" loading={saveLoading}>保存全部</Button>
           </div>
         </Form>
       </Spin>
@@ -244,4 +333,4 @@ const Setting: React.FC = () => {
   );
 };
 
-export default Setting;
+export default BatchSetting;

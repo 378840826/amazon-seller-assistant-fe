@@ -3,6 +3,7 @@ import {
   queryGoodsList,
   queryLabels,
   updateRule,
+  updateRuleSingle,
   addLabel,
   deleteLabel,
   queryTransitDetails,
@@ -12,6 +13,7 @@ import {
 import { storage, getAmazonAsinUrl } from '@/utils/utils';
 
 export type Order = 'descend' | 'ascend' | null | undefined;
+export type settingType = 'period' | 'shipping' | 'label' | 'status' | 'rule';
 
 export interface IReplenishmentModelState {
   updateTime: string;
@@ -38,6 +40,7 @@ export interface IReplenishmentModelState {
     sku: string | undefined;
     record: API.IInventoryReplenishmentSetting;
   };
+  batchSettingVisible: boolean;
   transitDetails: API.ITransitDetails[];
 }
 
@@ -57,7 +60,7 @@ const fluctuationSortDict = {
 };
 
 // 设置弹窗的默认填充
-export const settingDefaultRecord = {
+const settingDefaultRecord = {
   skuStatus: 'normal',
   avgDailySalesRules: 2,
   fixedSales: 0,
@@ -126,6 +129,7 @@ const GoodsListModel: IReplenishmentModelType = {
       sku: undefined,
       record: settingDefaultRecord,
     },
+    batchSettingVisible: false,
     // 在途详情弹窗内容
     transitDetails: [],
   },
@@ -209,8 +213,8 @@ const GoodsListModel: IReplenishmentModelType = {
       }
     },
 
-    // 设置和批量设置
-    *setRule({ payload, callback }, { select, call, put }) {
+    // 批量设置保存全部
+    *batchSet({ payload, callback }, { select, call, put }) {
       // 获取勾选的商品参数
       const checked = yield select((state: IConnectState) => state.replenishment.checked);
       const searchParams = yield select((state: IConnectState) => (
@@ -230,6 +234,60 @@ const GoodsListModel: IReplenishmentModelType = {
       const res = yield call(updateRule, params);
       if (res.code === 200) {
         // 用现有的参数重新查询表格
+        yield put({
+          type: 'fetchGoodsInventoryList',
+          payload: {
+            ...searchParams,
+            headersParams: payload.headersParams,
+          },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 批量设置保存单项数据
+    *batchSetSingle({ payload, callback }, { select, call, put }) {
+      // 获取勾选的商品参数
+      const checked = yield select((state: IConnectState) => state.replenishment.checked);
+      const searchParams = yield select((state: IConnectState) => (
+        state.replenishment.searchParams
+      ));
+      let params = { ...payload, ...checked };
+      // 如果是选择全部，还需要额外的查询参数
+      if (checked.dataRange === 2) {
+        params = {
+          ...payload,
+          ...checked,
+          skuStatusQuery: searchParams.skuStatus,
+          replenishmentExists: searchParams.replenishmentExists,
+          inputContent: searchParams.inputContent,
+        };
+      }
+      const res = yield call(updateRuleSingle, params);
+      if (res.code === 200) {
+        // 用现有的参数重新查询表格
+        yield put({
+          type: 'fetchGoodsInventoryList',
+          payload: {
+            ...searchParams,
+            headersParams: payload.headersParams,
+          },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 单个设置
+    *setRule({ payload, callback }, { select, call, put }) {
+      // 获取勾选的商品参数
+      const checked = yield select((state: IConnectState) => state.replenishment.checked);
+      const params = { ...payload, ...checked };
+      const res = yield call(updateRule, params);
+      if (res.code === 200) {
+        // 用现有的参数重新查询表格
+        const searchParams = yield select((state: IConnectState) => (
+          state.replenishment.searchParams
+        ));
         yield put({
           type: 'fetchGoodsInventoryList',
           payload: {
@@ -338,7 +396,13 @@ const GoodsListModel: IReplenishmentModelType = {
       if (sku) {
         state.checked = { dataRange: 1, currentPageSkus: [sku] };
       }
-      state.setting = { visible, sku, record };
+      state.setting = { visible, sku, record: record || settingDefaultRecord };
+    },
+
+    // 切换显示批量设置弹窗
+    switchBatchSettingVisible(state, { payload }) {
+      const { visible } = payload;
+      state.batchSettingVisible = visible;
     },
 
     // 删除标签
