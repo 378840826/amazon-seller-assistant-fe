@@ -215,7 +215,7 @@ const AsinBase: React.FC = (props) => {
   if (isAsin) {
     return (
       <div>
-        <BasicLoyout></BasicLoyout>
+        {/* <BasicLoyout></BasicLoyout> */}
         <nav className={styles.head }>
           <span className={styles.classify}>ASIN总览</span>
           <Iconfont type="icon-zhankai-copy" className={styles.arrow}></Iconfont>
