@@ -1,13 +1,12 @@
 import React, { ReactText, useEffect } from 'react';
 import { useSelector, useDispatch } from 'umi';
 import { IConnectState } from '@/models/connect';
-import { Table, Pagination, message, ConfigProvider } from 'antd';
+import { Table, Pagination, message } from 'antd';
 import { requestFeedback, requestErrorFeedback, getPageQuery } from '@/utils/utils';
 import { judgeFastPrice, judgeRuleOpen } from './utils';
 import GoodsIcon from './GoodsIcon';
 import { getFullColumns } from './cols';
 import Header from './Header';
-import zhCN from 'antd/es/locale/zh_CN';
 import styles from './index.less';
 
 interface IUpdatePrice {
@@ -39,7 +38,14 @@ const GoodsList: React.FC = () => {
   const loadingAdjustSwitch = false;
   // 商品
   const goodsListPage = useSelector((state: IConnectState) => state.goodsList);
-  const { goods: goodsData, groups, customCols, searchParams, tableLoading } = goodsListPage;
+  const {
+    goods: goodsData,
+    groups,
+    customCols,
+    searchParams,
+    tableLoading,
+    checkedGoodsIds,
+  } = goodsListPage;
   const { sort, order, current, size } = searchParams;
   const { total, records: goodsList } = goodsData;
   // 店铺
@@ -56,22 +62,14 @@ const GoodsList: React.FC = () => {
     pageSizeOptions: ['20', '50', '100'],
     showQuickJumper: true,
     showTotal: (total: number) => `共 ${total} 个`,
-    onChange: (current: number) => {
+    onChange: (page: number, pageSize: number | undefined) => {
+      // 如果改变了 pageSize， 则重置为第一页
+      page = pageSize === size ? page : 1;
       dispatch({
         type: 'goodsList/fetchGoodsList',
         payload: {
           headersParams,
-          searchParams: { current },
-        },
-        callback: requestErrorFeedback,
-      });
-    },
-    onShowSizeChange: (current: number, size: number) => {
-      dispatch({
-        type: 'goodsList/fetchGoodsList',
-        payload: {
-          headersParams,
-          searchParams: { current, size },
+          searchParams: { current: page, size: pageSize },
         },
         callback: requestErrorFeedback,
       });
@@ -108,6 +106,17 @@ const GoodsList: React.FC = () => {
     }
   }, [dispatch, currentShopId]);
 
+  // 高亮已排序的表头
+  useEffect(() => {
+    const activeClassName = 'sortActiveTh';
+    const nowTh = document.querySelector(`.${activeClassName}`);
+    nowTh?.classList.remove(activeClassName);
+    const el = document.querySelector('.ant-table-column-sorter .active') ||
+      document.querySelector('.sort-menu-btn .ant-table-column-sorter');
+    const th = el && el.closest('th');
+    th?.classList.add(activeClassName);
+  }, [sort]);
+
   // 勾选商品
   const rowSelection = {
     onChange: (selectedRowKeys: ReactText[]) => {
@@ -117,6 +126,8 @@ const GoodsList: React.FC = () => {
       });
     },
     fixed: true,
+    columnWidth: 36,
+    selectedRowKeys: checkedGoodsIds,
   };
 
   // 单个修改调价开关
@@ -287,7 +298,7 @@ const GoodsList: React.FC = () => {
         size="middle"
         pagination={false}
         rowSelection={{ ...rowSelection }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 360px)', scrollToFirstRowOnChange: true }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 330px)', scrollToFirstRowOnChange: true }}
         loading={tableLoading}
         columns={columns}
         rowKey="id"
@@ -311,9 +322,7 @@ const GoodsList: React.FC = () => {
           <span>{ GoodsIcon.promotion }：Promotion</span>
           <span>{ GoodsIcon.coupon() }：Coupon</span>
         </div>
-        <ConfigProvider locale={zhCN}>
-          <Pagination {...paginationProps} />
-        </ConfigProvider>
+        <Pagination {...paginationProps} />
       </div>
     </div>
   );

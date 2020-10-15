@@ -17,6 +17,7 @@ import { day, strToMoneyStr } from '@/utils/utils';
 import { renderSortIcon } from './utils';
 import editable from '@/pages/components/EditableCell';
 import GoodsImg from '@/pages/components/GoodsImg';
+import classnames from 'classnames';
 import styles from './index.less';
 
 const { Option } = Select;
@@ -52,6 +53,13 @@ export const getFullColumns = (params: any) => {
     currency,
   } = params;
 
+  // 获取自定义排序下拉框的 menuItem
+  const getMenuItem = (menuItemSort: string, menuItemOrder: string, name: string) => {
+    const key = `${menuItemSort}-${menuItemOrder}`;
+    const className = (menuItemOrder === order && menuItemSort === sort) ? styles.active : null;
+    return <MenuItem key={key} className={className}>{name}</MenuItem>;
+  };
+
   // 点击下拉排序
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSortMenuClick = ({ key }: any) => {
@@ -82,7 +90,7 @@ export const getFullColumns = (params: any) => {
       render: (_, record) => (
         <Select
           size="small"
-          style={{ minWidth: '100%', textAlign: 'center' }}
+          className={styles.tableSelect}
           dropdownClassName={styles.SelectDropdown}
           bordered={false}
           defaultValue={record.groupId}
@@ -116,7 +124,7 @@ export const getFullColumns = (params: any) => {
       dataIndex: 'title',
       key: '',
       align: 'center',
-      width: 330,
+      width: 316,
       fixed: 'left',
       render: (title, record) => (
         <div className={styles.goodsInfoContainer}>
@@ -133,8 +141,8 @@ export const getFullColumns = (params: any) => {
             {
               customCols.asin
               &&
-              <div>
-                <Text>{record.asin}</Text>
+              <div className={styles.asin}>
+                <Link to={`/report/asin/base?asin=${record.asin}`}>{record.asin}</Link>
               </div>
             }
             <div className={styles.iconContainer}>
@@ -192,7 +200,7 @@ export const getFullColumns = (params: any) => {
           {
             customCols.sku
             &&
-            <div style={{ marginBottom: 2 }}>{record.sku}</div>
+            <div className={styles.sku}>{record.sku}</div>
           }
           {
             customCols.openDate
@@ -237,23 +245,15 @@ export const getFullColumns = (params: any) => {
       title: () => {
         const menu = (
           <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            <MenuItem key="sellable-ascend">
-              库存升序
-            </MenuItem>
-            <MenuItem key="sellable-descend">
-              库存降序
-            </MenuItem>
-            <MenuItem key="sellableDays-ascend">
-              可售天数升序
-            </MenuItem>
-            <MenuItem key="sellableDays-descend">
-              可售天数降序
-            </MenuItem>
+            { getMenuItem('sellable', 'ascend', '库存升序') }
+            { getMenuItem('sellable', 'descend', '库存降序') }
+            { getMenuItem('sellableDays', 'ascend', '可售天数升序') }
+            { getMenuItem('sellableDays', 'descend', '可售天数降序') }
           </Menu>
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span style={{ cursor: 'pointer' }}>
+            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
               可售库存
               { GoodsIcon.question('可售库存，等同于后台available库存') }
               {
@@ -435,25 +435,17 @@ export const getFullColumns = (params: any) => {
       title: () => {
         const menu = (
           <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            <MenuItem key="profit-ascend">
-              利润升序
-            </MenuItem>
-            <MenuItem key="profit-descend">
-              利润降序
-            </MenuItem>
-            <MenuItem key="profitMargin-ascend">
-              利润率升序
-            </MenuItem>
-            <MenuItem key="profitMargin-descend">
-              利润率降序
-            </MenuItem>
+            { getMenuItem('profit', 'ascend', '利润升序')}
+            { getMenuItem('profit', 'descend', '利润降序')}
+            { getMenuItem('profitMargin', 'ascend', '利润率升序')}
+            { getMenuItem('profitMargin', 'descend', '利润率降序')}
           </Menu>
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span style={{ cursor: 'pointer' }}>
+            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
               利润
-              {GoodsIcon.question('利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%')}
+              { GoodsIcon.question('利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%') }
               {
                 (sort === 'profit' || sort === 'profitMargin') ? renderSortIcon(order) : null
               }
@@ -489,23 +481,15 @@ export const getFullColumns = (params: any) => {
       title: () => {
         const menu = (
           <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            <MenuItem key="dayOrder7Count-ascend">
-              7天订单升序
-            </MenuItem>
-            <MenuItem key="dayOrder7Count-descend">
-              7天订单降序
-            </MenuItem>
-            <MenuItem key="dayOrder7Ratio-ascend">
-              7天环比升序
-            </MenuItem>
-            <MenuItem key="dayOrder7Ratio-descend">
-              7天环比降序
-            </MenuItem>
+            { getMenuItem('dayOrder7Count', 'ascend', '7天订单升序')}
+            { getMenuItem('dayOrder7Count', 'descend', '7天订单降序')}
+            { getMenuItem('dayOrder7Ratio', 'ascend', '7天环比升序')}
+            { getMenuItem('dayOrder7Ratio', 'descend', '7天环比降序')}
           </Menu>
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span style={{ cursor: 'pointer' }}>
+            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
               7天订单
               { GoodsIcon.question(`周期：${dateRange7[0]}-${dateRange7[1]}`) }
               {
@@ -539,23 +523,15 @@ export const getFullColumns = (params: any) => {
       title: () => {
         const menu = (
           <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            <MenuItem key="dayOrder30Count-ascend">
-              30天订单升序
-            </MenuItem>
-            <MenuItem key="dayOrder30Count-descend">
-              30天订单降序
-            </MenuItem>
-            <MenuItem key="dayOrder30Ratio-ascend">
-              30天环比升序
-            </MenuItem>
-            <MenuItem key="dayOrder30Ratio-descend">
-              30天环比降序
-            </MenuItem>
+            { getMenuItem('dayOrder30Count', 'ascend', '30天订单升序')}
+            { getMenuItem('dayOrder30Count', 'descend', '30天订单降序')}
+            { getMenuItem('dayOrder30Ratio', 'ascend', '30天环比升序')}
+            { getMenuItem('dayOrder30Ratio', 'descend', '30天环比降序')}
           </Menu>
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span style={{ cursor: 'pointer' }}>
+            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
               30天订单
               { GoodsIcon.question(`周期：${dateRange30[0]}-${dateRange30[1]}`) }
               {
@@ -619,23 +595,15 @@ export const getFullColumns = (params: any) => {
       title: () => {
         const menu = (
           <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            <MenuItem key="reviewScore-ascend">
-              评分升序
-            </MenuItem>
-            <MenuItem key="reviewScore-descend">
-              评分降序
-            </MenuItem>
-            <MenuItem key="reviewCount-ascend">
-              评论数升序
-            </MenuItem>
-            <MenuItem key="reviewCount-descend">
-              评论数降序
-            </MenuItem>
+            { getMenuItem('reviewScore', 'ascend', '评分升序') }
+            { getMenuItem('reviewScore', 'descend', '评分降序') }
+            { getMenuItem('reviewCount', 'ascend', '评论数升序') }
+            { getMenuItem('reviewCount', 'descend', '评论数降序') }
           </Menu>
-        );
+        );        
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span style={{ cursor: 'pointer' }}>
+            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
               Review
               {
                 (sort === 'reviewScore' || sort === 'reviewCount') ? renderSortIcon(order) : null
@@ -655,7 +623,7 @@ export const getFullColumns = (params: any) => {
             customCols.reviewCount
             &&
             <Text type="secondary">
-              (<span className={styles.reviewCount}>{record.reviewCount}</span>)
+              (<Link to={`/review/monitor?asin=${record.asin}`}>{record.reviewCount}</Link>)
             </Text>
           }
         </Space>
@@ -745,7 +713,7 @@ export const getFullColumns = (params: any) => {
       align: 'center',
       width: 136,
       render: () => (
-        <Select defaultValue="未开发的功能0" style={{ width: 136 }} bordered={false}>
+        <Select defaultValue="未开发的功能0" className={styles.tableSelect} style={{ width: 136 }} bordered={false}>
           <Option value="未开发的功能0">未开发的功能0</Option>
           <Option value="未开发的功能1">未开发的功能1</Option>
           <Option value="未开发的功能2">未开发的功能2</Option>
@@ -796,22 +764,14 @@ export const getFullColumns = (params: any) => {
           <Space direction="vertical" className={styles.options}>
             <Space>
               <Dropdown overlay={priceMenu} placement="bottomCenter">
-                <span className={styles.optionsItem}>
-                  改价
-                </span>
+                <span className={styles.optionsItem}>改价</span>
               </Dropdown>
-              <Link to="/">
-                动态
-              </Link>
+              <Link to={`/dynamic/asin-overview?asin=${record.asin}`}>动态</Link>
             </Space>
             <Space>
-              <Link to="/">
-                订单
-              </Link>
+              <Link to={`/order?asin=${record.asin}`}>订单</Link>
               <Dropdown overlay={monitorMenu} placement="bottomCenter">
-                <span className={styles.optionsItem}>
-                  监控
-                </span>
+                <span className={styles.optionsItem}>监控</span>
               </Dropdown>
             </Space>
           </Space>
