@@ -1,29 +1,33 @@
 div.list_item {
   border-bottom: 1px solid @divider-line-color;
-  padding: 0 0 15px;
+  padding: 0 20px 15px;
+
+  &:hover {
+    background-color: #fafafa;
+  }
 
   div.layout_one_row {
     display: flex;
     padding: 15px 0 0;
 
     .asin {
+      width: 230px;
+      color: @heading-color;
+
       span:first-child {
         color: #0083ff;
-      }
-
-      span:last-child {
-        padding: 0 80px 0 0;
       }
     }
 
     .date span:last-child {
       padding: 0 80px 0 0;
+      color: @heading-color;
     }
 
     button {
       width: 80px;
-      height: 22px;
-      line-height: 22px;
+      height: 24px;
+      line-height: 24px;
       padding: 0;
       margin-left: auto;
       font-size: @font-size-sm;
@@ -36,14 +40,14 @@ div.list_item {
     }
 
     // 已处理
-    &:global(button.undisposed) {
+    button:global(.undisposed) {
       background-color: #fff;
       color: @success-color;
       border-color: @success-color;
       cursor: pointer;
     }
 
-    &:global(button.undisposed:hover) {
+    button:global(.undisposed:hover) {
       background-color: @success-color;
       color: @text-color-inverse;
     }
@@ -56,11 +60,12 @@ div.list_item {
     span.title {
       min-width: 60px;
       flex: 0 0 auto;
+      color: @text-color;
     }
 
     .reviewLink {
       width: 100%;
-      word-wrap: break-word;
+      word-break: break-all;
       color: #0083ff;
     }
 
@@ -78,9 +83,26 @@ div.list_item {
 
     .date {
       margin: 5px 0 0 auto;
-      padding: 0 0 0 130px;
       min-width: 55px;
       flex: 0 0 auto;
+      color: @text-color-secondary;
+    }
+
+    .link {
+      color: @text-color;
+      padding-left: 50px;
+
+      .icon {
+        color: @text-color-secondary;
+      }
+
+      &:hover {
+        color: @primary-color;
+
+        * {
+          color: @primary-color;
+        }
+      }
     }
   }
 }

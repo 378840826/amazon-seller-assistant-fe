@@ -99,6 +99,14 @@ const navigation: INavigation[] = [
       { title: '绑定店铺', path: '/shop/bind' },
     ],
   },
+  {
+    title: '跟卖监控',
+    menu: [
+      { title: '跟卖监控', path: '/follow/monitor' },
+      { title: '跟卖监控', path: '/follow/history', hide: true },
+      { title: '跟卖监控', path: '/follow/list', hide: true },
+    ],
+  },
 ];
 
 export default navigation;
