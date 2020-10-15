@@ -18,7 +18,7 @@ export default {
   // 成功色
   '@success-color': '#0dc757',
   // 警告色
-  '@warning-color': '#ffaf4d',
+  '@warning-color': '#ff9800',
   // 错误色
   '@error-color': '#ff5958',
   // 失效色
