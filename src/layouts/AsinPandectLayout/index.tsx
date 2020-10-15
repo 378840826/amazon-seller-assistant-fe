@@ -171,7 +171,7 @@ const AsinBase: React.FC = (props) => {
         }
       }
 
-      verifyAsin();
+      verifyAsin(true);
 
       // 登录接口(暂时)
       // dispatch({
