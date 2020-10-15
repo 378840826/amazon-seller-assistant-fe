@@ -1,5 +1,5 @@
 .cell {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -13,9 +13,17 @@
     margin-left: 5px;
   }
 
+  .ghostEditBtn {
+    opacity: 0;
+  }
+
   &:hover {
     .editableBtn {
       color: @primary-color;
+    }
+
+    .ghostEditBtn {
+      opacity: 1;
     }
   }
 }

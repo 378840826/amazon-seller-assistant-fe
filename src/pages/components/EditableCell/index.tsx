@@ -7,15 +7,18 @@ import styles from './index.less';
 interface IProps {
   inputValue: string;
   prefix?: React.ReactNode | string;
+  // 输入框输入内容约束
   formatValueFun?: (value: string) => string;
   maxLength: number;
   confirmCallback: {
     (value: string): void;
   };
+  // 编辑按钮是否默认隐藏 hover 时候再显示
+  ghostEditBtn?: boolean;
 }
 
 const EditableCell: React.FC<IProps> = (props) => {
-  const { inputValue, prefix, confirmCallback, maxLength, formatValueFun } = props;
+  const { inputValue, prefix, confirmCallback, maxLength, formatValueFun, ghostEditBtn } = props;
   const [value, setValue] = useState<string>(inputValue);
   const [editable, setEditable] = useState<boolean>(false);
   const inputEl = useRef<Input>(null);
@@ -81,7 +84,10 @@ const EditableCell: React.FC<IProps> = (props) => {
         <div className={styles.cellValue}>
           {prefix}{inputValue}
         </div>
-        <Iconfont className={styles.editableBtn} type="icon-xiugai" />
+        <Iconfont
+          className={classnames(styles.editableBtn, ghostEditBtn ? styles.ghostEditBtn : '')}
+          type="icon-xiugai"
+        />
       </div>
   );
 };
