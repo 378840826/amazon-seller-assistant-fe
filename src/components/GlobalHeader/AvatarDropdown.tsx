@@ -11,7 +11,7 @@ export interface IGlobalHeaderRightProps extends IConnectProps {
   unreadNotices: API.IUnreadNotices;
 }
 
-const { Item: MenuItem, Divider: MenuDivider } = Menu;
+const { Item: MenuItem } = Menu;
 
 const munuIcon = function(type: string): React.ReactElement {
   return (
@@ -52,38 +52,35 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
       <Menu className={styles.headerMenu} selectedKeys={[]} onClick={this.onMenuClick}>
         <MenuItem key="/center" className={styles.menuItem}>
           { munuIcon('icon-gerenzhongxin2') }
-          个人中心
+          <span className={styles.menuName}>个人中心</span>
         </MenuItem>
-        <MenuDivider />
         <MenuItem key="/shop/list" className={styles.menuItem}>
           { munuIcon('icon-dianpuguanli1') }
-          店铺管理
+          <span className={styles.menuName}>店铺管理</span>
         </MenuItem>
-        <MenuDivider />
         <MenuItem key="/ppc/shop" className={styles.menuItem}>
           { munuIcon('icon-fuwushouquan') }
-          广告授权
+          <span className={styles.menuName}>广告授权</span>
         </MenuItem>
-        <MenuDivider />
         <MenuItem key="/message" className={styles.menuItem}>
           { munuIcon('icon-xiaoxi') }
-          { unreadCount ? <Badge color="red" className={styles.badge} /> : null }
-          消息中心
+          <span className={styles.menuName}>
+            { unreadCount ? <Badge color="red" className={styles.badge} /> : null }
+            消息中心
+          </span>
         </MenuItem>
-        <MenuDivider />
         {currentUser.topAccount &&
             <MenuItem key="/sub-account" className={styles.menuItem}>
               { munuIcon('icon-guanlizhongxin') }
-              子账号管理
+              <span className={styles.menuName}>子账号管理</span>
             </MenuItem>
-        }
-        {currentUser.topAccount &&
-        <MenuDivider />
-        }
-        
+        }        
         <MenuItem key="/logout" className={styles.menuItem}>
           { munuIcon('icon-tuichu') }
-          注销 <span className={styles.username}>{currentUser.username}</span>
+          <span className={styles.menuName}>
+            注销
+            <span className={styles.username}>{currentUser.username}</span>
+          </span>
         </MenuItem>
       </Menu>
     );
