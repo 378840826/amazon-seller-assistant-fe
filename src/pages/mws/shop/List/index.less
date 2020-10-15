@@ -2,22 +2,32 @@
   position: relative;
   margin-top: 22px;
 
-  .bindBtn {
-    width: @btn-long-width;
-    position: absolute;
-    top: -38px;
-    right: 0;
-  }
+  :global {
+    .ant-table-thead > tr > th {
+      background-color: @simple-table-header-bg;
+    }
 
-  .unBindBtn {
-    color: @btn-text-color;
-
-    &:hover {
-      color: @btn-text-hover-color;
+    .ant-table-container {
+      font-size: @font-size-base;
     }
   }
+}
 
-  :global(.ant-table-thead > tr > th) {
-    background-color: @simple-table-header-bg;
+.bindBtn {
+  width: @btn-long-width;
+  position: absolute;
+  top: -38px;
+  right: 0;
+}
+
+.unBindBtn {
+  color: @btn-text-color;
+
+  &:hover {
+    color: @primary-color;
   }
+}
+
+.shopSwitch {
+  transform: scale(0.909);
 }

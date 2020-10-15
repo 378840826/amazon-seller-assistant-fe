@@ -1,5 +1,3 @@
-@headMenuLineHeight: 40px;
-
 .right {
   display: flex;
   align-items: center;
@@ -11,9 +9,8 @@
   }
 
   .weixin {
-    margin: 0 26px;
+    margin: 0 16px 0 26px;
     font-size: 24px;
-    color: @primary-color;
     cursor: pointer;
   }
 
@@ -63,17 +60,13 @@
 }
 
 .headerMenu {
-  padding-left: 18px;
-  padding-right: 18px;
-
   :global {
     .ant-dropdown-menu-item {
-      min-width: 200px;
-      color: @primary-color;
+      color: @text-color;
       text-align: center;
 
       &:hover {
-        color: #0083ff;
+        color: @primary-color;
       }
     }
 
@@ -84,14 +77,16 @@
   }
 
   .menuItem {
-    line-height: @headMenuLineHeight;
+    line-height: 30px;
     position: relative;
+    display: flex;
+    align-items: center;
+    padding: 5px 40px;
 
     .menuIcon {
-      position: absolute;
-      left: 0;
-      top: 14px;
+      color: @primary-color;
       font-size: 18px;
+      margin-right: 0;
     }
 
     .badge {
@@ -109,5 +104,11 @@
       white-space: nowrap;
       vertical-align: bottom;
     }
+  }
+
+  .menuName {
+    flex: 1;
+    margin-left: 20px;
+    text-align: left;
   }
 }

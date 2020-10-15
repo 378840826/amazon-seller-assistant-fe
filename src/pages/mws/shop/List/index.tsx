@@ -63,10 +63,11 @@ const ShopList: React.FC = () => {
       title: '店铺名称',
       dataIndex: 'storeName',
       align: 'center',
-      width: 200,
+      width: 300,
       render: (storeName, record) => {
         return (
           editable({
+            ghostEditBtn: true,
             inputValue: storeName,
             maxLength: 20,
             confirmCallback: value => {
@@ -132,6 +133,7 @@ const ShopList: React.FC = () => {
         const loading = loadingEffect.effects['global/switchShopAutoPrice'];
         return (
           <Switch
+            className={styles.shopSwitch}
             loading={loading}
             checked={autoPrice}
             onClick={() => handleSwitchClick(autoPrice, record)}
