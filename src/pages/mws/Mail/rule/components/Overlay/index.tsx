@@ -267,6 +267,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
           <Form.Item
             label="若亚马逊邮件被客户退订导致发送失败"
             name="sendingStatus"
+            className={styles.sendingStatus}
           >
             <Radio.Group>
               <Radio value="notSending">不再发送剩余模板</Radio>
