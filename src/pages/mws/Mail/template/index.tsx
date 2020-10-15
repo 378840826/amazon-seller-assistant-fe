@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'umi';
-import { Modal, Table, Button, Switch, Spin, message } from 'antd';
+import { Modal, Table, Button, Switch, message, Typography } from 'antd';
 import styles from './index.less';
 import { ColumnProps } from 'antd/lib/table';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import Overlay from './components/Overlay';
+const { Paragraph } = Typography;
 
 
 interface IMailTemplate extends IConnectProps{
@@ -94,7 +95,7 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
   };
 
   //修改状态
-  const onChange = (checked: boolean, id: number, key: number) => {
+  const onChange = (checked: boolean, id: number, key: number | undefined) => {
     dispatch({
       type: 'mail/switchTemplate',
       payload: {
@@ -106,7 +107,10 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       },
       callback: () => {
         const records = state.data;
-        records[key].status = checked;
+        if (typeof key === 'number'){
+          records[key].status = checked;
+        }
+        
         setState(state => ({
           ...state,
           data: records,
@@ -199,12 +203,13 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       dataIndex: 'templateSubject',
       align: 'left',
       width: 290,
-      ellipsis: true,
       render: (text) => {
         return (
           text === '' ? <div className="null_bar"></div>
             :
-            <span>{text}</span>
+            <Paragraph ellipsis={{ rows: 2 }}>
+              {text}
+            </Paragraph>
         );
       },
     },
