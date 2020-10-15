@@ -1,5 +1,5 @@
 .baseBox {
-  margin: 20px 30px 0;
+  margin: 20px 0 0;
   background-color: #fff;
   border-radius: @border-radius-base;
   font-family: "微软雅黑", sans-serif;
@@ -32,6 +32,11 @@ header.headProduct {
         &:hover {
           opacity: 0.8;
         }
+      }
+
+      &.active img {
+        border: 1px solid @warning-color;
+        box-shadow: 0 0 5px 1px @warning-color;
       }
     }
 
@@ -75,6 +80,11 @@ header.headProduct {
         color: @warning-color;
         padding: 0 18px 0 4px;
       }
+
+      .decollator {
+        color: @text-color-secondary;
+        padding: 0 6px;
+      }
     }
 
     .icons {
@@ -117,13 +127,16 @@ header.headProduct {
     }
 
     .ranking {
-      display: grid;
+      display: flex;
       padding-top: 14px;
       color: @heading-color;
-      grid-template-columns: repeat(2, 230px);
+      // grid-template-columns: repeat(2, 230px);
+      flex-wrap: wrap;
 
       p {
         padding-bottom: 5px;
+        min-width: 230px;
+        padding-right: 25px;
       }
 
       span.num {

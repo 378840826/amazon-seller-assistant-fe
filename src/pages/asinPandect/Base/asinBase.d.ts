@@ -38,6 +38,7 @@ declare namespace AsinBase {
     otherFeePer: number;
     fbaFeePer: number;
     commissionPer: number;
+    profitCny: number;
 }
 
   interface IInitResponse {
@@ -63,6 +64,8 @@ declare namespace AsinBase {
     fulfillmentChannel: string;
     openDate: string;
     usedNewSellNum: string;
+    coupon: string;
+    nrCategory: string;
     productImageVos: {
       isMain: boolean;
       img: string;

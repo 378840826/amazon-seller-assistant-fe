@@ -9,6 +9,7 @@ import echarts from 'echarts';
 // ---
 import notImg from '@/assets/stamp.png';
 import Update from './components/Update';
+import Empty from './components/Empty';
 import {
   Rate, 
   Tooltip,
@@ -30,7 +31,10 @@ const AsinBase: React.FC = () => {
 
   const [update, setUpdate] = useState<string>('2020-08-12 17:54:02 PDT(太平洋)');
   const [lgImg, setLgImg] = useState<string>(''); // 大图
-  const [imgs, setImgs] = useState<string[]>([]); // 大图左侧的图片列表
+  const [imgs, setImgs] = useState<{
+    isMain: boolean;
+    img: string;
+  }[]>([]); // 大图左侧的图片列表
   const [asinInfo, setAsinInfo] = useState<AsinBase.IInitResponse|null>(null);
   const [defaultSku, setDefaultSku] = useState<string>(''); // 选中的sku
   const [priceEs, setPriceEs] = useState<AsinBase.IProductAsinSkuVo|null>(null); // 价格估算及饼图占比
@@ -51,28 +55,31 @@ const AsinBase: React.FC = () => {
           },
         });
       }).then(datas => {
+
         const {
           data,
+          code,
         } = datas as {
           data: AsinBase.IInitResponse;
+          code: number;
         };
+
+        if (code === 500) {
+          return;
+        }
+
         const { 
           updateTime,
           productImageVos,
           productAsinSkuVo,
         } = data;
         setAsinInfo(data);
-        const imgArr: string[] = [];
         productImageVos.forEach(item => {
           if (item.isMain) {
             setLgImg(item.img);
-          } else {
-            imgArr.push(item.img);
           }
         });
-
-
-        setImgs([...imgArr]);
+        setImgs(productImageVos);
         setUpdate(updateTime);
         setDefaultSku(productAsinSkuVo.sku);
         setPriceEs(productAsinSkuVo);
@@ -104,12 +111,9 @@ const AsinBase: React.FC = () => {
         { value: priceEs?.commissionPer, name: '佣金' },
       ];
 
-      console.log(data, 'data');
-      
-
       // 去掉0的数据项
       const newData: {}[] = [];
-      data.forEach((item, i) => {
+      data.forEach(item => {
         if (item.value === 0) {
           // data.splice(i, 1);
         } else {
@@ -130,7 +134,6 @@ const AsinBase: React.FC = () => {
       if (newData.length === 2) {
         newData.pop();
       }
-      
 
       const option = {
         color: [
@@ -191,13 +194,13 @@ const AsinBase: React.FC = () => {
                 rich: {
                   name: {
                     color: '#555',
-                    fontSize: 12,
+                    fontSize: 14,
                     // width: 60,
                   },
                   c: {
                     fontWeight: 550,
                     color: '#222',
-                    fontSize: 12,
+                    fontSize: 14,
                   },
                 },
               },
@@ -270,8 +273,20 @@ const AsinBase: React.FC = () => {
       console.error(err);
     });
   };
-  
 
+  // 切换大图
+  const switchImg = ({ img }: {isMain: boolean; img: string }) => {
+    setLgImg(img);
+    imgs.forEach(item => {
+      if (item.img === img) {
+        item.isMain = true;
+      } else {
+        item.isMain = false;
+      }
+    });
+    setImgs([...imgs]);
+  };
+  
   return (
     <div className={styles.baseBox}>
       <div className={styles.base}>
@@ -282,10 +297,22 @@ const AsinBase: React.FC = () => {
           <div className={styles.productImgs}>
             <ul>
               { imgs.map((item, i) => {
-                return <li key={i}><img src={item || notImg} alt=""/></li>;
+                if (item.isMain) {
+                  return <li 
+                    key={i} 
+                    className={styles.active} 
+                    onClick={() => switchImg(item)}>
+                    <img src={item.img || notImg}/>
+                  </li>;
+                }
+                return <li 
+                  key={i} 
+                  onClick={() => switchImg(item)}>
+                  <img src={item.img || notImg}/>
+                </li>;
               })}
             </ul>
-            <img src={lgImg || notImg} className={styles.imgLg} alt=""/>
+            <img src={lgImg || notImg} className={styles.imgLg}/>
           </div>
           <div className={styles.infos}>
             <p className={styles.title}>
@@ -301,7 +328,9 @@ const AsinBase: React.FC = () => {
                 <span className={styles.num}>{asinInfo?.reviewScore || 0}</span>
               </>
               <span className={styles.text}>
-                {asinInfo?.reviewCount || 0}条评论 | {asinInfo?.answerQuestionNum || 0}条Q&A
+                {asinInfo?.reviewCount || 0}条评论 
+                <span className={styles.decollator}>|</span> 
+                {asinInfo?.answerQuestionNum || 0}条Q&A
               </span>
             </div>
             <div className={styles.icons}>
@@ -310,7 +339,7 @@ const AsinBase: React.FC = () => {
               }}>
                 <Tooltip title="keyword">
                   <img
-                    src={require('@/assets/asinPandect/ac.png')} 
+                    src={require('@/assets/icon/ac.svg')} 
                     className={styles.img}
                   />
                 </Tooltip>
@@ -321,7 +350,7 @@ const AsinBase: React.FC = () => {
               }}>
                 <Tooltip title="category名称">
                   <img
-                    src={require('@/assets/asinPandect/bs.png')} 
+                    src={require('@/assets/icon/bs.svg')} 
                     className={styles.img}
                   />
                 </Tooltip>
@@ -332,7 +361,7 @@ const AsinBase: React.FC = () => {
               }}>
                 <Tooltip title="Add-on item">
                   <img
-                    src={require('@/assets/asinPandect/add.png')} 
+                    src={require('@/assets/icon/add.svg')} 
                     className={styles.img}
                   />
                 </Tooltip>
@@ -341,9 +370,9 @@ const AsinBase: React.FC = () => {
               <span style={{
                 display: asinInfo?.isCoupon ? 'inline-block' : 'none',
               }}>
-                <Tooltip title="5% OFF">
+                <Tooltip title={asinInfo?.coupon}>
                   <img
-                    src={require('@/assets/asinPandect/jian.png')} 
+                    src={require('@/assets/icon/jian.svg')} 
                     className={styles.img}
                   />
                 </Tooltip>
@@ -354,7 +383,7 @@ const AsinBase: React.FC = () => {
               }}>
                 <Tooltip title="Prime">
                   <img
-                    src={require('@/assets/asinPandect/pr.png')} 
+                    src={require('@/assets/icon/pr.svg')} 
                     className={styles.img}
                   />
                 </Tooltip>
@@ -365,7 +394,7 @@ const AsinBase: React.FC = () => {
               }}>
                 <Tooltip title="Promotion">
                   <img
-                    src={require('@/assets/asinPandect/promotion.png')} 
+                    src={require('@/assets/icon/promotion.svg')} 
                     className={styles.img}
                   />
                 </Tooltip>
@@ -374,9 +403,9 @@ const AsinBase: React.FC = () => {
               <span style={{
                 display: asinInfo?.isNr ? 'inline-block' : 'none',
               }}>
-                <Tooltip title="Prime">
+                <Tooltip title={asinInfo?.nrCategory}>
                   <img
-                    src={require('@/assets/asinPandect/nr.png')} 
+                    src={require('@/assets/icon/nr.svg')} 
                     className={styles.img}
                   />
                 </Tooltip>
@@ -416,7 +445,7 @@ const AsinBase: React.FC = () => {
                       ${item.isTopCategory ? '大类' : '小类'}排名：#${item.categoryRanking} ${item.categoryName}`
                     }>
                       <>
-                        <span className={styles.num}>#{item.categoryRanking}</span>
+                        <span className={styles.num}>#{item.categoryRanking} </span>
                         {item.categoryName}
                       </>
                     </Tooltip>
@@ -450,7 +479,9 @@ const AsinBase: React.FC = () => {
 
                 <div className={styles.base}>
                   <span className={styles.text}>售价：</span>
-                  <span className={styles.va1}>{currentShop.currency}{priceEs?.price}</span>
+                  <span className={styles.va1}>
+                    {priceEs?.price === null ? <Empty /> : currentShop.currency + priceEs?.price}
+                  </span>
                   <span className={styles.va12}>（￥{priceEs?.priceCny}）</span>
                 </div>
 
@@ -487,7 +518,10 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>佣金：</span>
                   <span className={styles.va1}>
-                    {currentShop.currency + priceEs?.commission}
+                    {
+                      priceEs?.commission === null 
+                        ? <Empty /> : currentShop.currency + priceEs?.commission
+                    }
                   </span>
                   <span className={styles.va12} style={{
                     display: priceEs?.commissionCny === null ? 'none' : 'inline-block',
@@ -499,7 +533,7 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>FBA fee：</span>
                   <span className={styles.va1}>
-                    {currentShop.currency + priceEs?.fbaFee}
+                    {priceEs?.fbaFee === null ? <Empty /> : currentShop.currency + priceEs?.fbaFee}
                   </span>
                   <span className={styles.va12} style={{
                     display: priceEs?.fbaFeeCny === null ? 'none' : 'inline-block',
@@ -566,14 +600,16 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>利润：</span>
                   <span className={styles.va1}>
-                    {currentShop.currency + priceEs?.profit}
+                    {priceEs?.profit === null ? <Empty /> : currentShop.currency + priceEs?.profit}
                   </span>
-                  <span className={styles.va12}>（￥11.25）</span>
+                  <span className={styles.va12}>（￥{priceEs?.profitCny}）</span>
                 </div>
 
                 <div className={styles.base}>
                   <span className={styles.text}>利润率：</span>
-                  <span className={styles.va1}>{priceEs?.profitMargin}%</span>
+                  <span className={styles.va1}>
+                    {priceEs?.profit === null ? <Empty /> : `${priceEs?.profitMargin}%`}
+                  </span>
                 </div>
               </Form>
             </div>
