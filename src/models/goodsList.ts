@@ -160,6 +160,11 @@ const GoodsListModel: IGoodsListModelType = {
           type: 'saveParams',
           payload: { searchParams, filtrateParams },
         });
+        // 取消选中
+        yield put({
+          type: 'updateCheckGoods',
+          payload: [],
+        });
       }
       callback && callback(res.code, res.message);
     },
