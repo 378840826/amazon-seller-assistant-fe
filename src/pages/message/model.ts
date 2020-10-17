@@ -3,11 +3,10 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-08 17:50:42
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-09-14 12:03:35
+ * @LastEditTime: 2020-10-15 11:44:42
  * @FilePath: \amzics-react\src\pages\message\model.ts
  */ 
 import { Effect, Reducer } from 'umi';
-import { message } from 'antd';
 import {
   getAllMessageList,
   getReviewMessageAll,

@@ -11,11 +11,10 @@ import { ColumnProps } from 'antd/es/table';
 import { Link } from 'umi';
 import GoodsImg from '@/pages/components/GoodsImg';
 import { Order } from '@/models/replenishment';
-import { Iconfont } from '@/utils/utils';
 import TransitDetails from './TransitDetails';
 import classnames from 'classnames';
 import Setting from './Setting';
-import GoodsIcon from '../GoodsList/GoodsIcon';
+import GoodsIcon from '@/pages/components/GoodsIcon';
 import styles from './index.less';
 
 const { Item: MenuItem } = Menu;
@@ -155,21 +154,25 @@ export const getFullColumns = (params: any) => {
       fixed: 'left',
       render: (title, record) => (
         <div className={styles.goodsInfoContainer}>
-          <GoodsImg src={record.img} alt="商品图" width={46} />
+          <GoodsImg src={record.img} alt="商品" width={46} />
           <div className={styles.goodsInfoContent}>
             <Paragraph ellipsis className={styles.goodsTitle}>
               {
                 record.newProduct ? <span className={styles.newProduct}>新品</span> : null
               }
-              <Iconfont className={styles.link} type="icon-lianjie" />
-              <a title={title} href={record.url} target="_blank" rel="noopener noreferrer">{title}</a>
+              <div className={styles.goodsTitle}>
+                { GoodsIcon.link() }
+                <a title={title} href={record.url} target="_blank" rel="noopener noreferrer">{title}</a>
+              </div>
             </Paragraph>
             <div className={styles.goodsInfoRow}>
-              <Text>{record.sku}</Text>
+              <div className={styles.asin}>
+                <Link to={`/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
+              </div>
               <Text>{record.fnSku}</Text>
             </div>
             <div className={styles.goodsInfoRow}>
-              <Link to={`/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
+              <Text>{record.sku}</Text>
               {
                 record.listingStatus === 'Active' || record.listingStatus === 'Incomplete'
                   ? <Text>{listingStatusDict[record.listingStatus]}</Text>

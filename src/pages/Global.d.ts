@@ -23,8 +23,8 @@ declare namespace Global {
           autoPrice: boolean;
           timezone: string;
           currency: string;
-          tokenInvalid: boolean;
           marketplace: string;
+          tokenInvalid: boolean;
         };
       };
     };

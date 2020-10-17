@@ -190,25 +190,26 @@ export default [
     ],
   },
 
-  // 跟卖
+  // 邮件
   {
-    path: '/competitor',
+    path: '/mail',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: '跟卖监控', path: '/competitor/monitor', component: './follow/Monitor' },
-      { title: '跟卖列表', path: '/competitor/list', component: './follow/List' },
-      { title: '跟卖历史', path: '/competitor/history', component: './follow/History' },
-      // 重定向
-      { path: '/competitor', redirect: '/competitor/monitor' },
+      { path: '/mail', redirect: '/mail/summary' },
+      { path:'/mail',component:'./mws/Mail/components/Menu',routes:[
+        {title:'邮件统计',path:'/mail/summary',component:'./mws/Mail/summary'},
+        {title:'收件箱',path:'/mail/inbox',component:'./mws/Mail/Inbox'},
+        {title:'已回复',path:'/mail/reply',component:'./mws/Mail/Inbox'},
+        {title:'未回复',path:'/mail/no-reply',component:'./mws/Mail/Inbox'},
+        {title:'发件箱',path:'/mail/outbox',component:'./mws/Mail/outbox'},
+        {title:'发送成功',path:'/mail/send-success',component:'./mws/Mail/outbox'},
+        {title:'发送失败',path:'/mail/send-fail',component:'./mws/Mail/outbox'},
+        {title:'正在发送',path:'/mail/sending',component:'./mws/Mail/outbox'},
+        {title:'自动邮件规则',path:'/mail/rule',component:'./mws/Mail/rule'},
+        {title:'邮件模版',path:'/mail/template',component:'./mws/Mail/template'}
+      ]},
     ],
   },
-
-  // {
-  //   path: '/demo',
-  //   component: './demo',
-  //   title: '测试专用',
-  // },
-
   // 首页
   {
     path: '/',

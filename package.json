@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.0.6",
-    "@types/echarts": "^4.6.4",
     "@types/react-wow": "^1.0.0",
     "antd": "^4.3.0",
     "braft-editor": "^2.3.9",

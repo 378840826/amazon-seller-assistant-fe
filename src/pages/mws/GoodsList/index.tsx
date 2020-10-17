@@ -4,7 +4,7 @@ import { IConnectState } from '@/models/connect';
 import { Table, Pagination, message } from 'antd';
 import { requestFeedback, requestErrorFeedback, getPageQuery } from '@/utils/utils';
 import { judgeFastPrice, judgeRuleOpen } from './utils';
-import GoodsIcon from './GoodsIcon';
+import GoodsIcon from '@/pages/components/GoodsIcon';
 import { getFullColumns } from './cols';
 import Header from './Header';
 import styles from './index.less';
@@ -318,8 +318,8 @@ const GoodsList: React.FC = () => {
           <span>{ GoodsIcon.ac() }：Amazon&apos;s Choice</span>
           <span>{ GoodsIcon.bs() }：Best Seller</span>
           <span>{ GoodsIcon.nr() }：New Releases</span>
-          <span>{ GoodsIcon.prime }：Prime</span>
-          <span>{ GoodsIcon.promotion }：Promotion</span>
+          <span>{ GoodsIcon.prime() }：Prime</span>
+          <span>{ GoodsIcon.promotion() }：Promotion</span>
           <span>{ GoodsIcon.coupon() }：Coupon</span>
         </div>
         <Pagination {...paginationProps} />
