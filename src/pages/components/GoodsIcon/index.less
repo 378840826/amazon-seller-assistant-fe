@@ -1,10 +1,28 @@
-@blue: #0083ff;
+@blue: @primary-color;
 @golden: #ffaf4d;
+
+// 大图标
+.big > span {
+  width: 33px;
+  line-height: 20px;
+  font-size: 14px;
+
+  &.add {
+    width: 37px;
+  }
+
+  &.coupon,
+  &.promotion,
+  &.pr {
+    width: 28px;
+  }
+}
 
 .icon {
   display: inline-block;
   width: 24px;
   line-height: 14px;
+  font-size: 12px;
   border: 1px solid;
   border-radius: 2px;
   text-align: center;
@@ -85,7 +103,7 @@
   }
 }
 
-.hongqi {
+.redFlag {
   color: @text-color-down;
 }
 

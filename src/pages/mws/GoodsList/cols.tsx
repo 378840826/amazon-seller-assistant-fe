@@ -12,7 +12,7 @@ import {
   Input,
 } from 'antd';
 import { ColumnProps } from 'antd/es/table';
-import GoodsIcon from './GoodsIcon';
+import GoodsIcon from '@/pages/components/GoodsIcon';
 import { day, strToMoneyStr } from '@/utils/utils';
 import { renderSortIcon } from './utils';
 import editable from '@/pages/components/EditableCell';
@@ -128,13 +128,13 @@ export const getFullColumns = (params: any) => {
       fixed: 'left',
       render: (title, record) => (
         <div className={styles.goodsInfoContainer}>
-          <GoodsImg src={record.imgUrl} alt="商品图" width={46} />
+          <GoodsImg src={record.imgUrl} alt="商品" width={46} />
           <div className={styles.goodsInfoContent}>
             {
               customCols.title
               &&
               <Paragraph ellipsis className={styles.goodsTitle}>
-                { GoodsIcon.link }
+                { GoodsIcon.link() }
                 <a title={title} href={record.url} target="_blank" rel="noopener noreferrer">{title}</a>
               </Paragraph>
             }
@@ -142,7 +142,7 @@ export const getFullColumns = (params: any) => {
               customCols.asin
               &&
               <div className={styles.asin}>
-                <Link to={`/report/asin/base?asin=${record.asin}`}>{record.asin}</Link>
+                <Link to={`/report/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
               </div>
             }
             <div className={styles.iconContainer}>
@@ -154,8 +154,8 @@ export const getFullColumns = (params: any) => {
                   { record.isAc && GoodsIcon.ac(record.acKeyword) }
                   { record.isBs && GoodsIcon.bs(record.bsCategory) }
                   { record.isNr && GoodsIcon.nr(record.nrCategory) }
-                  { record.isPrime && GoodsIcon.prime }
-                  { record.isPromotion && GoodsIcon.promotion }
+                  { record.isPrime && GoodsIcon.prime() }
+                  { record.isPromotion && GoodsIcon.promotion() }
                   { record.isCoupon && GoodsIcon.coupon(record.coupon) }
                 </>
               }
@@ -174,7 +174,7 @@ export const getFullColumns = (params: any) => {
                     style={{ display: 'inline-block', width: 16 }}
                     title="已占有黄金购物车，非实时数据，如需实时监控，请使用跟卖监控功能"
                   >
-                    { record.isBuyBox && GoodsIcon.buyBoxcart }
+                    { record.isBuyBox && GoodsIcon.buyBoxcart() }
                   </span>
                 }
               </div>
@@ -282,7 +282,7 @@ export const getFullColumns = (params: any) => {
                 record.sellableDays
                   ?
                   <div title={`预计可售${record.sellableDays}天`}>
-                    { GoodsIcon.hongqi }
+                    { GoodsIcon.redFlag() }
                     <Text type="secondary">{record.sellableDays}天</Text>
                   </div>
                   : null

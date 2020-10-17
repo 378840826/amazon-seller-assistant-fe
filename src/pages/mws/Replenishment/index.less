@@ -179,6 +179,10 @@
   margin-bottom: 0;
   color: @link-color;
 
+  &:hover > span {
+    color: @link-color;
+  }
+
   .link {
     color: @text-color-secondary;
   }
@@ -275,4 +279,14 @@
 
 .hide {
   display: none;
+}
+
+.asin {
+  a {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @primary-color;
+    }
+  }
 }

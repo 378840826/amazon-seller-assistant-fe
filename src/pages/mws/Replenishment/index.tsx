@@ -257,7 +257,7 @@ const Replenishment: React.FC = () => {
       <Table
         size="middle"
         rowSelection={{ ...rowSelection }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 300px)', scrollToFirstRowOnChange: true }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 286px)', scrollToFirstRowOnChange: true }}
         loading={loading}
         columns={columns}
         rowKey="sku"
