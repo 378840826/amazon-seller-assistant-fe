@@ -20,13 +20,28 @@ const navigation: INavigation[] = [
     menu: [
       { title: '数据大盘', path: '/overview' },
       { title: '店铺报告', path: '/overview/shop' },
-      { title: 'BI看板', path: '/overview/bi' },
+      { title: 'BI诊断', path: '/overview/bi' },
     ],
   },
   {
     title: '商品',
     menu: [
       { title: '商品列表', path: '/product/list' },
+      // 隐藏的 asin总览， 需要高亮 '商品' 一级导航， 所以放这里
+      { title: '', path: '/asin/base', hide: true },
+      { title: '', path: '/asin/dynamic', hide: true },
+      { title: '', path: '/asin/order', hide: true },
+      { title: '', path: '/asin/b2b', hide: true },
+      { title: '', path: '/asin/ppc', hide: true },
+      { title: '', path: '/asin/territory', hide: true },
+      { title: '', path: '/asin/return', hide: true },
+    ],
+  },
+  {
+    title: '调价',
+    menu: [
+      { title: '调价规则', path: '/reprice/rules' },
+      { title: '调价记录', path: '/reprice/history' },
     ],
   },
   {
@@ -43,16 +58,9 @@ const navigation: INavigation[] = [
     ],
   },
   {
-    title: '调价',
-    menu: [
-      { title: '调价规则', path: '/reprice/rules' },
-      { title: '调价记录', path: '/reprice/history' },
-    ],
-  },
-  {
     title: '报表',
     menu: [
-      { title: 'ASIN总览报表', path: '/report/asin/base' },
+      { title: 'ASIN报表', path: '/report/asin-overview' },
       { title: 'Business Rport导入', path: '/report/import' },
     ],
   },
@@ -83,12 +91,24 @@ const navigation: INavigation[] = [
     title: '跟卖',
     menu: [
       { title: '跟卖监控', path: '/competitor/monitor' },
+      { title: '跟卖列表', path: '/competitor/list', hide: true },
+      { title: '跟卖历史', path: '/competitor/history', hide: true },
     ],
   },
   {
     title: '邮件',
     menu: [
       { title: '邮件助手', path: '/mail/summary' },
+      { title: '收件箱', path: '/mail/inbox', hide: true },
+      { title: '已回复', path: '/mail/reply', hide: true },
+      { title: '未回复', path: '/mail/no-reply', hide: true },
+      { title: '发件箱', path: '/mail/outbox', hide: true },
+      { title: '发送成功', path: '/mail/send-success', hide: true },
+      { title: '发送失败', path: '/mail/send-fail', hide: true },
+      { title: '正在发送', path: '/mail/sending', hide: true },
+      { title: '自动邮件规则', path: '/mail/rule', hide: true },
+      { title: '邮件模版', path: '/mail/template', hide: true },
+
     ],
   },
   {
@@ -97,14 +117,6 @@ const navigation: INavigation[] = [
     menu: [
       { title: '已绑定店铺', path: '/shop/list' },
       { title: '绑定店铺', path: '/shop/bind' },
-    ],
-  },
-  {
-    title: '跟卖监控',
-    menu: [
-      { title: '跟卖监控', path: '/follow/monitor' },
-      { title: '跟卖监控', path: '/follow/history', hide: true },
-      { title: '跟卖监控', path: '/follow/list', hide: true },
     ],
   },
 ];

@@ -379,8 +379,8 @@ const GlobalModel: IGlobalModelType = {
         const disabledShopSelectorUrl = [
           '/ppc/campaign/add',
           '/ppc/group/add',
-          '/follow/history',
-          '/follow/list',
+          '/competitor/history',
+          '/competitor/list',
         ];
         const isHidden = hiddenShopSelectorUrl.some(path => path === pathname);
         const isDisabled = disabledShopSelectorUrl.some(path => path === pathname);
@@ -399,6 +399,8 @@ const GlobalModel: IGlobalModelType = {
           '/goods/error-report',
           '/product/error-report',
           '/shop/bind',
+          '/competitor/list',
+          '/competitor/history',
           '/mail/summary',
           '/mail/inbox',
           '/mail/reply',

@@ -298,7 +298,7 @@ const GoodsList: React.FC = () => {
         size="middle"
         pagination={false}
         rowSelection={{ ...rowSelection }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 330px)', scrollToFirstRowOnChange: true }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 364px)', scrollToFirstRowOnChange: true }}
         loading={tableLoading}
         columns={columns}
         rowKey="id"

@@ -57,7 +57,7 @@ export default [
     routes: [
       { title: '数据大盘', path: '/overview', component: './mws/GoodsList' },
       { title: '店铺报告', path: '/overview/shop', component: './mws/GoodsList' },
-      { title: 'BI看板', path: '/overview/bi', component: './mws/GoodsList' },
+      { title: 'BI诊断', path: '/overview/bi', component: './mws/GoodsList' },
     ],
   },
 
@@ -71,6 +71,24 @@ export default [
       // 重定向
       { path: '/product', redirect: '/product/list' },
     ],
+  },
+
+  // asin总览，无导航， 入口是每个列表中的 ASIN
+  {
+    path: '/asin',
+    component: '../layouts/AsinPandectLayout',
+    wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
+    routes: [
+      { title: 'ASIN总览', path: '/asin/base', component: './asinPandect/Base' },
+      { title: 'ASIN总览', path: '/asin/dynamic', component: './asinPandect/Base' },
+      { title: 'ASIN总览', path: '/asin/order', component: './asinPandect/Order' },
+      { title: 'ASIN总览', path: '/asin/b2b', component: './asinPandect/B2B' },
+      { title: 'ASIN总览', path: '/asin/ppc', component: './asinPandect/Base' },
+      { title: 'ASIN总览', path: '/asin/territory', component: './asinPandect/Dsell' },
+      { title: 'ASIN总览', path: '/asin/return', component: './asinPandect/ReturnProduct' },
+      // 重定向
+      { path: '/asin', redirect: '/asin/base' },
+    ]
   },
 
   // 动态
@@ -111,21 +129,8 @@ export default [
     path: '/report',
     component: '../layouts/BasicLayout',
     routes: [
-      {
-        path: '/report/asin',
-        component: '../layouts/AsinPandectLayout',
-        wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
-        routes: [
-          { path: '/report/asin/base', title: 'ASIN总览', component: './asinPandect/Base' },
-          { path: '/report/asin/dsell', title: 'ASIN总览 - 地区销售', component: './asinPandect/Dsell' },
-          { path: '/report/asin/order', title: 'ASIN总览 - 订单解读', component: './asinPandect/Order' },
-          { path: '/report/asin/ra', title: 'ASIN总览 - 退货分析', component: './asinPandect/ReturnProduct' },
-          { path: '/report/asin/b2b', title: 'ASIN总览 - B2B销售', component: './asinPandect/B2B' },
-          // 重定向
-          { path: '/report', redirect: '/report/asin/base' },
-        ]
-      },
-      { title: 'Business Rport导入', path: '/report/business', component: './mws/GoodsList' },
+      { title: 'ASIN报表', path: '/report/asin-overview', component: './mws/GoodsList' },
+      { title: 'Business Rport导入', path: '/report/import', component: './mws/GoodsList' },
     ],
   },
 
@@ -170,46 +175,38 @@ export default [
     path: '/mail',
     component: '../layouts/BasicLayout',
     routes: [
-      // 重定向
-      { path: '/mail', redirect: '/mail/summary' },
       {
         path: '/mail', component: './mws/Mail/components/Menu', routes: [
-          { title: '邮件统计', path: '/mail/summary', component: './mws/Mail/summary' },
-          { title: '收件箱', path: '/mail/inbox', component: './mws/Mail/Inbox' },
-          { title: '已回复', path: '/mail/reply', component: './mws/Mail/Inbox' },
-          { title: '未回复', path: '/mail/no-reply', component: './mws/Mail/Inbox' },
-          { title: '发件箱', path: '/mail/outbox', component: './mws/Mail/outbox' },
-          { title: '发送成功', path: '/mail/send-success', component: './mws/Mail/outbox' },
-          { title: '发送失败', path: '/mail/send-fail', component: './mws/Mail/outbox' },
-          { title: '正在发送', path: '/mail/sending', component: './mws/Mail/outbox' },
-          { title: '自动邮件规则', path: '/mail/rule', component: './mws/Mail/rule' },
-          { title: '邮件模版', path: '/mail/template', component: './mws/Mail/template' },
+          { title: '邮件助手', path: '/mail/summary', component: './mws/Mail/summary' },
+          { title: '邮件助手', path: '/mail/inbox', component: './mws/Mail/Inbox' },
+          { title: '邮件助手', path: '/mail/reply', component: './mws/Mail/Inbox' },
+          { title: '邮件助手', path: '/mail/no-reply', component: './mws/Mail/Inbox' },
+          { title: '邮件助手', path: '/mail/outbox', component: './mws/Mail/outbox' },
+          { title: '邮件助手', path: '/mail/send-success', component: './mws/Mail/outbox' },
+          { title: '邮件助手', path: '/mail/send-fail', component: './mws/Mail/outbox' },
+          { title: '邮件助手', path: '/mail/sending', component: './mws/Mail/outbox' },
+          { title: '邮件助手', path: '/mail/rule', component: './mws/Mail/rule' },
+          { title: '邮件助手', path: '/mail/template', component: './mws/Mail/template' },
         ]
       },
-      
+      // 重定向
+      { path: '/mail', redirect: '/mail/summary' },
     ],
   },
 
-  // 邮件
+  // 跟卖
   {
-    path: '/mail',
+    path: '/competitor',
     component: '../layouts/BasicLayout',
     routes: [
-      { path: '/mail', redirect: '/mail/summary' },
-      { path:'/mail',component:'./mws/Mail/components/Menu',routes:[
-        {title:'邮件统计',path:'/mail/summary',component:'./mws/Mail/summary'},
-        {title:'收件箱',path:'/mail/inbox',component:'./mws/Mail/Inbox'},
-        {title:'已回复',path:'/mail/reply',component:'./mws/Mail/Inbox'},
-        {title:'未回复',path:'/mail/no-reply',component:'./mws/Mail/Inbox'},
-        {title:'发件箱',path:'/mail/outbox',component:'./mws/Mail/outbox'},
-        {title:'发送成功',path:'/mail/send-success',component:'./mws/Mail/outbox'},
-        {title:'发送失败',path:'/mail/send-fail',component:'./mws/Mail/outbox'},
-        {title:'正在发送',path:'/mail/sending',component:'./mws/Mail/outbox'},
-        {title:'自动邮件规则',path:'/mail/rule',component:'./mws/Mail/rule'},
-        {title:'邮件模版',path:'/mail/template',component:'./mws/Mail/template'}
-      ]},
+      { title: '跟卖监控', path: '/competitor/monitor', component: './follow/Monitor' },
+      { title: '跟卖列表', path: '/competitor/list', component: './follow/List' },
+      { title: '跟卖历史', path: '/competitor/history', component: './follow/History' },
+      // 重定向
+      { path: '/competitor', redirect: '/competitor/monitor' },
     ],
   },
+
   // 首页
   {
     path: '/',
@@ -218,6 +215,8 @@ export default [
       { path: '/', component: './index', title: '首页' },
       { path: '/index/privacy', component: './privacy', title: '隐私政策' },
       { path: '/index/logs', component: './logs', title: '更新日志' },
+      // 重定向
+      { path: '/index', redirect: '/' },
     ],
   },
 ]

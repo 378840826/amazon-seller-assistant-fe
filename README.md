@@ -48,7 +48,7 @@
 
 ### 新增页面步骤
 1. 创建页面级组件
-2. 在 ```config/config.routes.ts``` 添加路由
+2. 在 ```config/config.routes.ts``` 添加路由, 其中 title 字段是浏览器标签的 title, 统一和二级导航对应
 3. 如果是功能页需要添加导航，在 ```src/layouts/BasicLayout/navigation``` 中添加到对应导航菜单
 4. 如果是需要高亮一级导航但是不需要二级导航的页面(例如商品管理>错误报告)，在上一条的基础上并增加字段 ```hide: true```
 5. 如果是 index 或 user 等页面需要添加导航，在 ```src/layouts/``` 下对应的布局中添加导航菜单

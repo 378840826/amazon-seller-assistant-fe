@@ -142,7 +142,7 @@ export const getFullColumns = (params: any) => {
               customCols.asin
               &&
               <div className={styles.asin}>
-                <Link to={`/report/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
+                <Link to={`/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
               </div>
             }
             <div className={styles.iconContainer}>
