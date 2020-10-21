@@ -1,0 +1,70 @@
+.container {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+  text-align: right;
+  height: 100%;
+
+  .customButton {
+    width: 106px;
+    height: 30px;
+    background: #2f99fd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #fff;
+    display: inline-block;
+    text-align: center;
+    margin-top: 14px;
+    margin-bottom: 14px;
+  }
+}
+
+.__deleteRule {
+  :global {
+    .ant-modal-content {
+      padding-bottom: 20px;
+
+      .ant-modal-body {
+        font-size: 16px;
+        color: #666;
+        padding-bottom: 15px;
+      }
+
+      .ant-modal-footer {
+        text-align: center !important;
+        border-top: none;
+
+        button {
+          & + button {
+            margin-left: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.__table {
+  .delete {
+    margin-left: 20px;
+  }
+
+  .update,
+  .delete {
+    color: #09c2a6;
+    cursor: pointer;
+
+    &:hover {
+      color: #0084ff;
+    }
+  }
+
+  :global {
+    .ant-table-body {
+      border-left: 1px solid #eee;
+      border-right: 1px solid #eee;
+    }
+  }
+}

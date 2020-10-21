@@ -1,0 +1,91 @@
+.box {
+  display: flex;
+  font-size: @font-size-sm;
+}
+
+.layoutLeft {
+  width: 155px;
+  padding: 44px 0 10px;
+  background-color: #fafafa;
+  flex: 0 0 auto;
+
+  img {
+    width: 112px;
+    height: 112px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  a.title {
+    display: inline-block;
+    padding: 10px 15px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  p.details {
+    padding: 0 15px;
+    color: @text-color;
+
+    .content {
+      width: 80px;
+      word-break: break-all;
+    }
+  }
+}
+
+.layoutRight {
+  background-color: #fff;
+  padding: 0 20px;
+  flex: auto;
+  width: calc(100% - 155px);
+
+  header {
+    height: 44px;
+    padding-top: 20px;
+  }
+
+  thead th {
+    height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: @heading-color;
+    border-width: 1px 0 0 0 !important;
+    background-color: #f7f7f7;
+    font-size: @font-size-sm;
+
+    &:last-child {
+      border-right-width: 1px !important;
+    }
+  }
+
+  tbody {
+    td {
+      height: 44px;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-width: 0 0 1px !important;
+      font-size: @font-size-sm;
+
+      &:last-child {
+        border-right-width: 1px !important;
+      }
+    }
+
+    tr:hover td {
+      background-color: #fafafa !important;
+    }
+  }
+
+  .ListLink {
+    color: #09c2a6;
+
+    &:hover {
+      color: #009881;
+    }
+  }
+}
+
+div:global(.ant-table-body) {
+  overflow-y: auto !important;
+}

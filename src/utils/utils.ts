@@ -8,7 +8,7 @@ type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_1799129_mra884d2vr.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_kskuwbez1kg.js',
 });
 
 // 获取亚马逊站点基本链接
@@ -61,6 +61,13 @@ export const requestErrorFeedback = function (code?: number, msg?: string): void
   }
 };
 
+// 判断数据类型
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getDataType = function (data: any) {
+  const original = Object.prototype.toString.call(data);
+  return original.split(' ').pop()?.slice(0, -1);
+};
+
 // 日期相关
 export const day = {
   // 获取天数日期范围， end 为空时获取 start 天前到昨天的范围
@@ -69,6 +76,29 @@ export const day = {
     const s = moment().subtract('days', start).format(format || 'MM.DD');
     const e = moment().subtract('days', end || 1).format(format || 'MM.DD');
     return [s, e];
+  },
+
+  // 获取格式化日期, 默认格式 yyyymmdd, 默认日期为 now
+  getNowFormatTime: function (format = 'YYYY-MM-DD hh:mm:ss', d: Date | string | number = new Date()) {
+    const date = new Date(d);
+    const YYYY = date.getFullYear();
+    const M = date.getMonth() + 1;
+    const D = date.getDate();
+    const h = date.getHours();
+    const m = date.getMinutes();
+    const s = date.getSeconds();
+    const MM = M < 10 ? `0${M}` : M;
+    const DD = D < 10 ? `0${D}` : D;
+    const hh = h < 10 ? `0${h}` : h;
+    const mm = m < 10 ? `0${m}` : m;
+    const ss = s < 10 ? `0${s}` : s;
+    const stringDate = format.replace('YYYY', String(YYYY))
+      .replace('MM', String(MM))
+      .replace('DD', String(DD))
+      .replace('hh', String(hh))
+      .replace('mm', String(mm))
+      .replace('ss', String(ss));
+    return stringDate;
   },
 };
 
@@ -184,6 +214,17 @@ export const isRepeatArray = function (array: Array<string | number>): boolean {
 // 获取解析后的 queryString 参数
 export const getPageQuery = () => parse(window.location.href.split('?')[1]);
 
+// obj 转 queryString
+export const objToQueryString = (obj: { [key: string]: string | number | boolean}) => {
+  let queryString = '';
+  Object.keys(obj).forEach(key => {
+    if (obj[key] !== '' && obj[key] !== undefined && obj[key] !== null) {
+      queryString += `${key}=${encodeURIComponent(obj[key])}&`;
+    }
+  });
+  return queryString.slice(0, queryString.length - 1);
+};
+
 // localstorage 方法
 export const storage = {
   set(key: string, value: unknown) {
@@ -226,6 +267,7 @@ export const getUrlParam = function (name: string) {
   return result ? decodeURIComponent(result[2]) : null;
 };
 
+//递归将对象中所有为null的值改为空字符
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const nTs = (ary: any) => {
   for (const i in ary) {
@@ -238,3 +280,17 @@ export const nTs = (ary: any) => {
     }
   }
 };
+
+//将单位为ms秒的时间戳转换为时分
+export const changeHS = (second: number | string) => {
+  if (typeof second === 'number'){
+    // 1H = 60 min = 3600s  1s=1000ms
+    let H: number | string = Math.floor(second / (3600 * 1000 ));
+    let M: number | string = Math.floor((second - 3600 * 1000 * H ) / (60 * 1000)) ;
+    H = H > 10 ? H : `0${H}`;
+    M = M > 10 ? M : `0${M}`;
+    return `${H}:${M}`;
+  }
+};
+
+

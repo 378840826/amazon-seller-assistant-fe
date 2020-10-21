@@ -16,68 +16,107 @@ export interface INavigation {
 
 const navigation: INavigation[] = [
   {
-    title: '数据大盘',
+    title: '大盘',
     menu: [
-      { title: '店铺总揽', path: '/mws/overview' },
-      { title: 'Business Report 导入', path: '/mws/report/import' },
-      { title: 'Business Report 解读', path: '/mws/report/unscramble' },
+      { title: '数据大盘', path: '/overview' },
+      { title: '店铺报告', path: '/overview/shop' },
+      { title: 'BI诊断', path: '/overview/bi' },
     ],
   },
   {
-    title: '商品管理',
+    title: '商品',
     menu: [
-      { title: '商品列表', path: '/mws/goods/list' },
-      { title: 'ASIN动态', path: '/mws/goods/change' },
-      { title: '错误报告', path: '/mws/goods/error-report', hide: true },
+      { title: '商品列表', path: '/product/list' },
+      // 隐藏的 asin总览， 需要高亮 '商品' 一级导航， 所以放这里
+      { title: '', path: '/asin/base', hide: true },
+      { title: '', path: '/asin/dynamic', hide: true },
+      { title: '', path: '/asin/order', hide: true },
+      { title: '', path: '/asin/b2b', hide: true },
+      { title: '', path: '/asin/ppc', hide: true },
+      { title: '', path: '/asin/territory', hide: true },
+      { title: '', path: '/asin/return', hide: true },
     ],
   },
   {
-    title: '订单中心',
+    title: '调价',
     menu: [
-      { title: '订单列表', path: '/mws/order/list' },
-      { title: '订单解读', path: '/mws/order/unscramble' },
+      { title: '调价规则', path: '/reprice/rules' },
+      { title: '调价记录', path: '/reprice/history' },
     ],
   },
   {
-    title: '智能调价',
+    title: '动态',
     menu: [
-      { title: '调价规则', path: '/mws/reprice/rules' },
-      { title: '调价记录', path: '/mws/reprice/history' },
+      { title: 'ASIN动态汇总', path: '/dynamic/asin-overview' },
+      { title: 'ASIN动态监控设定', path: '/dynamic/asin-monitor' },
     ],
   },
   {
-    title: '智能广告',
+    title: '订单',
     menu: [
-      { title: '广告总揽', path: '/ppc/overview' },
-      { title: '店铺报告', path: '/ppc/shop' },
-      { title: 'ASIN广告解读', path: '/ppc/asin' },
+      { title: '订单列表', path: '/order' },
+    ],
+  },
+  {
+    title: '报表',
+    menu: [
+      { title: 'ASIN报表', path: '/report/asin-overview' },
+      { title: 'Business Rport导入', path: '/report/import' },
+    ],
+  },
+  {
+    title: '补货',
+    menu: [
+      { title: '补货计划', path: '/replenishment' },
+    ],
+  },
+  {
+    title: '广告',
+    menu: [
       { title: '广告系列', path: '/ppc/campaign' },
       { title: '广告组', path: '/ppc/group' },
-      { title: '广告', path: '/ppc/item' },
-      { title: '关键词', path: '/ppc/keyword' },
+      { title: '广告', path: '/ppc/product' },
+      { title: 'Targeting', path: '/ppc/targeting' },
       { title: 'search term 报表', path: '/ppc/search-report' },
     ],
   },
   {
-    title: '关键词',
+    title: '评论',
     menu: [
-      { title: '跟踪设定', path: '/mws/keywords/monitor' },
-      { title: '搜索排名跟踪', path: '/mws/keywords/ranking' },
+      { title: '评论列表', path: '/review/list' },
+      { title: '评论监控设定', path: '/review/monitor' },
     ],
   },
   {
-    title: '评论监控',
+    title: '跟卖',
     menu: [
-      { title: '评论监控', path: '/mws/comment/monitor' },
-      { title: '评论监控设定', path: '/mws/comment/settings' },
+      { title: '跟卖监控', path: '/competitor/monitor' },
+      { title: '跟卖列表', path: '/competitor/list', hide: true },
+      { title: '跟卖历史', path: '/competitor/history', hide: true },
+    ],
+  },
+  {
+    title: '邮件',
+    menu: [
+      { title: '邮件助手', path: '/mail/summary' },
+      { title: '收件箱', path: '/mail/inbox', hide: true },
+      { title: '已回复', path: '/mail/reply', hide: true },
+      { title: '未回复', path: '/mail/no-reply', hide: true },
+      { title: '发件箱', path: '/mail/outbox', hide: true },
+      { title: '发送成功', path: '/mail/send-success', hide: true },
+      { title: '发送失败', path: '/mail/send-fail', hide: true },
+      { title: '正在发送', path: '/mail/sending', hide: true },
+      { title: '自动邮件规则', path: '/mail/rule', hide: true },
+      { title: '邮件模版', path: '/mail/template', hide: true },
+
     ],
   },
   {
     title: '店铺管理',
     visible: false,
     menu: [
-      { title: '已绑定店铺', path: '/mws/shop/list' },
-      { title: '绑定店铺', path: '/mws/shop/bind' },
+      { title: '已绑定店铺', path: '/shop/list' },
+      { title: '绑定店铺', path: '/shop/bind' },
     ],
   },
 ];

@@ -1,0 +1,112 @@
+div.list_item {
+  border-bottom: 1px solid @divider-line-color;
+  padding: 0 20px 15px;
+
+  &:hover {
+    background-color: #fafafa;
+  }
+
+  div.layout_one_row {
+    display: flex;
+    padding: 15px 0 0;
+
+    .asin {
+      width: 230px;
+      color: @heading-color;
+
+      span:first-child {
+        color: #0083ff;
+      }
+    }
+
+    .date span:last-child {
+      padding: 0 80px 0 0;
+      color: @heading-color;
+    }
+
+    button {
+      width: 80px;
+      height: 24px;
+      line-height: 24px;
+      padding: 0;
+      margin-left: auto;
+      font-size: @font-size-sm;
+      border-radius: 11px;
+    }
+
+    button[type=button] {
+      background-color: #f8f8f8;
+      color: @text-color-disabled;
+    }
+
+    // 已处理
+    button:global(.undisposed) {
+      background-color: #fff;
+      color: @success-color;
+      border-color: @success-color;
+      cursor: pointer;
+    }
+
+    button:global(.undisposed:hover) {
+      background-color: @success-color;
+      color: @text-color-inverse;
+    }
+  }
+
+  div.layout_two_row {
+    display: flex;
+    padding: 5px 0 0;
+
+    span.title {
+      min-width: 60px;
+      flex: 0 0 auto;
+      color: @text-color;
+    }
+
+    .reviewLink {
+      width: 100%;
+      word-break: break-all;
+      color: #0083ff;
+    }
+
+    // 评论内容
+    .contents {
+      width: 980px;
+
+      .icon {
+        font-size: 14px;
+        color: #888;
+        float: left;
+        margin: 5px 2px;
+      }
+    }
+
+    .date {
+      margin: 5px 0 0 auto;
+      min-width: 55px;
+      flex: 0 0 auto;
+      color: @text-color-secondary;
+    }
+
+    .link {
+      color: @text-color;
+      padding-left: 50px;
+
+      .icon {
+        color: @text-color-secondary;
+      }
+
+      &:hover {
+        color: @primary-color;
+
+        * {
+          color: @primary-color;
+        }
+      }
+    }
+  }
+}
+
+div.list_item:last-child {
+  border-width: 0;
+}

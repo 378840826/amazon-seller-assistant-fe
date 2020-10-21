@@ -6,32 +6,43 @@
 import React from 'react';
 import styles from './index.less';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { moneyFormat } from '@/utils/huang';
 
 interface IProps {
   value: number;
   symbol?: string; // 符号 默认%
+  decimals?: number; // 保留小数位
 }
 
 const Rate: React.FC<IProps> = (props) => {
   const {
     value = 0,
     symbol = '%',
+    decimals,
   } = props;
   return (
     <>
       {
         value >= 0 ? <span className={styles.up}>
-          { value }{symbol}
+          {
+            decimals ? (moneyFormat(value, decimals) + symbol) : (value + symbol)
+          }
           <ArrowUpOutlined 
             className={styles.up} 
-            style={{ marginLeft: 2 }}
+            style={{
+              marginLeft: 2,
+            }}
           />
         </span>
           : <span className={styles.down}>
-            { value }{symbol}
+            {
+              decimals ? (moneyFormat(value, decimals) + symbol) : (value + symbol)
+            }
             <ArrowDownOutlined 
               className={styles.down} 
-              style={{ marginLeft: 2 }}
+              style={{
+                marginLeft: 2,
+              }}
             />
           </span>
       }

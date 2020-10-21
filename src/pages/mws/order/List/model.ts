@@ -3,7 +3,6 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-05-29 10:39:05
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 10:11:05
  * @FilePath: \amzics-react\src\pages\mws\order\List\model.ts
  */ 
 
@@ -43,12 +42,12 @@ const OrderList: IOrderList = {
   },
 
   effects: {
-    *getOrderList({ payload }, { call }): Generator {
+    *getOrderList({ payload, resolve, reject }, { call }): Generator {
       try {
-        const response = yield call(getOrderLists, payload.data);
-        payload.resolve(response as {});
+        const response = yield call(getOrderLists, payload);
+        resolve(response as {});
       } catch (error) {
-        payload.reject(error);
+        reject(error);
       }
     },
 

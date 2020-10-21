@@ -5,6 +5,9 @@ import themeConfig from './config.theme';
 const config =  {
   theme: themeConfig,
   routes: routesConfig,
+  locale:{
+    default: 'zh-CN',
+  },
   antd: {},
   dva: {
     hmr: true,

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Menu, Spin, Badge } from 'antd';
 import { Iconfont } from '@/utils/utils';
-import { ClickParam } from 'antd/es/menu';
 import { history, connect } from 'umi';
 import { IConnectProps, IConnectState } from '@/models/connect';
 import HeaderDropdown from '../HeaderDropdown';
@@ -12,7 +11,7 @@ export interface IGlobalHeaderRightProps extends IConnectProps {
   unreadNotices: API.IUnreadNotices;
 }
 
-const { Item: MenuItem, Divider: MenuDivider } = Menu;
+const { Item: MenuItem } = Menu;
 
 const munuIcon = function(type: string): React.ReactElement {
   return (
@@ -21,8 +20,8 @@ const munuIcon = function(type: string): React.ReactElement {
 };
 
 class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
-  onMenuClick = (event: ClickParam) => {
-    const { key } = event;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onMenuClick = ({ key }: any) => {
     if (key === '/logout') {
       this.props.dispatch({
         type: 'user/logout',
@@ -53,38 +52,35 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
       <Menu className={styles.headerMenu} selectedKeys={[]} onClick={this.onMenuClick}>
         <MenuItem key="/center" className={styles.menuItem}>
           { munuIcon('icon-gerenzhongxin2') }
-          个人中心
+          <span className={styles.menuName}>个人中心</span>
         </MenuItem>
-        <MenuDivider />
-        <MenuItem key="/mws/shop/list" className={styles.menuItem}>
+        <MenuItem key="/shop/list" className={styles.menuItem}>
           { munuIcon('icon-dianpuguanli1') }
-          店铺管理
+          <span className={styles.menuName}>店铺管理</span>
         </MenuItem>
-        <MenuDivider />
         <MenuItem key="/ppc/shop" className={styles.menuItem}>
           { munuIcon('icon-fuwushouquan') }
-          广告授权
+          <span className={styles.menuName}>广告授权</span>
         </MenuItem>
-        <MenuDivider />
         <MenuItem key="/message" className={styles.menuItem}>
           { munuIcon('icon-xiaoxi') }
-          { unreadCount ? <Badge color="red" className={styles.badge} /> : null }
-          消息中心
+          <span className={styles.menuName}>
+            { unreadCount ? <Badge color="red" className={styles.badge} /> : null }
+            消息中心
+          </span>
         </MenuItem>
-        <MenuDivider />
         {currentUser.topAccount &&
             <MenuItem key="/sub-account" className={styles.menuItem}>
               { munuIcon('icon-guanlizhongxin') }
-              子账号管理
+              <span className={styles.menuName}>子账号管理</span>
             </MenuItem>
-        }
-        {currentUser.topAccount &&
-        <MenuDivider />
-        }
-        
+        }        
         <MenuItem key="/logout" className={styles.menuItem}>
           { munuIcon('icon-tuichu') }
-          注销 <span className={styles.username}>{currentUser.username}</span>
+          <span className={styles.menuName}>
+            注销
+            <span className={styles.username}>{currentUser.username}</span>
+          </span>
         </MenuItem>
       </Menu>
     );

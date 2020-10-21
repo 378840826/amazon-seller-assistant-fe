@@ -27,10 +27,6 @@ const { Step } = Steps;
 const { Group: CheckboxGroup } = Checkbox;
 const { Item: FormItem } = Form;
 const { Paragraph, Text } = Typography;
-const formItemLayout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 19 },
-};
 
 const ShopBind: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -101,44 +97,22 @@ const ShopBind: React.FC = () => {
           <div className={styles.stepContent}>
             <FormItem name="northAmerica" label="北美">
               <CheckboxGroup onChange={handleNorthAmericaChange} name="northAmerica">
-                <Row>
-                  <Col>
-                    <Checkbox value="US">US美国</Checkbox>
-                  </Col>
-                  <Col>
-                    <Checkbox value="CA">CA加拿大</Checkbox>
-                  </Col>
-                </Row>
+                <Checkbox value="US">US美国</Checkbox>
+                <Checkbox value="CA">CA加拿大</Checkbox>
               </CheckboxGroup>
             </FormItem>
             <FormItem name="europe" label="欧洲">
               <CheckboxGroup onChange={handleEuropeChange}>
-                <Row>
-                  <Col>
-                    <Checkbox value="UK">UK英国</Checkbox>
-                  </Col>
-                  <Col>
-                    <Checkbox value="DE">DE德国</Checkbox>
-                  </Col>
-                  <Col>
-                    <Checkbox value="FR">FR法国</Checkbox>
-                  </Col>
-                  <Col>
-                    <Checkbox value="ES">ES西班牙</Checkbox>
-                  </Col>
-                  <Col>
-                    <Checkbox value="IT">IT意大利</Checkbox>
-                  </Col>
-                </Row>
+                <Checkbox value="UK">UK英国</Checkbox>
+                <Checkbox value="DE">DE德国</Checkbox>
+                <Checkbox value="FR">FR法国</Checkbox>
+                <Checkbox value="ES">ES西班牙</Checkbox>
+                <Checkbox value="IT">IT意大利</Checkbox>
               </CheckboxGroup>
             </FormItem>
             <FormItem name="asiaPacific" label="亚太">
               <CheckboxGroup onChange={handleAsiaPacificChange} name="asiaPacific">
-                <Row>
-                  <Col>
-                    <Checkbox value="JP">JP日本</Checkbox>
-                  </Col>
-                </Row>
+                <Checkbox value="JP">JP日本</Checkbox>
               </CheckboxGroup>
             </FormItem>
           </div>
@@ -163,12 +137,12 @@ const ShopBind: React.FC = () => {
               注意：只有专业卖家 ( Pro Merchant )可以使用MWS的服务。
             </Paragraph>
             <Paragraph>
-              <span className={styles.siteName}>美&nbsp;&nbsp;&nbsp;&nbsp;国：</span>
+              <span className={styles.siteName}>美国</span>：
               <a href="https://sellercentral.amazon.com/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.com/gp/mws/registration/register.html
               </a>
               <br />
-              <span className={styles.siteName}>加拿大：</span>
+              <span className={styles.siteName}>加拿大</span>：
               <a href="https://sellercentral.amazon.ca/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.ca/gp/mws/registration/register.html
               </a>
@@ -193,27 +167,27 @@ const ShopBind: React.FC = () => {
               注意：只有专业卖家 ( Pro Merchant )可以使用MWS的服务。
             </Paragraph>
             <Paragraph>
-              <span className={styles.siteName}>德&nbsp;&nbsp;&nbsp;&nbsp;国：</span>
+              <span className={styles.siteName}>德国</span>：
               <a href="https://sellercentral.amazon.de/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.de/gp/mws/registration/register.html
               </a>
               <br />
-              <span className={styles.siteName}>法&nbsp;&nbsp;&nbsp;&nbsp;国：</span>
+              <span className={styles.siteName}>法国</span>：
               <a href="https://sellercentral.amazon.fr/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.fr/gp/mws/registration/register.html
               </a>
               <br />
-              <span className={styles.siteName}>英&nbsp;&nbsp;&nbsp;&nbsp;国：</span>
+              <span className={styles.siteName}>英国</span>：
               <a href="https://sellercentral.amazon.co.uk/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.co.uk/gp/mws/registration/register.html
               </a>
               <br />
-              <span className={styles.siteName}>西班牙：</span>
+              <span className={styles.siteName}>西班牙</span>：
               <a href="https://sellercentral.amazon.es/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.es/gp/mws/registration/register.html
               </a>
               <br />
-              <span className={styles.siteName}>意大利：</span>
+              <span className={styles.siteName}>意大利</span>：
               <a href="https://sellercentral.amazon.it/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.it/gp/mws/registration/register.html
               </a>
@@ -238,7 +212,7 @@ const ShopBind: React.FC = () => {
               注意：只有专业卖家 ( Pro Merchant )可以使用MWS的服务。
             </Paragraph>
             <Paragraph>
-              <span className={styles.siteName}>日&nbsp;&nbsp;&nbsp;&nbsp;本：</span>
+              <span className={styles.siteName}>日本</span>：
               <a href="https://sellercentral.amazon.co.jp/gp/mws/registration/register.html" target="_blank" rel="noopener noreferrer">
                 https://sellercentral.amazon.co.jp/gp/mws/registration/register.html
               </a>
@@ -261,8 +235,8 @@ const ShopBind: React.FC = () => {
               输入开发商名称和编号；点击 Next，接受许可协议，然后再点击Next。
             </Paragraph>
             <div>
+              <div className={styles.title}>北美：</div>
               <Row gutter={[40, 40]}>
-                <Col span="3">北美：</Col>
                 <Col span="10">
                   开发者名称：Amzics
                   <Button size="small" className={styles.copyBtn} onClick={() => copyText('Amzics')}>复制</Button>
@@ -288,8 +262,8 @@ const ShopBind: React.FC = () => {
               输入开发商名称和编号；点击 Next，接受许可协议，然后再点击Next。
             </Paragraph>
             <div>
+              <div className={styles.title}>欧洲：</div>
               <Row gutter={[40, 40]}>
-                <Col span="3">欧洲：</Col>
                 <Col span="10">
                   开发者名称：Amzics
                   <Button size="small" className={styles.copyBtn} onClick={() => copyText('Amzics')}>复制</Button>
@@ -315,8 +289,8 @@ const ShopBind: React.FC = () => {
               输入开发商名称和编号；点击 Next，接受许可协议，然后再点击Next。
             </Paragraph>
             <div>
+              <div className={styles.title}>日本：</div>
               <Row gutter={[40, 40]}>
-                <Col span="3">日本：</Col>
                 <Col span="10">
                   开发者名称：Amzics
                   <Button size="small" className={styles.copyBtn} onClick={() => copyText('Amzics')}>复制</Button>
@@ -362,6 +336,7 @@ const ShopBind: React.FC = () => {
                 name="storeName"
                 label="店铺名称"
                 rules={[{ required: true, message: '请输入店铺名称' }]}
+                labelCol={{ span: 5 }}
               >
                 <Input maxLength={20} />
               </FormItem>
@@ -369,6 +344,7 @@ const ShopBind: React.FC = () => {
                 name="sellerId"
                 label="Seller ID"
                 rules={[{ required: true, message: '请输入Seller ID' }]}
+                labelCol={{ span: 5 }}
               >
                 <Input />
               </FormItem>
@@ -376,6 +352,7 @@ const ShopBind: React.FC = () => {
                 name="token"
                 label="MWS Auth Token"
                 rules={[{ required: true, message: '请输入MWS Auth Token' }]}
+                labelCol={{ span: 5 }}
               >
                 <Input />
               </FormItem>
@@ -389,14 +366,13 @@ const ShopBind: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.breadcrumbs}>
-        <Link to="/mws/shop/list">店铺管理</Link>
+        <Link to="/shop/list">店铺管理</Link>
         <Iconfont type="icon-zhankai-copy" className={styles.icon} />
         <span>绑定店铺</span>
       </div>
       <div className={styles.stepContainer}>
         <Form
           form={form}
-          {...formItemLayout}
           onFinish={handleFinish}
           className={styles.Form}
           labelAlign="left"

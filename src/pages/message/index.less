@@ -1,9 +1,7 @@
 .message_box {
   margin: 50px -30px 0;
 
-  p,
-  ul,
-  li {
+  p {
     padding: 0;
     margin: 0;
   }
@@ -24,6 +22,7 @@
         line-height: 16px;
         font-size: 16px;
         top: -30px;
+        color: #333;
       }
     }
 
@@ -33,11 +32,12 @@
         font-size: @font-size-lg;
 
         li {
-          margin-right: 55px;
           display: inline-flex;
           transition: none;
           height: 57px;
           line-height: 57px;
+          margin: 0 55px 0 0;
+          padding: 0;
         }
 
         li:hover {
@@ -70,15 +70,16 @@
     }
 
     main.list {
-      padding: 0 21px;
       font-size: @font-size-base;
       width: 1300px;
       background-color: #fff;
+      max-height: calc(100vh - 225px);
+      overflow-y: auto;
     }
 
     > footer {
       width: 1300px;
-      padding: 20px;
+      padding: 0 20px;
       border-top: 1px solid @divider-line-color;
       background-color: #fff;
     }

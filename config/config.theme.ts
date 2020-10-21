@@ -18,7 +18,7 @@ export default {
   // 成功色
   '@success-color': '#0dc757',
   // 警告色
-  '@warning-color': '#ffaf4d',
+  '@warning-color': '#ff9800',
   // 错误色
   '@error-color': '#ff5958',
   // 失效色
@@ -30,11 +30,11 @@ export default {
 
   /* 文本颜色 */
   // 标题色
-  '@heading-color': '#333',
+  '@heading-color': '#222',
   // 文本色
-  '@text-color': '#666',
+  '@text-color': '#555',
   // 次文本色
-  '@text-color-secondary': '#999',
+  '@text-color-secondary': '#888',
   // 失效文本色
   '@text-color-disabled': '#ccc', 
   // 重要文本色 / 警告文本色
@@ -67,6 +67,7 @@ export default {
   // 小按钮
   '@btn-width-sm': '50px',
   '@btn-height-sm': '20px',
+  '@btn-font-size-sm':'12px',
   // 长按钮宽度
   '@btn-long-width': '106px',
   // 自定文字按钮颜色
@@ -93,4 +94,6 @@ export default {
   '@layout-header-inputBackgroundColor': '#f5f5f5',
   // xl 屏幕
   '@screen-xl': '1400px',
+  //table
+  '@table-font-size':'12px',
 }

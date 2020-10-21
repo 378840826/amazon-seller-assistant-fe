@@ -6,6 +6,8 @@
  * @FilePath: \amzics-react\src\utils\huang.ts
  */
 
+import { storage } from '@/utils/utils';
+import { Moment } from 'moment';
 /**
   storageKeys localStorage Key 放这里
   isEmptyObj 判断对象是否为空
@@ -91,64 +93,70 @@ export function outerHeight(selector: string): number|undefined {
 
 /**
  * @param query 按最近N天 week本周 lastWeek上周 month本月 lastMonth上月 year今年 lastYear去年
+ * @param isMoment true返回moment, false 返回 YYYY-MM-DD格式日期
  * @param date 可选 规定时间范围、用于获取某个月、如 getRange('week', new Date()),当前月，也可以指定其它
+  """夏令时"""：
+  日本，北京时间-1个小时
+  英国，北京时间-7个小时
+  加拿大、美国，北京时间-15个小时
+  德国、法国、意大利、西班牙，北京时间-6个小时
+  """冬令时"""：
+  日本，北京时间-1个小时
+  英国，北京时间-8个小时
+  加拿大、美国，北京时间-16个小时
+  德国、法国、意大利、西班牙，北京时间-7个小时
  */
-export function getRangeDate(
-  query: string|number,
-  date: Date|{} = {}
-): {start: string; end: string} {
+export function getRangeDate(query: string|number, isMoment = true, date = {}) {
   const moment = require('moment-timezone'); // eslint-disable-line
-  moment.tz.setDefault('Europe/Paris');
-  console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
-  
+  const { timezone } = storage.get('currentShop');
+  timezone ? moment.tz.setDefault(timezone) : null; // 当前没有
   date = isEmptyObj(date) ? moment() : date;
-
-  // 最近N天
-  if (!isNaN(Number(query))) {
-    return {
-      start: moment(date).subtract(query as number - 1, 'day').format('YYYY-MM-DD'),
-      end: moment(date).format('YYYY-MM-DD'),
-    };
-  }
+  // console.log('当前站点时间', moment(date).format('YYYY-MM-DD HH:mm:ss'));
+  let start = moment();
+  let end = moment();
 
   switch (query) {
   case 'week': // 本周
-    return {
-      start: moment(date).startOf('week').format('YYYY-MM-DD'),
-      end: moment(date).endOf('week').format('YYYY-MM-DD'),
-    };
+    start = moment(date).startOf('week');
+    end = moment(date).endOf('week');
+    break;
   case 'lastWeek': // 上周
-    return {
-      start: moment(date).subtract(1, 'week').startOf('week').format('YYYY-MM-DD'),
-      end: moment(date).subtract(1, 'week').endOf('week').format('YYYY-MM-DD'),
-    };
+    start = moment(date).subtract(1, 'week').startOf('week');
+    end = moment(date).subtract(1, 'week').endOf('week');
+    break;
   case 'month': // 本月
-    return {
-      start: moment(date).startOf('month').format('YYYY-MM-DD'),
-      end: moment(date).endOf('month').format('YYYY-MM-DD'),
-    };
+    start = moment(date).startOf('month');
+    end = moment(date).endOf('month');
+    break;
   case 'lastMonth': // 上月
-    return {
-      start: moment(date).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'),
-      end: moment(date).subtract(1, 'month').endOf('month').format('YYYY-MM-DD'),
-    };
+    start = moment(date).subtract(1, 'month').startOf('month');
+    end = moment(date).subtract(1, 'month').endOf('month');
+    break;
   case 'year': // 今年
-    return {
-      start: moment(date).startOf('year').format('YYYY-MM-DD'),
-      end: moment(date).endOf('year').format('YYYY-MM-DD'),
-    };
+    start = moment(date).startOf('year');
+    end = moment(date).endOf('year');
+    break;
   case 'lastYear': // 去年
-    return {
-      start: moment(date).subtract(1, 'year').startOf('year').format('YYYY-MM-DD'),
-      end: moment(date).subtract(1, 'year').endOf('year').format('YYYY-MM-DD'),
-    };
+    start = moment(date).subtract(1, 'year').startOf('year');
+    end = moment(date).subtract(1, 'year').endOf('year');
+    break;
   default: 
+    start = moment(date).subtract(query as number - 1, 'day');
+    end = moment(date);
+  }
+
+  if (isMoment) {
     return {
-      start: 'not data',
-      end: 'not data',
+      start,
+      end,
     };
   }
+  return {
+    start: moment(start).format('YYYY-MM-DD'),
+    end: moment(end).format('YYYY-MM-DD'),
+  };
 }
+
 
 /**
  * 金额格式

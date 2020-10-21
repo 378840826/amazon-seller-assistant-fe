@@ -11,7 +11,7 @@
   }
 
   .goodsInfoContent {
-    margin-left: 20px;
+    margin-left: 10px;
     text-align: left;
     width: 240px;
   }
@@ -54,11 +54,8 @@
     color: @warning-color;
   }
 
-  .reviewCount {
-    color: @link-color;
-  }
-
-  .options {
+  .options,
+  .asin {
     color: @btn-text-color;
 
     a {
@@ -109,6 +106,15 @@
       font-size: @font-size-sm;
     }
 
+    // 高亮已排序的表头
+    .ant-table-header .ant-table-cell.sortActiveTh {
+      background: #e5e8eb;
+    }
+
+    .ant-table-container {
+      border: 1px solid @divider-line-color;
+    }
+
     .ant-table-tbody td,
     .ant-table-thead th {
       border: none;
@@ -134,7 +140,8 @@
           border-color: transparent transparent @text-color-secondary @text-color-secondary;
           border-style: solid;
           border-width: 1px;
-          transform: rotate(135deg) translate(-5px, -6px);
+          transform: rotate(135deg) translate(-2px, -6px);
+          margin-right: 6px;
         }
       }
 
@@ -170,11 +177,6 @@
   * {
     font-size: @font-size-sm;
   }
-}
-
-.titleMenu li {
-  font-size: @font-size-sm;
-  color: @primary-color;
 }
 
 .tableAddGroup {
@@ -215,4 +217,53 @@
       }
     }
   }
+}
+
+// 表格中的分组和调价规则下拉框样式修改
+.tableSelect {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100%;
+
+  :global {
+    .ant-select-arrow {
+      position: relative;
+      margin: 0;
+    }
+
+    .ant-select-selection-item {
+      padding-right: 7px;
+    }
+
+    .ant-select-selector {
+      width: auto !important;
+      padding: 0 7px !important;
+
+      .ant-select-selection-item {
+        padding-right: 6px !important;
+      }
+    }
+  }
+}
+
+// 自定义排序
+.sortMenuBtn {
+  display: block;
+  cursor: pointer;
+}
+
+// 下拉菜单（自定义排序和下拉菜单）
+.titleMenu li {
+  font-size: @font-size-sm;
+
+  &.active {
+    background: #f0faff;
+    color: @heading-color;
+  }
+}
+
+.sku {
+  max-width: 140px;
+  margin-bottom: 2px;
 }

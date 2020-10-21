@@ -1,0 +1,117 @@
+.rule_form {
+  text-align: left;
+
+  :global {
+    .ant-form-item-label {
+      text-align: left !important;
+    }
+  }
+
+  .buttons {
+    :global {
+      .ant-form-item-control-input-content {
+        text-align: left !important;
+
+        button + button {
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+
+  .content_edit {
+    :global {
+      .ant-form-item {
+        margin-bottom: 0 !important;
+      }
+
+      .ant-col-16 {
+        flex: 1 !important;
+      }
+
+      .ant-col-8 {
+        width: 211px !important;
+        flex: none;
+      }
+    }
+
+    .item_subject {
+      :global {
+        .ant-col.ant-col-4.ant-form-item-label {
+          line-height: 39px;
+        }
+
+        .ant-form-item-control-input {
+          border-left: 1px solid #d9d9d9;
+          border-top: 1px solid #d9d9d9;
+          border-top-left-radius: 4px;
+        }
+      }
+    }
+
+    .item_content {
+      :global {
+        .ant-form-item-no-colon {
+          margin-top: 12px;
+        }
+
+        .ant-form-item-control-input {
+          border-left: 1px solid #d9d9d9;
+          border-top: 1px solid #e1e1e1;
+          border-bottom: 1px solid #d9d9d9;
+          border-bottom-left-radius: 4px;
+        }
+      }
+
+      .braftEditor_content {
+        height: 435px;
+        font-size: 14px;
+
+        :global {
+          .public-DraftEditorPlaceholder-inner {
+            font-size: 14px;
+            color: @text-color-disabled;
+          }
+        }
+      }
+    }
+
+    .click_area {
+      background-color: @simple-table-header-bg;
+      padding-left: 18px;
+      border: 1px solid #d9d9d9;
+      border-left: none;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+
+      .title {
+        color: @heading-color;
+        padding-top: 10px;
+        margin-top: 70px;
+        padding-bottom: 14px;
+        text-align: left;
+      }
+
+      .btn_div {
+        text-align: left;
+        height: 30px;
+        line-height: 30px;
+
+        span {
+          color: @link-color;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .tips {
+    text-align: right;
+    color: #999;
+    font-size: 12px;
+
+    .orange {
+      color: #ffaf4d;
+    }
+  }
+}

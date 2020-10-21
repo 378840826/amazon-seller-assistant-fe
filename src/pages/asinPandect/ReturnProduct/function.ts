@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-07-09 11:05:55
  * @LastEditors: Huang Chao Yi
- * @FilePath: \amzics-react\src\pages\asinPandect\returnProduct\function.ts
+ * @FilePath: \amzics-react\src\pages\asinPandect\ReturnProduct\function.ts
  */
 import { moneyFormat } from '@/utils/huang';
 import moment from 'moment';
@@ -20,6 +20,8 @@ export function handleTooltip(datas: ReturnProduct.ITooltip[]) {
     if (datas[0] && datas[1]) {
       const { seriesName: s1, data: d1, color: c1 } = datas[0] || {};
       const { seriesName: s2, data: d2, color: c2 } = datas[1] || {};
+      console.log(moneyFormat(d2, 2));
+
       return `<div class="echarts-line-tooltip">
         <p class="title">${date}</p>
         <p class="detail">
@@ -30,7 +32,7 @@ export function handleTooltip(datas: ReturnProduct.ITooltip[]) {
         <p class="detail">
           <span class="icon" style="background-color:${c2}"></span>
           ${s2}：
-          <span class="money">${moneyFormat(d2)}%</span>
+          <span class="money">${moneyFormat(d2, 2)}%</span>
         </p>
       </div>`;
     } else if (datas[0]) {
@@ -50,7 +52,7 @@ export function handleTooltip(datas: ReturnProduct.ITooltip[]) {
         <p class="detail">
           <span class="icon" style="background-color:${c2}"></span>
           ${s2}：
-          <span class="money">${moneyFormat(d2)}%</span>
+          <span class="money">${moneyFormat(d2, 2)}%</span>
         </p>
       </div>`;
     }

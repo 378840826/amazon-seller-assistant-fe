@@ -53,7 +53,7 @@ const ReturnProduct: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); // loading
   const asin = useSelector((state: ReturnProduct.IAsinGlobal) => state.asinGlobal.asin );
   const { startDate, endDate } = storage.get(`asinBrDateRange_date`);
-  const { start, end } = getRangeDate(7);
+  const { start, end } = getRangeDate(7, false);
 
 
   // 初始化请求数据
@@ -177,7 +177,7 @@ const ReturnProduct: React.FC = () => {
             },
           },
           axisLabel: {
-            color: '#999', // 字体颜色
+            color: '#888', // 字体颜色
             formatter(value: string) {
               return moment(value).format('MM-DD');
             },
@@ -190,7 +190,7 @@ const ReturnProduct: React.FC = () => {
         yAxis: [{
           type: 'value',
           offset: 10,
-          splitNumber: 5,
+          splitNumber: 6,
           axisLine: {
             show: false,
             lineStyle: {
@@ -208,20 +208,23 @@ const ReturnProduct: React.FC = () => {
             },
           },
           axisLabel: {
-            color: '#999',
+            color: '#888',
             showMinLabel: true, // 是否显示最小值 0
           },
         }, {
           type: 'value',
           position: 'right',
           offset: 10,
-          splitNumber: 5,
+          splitNumber: 6,
           axisTick: {
             show: false,
           },
           axisLabel: {
-            color: '#999',
+            color: '#888',
             showMinLabel: true, // 是否显示最小值 0
+            formatter(value: string) {
+              return `${value}%`;
+            },
           },
           axisLine: {
             show: false,
@@ -368,13 +371,13 @@ const ReturnProduct: React.FC = () => {
                 color: '#3494BD',
                 rich: {
                   name: {
-                    color: '#666',
+                    color: '#555',
                     fontSize: 12,
                     // width: 60,
                   },
                   c: {
                     fontWeight: 550,
-                    color: '#333',
+                    color: '#222',
                     fontSize: 12,
                   },
                 },
@@ -411,7 +414,7 @@ const ReturnProduct: React.FC = () => {
             {value}
             <span style={
               {
-                color: '#999',
+                color: '#888',
               }
             }>（{proportion}）</span>
           </>
@@ -510,7 +513,7 @@ const ReturnProduct: React.FC = () => {
                 </p>
                 <p className={styles.ratio}>
                   <span className={styles.text}>环比：</span>
-                  <Rate value={ parseFloat(returnInfo.returnQuantityRatio) } />
+                  <Rate value={ parseFloat(returnInfo.returnQuantityRatio) } decimals={2}/>
                 </p>
               </div>
             </div>
@@ -530,7 +533,7 @@ const ReturnProduct: React.FC = () => {
                 </p>
                 <p className={styles.ratio}>
                   <span className={styles.text}>环比：</span>
-                  <Rate value={ parseFloat(returnInfo.returnRateRatio) }/>
+                  <Rate value={ parseFloat(returnInfo.returnRateRatio) } decimals={2} />
                 </p>
               </div>
             </div>
