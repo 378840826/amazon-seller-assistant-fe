@@ -215,7 +215,7 @@ const AsinBase: React.FC = (props) => {
   if (isAsin) {
     return (
       <div>
-        {/* <BasicLoyout></BasicLoyout> */}
+        <BasicLoyout></BasicLoyout>
         <nav className={styles.head }>
           <span className={styles.classify}>ASIN总览</span>
           <Iconfont type="icon-zhankai-copy" className={styles.arrow}></Iconfont>
@@ -274,11 +274,7 @@ const AsinBase: React.FC = (props) => {
               value={searchValue}
               // loading={searchBtnLoading}
               onChange={(value) => setSearchValue(value)} 
-              onSearch={onSearch} style={
-                {
-                  marginRight: 20,
-                }
-              }
+              onSearch={onSearch}
               onPressEnter={onPressEnter}
             />
           </div>
@@ -321,11 +317,7 @@ const AsinBase: React.FC = (props) => {
           placeholder="搜索其他ASIN/SKU"
           value={searchValue}
           onChange={(value) => setSearchValue(value)} 
-          onSearch={onSearch} style={
-            {
-              marginRight: 20,
-            }
-          }
+          onSearch={onSearch}
           onPressEnter={onPressEnter}
         />
       </div>
