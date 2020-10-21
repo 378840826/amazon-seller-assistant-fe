@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-13 15:03:11
  * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-09-15 09:47:40
+ * @LastEditTime: 2020-10-20 17:39:18
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\CommectMonitor.d.ts
  */ 
 
@@ -73,6 +73,7 @@ declare namespace CommectMonitor {
     reviewerName: string;
     reviewsNumMin: string;
     reviewsNumMax: string;
+    replyStatus: string;
   }
 
   interface IOrderType {

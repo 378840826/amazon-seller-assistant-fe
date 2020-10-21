@@ -15,6 +15,7 @@ import {
 import placeholderImg from '@/assets/stamp.png';
 import TableNotData from '@/components/TableNotData';
 import Snav from '@/components/Snav';
+import { competitorHistoryRouter, competitorMonitorRouter } from '@/utils/routes';
 
 interface ILocation extends Location {
   query: {
@@ -87,13 +88,13 @@ const List: React.FC<IProps> = () => {
 
   const navList: Snav.INavList[] = [
     {
-      label: '监控列表',
-      path: '/follow/monitor',
+      label: '跟卖监控',
+      path: competitorMonitorRouter,
       type: 'Link',
     },
     {
       label: '跟卖历史',
-      path: `/follow/history`,
+      path: competitorHistoryRouter,
       type: 'Link',
       search: `?id=${historyId}`,
       state: {
@@ -220,7 +221,7 @@ const List: React.FC<IProps> = () => {
   return (
     <div className={styles.vessel}>
       <Snav navList={navList} style={{
-        paddingBottom: 15,
+        padding: '15px 0',
       }} />
       <div className={styles.box}>
         <div className={styles.layoutLeft}>

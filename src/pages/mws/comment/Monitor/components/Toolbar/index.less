@@ -1,8 +1,11 @@
 header.monitor_toolbar {
   background-color: #fff;
   padding: 0 20px 20px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-auto-columns: repeat(auto-fill, 343px);
+  grid-template-columns: repeat;
+  grid-template-columns: repeat(auto-fill, 343px);
+  column-gap: min(115px);
 
   > div {
     width: 343px;
@@ -32,38 +35,58 @@ header.monitor_toolbar {
   }
 
   // 工具栏有大小屏
-  @media screen and (max-width: 1847px) {
-    .layout_five_div {
-      margin: 0 0 0 100px;
-    }
+  @media screen and (max-width: 1800px) {
+    padding: 20px 20px;
+    background-color: coral;
+    column-gap: 80px;
+    // .layout_five_div {
+    //   margin: 0 0 0 100px;
+    // }
 
-    .layout_six_div {
-      margin: 0 0 0 119px;
-    }
+    // .layout_six_div {
+    //   margin: 0 0 0 119px;
+    // }
+
+    // .btns {
+    //   margin: 0 0 0 559px;
+    // }
 
     .btns {
-      margin: 0 0 0 559px;
+      margin-top: -50px;
+    }
+
+    .empty {
+      width: 0;
     }
   }
 
-  @media screen and (min-width: 1848px) {
+  @media screen and (min-width: 1799px) {
     padding: 20px 70px;
-
-    .layout_six_div {
-      margin: 0 0 0 103px;
-    }
-
-    .layout_four_div {
-      margin: 0 0 0 116px;
-    }
-
-    .layout_seven_div {
-      margin: 0 0 0 113px;
-    }
+    background-color: pink;
 
     .btns {
-      margin: 0 0 0 114px;
+      margin-top: 0;
     }
+
+    .empty {
+      width: 343px;
+    }
+
+    // .layout_six_div {
+    //   margin: 0 0 0 103px;
+    // }
+
+    // .layout_four_div {
+    //   margin: 0 0 0 116px;
+    // }
+
+    // .layout_seven_div {
+    //   margin: 0 0 0 113px;
+    // }
+
+    // .btns {
+    //   margin: 0 0 0 114px;
+    // }
   }
 
   // 第一个div
@@ -84,31 +107,38 @@ header.monitor_toolbar {
   .layout_two_div {
     display: flex;
     line-height: 30px;
-    margin: 0 115px 0 100px;
+    // margin: 0 115px 0 100px;
 
     input {
       width: 280px;
     }
   }
 
-  // 第三个div
+  // 回复
   .layout_three_div {
+    .other {
+      padding-left: 40px;
+    }
+  }
+
+  // 第四个div
+  .layout_four_div {
     input {
       width: 128px;
       text-align: center;
     }
   }
 
-  // 第四个div
-  .layout_four_div {
+  // 第五个div
+  .layout_five_div {
     :global(.ant-picker) {
       width: 280px;
       height: 30px;
     }
   }
 
-  // 第五个
-  .layout_five_div {
+  // 第六个
+  .layout_six_div {
     display: flex;
 
     > div {
@@ -126,8 +156,8 @@ header.monitor_toolbar {
     }
   }
 
-  // 第六个
-  .layout_six_div {
+  // 第七个
+  .layout_seven_div {
     display: flex;
 
     span.text {
@@ -143,8 +173,8 @@ header.monitor_toolbar {
     }
   }
 
-  // 第七个
-  .layout_seven_div {
+  // 第八个
+  .layout_eight_div {
     .text {
       line-height: 24px;
     }

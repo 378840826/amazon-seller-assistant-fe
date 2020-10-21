@@ -26,6 +26,7 @@ import './global.less';
 import placeholderImg from '@/assets/stamp.png';
 import { isObject } from '@/utils/huang';
 import { getAmazonAsinUrl } from '@/utils/utils';
+import { competitorHistoryRouter } from '@/utils/routes';
 
 
 const Monitor: React.FC = () => {
@@ -178,7 +179,7 @@ const Monitor: React.FC = () => {
       align: 'center',
       render(id: string) {
         return <Link className={styles.history} to={{
-          pathname: '/follow/history',
+          pathname: competitorHistoryRouter,
           search: `id=${id}`,
         }}>历史</Link>;
       },
