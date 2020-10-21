@@ -63,6 +63,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
   const { start, end } = getRangeDate(30);
   const [datepickerValue, setDatepickerValue] = useState<Moment[]>([start, end]);
+  const [reply, setReply] = useState<string>('all'); // 回复
 
   // 收集请求所需数据
   const gather = (param = {}, type = false) => {
@@ -76,6 +77,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     fields.reviewerName = reviewerName; // 笔名
     fields.reviewsNumMin = reviewsNumMin; // review起始值
     fields.reviewsNumMax = reviewsNumMax; // review结束值
+    fields.replyStatus = reply; // review结束值
 
     Object.assign(fields, param);
 
@@ -205,6 +207,11 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     setReviewsNumMax(value);
   };
 
+  // 回复的改变
+  const changReply = (e: RadioChangeEvent) => {
+    setReply(e.target.value);
+  };
+
   const { start: start7, end: end7 } = getRangeDate(7);
   const { start: start30, end: end30 } = getRangeDate(30);
   const { start: start60, end: end60 } = getRangeDate(60);
@@ -238,13 +245,42 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   };
 
   return (
-    <header className={`clearfix ${styles.monitor_toolbar} monitor-list-toolbar`}>
+    <header className={` ${styles.monitor_toolbar} monitor-list-toolbar`}>
       <div className={styles.layout_one_div}>
         <span className={styles.text}>星级：</span>
         <Checkbox.Group 
           options={options} 
           value={radioStar}
           onChange={changeStar} />
+      </div>
+
+      <div className={styles.layout_three_div}>
+        <span className={styles.text}>回复：</span>
+        <Radio.Group onChange={changReply} value={reply}>
+          <Radio value="all">全部</Radio>
+          <Radio value="yes" className={styles.other}>有</Radio>
+          <Radio value="no" className={styles.other}>无</Radio>
+        </Radio.Group>
+      </div>
+
+      <div className={styles.layout_seven_div}>
+        <span className={styles.text}>用户笔名：</span>
+        <Input
+          value={reviewerName}
+          onChange={changeReviewerName}
+          onPressEnter={InputDownEnter}
+        />
+      </div>
+
+      <div className={styles.layout_five_div}>
+        <span className={styles.text}>日期：</span>
+        <ConfigProvider locale={zhCN}>
+          <DatePicker.RangePicker 
+            {...RangePicker} 
+            dropdownClassName="h-range-picker" 
+            className="h-range-picker"
+          />
+        </ConfigProvider>
       </div>
 
       <div className={styles.layout_two_div}>
@@ -257,7 +293,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
         />
       </div>
 
-      <div className={styles.layout_three_div}>
+      <div className={styles.layout_four_div}>
         <span className={styles.text}>评分：</span>
         <Input
           placeholder="min"
@@ -274,36 +310,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
         />
       </div>
 
-      <div className={styles.layout_four_div}>
-        <span className={styles.text}>日期：</span>
-        <ConfigProvider locale={zhCN}>
-          <DatePicker.RangePicker 
-            {...RangePicker} 
-            dropdownClassName="h-range-picker" 
-            className="h-range-picker"
-          />
-        </ConfigProvider>
-      </div>
-
-      <div className={styles.layout_five_div}>
-        <span className={styles.text}>状态：</span>
-        <Radio.Group onChange={handleStatus} value={radioStatus}>
-          {statusList.map((item, index) => {
-            return <Radio value={item.value} key={index}>{item.text}</Radio>;
-          })}
-        </Radio.Group>
-      </div>
-      
-      <div className={styles.layout_six_div}>
-        <span className={styles.text}>用户笔名：</span>
-        <Input
-          value={reviewerName}
-          onChange={changeReviewerName}
-          onPressEnter={InputDownEnter}
-        />
-      </div>
-
-      <div className={styles.layout_seven_div}>
+      <div className={styles.layout_eight_div}>
         <span className={styles.text}>Review：</span>
         <Input
           value={reviewsNumMin}
@@ -317,7 +324,21 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
           onPressEnter={InputDownEnter}
         />
       </div>
-        
+
+      <div className={styles.layout_six_div}>
+        <span className={styles.text}>状态：</span>
+        <Radio.Group onChange={handleStatus} value={radioStatus}>
+          {statusList.map((item, index) => {
+            return <Radio value={item.value} key={index}>{item.text}</Radio>;
+          })}
+        </Radio.Group>
+      </div>
+    
+      {/* 占位 */}
+      <div className={styles.empty}></div>
+      <div className={styles.empty}></div>
+      <div className={styles.empty}></div>
+      
       <div className={styles.btns}>
         <Button type="primary" onClick={clickSearchBtn}>查询</Button>
         <Button onClick={clickDownload}>下载</Button>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import styles from './common.less';
+import { competitorListRouter } from '@/utils/routes';
 
 interface IProps {
   data: Message.IFollowDataType;
@@ -81,7 +82,7 @@ const Outer: React.FC<IProps> = (props) => {
         }
         <p className={styles.dates}>
           <Link to={{
-            pathname: '/follow/list',
+            pathname: competitorListRouter,
             search: `?id=${data.followMonitorHistoryId}`,
           }} className={styles.details}>
             详情
