@@ -17,6 +17,9 @@ import {
 } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import moment from 'moment';
+import {
+  reviewListRouter,
+} from '@/utils/routes';
 
 
 const Settings: React.FC = () => {
@@ -364,7 +367,7 @@ const Settings: React.FC = () => {
         const { asin = '' } = row.productInfo;
         return <div>
           <Link to={{
-            pathname: '/review/monitor',
+            pathname: reviewListRouter,
             search: `asin=${asin}`,
           }} target="_blank" className={styles.look}>查看</Link>
         </div>;
