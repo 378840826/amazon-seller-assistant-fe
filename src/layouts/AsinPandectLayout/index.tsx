@@ -171,7 +171,7 @@ const AsinBase: React.FC = (props) => {
         }
       }
 
-      verifyAsin();
+      verifyAsin(true);
 
       // 登录接口(暂时)
       // dispatch({
@@ -274,11 +274,7 @@ const AsinBase: React.FC = (props) => {
               value={searchValue}
               // loading={searchBtnLoading}
               onChange={(value) => setSearchValue(value)} 
-              onSearch={onSearch} style={
-                {
-                  marginRight: 20,
-                }
-              }
+              onSearch={onSearch}
               onPressEnter={onPressEnter}
             />
           </div>
@@ -321,11 +317,7 @@ const AsinBase: React.FC = (props) => {
           placeholder="搜索其他ASIN/SKU"
           value={searchValue}
           onChange={(value) => setSearchValue(value)} 
-          onSearch={onSearch} style={
-            {
-              marginRight: 20,
-            }
-          }
+          onSearch={onSearch}
           onPressEnter={onPressEnter}
         />
       </div>

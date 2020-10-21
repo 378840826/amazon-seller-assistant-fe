@@ -138,3 +138,32 @@ export async function getB2BlineChartData(data: {}) {
 }
 
 // ------------>>>>>>>>>>>>> B2B销售 end //
+
+
+// ------------>>>>>>>>>>>>> 基本信息 start //
+// 初始化数据
+export async function getBaseInitData(data: { asin: string}) {
+  return request('/api/mws/product/asin-info', {
+    params: {
+      asin: data.asin,
+    },
+    data,
+  });
+}
+
+export async function tabSkuData(data: { sku: string}) {
+  return request('/api/mws/product/sku-exp', {
+    params: {
+      sku: data.sku,
+    },
+    data,
+  });
+}
+
+// 修改价格估算
+export async function updatePriceEstimated(data: { asin: string}) {
+  return request.post('/api/mws/product/update/sku-exp', {
+    data,
+  });
+}
+// ------------>>>>>>>>>>>>> 基本信息 end //
