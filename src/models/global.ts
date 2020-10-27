@@ -213,6 +213,7 @@ const GlobalModel: IGlobalModelType = {
         const { pathname } = window.location;
         // 不需要绑定店铺的
         const exclude = [
+          '/overview',
           '/users',
           '/center',
           '/message',

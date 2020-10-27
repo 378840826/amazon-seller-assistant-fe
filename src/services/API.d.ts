@@ -24,10 +24,12 @@ declare namespace API {
     topAccount: boolean;
   }
 
+  export type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
+
   interface IShop {
     id: string;
     storeName: string;
-    marketplace: string;
+    marketplace: Site;
     sellerId: string;
     token: string;
     autoPrice: boolean;
@@ -184,6 +186,106 @@ declare namespace API {
     shoppingList: string;
     // 用于设置
     labelIds?: string[];
+  }
+
+  // BI 诊断(看板)
+  interface IFisKanban {
+    asin: string;
+    sku: string;
+    img: string;
+    availableDays: number;
+  }
+
+  interface IAjKanban {
+    ruleName: string;
+    ajFrequency: number;
+  }
+
+  interface IFollowKanban {
+    monitoringCount: number;
+    followAsinCount: number;
+    followAsinNotJoninBuyboxAj: number;
+    buyboxLostAsinCount: number;
+    buyboxLostAsinNotJoninBuyboxAj: number;
+  }
+
+  interface IBuyboxPercentage {
+    asin: string;
+    sku: string;
+    img: string;
+    isJoinFollowMonitoring: boolean;
+    buyboxPercentage: number;
+  }
+
+  interface IBuyboxPercentageKanban {
+    buyboxPercentage: IBuyboxPercentage[];
+    lastTime: string;
+  }
+
+  interface IMailKanban {
+    unMailNumber: number;
+    urgentMailTimeLeftHours: number;
+    urgentMailTimeLeftMinute: number;
+  }
+
+  interface IReviewKanban {
+    oneStar: number;
+    oneStarUnanswered: number;
+    twoStar: number;
+    twoStarUnanswered: number;
+    threeStar: number;
+    threeStarUnanswered: number;
+    fourStar: number;
+    fourStarUnanswered: number;
+    fiveStar: number;
+    fiveStarUnanswered: number;
+  }
+
+  interface IFeedbackKanban {
+    oneStar: number;
+    twoStar: number;
+    threeStar: number;
+  }
+
+  interface IKanbanAsinInfos {
+    asin: string;
+    sku: string;
+    img: string;
+    addKeyword: string;
+    titleNotIncluded: string[];
+    bpNotIncluded: string[];
+    descriptionNotIncluded: string[];
+  }
+  interface IAcKeywordKanban {
+    asinInfos: IKanbanAsinInfos[];
+    lastTime: string;
+  }
+
+  interface IAdKeywordKanban {
+    adCampaignsName: string;
+    adGroupName: string;
+    acos: number;
+    keyword: string;
+  }
+
+  interface IAdIneligibleKanban {
+    asin: string;
+    sku: string;
+    img: string;
+    Ineligible: string;
+  }
+
+  interface IBiBoard {
+    fisKanban: IFisKanban[];
+    ajKanban: IAjKanban[];
+    followKanban: IFollowKanban;
+    buyboxPercentageKanban: IBuyboxPercentageKanban;
+    mailKanban: IMailKanban;
+    reviewKanban: IReviewKanban;
+    feedbackKanban: IFeedbackKanban;
+    acKeywordKanban: IAcKeywordKanban;
+    adKeywordKanban: IAdKeywordKanban[];
+    adIneligibleKanban: IAdIneligibleKanban[];
   }
 
   interface ILabel {

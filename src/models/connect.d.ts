@@ -1,6 +1,7 @@
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { IGoodsListModelState } from './goodsList';
 import { IReplenishmentModelState } from './replenishment';
+import { IBiBoardModelState } from './biBoard';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { IUserModelState } from './user';
@@ -39,6 +40,7 @@ export interface IConnectState {
   global: IGlobalModelState;
   goodsList: IGoodsListModelState;
   replenishment: IReplenishmentModelState;
+  biBoard: IBiBoardModelState;
   loading: ILoading;
   settings: SettingModelState;
   user: IUserModelState;

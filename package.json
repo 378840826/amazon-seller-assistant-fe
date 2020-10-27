@@ -21,6 +21,8 @@
     "echarts": "^4.8.0",
     "moment-timezone": "^0.5.31",
     "react": "^16.8.6",
+    "react-dnd": "^9.5.1",
+    "react-dnd-html5-backend": "^9.5.1",
     "react-dom": "^16.8.6",
     "react-draggable": "^4.4.3",
     "react-lazy-load": "^3.1.13",
@@ -29,8 +31,8 @@
     "umi-request": "^1.2.19"
   },
   "devDependencies": {
-    "@types/echarts": "^4.6.4",
     "@types/classnames": "^2.2.10",
+    "@types/echarts": "^4.6.4",
     "@types/express": "^4.17.6",
     "@types/jest": "^23.3.12",
     "@types/react": "^16.7.18",
