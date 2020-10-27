@@ -57,7 +57,7 @@ export default [
     routes: [
       { title: '数据大盘', path: '/overview', component: './mws/GoodsList' },
       { title: '店铺报告', path: '/overview/shop', component: './mws/GoodsList' },
-      { title: 'BI诊断', path: '/overview/bi', component: './mws/GoodsList' },
+      { title: 'BI诊断', path: '/overview/bi', component: './BiBoard' },
     ],
   },
 

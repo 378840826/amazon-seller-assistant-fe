@@ -4,15 +4,13 @@ import 'moment/locale/zh-cn';
 import { message } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 
-type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
-
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
   scriptUrl: '//at.alicdn.com/t/font_1799129_kskuwbez1kg.js',
 });
 
 // 获取亚马逊站点基本链接
-export const getAmazonBaseUrl = function (state: Site): string {
+export const getAmazonBaseUrl = function (state: API.Site): string {
   const urlDict = {
     US: 'https://www.amazon.com',
     CA: 'https://www.amazon.ca',
@@ -26,15 +24,34 @@ export const getAmazonBaseUrl = function (state: Site): string {
 };
 
 // 获取亚马逊 asin 链接
-export const getAmazonAsinUrl = function (asin: string, state: Site): string {
+export const getAmazonAsinUrl = function (asin: string, state: API.Site): string {
   const baseUrl = getAmazonBaseUrl(state);
   return `${baseUrl}/dp/${asin}`;
 };
 
-// 获取亚马逊 asin 链接
-export const getAmazonKeywordUrl = function (keyword: string, state: Site): string {
+// 获取亚马逊 keyword 链接
+export const getAmazonKeywordUrl = function (keyword: string, state: API.Site): string {
   const baseUrl = getAmazonBaseUrl(state);
   return `${baseUrl}/s?k=${keyword}`;
+};
+
+// 亚马逊 marketplaceID
+export const marketplaceIdDict = {
+  US: 'ATVPDKIKX0DER',
+  CA: 'A2EUQ1WTGCTBG2',
+  UK: 'A1F83G8C2ARO7P',
+  ES: 'A1RKKUPIHCS9HS',
+  IT: 'APJ6JRA9NG5V4',
+  FR: 'A13V1IB3VIYZZH',
+  DE: 'A1PA6795UKMFR9',
+  JP: 'A1VC38T7YXB528',
+};
+
+// 获取亚马逊店铺首页链接
+export const getAmazonShopPageUrl = function (state: API.Site, sellerId: string): string {
+  const baseUrl = getAmazonBaseUrl(state);
+  const marketplaceId = marketplaceIdDict[state];
+  return `${baseUrl}/sp?_encoding=UTF8&marketplaceID=${marketplaceId}&seller=${sellerId}`;
 };
 
 // 请求反馈提示（正常异常都提示）
