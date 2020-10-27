@@ -1,0 +1,88 @@
+.card {
+  width: 450px;
+  box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+
+  :global {
+    .ant-card-head {
+      background-color: @simple-table-header-bg;
+      border: none;
+    }
+  }
+}
+
+.close {
+  color: #999;
+
+  &:hover {
+    color: @error-color;
+  }
+}
+
+.titleContainer {
+  cursor: move;
+}
+
+.title {
+  color: @heading-color;
+  font-weight: bold;
+}
+
+.titleExplain {
+  color: @text-color-secondary;
+  font-size: @font-size-sm;
+}
+
+.content {
+  height: 200px;
+  overflow-y: auto;
+  padding-right: 6px;
+
+  // 淡化滚动条
+  // 整体样式
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  // 小方块
+  &::-webkit-scrollbar-thumb {
+    width: 10px;
+    height: 30px;
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+
+  // 轨道
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: @font-size-sm;
+  margin-top: 12px;
+}
+
+.annotation {
+  color: @warning-color;
+}
+
+.linkIcon {
+  color: @link-color;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.activeCard {
+  box-shadow: 0 0 0 1px rgba(0, 131, 255, 1);
+
+  & > * {
+    opacity: 0.4;
+  }
+}
+
+.notData {
+  background: #fafafa;
+}

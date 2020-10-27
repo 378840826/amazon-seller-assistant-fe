@@ -1,0 +1,155 @@
+.page {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.customBtn {
+  position: absolute;
+  width: 80px;
+  top: -38px;
+  right: 25px;
+}
+
+.goodsContainer {
+  display: inline-flex;
+  align-items: center;
+}
+
+.goodsInfo {
+  margin-left: 8px;
+  max-width: 300px;
+  line-height: 16px;
+  word-break: break-all;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+}
+
+.smallFont {
+  font-size: @font-size-sm;
+}
+
+.fisKanbanItem,
+.ajKanbanItem {
+  composes: cell;
+  justify-content: space-between;
+}
+
+.fisContent,
+.ajContent,
+.reviewContent,
+.buyboxPercentageContent,
+.adKeywordContent,
+.adIneligibleContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+}
+
+.followKanbanItem {
+  composes: cell;
+  margin: 14px 0;
+
+  .left {
+    width: 180px;
+  }
+}
+
+.mailKanbanItem {
+  composes: cell;
+  margin: 14px 0;
+
+  .left {
+    width: 100px;
+  }
+}
+
+.acKeywordKanbanItem {
+  margin-bottom: 14px;
+}
+
+.buyboxPercentageKanbanItem {
+  composes: cell;
+
+  .goodsContainer {
+    width: 260px;
+  }
+}
+
+.feedbackItem,
+.reviewItem {
+  composes: cell;
+
+  :global {
+    .ant-rate {
+      color: #ffaf4d;
+    }
+  }
+
+  .left {
+    width: 130px;
+  }
+}
+
+.star {
+  font-size: 14px;
+
+  :global(.ant-rate-star:not(:last-child)) {
+    margin-right: 5px;
+  }
+}
+
+.red {
+  color: @error-color;
+}
+
+.acKeywordInfo {
+  font-size: @font-size-sm;
+  margin-left: 39px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.adKeywordKanbanItem {
+  line-height: 18px;
+}
+
+.adIneligibleKanbanItem {
+  .goodsInfo,
+  .goodsContainer {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.notData {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: @font-size-lg;
+
+  & > div {
+    text-align: center;
+  }
+}
+
+.linkIcon {
+  color: @link-color;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.DragLayer {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  left: 0;
+  top: 0;
+}
