@@ -49,6 +49,11 @@ input {
   border: none;
 }
 
+// 设置google自动填充后的背景颜色
+input:-webkit-autofill {
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 p {
   margin: 0;
   padding: 0;
@@ -284,6 +289,10 @@ div.ant-typography {
   &::-webkit-scrollbar-track { /* 滚动条里面轨道 */
     background: #f1f1f1;
   }
+}
+
+.h-disabled {
+  cursor: not-allowed !important;
 }
 
 .ant-table-pagination.ant-pagination {

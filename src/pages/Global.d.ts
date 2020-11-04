@@ -29,4 +29,10 @@ declare namespace Global {
       };
     };
   }
+
+  // 常见的返回数据格式
+  interface IBaseResponse {
+    code: number;
+    message: string;
+  }
 }

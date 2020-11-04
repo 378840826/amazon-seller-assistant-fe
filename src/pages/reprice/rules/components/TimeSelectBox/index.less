@@ -1,0 +1,83 @@
+.timeSelectBox {
+  color: red;
+}
+
+.showText {
+  cursor: pointer;
+
+  .icon {
+    color: @text-color-secondary;
+  }
+
+  &:hover {
+    color: @primary-color;
+
+    .icon {
+      color: @primary-color;
+    }
+  }
+}
+
+.contentBox {
+  padding: 10px 0;
+  position: relative;
+
+  .hour,
+  .minute {
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 10px;
+
+      .beijing {
+        color: @text-color-secondary;
+        font-size: @font-size-sm;
+      }
+    }
+
+    ul {
+      display: grid;
+      grid-template-columns: repeat(6, 58px);
+      column-gap: 20px;
+      row-gap: 10px;
+
+      li {
+        border: 1px solid @divider-line-color;
+        border-radius: @border-radius-base;
+        text-align: center;
+        padding: 2px 0;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &.active {
+          border: 1px solid @primary-color;
+        }
+
+        &:hover {
+          box-shadow: 0 0 5px 1px #c9c9c9;
+        }
+      }
+    }
+  }
+
+  .minute {
+    margin-top: 20px;
+  }
+
+  .btns {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+
+    button {
+      margin-left: 10px;
+    }
+
+    button.okBtn.disable {
+      background-color: #ccc;
+      border-color: #ccc;
+      cursor: not-allowed;
+      color: #fff;
+    }
+  }
+}
