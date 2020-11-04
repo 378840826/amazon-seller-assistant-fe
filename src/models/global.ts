@@ -12,6 +12,12 @@ import {
 import { storage } from '@/utils/utils';
 import { Modal } from 'antd';
 import { history } from 'umi';
+import { 
+  ruleAddRouter, 
+  ruleAddSalesRouter,
+  ruleAddCartRouter,
+  ruleAddCompetitorRouter,
+} from '@/utils/routes';
 
 const { confirm } = Modal;
 
@@ -381,6 +387,10 @@ const GlobalModel: IGlobalModelType = {
           '/ppc/group/add',
           '/competitor/history',
           '/competitor/list',
+          ruleAddRouter,
+          ruleAddSalesRouter,
+          ruleAddCartRouter,
+          ruleAddCompetitorRouter,
         ];
         const isHidden = hiddenShopSelectorUrl.some(path => path === pathname);
         const isDisabled = disabledShopSelectorUrl.some(path => path === pathname);
@@ -410,6 +420,10 @@ const GlobalModel: IGlobalModelType = {
           '/mail/sending',
           '/mail/rule',
           '/mail/template',
+          ruleAddRouter,
+          ruleAddSalesRouter,
+          ruleAddCartRouter,
+          ruleAddCompetitorRouter,
         ];
         const isUnshow = unshownPageTitleUrl.some(path => path === pathname);
         dispatch({

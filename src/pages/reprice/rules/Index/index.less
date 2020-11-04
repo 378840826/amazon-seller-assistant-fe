@@ -1,0 +1,95 @@
+span:global(.secondary) {
+  color: @text-color-secondary;
+}
+
+.rulesBox {
+  position: relative;
+}
+
+.addBtn {
+  width: 100px;
+  padding: 0;
+  background-color: @primary-color;
+  position: absolute;
+  right: 0;
+  top: -42px;
+
+  &:hover {
+    background-color: @primary-color;
+  }
+}
+
+main.table {
+  margin-top: 20px;
+
+  div:global(.ant-table-body) {
+    overflow-y: auto !important;
+  }
+
+  table thead {
+    th {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      height: 54px;
+      background: @simple-table-header-bg !important;
+    }
+  }
+
+  tbody {
+    tr,
+    td {
+      height: 60px;
+    }
+
+    tr:hover {
+      i:global(.update-icon) {
+        opacity: 1;
+      }
+
+      :global(.h-async-default-icon) {
+        opacity: 1;
+      }
+    }
+  }
+
+  .typeCol {
+    padding-left: 70px;
+  }
+
+  // 操作列
+  .handleCol {
+    text-align: center;
+
+    span {
+      padding: 0 5px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    a.setting {
+      color: @btn-text-color;
+      padding: 0 5px 0 10px;
+
+      &:hover {
+        color: @link-color;
+      }
+    }
+
+    span.del {
+      color: @btn-text-color;
+
+      &.disabled {
+        color: @text-color-secondary;
+        cursor: not-allowed;
+
+        &:hover {
+          color: @text-color-secondary;
+        }
+      }
+
+      &:hover {
+        color: @error-color;
+      }
+    }
+  }
+}

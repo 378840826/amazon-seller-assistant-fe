@@ -1,0 +1,86 @@
+.typeList {
+  display: grid;
+  grid-template-columns: repeat(3, 436px);
+  justify-content: center;
+  column-gap: 60px;
+  margin-top: 13px;
+
+  .typeItem {
+    background-color: #fff;
+    height: 682px;
+    border-radius: @border-radius-base;
+    text-align: center;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+    cursor: pointer;
+
+    h2 {
+      margin: 145px 0 108px;
+      text-align: center;
+      color: @heading-color;
+      font-size: 24px;
+    }
+
+    img {
+      width: 150px;
+      height: 150px;
+      transition: all 0.3s;
+    }
+
+    p {
+      color: @text-color;
+      margin: 105px 60px;
+      text-align: left;
+      line-height: 20px;
+    }
+
+    &:hover {
+      border-color: @primary-color;
+
+      img {
+        transform: scale(1.2) rotate(360deg);
+      }
+    }
+  }
+
+  .typeItem.active {
+    background: linear-gradient(-35deg, #2f99fd, #5fb2ff);
+
+    h2,
+    p {
+      color: @text-color-inverse;
+    }
+  }
+
+  // 小于
+  @media screen and (max-width: 1399px) {
+    grid-template-columns: repeat(3, 416px);
+    column-gap: 30px;
+
+    .typeItem {
+      height: 582px;
+
+      img {
+        width: 120px;
+        height: 120px;
+      }
+
+      h2 {
+        margin-top: 106px;
+      }
+
+      p {
+        margin: 90px 30px;
+      }
+    }
+  }
+}
+
+.foot {
+  text-align: center;
+  margin-top: 60px;
+
+  button {
+    margin: 0 15px;
+  }
+}
