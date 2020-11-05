@@ -1,0 +1,30 @@
+.__table_com {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+  border-top: 1px solid @divider-line-color;
+  background-color: #fff;
+
+  .__table {
+    .dark_row {
+      background-color: #fafafa;
+    }
+
+    :global {
+      .ant-table-tbody > tr > td,
+      .ant-table-thead > tr > th {
+        border-bottom: none;
+        padding: 0;
+      }
+
+      .ant-table-thead > tr > th {
+        height: 44px;
+      }
+
+      .ant-table-tbody > tr > td {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+    }
+  }
+}

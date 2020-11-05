@@ -8,7 +8,7 @@ type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_1799129_kskuwbez1kg.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_x9j2eiy59yn.js',
 });
 
 // 获取亚马逊站点基本链接
@@ -99,6 +99,38 @@ export const day = {
       .replace('mm', String(mm))
       .replace('ss', String(ss));
     return stringDate;
+  },
+
+  //获取星期 英文 time为传入的时间戳
+  getWeek: (time: number) => {
+    time = new Date(time).getDay() || new Date().getDay();
+    let day = 'Mon';
+    switch (time){
+    case 0:
+      day = 'Sun';
+      break;
+    case 1:
+      day = 'Mon';
+      break;
+    case 2:
+      day = 'Tue';
+      break;
+    case 3:
+      day = 'Wen';
+      break;
+    case 4:
+      day = 'Thu';
+      break;
+    case 5:
+      day = 'Fri';
+      break;
+    case 6:
+      day = 'Sat';
+      break;
+    default:
+      day = 'Mon';
+    }
+    return day;
   },
 };
 
