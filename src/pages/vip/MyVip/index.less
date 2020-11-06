@@ -1,0 +1,176 @@
+.page {
+  margin: 0 auto;
+  width: 1240px;
+
+  table {
+    text-align: center;
+  }
+
+  tr {
+    border: 1px solid #eee;
+    line-height: 35px;
+
+    &:hover {
+      background: @simple-table-header-bg;
+    }
+  }
+
+  th {
+    color: @heading-color;
+    font-weight: 500;
+    background: #f2f6fb;
+  }
+}
+
+.vipInfoContainer {
+  background: linear-gradient(180deg, #ebf6ff 0%, #fff 100%);
+}
+
+.vipInfo {
+  display: flex;
+  align-items: center;
+  padding: 30px 44px 20px 44px;
+
+  img {
+    width: 55px;
+    margin-right: 10px;
+  }
+}
+
+.remainDays {
+  margin-left: 70px;
+}
+
+.remainDaysNumber {
+  font-size: 24px;
+  color: #01c060;
+}
+
+.vipLevel {
+  display: inline-block;
+}
+
+.vipName {
+  transform: translateY(10px);
+  color: #ca9e6e;
+  font-size: @font-size-lg;
+}
+
+.btnRenew {
+  display: inline-block;
+  margin-left: 10px;
+  width: 64px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  color: #fff;
+  background: #ca9e6e;
+  border-radius: 12px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+    color: #fff;
+  }
+}
+
+.upgradeVip {
+  position: relative;
+  padding: 15px 44px 20px 44px;
+  border-top: 1px solid #e2eaf1;
+
+  img {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.title {
+  color: @heading-color;
+  font-size: @font-size-lg;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.upgradeVipCardContainer {
+  display: flex;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 20px;
+  text-align: center;
+  width: 180px;
+  height: 90px;
+  box-shadow: 0 8px 18px 0 rgba(221, 221, 221, 0.75);
+  padding: 12px 0;
+  border-radius: 4px;
+
+  .name {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .btnBuy {
+    display: inline-block;
+    width: 90px;
+    height: 30px;
+    line-height: 30px;
+    background: #fff;
+    border-radius: @border-radius-base;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &.vip1Card {
+    background: linear-gradient(90deg, #5ec8ff 0%, #2f99fd 100%);
+
+    .btnBuy {
+      color: @link-color;
+    }
+  }
+
+  &.vip2Card {
+    background: linear-gradient(90deg, #ffcd5e 0%, #ffaf4d 100%);
+
+    .btnBuy {
+      color: #ffaf4d;
+    }
+  }
+
+  &.vip3Card {
+    background: linear-gradient(90deg, #696596 0%, #3a375f 100%);
+
+    .btnBuy {
+      color: #3a375f;
+    }
+  }
+}
+
+.residueContainer {
+  margin: 20px 0;
+  padding: 20px 44px;
+  background: #fff;
+
+  table {
+    width: 528px;
+  }
+}
+
+.paymentHistoryContainer {
+  margin: 20px 0;
+  padding: 20px 44px;
+  background: #fff;
+
+  table {
+    width: 100%;
+  }
+}

@@ -12,7 +12,6 @@ import AD from './components/AD';
 import ASIN from './components/Asin';
 import Price from './components/Price';
 import Data from './components/Data';
-import PayRule from './components/PayRule';
 import Faq from './components/Faq';
 import GlobalFooter from '@/components/GlobalFooter';
 import styles from './index.less';
@@ -99,15 +98,6 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
                   <AD/>
                 </TabPane>
               </Tabs>
-            </div>
-          </div>
-        </div>
-      </ReactWOW>
-      <ReactWOW animation="fadeIn" >
-        <div className={styles.grey} id="pay">
-          <div className={styles.w}>
-            <div className={styles.part3}>
-              <PayRule/>
             </div>
           </div>
         </div>
