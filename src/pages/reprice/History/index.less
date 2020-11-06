@@ -1,0 +1,167 @@
+.historyBox {
+  background-color: #fff;
+  padding: 20px 18px 10px;
+
+  div:global(.ant-table-body) {
+    overflow-y: auto !important;
+  }
+}
+
+.successText {
+  color: @success-color;
+}
+
+.errorText {
+  color: @error-color;
+}
+
+.secondaryText {
+  color: @text-color-secondary;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > * {
+    padding-bottom: 20px;
+  }
+
+  .rules,
+  .conditions {
+    display: flex;
+    align-items: center;
+  }
+
+  .rulesList {
+    width: 280px;
+  }
+
+  .conditaionsList {
+    width: 280px;
+  }
+
+  @media screen and (max-width: 1646px) {
+    .conditions {
+      order: 2;
+    }
+  }
+
+  .calendar {
+    margin-right: 0;
+  }
+}
+
+// 条件下拉框
+.conditionsSelects {
+  div:global(.ant-select-item-option-content) {
+    overflow: visible;
+    white-space: pre-wrap;
+  }
+}
+
+.table {
+  width: 100%;
+
+  thead th {
+    height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: 0;
+  }
+
+  tbody {
+    td {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border: 0;
+    }
+
+    td:first-child {
+      border-left: 1px solid #eee;
+    }
+
+    td:last-child {
+      border-right: 1px solid #eee;
+    }
+
+    tr:nth-child(2n+1) td {
+      background-color: @simple-table-header-bg;
+    }
+
+    .productCol {
+      width: 260px;
+      display: flex;
+      justify-content: space-between;
+
+      img {
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        margin-right: 8px;
+      }
+
+      .details {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 36px);
+        padding-right: 20px;
+
+        p {
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .title {
+          .icon {
+            color: @text-color-secondary;
+          }
+
+          &:hover {
+            color: @primary-color;
+
+            .icon {
+              color: @primary-color;
+            }
+          }
+        }
+
+        .foot {
+          display: flex;
+          justify-content: space-between;
+          color: @success-color;
+
+          .asin {
+            color: @btn-text-color;
+
+            &:hover {
+              color: @link-color;
+            }
+          }
+        }
+      }
+    }
+
+    .conditioinsCol {
+      div.content {
+        min-width: 150px;
+      }
+    }
+  }
+
+  // 条件
+  .conditionContent {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  // 触发价格
+  .trggerContent {
+    .method {
+      color: @text-color-secondary;
+    }
+  }
+}

@@ -5,17 +5,19 @@
  * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\utils\routes.ts
  * 
- * 路由相关
+ * 路由相关 , 懒得修改
  */
 
 
-/**
- * 调价规则相关
- * /reprice/rules 调价规则列表
- * /reprice/rules/add 添加一条规则
- */
-export const ruleListRouter = '/reprice/rules'; 
-export const ruleAddRouter = '/reprice/rules/add';
+// 调价规则
+export const ruleListRouter = '/reprice/rules'; // 调价规则列表
+export const ruleAddRouter = '/reprice/rules/add'; // 添加一条规则
+export const ruleAddSalesRouter = '/reprice/rules/addSales'; // 添加根据销售表现调价
+export const ruleAddCartRouter = '/reprice/rules/addCart'; // 根据黄金购物车调价
+export const ruleAddCompetitorRouter = '/reprice/rules/addCompetitor'; // 根据竞品价格调价
+
+// 调价记录
+export const ruleHistoryRouter = '/reprice/history'; // 调价记录列表
 
 
 // 跟卖监控
