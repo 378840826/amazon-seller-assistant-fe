@@ -1,6 +1,12 @@
 /*
   路由配置
 */
+
+import {
+  ruleHistoryRouter,
+} from '../src/utils/routes';
+
+
 export default [
   // 账户
   {
@@ -118,7 +124,7 @@ export default [
     component: '../layouts/BasicLayout',
     routes: [
       { title: '调价规则', path: '/reprice/rules', component: './mws/GoodsList' },
-      { title: '调价记录', path: '/reprice/history', component: './mws/GoodsList' },
+      { title: '调价记录', path: ruleHistoryRouter, component: './reprice/History' },
       // 重定向
       { path: '/reprice', redirect: '/reprice/rules' },
     ],

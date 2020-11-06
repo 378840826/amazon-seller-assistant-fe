@@ -2,12 +2,11 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 11:14:36
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\utils\huang.ts
  */
 
 import { storage } from '@/utils/utils';
-import { Moment } from 'moment';
 /**
   storageKeys localStorage Key 放这里
   isEmptyObj 判断对象是否为空
@@ -205,4 +204,53 @@ export function moneyFormat(
  */
 export function isObject(param: any) { // eslint-disable-line
   return Object.prototype.toString.call(param) === '[object Object]';
+}
+
+/**
+ * 获取当前站点的对应的时区时间
+ * @param site 站点
+ */
+export function getSiteDate(site: string) {
+  if (!site || typeof site !== 'string') {
+    throw new Error('请传入一个站点');
+  }
+  switch (site) {
+  case 'US':
+    return {
+      nationality: '美国',
+      timeText: '太平洋时间',
+    };
+  case 'CA':
+    return {
+      nationality: '加拿大',
+      timeText: '太平洋时间',
+    };
+  case 'UK':
+    return {
+      nationality: '英国',
+      timeText: '英国时间',
+    };
+  case 'ES':
+    return {
+      nationality: '西班牙',
+      timeText: '西班牙时间',
+    };
+  case 'DE':
+    return {
+      nationality: '德国',
+      timeText: '德国时间',
+    };
+  case 'FR':
+    return {
+      nationality: '法国',
+      timeText: '法国时间',
+    };
+  case 'IT':
+    return {
+      nationality: '意大利',
+      timeText: '意大利时间',
+    };
+  default: 
+    // 
+  }
 }

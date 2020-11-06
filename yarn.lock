@@ -10506,15 +10506,17 @@ react-addons-css-transition-group@^15.5.2:
   dependencies:
     react-transition-group "^1.2.0"
 
-react-dnd-html5-backend@9.5.1:
+react-dnd-html5-backend@^9.5.1:
   version "9.5.1"
   resolved "https://registry.npm.taobao.org/react-dnd-html5-backend/download/react-dnd-html5-backend-9.5.1.tgz#e6a0aed3ece800c1abe004f9ed9991513e2e644c"
+  integrity sha1-5qCu0+zoAMGr4AT57ZmRUT4uZEw=
   dependencies:
     dnd-core "^9.5.1"
 
-react-dnd@9.5.1:
+react-dnd@^9.5.1:
   version "9.5.1"
   resolved "https://registry.npm.taobao.org/react-dnd/download/react-dnd-9.5.1.tgz#907e55c791d6c50cbed1a4021c14b989b86ac467"
+  integrity sha1-kH5Vx5HWxQy+0aQCHBS5ibhqxGc=
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.1"
     "@types/shallowequal" "^1.1.1"
