@@ -126,7 +126,7 @@ const TablePage: React.FC<ITablePageProps> = ({
         loading={loading}
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
-        scroll={{ x: '1323px' }}
+        scroll={{ x: '1323px', y: '100vh - 271px' }}
         dataSource={tableInfo.records}
         locale={{ emptyText: tableErrorMsg === '' ? 'Oops! 没有更多数据啦' : tableErrorMsg }}
         rowClassName={(_, index) => {

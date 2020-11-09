@@ -111,15 +111,16 @@ const EchartsCom: React.FC<IEchartsCom> = ({
   //获取到曲线
   const getSeries = () => {
     const series = [];
-    const { polylineResult, categoryRanking, listingChangeVo } = data;
-    if (categoryRanking !== undefined && 
-      polylineResult !== undefined && 
-      listingChangeVo !== undefined){
+    let changeVoIndex = 1;
+    const { polylineResult, categoryRanking, listingChangeVo, polylineName } = data;
+    if (categoryRanking !== undefined){
       const rankList = Object.keys(categoryRanking);
-      const resultList = Object.keys(polylineResult);
       //排名有就在右侧 索引0
       rankList.map((item) => {
         categoryRanking[item].map((detail: API.IParams) => {
+          if (item === polylineName){
+            changeVoIndex = 0; 
+          }
           if (item === 'bigCategoryRanking'){
             bigCategoryList.push(detail.categoryName);
           } else if (item === 'smallCategoryRanking'){
@@ -133,20 +134,63 @@ const EchartsCom: React.FC<IEchartsCom> = ({
           });
         });
       });
-      //其他的曲线有就一左一右
-      resultList.map((item, index) => {
-        series.push({
-          name: getName(item),
-          data: polylineResult[item],
-          type: 'line',
-          yAxisIndex: Number(index + 1),
-        });
-      }); 
+    }
 
+    if (polylineResult !== undefined){
+      const resultList = Object.keys(polylineResult);
+      const resLength = resultList.length;
+      //如果只有一个返回
+      if (resLength === 1){
+        resultList.map((item, index) => {
+          if (item === 'conversionRate'){
+            if (item === polylineName) {
+              changeVoIndex = 1; 
+            }
+            series.push({
+              name: getName(item),
+              data: polylineResult[item],
+              type: 'line',
+              yAxisIndex: 1,
+            });
+          } else {
+            if (item === polylineName) {
+              changeVoIndex = 2; 
+            }
+            series.push({
+              name: getName(item),
+              data: polylineResult[item],
+              type: 'line',
+              yAxisIndex: 2,
+            });
+          }
+        });
+      }
+      //如果有两个返回
+      if (resLength === 2){
+        resultList.map((item, index) => {
+          if (resultList.indexOf('conversionRate') > -1){
+            series.push({
+              name: getName(item),
+              data: polylineResult[item],
+              type: 'line',
+              yAxisIndex: item === 'conversionRate' ? 1 : 3,
+            });
+          } else {
+            series.push({
+              name: getName(item),
+              data: polylineResult[item],
+              type: 'line',
+              yAxisIndex: Number(index + 2),
+            });
+          }
+        });
+      }
+    }
+    if (listingChangeVo !== undefined){
       //listingChangeVo导入
       listingChangeVo.length > 0 && series.push({
         symbolSize: 50,
-        yAxisIndex: 0,
+        yAxisIndex: changeVoIndex,
         symbol: 'pin',
         data: listingChangeVo,
         type: 'scatter',
@@ -270,7 +314,20 @@ const EchartsCom: React.FC<IEchartsCom> = ({
             },
           },
         },
-        { //价格
+        { //百分比
+          name: '',
+          type: 'value',
+          position: 'left',
+          axisLabel: {
+            formatter: '{value} %',
+          },
+          splitLine: { //网格线
+            lineStyle: {
+              type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+            },
+          },
+        },
+        { //polyline中的其他 左边
           name: '',
           type: 'value',
           position: 'left',
@@ -280,7 +337,7 @@ const EchartsCom: React.FC<IEchartsCom> = ({
             },
           },
         },
-        { //polyline中的其他 包括百分比
+        { //polyline中的其他 右边
           name: '',
           type: 'value',
           position: 'right',
