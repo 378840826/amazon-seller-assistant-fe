@@ -1,0 +1,361 @@
+@disable-color: #c1c1c1; // 按钮禁用颜色
+@border-disable-color: #e1e1e1; // 按钮禁用边框颜色
+
+.emptyLine {
+  color: @text-color-secondary !important;
+}
+
+.parenthead {
+  background-color: #fff;
+  position: relative;
+  border-radius: @border-radius-sm;
+  margin-top: 15px;
+
+  .oneLayout {
+    padding-bottom: 14px;
+  }
+
+  .productInfo {
+    display: flex;
+
+    img.img {
+      width: 44px;
+      height: 44px;
+      margin: 15px 10px 0 20px;
+    }
+
+    .asinDetails {
+      width: 180px;
+      font-size: @font-size-sm;
+
+      a.title {
+        width: 180px;
+        color: @link-color;
+        line-height: 14px;
+        white-space: pre-wrap;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        cursor: pointer;
+        margin-top: 12px;
+        word-break: break-all;
+      }
+
+      .asinSku {
+        display: flex;
+        justify-content: space-between;
+        color: @text-color;
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .search {
+    width: 600px !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 20px;
+
+    &.disable button:global(.ant-btn-primary) {
+      background: #ccc;
+      border-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .twoLayout {
+    min-height: 100px;
+    padding-top: 10px;
+    border-top: 1px solid @divider-line-color;
+
+    .twoLayoutContent {
+      width: 700px;
+      margin: 0 auto;
+      border: none;
+    }
+  }
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+
+  .leftLayout,
+  .rightLayout {
+    width: 50%;
+    height: 414px;
+    background-color: #fff;
+    border-radius: @border-radius-sm;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 10px 15px 20px;
+      position: relative;
+
+      strong {
+        color: @heading-color;
+        font-size: @font-size-lg;
+      }
+    }
+  }
+
+  .leftLayout {
+    margin-right: 10px;
+
+    .addBtn {
+      width: 50px;
+      height: 30px;
+      line-height: 30px;
+      padding: 0;
+      min-width: auto;
+      text-align: center;
+
+      // 已全选
+      &.allSelectBtn {
+        color: @disable-color;
+        border-color: @border-disable-color;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .rightLayout {
+    .delBtn {
+      width: 75px;
+      position: absolute;
+      right: 14px;
+      min-width: auto;
+      padding: 0;
+
+      &.disabled {
+        color: @disable-color;
+        border-color: @border-disable-color;
+        cursor: not-allowed;
+      }
+
+      &:hover {
+        color: @error-color;
+        border-color: @error-color;
+      }
+    }
+  }
+}
+
+.fooBtns {
+  text-align: center;
+  margin-top: 20px;
+
+  .btn {
+    margin: 0 5px;
+    border: 1px solid @primary-color;
+  }
+
+  .cancel:hover {
+    color: @error-color;
+    border: 1px solid @error-color;
+  }
+}
+
+.list {
+  padding: 0 10px 0 20px;
+}
+
+.listStyle {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid @divider-line-color;
+  padding: 5px 0;
+  position: relative;
+
+  .details.select {
+    width: calc(100%);
+    padding-right: 32px;
+  }
+
+  .addBtnItem {
+    width: 50px;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    padding: 0;
+    min-width: auto;
+    text-align: center;
+
+    &.disabled {
+      color: @disable-color;
+      border-color: @border-disable-color;
+      cursor: not-allowed;
+    }
+  }
+
+  .delIcon {
+    color: @text-color-secondary;
+    cursor: pointer;
+    position: relative;
+    top: 10px;
+    right: 32px;
+    transition: all 0.3s;
+    height: 14px;
+
+    &:hover {
+      color: @error-color;
+    }
+  }
+}
+
+.listItem {
+  width: 100%;
+  display: flex;
+  padding: 5px 0;
+  position: relative;
+
+  img {
+    width: 54px;
+    height: 54px;
+    margin: 0 10px 0 0;
+    flex: 0 0 auto;
+  }
+
+  .details {
+    width: calc(100%);
+    padding-right: 70px;
+
+    .newProductLinks {
+      color: @link-color;
+      line-height: 18px;
+      white-space: pre-wrap;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      cursor: pointer;
+      word-break: break-all;
+      min-height: 24px;
+      margin-bottom: 5px;
+    }
+
+    .foot {
+      display: flex;
+      line-height: 16px;
+
+      > p {
+        white-space: nowrap;
+      }
+
+      .brand {
+        color: @text-color-secondary;
+        margin-right: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        span {
+          color: @text-color;
+        }
+      }
+
+      .scale {
+        min-width: 35px;
+        color: @warning-color;
+        border-right: 1px solid @divider-line-color;
+        padding-right: 6px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: middle;
+
+        span {
+          color: @text-color-secondary;
+        }
+      }
+
+      .ranking {
+        color: @warning-color;
+        padding-left: 6px;
+        cursor: pointer;
+      }
+
+      .asin {
+        padding-left: 18px;
+      }
+
+      .seller {
+        color: @text-color-secondary;
+        padding-left: 18px;
+        margin-right: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        span {
+          color: @text-color;
+        }
+      }
+
+      .price {
+        color: @error-color;
+        padding-right: 6px;
+        border-right: 1px solid @divider-line-color;
+        display: inline-block;
+      }
+
+      .freight {
+        padding: 0 10px;
+        white-space: nowrap;
+        padding-right: 6px;
+        border-right: 1px solid @divider-line-color;
+      }
+    }
+  }
+
+  .addBtnItem {
+    width: 50px;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    padding: 0;
+    min-width: auto;
+    text-align: center;
+
+    &.disabled {
+      color: @disable-color;
+      border-color: @border-disable-color;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.searchLoading {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.initBox {
+  text-align: center;
+  margin: 50px auto;
+
+  .notProduct {
+    width: 500px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 160px;
+      height: 120px;
+      flex: 0 0 auto;
+    }
+  }
+}
