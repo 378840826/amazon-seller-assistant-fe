@@ -2,9 +2,6 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-10-19 16:53:46
- * @LastEditors: Huang Chao Yi
- * @FilePath: \amzics-react\src\utils\routes.ts
- * 
  * 路由相关
  */
 
@@ -34,3 +31,10 @@ export const asinPandectReturnRouter = '/asin/return'; // ASIN总览 - 退货分
 
 // 评论
 export const reviewListRouter = '/review/list'; // 评论列表
+
+// 竞品设定
+export const setCompetingGoodsRouter = '/product/cp'; // 商品ID
+
+
+// 商品列表
+export const productListRouter = '/product/list';

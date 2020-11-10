@@ -206,3 +206,23 @@ export function moneyFormat(
 export function isObject(param: any) { // eslint-disable-line
   return Object.prototype.toString.call(param) === '[object Object]';
 }
+
+/**
+ * 是否为正式版环境
+ * 因为还不知道正式的域名，只能尽量限制
+ */
+export function isFormal() {
+  // 测试环境
+  const hostname = location.hostname;
+  if (
+    hostname === 'dev.workics.cn'
+    || hostname === 'test.workics.cn'
+    || hostname === '127.0.0.1'
+    || hostname === 'localhost'
+  ) {
+    return false;
+  }
+
+  // 其它都是正式版
+  return true;
+}

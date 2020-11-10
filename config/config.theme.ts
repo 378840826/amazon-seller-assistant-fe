@@ -60,6 +60,7 @@ export default {
   '@font-size-lg': '16px',
   // 组件/浮层圆角
   '@border-radius-base': '4px',
+  '@border-radius-sm': '2px',
   // 行高
   '@li-line-height-base': '32px',
 
