@@ -1,0 +1,35 @@
+.__table {
+  :global {
+    .ant-table-thead > tr > th {
+      height: 44px;
+    }
+
+    .ant-table-tbody > tr > td {
+      height: 68px;
+    }
+
+    .ant-table-tbody > tr > td,
+    .ant-table-thead > tr > th {
+      border-bottom: none;
+      padding: 0;
+    }
+
+    .ant-table-content {
+      border-left: 1px solid #eee;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+  }
+
+  .hover_color {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
+
+.dark_row {
+  background-color: @simple-table-header-bg;
+}

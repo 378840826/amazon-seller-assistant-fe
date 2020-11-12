@@ -80,7 +80,7 @@ export default [
     wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
     routes: [
       { title: 'ASIN总览', path: '/asin/base', component: './asinPandect/Base' },
-      { title: 'ASIN总览', path: '/asin/dynamic', component: './asinPandect/Base' },
+      { title: 'ASIN总览', path: '/asin/dt', component: './asinPandect/Dynamic' },
       { title: 'ASIN总览', path: '/asin/order', component: './asinPandect/Order' },
       { title: 'ASIN总览', path: '/asin/b2b', component: './asinPandect/B2B' },
       { title: 'ASIN总览', path: '/asin/ppc', component: './asinPandect/Base' },
@@ -96,8 +96,8 @@ export default [
     path: '/dynamic',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: 'ASIN动态汇总', path: '/dynamic/asin-overview', component: './mws/AsinChange' },
-      { title: 'ASIN动态监控设定', path: '/dynamic/asin-monitor', component: './mws/AsinChange' },
+      { title: 'ASIN动态汇总', path: '/dynamic/asin-overview', component: './mws/AsinChange/summary' },
+      { title: 'ASIN动态监控设定', path: '/dynamic/asin-monitor', component: './mws/AsinChange/monitor' },
       // 重定向
       { path: '/dynamic', redirect: '/dynamic/asin-overview' },
     ],

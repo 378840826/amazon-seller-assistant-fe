@@ -173,7 +173,6 @@ const mailModel: IMailModelType = {
       const { pathname, StoreId, ...params } = payload;
       const formData = new FormData();
       Object.keys(params).map(key => {
-        console.log('key', key);
         if (key === 'file'){
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           params.file.map( (item: any) => {
