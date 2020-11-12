@@ -43,7 +43,6 @@ const DynamicAsin: React.FC = () => {
  
 
   useEffect(() => {
-    console.log('重新render');
     setState((state) => ({
       ...state,
       chartLoading: true,

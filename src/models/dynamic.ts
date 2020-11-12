@@ -21,7 +21,7 @@ const DynamicModel: IDynamicModelType = {
       const response = yield call(getSummaryList, payload);
       nTs(response);
       if (response.code === 200){
-        response.data.records.map((item: API.IParams, index: number) => {
+        response.data.page.records.map((item: API.IParams, index: number) => {
           item.key = index;
         });
       }

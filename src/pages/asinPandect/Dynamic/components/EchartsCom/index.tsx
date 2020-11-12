@@ -59,7 +59,6 @@ const EchartsCom: React.FC<IEchartsCom> = ({
   currency,
   data,
 }) => {
-  console.log('重新渲染EchartsCom');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const refEcharts = useRef<any>(null);
   const minCategoryList: string[] = [];
@@ -99,7 +98,6 @@ const EchartsCom: React.FC<IEchartsCom> = ({
         refEcharts.current.getEchartsInstance().getOption().dataZoom[0];
         range.dateStart = moment(startValue).format('YYYY-MM-DD');
         range.dateEnd = moment(endValue).format('YYYY-MM-DD');
-        console.log(JSON.stringify(range), startValue, endValue);
         modifySendState({ ...range });
         form.setFieldsValue({
           dateRange: [moment(range.dateStart), moment(range.dateEnd)],
@@ -108,102 +106,133 @@ const EchartsCom: React.FC<IEchartsCom> = ({
     },
   };
 
-  //获取到曲线
-  const getSeries = () => {
-    const series = [];
-    let changeVoIndex = 1;
-    const { polylineResult, categoryRanking, listingChangeVo, polylineName } = data;
-    if (categoryRanking !== undefined){
-      const rankList = Object.keys(categoryRanking);
-      //排名有就在右侧 索引0
-      rankList.map((item) => {
-        categoryRanking[item].map((detail: API.IParams) => {
-          if (item === polylineName){
-            changeVoIndex = 0; 
-          }
-          if (item === 'bigCategoryRanking'){
-            bigCategoryList.push(detail.categoryName);
-          } else if (item === 'smallCategoryRanking'){
-            minCategoryList.push(detail.categoryName);
-          }
-          series.push({
-            name: detail.categoryName,
-            data: detail.categoryPolyline,
-            type: 'line',
-            yAxisIndex: 0,
-          });
-        });
-      });
-    }
-
-    if (polylineResult !== undefined){
-      const resultList = Object.keys(polylineResult);
-      const resLength = resultList.length;
-      //如果只有一个返回
-      if (resLength === 1){
-        resultList.map((item, index) => {
-          if (item === 'conversionRate'){
-            if (item === polylineName) {
-              changeVoIndex = 1; 
-            }
-            series.push({
-              name: getName(item),
-              data: polylineResult[item],
-              type: 'line',
-              yAxisIndex: 1,
-            });
-          } else {
-            if (item === polylineName) {
-              changeVoIndex = 2; 
-            }
-            series.push({
-              name: getName(item),
-              data: polylineResult[item],
-              type: 'line',
-              yAxisIndex: 2,
-            });
-          }
-        });
-      }
-      //如果有两个返回
-      if (resLength === 2){
-        resultList.map((item, index) => {
-          if (resultList.indexOf('conversionRate') > -1){
-            series.push({
-              name: getName(item),
-              data: polylineResult[item],
-              type: 'line',
-              yAxisIndex: item === 'conversionRate' ? 1 : 3,
-            });
-          } else {
-            series.push({
-              name: getName(item),
-              data: polylineResult[item],
-              type: 'line',
-              yAxisIndex: Number(index + 2),
-            });
-          }
-        });
-      }
-    }
-    if (listingChangeVo !== undefined){
-      //listingChangeVo导入
-      listingChangeVo.length > 0 && series.push({
-        symbolSize: 50,
-        yAxisIndex: changeVoIndex,
-        symbol: 'pin',
-        data: listingChangeVo,
-        type: 'scatter',
-        label: {
-          normal: myLabel,
-          emphasis: myLabel,
-        },
-      });
-    }
-    return series;
-  };
+ 
   //设置echarts配置信息
   const getOption = () => {
+    const yAxisIndexList: echarts.EChartOption.YAxis[] = [
+      { //排名
+        name: '',
+        type: 'value',
+        inverse: true,
+        position: 'right',
+        splitLine: { //网格线
+          lineStyle: {
+            type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+          },
+        },
+        axisLabel: {
+          color: '#999',
+        },
+      }];
+    //获取到曲线
+    const getSeries = () => {
+      const series = [];
+      let changeVoIndex = 1;
+      const { polylineResult, categoryRanking, listingChangeVo, polylineName } = data;
+      if (categoryRanking !== undefined){
+        const rankList = Object.keys(categoryRanking);
+        //排名有就在右侧 索引0
+        rankList.map((item) => {
+          categoryRanking[item].map((detail: API.IParams) => {
+            if (item === polylineName){
+              changeVoIndex = 0; 
+            }
+            if (item === 'bigCategoryRanking'){
+              bigCategoryList.push(detail.categoryName);
+            } else if (item === 'smallCategoryRanking'){
+              minCategoryList.push(detail.categoryName);
+            }
+            series.push({
+              name: detail.categoryName,
+              data: detail.categoryPolyline,
+              type: 'line',
+              connectNulls: true,
+              yAxisIndex: 0,
+            });
+          });
+        });
+      }
+
+      if (polylineResult !== undefined){
+        const resultList = Object.keys(polylineResult);
+        resultList.map((item, index) => {
+
+          if (item === polylineName){
+            changeVoIndex = Number(index + 1);
+          }
+
+          if (item === 'conversionRate'){
+            yAxisIndexList[index + 1] = { //百分比
+              name: '',
+              type: 'value',
+              position: index === 0 ? 'left' : 'right',
+              axisLabel: {
+                formatter: '{value} %',
+                color: '#999',
+              },
+              splitLine: { //网格线
+                lineStyle: {
+                  type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+                },
+              },
+            };
+          } else if (item === 'price'){
+            yAxisIndexList[index + 1] = {
+              name: '',
+              type: 'value',
+              position: index === 0 ? 'left' : 'right',
+              axisLabel: {
+                formatter: `${currency}{value}`,
+                color: '#999',
+              },
+              splitLine: { //网格线
+                lineStyle: {
+                  type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+                },
+              },
+            };
+          } else {
+            yAxisIndexList[index + 1] = {
+              name: '',
+              type: 'value',
+              position: index === 0 ? 'left' : 'right',
+              axisLabel: {
+                color: '#999',
+              },
+              splitLine: { //网格线
+                lineStyle: {
+                  type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+                },
+              },
+            };
+          }
+
+          series.push({
+            name: getName(item),
+            data: polylineResult[item],
+            type: 'line',
+            connectNulls: true,
+            yAxisIndex: Number(index + 1),
+          });
+        });
+       
+      }
+      if (listingChangeVo !== undefined){
+        //listingChangeVo导入
+        listingChangeVo.length > 0 && series.push({
+          symbolSize: 50,
+          yAxisIndex: changeVoIndex,
+          symbol: 'pin',
+          data: listingChangeVo,
+          type: 'scatter',
+          label: {
+            normal: myLabel,
+            emphasis: myLabel,
+          },
+        });
+      }
+      return series;
+    };
     const option: echarts.EChartOption = {
       title: {
         text: '',
@@ -229,30 +258,46 @@ const EchartsCom: React.FC<IEchartsCom> = ({
           let htmlOuter = `<span style="color:#888;">${date}&nbsp;&nbsp;${week}</span><br/>`;
           if (params instanceof Array){
             let html = ``;
-            let bigCateHtml = bigCategoryList.length > 0 ? 
-              `<span style="line-height:32px;">大类排名：</span><br/>` : ``;//大类排名曲线
-            let smallCateHtml = minCategoryList.length > 0 ? 
-              `<span style="line-height:32px;">小类排名：</span><br/>` : ``;//小类排名曲线
+            let countBig = 0;
+            let countSmall = 0;
+            let bigCateHtml = ``;//大类排名曲线
+            let smallCateHtml = ``;//小类排名曲线
             let pinHtml = ``;
-           
+
+            params.forEach((item) => {
+              if (bigCategoryList.indexOf(item.seriesName as string) > -1){
+                countBig++;
+              }
+              if (minCategoryList.indexOf(item.seriesName as string) > -1){
+                countSmall++;
+              }
+            });
+
+            if (countBig > 0){
+              bigCateHtml = `<span style="line-height:32px;">大类排名：</span><br/>`;
+            }
+            if (countSmall > 0){
+              smallCateHtml = `<span style="line-height:32px;">小类排名：</span><br/>`;
+            }
+            
             params.forEach((item) => {
               if (item.seriesType === 'line'){
                 if (/价格/.test(item.seriesName as string)){
                   html += `${item.marker}<span style="color:#222">${item.seriesName}:</span>`;
-                  html += `<span style="color:#555">&nbsp;${currency}${item.data[1]}</span><br/>`;
+                  html += `<span style="color:#555">&nbsp;${item.data[1] === null ? '' : `${currency}${item.data[1]}`}</span><br/>`;
                 } else if (/Session/.test(item.seriesName as string)){
                   html += `${item.marker}<span style="color:#222">${item.seriesName}:</span>`;
-                  html += `<span style="color:#555">&nbsp;${item.data[1]}%</span><br/>`;
+                  html += `<span style="color:#555">&nbsp;${item.data[1] === null ? '' : `${item.data[1]}%` }</span><br/>`;
                 } else {
                   if (bigCategoryList.indexOf(item.seriesName as string) > -1){
-                    bigCateHtml += `${item.marker}<span style="color:#FFAF4D">#${item.data[1]}
+                    bigCateHtml += `${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`} 
                     </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span><br/>`;
                   } else if (minCategoryList.indexOf(item.seriesName as string) > -1){
-                    smallCateHtml += `${item.marker}<span style="color:#FFAF4D">#${item.data[1]}
+                    smallCateHtml += `${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`}
                     </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span><br/>`;
                   } else {
                     html += `${item.marker}<span>${item.seriesName}:</span>`;
-                    html += `<span style="color:#555">${item.data[1]}</span><br/>`;
+                    html += `<span style="color:#555">${item.data[1] === null ? '' : item.data[1]}</span><br/>`;
                   }
                 }
               } else if (item.seriesType === 'scatter'){
@@ -278,7 +323,7 @@ const EchartsCom: React.FC<IEchartsCom> = ({
       legend: {
         left: 60,
         top: 24,
-        pageTextStyle: { color: '#666' }, 
+        textStyle: { color: '#666', fontSize: 14 }, 
       }, 
       dataZoom: [
         {
@@ -302,51 +347,7 @@ const EchartsCom: React.FC<IEchartsCom> = ({
           fontSize: 12,
         },
       },
-      yAxis: [
-        { //排名
-          name: '',
-          type: 'value',
-          inverse: true,
-          position: 'right',
-          splitLine: { //网格线
-            lineStyle: {
-              type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
-            },
-          },
-        },
-        { //百分比
-          name: '',
-          type: 'value',
-          position: 'left',
-          axisLabel: {
-            formatter: '{value} %',
-          },
-          splitLine: { //网格线
-            lineStyle: {
-              type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
-            },
-          },
-        },
-        { //polyline中的其他 左边
-          name: '',
-          type: 'value',
-          position: 'left',
-          splitLine: { //网格线
-            lineStyle: {
-              type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
-            },
-          },
-        },
-        { //polyline中的其他 右边
-          name: '',
-          type: 'value',
-          position: 'right',
-          splitLine: { //网格线
-            lineStyle: {
-              type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
-            },
-          },
-        }],
+      yAxis: yAxisIndexList,
       color: ['#49B5FF', '#FFC175', '#6FE09C', '#FE8484', '#759FFF'],
       series: getSeries(),
     };

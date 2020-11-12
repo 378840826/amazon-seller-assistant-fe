@@ -17,6 +17,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
   const [state, setState] = useState({
     tableLoading: false,
     tableInfo: {},
+    updateTime: '',
     tableErrorMsg: '',
   });
   const [sendState, setSendState] = useState({
@@ -64,10 +65,12 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
         },
       },
       callback: (res: {code: number;data: API.IParams;message: string}) => {
+        console.log('res:', res);
         if (res.code === 200){
           setState((state) => ({
             ...state,
-            tableInfo: res.data,
+            tableInfo: res.data.page,
+            updateTime: res.data.updateTime,
             tableErrorMsg: '',
             tableLoading: false,
           }));
@@ -75,6 +78,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
           setState((state) => ({
             ...state,
             tableInfo: {},
+            updateTime: '',
             tableErrorMsg: res.message,
             tableLoading: false,
           }));
@@ -90,7 +94,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
         <LinkHeader/>
         <span className={styles.timestamp}>
           <i>更新时间：</i>
-          <i>{state.tableInfo.updateTime}</i>
+          <i>{state.updateTime}</i>
         </span>
       </div>
       <div className={styles.other_container}>
@@ -101,7 +105,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
           onSearch={value => onSearch(value)} 
           disabled={state.tableLoading}
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>}
-          style={{ width: 280 }}
+          style={{ width: '280px' }}
         />
         <OperatorBar 
           list={sendState.changeType} 

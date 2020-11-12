@@ -39,22 +39,18 @@ const RenderValue: React.FC<IRenderValue> = ({ text, record }) => {
     }
     return (
       <>
-        {text.map(item => {
-          <div>{item}</div>;
+        {text.map((item, index) => {
+          return (
+            <div key={index}>{item}</div>
+          ) ;
         })}
       </>
     );
     
   }
-  if (record.changeType === 'changeSerllerQt'){
-    return (
-      <Link to={`/competitor/list?id=${record.id}`} href="">{text}</Link>
-    );
-  }
   return (
     <div>{text}</div>
   );
-    
   
 };
 export default RenderValue;

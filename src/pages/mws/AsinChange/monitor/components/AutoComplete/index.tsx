@@ -11,7 +11,7 @@ interface IAutoCompleteCom extends IConnectProps{
   loading: boolean;
 }
 interface IState{
-  result: {value: string; label: JSX.Element}[];
+  result: IAutoData[];
   loading: boolean;
   asin: string;
 }
@@ -20,20 +20,6 @@ interface IAutoData{
   asin: string;
   title: string;
 }
-
-const searchResult = (data: IAutoData[]) => {
-  return data.map((item, idx) => {
-    return {
-      value: item.asin,
-      label: (
-        <div key={idx}>
-          <div className={styles.title}>{item.title}</div>
-          <div className={styles.asin}>{item.asin}</div>
-        </div>
-      ),
-    };
-  });
-};
 
 const AutoCompleteCom: React.FC<IAutoCompleteCom> = ({
   StoreId,
@@ -64,7 +50,7 @@ const AutoCompleteCom: React.FC<IAutoCompleteCom> = ({
         setState((state) => ({
           ...state,
           loading: false,
-          result: searchResult(data),
+          result: data,
         }));
       },
     });
@@ -124,7 +110,6 @@ const AutoCompleteCom: React.FC<IAutoCompleteCom> = ({
           style={{
             width: '100%',
           }}
-          options={state.result}
           onSearch={handleSearch}
           onSelect = {handleSelect}
           placeholder="请输入要监控的ASIN"
@@ -135,9 +120,10 @@ const AutoCompleteCom: React.FC<IAutoCompleteCom> = ({
               <Spin />
             </Option>
             : 
-            state.result.map( (item, idx) => (
-              <Option key={idx} value={item.value}>
-                {item.label}
+            state.result.map( (item, idx: number) => (
+              <Option key={idx} value={item.asin}>
+                <div className={styles.title}>{item.title}</div>
+                <div className={styles.asin}>{item.asin}</div>
               </Option>
             ))
           }
