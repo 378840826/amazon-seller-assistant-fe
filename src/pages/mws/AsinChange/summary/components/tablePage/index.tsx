@@ -38,7 +38,7 @@ const TablePage: React.FC<ITablePage> = (
     {
       title: '数据获取时间',
       dataIndex: 'collectionTime',
-      width: 108,
+      width: 100,
       align: 'center',
       render: (text) => {
         return (
@@ -63,7 +63,7 @@ const TablePage: React.FC<ITablePage> = (
     {
       title: 'SKU',
       dataIndex: 'skuList',
-      width: 100,
+      width: 50,
       align: 'left',
       render: (text) => {
         return (
@@ -130,7 +130,7 @@ const TablePage: React.FC<ITablePage> = (
         loading={loading}
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
-        scroll={{ x: '1323px' }}
+        scroll={{ x: true, y: 662 }}
         dataSource={tableInfo.records}
         locale={{ 
           emptyText: tableErrorMsg === '' ? 

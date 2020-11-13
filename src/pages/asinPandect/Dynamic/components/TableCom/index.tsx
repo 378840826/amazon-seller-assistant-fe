@@ -59,7 +59,7 @@ const TableCom: React.FC<ITableCom> = ({
     {
       title: '数据获取时间',
       dataIndex: 'collectionTime',
-      width: 200,
+      width: 100,
       align: 'center',
       render: (text) => {
         return (
@@ -200,7 +200,7 @@ const TableCom: React.FC<ITableCom> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={state.loading}
-        scroll={{ x: 'max-content', y: '618px' }}
+        scroll={{ x: true, y: 618 }}
         locale={{ emptyText: state.message === '' ? 'Oops! 没有更多数据啦' : state.message }}
         dataSource = {state.tableInfo.records}
         rowClassName={(_, index) => {
