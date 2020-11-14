@@ -34,6 +34,24 @@ const BsDetails: React.FC = () => {
     }
   }, [dispatch, currentShopId, reportId]);
 
+  // records 处理，转换两位小数，增加百分号，增加货币符号
+  const getProcessRecords = () => {
+    const price = ['orderedProductSales', 'orderedProductSalesB2b'];
+    const percent = [
+      'sessionPercentage',
+      'pageViewsPercentage',
+      'buyBoxPercentage',
+      'unitSessionPercentage',
+      'unitSessionPercentageB2b',
+    ];
+    const result: { [key: string]: string | number }[] = JSON.parse((JSON.stringify(records)));
+    result.forEach((item) => {
+      price.forEach(key => item[key] = `${item.currency}${Number(item[key]).toFixed(2)}`);
+      percent.forEach(key => item[key] = `${Number(item[key]).toFixed(2)}%`);
+    });
+    return result;
+  };
+
   // 分页配置
   const paginationProps: TablePaginationConfig = {
     total,
@@ -163,7 +181,7 @@ const BsDetails: React.FC = () => {
             return styles.darkRow;
           }
         }}
-        dataSource={records}
+        dataSource={getProcessRecords()}
         locale={{ emptyText: '未找到相关数据' }}
         showSorterTooltip={false}
         pagination={{ ...paginationProps }}

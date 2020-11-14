@@ -61,7 +61,7 @@ const navigation: INavigation[] = [
     title: '报表',
     menu: [
       { title: 'ASIN报表', path: '/report/asin-overview' },
-      { title: 'Business Rport导入', path: '/report/import' },
+      { title: 'Business Report导入', path: '/report/import' },
     ],
   },
   {
