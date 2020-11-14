@@ -1,0 +1,252 @@
+.page {
+  width: 1360px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: @font-size-lg;
+  border-left: 4px solid @primary-color;
+  line-height: 16px;
+  padding-left: 8px;
+  margin: 16px 0;
+}
+
+.pageContent {
+  display: flex;
+  background: #fff;
+}
+
+.left {
+  width: 970px;
+  padding: 0 20px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  padding: 20px 0 14px 0;
+}
+
+.importBtn {
+  margin-right: 30px;
+}
+
+.rangePicker {
+  flex: 1;
+  text-align: right;
+}
+
+.Table {
+  tr .deleteBtn {
+    display: none;
+    color: @error-color;
+
+    &:hover {
+      color: @error-color;
+      opacity: 0.8;
+    }
+  }
+
+  tr:hover {
+    .deleteBtn {
+      display: initial;
+    }
+  }
+
+  :global {
+    .ant-table-container {
+      font-size: 14px;
+      border: 1px solid #eee;
+
+      tr {
+        th,
+        td {
+          padding: 7px;
+        }
+      }
+    }
+  }
+}
+
+.right {
+  h5 {
+    font-size: @font-size-lg;
+    color: #000;
+    margin-bottom: 0;
+    margin-top: 20px;
+  }
+
+  h6 {
+    font-size: @font-size-base;
+    color: @heading-color;
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+}
+
+.carousel {
+  padding: 0 20px;
+  height: 50px;
+  line-height: 50px;
+  background: #ffe8d0;
+  border-bottom: 1px solid #ffc589;
+}
+
+.query {
+  margin-right: 10px;
+  color: #ffad4d;
+}
+
+.direction {
+  height: calc(100vh - 150px);
+  background: #fafafa;
+  overflow: auto;
+  padding: 0 20px 20px 20px;
+}
+
+.imgContainer {
+  text-align: center;
+
+  img {
+    width: 180px;
+  }
+}
+
+.Modal {
+  :global {
+    .ant-modal-title {
+      font-size: 14px;
+    }
+
+    .ant-modal-body {
+      padding: 10px 20px 20px 20px;
+    }
+  }
+}
+
+.modalFileList {
+  height: 180px;
+  overflow: auto;
+  padding-right: 6px;
+
+  // 淡化滚动条
+  // 整体样式
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  // 小方块
+  &::-webkit-scrollbar-thumb {
+    width: 10px;
+    height: 30px;
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+
+  // 轨道
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+}
+
+.closeIcon {
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.checkIcon {
+  color: @success-color;
+}
+
+.fileName {
+  width: 290px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  & > span {
+    margin-right: 8px;
+  }
+}
+
+.file {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 26px;
+
+  & > span {
+    color: @text-color-secondary;
+  }
+
+  &:hover {
+    background: #fafafa;
+
+    .fileName {
+      color: #222;
+    }
+
+    .closeIcon {
+      color: @error-color;
+    }
+  }
+
+  &.error {
+    color: @error-color;
+  }
+}
+
+.btns {
+  & > span {
+    color: @btn-text-color;
+    margin: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  a {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  :global(.ant-upload) {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
+
+.modalFooter {
+  text-align: center;
+  margin-top: 20px;
+
+  button {
+    margin: 0 10px;
+  }
+}
+
+.progress {
+  position: absolute;
+  line-height: 30px;
+  color: @text-color-secondary;
+}
+
+.pluginMsg {
+  font-size: @font-size-sm;
+  color: @text-color-secondary;
+}
+
+.icon {
+  font-size: 11px;
+  margin-left: 2px;
+}

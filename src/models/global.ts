@@ -400,6 +400,8 @@ const GlobalModel: IGlobalModelType = {
           '/goods/error-report',
           '/product/error-report',
           '/shop/bind',
+          // 因 bs导入 页面标题需要特殊的样式
+          '/report/import',
           '/competitor/list',
           '/competitor/history',
           '/mail/summary',
