@@ -103,23 +103,14 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
           </div>
         </div>
       </ReactWOW>
-      <ReactWOW animation="fadeIn" >
-        <div className={styles.grey} id="pay">
-          <div className={styles.w}>
-            <div className={styles.part3}>
-              <PayRule/>
-            </div>
-          </div>
-        </div>
-      </ReactWOW>
-      <div className={styles.white} id="fqa">
+      <div className={styles.gray} id="fqa">
         <div className={styles.w}>
           <div className={styles.part4}>
             <Faq/>
           </div>
         </div>
       </div>
-      <div className={styles.grey}>
+      <div className={styles.white}>
         <GlobalFooter className={[styles.w, styles.__index].join(' ')}/>
       </div>
     </div>

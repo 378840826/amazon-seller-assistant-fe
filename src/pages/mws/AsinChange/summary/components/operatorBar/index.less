@@ -60,6 +60,13 @@
   .adjustList {
     margin-top: 12px;
 
+    :global {
+      .ant-btn:hover {
+        color: #ffaf4d;
+        border-color: #ffaf4d;
+      }
+    }
+
     .active {
       border-color: #ffaf4d;
       color: #ffaf4d;
@@ -74,6 +81,13 @@
 
       &:hover {
         color: #ffaf4d;
+      }
+    }
+
+    :global {
+      .ant-btn:hover {
+        border-color: #0dc757;
+        color: #0dc757;
       }
     }
 
@@ -94,6 +108,13 @@
   .relativeList {
     margin-top: 12px;
 
+    :global {
+      .ant-btn:hover {
+        color: #ff5958;
+        border-color: #ff5958;
+      }
+    }
+
     .active {
       color: #ff5958;
       border-color: #ff5958;
@@ -102,6 +123,13 @@
 
   .raceOperaList {
     flex: 1;
+
+    :global {
+      .ant-btn:hover {
+        color: #3e79ff;
+        border-color: #3e79ff;
+      }
+    }
 
     .active {
       color: #3e79ff;
@@ -120,5 +148,6 @@
 
   .calendar_picker {
     width: 300px;
+    text-align: right;
   }
 }

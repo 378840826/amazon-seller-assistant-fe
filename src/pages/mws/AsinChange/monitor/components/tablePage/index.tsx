@@ -110,10 +110,10 @@ const TablePage: React.FC<ITablePageProps> = ({
       title: '操作',
       align: 'center',
       dataIndex: 'productInfo',
-      width: 100,
+      width: 50,
       render: (record) => {
         return (
-          <Link className={styles.hover_color} to={`/asin/base?asin=${record.asin}`}>查看</Link>
+          <Link className={styles.hover_color} to={`/asin/dt?asin=${record.asin}`}>查看</Link>
         );
       },
     },

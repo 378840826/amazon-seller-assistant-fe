@@ -49,7 +49,7 @@ const RenderValue: React.FC<IRenderValue> = ({ text, record }) => {
     
   }
   return (
-    <div>{text}</div>
+    <div className={styles.gap}>{text}</div>
   );
   
 };

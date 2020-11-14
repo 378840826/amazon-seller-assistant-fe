@@ -38,7 +38,7 @@ const TablePage: React.FC<ITablePage> = (
     {
       title: '数据获取时间',
       dataIndex: 'collectionTime',
-      width: 100,
+      width: 130,
       align: 'center',
       render: (text) => {
         return (
@@ -51,7 +51,7 @@ const TablePage: React.FC<ITablePage> = (
     {
       title: '商品信息',
       dataIndex: 'productInfo',
-      width: 200,
+      width: 150,
       align: 'center',
       ellipsis: true,
       render: (text) => {
@@ -107,7 +107,7 @@ const TablePage: React.FC<ITablePage> = (
     },
     {
       title: '操作',
-      width: 100,
+      width: 40,
       align: 'center',
       render: (record) => {
         return (

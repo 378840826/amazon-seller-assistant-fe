@@ -33,3 +33,22 @@
 .dark_row {
   background-color: @simple-table-header-bg;
 }
+
+.switch {
+  :global {
+    button {
+      min-width: 36px !important;
+      height: 18px !important;
+      line-height: 18px !important;
+
+      .ant-switch-handle {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .ant-switch-checked .ant-switch-handle {
+      left: calc(100% - 14px - 2px);
+    }
+  }
+}
