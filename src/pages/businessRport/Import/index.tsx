@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Radio, DatePicker, Table, Upload, message, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch, Link } from 'umi';
 import { IConnectState } from '@/models/connect';
 import { IFile } from '@/models/bs';
@@ -106,6 +107,7 @@ const BsImport: React.FC = function () {
     showSizeChanger: true,
     defaultPageSize: 20,
     pageSizeOptions: ['20', '50', '100'],
+    showTotal: (total: number) => (<>共 {total} 个</>),
     onChange: (current, pageSize) => {
       dispatch({
         type: 'bs/fetchBsList',
@@ -215,7 +217,13 @@ const BsImport: React.FC = function () {
   // 删除
   const handleDelete = (id: string) => {
     Modal.confirm({
-      content: '删除报表将影响数据统计和分析，继续删除？',
+      content: (
+        <>
+          <ExclamationCircleOutlined className={styles.warnIcon} />删除报表将影响数据统计和分析，继续删除？
+        </>
+      ),
+      icon: null,
+      className: styles.modalConfirm,
       maskClosable: true,
       centered: true,
       onOk() {
@@ -370,7 +378,7 @@ const BsImport: React.FC = function () {
                 title: '日期',
                 dataIndex: 'reportTime',
                 align: 'center',
-                width: 200,
+                width: 240,
               }, {
                 title: '状态',
                 dataIndex: 'reportStatus',
@@ -391,7 +399,7 @@ const BsImport: React.FC = function () {
               }, {
                 title: '操作',
                 align: 'center',
-                width: 300,
+                width: 260,
                 fixed: 'right',
                 render: (_, record) => (
                   <div className={styles.btns}>
