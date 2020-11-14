@@ -1,6 +1,7 @@
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { IGoodsListModelState } from './goodsList';
 import { IReplenishmentModelState } from './replenishment';
+import { IBsModelState } from './bs';
 import { IBiBoardModelState } from './biBoard';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
@@ -14,7 +15,7 @@ export { IGlobalModelState, SettingModelState, IUserModelState };
 
 export interface IModelType {
   effects?: {
-    [key: string]: Effect;
+    [key: string]: Effect | [Effect, { type: string; delay: number }];
   };
   reducers?: {
     [key: string]: ImmerReducer;
@@ -40,6 +41,7 @@ export interface IConnectState {
   global: IGlobalModelState;
   goodsList: IGoodsListModelState;
   replenishment: IReplenishmentModelState;
+  bs: IBsModelState;
   biBoard: IBiBoardModelState;
   loading: ILoading;
   settings: SettingModelState;

@@ -1,0 +1,31 @@
+.page {
+  margin: 0;
+
+  .darkRow td {
+    background-color: #fafafa;
+  }
+
+  :global {
+    .ant-table {
+      border: 1px solid #f0f0f0;
+    }
+
+    .ant-table-tbody > tr > td,
+    .ant-table-thead > tr > th {
+      padding: 4px 0;
+    }
+  }
+}
+
+.pageTitle {
+  font-size: @font-size-lg;
+  border-left: 4px solid @primary-color;
+  line-height: 16px;
+  padding-left: 8px;
+  margin: 16px 0;
+
+  span {
+    color: @text-color-secondary;
+    font-size: @font-size-base;
+  }
+}

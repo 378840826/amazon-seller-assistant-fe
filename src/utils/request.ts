@@ -45,6 +45,10 @@ request.interceptors.request.use((url, options) => {
     // 需要插入到 headers 中的参数
     const { headersParams } = data;
     Object.assign(headers, headersParams);
+    // 如果是文件上传，删除上面 extend 加上的 Content-Type，让浏览器自己设置
+    if (Object.prototype.toString.call(data) === '[object FormData]') {
+      headers && delete headers['Content-Type'];
+    }
   }
   return {
     url,
