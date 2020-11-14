@@ -7,6 +7,7 @@ import { day } from '@/utils/utils';
 import styles from './index.less';
 import { yAxisList } from '@/pages/mws/AsinChange/summary/components/operatorBar';
 
+
 interface IEchartsCom{
   modifySendState: (params: API.IParams) => void;
   data: API.IParams;
@@ -14,6 +15,31 @@ interface IEchartsCom{
   chartLoading: boolean;
   currency: string;
 }
+
+const getPinColor = (shortName: string) => {
+  const operaShortList = ['图片', '标题', 'Deal', '劵', '变体', 'Bun', 'BP', '促', '描述', 'EBC', '视频'];
+  const adjustShortList = ['分类', 'AC', 'FBT', 'Add'];
+  const feedbackShortList = ['Q&A', 'Review'];
+  const relativeShortList = ['有货', '缺货', '库存不足', '预售', 'BS', 'NR'];
+  const raceOperaShortList = ['卖家', 'FBA', 'FBM', 'Amazon', '卖家数']; 
+  if (operaShortList.indexOf(shortName) > -1){
+    return { color: '#2f99fd' };
+  }
+  if (adjustShortList.indexOf(shortName) > -1){
+    return { color: '#ffaf4d' };
+  }
+  if (feedbackShortList.indexOf(shortName) > -1){
+    return { color: '#0dc757' };
+  }
+  if (relativeShortList.indexOf(shortName) > -1){
+    return { color: '#ff5958' };
+  }
+  if (raceOperaShortList.indexOf(shortName) > -1){
+    return { color: '#3e79ff' };
+  }
+  return { color: '#3e79ff' };
+};
+
 const rangeList = {
   '最近7天': [
     moment().subtract(6, 'day'),
@@ -118,10 +144,21 @@ const EchartsCom: React.FC<IEchartsCom> = ({
         splitLine: { //网格线
           lineStyle: {
             type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+            color: '#c1c1c1',
+          },
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#ccc',
           },
         },
         axisLabel: {
-          color: '#999',
+          color: '#555',
+        },
+        axisTick: {
+          lineStyle: {
+            color: '#ccc',
+          },
         },
       }];
     //获取到曲线
@@ -168,11 +205,21 @@ const EchartsCom: React.FC<IEchartsCom> = ({
               position: index === 0 ? 'left' : 'right',
               axisLabel: {
                 formatter: '{value} %',
-                color: '#999',
+                color: '#555',
+              },
+              axisLine: {
+                lineStyle: {
+                  color: '#ccc',
+                },
               },
               splitLine: { //网格线
                 lineStyle: {
                   type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+                },
+              },
+              axisTick: {
+                lineStyle: {
+                  color: '#ccc',
                 },
               },
             };
@@ -183,11 +230,21 @@ const EchartsCom: React.FC<IEchartsCom> = ({
               position: index === 0 ? 'left' : 'right',
               axisLabel: {
                 formatter: `${currency}{value}`,
-                color: '#999',
+                color: '#555',
+              },
+              axisLine: {
+                lineStyle: {
+                  color: '#ccc',
+                },
               },
               splitLine: { //网格线
                 lineStyle: {
                   type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+                },
+              },
+              axisTick: {
+                lineStyle: {
+                  color: '#ccc',
                 },
               },
             };
@@ -197,11 +254,21 @@ const EchartsCom: React.FC<IEchartsCom> = ({
               type: 'value',
               position: index === 0 ? 'left' : 'right',
               axisLabel: {
-                color: '#999',
+                color: '#555',
+              },
+              axisLine: {
+                lineStyle: {
+                  color: '#ccc',
+                },
               },
               splitLine: { //网格线
                 lineStyle: {
                   type: 'dotted', //设置网格线类型 dotted：虚线   solid:实线
+                },
+              },
+              axisTick: {
+                lineStyle: {
+                  color: '#ccc',
                 },
               },
             };
@@ -218,6 +285,10 @@ const EchartsCom: React.FC<IEchartsCom> = ({
        
       }
       if (listingChangeVo !== undefined){
+        listingChangeVo.map((item: API.IParams) => {
+          item.itemStyle = getPinColor(item.name);
+        });
+       
         //listingChangeVo导入
         listingChangeVo.length > 0 && series.push({
           symbolSize: 50,
@@ -246,10 +317,10 @@ const EchartsCom: React.FC<IEchartsCom> = ({
         backgroundColor: '#fff',
         textStyle: {
           color: '#222',
-          lineHeight: 26,
+          lineHeight: 24,
         },
         extraCssText: 'box-shadow: 0px 3px 13px 0px rgba(215, 215, 215, 0.75);',
-        padding: [10, 14, 3, 14],
+        padding: [7, 14, 2, 14],
         // 价格单金额单位，转化率带百分比，排名带#号
         formatter: (params) => {
           const time = params[0].axisValue;
@@ -260,6 +331,7 @@ const EchartsCom: React.FC<IEchartsCom> = ({
             let html = ``;
             let countBig = 0;
             let countSmall = 0;
+            let countScatter = 0;
             let bigCateHtml = ``;//大类排名曲线
             let smallCateHtml = ``;//小类排名曲线
             let pinHtml = ``;
@@ -271,13 +343,19 @@ const EchartsCom: React.FC<IEchartsCom> = ({
               if (minCategoryList.indexOf(item.seriesName as string) > -1){
                 countSmall++;
               }
+              if (item.seriesType === 'scatter'){
+                countScatter++;
+              }
             });
 
             if (countBig > 0){
-              bigCateHtml = `<span style="line-height:32px;">大类排名：</span><br/>`;
+              bigCateHtml = `<div style="padding-top:9px;padding-bottom:3px;">大类排名：</div>`;
             }
             if (countSmall > 0){
-              smallCateHtml = `<span style="line-height:32px;">小类排名：</span><br/>`;
+              smallCateHtml = `<div style="padding-top:9px;padding-bottom:3px;">小类排名：</div>`;
+            }
+            if (countScatter > 0){
+              pinHtml = `<div style="padding-top:7px;">`;
             }
             
             params.forEach((item) => {
@@ -290,11 +368,11 @@ const EchartsCom: React.FC<IEchartsCom> = ({
                   html += `<span style="color:#555">&nbsp;${item.data[1] === null ? '' : `${item.data[1]}%` }</span><br/>`;
                 } else {
                   if (bigCategoryList.indexOf(item.seriesName as string) > -1){
-                    bigCateHtml += `${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`} 
-                    </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span><br/>`;
+                    bigCateHtml += `<div style="line-height:22px;">${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`} 
+                    </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span></div>`;
                   } else if (minCategoryList.indexOf(item.seriesName as string) > -1){
-                    smallCateHtml += `${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`}
-                    </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span><br/>`;
+                    smallCateHtml += `<div style="line-height:22px;">${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`}
+                    </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span></div>`;
                   } else {
                     html += `${item.marker}<span>${item.seriesName}:</span>`;
                     html += `<span style="color:#555">${item.data[1] === null ? '' : item.data[1]}</span><br/>`;
@@ -324,6 +402,7 @@ const EchartsCom: React.FC<IEchartsCom> = ({
       legend: {
         left: 60,
         top: 24,
+        itemGap: 20,
         textStyle: { color: '#666', fontSize: 14 }, 
       }, 
       dataZoom: [
@@ -337,17 +416,34 @@ const EchartsCom: React.FC<IEchartsCom> = ({
       ],
       xAxis: {
         type: 'time',
+        splitLine: {
+          show: false,
+        },
         axisLine: {
+          onZero: false,
           lineStyle: {
-            color: '#999', //左边线的颜色
+            color: '#ccc',
           },
         },
-        splitNumber: 0, //坐标分割的段数
         axisLabel: {
           color: '#999',
           fontSize: 12,
+          formatter: function (value: string) {
+            // 格式化成月-日
+            const date = new Date(value);
+            const texts = [(date.getMonth() + 1), date.getDate()];
+            return texts.join('-');
+          },
+        },
+        axisTick: {
+          show: true,
+          inside: true,
+          lineStyle: {
+            color: '#ccc',
+          },
         },
       },
+      
       yAxis: yAxisIndexList,
       color: ['#49B5FF', '#FFC175', '#6FE09C', '#FE8484', '#759FFF'],
       series: getSeries(),

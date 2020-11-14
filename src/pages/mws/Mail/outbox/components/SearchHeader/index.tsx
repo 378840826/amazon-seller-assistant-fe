@@ -115,7 +115,7 @@ const SearchHeader: React.FC<ISearchHeader> = ({
         <Search 
           size="middle" 
           className="__search_input"
-          placeholder="订单编号、标题、ASIN、SKU，发件人" 
+          placeholder="订单编号、标题、ASIN、SKU、发件人邮箱" 
           onSearch={value => onSearch(value)} 
           disabled={tableLoading}
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>} />

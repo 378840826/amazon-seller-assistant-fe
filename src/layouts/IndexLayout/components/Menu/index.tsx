@@ -8,8 +8,6 @@ interface IMenuItemProps {
 }
 
 const { Link } = Anchor;
-
-console.log('还会加载吗？');
 const MenuCom: React.FC = () => {
   const menuList: Array<IMenuItemProps> = ['/'].indexOf(location.pathname) > -1 ? [
     { href: '#home', name: '首页', top: 0 },
