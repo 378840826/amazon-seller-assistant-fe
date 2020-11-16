@@ -12,12 +12,14 @@ interface IProps {
   value: number;
   symbol?: string; // 符号 默认%
   decimals?: number; // 保留小数位
+  showArrow?: boolean; // 是否显示箭头
 }
 
 const Rate: React.FC<IProps> = (props) => {
   const {
     value = 0,
     symbol = '%',
+    showArrow = true,
     decimals,
   } = props;
   return (
@@ -31,6 +33,7 @@ const Rate: React.FC<IProps> = (props) => {
             className={styles.up} 
             style={{
               marginLeft: 2,
+              display: showArrow ? 'inline-block' : 'none',
             }}
           />
         </span>
@@ -42,6 +45,7 @@ const Rate: React.FC<IProps> = (props) => {
               className={styles.down} 
               style={{
                 marginLeft: 2,
+                display: showArrow ? 'inline-block' : 'none',
               }}
             />
           </span>

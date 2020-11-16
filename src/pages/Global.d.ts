@@ -8,6 +8,8 @@
  * 全局TS类型
  */ 
 declare namespace Global {
+  import { Site } from '@/utils/utils';
+  
   // dva 仓库中拿出来的选中店铺
   type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
   interface IGlobalShopType {

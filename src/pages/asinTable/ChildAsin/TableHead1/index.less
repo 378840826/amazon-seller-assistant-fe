@@ -1,0 +1,81 @@
+.tableHead {
+  p {
+    height: 22px;
+    line-height: 22px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hint {
+    color: @text-color-secondary;
+    font-size: @font-size-sm;
+    margin: 0 0 0 5px;
+  }
+
+  .sort {
+    color: @text-color-secondary;
+    transition: all 0.3s;
+    position: relative;
+    left: 5px;
+    top: 1px;
+    font-size: @font-size-sm;
+    opacity: 0.8;
+
+    &:hover {
+      color: @heading-color;
+      opacity: 1 !important;
+      display: inline-block !important;
+    }
+  }
+
+  .sort.active {
+    transform: rotate(180deg);
+  }
+
+  .title {
+    text-align: center;
+
+    &:hover {
+      background-color: #e5e8eb;
+      cursor: pointer;
+
+      .sort {
+        color: @heading-color;
+        opacity: 1 !important;
+        display: inline-block !important;
+      }
+    }
+  }
+
+  // 不显示环比的样式
+  .title.notShowTwo {
+    height: 44px;
+    line-height: 44px;
+  }
+
+  .subTitle {
+    border-top: 1px solid #ccc;
+    transition: all 0.3s;
+    text-align: center;
+    display: flex;
+
+    span.text {
+      width: 50%;
+      flex: 0 0 auto;
+
+      &:first-child {
+        border-right: 1px solid #ccc;
+      }
+
+      &:hover {
+        background-color: #e5e8eb;
+        cursor: pointer;
+
+        .sort {
+          display: inline-block !important;
+          color: @heading-color;
+        }
+      }
+    }
+  }
+}

@@ -234,7 +234,7 @@ export const strToReviewScoreStr = function (value: string) {
     newValue = '0.';
   }
   // 大于 5 时
-  if (newValue > '5') {
+  if (Number(newValue) > 5) {
     newValue = '5';
   }
   return newValue;
