@@ -1,0 +1,54 @@
+.__table {
+  :global {
+    .ant-table-thead > tr > th {
+      height: 44px;
+    }
+
+    .ant-table-tbody > tr > td {
+      height: 68px;
+    }
+
+    .ant-table-tbody > tr > td,
+    .ant-table-thead > tr > th {
+      border-bottom: none;
+      padding: 0;
+    }
+
+    .ant-table-body {
+      border-left: 1px solid #eee;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+  }
+
+  .hover_color {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
+
+.dark_row {
+  background-color: @simple-table-header-bg;
+}
+
+.switch {
+  :global {
+    button {
+      min-width: 36px !important;
+      height: 18px !important;
+      line-height: 18px !important;
+
+      .ant-switch-handle {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .ant-switch-checked .ant-switch-handle {
+      left: calc(100% - 14px - 2px);
+    }
+  }
+}

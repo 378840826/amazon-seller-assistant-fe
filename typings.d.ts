@@ -8,4 +8,5 @@ declare module '*.jpg';
 declare module '*.jpeg';
 declare module '*.gif';
 declare module '*.bmp';
-declare module 'braft-utils'
+declare module 'braft-utils';
+declare module 'react-lazy-load';

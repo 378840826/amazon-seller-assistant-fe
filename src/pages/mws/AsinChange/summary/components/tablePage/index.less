@@ -1,0 +1,40 @@
+.__table {
+  margin-top: 14px;
+
+  .dark_row {
+    background-color: #fafafa;
+  }
+
+  .hover_detail {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  :global {
+    .ant-table-thead > tr > th {
+      height: 44px;
+    }
+
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      padding: 0 !important;
+      border-bottom: none;
+      min-height: 44px;
+    }
+
+    tr.ant-table-placeholder {
+      td {
+        height: 44px;
+      }
+    }
+
+    .ant-table-body {
+      border-left: 1px solid #eee;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+  }
+}
