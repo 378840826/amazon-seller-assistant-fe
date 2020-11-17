@@ -216,6 +216,7 @@ export default [
       { path: '/', component: './index', title: '首页' },
       { path: '/index/privacy', component: './privacy', title: '隐私政策' },
       { path: '/index/logs', component: './logs', title: '更新日志' },
+      { path: '/index/crx', component: './Crx', title: '插件' },
       // 重定向
       { path: '/index', redirect: '/' },
     ],
