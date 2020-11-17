@@ -34,7 +34,7 @@
   .changeType {
     height: 30px;
     line-height: 30px;
-    margin-top: 7px;
+    margin-top: 9px;
 
     & > span {
       color: #222;
@@ -72,7 +72,7 @@
   }
 
   .operaList {
-    margin-top: 12px;
+    margin-top: 4px;
 
     .active {
       border-color: #2f99fd;
@@ -88,9 +88,15 @@
         color: #ffaf4d;
         border-color: #ffaf4d;
       }
+
+      .ant-btn:focus {
+        border-color: #d9d9d9;
+        color: @text-color;
+      }
     }
 
-    .active {
+    .active,
+    .active:focus {
       border-color: #ffaf4d;
       color: #ffaf4d;
     }
@@ -106,6 +112,11 @@
 
   .yAxisList {
     margin-top: 12px;
+
+    & > span {
+      font-size: 16px;
+      color: @heading-color;
+    }
 
     .active {
       color: #2f99fd;
@@ -129,9 +140,15 @@
         border-color: #0dc757;
         color: #0dc757;
       }
+
+      .ant-btn:focus {
+        border-color: #d9d9d9;
+        color: @text-color;
+      }
     }
 
-    .active {
+    .active,
+    .active:focus {
       border-color: #0dc757;
       color: #0dc757;
 
@@ -153,9 +170,15 @@
         color: #ff5958;
         border-color: #ff5958;
       }
+
+      .ant-btn:focus {
+        border-color: #d9d9d9;
+        color: @text-color;
+      }
     }
 
-    .active {
+    .active,
+    .active:focus {
       color: #ff5958;
       border-color: #ff5958;
     }
@@ -183,7 +206,7 @@
 }
 
 .race_calendar {
-  margin-top: 12px;
+  margin-top: 20px;
   display: flex;
 
   .calendar_picker {
