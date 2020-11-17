@@ -49,27 +49,11 @@
   }
 
   .operaList {
-    margin-top: 12px;
+    margin-top: 4px;
 
     .active {
       border-color: #2f99fd;
       color: #2f99fd;
-    }
-  }
-
-  .adjustList {
-    margin-top: 12px;
-
-    :global {
-      .ant-btn:hover {
-        color: #ffaf4d;
-        border-color: #ffaf4d;
-      }
-    }
-
-    .active {
-      border-color: #ffaf4d;
-      color: #ffaf4d;
     }
   }
 
@@ -89,9 +73,15 @@
         border-color: #0dc757;
         color: #0dc757;
       }
+
+      .ant-btn:focus {
+        border-color: #d9d9d9;
+        color: @text-color;
+      }
     }
 
-    .active {
+    .active,
+    .active:focus {
       border-color: #0dc757;
       color: #0dc757;
 
@@ -105,6 +95,28 @@
     }
   }
 
+  .adjustList {
+    margin-top: 12px;
+
+    :global {
+      .ant-btn:hover {
+        color: #ffaf4d;
+        border-color: #ffaf4d;
+      }
+
+      .ant-btn:focus {
+        border-color: #d9d9d9;
+        color: @text-color;
+      }
+    }
+
+    .active,
+    .active:focus {
+      border-color: #ffaf4d;
+      color: #ffaf4d;
+    }
+  }
+
   .relativeList {
     margin-top: 12px;
 
@@ -113,9 +125,15 @@
         color: #ff5958;
         border-color: #ff5958;
       }
+
+      .ant-btn:focus {
+        border-color: #d9d9d9;
+        color: @text-color;
+      }
     }
 
-    .active {
+    .active,
+    .active:focus {
       color: #ff5958;
       border-color: #ff5958;
     }
@@ -124,16 +142,22 @@
   .raceOperaList {
     flex: 1;
 
+    .active,
+    .active:focus {
+      color: #3e79ff;
+      border-color: #3e79ff;
+    }
+
     :global {
       .ant-btn:hover {
         color: #3e79ff;
         border-color: #3e79ff;
       }
-    }
 
-    .active {
-      color: #3e79ff;
-      border-color: #3e79ff;
+      .ant-btn:focus {
+        border-color: #d9d9d9;
+        color: @text-color;
+      }
     }
   }
 

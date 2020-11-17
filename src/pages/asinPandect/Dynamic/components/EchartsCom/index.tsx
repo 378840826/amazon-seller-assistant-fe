@@ -22,22 +22,22 @@ const getPinColor = (shortName: string) => {
   const feedbackShortList = ['Q&A', 'Review'];
   const relativeShortList = ['有货', '缺货', '库存不足', '预售', 'BS', 'NR'];
   const raceOperaShortList = ['卖家', 'FBA', 'FBM', 'Amazon', '卖家数']; 
-  if (operaShortList.indexOf(shortName) > -1){
-    return { color: '#2f99fd' };
+  if (operaShortList.includes(shortName)){
+    return { color: '#49B5FF' };
   }
-  if (adjustShortList.indexOf(shortName) > -1){
-    return { color: '#ffaf4d' };
+  if (adjustShortList.includes(shortName)){
+    return { color: '#FFC175' };
   }
-  if (feedbackShortList.indexOf(shortName) > -1){
-    return { color: '#0dc757' };
+  if (feedbackShortList.includes(shortName)){
+    return { color: '#6FE09C' };
   }
-  if (relativeShortList.indexOf(shortName) > -1){
-    return { color: '#ff5958' };
+  if (relativeShortList.includes(shortName)){
+    return { color: '#FE8484' };
   }
-  if (raceOperaShortList.indexOf(shortName) > -1){
-    return { color: '#3e79ff' };
+  if (raceOperaShortList.includes(shortName)){
+    return { color: '#759FFF' };
   }
-  return { color: '#3e79ff' };
+  return { color: '#49B5FF' };
 };
 
 const rangeList = {
