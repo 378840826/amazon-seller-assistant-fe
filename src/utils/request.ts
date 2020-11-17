@@ -66,6 +66,7 @@ request.interceptors.response.use(async (response, options) => {
   const resBody = await response.clone().json();
   const whiteList = [
     '/', 
+    '/index/crx',
     '/index/privacy', 
     '/index/logs',
   ];

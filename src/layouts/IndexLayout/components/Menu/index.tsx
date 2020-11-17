@@ -14,11 +14,13 @@ const MenuCom: React.FC = () => {
     { href: '#fun', name: '功能', top: 864 },
     { href: '#pay', name: '付费', top: 1644 },
     { href: '#fqa', name: 'FAQ', top: 2359 },
+    { href: '/index/crx', name: '插件', top: 0 },
   ] : [
     { href: '/#home', name: '首页', top: 0 },
     { href: '/#fun', name: '功能', top: 864 },
     { href: '/#pay', name: '付费', top: 1644 },
     { href: '/#fqa', name: 'FAQ', top: 2359 },
+    { href: '/index/crx', name: '插件', top: 0 },
   ];
   return (
     <div className={styles.menu}>
