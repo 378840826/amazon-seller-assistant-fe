@@ -60,7 +60,7 @@ const ChildAsin: React.FC<IProps> = props => {
   // state
   const [visiblefiltern, setVisibleFiltern] = useState<boolean>(false); // 高级筛选是否显示
   const [conditions, setConditions] = useState<API.IParams[]>([]); // 偏好列表
-  const [ratio, setRatio] = useState<boolean>(true); // 环比按钮
+  const [ratio, setRatio] = useState<boolean>(false); // 环比按钮
   const [visibleCustom, setVisibleCustom] = useState<boolean>(false); // 自定义列是否显示
   // 高级筛选条件组
   const [screecondition, setScreecondition] = useState<AsinTable.IFiltrateList[]>([]);
@@ -68,7 +68,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const [loading, setLoading] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<AsinTable.IChildResocds[]>([]);
   const [summary, setSummary] = useState<AsinTable.IChildSummaryType|null>(null);
-  const [calendar, setCalendar] = useState<string>(storage.get(adinTableCalendar) || '6'); // 日历
+  const [calendar, setCalendar] = useState<string>(storage.get(adinTableCalendar) || '7'); // 日历
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
@@ -197,7 +197,10 @@ const ChildAsin: React.FC<IProps> = props => {
   }, [tabValue, requestFn, getChildPreference]);
 
   // 搜索框
-  const changeSearch = () => {
+  const changeSearch = (val: string) => {
+    if (val === '') {
+      return;
+    }
     requestFn();
   };
 
@@ -440,6 +443,7 @@ const ChildAsin: React.FC<IProps> = props => {
     marketplace: currentShop.marketplace,
     childCustomcol,
     sortCallback,
+    site: currentShop.marketplace,
   });
 
   let count = 1;
@@ -551,13 +555,14 @@ const ChildAsin: React.FC<IProps> = props => {
       }}>
         <Form.Item name="search">
           <Input.Search
+            allowClear
             className="h-search"
             placeholder="输入标题、ASIN、SKU"
             style={{
               'float': 'left',
             }}
             enterButton={<Iconfont type="icon-sousuo" />}
-            onSearch={() => changeSearch()}
+            onSearch={changeSearch}
           />
         </Form.Item>
       </Form>
@@ -601,7 +606,6 @@ const ChildAsin: React.FC<IProps> = props => {
           />
         </div>
         <div className={commonStyles.calendar}>
-          <span className={commonStyles.nameText}>日期：</span>
           <DefinedCalendar 
             checkedItem={calendar} 
             storageKey={adinTableCalendar} 

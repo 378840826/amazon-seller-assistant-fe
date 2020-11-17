@@ -24,7 +24,7 @@ const AsinTable = () => {
   const [messageprofit, setMessageProfit] = useState<boolean>(false);
   // 未完成广告授权 是否显示（子asin列表校验店铺是否已通过MWS绑定或者广告授权）
   const [messagead, setMessageAd] = useState<boolean>(false);
-  const [currentTab, setCurrentTab] = useState<string>('child'); // 当前选中的menu
+  const [currentTab, setCurrentTab] = useState<string>('parent'); // 当前选中的menu
   const [visible, setVisible] = useState<boolean>(false); // 显示消息框
   const [isShow, setIsShow] = useState<boolean>(false); // 是否有消息提醒
 
@@ -95,7 +95,7 @@ const AsinTable = () => {
         setMessageadAsync(false);
       }
     });
-  }, [dispatch, currentShop]);
+  }, [dispatch, currentShop, currentTab]);
 
   // 忽略
   useEffect(() => {
@@ -116,7 +116,6 @@ const AsinTable = () => {
     setMessageProfit(messageprofitAsync);
     setMessageAd(messageadAsync);
   };
-
 
   return <div className={styles.asinTable}>
     <Tabs defaultActiveKey={currentTab} className={styles.tabs} onChange={tabCallback} animated>

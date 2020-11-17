@@ -221,6 +221,7 @@ declare namespace AsinTable {
     marketplace: string;
     parentCol?: {};
     childCustomcol: string[];
+    site: 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
     sortCallback: (order: string, sort: boolean) => void;
   }
 

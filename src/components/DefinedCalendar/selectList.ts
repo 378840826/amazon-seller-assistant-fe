@@ -45,12 +45,12 @@ export const list: DefinedCalendar.IList = [
   // 包含季筛选
   [
     {
-      text: '按月查看',
-      key: 'month',
-    },
-    {
       text: '按周查看',
       key: 'week',
+    },
+    {
+      text: '按月查看',
+      key: 'month',
     },
     {
       text: '按季查看',

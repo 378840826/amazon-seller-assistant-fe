@@ -67,7 +67,7 @@ const Summary: React.FC<IProps> = (props) => {
   const summary = [
     {
       dataIndex: 'productCol',
-      component: <td className={styles.title} key="0"></td>,
+      component: <td className={styles.title} key="0">合计</td>,
     },
     {
       dataIndex: 'skuInfo',
@@ -83,7 +83,7 @@ const Summary: React.FC<IProps> = (props) => {
     },
     {
       dataIndex: 'reviewScore',
-      component: <td className={styles.title} key="4">合计</td>,
+      component: <td className={styles.title} key="4"></td>,
     },
     {
       dataIndex: 'totalSales',
@@ -177,66 +177,161 @@ const Summary: React.FC<IProps> = (props) => {
       </td>,
     },
     {
+      dataIndex: 'returnQuantity',
+      component: <td className={styles.center} key="20">
+        {returnQuantity !== null ? returnQuantity : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'returnRate',
+      component: <td className={styles.center} key="21">
+        {returnRate !== null ? `${returnRate}%` : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'b2bSales',
+      component: <td className={styles.center} key="22">
+        {b2bSales !== null ? symbol + moneyFormat(b2bSales, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'b2bOrderQuantity',
+      component: <td className={styles.center} key="23">
+        {b2bOrderQuantity !== null ? b2bOrderQuantity : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'b2bSalesQuantity',
+      component: <td className={styles.center} key="24">
+        {b2bSalesQuantity !== null ? b2bSalesQuantity : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'b2bSalesQuantityExceptOrderQuantity',
+      component: <td className={styles.center} key="25">
+        {
+          b2bSalesQuantityExceptOrderQuantity !== null ? 
+            b2bSalesQuantityExceptOrderQuantity : <Empty/>
+        }
+      </td>,
+    },
+    {
+      dataIndex: 'b2bAvgSellingPrice',
+      component: <td className={styles.right} key="26">
+        {b2bAvgSellingPrice !== null ? symbol + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'b2bAvgCustomerPrice',
+      component: <td className={styles.right} key="27">
+        {b2bAvgCustomerPrice !== null ? symbol + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'adAsinAdTypeStatistics',
+      component: <td key="28"></td>,
+    },
+    {
+      dataIndex: 'adSales',
+      component: <td className={styles.right} key="29">
+        {adSales !== null ? symbol + moneyFormat(adSales, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'skuAdSales',
+      component: <td className={styles.center} key="30">
+        {skuAdSales !== null ? symbol + moneyFormat(skuAdSales, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'naturalSales',
+      component: <td className={styles.center} key="31">
+        {naturalSales !== null ? symbol + moneyFormat(naturalSales, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'adOrderQuantity',
+      component: <td className={styles.center} key="32">
+        {adOrderQuantity !== null ? adOrderQuantity : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'skuAdOrderQuantity',
+      component: <td className={styles.center} key="33">
+        {skuAdOrderQuantity !== null ? skuAdOrderQuantity : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'naturalOrderQuantity',
+      component: <td className={styles.center} key="34">
+        {naturalOrderQuantity !== null ? naturalOrderQuantity : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'cpc',
+      component: <td className={styles.center} key="35">
+        {cpc !== null ? symbol + moneyFormat(cpc, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'spend',
+      component: <td className={styles.center} key="36">
+        {spend !== null ? symbol + moneyFormat(spend, 2, ',', '.', false) : <Empty/>} 
+      </td>,
+    },
+    {
+      dataIndex: 'acos',
+      component: <td className={styles.right} key="37">
+        {acos !== null ? acos : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'compositeAcos',
+      component: <td className={styles.right} key="38">
+        {compositeAcos !== null ? compositeAcos : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'roas',
+      component: <td className={styles.right} key="39">
+        {roas !== null ? roas : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'compositeRoas',
+      component: <td className={styles.right} key="40">
+        {compositeRoas !== null ? compositeRoas : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'impressions',
+      component: <td className={styles.right} key="41">
+        {impressions !== null ? impressions : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'clicks',
+      component: <td className={styles.right} key="42">
+        {clicks !== null ? clicks : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'ctr',
+      component: <td className={styles.right} key="43">
+        {ctr !== null ? `${ctr}%` : <Empty/>}
+      </td>,
+    },
+    {
+      dataIndex: 'adConversionsRate',
+      component: <td className={styles.right} key="44">
+        {adConversionsRate !== null ? `${adConversionsRate}%` : <Empty/>}
+      </td>,
+    },
+    {
       dataIndex: 'handle',
-      component: <td className={styles.title} key="46">handle</td>,
+      component: <td className={styles.title} key="45"></td>,
     },
   ];
-
-
-  <tr className={styles.summary}>
-    
-    <td className={styles.center}>{returnQuantity !== null ? returnQuantity : <Empty/>}</td>
-    <td className={styles.center}>{returnRate !== null ? `${returnRate}%` : <Empty/>}</td>
-    <td className={styles.center}>
-      {b2bSales !== null ? symbol + moneyFormat(b2bSales, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td className={styles.center}>{b2bOrderQuantity !== null ? b2bOrderQuantity : <Empty/>}</td>
-    <td className={styles.center}>{b2bSalesQuantity !== null ? b2bSalesQuantity : <Empty/>}</td>
-    <td className={styles.center}>
-      {
-        b2bSalesQuantityExceptOrderQuantity !== null ? 
-          b2bSalesQuantityExceptOrderQuantity : <Empty/>
-      }
-    </td>
-    <td className={styles.right}>
-      {b2bAvgSellingPrice !== null ? symbol + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td className={styles.right}>
-      {b2bAvgCustomerPrice !== null ? symbol + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td></td>
-    <td className={styles.right}>
-      {adSales !== null ? symbol + moneyFormat(adSales, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td className={styles.center}>
-      {skuAdSales !== null ? symbol + moneyFormat(skuAdSales, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td className={styles.center}>
-      {naturalSales !== null ? symbol + moneyFormat(naturalSales, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td className={styles.center}>{adOrderQuantity !== null ? adOrderQuantity : <Empty/>}</td>
-    <td className={styles.center}>{skuAdOrderQuantity !== null ? skuAdOrderQuantity : <Empty/>}</td>
-    <td className={styles.center}>
-      {naturalOrderQuantity !== null ? naturalOrderQuantity : <Empty/>}
-    </td>
-    <td className={styles.center}>
-      {cpc !== null ? symbol + moneyFormat(cpc, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td className={styles.center}>
-      {spend !== null ? symbol + moneyFormat(spend, 2, ',', '.', false) : <Empty/>} 
-    </td>
-    <td className={styles.right}>{acos !== null ? acos : <Empty/>}</td>
-    <td className={styles.right}>{compositeAcos !== null ? compositeAcos : <Empty/>}</td>
-    <td className={styles.right}>{roas !== null ? roas : <Empty/>}</td>
-    <td className={styles.right}>{compositeRoas !== null ? compositeRoas : <Empty/>}</td>
-    <td className={styles.right}>{impressions !== null ? impressions : <Empty/>}</td>
-    <td className={styles.right}>{clicks !== null ? clicks : <Empty/>}</td>
-    <td className={styles.right}>{ctr !== null ? `${ctr}%` : <Empty/>}</td>
-    <td className={styles.right}>
-      {adConversionsRate !== null ? `${adConversionsRate}%` : <Empty/>}
-    </td>
-  </tr>;
-
 
   // 自定义列
   const selectCustomCol: string[] = []; // 当前选中的自定义列

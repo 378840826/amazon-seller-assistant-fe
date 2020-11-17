@@ -184,7 +184,10 @@ const ChildAsin: React.FC<IProps> = props => {
   }, [dispatch, tabValue]);
 
   // 搜索框
-  const changeSearch = () => {
+  const changeSearch = (val: string) => {
+    if (val === '') {
+      return;
+    }
     requestFn();
   };
 
@@ -536,13 +539,14 @@ const ChildAsin: React.FC<IProps> = props => {
       }}>
         <Form.Item name="search">
           <Input.Search
+            allowClear
             className="h-search"
             placeholder="输入标题、ASIN、SKU"
             style={{
               'float': 'left',
             }}
             enterButton={<Iconfont type="icon-sousuo" />}
-            onSearch={() => changeSearch()}
+            onSearch={changeSearch}
           />
         </Form.Item>
       </Form>
@@ -578,7 +582,6 @@ const ChildAsin: React.FC<IProps> = props => {
 
       <div className={commonStyles.rightLayout}>
         <div className={commonStyles.calendar}>
-          <span className={commonStyles.nameText}>日期：</span>
           <DefinedCalendar 
             checkedItem={calendar} 
             storageKey={adinTableCalendar} 
@@ -673,7 +676,7 @@ const ChildAsin: React.FC<IProps> = props => {
         />
       </div>
     </div>
-    <Table {...tableConfig} />
+    <Table {...tableConfig} className={styles.table}/>
   </div>;
 };
 

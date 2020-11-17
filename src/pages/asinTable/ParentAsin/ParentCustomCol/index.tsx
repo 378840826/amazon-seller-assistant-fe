@@ -68,23 +68,14 @@ const ParentCustomCol: React.FC<IProps> = () => {
     (state: AsinTable.IDvaState) => state.asinTable.parentCustomcol
   );
 
-
   // state
-
-  //总体销售表现
-  // 全选按钮的样式
+  //总体销售表现 全选按钮的样式
   const [indeterminate, settIndeterminate] = useState<boolean>(false);
-
-  // 总体流量转化
-  // 全选按钮的样式
+  // 总体流量转化  全选按钮的样式
   const [fluxStyle, setFluxStyle] = useState<boolean>(false);
-
-  // 退货
-  // 全选按钮的样式
+  // 退货 全选按钮的样式
   const [refundStyle, setRefundStyle] = useState<boolean>(false);
-
-  // b2b销售
-  // 全选按钮的样式
+  // b2b销售 全选按钮的样式
   const [b2bStyle, setB2bStyle] = useState<boolean>(false);
 
 

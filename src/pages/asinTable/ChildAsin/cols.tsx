@@ -3,7 +3,7 @@ import styles from './../commonStyles.less';
 import { moneyFormat } from '@/utils/huang';
 
 // 组件
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import notImg from '@/assets/stamp.png';
 import { Link } from 'umi';
 import TableHead from './TableHead';
@@ -24,6 +24,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     order = '', // 正序或倒序
     sortCallback,
     childCustomcol,
+    site,
   } = props;
 
 
@@ -69,9 +70,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <div className={styles.productCol}>
           <img src={imgUrl || notImg}/>
           <div className={styles.details}>
-            <a href="" 
+            <a href={getAmazonAsinUrl(asin, site)} 
               className={styles.title}
               target="_blank"
+              rel="noreferrer"
               title={title}
             >
               <Iconfont type="icon-lianjie" className={styles.linkIcon}/>{title}</a>

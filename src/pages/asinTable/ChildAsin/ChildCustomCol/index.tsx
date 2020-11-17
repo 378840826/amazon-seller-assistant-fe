@@ -20,7 +20,7 @@ const ParentCustomCol: React.FC = () => {
 
   const skus = [
     { label: 'SKU', value: sprs[0] },
-    { label: '父SKU', value: sprs[1] },
+    { label: '父ASIN', value: sprs[1] },
     { label: 'Review', value: sprs[2] },
     { label: '评分', value: sprs[3] },
   ];
