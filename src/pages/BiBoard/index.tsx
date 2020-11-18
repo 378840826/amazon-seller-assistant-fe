@@ -164,10 +164,10 @@ const BiBoard: React.FC = () => {
     <div className={styles.buyboxPercentageKanbanItem} key={record.asin}>
       { renderGoods(record) }
       <div className={styles.red}>
-        {record.buyboxPercentage}%
+        {record.buyboxPercentage && record.buyboxPercentage.toFixed(2)}%
         {
           record.isJoinFollowMonitoring
-            ? null
+            ? <Button type="link" className={styles.hide}>加入跟卖监控</Button>
             : <Button type="link" onClick={() => handleAddMonitor(record.asin)}>加入跟卖监控</Button>
         }
       </div>
@@ -255,7 +255,7 @@ const BiBoard: React.FC = () => {
       <div className={styles.row}>
         <span>{record.keyword}</span>
         <span>
-          ACoS≥<span className={styles.red}>{record.acos}%</span>
+          ACoS≥<span className={styles.red}>{record.acos.toFixed(2)}%</span>
         </span>
       </div>
       <Text type="secondary" className={styles.smallFont}>{record.adCampaignsName} &gt; {record.adGroupName}</Text>

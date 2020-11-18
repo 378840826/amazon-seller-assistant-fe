@@ -93,7 +93,7 @@ export const getFullColumns = (params: any) => {
   const compareTd = function (obj: { [key: string]: string | number }) {
     // 要显示的环比是百分比还是数值
     const { value, percentValue, numberValue } = obj;
-    let compareValue = percentValue;
+    let compareValue: string | number = Number(percentValue).toFixed(2);
     let suffix = '%';
     if (compareType === 'number') {
       compareValue = numberValue;
@@ -225,7 +225,7 @@ export const getFullColumns = (params: any) => {
             record.reviewCount !== null
               ?
               <>
-                { reviewScore }
+                { reviewScore && reviewScore.toFixed(1) }
                 <Text type="secondary">
                   (<span className={styles.reviewCount}>{record.reviewCount}</span>)
                 </Text>
