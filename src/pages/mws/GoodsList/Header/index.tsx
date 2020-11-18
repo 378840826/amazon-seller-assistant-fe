@@ -274,7 +274,8 @@ const Header: React.FC = () => {
       name = value;
       break;          
     default:
-      throw 'key 不存在';
+      console.error('筛选参数key不存在');
+      break;
     }
     return name;
   };

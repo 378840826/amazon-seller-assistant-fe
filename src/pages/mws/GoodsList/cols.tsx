@@ -318,7 +318,7 @@ export const getFullColumns = (params: any) => {
             customCols.price
             &&
             editable({
-              inputValue: price,
+              inputValue: price && price.toFixed(2),
               formatValueFun: strToMoneyStr,
               prefix: currency,
               maxLength: 20,
@@ -356,7 +356,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (price, record) => (
         editable({
-          inputValue: price,
+          inputValue: price && price.toFixed(2),
           formatValueFun: strToMoneyStr,
           prefix: price === null ? '' : currency,
           maxLength: 20,
@@ -379,7 +379,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (freight, record) => (
         editable({
-          inputValue: freight,
+          inputValue: freight && freight.toFixed(2),
           formatValueFun: strToMoneyStr,
           prefix: freight === null ? '' : currency,
           maxLength: 20,
@@ -411,7 +411,7 @@ export const getFullColumns = (params: any) => {
             (
               commission
                 ?
-                <div>{currency}{commission}</div>
+                <div>{currency}{commission && commission.toFixed(2)}</div>
                 :
                 '—'
             )
@@ -423,7 +423,7 @@ export const getFullColumns = (params: any) => {
               record.fbaFee
                 ?
                 <Text type="secondary">
-                  +{currency}{record.fbaFee}
+                  +{currency}{record.fbaFee.toFixed(2)}
                 </Text>
                 :
                 '—'
@@ -464,13 +464,13 @@ export const getFullColumns = (params: any) => {
             {
               customCols.profit
               &&
-              <div>{currency}{profit}</div>
+              <div>{currency}{profit.toFixed(2)}</div>
             }
             {
               customCols.profitMargin
               &&
               <Text type="secondary">
-                ({ record.profitMargin }%)
+                ({ record.profitMargin && record.profitMargin.toFixed(2) }%)
               </Text>
             }
           </Space>
@@ -618,7 +618,7 @@ export const getFullColumns = (params: any) => {
       width: 80,
       render: (reviewScore, record) => (
         <Space direction="vertical">
-          { customCols.reviewScore && reviewScore }
+          { customCols.reviewScore && reviewScore && reviewScore.toFixed(1) }
           {
             customCols.reviewCount
             &&
@@ -638,7 +638,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (minPrice, record) => (
         editable({
-          inputValue: minPrice,
+          inputValue: minPrice && minPrice.toFixed(2),
           formatValueFun: strToMoneyStr,
           prefix: minPrice === null ? '' : currency,
           maxLength: 20,
@@ -670,7 +670,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (maxPrice, record) => (
         editable({
-          inputValue: maxPrice,
+          inputValue: maxPrice && maxPrice.toFixed(2),
           formatValueFun: strToMoneyStr,
           prefix: maxPrice === null ? '' : currency,
           maxLength: 20,
@@ -703,8 +703,8 @@ export const getFullColumns = (params: any) => {
       key: 'competingCount',
       align: 'center',
       width: 60,
-      render: competingCount => (
-        <Link to="/review/monitor">{competingCount}</Link>
+      render: (competingCount, record) => (
+        <Link to={`/product/cp?id=${record.id}`}>{competingCount || 0}</Link>
       ),
     }, {
       title: '调价规则',
