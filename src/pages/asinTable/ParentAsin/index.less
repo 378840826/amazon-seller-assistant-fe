@@ -1,4 +1,4 @@
-@bg-color: #f7f7f7;
+@bg-color: @table-row-hover-bg;
 
 .childAsin {
   width: 100%;
@@ -14,16 +14,9 @@
   .table {
     background-color: #fff;
     margin: 20px 0 0 0;
-  }
 
-  thead {
-    th {
-      border-width: 0 !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      // padding: 0 !important;
-      height: 44px;
-      line-height: 44px;
+    & > :global(.ant-spin-nested-loading) > div:global(.ant-spin-container) > div:global(.ant-table:first-child) {
+      border: 1px solid @divider-line-color;
     }
   }
 
@@ -31,13 +24,32 @@
     td {
       padding-top: 0 !important;
       padding-bottom: 0 !important;
-      // padding: 0 !important;
       color: @text-color;
+      border: 0;
     }
 
     &:hover * {
       background-color: @bg-color !important;
     }
+  }
+
+  thead {
+    th {
+      border-width: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      height: 44px;
+    }
+  }
+
+  .childTable {
+    td {
+      border-bottom: 1px solid #eee;
+    }
+
+    // tr:nth-child(odd) > td {
+    //   border-bottom: 1px solid red !important;
+    // }
   }
 
   // asin外面的容器行
@@ -47,7 +59,28 @@
     }
 
     &:nth-child(odd) td {
-      background-color: @bg-color;
+      background-color: @simple-table-header-bg;
+      border-color: #e8e8e8;
+    }
+
+    &:nth-child(odd) tfoot td {
+      border-color: #e8e8e8;
+    }
+
+    // 父ASIN列表
+    .parentAsinCol {
+      padding: 16px 0 !important;
+
+      &::after {
+        box-shadow: none;
+      }
+    }
+
+    &:nth-child(odd) tfoot {
+      td.childTableChildAsin,
+      td.summarySku {
+        background-color: @simple-table-header-bg !important;
+      }
     }
   }
 
@@ -62,6 +95,12 @@
     width: 210px;
     min-width: 210px;
     max-width: 210px;
+
+    .text {
+      max-width: 210px;
+      display: block;
+      text-align: center;
+    }
   }
 
   .childAsinCol {
@@ -69,18 +108,29 @@
     min-width: 210px;
     max-width: 210px;
     padding: 0;
+    left: 100px !important;
+    z-index: 999;
   }
 
   th.skuCol {
-    width: 186px;
-    min-width: 186px;
-    max-width: 186px;
+    width: 196px;
+    min-width: 196px;
+    max-width: 196px;
+    left: 310px !important;
+
+    .text {
+      max-width: 170px;
+      display: block;
+      text-align: center;
+    }
   }
 
   td.skuCol {
-    width: 186px;
-    min-width: 186px;
-    max-width: 186px;
+    width: 196px;
+    min-width: 196px;
+    max-width: 196px;
+    left: 310px !important;
+    padding-right: 10px;
   }
 
   // 商品列
@@ -111,11 +161,14 @@
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
-        white-space: normal;
-        color: @success-color;
+        color: @link-color;
 
-        &:hover .linkIcon {
-          color: @link-color;
+        &:hover {
+          color: @primary-color;
+
+          .linkIcon {
+            color: @primary-color;
+          }
         }
       }
 
@@ -123,8 +176,13 @@
         display: flex;
         justify-content: space-between;
 
-        span:first-child {
-          color: @link-color;
+        a.title {
+          color: @btn-text-color;
+          width: 50%;
+
+          &:hover {
+            color: @primary-color;
+          }
         }
 
         span:last-child {
@@ -140,7 +198,7 @@
     line-height: 48px;
 
     td.base {
-      border-top: 1px solid @divider-line-color;
+      border-top: 1px solid #eee;
       border-bottom: 0;
       height: 48px;
       line-height: 48px;
@@ -149,6 +207,47 @@
       p {
         line-height: 16px;
       }
+    }
+
+    // 子ASIN列
+    .summaryChildAsin {
+      position: sticky;
+      z-index: 2;
+      background-color: #fff;
+      left: 100px;
+
+      .text {
+        max-width: 190px;
+        text-align: right;
+        display: block;
+      }
+    }
+
+    // SKU
+    .summarySku {
+      position: sticky;
+      z-index: 2;
+      left: 310px;
+      background-color: #fff;
+      padding-right: 60px;
+
+      .text {
+        max-width: 170px;
+        text-align: right;
+        display: block;
+      }
+      // &::after {
+      //   box-shadow: inset 8px 0 8px -8px rgba(0, 0, 0, 0.1);
+      //   position: absolute;
+      //   top: 0;
+      //   right: 0;
+      //   bottom: -1px;
+      //   width: 30px;
+      //   transform: translateX(100%);
+      //   transition: box-shadow 0.3s;
+      //   content: '';
+      //   pointer-events: none;
+      // }
     }
   }
 }

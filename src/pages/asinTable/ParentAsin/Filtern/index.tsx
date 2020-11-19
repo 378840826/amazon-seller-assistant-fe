@@ -278,8 +278,8 @@ const ParentAsinFiltern: React.FC<IProps> = (props) => {
                           />
                         </div>
                       </div>
-                      <Form.Item><Button type="primary" htmlType="submit">确定</Button></Form.Item>
                       <Button onClick={cancelFiltrate}>取消</Button>
+                      <Form.Item><Button type="primary" htmlType="submit">确定</Button></Form.Item>
                       <span className={styles.clear} onClick={onresetForm}>清空</span>
                     </div>;
                   }

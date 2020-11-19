@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { useDispatch, useSelector } from 'umi';
-import { sprs, adSales, flux, b2b, refunds } from '../config';
+import { 
+  parentsprs,
+  parentadSales,
+  parentflux,
+  parentb2b,
+  parentrefunds,
+} from '../config';
 
 
 // 组件
@@ -10,58 +16,54 @@ import {
   Form,
 } from 'antd';
 
-interface IProps {
-  callback: (params: {}) => void;
-}
-
 const { Item } = Form;
-const ParentCustomCol: React.FC<IProps> = () => {
+const ParentCustomCol: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   // asin SKU
   const asinOrSku = [
-    { label: '子ASIN', value: sprs[0] },
-    { label: 'SKU', value: sprs[1] },
+    // { label: '子ASIN', value: parentsprs[0] },
+    { label: 'SKU', value: parentsprs[1] },
   ];
 
   // 总体销售表现
   const salesList = [
-    { label: '总销售额', value: adSales[0] },
-    { label: '总订单量', value: adSales[1] },
-    { label: '总销量', value: adSales[2] },
-    { label: '回评率', value: adSales[3] },
-    { label: '利润', value: adSales[4] },
-    { label: '利润率', value: adSales[5] },
-    { label: '销量/订单量', value: adSales[6] },
-    { label: '平均客单价', value: adSales[7] },
-    { label: '平均售价', value: adSales[8] },
-    { label: '优惠订单', value: adSales[9] },
-    { label: '关联销售', value: adSales[10] },
+    { label: '总销售额', value: parentadSales[0] },
+    { label: '总订单量', value: parentadSales[1] },
+    { label: '总销量', value: parentadSales[2] },
+    { label: '回评率', value: parentadSales[3] },
+    { label: '利润', value: parentadSales[4] },
+    { label: '利润率', value: parentadSales[5] },
+    { label: '销量/订单量', value: parentadSales[6] },
+    { label: '平均客单价', value: parentadSales[7] },
+    { label: '平均售价', value: parentadSales[8] },
+    { label: '优惠订单', value: parentadSales[9] },
+    { label: '关联销售', value: parentadSales[10] },
   ];
 
   // 总体流量转化
   const fluxList = [
-    { label: 'PageView', value: flux[0] },
-    { label: 'Session', value: flux[1] },
-    { label: 'PageView/Session', value: flux[2] },
-    { label: '转化率', value: flux[3] },
+    { label: 'PageView', value: parentflux[0] },
+    { label: 'Session', value: parentflux[1] },
+    { label: 'PageView/Session', value: parentflux[2] },
+    { label: '转化率', value: parentflux[3] },
   ];
 
   // 退货
   const refundList = [
-    { label: '退货率', value: refunds[0] },
-    { label: '退货量', value: refunds[1] },
+    { label: '退货率', value: parentrefunds[0] },
+    { label: '退货量', value: parentrefunds[1] },
   ];
 
   // B2B销售
   const b2bList = [
-    { label: 'B2B销售额', value: b2b[0] },
-    { label: 'B2B订单量', value: b2b[1] },
-    { label: 'B2B销量', value: b2b[2] },
-    { label: 'B2B销量/订单量', value: b2b[3] },
-    { label: 'B2B平均售价', value: b2b[4] },
-    { label: 'B2B平均客单价', value: b2b[5] },
+    { label: 'B2B销售额', value: parentb2b[0] },
+    { label: 'B2B订单量', value: parentb2b[1] },
+    { label: 'B2B销量', value: parentb2b[2] },
+    { label: 'B2B销量/订单量', value: parentb2b[3] },
+    { label: 'B2B平均售价', value: parentb2b[4] },
+    { label: 'B2B平均客单价', value: parentb2b[5] },
   ];
 
   const parentCustomcol = useSelector(
@@ -86,7 +88,7 @@ const ParentCustomCol: React.FC<IProps> = () => {
     // 监听 “总体销售表现”是否需要全选
     if (parentCustomcol.salesItem) {
       const length = parentCustomcol.salesItem.length;
-      if (length === adSales.length) {
+      if (length === parentadSales.length) {
         settIndeterminate(false);
         form.setFieldsValue({
           salesAll: true,
@@ -106,7 +108,7 @@ const ParentCustomCol: React.FC<IProps> = () => {
     // 监听 “总体流量转化”是否需要全选
     if (parentCustomcol.fluxItem) {
       const length = parentCustomcol.fluxItem.length;
-      if (length === flux.length) {
+      if (length === parentflux.length) {
         setFluxStyle(false);
         form.setFieldsValue({
           fluxAll: true,
@@ -126,7 +128,7 @@ const ParentCustomCol: React.FC<IProps> = () => {
     // 监听 “B2B销售”是否需要全选
     if (parentCustomcol.b2bItem) {
       const length = parentCustomcol.b2bItem.length;
-      if (length === b2b.length) {
+      if (length === parentb2b.length) {
         setB2bStyle(false);
         form.setFieldsValue({
           b2bAll: true,
@@ -146,7 +148,7 @@ const ParentCustomCol: React.FC<IProps> = () => {
     // 监听 “退货”是否需要全选
     if (parentCustomcol.refundItem) {
       const length = parentCustomcol.refundItem.length;
-      if (length === refunds.length) {
+      if (length === parentrefunds.length) {
         setRefundStyle(false);
         form.setFieldsValue({
           refundAll: true,
@@ -179,28 +181,28 @@ const ParentCustomCol: React.FC<IProps> = () => {
 
     // 全选和取消全选
     if (changedValues.salesAll) {
-      obj.salesItem = adSales;
+      obj.salesItem = parentadSales;
     } else if (changedValues.salesAll === false) {
       obj.salesItem = [];
     }
 
     // 全选和取消全选
     if (changedValues.fluxAll) {
-      obj.fluxItem = flux;
+      obj.fluxItem = parentflux;
     } else if (changedValues.fluxAll === false) {
       obj.fluxItem = [];
     }
 
     // 全选和取消全选
     if (changedValues.b2bAll) {
-      obj.b2bItem = b2b;
+      obj.b2bItem = parentb2b;
     } else if (changedValues.b2bAll === false) {
       obj.b2bItem = [];
     }
 
     // 全选和取消全选
     if (changedValues.refundAll) {
-      obj.refundItem = refunds;
+      obj.refundItem = parentrefunds;
     } else if (changedValues.refundAll === false) {
       obj.refundItem = [];
     }
@@ -240,7 +242,7 @@ const ParentCustomCol: React.FC<IProps> = () => {
 
       <div className={styles.rightLayout}>
         {/* 总体流量转化 */}
-        <div className={`${styles.common} ${styles.flux}`}>
+        <div className={`${styles.common} ${styles.parentflux}`}>
           <Item name="fluxAll" valuePropName="checked">
             <Checkbox indeterminate={fluxStyle} className={styles.title}>总体流量转化</Checkbox>
           </Item>
@@ -265,7 +267,7 @@ const ParentCustomCol: React.FC<IProps> = () => {
         </div>
 
         {/* B2B销售 */}
-        <div className={`${styles.common} ${styles.b2b}`}>
+        <div className={`${styles.common} ${styles.parentb2b}`}>
           <Item name="b2bAll" valuePropName="checked">
             <Checkbox indeterminate={b2bStyle} className={styles.title}>B2B销售</Checkbox>
           </Item>

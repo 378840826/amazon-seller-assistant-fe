@@ -17,8 +17,8 @@ import DefinedCalendar from '@/components/DefinedCalendar';
 import { DownOutlined } from '@ant-design/icons';
 import Summary from './Summary';
 import { childAsinCols } from './cols';
-import ChildCustomCol from './ChildCustomCol';
-import ChildAsinFiltern from './ChildAsinFiltern';
+import CustomCol from './CustomCol';
+import Filtern from './Filtern';
 import {
   Menu,
   Button,
@@ -73,6 +73,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
   const [order, setOrder] = useState<string>('');
+  const [sort, setSort] = useState<boolean>(false);
   const [exportText, setExportText] = useState<string>('导出');
   const [update, setUpdate] = useState<string>('');
   
@@ -110,6 +111,20 @@ const ChildAsin: React.FC<IProps> = props => {
       return;
     }
 
+    const filtern = searchForm.getFieldsValue();
+    const filternparams = {};
+    const filtrations = ['search']; // 不加入条件组
+    for (const key in filtern) {
+      const value = filtern[key];
+      if (filtrations.indexOf(key) > -1) {
+        continue;
+      }
+
+      if (value !== undefined && value !== null && value !== '' ) {
+        filternparams[key] = value;
+      }
+    }
+
     let payload = {
       headersParams: {
         StoreId: currentShop.id,
@@ -118,13 +133,11 @@ const ChildAsin: React.FC<IProps> = props => {
       size: pageSize,
       sellerId: currentShop.sellerId,
       marketplace: currentShop.marketplace,
-      search: searchForm.getFieldValue(['search']),
       ...getCalendarFields(calendar, adinTableCalendar),
-      ...searchForm.getFieldsValue(),
+      ...filternparams,
     };
     payload = Object.assign(payload, params);
     setLoading(true);
-    console.log('子ASIN 初始化请求');
     new Promise((resolve, reject) => {
       dispatch({
         type: 'asinTable/getChildInitList',
@@ -148,11 +161,13 @@ const ChildAsin: React.FC<IProps> = props => {
         setCurrent(page.current);
         setPageSize(page.size);
         setTotal(page.total);
+        setSort(page.asc);
       } else {
         setDataSource([]);
         setCurrent(1);
         setPageSize(20);
         setTotal(0);
+        setSort(false);
       }
     });
   }, [dispatch, currentShop, searchForm, calendar]); // eslint-disable-line
@@ -198,10 +213,7 @@ const ChildAsin: React.FC<IProps> = props => {
 
   // 搜索框
   const changeSearch = (val: string) => {
-    if (val === '') {
-      return;
-    }
-    requestFn();
+    requestFn({ search: val });
   };
 
   // 删除单个偏好
@@ -354,7 +366,9 @@ const ChildAsin: React.FC<IProps> = props => {
   };
 
   // 高级筛选确定按钮
-  const confirmFiltrateCallback = (data: {}) => {
+  const confirmFiltrateCallback = () => {
+    const data = searchForm.getFieldsValue();
+
     const arr = [];
     const filtrations = ['status', 'adType', 'groupId', 'search']; // 不加入条件组
 
@@ -362,10 +376,13 @@ const ChildAsin: React.FC<IProps> = props => {
       if (filtrations.indexOf(key) > -1) {
         continue;
       }
-      if (data[key] !== undefined && data[key] !== null) {
+
+      const value = data[key];
+
+      if (value !== undefined && value !== null && value !== '') {
         const str = key.slice(0, -3);
         const type = key.slice(-3);
-        const item = data[key];
+        const item = value;
         const chineseName = getLabel(str);
         let min = '';
         let max = '';
@@ -430,9 +447,9 @@ const ChildAsin: React.FC<IProps> = props => {
     onChange(current: number, size: number | undefined) {
       setCurrent(current);
       setPageSize(size as number);
-      console.log(current, size);
-      requestFn({ size, current });
+      requestFn({ size, current, asc: sort, order });
     },
+    showSizeChanger: true, // pageSize 切换器
     className: 'h-page-small',
   };
 
@@ -455,7 +472,7 @@ const ChildAsin: React.FC<IProps> = props => {
     rowKey: () => count++,
     scroll: {
       x: 'max-content',
-      y: 'calc(100vh - 378px)',
+      y: 'calc(100vh - 328px)',
       scrollToFirstRowOnChange: true,
     },
     locale: {
@@ -472,17 +489,24 @@ const ChildAsin: React.FC<IProps> = props => {
   const customBox = (
     <Menu>
       <Menu.Item className="customBox">
-        <ChildCustomCol />
+        <CustomCol />
       </Menu.Item>
     </Menu>
   );
   
   // 点击偏好名称
   const clickPreferenceName = (id: string) => {
+    console.log('???');
+    
     setVisibleFiltern(true);
     conditions.forEach(item => {
+      console.log(item, 'item');
+      
       if (item.id === id) {
         setLoadPreferenceId(id);
+        if (item.adType === null ) {
+          item.adType = undefined;
+        }
         searchForm.setFieldsValue(item);
         setRatio(true);
         requestFn();
@@ -590,7 +614,7 @@ const ChildAsin: React.FC<IProps> = props => {
                 title="点击删除"
                 onClick={() => delPreferential(item.id)}
               >
-                <CloseOutlined />
+                <Iconfont type="icon-close" />
               </span>
             </div>;
           })
@@ -691,7 +715,7 @@ const ChildAsin: React.FC<IProps> = props => {
     <div className={commonStyles.filtern} style={{
       display: visiblefiltern ? 'block' : 'none',
     }}>
-      <ChildAsinFiltern
+      <Filtern
         preferentialConfirmCallback={preferentialConfirmCallback}
         cancelFiltrate={cancelFiltrate}
         confirmFiltrateCallback={confirmFiltrateCallback}

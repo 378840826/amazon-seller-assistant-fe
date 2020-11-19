@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import { moneyFormat } from '@/utils/huang';
+import classnames from 'classnames';
 
 
 interface IProps {
@@ -62,20 +63,49 @@ const Summary: React.FC<IProps> = (props) => {
     ctr,
     adConversionsRate,
   } = data as AsinTable.IChildSummaryType;
+  
+  // eslint-disable-next-line
+  const selectCustomCol: string[] = []; // 当前选中的自定义列
+  const other = ['productCol', 'handle']; // 这些列不在自定义列中
+  // childCustomcol是Object[],需要转换一下
+  for (const key in childCustomcol) {
+    const item = childCustomcol[key];
+    selectCustomCol.push(...item);
+  }
+  selectCustomCol.push(...other);
+
+  // eslint-disable-next-line
+  const [visible, setVisible] = useState<boolean>(false); // SKUK这一列是否显示出来
+
+  // eslint-disable-next-line
+  useEffect(() => { 
+    if (selectCustomCol.indexOf('skuInfo') === -1) { // 隐藏了
+      setVisible(false);
+    } else {
+      setVisible(true);
+    }
+  }, [selectCustomCol]);
 
 
   const summary = [
     {
       dataIndex: 'productCol',
-      component: <td className={styles.title} key="0">合计</td>,
+      component: <td className={classnames(styles.title, styles.productColSummary)} key="0">合计</td>,
+      fixed: 'left',
     },
     {
       dataIndex: 'skuInfo',
-      component: <td className={styles.title} key="1"></td>,
+      component: <td className={classnames(styles.title, styles.skuInfoSummary)} style={{
+        left: visible ? 239 : 0,
+      }} key="1"></td>,
+      fixed: 'left',
     },
     {
       dataIndex: 'parentAsin',
-      component: <td className={styles.title} key="2"></td>,
+      component: <td className={classnames(styles.title, styles.parentAsinSummary)} style={{
+        left: visible ? 441 : 239,
+      }} key="2"></td>,
+      fixed: 'left',
     },
     {
       dataIndex: 'reviewNum',
@@ -282,13 +312,13 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'acos',
       component: <td className={styles.right} key="37">
-        {acos !== null ? acos : <Empty/>}
+        {acos !== null ? `${acos}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'compositeAcos',
       component: <td className={styles.right} key="38">
-        {compositeAcos !== null ? compositeAcos : <Empty/>}
+        {compositeAcos !== null ? `${compositeAcos}%` : <Empty/>}
       </td>,
     },
     {
@@ -334,15 +364,6 @@ const Summary: React.FC<IProps> = (props) => {
   ];
 
   // 自定义列
-  const selectCustomCol: string[] = []; // 当前选中的自定义列
-  const other = ['productCol', 'handle']; // 这些列不在自定义列中
-  // childCustomcol是Object[],需要转换一下
-  for (const key in childCustomcol) {
-    const item = childCustomcol[key];
-    selectCustomCol.push(...item);
-  }
-  selectCustomCol.push(...other);
-
   const newColumns = [];
   for (let i = 0; i < summary.length; i++){
     const items = summary[i];

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import classnames from 'classnames';
 import {
   Tooltip,
 } from 'antd';
@@ -58,9 +59,12 @@ const TableHead: React.FC<IProps> = props => {
     <div className={styles.tableHead} style={{
       width: width ? width : 'auto',
     }}>
-      <p className={`${styles.title}`} 
-        title="点击排序"
-        onClick={mainCallback}
+      <p className={classnames(
+        styles.title,
+        titleparams === order ? styles.sorted : ''
+      )} 
+      title="点击排序"
+      onClick={mainCallback}
       >
         {title}
         {
@@ -81,7 +85,10 @@ const TableHead: React.FC<IProps> = props => {
         onClick={() => subtitle }
         title="点击排序"
       >
-        <span className={styles.text} style={{
+        <span className={classnames(
+          styles.text,
+          subtitle === order ? styles.sorted : ''
+        )} style={{
           display: visible ? 'inline-block' : 'none',
         }} onClick={ratioCallback}>
           环比
@@ -93,7 +100,10 @@ const TableHead: React.FC<IProps> = props => {
             }}
           />
         </span>
-        <span className={styles.text} style={{
+        <span className={classnames(
+          styles.text,
+          proportion === order ? styles.sorted : ''
+        )} style={{
           width: visible ? '50%' : '100%',
         }} onClick={proportionCallback}>
           占比

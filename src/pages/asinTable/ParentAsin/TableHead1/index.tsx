@@ -10,6 +10,7 @@
 import React, { useState } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
+import classnames from 'classnames';
 
 
 interface IProps {
@@ -51,9 +52,12 @@ const TableHead: React.FC<IProps> = props => {
     <div className={styles.tableHead} style={{
       width: width ? width : 'auto',
     }}>
-      <p className={`${styles.title}`} 
-        title="点击排序"
-        onClick={mainCallback}
+      <p className={classnames(
+        styles.title,
+        titleparams === order ? styles.sorted : ''
+      )} 
+      title="点击排序"
+      onClick={mainCallback}
       >
         {title}
         <Iconfont 
@@ -65,7 +69,10 @@ const TableHead: React.FC<IProps> = props => {
         />
       </p> 
       <p 
-        className={styles.subTitle}
+        className={classnames(
+          styles.subTitle,
+          subtitle === order ? styles.sorted : ''
+        )}
         title="点击排序"
         onClick={subCallback}
       >

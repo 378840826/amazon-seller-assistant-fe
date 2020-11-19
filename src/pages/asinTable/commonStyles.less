@@ -1,7 +1,11 @@
 // 搜索框栏
 .search {
   background-color: #fff;
-  padding: 14px 20px;
+  padding: 14px 20px 0;
+
+  div:global(.ant-form-item) {
+    margin-bottom: 14px;
+  }
 
   .filternBtn {
     background-color: @primary-color;
@@ -20,7 +24,8 @@
   }
 
   // 自定义列
-  div:global(.customBox) {
+  div:global(.customBox),
+  div:global(.customBox1) {
     margin-left: 20px;
 
     li:global(.ant-dropdown-menu-item):hover {
@@ -31,10 +36,16 @@
       transition: all 0.3s;
       font-size: 12px !important;
       transform: translateY(2px);
+      color: @text-color-secondary;
     }
 
     .downArrow.active {
       transform: rotate(180deg);
+      color: #59b4ff;
+    }
+
+    &:hover .downArrow {
+      color: #59b4ff;
     }
   }
 
@@ -57,7 +68,7 @@
     }
 
     .condition {
-      width: 90px;
+      width: 120px;
       height: 30px;
       line-height: 30px;
       text-align: center;
@@ -77,22 +88,18 @@
       }
 
       .closeIcon {
-        width: 20px;
-        height: 30px;
-        position: absolute;
-        right: 0;
-        top: 0;
+        width: 16px;
+        height: 18px;
+        font-size: 22px;
         color: @error-color;
-        font-weight: bold;
-        z-index: 2;
-        background-color: rgba(47, 153, 253, 0.1);
+        background-color: #fff;
+        right: -4px;
+        top: -13px;
         opacity: 0;
+        position: absolute;
       }
 
       &:hover {
-        border-color: @primary-color;
-        color: @primary-color;
-
         .closeIcon {
           opacity: 1;
         }
@@ -135,7 +142,7 @@
   background-color: #fafafa;
   display: flex;
   flex-wrap: wrap;
-  padding: 14px 20px;
+  padding: 14px 20px 0;
 
   .conditionItem {
     border: 1px solid @border-color-base;
@@ -244,10 +251,14 @@ span.emptyLine {
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
       white-space: normal;
-      color: @success-color;
+      color: @link-color;
 
-      &:hover .linkIcon {
-        color: @link-color;
+      &:hover {
+        color: @primary-color;
+
+        .linkIcon {
+          color: @primary-color;
+        }
       }
     }
 
@@ -255,8 +266,13 @@ span.emptyLine {
       display: flex;
       justify-content: space-between;
 
-      span:first-child {
-        color: @link-color;
+      a.title {
+        color: @btn-text-color;
+        width: 88px;
+
+        &:hover {
+          color: @primary-color;
+        }
       }
 
       span:last-child {
@@ -285,6 +301,10 @@ span.emptyLine {
         white-space: nowrap;
         text-overflow: ellipsis;
       }
+
+      .price {
+        color: @error-color;
+      }
     }
 
     .footer {
@@ -296,11 +316,20 @@ span.emptyLine {
         float: right;
         padding: 0 20px 0 10px;
       }
+      // 在售
+      span.status.normal {
+        color: @text-color;
+      }
+
+      // 不可售    禁止显示    移除
+      span.status.other {
+        color: #bbb;
+      }
     }
   }
 
   .skuItem:not(:last-child) {
-    border-bottom: 1px solid @border-color-base;
+    border-bottom: 1px solid #ddd;
   }
 }
 
@@ -325,4 +354,21 @@ span.emptyLine {
       padding-right: 3px;
     }
   }
+}
+
+.handleCol {
+  padding: 16px 6px !important;
+
+  .handleLink {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
+
+.parentAsinCol {
+  white-space: pre-wrap;
+  word-break: break-all;
 }

@@ -5,27 +5,37 @@
     margin: 20px 0 0;
     background-color: #fff;
 
-    :global(.ant-table-body) {
-      overflow-y: auto !important;
+    :global(.ant-spin-container) :global(.ant-table) {
+      border: 1px solid @divider-line-color;
+
+      :global(.ant-table-body) {
+        overflow-y: auto !important;
+      }
     }
 
     // 表头
     thead th {
-      background-color: #f2f6fb;
+      background-color: @table-row-hover-bg;
       height: 44px;
       padding-bottom: 0;
       padding-top: 0;
       color: @heading-color;
+      border-width: 0 !important;
     }
 
     tbody {
       td {
         padding-top: 0;
         padding-bottom: 0;
+        border: 0;
+      }
+
+      tr:hover td {
+        background-color: @table-row-hover-bg !important;
       }
 
       tr:nth-child(2n+1) td {
-        background-color: #f7f7f7;
+        background-color: @simple-table-header-bg;
       }
     }
   }
@@ -39,12 +49,14 @@
   div:global(.ant-popover-title) {
     color: @heading-color;
     font-size: @font-size-lg;
-    padding: 16px;
+    padding: 16px 20px;
   }
 
   div:global(.ant-popover-inner-content) {
     max-height: 500px;
     overflow-y: auto;
+    padding-bottom: 0;
+    padding-top: 5px;
   }
 
   .loading {
@@ -55,25 +67,11 @@
     padding-bottom: 30px;
   }
 
-  .closeIcon {
-    position: absolute;
-    right: 50px;
-    top: 20px;
-    transition: all 0.3s;
-    color: @text-color-secondary;
-    cursor: pointer;
-
-    &:hover {
-      color: @primary-color;
-      transform: rotate(360deg);
-    }
-  }
-
   .listBox {
     width: 100%;
 
     .num {
-      margin: 10px 10px 0 10px;
+      margin: 10px 10px 0 3px;
     }
 
     .productImg {
@@ -85,11 +83,14 @@
     .item {
       display: flex;
       justify-content: space-between;
-      border-bottom: 1px solid @divider-line-color;
       margin: 10px 0;
 
+      &:not(:last-child) {
+        border-bottom: 1px solid @divider-line-color;
+      }
+
       .details {
-        margin: 0 20px 5px 6px;
+        margin: 0 0 5px 6px;
 
         .title {
           overflow: hidden;
@@ -103,8 +104,12 @@
             color: @text-color-secondary;
           }
 
-          &:hover .icon {
-            color: @link-color;
+          &:hover {
+            color: @primary-color;
+
+            .icon {
+              color: @link-color;
+            }
           }
         }
 
@@ -114,7 +119,11 @@
         }
 
         .asin {
-          color: @link-color;
+          color: @btn-text-color;
+
+          &:hover {
+            color: @link-color;
+          }
         }
 
         .price {
@@ -127,6 +136,11 @@
         }
       }
     }
+  }
+
+  .notTable {
+    color: @text-color;
+    font-size: @font-size-base;
   }
 }
 

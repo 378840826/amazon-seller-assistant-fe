@@ -440,10 +440,10 @@ const ChildAsinFiltern: React.FC<IProps> = (props) => {
           <Form.Item label="广告组类型：" name="adType" initialValue={undefined}>
             <Radio.Group>
               <Radio value={undefined} checked className={styles.radio}>不限</Radio>
-              <Radio value={1} className={styles.radio}>SP自动</Radio>
-              <Radio value={2} className={styles.radio}>SP手动</Radio>
-              <Radio value={3} className={styles.radio}>SB</Radio>
-              <Radio value={4} className={styles.radio}>SD</Radio>
+              <Radio value="1" className={styles.radio}>SP自动</Radio>
+              <Radio value="2" className={styles.radio}>SP手动</Radio>
+              <Radio value="3" className={styles.radio}>SB</Radio>
+              <Radio value="4" className={styles.radio}>SD</Radio>
             </Radio.Group>
           </Form.Item>
         </div>
@@ -509,6 +509,7 @@ const ChildAsinFiltern: React.FC<IProps> = (props) => {
               />
             </div>
           </div>
+          <Button className={styles.btn} onClick={cancelFiltrate}>取消</Button>
           <Form.Item>
             <Button 
               type="primary"
@@ -518,7 +519,6 @@ const ChildAsinFiltern: React.FC<IProps> = (props) => {
               确定
             </Button>
           </Form.Item>
-          <Button className={styles.btn} onClick={cancelFiltrate}>取消</Button>
           <span 
             className={`${styles.clear} ${styles.btn}`}
             onClick={onresetForm}

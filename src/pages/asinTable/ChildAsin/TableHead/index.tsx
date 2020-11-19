@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import classnames from 'classnames';
 import {
   Tooltip,
 } from 'antd';
@@ -14,6 +15,7 @@ interface IProps {
   order: string;
   width?: number;
   hint?: string;
+  align?: 'left' | 'center' | 'right';
   callback: (order: string, sort: boolean) => void;
 }
 
@@ -26,6 +28,7 @@ const TableHead: React.FC<IProps> = props => {
     order, // 排序字段
     width,
     hint, // ？号图标的提示，有的话就显示出来
+    align = 'center', // 文本对齐
     callback,
   } = props;
 
@@ -49,9 +52,16 @@ const TableHead: React.FC<IProps> = props => {
     <div className={styles.tableHead} style={{
       width: width ? width : 'auto',
     }}>
-      <p className={`${styles.title} ${ visible ? '' : styles.notShowTwo}`} 
-        title="点击排序"
-        onClick={mainCallback}
+      <p className={classnames(
+        styles.title,
+        visible ? '' : styles.notShowTwo,
+        titleparams === order ? styles.sorted : ''
+      )} 
+      title="点击排序"
+      onClick={mainCallback}
+      style={{
+        textAlign: align,
+      }}
       >
         {title}
         {
@@ -71,7 +81,10 @@ const TableHead: React.FC<IProps> = props => {
         style={{
           display: visible ? 'block' : 'none',
         }}
-        className={styles.subTitle}
+        className={classnames(
+          styles.subTitle,
+          subtitle === order ? styles.sorted : ''
+        )}
         title="点击排序"
         onClick={ratioCallback}
       >

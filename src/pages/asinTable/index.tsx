@@ -24,7 +24,8 @@ const AsinTable = () => {
   const [messageprofit, setMessageProfit] = useState<boolean>(false);
   // 未完成广告授权 是否显示（子asin列表校验店铺是否已通过MWS绑定或者广告授权）
   const [messagead, setMessageAd] = useState<boolean>(false);
-  const [currentTab, setCurrentTab] = useState<string>('parent'); // 当前选中的menu
+  const [currentTab, setCurrentTab] = useState<string>('child'); // 当前选中的menu
+  
   const [visible, setVisible] = useState<boolean>(false); // 显示消息框
   const [isShow, setIsShow] = useState<boolean>(false); // 是否有消息提醒
 
@@ -120,12 +121,12 @@ const AsinTable = () => {
   return <div className={styles.asinTable}>
     <Tabs defaultActiveKey={currentTab} className={styles.tabs} onChange={tabCallback} animated>
       <TabPane tab="子ASIN" key="child">
-        <ChildAsin tabValue={currentTab} receptionMessage={receptionMessage}/>
+        
       </TabPane>
       <TabPane tab="父ASIN" key="parent">
-        <ParentAsin tabValue={currentTab} receptionMessage={receptionMessage}/>
       </TabPane>
     </Tabs>
+    {currentTab === 'child' ? <ChildAsin tabValue={currentTab} receptionMessage={receptionMessage}/> : <ParentAsin tabValue={currentTab} receptionMessage={receptionMessage}/>}
 
     <div className={styles.messageIcon}>
       <Iconfont 
@@ -161,7 +162,7 @@ const AsinTable = () => {
           <footer>
             <span className={styles.ignore}
               onClick={() => setMessageProfit(!messageprofit)}>忽略</span>
-            <Link className={styles.to} to="/mws/goods/list" target="_blank">去导入</Link>
+            <Link className={styles.to} to="/product/list" target="_blank">去导入</Link>
           </footer>
         </div>
 

@@ -100,7 +100,6 @@ const Demo: React.FC<IProps> = (props) => {
   const content = () => {
     return <div className={styles.contentBox}>
       <Spin spinning={loading} className={styles.loading}></Spin>
-      <Iconfont type="icon-guanbi1" className={styles.closeIcon} onClick={() => setVisible(false)} />
       <div className={styles.listBox}>
         {
           data.map((item, i) => {
@@ -116,7 +115,10 @@ const Demo: React.FC<IProps> = (props) => {
                   {item.title}
                 </a>
                 <p className={styles.p}>
-                  <span className={styles.asin}>{item.asin}</span>
+                  <a href={getAmazonAsinUrl(asin, marketplace)} 
+                    className={styles.asin}
+                    target="_blank" rel="noreferrer"
+                  >{item.asin}</a>
                   <span className={styles.price}>{item.price ? currency + item.price : ''}</span>
                 </p>
                 <p className={styles.p}>
@@ -136,7 +138,7 @@ const Demo: React.FC<IProps> = (props) => {
           })
         }
         {
-          loading === false && data.length === 0 ? <h2>暂无关联销售数据</h2> : ''
+          loading === false && data.length === 0 ? <h2 className={styles.notTable}>暂无关联销售数据</h2> : ''
         }
       </div>
     </div>;
