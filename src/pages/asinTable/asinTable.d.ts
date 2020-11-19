@@ -103,6 +103,11 @@ declare namespace AsinTable {
     clicksRingRatio: number;
     ctrRingRatio: number;
     adConversionsRateRingRatio: number;
+    b2bSalesProportion: number;
+    skuAdSalesProportion: number;
+    skuAdOrderQuantityProportion: number;
+    naturalOrderQuantityProportion: number;
+    naturalSalesProportion: number;
   }
 
   interface IParentResocds {
@@ -183,6 +188,8 @@ declare namespace AsinTable {
       current: number;
       size: number;
       records: IParentResocds[];
+      asc: boolean;
+      order: string;
     };
   }
 
@@ -239,6 +246,7 @@ declare namespace AsinTable {
     order: string;
     parentCol?: {};
     parentCustomcol: string[];
+    site: 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
     sortCallback: (order: string, sort: boolean) => void;
   }
 

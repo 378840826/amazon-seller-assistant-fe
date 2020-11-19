@@ -68,10 +68,16 @@ div.layoutBox {
   display: flex;
   grid-column-start: 4;
   grid-column-end: 4;
+  position: relative;
+  top: 6px;
 
   @media screen and (max-width: 1778px) {
     grid-column-start: 3;
     grid-column-end: 3;
+  }
+
+  :global(.ant-form-item) {
+    margin-bottom: 14px;
   }
 
   button {

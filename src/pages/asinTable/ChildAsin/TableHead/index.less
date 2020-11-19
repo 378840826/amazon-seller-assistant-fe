@@ -1,4 +1,8 @@
 .tableHead {
+  display: inline-flex;
+  justify-content: end;
+  flex-direction: column;
+
   p {
     height: 22px;
     line-height: 22px;
@@ -10,22 +14,18 @@
     color: @text-color-secondary;
     font-size: @font-size-sm;
     margin: 0 0 0 5px;
+    transition: 0.3 all;
+
+    &:hover {
+      color: @warning-color;
+    }
   }
 
   .sort {
     color: @text-color-secondary;
     transition: all 0.3s;
-    position: relative;
-    left: 5px;
-    top: 1px;
     font-size: @font-size-sm;
-    opacity: 0.8;
-
-    &:hover {
-      color: @heading-color;
-      opacity: 1 !important;
-      display: inline-block !important;
-    }
+    margin-left: 5px;
   }
 
   .sort.active {
@@ -36,15 +36,14 @@
     text-align: center;
 
     &:hover {
-      background-color: #e5e8eb;
+      background-color: #e5eef7;
       cursor: pointer;
-
-      .sort {
-        color: @heading-color;
-        opacity: 1 !important;
-        display: inline-block !important;
-      }
+      width: 100%;
     }
+  }
+
+  .title.sorted {
+    background-color: #e5e8eb;
   }
 
   // 不显示环比的样式
@@ -54,19 +53,17 @@
   }
 
   .subTitle {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #ddd;
     transition: all 0.3s;
     text-align: center;
 
     &:hover {
-      background-color: #e5e8eb;
+      background-color: #e5eef7;
       cursor: pointer;
-
-      .sort {
-        color: @heading-color;
-        opacity: 1 !important;
-        display: inline-block !important;
-      }
     }
+  }
+
+  .subTitle.sorted {
+    background-color: #e5e8eb;
   }
 }

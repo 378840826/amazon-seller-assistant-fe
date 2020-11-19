@@ -9,16 +9,20 @@ div.asinTable {
 
   ul:global(.ant-pagination) {
     padding-left: 20px !important;
+    padding-right: 20px !important;
   }
 
   .tabs {
     width: 100%;
-    min-height: 850px;
 
     div:global(.ant-tabs-nav) {
       padding-left: 20px;
       background-color: #fff;
       margin-bottom: 0;
+    }
+
+    div:global(.ant-tabs-tab-active) div:global(.ant-tabs-tab-btn) {
+      color: @link-color;
     }
   }
 
@@ -67,22 +71,22 @@ div.asinTable {
         span.ignore {
           color: @text-color-secondary;
           padding-right: 12px;
-          cursor: default;
+          cursor: pointer;
           transition: all 0.3s;
 
           &:hover {
-            opacity: 0.5;
+            opacity: 0.8;
           }
         }
 
         .to {
           color: @link-color;
           padding-left: 12px;
-          cursor: default;
+          cursor: pointer;
           transition: all 0.3s;
 
           &:hover {
-            opacity: 0.5;
+            color: @primary-color;
           }
         }
       }
@@ -92,7 +96,7 @@ div.asinTable {
       }
 
       .data {
-        width: 342px;
+        width: 390px;
       }
 
       .profit {
@@ -100,7 +104,7 @@ div.asinTable {
       }
 
       .ad {
-        width: 244px;
+        width: 390px;
       }
     }
   }
@@ -173,7 +177,7 @@ div.asinTable {
           white-space: normal;
 
           &:hover .linkIcon {
-            color: @link-color;
+            color: @primary-color;
           }
         }
 
@@ -181,8 +185,12 @@ div.asinTable {
           display: flex;
           justify-content: space-between;
 
-          span:first-child {
-            color: @link-color;
+          a.title {
+            color: @btn-text-color;
+
+            &:hover {
+              color: @link-color;
+            }
           }
 
           span:last-child {

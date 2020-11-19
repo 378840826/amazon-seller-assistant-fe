@@ -166,7 +166,7 @@ const list = [
   },
 ];
 
-// 是否在售
+// 状态, Active:在售, Inactive 不可售 ,Incomplete：禁止显示, Remove 移除
 export function getlistingStatus(value: string) {
   switch (value) {
   case 'Active':
@@ -180,7 +180,6 @@ export function getlistingStatus(value: string) {
   default: 
     return '';
   }
-
 }
 
 // son asin 获取表单的筛选字段
@@ -254,21 +253,4 @@ export function getCalendarFields(val: string, key: string) {
     //
   }
   return result;
-}
-
-// 状态, Active:在售, Inactive 不可售 ,Incomplete：禁止显示, Remove 移除
-export function getProductStatus(type: string) {
-  switch (type) {
-  case 'Active':
-    return '在售';
-  case 'Inactive':
-    return '不可售';
-  case 'Incomplete':
-    return '禁止显示';
-  case 'Remove':
-    return '移除';
-  default:
-    // 
-  }
-    
 }

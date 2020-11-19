@@ -323,7 +323,7 @@ const ParentCustomCol: React.FC = () => {
   }}>
     <Form form={form} onValuesChange={onValuesChange}>
       <div className={styles.leftLayout}>
-        <div className={`${styles.common}`}>
+        <div className={`${styles.common} ${styles.skus}`}>
           <Item name="asins">
             <Checkbox.Group
               options={skus}

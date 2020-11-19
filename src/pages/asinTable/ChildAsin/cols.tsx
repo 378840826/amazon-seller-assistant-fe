@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './../commonStyles.less';
 import { moneyFormat } from '@/utils/huang';
+import classnames from 'classnames';
 
 // 组件
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
@@ -60,6 +61,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       title: '商品信息',
       align: 'center',
       width: 230,
+      fixed: 'left',
       render(val: string, { 
         imgUrl, 
         title, 
@@ -78,7 +80,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
             >
               <Iconfont type="icon-lianjie" className={styles.linkIcon}/>{title}</a>
             <footer>
-              <span>{asin}</span>
+              <Link to={`/asin/base?asin=${asin}`} className={styles.title}>{asin}</Link>
               <Tooltip title={`大类排名：#${categoryRanking} ${categoryName}`}>
                 <span>#{categoryRanking}</span>
               </Tooltip>
@@ -92,20 +94,28 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       title: 'SKU',
       align: 'center',
       width: 200,
+      fixed: 'left',
       render(list: AsinTable.ISkuinfo[]) {
         return <div className={styles.skuListCol}>
           {list.map((item, i) => {
             return <div className={styles.skuItem} key={i}>
               <p className={styles.skus}>
                 <span>{item.sku}</span>
-                <span>{item.price ? currency + item.price : ''}</span>
+                <span className={styles.price}>{item.price ? currency + item.price : ''}</span>
               </p>
               <p className={styles.footer}>
                 <span>库存：{item.sellable}</span>
                 <Deliver method={item.fulfillmentChannel} style={{
                   'float': 'right',
+                  width: 30,
+                  textAlign: 'right',
                 }}/>
-                <span className={styles.status}>{getlistingStatus(item.listingStatus)}</span>
+                <span className={classnames(
+                  styles.status, 
+                  getlistingStatus(item.listingStatus) === '在售' ? styles.normal : styles.other
+                )}>
+                  {getlistingStatus(item.listingStatus)}
+                </span>
               </p>
             </div>;
           })}
@@ -117,6 +127,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       title: '父ASIN',
       align: 'center',
       width: 110,
+      fixed: 'left',
+      render(val: string) {
+        return <p className={styles.parentAsinCol}>{val}</p>;
+      },
     },
     {
       dataIndex: 'reviewNum',
@@ -139,6 +153,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: four,
@@ -236,6 +251,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: four,
@@ -263,6 +279,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'center',
       width: three,
@@ -310,6 +327,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: four,
@@ -337,6 +355,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: five,
@@ -553,10 +572,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        width={100}
       />,
       align: 'center',
       width: outer8,
-      render(val: number, { b2bSalesRingRatio }: AsinTable.IChildResocds) {
+      render(val: number, { b2bSalesRingRatio, b2bSalesProportion }: AsinTable.IChildResocds) {
         return (
           <div className={styles.haveProportion}>
             <p>
@@ -572,7 +592,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               </span>
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
-              }}>25%</span>
+              }}>{b2bSalesProportion === null ? <Empty /> : `${b2bSalesProportion}%`}</span>
             </p>
           </div>
         );
@@ -659,6 +679,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer5,
@@ -686,6 +707,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer4,
@@ -775,6 +797,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: five,
@@ -806,7 +829,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       />,
       align: 'center',
       width: outer3,
-      render(val: number, { skuAdSalesRingRatio }: AsinTable.IChildResocds) {
+      render(val: number, { skuAdSalesRingRatio, skuAdSalesProportion }: AsinTable.IChildResocds) {
         return (
           <div className={styles.haveProportion}>
             <p>
@@ -822,7 +845,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               </span>
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
-              }}>25%</span>
+              }}>{skuAdSalesProportion === null ? <Empty /> : `${skuAdSalesProportion}%`}</span>
             </p>
           </div>
         );
@@ -838,10 +861,13 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        width={100}
       />,
       align: 'center',
       width: outer4,
-      render(val: number, { naturalSalesRingRatio }: AsinTable.IChildResocds) {
+      render(val: number, { 
+        naturalSalesRingRatio, naturalSalesProportion,
+      }: AsinTable.IChildResocds) {
         return (
           <div className={styles.haveProportion}>
             <p>
@@ -857,7 +883,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               </span>
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
-              }}>25%</span>
+              }}>{naturalSalesProportion === null ? <Empty /> : 
+                  `${naturalSalesProportion}%`}
+              </span>
             </p>
           </div>
         );
@@ -899,7 +927,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       />,
       align: 'center',
       width: outer3,
-      render(val: number, { skuAdOrderQuantityRingRatio }: AsinTable.IChildResocds) {
+      render(val: number, { 
+        skuAdOrderQuantityRingRatio, skuAdOrderQuantityProportion,
+      }: AsinTable.IChildResocds) {
         return (
           <div className={styles.haveProportion}>
             <p>
@@ -915,7 +945,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               </span>
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
-              }}>25%</span>
+              }}>
+                {skuAdOrderQuantityProportion === null ? <Empty /> : 
+                  `${skuAdOrderQuantityProportion}%`}
+              </span>
             </p>
           </div>
         );
@@ -934,7 +967,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       />,
       align: 'center',
       width: outer4,
-      render(val: number, { naturalOrderQuantityRingRatio }: AsinTable.IChildResocds) {
+      render(val: number, { 
+        naturalOrderQuantityRingRatio, naturalOrderQuantityProportion,
+      }: AsinTable.IChildResocds) {
         return (
           <div className={styles.haveProportion}>
             <p>
@@ -950,7 +985,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               </span>
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
-              }}>25%</span>
+              }}>{naturalOrderQuantityProportion === null ? <Empty /> : 
+                  `${naturalOrderQuantityProportion}%`}
+              </span>
             </p>
           </div>
         );
@@ -965,6 +1002,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer6,
@@ -992,6 +1030,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: three,
@@ -1019,6 +1058,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer6,
@@ -1046,6 +1086,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer1,
@@ -1053,7 +1094,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? `${val}%` : <Empty />
+              val !== null ? `${val}` : <Empty />
             }
           </p>
           <p style={{
@@ -1073,6 +1114,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer6,
@@ -1100,6 +1142,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer1,
@@ -1127,6 +1170,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer7,
@@ -1154,6 +1198,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: three,
@@ -1181,6 +1226,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: outer6,
@@ -1208,6 +1254,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        align="right"
       />,
       align: 'right',
       width: five,
@@ -1230,7 +1277,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       dataIndex: 'handle',
       title: '操作',
       align: 'center',
-      width: 100,
+      width: 75,
+      fixed: 'right',
+      className: styles.handleCol,
       render() {
         return <Link
           target="_blank"

@@ -22,6 +22,13 @@ import {
 import { storage } from '@/utils/utils';
 import { storageKeys } from '@/utils/huang';
 import { sprs, adSales, flux, b2b, refunds, adsSales, adsFluxs, adsPuts } from './ChildAsin/config';
+import { 
+  parentsprs,
+  parentadSales,
+  parentflux,
+  parentb2b,
+  parentrefunds,
+} from './ParentAsin/config';
 
 export interface IAsinTableState {
   childControlRSASIN: string;
@@ -82,11 +89,11 @@ if (!childCustomLocation) {
 let parentCustomLocation = storage.get(asinTableParentCustomCol);
 if (!parentCustomLocation) {
   parentCustomLocation = {
-    asins: sprs,
-    salesItem: adSales,
-    fluxItem: flux,
-    b2bItem: b2b,
-    refundItem: refunds,
+    asins: parentsprs,
+    salesItem: parentadSales,
+    fluxItem: parentflux,
+    b2bItem: parentb2b,
+    refundItem: parentrefunds,
   };
   storage.set(asinTableParentCustomCol, parentCustomLocation);
 }

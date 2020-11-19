@@ -9,6 +9,7 @@ import {
   useSelector,
 } from 'umi';
 import { Iconfont, storage } from '@/utils/utils';
+import { colsWidth } from './config';
 
 
 // 组件
@@ -17,8 +18,8 @@ import TableNotData from '@/components/TableNotData';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import { DownOutlined } from '@ant-design/icons';
 import { parentAsinCols } from './cols';
-import ParentCustomCol from './ParentCustomCol';
-import ParentAsinFiltern from './ParentAsinFiltern';
+import CustomCol from './CustomCol';
+import Filtern from './Filtern';
 import {
   Menu,
   Button,
@@ -65,10 +66,11 @@ const ChildAsin: React.FC<IProps> = props => {
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
-  const [calendar, setCalendar] = useState<string>(storage.get(adinTableCalendar) || '6'); // 日历
+  const [calendar, setCalendar] = useState<string>(storage.get(adinTableCalendar) || '7'); // 日历
   const [loading, setLoading] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<AsinTable.IParentResocds[]>([]);
   const [order, setOrder] = useState<string>('');
+  const [sort, setSort] = useState<boolean>(false);
   const [exportText, setExportText] = useState<string>('导出');
 
   // 保存当前点击筛选的偏好ID ，删除如果是当前ID,就删除掉
@@ -80,6 +82,21 @@ const ChildAsin: React.FC<IProps> = props => {
       return;
     }
 
+    const filtern = searchForm.getFieldsValue();
+    
+    const filternparams = {};
+    const filtrations = ['search']; // 不加入条件组
+    for (const key in filtern) {
+      const value = filtern[key];
+      if (filtrations.indexOf(key) > -1) {
+        continue;
+      }
+
+      if (value !== undefined && value !== null && value !== '' ) {
+        filternparams[key] = value;
+      }
+    }
+
     let payload = {
       headersParams: {
         StoreId: currentShop.id,
@@ -88,15 +105,13 @@ const ChildAsin: React.FC<IProps> = props => {
       size: pageSize,
       sellerId: currentShop.sellerId,
       marketplace: currentShop.marketplace,
-      search: searchForm.getFieldValue(['search']),
       ...getCalendarFields(calendar, adinTableCalendar),
-      ...searchForm.getFieldsValue(),
+      ...filternparams,
     };
 
     payload = Object.assign(payload, params);
     setLoading(true);
 
-    console.log('父ASIN 初始化请求');
     new Promise((resolve, reject) => {
       dispatch({
         type: 'asinTable/getParentInitList',
@@ -112,7 +127,6 @@ const ChildAsin: React.FC<IProps> = props => {
         data: AsinTable.IParentInitListType;
       };
       const { page } = data;
-      console.log(data, 'dataaa');
 
       receptionMessage(data.costAndFreightStatus === '1' ? true : false);
       setUpdate(data.updateTime);
@@ -121,11 +135,13 @@ const ChildAsin: React.FC<IProps> = props => {
         setCurrent(page.current);
         setPageSize(page.size);
         setTotal(page.total);
+        setSort(page.asc);
       } else {
         setDataSource([]);
         setCurrent(1);
         setPageSize(20);
         setTotal(0);
+        setSort(false);
       }
     });
   
@@ -176,19 +192,9 @@ const ChildAsin: React.FC<IProps> = props => {
     });
   }, [visibleCustom]);
 
-  useEffect(() => {
-    if (tabValue === 'parent') {
-
-      console.log('父ASIN 初始化请求');
-    }
-  }, [dispatch, tabValue]);
-
   // 搜索框
   const changeSearch = (val: string) => {
-    if (val === '') {
-      return;
-    }
-    requestFn();
+    requestFn({ search: val });
   };
 
   // 删除单个偏好
@@ -269,7 +275,6 @@ const ChildAsin: React.FC<IProps> = props => {
     // 最多10个
     if (conditions.length >= 10) {
       message.error('最多保存10个偏好');
-      // resolve(false);
       isReturn = false;
     }
 
@@ -341,7 +346,9 @@ const ChildAsin: React.FC<IProps> = props => {
   };
 
   // 高级筛选确定按钮
-  const confirmFiltrateCallback = (data: {}) => {
+  const confirmFiltrateCallback = () => {
+    const data = searchForm.getFieldsValue();
+    
     const arr = [];
     const filtrations = ['search']; // 不加入条件组
 
@@ -349,11 +356,13 @@ const ChildAsin: React.FC<IProps> = props => {
       if (filtrations.indexOf(key) > -1) {
         continue;
       }
+
+      const value = data[key];
       
-      if (data[key] !== undefined && data[key] !== null) {
+      if (value !== undefined && value !== null && value !== '') {
         const str = key.slice(0, -3);
         const type = key.slice(-3);
-        const item = data[key];
+        const item = value;
         const chineseName = getLabel(str);
         let min = '';
         let max = '';
@@ -421,14 +430,12 @@ const ChildAsin: React.FC<IProps> = props => {
     onChange(current: number, size: number | undefined) {
       setCurrent(current);
       setPageSize(size as number);
-      requestFn({ size, current });
+      requestFn({ size, current, asc: sort, order });
     },
+    showSizeChanger: true, // pageSize 切换器
     className: 'h-page-small',
   };
 
-  const ParentCustomColCallback = (aaa: {}) => {
-    console.log(aaa, 'aaaaa');
-  };
 
   // 排序
   const sortCallback = (order: string, asc: boolean) => {
@@ -498,7 +505,43 @@ const ChildAsin: React.FC<IProps> = props => {
     order,
     sortCallback,
     parentCustomcol,
+    site: currentShop.marketplace,
   });
+
+  //  确定表格的高度
+  const getTableScrollX = (): string => {
+    const selectCustomCol = [];
+    let width = 0;
+    const bodyWidth = document.body.clientWidth - 100;
+    
+    // 自定义已选的列
+    for (const key in parentCustomcol) {
+      const item = parentCustomcol[key];
+      selectCustomCol.push(...item);
+    }
+
+    selectCustomCol.forEach(item => {
+      for (const key in colsWidth) {
+        const value = colsWidth[key];
+        if (item === key) {
+          console.log(value, 'value');
+          width += value;
+        }
+      }
+    });
+
+    if (selectCustomCol.length === 0) {
+      return 'max-content';
+    }
+
+    if (width <= bodyWidth) {
+      width = bodyWidth;
+    }
+
+
+    console.log(selectCustomCol, 'selectCustomCol');
+    return `${width}px`;
+  };
 
   let count = 0;
   const tableConfig = {
@@ -508,8 +551,8 @@ const ChildAsin: React.FC<IProps> = props => {
     loading,
     rowKey: () => count++,
     scroll: {
-      x: '2918px',
-      y: 'calc(100vh - 378px)',
+      x: getTableScrollX(),
+      y: 'calc(100vh - 328px)',
       scrollToFirstRowOnChange: true,
     },
     locale: {
@@ -522,7 +565,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const customBox = (
     <Menu>
       <Menu.Item className="customBox">
-        <ParentCustomCol callback={ParentCustomColCallback}/>
+        <CustomCol />
       </Menu.Item>
     </Menu>
   );
@@ -573,7 +616,7 @@ const ChildAsin: React.FC<IProps> = props => {
                 title="点击删除"
                 onClick={() => delPreferential(item.id)}
               >
-                <CloseOutlined />
+                <Iconfont type="icon-close" />
               </span>
             </div>;
           })
@@ -594,11 +637,11 @@ const ChildAsin: React.FC<IProps> = props => {
         <Button style={{
           width: 82,
         }} onClick={uploadTable}>{exportText}</Button>
-        <div className="customBox" style={{
+        <div className="customBox1" style={{
           position: 'relative',
         }}>
           <Dropdown overlay={customBox} trigger={['click']} 
-            getPopupContainer={() => document.querySelector('.customBox') as HTMLElement}
+            getPopupContainer={() => document.querySelector('.customBox1') as HTMLElement}
             visible={visibleCustom}
             placement="bottomLeft"
           >
@@ -668,7 +711,7 @@ const ChildAsin: React.FC<IProps> = props => {
       display: visiblefiltern ? 'block' : 'none',
     }}>
       <div>
-        <ParentAsinFiltern 
+        <Filtern 
           preferentialConfirmCallback={preferentialConfirmCallback}
           cancelFiltrate={cancelFiltrate}
           confirmFiltrateCallback={confirmFiltrateCallback}
@@ -676,7 +719,7 @@ const ChildAsin: React.FC<IProps> = props => {
         />
       </div>
     </div>
-    <Table {...tableConfig} className={styles.table}/>
+    <Table {...tableConfig} className={classnames(styles.table, 'parentTableBox')}/>
   </div>;
 };
 
