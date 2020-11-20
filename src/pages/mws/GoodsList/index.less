@@ -1,6 +1,10 @@
 .page {
   position: relative;
 
+  .disabled {
+    color: @text-color-disabled;
+  }
+
   .Switch {
     transform: scale(0.818);
   }
@@ -220,7 +224,7 @@
 }
 
 // 表格中的分组和调价规则下拉框样式修改
-.tableSelect {
+.page .tableSelect {
   display: flex;
   justify-content: center;
   align-items: center;

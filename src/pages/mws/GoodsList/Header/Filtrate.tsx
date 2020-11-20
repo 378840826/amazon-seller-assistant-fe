@@ -17,6 +17,7 @@ const { Option } = Select;
 
 interface IProps {
   handleFiltrate: (values: { [key: string]: Store }) => void;
+  handleClickFiltrate: () => void;
   filtrateParams: {
     [key: string]: ParamsValue;
   };
@@ -113,6 +114,7 @@ const Filtrate: React.FC<IProps> = props => {
   const [form] = Form.useForm();
   const {
     handleFiltrate,
+    handleClickFiltrate,
     filtrateParams,
     groupsOptions,
     currency,
@@ -233,8 +235,9 @@ const Filtrate: React.FC<IProps> = props => {
         { getFiltrateSelectItem('调价规则', 'ruleId', groupsOptions) }
         <Col span={6}>
           <div className={styles.filtrateBtns}>
-            <Button type="primary" htmlType="submit">筛选</Button>
-            <Button onClick={handleClickFormEmpty}> 清空</Button>
+            <Button onClick={handleClickFiltrate}>取消</Button>
+            <Button type="primary" htmlType="submit">确定</Button>
+            <Button className={styles.btnEmpty} type="link" onClick={handleClickFormEmpty}>清空</Button>
           </div>
         </Col>
       </Row>

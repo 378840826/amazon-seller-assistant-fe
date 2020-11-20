@@ -1,6 +1,16 @@
 .page {
   position: relative;
   margin-bottom: 30px;
+
+  .smallFont {
+    font-size: @font-size-sm;
+  }
+
+  .linkIcon {
+    color: @link-color;
+    font-size: 11px;
+    margin-left: 4px;
+  }
 }
 
 .customBtn {
@@ -25,10 +35,6 @@
 .cell {
   display: flex;
   align-items: center;
-}
-
-.smallFont {
-  font-size: @font-size-sm;
 }
 
 .fisKanbanItem,
@@ -148,12 +154,6 @@
   & > div {
     text-align: center;
   }
-}
-
-.linkIcon {
-  color: @link-color;
-  font-size: 11px;
-  margin-left: 4px;
 }
 
 .DragLayer {

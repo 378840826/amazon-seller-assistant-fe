@@ -31,12 +31,14 @@ export default {
   /* 文本颜色 */
   // 标题色
   '@heading-color': '#222',
+  // 副标题色
+  '@heading-color-secondary': '#444',
   // 文本色
   '@text-color': '#555',
   // 次文本色
   '@text-color-secondary': '#888',
   // 失效文本色
-  '@text-color-disabled': '#ccc', 
+  '@text-color-disabled': '#bbb', 
   // 重要文本色 / 警告文本色
   '@text-color-warning': '#ff8c00', 
   // 上升文本色

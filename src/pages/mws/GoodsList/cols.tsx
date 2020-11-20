@@ -26,10 +26,10 @@ const { Paragraph, Text } = Typography;
 const { Search } = Input;
 
 export const listingStatusDict = {
-  Active: '在售',
-  Inactive: '不可售',
-  Incomplete: '禁止显示',
-  Remove: '已移除',
+  Active: <span>在售</span>,
+  Inactive: <span className={styles.disabled}>不可售</span>,
+  Incomplete: <span>禁止显示</span>,
+  Remove: <span className={styles.disabled}>已移除</span>,
 };
 
 const dateRange7 = day.getDateRange({ start: 7 });
@@ -184,7 +184,7 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => (
-        <span>
+        <span title="点击可按上架时间排序">
           SKU
           { GoodsIcon.question('点击可按上架时间排序') }
         </span>
@@ -221,11 +221,7 @@ export const getFullColumns = (params: any) => {
             customCols.listingStatus
             &&
             <div>
-              {
-                listingStatus === 'Active' || listingStatus === 'Incomplete'
-                  ? <Text>{listingStatusDict[listingStatus]}</Text>
-                  : <Text disabled>{listingStatusDict[listingStatus]}</Text>
-              }
+              { listingStatusDict[listingStatus] }
             </div>
           }
           {
@@ -253,7 +249,10 @@ export const getFullColumns = (params: any) => {
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
+            <span
+              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+              title="可售库存，等同于后台available库存"
+            >
               可售库存
               { GoodsIcon.question('可售库存，等同于后台available库存') }
               {
@@ -301,7 +300,7 @@ export const getFullColumns = (params: any) => {
       width: 76,
     }, {
       title: () => (
-        <span>
+        <span title="售价+配送费">
           售价
           { GoodsIcon.question('售价+配送费')}
         </span>
@@ -394,7 +393,7 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => (
-        <span>
+        <span title="佣金+FBA fee">
           平台费用
           { GoodsIcon.question('佣金+FBA fee')}
         </span>
@@ -443,7 +442,10 @@ export const getFullColumns = (params: any) => {
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
+            <span
+              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+              title="利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%"
+            >
               利润
               { GoodsIcon.question('利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%') }
               {
@@ -489,7 +491,10 @@ export const getFullColumns = (params: any) => {
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
+            <span
+              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+              title={`周期：${dateRange7[0]}-${dateRange7[1]}`}
+            >
               7天订单
               { GoodsIcon.question(`周期：${dateRange7[0]}-${dateRange7[1]}`) }
               {
@@ -531,7 +536,10 @@ export const getFullColumns = (params: any) => {
         );
         return (
           <Dropdown overlay={menu} placement="bottomRight">
-            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
+            <span
+              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+              title={`周期：${dateRange30[0]}-${dateRange30[1]}`}
+            >
               30天订单
               { GoodsIcon.question(`周期：${dateRange30[0]}-${dateRange30[1]}`) }
               {
@@ -694,7 +702,7 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => (
-        <span>
+        <span title="必须设定竞品，才能使用根据竞品价格调价功能">
           竞品
           { GoodsIcon.question('必须设定竞品，才能使用根据竞品价格调价功能') }
         </span>
