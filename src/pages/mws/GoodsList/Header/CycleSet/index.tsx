@@ -65,7 +65,7 @@ const CycleSet: React.FC<IProps> = props => {
             </div>
           </div>
           :
-          <div className={styles.container}>
+          <div className={styles.container} title="可设定补货天数为n天，系统会预估库存是否可满足未来n天的销售，若不足，系统会自动提示">
             <span className={styles.cycle}>
               补货天数:&nbsp;{cycle}
             </span>

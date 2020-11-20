@@ -14,6 +14,19 @@
 .goodsFiltrate {
   margin-bottom: 20px;
   padding: 20px 20px 0 20px;
+
+  .btnFiltrate {
+    width: 82px;
+
+    :global(.anticon) {
+      font-size: 10px;
+    }
+  }
+
+  .btnActive {
+    color: @primary-color;
+    border-color: @primary-color;
+  }
 }
 
 .filtrateBtns {
@@ -22,6 +35,11 @@
   button {
     width: 82px;
     margin: 0 10px;
+  }
+
+  .btnEmpty {
+    width: 60px;
+    margin: 0;
   }
 }
 
@@ -61,27 +79,27 @@
   composes: dropdown;
   width: 292px;
   padding: 30px 30px 20px 30px;
+
+  .fileBtn {
+    position: relative;
+    padding: 0;
+    display: block;
+  }
+
+  .fileInput {
+    opacity: 0;
+    width: 82px;
+    height: @height-base;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }
 
 .errorText {
   color: @error-color;
   margin-left: 20px;
   height: 22px;
-}
-
-.fileBtn {
-  position: relative;
-  padding: 0;
-  display: block;
-}
-
-.fileInput {
-  opacity: 0;
-  width: 82px;
-  height: @height-base;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .fileName {
@@ -105,47 +123,28 @@
   }
 }
 
-.statusFormItem {
-  :global {
-    .ant-radio-wrapper {
-      margin-right: 6px;
-
-      span.ant-radio + * {
-        padding: 2px;
-      }
-    }
-  }
-}
-
-.acFormItem {
-  :global(.ant-form-item-label) {
-    white-space: inherit;
-    overflow: visible;
-  }
-}
-
 .SearchContainer {
   position: relative;
-}
 
-.emptySearch {
-  position: absolute;
-  right: 46px;
-  top: 2px;
-  z-index: 1;
-  color: @text-color-secondary;
-  cursor: pointer;
+  .Search {
+    width: 280px;
 
-  &:hover {
-    opacity: 0.6;
+    :global(.ant-input-search-button) {
+      padding: 3px 8px;
+    }
   }
-}
 
-.Search {
-  width: 280px;
+  .emptySearch {
+    position: absolute;
+    right: 46px;
+    top: 2px;
+    z-index: 1;
+    color: @text-color-secondary;
+    cursor: pointer;
 
-  :global(.ant-input-search-button) {
-    padding: 3px 8px;
+    &:hover {
+      opacity: 0.6;
+    }
   }
 }
 
@@ -170,30 +169,36 @@
   }
 }
 
-.btnFiltrate {
-  width: 82px;
-
-  :global(.anticon) {
-    font-size: 10px;
-  }
-}
-
-.btnActive {
-  color: @primary-color;
-  border-color: @primary-color;
-}
-
 .Form {
   padding: 20px 40px 0 20px;
   background-color: #fafafa;
-}
 
-.FormRangeItem {
-  display: inline-block;
-  width: calc(50% - 12px);
+  .FormRangeItem {
+    display: inline-block;
+    width: calc(50% - 12px);
 
-  input {
-    text-align: center;
+    input {
+      text-align: center;
+    }
+  }
+
+  .acFormItem {
+    :global(.ant-form-item-label) {
+      white-space: inherit;
+      overflow: visible;
+    }
+  }
+
+  .statusFormItem {
+    :global {
+      .ant-radio-wrapper {
+        margin-right: 6px;
+
+        span.ant-radio + * {
+          padding: 2px;
+        }
+      }
+    }
   }
 }
 

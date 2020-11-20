@@ -436,6 +436,7 @@ const Header: React.FC = () => {
         visible.filtrate
           ? 
           <Filtrate
+            handleClickFiltrate={handleClickFiltrate}
             handleFiltrate={handleFiltrate}
             filtrateParams={filtrateParams}
             groupsOptions={groupsOptions}
