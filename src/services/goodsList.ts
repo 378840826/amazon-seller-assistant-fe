@@ -152,3 +152,30 @@ export async function getErrorReport(params: API.IParams) {
     data: params,
   });
 }
+
+// 添加跟卖监控
+export async function addMonitor(params: API.IParams) {
+  const { type, asin } = params;
+  const monitorTypeUrl = {
+    follow: '/api/mws/follow/monitor/add-asin',
+    asin: '/api/mws/asin-dynamic/monitoring-settings/add-asin',
+    review: `/api/mws/review/monitoring-settings/add-asin?asin=${asin}`,
+  };
+  return request(monitorTypeUrl[type], {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 批量添加跟卖监控
+export async function addBatchMonitor(params: API.IParams) {
+  const monitorTypeUrl = {
+    follow: '/api/mws/follow/monitor/batch/add-asin',
+    asin: '/api/mws/asin-dynamic/monitoring-settings/add-asins',
+    review: '/api/mws/review/monitoring-settings/add-asins',
+  };
+  return request(monitorTypeUrl[params.type], {
+    method: 'POST',
+    data: params,
+  });
+}

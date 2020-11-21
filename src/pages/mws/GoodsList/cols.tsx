@@ -18,6 +18,7 @@ import { renderSortIcon } from './utils';
 import editable from '@/pages/components/EditableCell';
 import GoodsImg from '@/pages/components/GoodsImg';
 import classnames from 'classnames';
+import { MenuClickEventHandler } from 'rc-menu/lib/interface.d';
 import styles from './index.less';
 
 const { Option } = Select;
@@ -46,6 +47,7 @@ export const getFullColumns = (params: any) => {
     handleAdjustSwitchClick,
     handleSortChange,
     handleFastPrice,
+    handleAddMonitor,
     groups,
     customCols,
     sort,
@@ -637,7 +639,11 @@ export const getFullColumns = (params: any) => {
         </Space>
       ),
     }, {
-      title: '最低价',
+      title: () => (
+        <span title="必须设定最低价和最高价，才能开启智能调价">
+          最低价 { GoodsIcon.question('必须设定最低价和最高价，才能开启智能调价')}
+        </span>
+      ),
       sorter: true,
       sortOrder: sort === 'minPrice' ? order : null,
       dataIndex: 'minPrice',
@@ -669,7 +675,11 @@ export const getFullColumns = (params: any) => {
         })
       ),
     }, {
-      title: '最高价',
+      title: () => (
+        <span title="必须设定最低价和最高价，才能开启智能调价">
+          最高价 { GoodsIcon.question('必须设定最低价和最高价，才能开启智能调价')}
+        </span>
+      ),
       sorter: true,
       sortOrder: sort === 'maxPrice' ? order : null,
       dataIndex: 'maxPrice',
@@ -703,8 +713,7 @@ export const getFullColumns = (params: any) => {
     }, {
       title: () => (
         <span title="必须设定竞品，才能使用根据竞品价格调价功能">
-          竞品
-          { GoodsIcon.question('必须设定竞品，才能使用根据竞品价格调价功能') }
+          竞品 { GoodsIcon.question('必须设定竞品，才能使用根据竞品价格调价功能') }
         </span>
       ),
       dataIndex: 'competingCount',
@@ -749,9 +758,10 @@ export const getFullColumns = (params: any) => {
       width: 80,
       fixed: 'right',
       render: (_, record) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const handleMonitorClick = (param: any) => {
-          console.log('handleMonitorClick', param, record);
+        const handleMonitorClick: MenuClickEventHandler = param => {
+          if (param.key) {
+            handleAddMonitor(param.key, record.asin);
+          }
         };
         const priceMenu = (
           <Menu className={styles.titleMenu} onClick={(event) => handleFastPrice(record, event)}>
@@ -762,10 +772,12 @@ export const getFullColumns = (params: any) => {
         );
         const monitorMenu = (
           <Menu className={styles.titleMenu} onClick={handleMonitorClick}>
-            <MenuItem key="sell">跟卖监控</MenuItem>
-            <MenuItem key="asin">ASIN动态监控</MenuItem>
-            <MenuItem key="review">Review监控</MenuItem>
-            <MenuItem key="keyword">关键词监控</MenuItem>
+            <MenuItem key="follow">添加跟卖监控</MenuItem>
+            <MenuItem key="asin">添加ASIN动态监控</MenuItem>
+            <MenuItem key="review">添加评论监控</MenuItem>
+            <MenuItem key="">
+              <Link to="/dynamic/rank-monitor" target="_blank">添加搜索排名监控</Link>
+            </MenuItem>
           </Menu>
         );
         return (
