@@ -44,6 +44,10 @@ const Header: React.FC = () => {
   // 批量查询的 value
   const [batchText, setBatchText] = useState<string>('');
   const groupsOptions = groups.map(group => ({ value: group.id, name: group.groupName }));
+  // 选中的商品的 asin， 用于批量添加监控
+  const checkedGoodsAsins = checkedGoodsIds.map(checkedId => {
+    return records.find(goods => goods.id === checkedId )?.asin;
+  });
 
   // 获取空筛选条件
   const getEmptyFiltrateParams = () => {
@@ -456,6 +460,7 @@ const Header: React.FC = () => {
               currentShop={currentShop}
               goodsListRecords={records}
               checkedGoodsIds={checkedGoodsIds}
+              checkedGoodsAsins={checkedGoodsAsins}
             />}
             trigger={['click']}
             visible={visible.batchSet}
@@ -470,10 +475,12 @@ const Header: React.FC = () => {
             overlay={<ImportFile />}
             trigger={['click']}
             visible={visible.importFile}
-            className={visible.importFile ? styles.active : ''}
+            className={classnames(styles.importFile, visible.importFile ? styles.active : '')}
             onVisibleChange={flag => setVisible({ ...visible, importFile: flag })}
           >
-            <Button>文件导入</Button>
+            <Button title="支持批量导入售价、成本、头程、最低价和最高价">
+                文件导入<Iconfont className={styles.icon} type="icon-tishi2" />
+            </Button>
           </Dropdown>
           <Dropdown
             overlay={groupsMenu}

@@ -1,12 +1,13 @@
 import React, { ReactText, useEffect } from 'react';
-import { useSelector, useDispatch } from 'umi';
+import { useSelector, useDispatch, history } from 'umi';
 import { IConnectState } from '@/models/connect';
-import { Table, Pagination, message } from 'antd';
+import { Table, Pagination, message, Modal } from 'antd';
 import { requestFeedback, requestErrorFeedback, getPageQuery } from '@/utils/utils';
 import { judgeFastPrice, judgeRuleOpen } from './utils';
 import GoodsIcon from '@/pages/components/GoodsIcon';
 import { getFullColumns } from './cols';
 import Header from './Header';
+import { addMonitor } from '@/services/goodsList';
 import styles from './index.less';
 
 interface IUpdatePrice {
@@ -32,6 +33,8 @@ interface IUpdateGoodsUserDefined {
     ruleName?: string;
   }): void;
 }
+
+export type IMonitorType = 'follow' | 'asin' | 'review';
 
 const GoodsList: React.FC = () => {
   const dispatch = useDispatch();
@@ -80,7 +83,7 @@ const GoodsList: React.FC = () => {
     if (currentShopId !== '-1') {
       const queryParams = getPageQuery();
       // 清除 url 中的参数
-      history.replaceState(null, '', '/product/list');
+      window.history.replaceState(null, '', '/product/list');
       dispatch({
         type: 'goodsList/fetchShopGroups',
         payload: {
@@ -269,6 +272,35 @@ const GoodsList: React.FC = () => {
     });
   };
 
+  // 添加到监控
+  const handleAddMonitor = (type: IMonitorType, asin: string) => {
+    const urlDict = {
+      follow: '/competitor/monitor',
+      asin: '/dynamic/asin-monitor',
+      review: '/review/monitor',
+    };
+    addMonitor({ headersParams, type, asin }).then(res => {
+      if (res.code === 200) {
+        Modal.confirm({
+          icon: null,
+          width: 300,
+          centered: true,
+          mask: false,
+          maskClosable: false,
+          cancelText: '前往监控列表',
+          title: '添加成功!',
+          onCancel() {
+            history.push(urlDict[type]);
+          },
+        });
+      }
+      requestErrorFeedback(res.code, res.message);
+    }).catch(err => {
+      console.log('添加监控错误', err);
+      message.error('网络有点问题，请稍候再试！');
+    });
+  };
+
   // 根据自定义列数据调整 Table 的 columns 数据
   const getColumns = () => {
     const cols = getFullColumns({
@@ -280,6 +312,7 @@ const GoodsList: React.FC = () => {
       handleAdjustSwitchClick,
       handleSortChange,
       handleFastPrice,
+      handleAddMonitor,
       groups,
       customCols,
       sort,

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Input, Button, Form, Select, Dropdown, Menu, message } from 'antd';
-import { useDispatch } from 'umi';
+import { Input, Button, Form, Select, Dropdown, Menu, message, Modal } from 'antd';
+import { MenuClickEventHandler } from 'rc-menu/lib/interface.d';
+import { useDispatch, history } from 'umi';
 import { DownOutlined } from '@ant-design/icons';
-import { requestFeedback, strToMoneyStr } from '@/utils/utils';
+import { requestFeedback, requestErrorFeedback, strToMoneyStr } from '@/utils/utils';
 import { judgeFastPrice, judgeRuleOpen } from '../utils';
+import { addBatchMonitor } from '@/services/goodsList';
 import styles from './index.less';
 
 const { Item: FormItem } = Form;
@@ -17,6 +19,7 @@ interface IProps {
   }[];
   currentShop: API.IShop;
   checkedGoodsIds: string[];
+  checkedGoodsAsins: (string | undefined)[];
   goodsListRecords: API.IGoods[];
 }
 
@@ -37,8 +40,11 @@ const BatchSet: React.FC<IProps> = props => {
     groupsOptions,
     currentShop,
     checkedGoodsIds,
+    checkedGoodsAsins,
     goodsListRecords,
   } = props;
+
+  const headersParams = { StoreId: currentShop.id };
 
   const { currency } = currentShop;
 
@@ -57,7 +63,7 @@ const BatchSet: React.FC<IProps> = props => {
     dispatch({
       type: 'goodsList/updatePrice',
       payload: {
-        headersParams: { StoreId: currentShop.id },
+        headersParams,
         type,
         ids: checkedGoodsIds,
         ...values,
@@ -88,7 +94,7 @@ const BatchSet: React.FC<IProps> = props => {
     dispatch({
       type: 'goodsList/updateBatchGoods',
       payload: {
-        headersParams: { StoreId: currentShop.id },
+        headersParams,
         key,
         ids: checkedGoodsIds,
         ...values,
@@ -113,7 +119,7 @@ const BatchSet: React.FC<IProps> = props => {
         payload: {
           ids: checkedGoodsIds,
           adjustSwitch: adjust,
-          headersParams: { StoreId: currentShop.id },
+          headersParams,
         },
         callback: requestFeedback,
       });
@@ -123,7 +129,7 @@ const BatchSet: React.FC<IProps> = props => {
       judge && dispatch({
         type: 'goodsList/fastUpdate',
         payload: {
-          headersParams: { StoreId: currentShop.id },
+          headersParams,
           key,
           ids: checkedGoodsIds,
         },
@@ -141,6 +147,40 @@ const BatchSet: React.FC<IProps> = props => {
     } else {
       setBatchSetFocus('');
     }
+  };
+
+  // 批量添加到监控
+  const handleMonitorClick: MenuClickEventHandler = param => {
+    const type = param.key;
+    const urlDict = {
+      follow: '/competitor/monitor',
+      asin: '/dynamic/asin-monitor',
+      review: '/review/monitor',
+    };
+    addBatchMonitor({
+      headersParams,
+      type: param.key,
+      asins: checkedGoodsAsins,
+    }).then(res => {
+      if (res.code === 200) {
+        Modal.confirm({
+          icon: null,
+          width: 300,
+          centered: true,
+          mask: false,
+          maskClosable: false,
+          cancelText: '前往监控列表',
+          title: '添加成功!',
+          onCancel() {
+            history.push(urlDict[type]);
+          },
+        });
+      }
+      requestErrorFeedback(res.code, res.message);
+    }).catch(err => {
+      console.log('批量添加监控错误', err);
+      message.error('网络有点问题，请稍候再试！');
+    });
   };
 
   // 批量设置各项目的确定按钮
@@ -164,11 +204,10 @@ const BatchSet: React.FC<IProps> = props => {
 
   // 批量添加监控下拉菜单
   const batchMonitorDropdownMenu = (
-    <Menu>
-      <MenuItem key="sell">跟卖监控</MenuItem>
+    <Menu onClick={handleMonitorClick}>
+      <MenuItem key="follow">跟卖监控</MenuItem>
       <MenuItem key="asin">ASIN动态监控</MenuItem>
       <MenuItem key="review">Review监控</MenuItem>
-      <MenuItem key="keyword">关键词监控</MenuItem>
     </Menu>
   );
 
