@@ -9,7 +9,7 @@ import {
   useSelector,
 } from 'umi';
 import { Iconfont, storage } from '@/utils/utils';
-import { colsWidth } from './config';
+// import { colsWidth } from './config';
 
 
 // 组件
@@ -144,7 +144,6 @@ const ChildAsin: React.FC<IProps> = props => {
         setSort(false);
       }
     });
-  
   }, [dispatch, currentShop, searchForm, calendar]); // eslint-disable-line
   
   // 父ASIN 父asin列表载入偏好
@@ -194,7 +193,7 @@ const ChildAsin: React.FC<IProps> = props => {
 
   // 搜索框
   const changeSearch = (val: string) => {
-    requestFn({ search: val });
+    requestFn({ search: val, size: pageSize });
   };
 
   // 删除单个偏好
@@ -443,6 +442,7 @@ const ChildAsin: React.FC<IProps> = props => {
     requestFn({
       order,
       asc,
+      size: pageSize,
     });
   };
 
@@ -508,40 +508,36 @@ const ChildAsin: React.FC<IProps> = props => {
     site: currentShop.marketplace,
   });
 
-  //  确定表格的高度
-  const getTableScrollX = (): string => {
-    const selectCustomCol = [];
-    let width = 0;
-    const bodyWidth = document.body.clientWidth - 100;
+  // //  确定表格的高度
+  // const getTableScrollX = (): string => {
+  //   const selectCustomCol = [];
+  //   let width = 0;
+  //   const bodyWidth = document.body.clientWidth - 100;
     
-    // 自定义已选的列
-    for (const key in parentCustomcol) {
-      const item = parentCustomcol[key];
-      selectCustomCol.push(...item);
-    }
+  //   // 自定义已选的列
+  //   for (const key in parentCustomcol) {
+  //     const item = parentCustomcol[key];
+  //     selectCustomCol.push(...item);
+  //   }
 
-    selectCustomCol.forEach(item => {
-      for (const key in colsWidth) {
-        const value = colsWidth[key];
-        if (item === key) {
-          console.log(value, 'value');
-          width += value;
-        }
-      }
-    });
+  //   selectCustomCol.forEach(item => {
+  //     for (const key in colsWidth) {
+  //       const value = colsWidth[key];
+  //       if (item === key) {
+  //         width += value;
+  //       }
+  //     }
+  //   });
 
-    if (selectCustomCol.length === 0) {
-      return 'max-content';
-    }
+  //   if (selectCustomCol.length === 0) {
+  //     return 'max-content';
+  //   }
 
-    if (width <= bodyWidth) {
-      width = bodyWidth;
-    }
-
-
-    console.log(selectCustomCol, 'selectCustomCol');
-    return `${width}px`;
-  };
+  //   if (width <= bodyWidth) {
+  //     width = bodyWidth;
+  //   }
+  //   return `${width}px`;
+  // };
 
   let count = 0;
   const tableConfig = {
@@ -551,7 +547,7 @@ const ChildAsin: React.FC<IProps> = props => {
     loading,
     rowKey: () => count++,
     scroll: {
-      x: getTableScrollX(),
+      x: 'max-content',
       y: 'calc(100vh - 328px)',
       scrollToFirstRowOnChange: true,
     },

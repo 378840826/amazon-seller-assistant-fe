@@ -213,7 +213,7 @@ const ChildAsin: React.FC<IProps> = props => {
 
   // 搜索框
   const changeSearch = (val: string) => {
-    requestFn({ search: val });
+    requestFn({ search: val, size: pageSize });
   };
 
   // 删除单个偏好
@@ -434,6 +434,7 @@ const ChildAsin: React.FC<IProps> = props => {
     requestFn({
       order,
       asc,
+      size: pageSize,
     });
   };
 
@@ -496,12 +497,8 @@ const ChildAsin: React.FC<IProps> = props => {
   
   // 点击偏好名称
   const clickPreferenceName = (id: string) => {
-    console.log('???');
-    
     setVisibleFiltern(true);
     conditions.forEach(item => {
-      console.log(item, 'item');
-      
       if (item.id === id) {
         setLoadPreferenceId(id);
         if (item.adType === null ) {

@@ -150,7 +150,6 @@ const ParentCustomCol: React.FC = () => {
     // 监听 “B2B销售”是否需要全选
     if (childCustomcol.b2bItem) {
       const length = childCustomcol.b2bItem.length;
-      console.log(childCustomcol.b2bItem, childCustomcol.b2bItem.length);
       if (length === b2b.length) {
         setB2bStyle(false);
         form.setFieldsValue({
@@ -250,7 +249,6 @@ const ParentCustomCol: React.FC = () => {
   }, [form, childCustomcol]);
   
   const onValuesChange = (changedValues: any, allValues: any) => { // eslint-disable-line
-    console.log(changedValues, allValues);
     const obj = {
       asins: allValues.asins || [],
       salesItem: allValues.salesItem || [],

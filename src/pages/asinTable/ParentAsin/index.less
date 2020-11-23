@@ -11,6 +11,10 @@
     margin: 0 !important;
   }
 
+  :global(.ant-table-container)::after {
+    box-shadow: none !important;
+  }
+
   .table {
     background-color: #fff;
     margin: 20px 0 0 0;
@@ -39,6 +43,7 @@
       padding-top: 0 !important;
       padding-bottom: 0 !important;
       height: 44px;
+      // border: 1px solid red !important;
     }
   }
 
@@ -54,8 +59,13 @@
 
   // asin外面的容器行
   .asinRowStyle {
+    th {
+      padding: 0;
+    }
+
     > td {
       border-width: 0 !important;
+      padding: 0;
     }
 
     &:nth-child(odd) td {
@@ -84,6 +94,10 @@
     }
   }
 
+  .mainTd {
+    padding: 0 !important;
+  }
+
   // 表头
   .headTable {
     tbody {
@@ -95,6 +109,7 @@
     width: 210px;
     min-width: 210px;
     max-width: 210px;
+    padding-left: 0;
 
     .text {
       max-width: 210px;
@@ -146,6 +161,11 @@
       margin-right: 6px;
     }
 
+    .imgFont {
+      font-size: 46px;
+      margin-right: 6px;
+    }
+
     .details {
       text-align: left;
 
@@ -178,7 +198,7 @@
 
         a.title {
           color: @btn-text-color;
-          width: 50%;
+          width: 88px;
 
           &:hover {
             color: @primary-color;
@@ -202,7 +222,6 @@
       border-bottom: 0;
       height: 48px;
       line-height: 48px;
-      color: @heading-color !important;
 
       p {
         line-height: 16px;
@@ -250,4 +269,119 @@
       // }
     }
   }
+}
+
+.totalSales {
+  width: 115px;
+  min-width: 115px;
+}
+
+.totalOrderQuantity {
+  width: 115px;
+  min-width: 115px;
+}
+
+.totalSalesQuantity {
+  width: 95px;
+  min-width: 95px;
+}
+
+.replyReviewRate {
+  width: 110px;
+  min-width: 110px;
+}
+
+.profit {
+  width: 100px;
+  min-width: 100px;
+}
+
+.profitRate {
+  width: 100px;
+  min-width: 100px;
+}
+
+.salesQuantityExceptOrderQuantity {
+  width: 125px;
+  min-width: 125px;
+}
+
+.avgSellingPrice {
+  width: 105px;
+  min-width: 105px;
+}
+
+.avgCustomerPrice {
+  width: 115px;
+  min-width: 115px;
+}
+
+.preferentialOrderQuantity {
+  width: 120px;
+  min-width: 120px;
+}
+
+.associateSales {
+  width: 120px;
+  min-width: 120px;
+}
+
+.pageView {
+  width: 90px;
+  min-width: 90px;
+}
+
+.session {
+  width: 105px;
+  min-width: 105px;
+}
+
+.pageViewExceptSession {
+  width: 145px;
+  min-width: 145px;
+}
+
+.conversionsRate {
+  width: 105px;
+  min-width: 105px;
+}
+
+.returnQuantity {
+  width: 105px;
+  min-width: 105px;
+}
+
+.returnRate {
+  width: 95px;
+  min-width: 95px;
+}
+
+.b2bSales {
+  width: 120px;
+  min-width: 120px;
+}
+
+.b2bSalesQuantity {
+  width: 110px;
+  min-width: 110px;
+}
+
+.b2bOrderQuantity {
+  width: 120px;
+  min-width: 120px;
+}
+
+.b2bSalesQuantityExceptOrderQuantity {
+  width: 160px;
+  min-width: 160px;
+}
+
+.b2bAvgSellingPrice {
+  width: 130px;
+  min-width: 130px;
+}
+
+.b2bAvgCustomerPrice {
+  width: 150px;
+  min-width: 150px;
 }

@@ -167,7 +167,6 @@ const ParentCustomCol: React.FC = () => {
   }, [form, parentCustomcol]);
 
   const onValuesChange = (changedValues: any, allValues: any) => { // eslint-disable-line
-    console.log(changedValues, allValues);
     const obj = {
       asins: allValues.asins || [],
       salesItem: allValues.salesItem || [],
