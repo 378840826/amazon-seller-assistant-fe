@@ -79,7 +79,7 @@ export default (props: IProps) => {
     {
       dataIndex: 'totalSales',
       component: <td className={classnames(styles.base)} align="right" key="2">
-        {totalSales === null ? <Empty /> : currency + moneyFormat(totalSales, 2, ',', '.', false) }
+        {totalSales === null ? <Empty /> : currency + moneyFormat(totalSales, 2, ',', '.', true) }
       </td>,
     },
     {
@@ -97,19 +97,19 @@ export default (props: IProps) => {
     {
       dataIndex: 'replyReviewRate',
       component: <td className={classnames(styles.base)} align="center" key="5">
-        {replyReviewRate === null ? <Empty /> : `${moneyFormat(replyReviewRate, 2, ',', '.', false)}%`}
+        {replyReviewRate === null ? <Empty /> : `${moneyFormat(replyReviewRate, 2, ',', '.', true)}%`}
       </td>,
     },
     {
       dataIndex: 'profit',
       component: <td className={classnames(styles.base)} align="right" key="6">
-        {profit === null ? <Empty /> : currency + moneyFormat(profit, 2, ',', '.', false) }
+        {profit === null ? <Empty /> : currency + moneyFormat(profit, 2, ',', '.', true) }
       </td>,
     },
     {
       dataIndex: 'profitRate',
       component: <td className={classnames(styles.base)} align="center" key="7">
-        {profitRate === null ? <Empty /> : `${moneyFormat(profitRate, 2, ',', '.', false)}%`}
+        {profitRate === null ? <Empty /> : `${moneyFormat(profitRate, 2, ',', '.', true)}%`}
       </td>,
     },
     {
@@ -121,13 +121,13 @@ export default (props: IProps) => {
     {
       dataIndex: 'avgSellingPrice',
       component: <td className={classnames(styles.base)} align="right" key="9">
-        {avgSellingPrice === null ? <Empty /> : currency + moneyFormat(avgSellingPrice, 2, ',', '.', false) }
+        {avgSellingPrice === null ? <Empty /> : currency + moneyFormat(avgSellingPrice, 2, ',', '.', true) }
       </td>,
     },
     {
       dataIndex: 'avgCustomerPrice',
       component: <td className={classnames(styles.base)} align="right" key="10">
-        {avgCustomerPrice === null ? <Empty /> : currency + moneyFormat(avgCustomerPrice, 2, ',', '.', false) }
+        {avgCustomerPrice === null ? <Empty /> : currency + moneyFormat(avgCustomerPrice, 2, ',', '.', true) }
       </td>,
     },
     {
@@ -139,7 +139,7 @@ export default (props: IProps) => {
     {
       dataIndex: 'associateSales',
       component: <td className={classnames(styles.base)} align="center" key="12">
-        {associateSales === null ? <Empty /> : moneyFormat(associateSales, 2, ',', '.', false)}
+        {associateSales === null ? <Empty /> : moneyFormat(associateSales, 2, ',', '.', true)}
       </td>,
     },
     {
@@ -151,68 +151,68 @@ export default (props: IProps) => {
     {
       dataIndex: 'session',
       component: <td className={classnames(styles.base)} align="center" key="14">
-        {session === null ? <Empty /> : moneyFormat(session, 2, ',', '.', false)}
+        {session === null ? <Empty /> : moneyFormat(session, 2, ',', '.', true)}
       </td>,
     },
     {
       dataIndex: 'pageViewExceptSession',
       component: <td className={classnames(styles.base)} align="center" key="15">
-        {pageViewExceptSession === null ? <Empty /> : moneyFormat(pageViewExceptSession, 2, ',', '.', false)}
+        {pageViewExceptSession === null ? <Empty /> : moneyFormat(pageViewExceptSession, 2, ',', '.', true)}
       </td>,
     },
     {
       dataIndex: 'conversionsRate',
       component: <td className={classnames(styles.base)} align="center" key="16">
-        {conversionsRate === null ? <Empty /> : `${moneyFormat(conversionsRate, 2, ',', '.', false)}%`}
+        {conversionsRate === null ? <Empty /> : `${moneyFormat(conversionsRate, 2, ',', '.', true)}%`}
       </td>,
     },
     {
       dataIndex: 'returnQuantity',
       component: <td className={classnames(styles.base)} align="center" key="17">
-        {returnQuantity === null ? <Empty /> : moneyFormat(returnQuantity, 2, ',', '.', false)}
+        {returnQuantity === null ? <Empty /> : moneyFormat(returnQuantity, 2, ',', '.', true)}
       </td>,
     },
     {
       dataIndex: 'returnRate',
       component: <td className={classnames(styles.base)} align="center" key="18">
-        {returnRate === null ? <Empty /> : `${moneyFormat(returnRate, 2, ',', '.', false)}%`}
+        {returnRate === null ? <Empty /> : `${moneyFormat(returnRate, 2, ',', '.', true)}%`}
       </td>,
     },
     {
       dataIndex: 'b2bSales',
       component: <td className={classnames(styles.base)} align="center" key="19">
-        <p>{b2bSales === null ? <Empty /> : currency + moneyFormat(b2bSales, 2, ',', '.', false) }</p>
-        <p>{b2bSalesProportion === null ? <Empty /> : `${moneyFormat(b2bSalesProportion, 2, ',', '.', false)}%`}</p>
+        <p>{b2bSales === null ? <Empty /> : currency + moneyFormat(b2bSales, 2, ',', '.', true) }</p>
+        <p>{b2bSalesProportion === null ? <Empty /> : `${moneyFormat(b2bSalesProportion, 2, ',', '.', true)}%`}</p>
       </td>,
     },
     {
       dataIndex: 'b2bSalesQuantity',
       component: <td className={classnames(styles.base)} align="center" key="20">
-        {b2bSalesQuantity === null ? <Empty /> : `${moneyFormat(b2bSalesQuantity, 2, ',', '.', false)}`}
+        {b2bSalesQuantity === null ? <Empty /> : `${moneyFormat(b2bSalesQuantity, 2, ',', '.', true)}`}
       </td>,
     },
     {
       dataIndex: 'b2bOrderQuantity',
       component: <td className={classnames(styles.base)} align="center" key="21">
-        {b2bOrderQuantity === null ? <Empty /> : `${moneyFormat(b2bOrderQuantity, 2, ',', '.', false)}`}
+        {b2bOrderQuantity === null ? <Empty /> : `${moneyFormat(b2bOrderQuantity, 2, ',', '.', true)}`}
       </td>,
     },
     {
       dataIndex: 'b2bSalesQuantityExceptOrderQuantity',
       component: <td className={classnames(styles.base)} align="center" key="22">
-        {b2bSalesQuantityExceptOrderQuantity === null ? <Empty /> : `${moneyFormat(b2bSalesQuantityExceptOrderQuantity, 2, ',', '.', false)}`}
+        {b2bSalesQuantityExceptOrderQuantity === null ? <Empty /> : `${moneyFormat(b2bSalesQuantityExceptOrderQuantity, 2, ',', '.', true)}`}
       </td>,
     },
     {
       dataIndex: 'b2bAvgSellingPrice',
       component: <td className={classnames(styles.base)} align="center" key="23">
-        {b2bAvgSellingPrice === null ? <Empty /> : `${currency + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', false)}`}
+        {b2bAvgSellingPrice === null ? <Empty /> : `${currency + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', true)}`}
       </td>,
     },
     {
       dataIndex: 'b2bAvgCustomerPrice',
       component: <td className={classnames(styles.base)} align="right" key="24">
-        {b2bAvgCustomerPrice === null ? <Empty /> : currency + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', false) }
+        {b2bAvgCustomerPrice === null ? <Empty /> : currency + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', true) }
       </td>,
     },
   ];

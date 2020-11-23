@@ -132,7 +132,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       align: 'center',
       width: 110,
       fixed: 'left',
-      render(val: string) {
+      render(val: number) {
         return <p className={styles.parentAsinCol}>{val}</p>;
       },
     },
@@ -159,6 +159,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       />,
       align: 'center',
       width: 110,
+      render(val: number) {
+        return moneyFormat(val, 1, ',', '.', true);
+      },
     },
     {
       dataIndex: 'totalSales',
@@ -177,7 +180,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -249,7 +252,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 110,
       render(val: number, { replyReviewRateRingRatio }: AsinTable.IChildResocds) {
         return <>
-          <p>{val === null ? <Empty /> : `${val}%` }</p>
+          <p>{val === null ? <Empty /> : `${ moneyFormat(val, 2, ',', '.', true)}%` }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -275,7 +278,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -301,7 +304,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: three,
       render(val: number, { profitRateRingRatio }: AsinTable.IChildResocds) {
         return <>
-          <p>{val === null ? <Empty /> : `${val}%` }</p>
+          <p>{val === null ? <Empty /> : `${ moneyFormat(val, 2, ',', '.', true)}%` }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -351,7 +354,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -379,7 +382,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -597,7 +600,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
           <div className={styles.haveProportion}>
             <p>
               {
-                val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+                val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
               }
             </p>
             <p>
@@ -703,7 +706,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -731,7 +734,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -821,7 +824,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -850,7 +853,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
           <div className={styles.haveProportion}>
             <p>
               {
-                val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+                val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
               }
             </p>
             <p>
@@ -888,7 +891,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
           <div className={styles.haveProportion}>
             <p>
               {
-                val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+                val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
               }
             </p>
             <p>
@@ -1026,7 +1029,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -1054,7 +1057,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', false) : <Empty />
+              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
