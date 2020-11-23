@@ -118,7 +118,7 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'totalSales',
       component: <td className={styles.right} key="5">
-        {totalSales !== null ? symbol + moneyFormat(totalSales, 2, ',', '.', false) : <Empty/>} 
+        {totalSales !== null ? symbol + moneyFormat(totalSales, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
@@ -155,19 +155,19 @@ const Summary: React.FC<IProps> = (props) => {
       dataIndex: 'salesQuantityExceptOrderQuantity',
       component: <td className={styles.center} key="11">
         {salesQuantityExceptOrderQuantity !== null ? 
-          `${salesQuantityExceptOrderQuantity}%` : <Empty/>}
+          `${salesQuantityExceptOrderQuantity}` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'avgSellingPrice',
       component: <td className={styles.right} key="12">
-        {avgSellingPrice !== null ? symbol + moneyFormat(avgSellingPrice, 2, ',', '.', false) : <Empty/>} 
+        {avgSellingPrice !== null ? symbol + moneyFormat(avgSellingPrice, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
       dataIndex: 'avgCustomerPrice',
       component: <td className={styles.right} key="13">
-        {avgCustomerPrice !== null ? symbol + moneyFormat(avgCustomerPrice, 2, ',', '.', false) : <Empty/>} 
+        {avgCustomerPrice !== null ? symbol + moneyFormat(avgCustomerPrice, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
@@ -221,7 +221,7 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'b2bSales',
       component: <td className={styles.center} key="22">
-        {b2bSales !== null ? symbol + moneyFormat(b2bSales, 2, ',', '.', false) : <Empty/>} 
+        {b2bSales !== null ? symbol + moneyFormat(b2bSales, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
@@ -248,13 +248,13 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'b2bAvgSellingPrice',
       component: <td className={styles.right} key="26">
-        {b2bAvgSellingPrice !== null ? symbol + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', false) : <Empty/>} 
+        {b2bAvgSellingPrice !== null ? symbol + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
       dataIndex: 'b2bAvgCustomerPrice',
       component: <td className={styles.right} key="27">
-        {b2bAvgCustomerPrice !== null ? symbol + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', false) : <Empty/>} 
+        {b2bAvgCustomerPrice !== null ? symbol + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
@@ -264,19 +264,19 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'adSales',
       component: <td className={styles.right} key="29">
-        {adSales !== null ? symbol + moneyFormat(adSales, 2, ',', '.', false) : <Empty/>} 
+        {adSales !== null ? symbol + moneyFormat(adSales, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
       dataIndex: 'skuAdSales',
       component: <td className={styles.center} key="30">
-        {skuAdSales !== null ? symbol + moneyFormat(skuAdSales, 2, ',', '.', false) : <Empty/>} 
+        {skuAdSales !== null ? symbol + moneyFormat(skuAdSales, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
       dataIndex: 'naturalSales',
       component: <td className={styles.center} key="31">
-        {naturalSales !== null ? symbol + moneyFormat(naturalSales, 2, ',', '.', false) : <Empty/>} 
+        {naturalSales !== null ? symbol + moneyFormat(naturalSales, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
@@ -300,13 +300,13 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'cpc',
       component: <td className={styles.center} key="35">
-        {cpc !== null ? symbol + moneyFormat(cpc, 2, ',', '.', false) : <Empty/>} 
+        {cpc !== null ? symbol + moneyFormat(cpc, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
       dataIndex: 'spend',
       component: <td className={styles.center} key="36">
-        {spend !== null ? symbol + moneyFormat(spend, 2, ',', '.', false) : <Empty/>} 
+        {spend !== null ? symbol + moneyFormat(spend, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {

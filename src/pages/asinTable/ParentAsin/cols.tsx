@@ -515,7 +515,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...totalSalesCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -547,7 +547,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...profitCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -571,7 +571,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...avgSellingPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -579,7 +579,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...avgCustomerPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -611,7 +611,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...sessionCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -619,7 +619,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...pageViewExceptSessionCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -651,7 +651,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bSalesCol,
           render(val: number, row: AsinTable.IParentChildAsin) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
               <p>{row.b2bSalesProportion}%</p>
             </>;
           },
@@ -668,7 +668,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bOrderQuantityCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -684,7 +684,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bAvgSellingPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -692,7 +692,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bAvgCustomerPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', false) }</p>
+              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
