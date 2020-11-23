@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-10-15 17:17:25
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\asinTable\ParentAsin\TableHead\index.tsx
  * 
  * 表头组件，这个组件是没有 占比的，TableHead1是有占比的
@@ -50,35 +50,32 @@ const TableHead: React.FC<IProps> = props => {
   
   const istyle = {
     width: width ? width : 'auto',
-    ...style,
+    textAlign: align,
+    // ...style,
   };
+
   
   return (
-    <div className={styles.tableHead} style={istyle}>
-      <p className={classnames(
-        styles.title,
-        titleparams === order ? styles.sorted : ''
-      )} 
-      title="点击排序"
-      onClick={mainCallback}
-      style={{
-        textAlign: align,
-      }}
-      >
-        {title}
-        {
-          hint ? <Tooltip title={hint}>
-            <QuestionCircleOutlined className={styles.hint}/></Tooltip>
-            : null
-        }
-        <Iconfont 
-          type="icon-xiangxiajiantou" 
-          className={`${styles.sort} ${mainSort === false ? styles.active : ''}`}
-          style={{
-            display: titleparams === order ? 'inline-block' : 'none',
-          }}
-        />
-      </p> 
+    <div style={istyle} title="点击排序" className={classnames(
+      styles.title,
+      titleparams === order ? styles.sorted : '',
+      styles.tableHead,
+    )}
+    onClick={mainCallback}
+    >
+      {title}
+      {
+        hint ? <Tooltip title={hint}>
+          <QuestionCircleOutlined className={styles.hint}/></Tooltip>
+          : null
+      }
+      <Iconfont 
+        type="icon-xiangxiajiantou" 
+        className={`${styles.sort} ${mainSort === false ? styles.active : ''}`}
+        style={{
+          display: titleparams === order ? 'inline-block' : 'none',
+        }}
+      />
     </div>
   );
 };

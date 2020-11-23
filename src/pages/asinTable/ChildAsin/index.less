@@ -17,8 +17,9 @@
     thead th {
       background-color: @table-row-hover-bg;
       height: 44px;
-      padding-bottom: 0;
-      padding-top: 0;
+      max-height: 44px;
+      padding-bottom: 0 !important;
+      padding-top: 0 !important;
       color: @heading-color;
       border-width: 0 !important;
     }
@@ -149,10 +150,10 @@
   cursor: pointer;
 
   &.active {
-    color: @btn-text-color;
+    color: #00c6a5;
   }
 
   &:hover {
-    color: @primary-color;
+    color: #00c6a5;
   }
 }

@@ -60,7 +60,8 @@ export default (props: IProps) => {
       dataIndex: 'childAsin',
       component: <td className={classnames(
         styles.base,
-        styles.summaryChildAsin
+        styles.summaryChildAsin,
+        selectCustomCol.indexOf('sku') === -1 ? 'ant-table-cell-fix-left-last' : '',
       )} key="0" >
         {selectCustomCol.indexOf(parentsprs[1]) === -1 ? <span className={styles.text}>小计</span> : ''}
       </td>,
@@ -69,7 +70,8 @@ export default (props: IProps) => {
       dataIndex: 'sku',
       component: <td className={classnames(
         styles.base,
-        styles.summarySku
+        styles.summarySku,
+        selectCustomCol.indexOf('sku') === -1 ? '' : 'ant-table-cell-fix-left-last',
       )} key="1">
         {selectCustomCol.indexOf(parentsprs[1]) > -1 ? <span className={styles.text}>小计</span> : ''}
       </td>,

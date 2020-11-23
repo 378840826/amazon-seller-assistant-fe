@@ -5,10 +5,10 @@ import classnames from 'classnames';
 
 // 组件
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
-import notImg from '@/assets/stamp.png';
 import { Link } from 'umi';
 import TableHead from './TableHead';
 import TableHead1 from './TableHead1';
+import TableHead2 from '../components/TableHead';
 import Deliver from '../components/Deliver';
 import Empty from '../components/Empty';
 import Rate from '@/components/Rate';
@@ -70,7 +70,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         categoryName,
       }: AsinTable.IChildResocds) {
         return <div className={styles.productCol}>
-          <img src={imgUrl || notImg}/>
+          <img src={imgUrl} className={imgUrl === null ? 'none' : '' }/>
+          <Iconfont type="icon-anzhizhushoubiaoqiantubiao1" className={classnames(
+            imgUrl === null ? '' : 'none',
+            styles.imgFont
+          ) } />
           <div className={styles.details}>
             <a href={getAmazonAsinUrl(asin, site)} 
               className={styles.title}
@@ -134,13 +138,25 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'reviewNum',
-      title: 'Review',
+      title: <TableHead2
+        title="Review"
+        titleparams="reviewNum"
+        callback={sortCallback}
+        order={order}
+        align="center"
+      />,
       align: 'center',
       width: 110,
     },
     {
       dataIndex: 'reviewScore',
-      title: '评分',
+      title: <TableHead2
+        title="评分"
+        titleparams="reviewScore"
+        callback={sortCallback}
+        order={order}
+        align="center"
+      />,
       align: 'center',
       width: 110,
     },
@@ -308,7 +324,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 130,
       render(val: number, { salesQuantityExceptOrderQuantityRingRatio }: AsinTable.IChildResocds) {
         return <>
-          <p>{val === null ? <Empty /> : `${val}%` }</p>
+          <p>{val === null ? <Empty /> : `${val}` }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -1094,7 +1110,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? `${val}` : <Empty />
+              val !== null ? `${val}%` : <Empty />
             }
           </p>
           <p style={{
@@ -1150,7 +1166,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return <>
           <p>
             {
-              val !== null ? `${val}%` : <Empty />
+              val !== null ? `${val}` : <Empty />
             }
           </p>
           <p style={{

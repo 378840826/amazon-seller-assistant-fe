@@ -47,19 +47,19 @@ export const parentb2b = [
   'b2bAvgCustomerPrice',
 ];
 
-// 表格各列的宽度
+// 表格各列的宽度 修改这里，也要修改index.less的宽度，
 export const colsWidth = {
   asin: 198,
   sku: 196,
-  totalSales: 105, // 总销售额
-  totalOrderQuantity: 105, // 总订单量
+  totalSales: 115, // 总销售额
+  totalOrderQuantity: 115, // 总订单量
   totalSalesQuantity: 95, // 总销量
   replyReviewRate: 110, // 回评率
   profit: 100, // 利润
-  profitRate: 95, // 利润率
+  profitRate: 100, // 利润率
   salesQuantityExceptOrderQuantity: 125, // 销量/订单量
   avgSellingPrice: 105, // 平均售价
-  avgCustomerPrice: 105, // 平均客单价
+  avgCustomerPrice: 115, // 平均客单价
   preferentialOrderQuantity: 120, // 优惠订单
   associateSales: 120, // 关联销售
   pageView: 80, // pageView
@@ -71,7 +71,7 @@ export const colsWidth = {
   b2bSales: 120, // B2B销售额
   b2bSalesQuantity: 110, // B2B销量
   b2bOrderQuantity: 120, // B2B订单量
-  b2bSalesQuantityExceptOrderQuantity: 150, // B2B销量/订单量
+  b2bSalesQuantityExceptOrderQuantity: 160, // B2B销量/订单量
   b2bAvgSellingPrice: 130, // B2B平均售价
   b2bAvgCustomerPrice: 150, // B2B平均客单价
 };
