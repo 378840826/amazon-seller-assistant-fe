@@ -64,7 +64,7 @@
 
     .nameText {
       color: @heading-color;
-      margin: 4px 10px 0 0;
+      margin: 4px 0 0 0;
     }
 
     .condition {
@@ -212,6 +212,8 @@ span.emptyLine {
 }
 
 .adType {
+  padding-left: 16px;
+
   .text1 {
     color: @text-color-secondary;
     padding: 0 2px;
@@ -352,11 +354,11 @@ span.emptyLine {
     }
 
     span.num:first-child {
-      padding-right: 3px;
+      padding-right: 5px;
     }
 
     span.num:last-child {
-      padding-right: 3px;
+      padding-right: 5px;
     }
   }
 }
@@ -376,4 +378,9 @@ span.emptyLine {
 .parentAsinCol {
   white-space: pre-wrap;
   word-break: break-all;
+}
+
+// 右对齐的列
+tbody tr td.tdTextRight {
+  padding-right: 12px !important;
 }
