@@ -92,7 +92,7 @@ const renderNavigation = () => {
           }
           return (
             <MenuItem key={titlePathname} className={styles.MenuItem}>
-              <Dropdown overlay={getSubMenu(item.menu)} placement="bottomCenter">
+              <Dropdown overlay={getSubMenu(item.menu)} placement="bottomLeft" overlayClassName={styles.overlay}>
                 <Link to={titlePathname}>{item.title}</Link>
               </Dropdown>
             </MenuItem>
