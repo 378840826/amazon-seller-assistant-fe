@@ -6,9 +6,9 @@ import classnames from 'classnames';
 // 组件
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import { Link } from 'umi';
-import TableHead from './TableHead';
-import TableHead1 from './TableHead1';
-import TableHead2 from '../components/TableHead';
+import TableHeadMain from '../components/TableHeadMain';
+import TableHeadTwo from '../components/TableHeadTwo';
+import TableHeadOne from '../components/TableHeadOne';
 import Deliver from '../components/Deliver';
 import Empty from '../components/Empty';
 import Rate from '@/components/Rate';
@@ -43,17 +43,17 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
 
   // const two = 80; // 2个字的列宽度
   const three = 95; // 3个字的列宽度、Spend、Clicks
-  const four = 105; // 4个字的列宽度
-  const five = 118; // 5个字的列宽度
+  const four = 90; // 4个字的列宽度
+  const five = 98; // 5个字的列宽度
   const outer1 = 110; // PageView、 B2B订单量、综合ACoS、综合RoAS
   const outer2 = 100; // Session、B2B销量
-  const outer3 = 160; // PageView/Session , 本SKU广告销售额、本SKU广告订单量
+  const outer3 = 110; // PageView/Session , 本SKU广告销售额、本SKU广告订单量
   // B2B销量/订单量、B2B平均客单价、自然销售额、自然订单量
-  const outer4 = 145; 
-  const outer5 = 130; // B2B平均售价、
+  const outer4 = 115; 
+  const outer5 = 110; // B2B平均售价、
   const outer6 = 85; // CPC、ACoS、RoAS
   const outer7 = 125; // Impressions
-  const outer8 = 140; // B2B销售额
+  const outer8 = 112; // B2B销售额
 
   const columns = [
     {
@@ -138,7 +138,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'reviewNum',
-      title: <TableHead2
+      title: <TableHeadOne
         title="Review"
         titleparams="reviewNum"
         callback={sortCallback}
@@ -146,11 +146,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         align="center"
       />,
       align: 'center',
-      width: 110,
+      width: 80,
     },
     {
       dataIndex: 'reviewScore',
-      title: <TableHead2
+      title: <TableHeadOne
         title="评分"
         titleparams="reviewScore"
         callback={sortCallback}
@@ -158,14 +158,14 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         align="center"
       />,
       align: 'center',
-      width: 110,
+      width: 80,
       render(val: number) {
         return moneyFormat(val, 1, ',', '.', true);
       },
     },
     {
       dataIndex: 'totalSales',
-      title: <TableHead
+      title: <TableHeadMain
         title="总销售额"
         titleparams="totalSales"
         subtitle="totalSalesRingRatio"
@@ -173,9 +173,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
-      width: four,
+      width: 100,
+      className: styles.tdTextRight,
       render(val: number, { totalSalesRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -193,7 +195,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'totalOrderQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="总订单量" 
         titleparams="totalOrderQuantity"
         subtitle="totalOrderQuantityRingRatio"
@@ -216,7 +218,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'totalSalesQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="总销量" 
         titleparams="totalSalesQuantity"
         subtitle="totalSalesQuantityRingRatio"
@@ -239,7 +241,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'replyReviewRate',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="回评率"
         titleparams="replyReviewRate"
         subtitle="replyReviewRateRingRatio"
@@ -263,7 +265,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'profit',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="利润"
         titleparams="profit"
         subtitle="profitRingRatio"
@@ -271,8 +273,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
+      className: styles.tdTextRight,
       width: four,
       render(val: number, { profitRingRatio }: AsinTable.IChildResocds) {
         return <>
@@ -291,14 +295,14 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'profitRate',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="利润率"
         titleparams="profitRate"
         subtitle="profitRateRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
       align: 'center',
       width: three,
@@ -315,7 +319,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'salesQuantityExceptOrderQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="销量/订单量"
         titleparams="salesQuantityExceptOrderQuantity"
         subtitle="salesQuantityExceptOrderQuantityRingRatio"
@@ -327,7 +331,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 130,
       render(val: number, { salesQuantityExceptOrderQuantityRingRatio }: AsinTable.IChildResocds) {
         return <>
-          <p>{val === null ? <Empty /> : `${val}` }</p>
+          <p>{val === null ? <Empty /> : `${ moneyFormat(val, 2, ',', '.', true)}` }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -339,7 +343,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'avgSellingPrice',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="平均售价"
         titleparams="avgSellingPrice"
         subtitle="avgSellingPriceRingRatio"
@@ -347,9 +351,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
       width: four,
+      className: styles.tdTextRight,
       render(val: number, { avgSellingPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -367,7 +373,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'avgCustomerPrice',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="平均客单价"
         titleparams="avgCustomerPrice"
         subtitle="avgCustomerPriceRingRatio"
@@ -375,9 +381,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
       width: five,
+      className: styles.tdTextRight,
       render(val: number, { avgCustomerPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -396,7 +404,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
   
     {
       dataIndex: 'preferentialOrderQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="优惠订单"
         titleparams="preferentialOrderQuantity"
         subtitle="preferentialOrderQuantityRingRatio"
@@ -406,7 +414,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         hint="有优惠折扣的订单量"
       />,
       align: 'center',
-      width: 125,
+      width: 110,
       render(val: number, { preferentialOrderQuantityRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>{val === null ? <Empty /> : val }</p>
@@ -420,7 +428,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'associateSales',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="关联销售"
         titleparams="associateSales"
         subtitle="associateSalesRingRatio"
@@ -445,7 +453,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'pageView',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="PageView"
         titleparams="pageView"
         subtitle="pageViewRingRatio"
@@ -468,7 +476,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'session',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="Session"
         titleparams="session"
         subtitle="sessionRingRatio"
@@ -491,7 +499,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'pageViewExceptSession',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="PageView/Session"
         titleparams="pageViewExceptSession"
         subtitle="pageViewExceptSessionRingRatio"
@@ -503,7 +511,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: outer3,
       render(val: number, { pageViewExceptSessionRingRatio }: AsinTable.IChildResocds) {
         return <>
-          <p>{val === null ? <Empty /> : val }</p>
+          <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', true) }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -514,7 +522,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'conversionsRate',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="转化率"
         titleparams="conversionsRate"
         subtitle="conversionsRateRingRatio"
@@ -526,7 +534,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: three,
       render(val: number, { conversionsRateRingRatio }: AsinTable.IChildResocds) {
         return <>
-          <p>{val === null ? <Empty /> : `${val}%` }</p>
+          <p>{val === null ? <Empty /> : `${moneyFormat(val, 2, ',', '.', true)}%` }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -537,7 +545,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'returnQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="退货量"
         titleparams="returnQuantity"
         subtitle="returnQuantityRingRatio"
@@ -560,7 +568,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'returnRate',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="退货率"
         titleparams="returnRate"
         subtitle="returnRateRingRatio"
@@ -572,7 +580,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: three,
       render(val: number, { returnRateRingRatio }: AsinTable.IChildResocds) {
         return <>
-          <p>{val === null ? <Empty /> : `${val}%` }</p>
+          <p>{val === null ? <Empty /> : `${moneyFormat(val, 2, ',', '.', true)}%` }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -583,7 +591,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'b2bSales',
-      title: <TableHead1
+      title: <TableHeadTwo
         title="B2B销售额"
         titleparams="b2bSales"
         subtitle="b2bSalesRingRatio"
@@ -611,7 +619,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               </span>
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
-              }}>{b2bSalesProportion === null ? <Empty /> : `${b2bSalesProportion}%`}</span>
+              }}>{b2bSalesProportion === null ? <Empty /> : `${moneyFormat(b2bSalesProportion, 2, ',', '.', true)}%`}</span>
             </p>
           </div>
         );
@@ -619,7 +627,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'b2bOrderQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="B2B订单量"
         titleparams="b2bOrderQuantity"
         subtitle="b2bOrderQuantityRingRatio"
@@ -642,7 +650,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'b2bSalesQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="B2B销量"
         titleparams="b2bSalesQuantity"
         subtitle="b2bSalesQuantityRingRatio"
@@ -665,7 +673,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'b2bSalesQuantityExceptOrderQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="B2B销量/订单量"
         titleparams="b2bSalesQuantityExceptOrderQuantity"
         subtitle="b2bSalesQuantityExceptOrderQuantityRingRatio"
@@ -679,7 +687,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         b2bSalesQuantityExceptOrderQuantityRingRatio }: AsinTable.IChildResocds
       ) {
         return <>
-          <p>{val === null ? <Empty /> : `${val}` }</p>
+          <p>{val === null ? <Empty /> : `${moneyFormat(val, 2, ',', '.', true)}` }</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -691,7 +699,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'b2bAvgSellingPrice',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="B2B平均售价"
         titleparams="b2bAvgSellingPrice"
         subtitle="b2bAvgSellingPriceRingRatio"
@@ -699,9 +707,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
       width: outer5,
+      className: styles.tdTextRight,
       render(val: number, { b2bAvgSellingPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -719,7 +729,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'b2bAvgCustomerPrice',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="B2B平均客单价" 
         titleparams="b2bAvgCustomerPrice"
         subtitle="b2bAvgCustomerPriceRingRatio"
@@ -727,9 +737,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
       width: outer4,
+      className: styles.tdTextRight,
       render(val: number, { b2bAvgCustomerPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -774,9 +786,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         enabledQuantity: number; 
       }[]|null) {
         if (data === null) {
-          return <Empty />;
+          return <div className={styles.adType}><Empty /></div>;
         }
-        <div>
+        return <div className={styles.adType}>
           {
             data.map((item, i) => {
               return <p key={i}>
@@ -790,26 +802,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
             })
           }
         </div>;
-        return (
-          <div>
-            <p>
-              SP自动：
-              <AdTypeData start={22} pause={22} pigeonhole={0} />
-            </p>
-            <p>
-              SP手动关键词：
-              <AdTypeData start={22} pause={22} pigeonhole={0} />
-            </p>
-            <p>SP手动Targeting：<AdTypeData start={22} pause={22} pigeonhole={0} /></p>
-            <p>SB广告：<AdTypeData start={22} pause={22} pigeonhole={0} /></p>
-            <p>SD广告：<AdTypeData start={221} pause={22} pigeonhole={0} /></p>
-          </div>
-        );
       },
     },
     {
       dataIndex: 'adSales',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="广告销售额" 
         titleparams="adSales"
         subtitle="adSalesRingRatio"
@@ -817,9 +814,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
       width: five,
+      className: styles.tdTextRight,
       render(val: number, { adSalesRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -837,7 +836,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'skuAdSales',
-      title: <TableHead1 
+      title: <TableHeadTwo 
         title="本SKU广告销售额"
         proportion="skuAdSalesProportion"
         titleparams="skuAdSales"
@@ -845,9 +844,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        width={110}
       />,
       align: 'center',
-      width: outer3,
+      width: 122,
       render(val: number, { skuAdSalesRingRatio, skuAdSalesProportion }: AsinTable.IChildResocds) {
         return (
           <div className={styles.haveProportion}>
@@ -864,7 +864,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               </span>
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
-              }}>{skuAdSalesProportion === null ? <Empty /> : `${skuAdSalesProportion}%`}</span>
+              }}>{skuAdSalesProportion === null ? <Empty /> : `${moneyFormat(skuAdSalesProportion, 2, ',', '.', true)}%`}</span>
             </p>
           </div>
         );
@@ -872,7 +872,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'naturalSales',
-      title: <TableHead1 
+      title: <TableHeadTwo 
         title="自然销售额"
         proportion="naturalSalesProportion"
         titleparams="naturalSales"
@@ -883,7 +883,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         width={100}
       />,
       align: 'center',
-      width: outer4,
+      width: 112,
       render(val: number, { 
         naturalSalesRingRatio, naturalSalesProportion,
       }: AsinTable.IChildResocds) {
@@ -903,7 +903,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
               }}>{naturalSalesProportion === null ? <Empty /> : 
-                  `${naturalSalesProportion}%`}
+                  `${moneyFormat(naturalSalesProportion, 2, ',', '.', true)}%`}
               </span>
             </p>
           </div>
@@ -912,7 +912,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'adOrderQuantity',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="广告订单量"
         titleparams="adOrderQuantity"
         subtitle="adOrderQuantityRingRatio"
@@ -935,7 +935,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'skuAdOrderQuantity',
-      title: <TableHead1 
+      title: <TableHeadTwo 
         title="本SKU广告订单量"
         titleparams="skuAdOrderQuantity"
         subtitle="skuAdOrderQuantityRingRatio"
@@ -943,9 +943,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        width={110}
       />,
       align: 'center',
-      width: outer3,
+      width: 122,
       render(val: number, { 
         skuAdOrderQuantityRingRatio, skuAdOrderQuantityProportion,
       }: AsinTable.IChildResocds) {
@@ -966,7 +967,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
                 width: ratio ? '50%' : '100%',
               }}>
                 {skuAdOrderQuantityProportion === null ? <Empty /> : 
-                  `${skuAdOrderQuantityProportion}%`}
+                  `${moneyFormat(skuAdOrderQuantityProportion, 2, ',', '.', true)}%`}
               </span>
             </p>
           </div>
@@ -975,7 +976,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'naturalOrderQuantity',
-      title: <TableHead1
+      title: <TableHeadTwo
         title="自然订单量"
         titleparams="naturalOrderQuantity"
         subtitle="naturalOrderQuantityRingRatio"
@@ -983,9 +984,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
+        width={100}
       />,
       align: 'center',
-      width: outer4,
+      width: 112,
       render(val: number, { 
         naturalOrderQuantityRingRatio, naturalOrderQuantityProportion,
       }: AsinTable.IChildResocds) {
@@ -1005,7 +1007,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
               <span className={styles.num} style={{
                 width: ratio ? '50%' : '100%',
               }}>{naturalOrderQuantityProportion === null ? <Empty /> : 
-                  `${naturalOrderQuantityProportion}%`}
+                  `${moneyFormat(naturalOrderQuantityProportion, 2, ',', '.', true)}%`}
               </span>
             </p>
           </div>
@@ -1014,7 +1016,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'cpc',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="CPC"
         titleparams="cpc"
         subtitle="cpcRingRatio"
@@ -1022,9 +1024,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
       width: outer6,
+      className: styles.tdTextRight,
       render(val: number, { cpcRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -1042,7 +1046,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'spend',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="Spend"
         titleparams="spend"
         subtitle="spendRingRatio"
@@ -1050,9 +1054,11 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         order={order}
         visible={ratio}
         align="right"
+        subalign="right"
       />,
       align: 'right',
       width: three,
+      className: styles.tdTextRight,
       render(val: number, { spendRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
@@ -1070,22 +1076,22 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'acos',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="ACoS"
         titleparams="acos"
         subtitle="acosRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: outer6,
       render(val: number, { acosRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
             {
-              val !== null ? `${val}%` : <Empty />
+              val !== null ? `${moneyFormat(val, 2, ',', '.', true)}%` : <Empty />
             }
           </p>
           <p style={{
@@ -1098,22 +1104,22 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'compositeAcos',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="综合ACoS"
         titleparams="compositeAcos"
         subtitle="compositeAcosRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: outer1,
       render(val: number, { compositeAcosRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
             {
-              val !== null ? `${val}%` : <Empty />
+              val !== null ? `${moneyFormat(val, 2, ',', '.', true)}%` : <Empty />
             }
           </p>
           <p style={{
@@ -1126,22 +1132,22 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'roas',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="RoAS"
         titleparams="roas"
         subtitle="roasRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: outer6,
       render(val: number, { roasRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
             {
-              val !== null ? val : <Empty />
+              val !== null ? moneyFormat(val, 2, ',', '.', true) : <Empty />
             }
           </p>
           <p style={{
@@ -1154,22 +1160,22 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'compositeRoas',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="综合RoAS"
         titleparams="compositeRoas"
         subtitle="compositeRoasRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: outer1,
       render(val: number, { compositeRoasRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
             {
-              val !== null ? `${val}` : <Empty />
+              val !== null ? `${moneyFormat(val, 2, ',', '.', true)}` : <Empty />
             }
           </p>
           <p style={{
@@ -1182,16 +1188,16 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'impressions',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="Impressions"
         titleparams="impressions"
         subtitle="impressionsRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: outer7,
       render(val: number, { impressionsRingRatio }: AsinTable.IChildResocds) {
         return <>
@@ -1210,16 +1216,16 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'clicks',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="Clicks"
         titleparams="clicks"
         subtitle="clicksRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: three,
       render(val: number, { clicksRingRatio }: AsinTable.IChildResocds) {
         return <>
@@ -1238,22 +1244,22 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'ctr',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="CTR"
         titleparams="ctr"
         subtitle="ctrRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: outer6,
       render(val: number, { ctrRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
             {
-              val !== null ? `${val}%` : <Empty />
+              val !== null ? `${moneyFormat(val, 2, ',', '.', true)}%` : <Empty />
             }
           </p>
           <p style={{
@@ -1266,22 +1272,22 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'adConversionsRate',
-      title: <TableHead 
+      title: <TableHeadMain 
         title="广告转化率"
         titleparams="adConversionsRate"
         subtitle="adConversionsRateRingRatio"
         callback={sortCallback}
         order={order}
         visible={ratio}
-        align="right"
+        align="center"
       />,
-      align: 'right',
+      align: 'center',
       width: five,
       render(val: number, { adConversionsRateRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
             {
-              val !== null ? `${val}%` : <Empty />
+              val !== null ? `${moneyFormat(val, 2, ',', '.', true)}%` : <Empty />
             }
           </p>
           <p style={{

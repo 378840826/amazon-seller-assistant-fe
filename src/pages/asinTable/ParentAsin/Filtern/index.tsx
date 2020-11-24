@@ -82,18 +82,19 @@ const ParentAsinFiltern: React.FC<IProps> = (props) => {
         defineType: 'decimal',
       },
       {
-        label: '平均售价',
-        field: 'avgSellingPrice',
+        label: <span>销量<span className={styles.secondary}>/</span>订单量</span>,
+        field: 'salesQuantityExceptOrderQuantity',
         defineType: 'decimal',
       },
+    
       {
         label: '平均客单价',
         field: 'avgCustomerPrice',
         defineType: 'decimal',
       },
       {
-        label: <span>销量<span className={styles.secondary}>/</span>订单量</span>,
-        field: 'salesQuantityExceptOrderQuantity',
+        label: '平均售价',
+        field: 'avgSellingPrice',
         defineType: 'decimal',
       },
       {
@@ -144,14 +145,14 @@ const ParentAsinFiltern: React.FC<IProps> = (props) => {
         defineType: 'other',
       },
       {
-        label: '退货量', 
-        field: 'returnQuantity',
-        defineType: 'int',
-      },
-      {
         label: '退货率', 
         field: 'returnRate',
         defineType: 'decimal',
+      },
+      {
+        label: '退货量', 
+        field: 'returnQuantity',
+        defineType: 'int',
       },
     ],
   

@@ -28,7 +28,6 @@ import {
   message,
   Input,
   Form,
-  Tooltip,
 } from 'antd';
 import {
   CloseOutlined,
@@ -602,11 +601,9 @@ const ChildAsin: React.FC<IProps> = props => {
         {
           conditions.map((item, i) => {
             return <div key={i} data-id={item.id} className={commonStyles.condition}>
-              <Tooltip title={item.preferenceName} placement="top" overlayClassName={styles.preferenceBox}>
-                <span className={commonStyles.text} onClick={() => clickPreferenceName(item.id)}>
-                  {item.preferenceName}
-                </span>
-              </Tooltip>
+              <span className={commonStyles.text} onClick={() => clickPreferenceName(item.id)}>
+                {item.preferenceName}
+              </span>
               <span 
                 className={commonStyles.closeIcon} 
                 title="点击删除"

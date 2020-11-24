@@ -136,26 +136,26 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'replyReviewRate',
       component: <td className={styles.center} key="8">
-        {replyReviewRate !== null ? `${replyReviewRate}%` : <Empty/>}
+        {replyReviewRate !== null ? `${moneyFormat(replyReviewRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'profit',
       component: <td className={styles.right} key="9">
-        {profit !== null ? symbol + moneyFormat(profit, 2, ',', '.', false) : <Empty/>} 
+        {profit !== null ? symbol + moneyFormat(profit, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
       dataIndex: 'profitRate',
       component: <td className={styles.center} key="10">
-        {profitRate !== null ? `${profitRate}%` : <Empty/>}
+        {profitRate !== null ? `${moneyFormat(profitRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'salesQuantityExceptOrderQuantity',
       component: <td className={styles.center} key="11">
         {salesQuantityExceptOrderQuantity !== null ? 
-          `${salesQuantityExceptOrderQuantity}` : <Empty/>}
+          `${moneyFormat(salesQuantityExceptOrderQuantity, 2, ',', '.', true)}` : <Empty/>}
       </td>,
     },
     {
@@ -197,13 +197,13 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'pageViewExceptSession',
       component: <td className={styles.center} key="18">
-        {pageViewExceptSession !== null ? pageViewExceptSession : <Empty/>}
+        {pageViewExceptSession !== null ? moneyFormat(pageViewExceptSession, 2, ',', '.', true) : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'conversionsRate',
       component: <td className={styles.center} key="19">
-        {conversionsRate !== null ? `${conversionsRate}%` : <Empty/>}
+        {conversionsRate !== null ? `${moneyFormat(conversionsRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
@@ -215,7 +215,7 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'returnRate',
       component: <td className={styles.center} key="21">
-        {returnRate !== null ? `${returnRate}%` : <Empty/>}
+        {returnRate !== null ? `${moneyFormat(returnRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
@@ -241,7 +241,7 @@ const Summary: React.FC<IProps> = (props) => {
       component: <td className={styles.center} key="25">
         {
           b2bSalesQuantityExceptOrderQuantity !== null ? 
-            b2bSalesQuantityExceptOrderQuantity : <Empty/>
+            moneyFormat(b2bSalesQuantityExceptOrderQuantity, 2, ',', '.', true) : <Empty/>
         }
       </td>,
     },
@@ -305,56 +305,56 @@ const Summary: React.FC<IProps> = (props) => {
     },
     {
       dataIndex: 'spend',
-      component: <td className={styles.center} key="36">
+      component: <td className={styles.right} key="36">
         {spend !== null ? symbol + moneyFormat(spend, 2, ',', '.', true) : <Empty/>} 
       </td>,
     },
     {
       dataIndex: 'acos',
-      component: <td className={styles.right} key="37">
-        {acos !== null ? `${acos}%` : <Empty/>}
+      component: <td className={styles.center} key="37">
+        {acos !== null ? `${moneyFormat(acos, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'compositeAcos',
-      component: <td className={styles.right} key="38">
-        {compositeAcos !== null ? `${compositeAcos}%` : <Empty/>}
+      component: <td className={styles.center} key="38">
+        {compositeAcos !== null ? `${moneyFormat(compositeAcos, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'roas',
-      component: <td className={styles.right} key="39">
-        {roas !== null ? roas : <Empty/>}
+      component: <td className={styles.center} key="39">
+        {roas !== null ? moneyFormat(roas, 2, ',', '.', true) : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'compositeRoas',
-      component: <td className={styles.right} key="40">
-        {compositeRoas !== null ? compositeRoas : <Empty/>}
+      component: <td className={styles.center} key="40">
+        {compositeRoas !== null ? moneyFormat(compositeRoas, 2, ',', '.', true) : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'impressions',
-      component: <td className={styles.right} key="41">
+      component: <td className={styles.center} key="41">
         {impressions !== null ? impressions : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'clicks',
-      component: <td className={styles.right} key="42">
+      component: <td className={styles.center} key="42">
         {clicks !== null ? clicks : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'ctr',
-      component: <td className={styles.right} key="43">
-        {ctr !== null ? `${ctr}%` : <Empty/>}
+      component: <td className={styles.center} key="43">
+        {ctr !== null ? `${moneyFormat(ctr, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'adConversionsRate',
-      component: <td className={styles.right} key="44">
-        {adConversionsRate !== null ? `${adConversionsRate}%` : <Empty/>}
+      component: <td className={styles.center} key="44">
+        {adConversionsRate !== null ? `${moneyFormat(adConversionsRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {

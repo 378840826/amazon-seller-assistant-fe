@@ -40,8 +40,7 @@
   thead {
     th {
       border-width: 0 !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
+      padding: 0 !important;
       height: 44px;
       // border: 1px solid red !important;
     }
@@ -50,6 +49,7 @@
   .childTable {
     td {
       border-bottom: 1px solid #eee;
+      padding: 0 6px;
     }
 
     // tr:nth-child(odd) > td {
@@ -69,7 +69,7 @@
     }
 
     &:nth-child(odd) td {
-      background-color: @simple-table-header-bg;
+      background-color: #f9f9f9;
       border-color: #e8e8e8;
     }
 
@@ -89,7 +89,7 @@
     &:nth-child(odd) tfoot {
       td.childTableChildAsin,
       td.summarySku {
-        background-color: @simple-table-header-bg !important;
+        background-color: #f9f9f9;
       }
     }
   }
@@ -128,24 +128,28 @@
   }
 
   th.skuCol {
-    width: 196px;
-    min-width: 196px;
-    max-width: 196px;
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
     left: 310px !important;
+    padding: 0 10px 0 20px;
 
     .text {
-      max-width: 170px;
       display: block;
       text-align: center;
     }
   }
 
   td.skuCol {
-    width: 196px;
-    min-width: 196px;
-    max-width: 196px;
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
     left: 310px !important;
-    padding-right: 10px;
+    padding: 0 10px 0 20px;
+
+    .price {
+      color: @error-color;
+    }
   }
 
   // 商品列
@@ -216,6 +220,7 @@
   .summary {
     height: 48px;
     line-height: 48px;
+    font-weight: 600;
 
     td.base {
       border-top: 1px solid #eee;
@@ -248,12 +253,13 @@
       z-index: 2;
       left: 310px;
       background-color: #fff;
-      padding-right: 60px;
+      padding: 0 !important;
 
       .text {
         max-width: 170px;
         text-align: right;
         display: block;
+        padding-right: 33px;
       }
       // &::after {
       //   box-shadow: inset 8px 0 8px -8px rgba(0, 0, 0, 0.1);

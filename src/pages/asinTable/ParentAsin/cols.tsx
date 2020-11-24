@@ -9,8 +9,8 @@ import classnames from 'classnames';
 // 组件
 import { Link } from 'umi';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
-import TableHead from '../components/TableHead';
-import TableHead1 from './TableHead1';
+import TableHeadOne from '../components/TableHeadOne';
+import TableHeadTwo from '../components/TableHeadTwo';
 import Deliver from '../components/Deliver';
 import Empty from '../components/Empty';
 
@@ -47,7 +47,8 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   selectCustomCol.push(...other);
  
   const style = {
-    'float': 'right',
+    display: 'flex',
+    justifyContent: 'flex-end',
   };
 
 
@@ -73,8 +74,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
 
   // 总销售额
   const totalSalesCol = {
-    className: styles.totalSales,
-    title: <TableHead
+    className: classnames(
+      styles.totalSales,
+      commonStyles.tdTextRight,
+    ),
+    title: <TableHeadOne
       title="总销售额"
       titleparams="totalSales"
       callback={sortCallback}
@@ -88,7 +92,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 总订单量
   const totalOrderQuantityCol = {
     className: styles.totalOrderQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="总订单量"
       titleparams="totalOrderQuantity"
       callback={sortCallback}
@@ -101,7 +105,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 总销量
   const totalSalesQuantityCol = {
     className: styles.totalSalesQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="总销量"
       titleparams="totalSalesQuantity"
       callback={sortCallback}
@@ -114,7 +118,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 回评率
   const replyReviewRateCol = {
     className: styles.replyReviewRate,
-    title: <TableHead
+    title: <TableHeadOne
       title="回评率"
       titleparams="replyReviewRate"
       callback={sortCallback}
@@ -127,8 +131,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
 
   // 利润
   const profitCol = {
-    className: styles.profit,
-    title: <TableHead
+    className: classnames(
+      styles.profit,
+      commonStyles.tdTextRight,
+    ),
+    title: <TableHeadOne
       title="利润"
       titleparams="profit"
       callback={sortCallback}
@@ -137,12 +144,13 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
     />,
     dataIndex: 'profit',
     align: 'right',
+    
   };
 
   // 利润率
   const profitRateCol = {
     className: styles.profitRate,
-    title: <TableHead
+    title: <TableHeadOne
       title="利润率"
       titleparams="profitRate"
       callback={sortCallback}
@@ -155,7 +163,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 销量/订单量
   const salesQuantityExceptOrderQuantityCol = {
     className: styles.salesQuantityExceptOrderQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="销量/订单量"
       titleparams="salesQuantityExceptOrderQuantity"
       callback={sortCallback}
@@ -167,8 +175,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   
   // 平均售价
   const avgSellingPriceCol = {
-    className: styles.avgSellingPrice,
-    title: <TableHead
+    className: classnames(
+      styles.avgSellingPrice,
+      commonStyles.tdTextRight,
+    ),
+    title: <TableHeadOne
       title="平均售价"
       titleparams="avgSellingPrice"
       callback={sortCallback}
@@ -181,8 +192,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
 
   // 平均客单价
   const avgCustomerPriceCol = {
-    className: styles.avgCustomerPrice,
-    title: <TableHead
+    className: classnames(
+      styles.avgCustomerPrice,
+      commonStyles.tdTextRight,
+    ),
+    title: <TableHeadOne
       title="平均客单价"
       titleparams="avgCustomerPrice"
       callback={sortCallback}
@@ -196,7 +210,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 优惠订单
   const preferentialOrderQuantityCol = {
     className: styles.preferentialOrderQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="优惠订单"
       titleparams="preferentialOrderQuantity"
       callback={sortCallback}
@@ -210,7 +224,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 关联销售
   const associateSalesCol = {
     className: styles.associateSales,
-    title: <TableHead
+    title: <TableHeadOne
       title="关联销售"
       titleparams="associateSales"
       callback={sortCallback}
@@ -224,7 +238,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // PageView
   const pageViewCol = {
     className: styles.pageView,
-    title: <TableHead
+    title: <TableHeadOne
       title="PageView"
       titleparams="pageView"
       callback={sortCallback}
@@ -237,7 +251,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // Session
   const sessionCol = {
     className: styles.session,
-    title: <TableHead
+    title: <TableHeadOne
       title="Session"
       titleparams="session"
       callback={sortCallback}
@@ -250,7 +264,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // PageView/Session
   const pageViewExceptSessionCol = {
     className: styles.pageViewExceptSession,
-    title: <TableHead
+    title: <TableHeadOne
       title="PageView/Session"
       titleparams="pageViewExceptSession"
       callback={sortCallback}
@@ -263,7 +277,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 转化率
   const conversionsRateCol = {
     className: styles.conversionsRate,
-    title: <TableHead
+    title: <TableHeadOne
       title="转化率"
       titleparams="conversionsRate"
       callback={sortCallback}
@@ -276,7 +290,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 退货量
   const returnQuantityCol = {
     className: styles.returnQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="退货量"
       titleparams="returnQuantity"
       callback={sortCallback}
@@ -289,7 +303,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 退货率
   const returnRateCol = {
     className: styles.returnRate,
-    title: <TableHead
+    title: <TableHeadOne
       title="退货率"
       titleparams="returnRate"
       callback={sortCallback}
@@ -302,12 +316,14 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B销售额
   const b2bSalesCol = {
     className: styles.b2bSales,
-    title: <TableHead1
+    title: <TableHeadTwo
       title="B2B销售额"
       titleparams="b2bSales"
       subtitle="b2bSalesProportion"
+      proportion="b2bSalesProportion"
       callback={sortCallback}
       order={order}
+      visible={false}
     />,
     dataIndex: 'b2bSales',
     align: 'center',
@@ -316,7 +332,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B销量
   const b2bSalesQuantity = {
     className: styles.b2bSalesQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="B2B销量"
       titleparams="b2bSalesQuantity"
       callback={sortCallback}
@@ -329,7 +345,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B订单量
   const b2bOrderQuantityCol = {
     className: styles.b2bOrderQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="B2B订单量"
       titleparams="b2bOrderQuantity"
       callback={sortCallback}
@@ -342,7 +358,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B销量/订单量
   const b2bSalesQuantityExceptOrderQuantityCol = {
     className: styles.b2bSalesQuantityExceptOrderQuantity,
-    title: <TableHead
+    title: <TableHeadOne
       title="B2B销量/订单量"
       titleparams="b2bSalesQuantityExceptOrderQuantity"
       callback={sortCallback}
@@ -355,7 +371,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B平均售价
   const b2bAvgSellingPriceCol = {
     className: styles.b2bAvgSellingPrice,
-    title: <TableHead
+    title: <TableHeadOne
       title="B2B平均售价"
       titleparams="b2bAvgSellingPrice"
       callback={sortCallback}
@@ -367,8 +383,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   
   // B2B平均客单价
   const b2bAvgCustomerPriceCol = {
-    className: styles.b2bAvgCustomerPrice,
-    title: <TableHead
+    className: classnames(
+      styles.b2bAvgCustomerPrice,
+      commonStyles.tdTextRight,
+    ),
+    title: <TableHeadOne
       title="B2B平均客单价"
       titleparams="b2bAvgCustomerPrice"
       callback={sortCallback}
@@ -403,8 +422,8 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
       { ...returnQuantityCol },
       { ...returnRateCol },
       { ...b2bSalesCol },
-      { ...b2bSalesQuantity },
       { ...b2bOrderQuantityCol },
+      { ...b2bSalesQuantity },
       { ...b2bSalesQuantityExceptOrderQuantityCol },
       { ...b2bAvgSellingPriceCol },
       { ...b2bAvgCustomerPriceCol },
@@ -539,7 +558,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...replyReviewRateCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : `${val}%` }</p>
+              <p>{val === null ? <Empty /> : `${moneyFormat(val, 2, ',', '.', true)}%` }</p>
             </>;
           },
         },
@@ -563,7 +582,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...salesQuantityExceptOrderQuantityCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : val }</p>
+              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', true) }</p>
             </>;
           },
         },
@@ -611,7 +630,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...sessionCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', true) }</p>
+              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', false) }</p>
             </>;
           },
         },
@@ -627,7 +646,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...conversionsRateCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : `${val}%` }</p>
+              <p>{val === null ? <Empty /> : `${moneyFormat(val, 2, ',', '.', true)}%` }</p>
             </>;
           },
         },
@@ -643,7 +662,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...returnRateCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : `${val}%` }</p>
+              <p>{val === null ? <Empty /> : `${moneyFormat(val, 2, ',', '.', true)}%` }</p>
             </>;
           },
         },
@@ -652,7 +671,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           render(val: number, row: AsinTable.IParentChildAsin) {
             return <>
               <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
-              <p>{row.b2bSalesProportion}%</p>
+              <p>{moneyFormat(row.b2bSalesProportion, 2, ',', '.', true)}%</p>
             </>;
           },
         },
@@ -668,7 +687,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bOrderQuantityCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', true) }</p>
+              <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', false) }</p>
             </>;
           },
         },
