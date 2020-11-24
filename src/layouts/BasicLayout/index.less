@@ -1,6 +1,6 @@
 .Header {
   display: flex;
-  box-shadow: 0 4px 8px 0 rgba(30, 72, 130, 0.1);
+  box-shadow: 0 0 8px 0 rgba(216, 216, 216, 0.75);
 
   .logo {
     vertical-align: sub;
@@ -8,13 +8,19 @@
 
   .Menu {
     flex: 1;
-    margin-left: 30px;
+    margin-left: 10px;
     font-size: 16px;
     border-bottom: none;
 
+    :global {
+      .ant-menu-item-active {
+        border-bottom: none;
+        background: #eaf5ff;
+      }
+    }
+
     .MenuItem {
       margin: 0;
-      padding: 0 10px;
       top: 0;
       line-height: @layout-header-height;
       height: @layout-header-height;
@@ -26,7 +32,9 @@
 
       a {
         display: inline-block;
-        line-height: @layout-header-height;
+        // 因为下拉框默认和菜单有 4px 间隙
+        line-height: 44px;
+        padding: 0 16px;
       }
     }
   }
@@ -48,6 +56,15 @@
 }
 
 .subMenu {
-  text-align: center;
-  padding: 5px 20px;
+  font-size: @font-size-lg;
+  padding: 6px 18px;
+}
+
+.overlay {
+  :global {
+    .ant-dropdown-menu {
+      border-radius: 0;
+      box-shadow: -5px 5px 10px -4px rgba(216, 216, 216, 0.75), 5px 5px 10px -4px rgba(216, 216, 216, 0.75);
+    }
+  }
 }
