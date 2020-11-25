@@ -162,6 +162,23 @@
         }
       }
     }
+
+    // 二级表头的排序箭头
+    .ant-table-thead {
+      tr:last-child {
+        .ant-table-column-sorter-up {
+          &::after {
+            transform: rotate(135deg) translate(-4px, -6px);
+          }
+        }
+
+        .ant-table-column-sorter-down {
+          &::after {
+            transform: rotate(-45deg) translate(6px, 3px);
+          }
+        }
+      }
+    }
   }
 }
 

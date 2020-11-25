@@ -55,6 +55,18 @@ const EditableCell: React.FC<IProps> = props => {
           className={styles.Input}
           defaultValue={inputValue}
           onChange={handelInput}
+          onKeyUp={(e) => {
+            switch (e.key) {
+            case 'Enter':
+              handelConfirm();             
+              break;
+            case 'Escape':
+              handelClickCancel();             
+              break;
+            default:
+              break;
+            }
+          }}
         />
         <div className={styles.btns}>
           <button

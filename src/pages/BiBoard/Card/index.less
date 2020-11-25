@@ -9,8 +9,21 @@
     }
   }
 
+  .link {
+    a {
+      color: @text-color;
+    }
+
+    &:hover {
+      a,
+      .linkIcon {
+        color: @link-color;
+      }
+    }
+  }
+
   .linkIcon {
-    color: @link-color;
+    color: @text-color-secondary;
     font-size: 11px;
     margin-left: 4px;
   }
