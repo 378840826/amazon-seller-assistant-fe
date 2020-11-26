@@ -87,7 +87,7 @@ export const getFullColumns = (params: any) => {
       dataIndex: 'groupId',
       key: 'group',
       align: 'center',
-      width: 156,
+      width: 130,
       fixed: 'left',
       render: (_, record) => (
         <Select
