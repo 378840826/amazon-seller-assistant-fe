@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Menu,
   Dropdown,
   Space,
   Typography,
@@ -10,14 +9,13 @@ import {
 import { ColumnProps } from 'antd/es/table';
 import { Link } from 'umi';
 import GoodsImg from '@/pages/components/GoodsImg';
-import { Order } from '@/models/replenishment';
 import TransitDetails from './TransitDetails';
 import classnames from 'classnames';
 import Setting from './Setting';
 import GoodsIcon from '@/pages/components/GoodsIcon';
+import DropdownSortTh from '@/pages/components/DropdownSortTh';
 import styles from './index.less';
 
-const { Item: MenuItem } = Menu;
 const { Paragraph, Text } = Typography;
 
 const listingStatusDict = {
@@ -48,21 +46,6 @@ export const renderCouldNullTd = (value: any) => {
   return value === null ? nullPlaceholder : value;
 };
 
-// 排序图标
-const renderSortIcon = (order: Order) => {
-  let className = '';
-  if (order === 'ascend') {
-    className = 'ant-table-column-sorter-up';
-  } else {
-    className = 'ant-table-column-sorter-down';
-  }
-  return (
-    <span className="ant-table-column-sorter">
-      <span className={className}></span>
-    </span>
-  );
-};
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getFullColumns = (params: any) => {
   const {
@@ -74,13 +57,6 @@ export const getFullColumns = (params: any) => {
     order,
     compareType,
   } = params;
-
-  // 获取自定义排序下拉框的 menuItem
-  const getMenuItem = (menuItemSort: string, menuItemOrder: string, name: string) => {
-    const key = `${menuItemSort}-${menuItemOrder}`;
-    const className = (menuItemOrder === order && menuItemSort === sort) ? styles.active : null;
-    return <MenuItem key={key} className={className}>{name}</MenuItem>;
-  };
 
   // 点击下拉排序
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -196,23 +172,17 @@ export const getFullColumns = (params: any) => {
       render: openDate => (openDate ? <Text>{openDate}</Text> : nullPlaceholder),
     }, {
       title: () => {
-        const menu = (
-          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            { getMenuItem('reviewScore', 'ascend', '评分升序') }
-            { getMenuItem('reviewScore', 'descend', '评分降序') }
-            { getMenuItem('reviewCount', 'ascend', '评论数升序') }
-            { getMenuItem('reviewCount', 'descend', '评论数降序') }
-          </Menu>
-        );
         return (
-          <Dropdown overlay={menu} placement="bottomRight">
-            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
-              Review
-              {
-                (sort === 'reviewScore' || sort === 'reviewCount') ? renderSortIcon(order) : null
-              }
-            </span>
-          </Dropdown>
+          <DropdownSortTh
+            sort={sort}
+            order={order}
+            handleSortMenuClick={handleSortMenuClick}
+            content="Review"
+            sortItems={[
+              { name: '评分', key: 'reviewScore' },
+              { name: '评轮数', key: 'reviewCount' },
+            ]}
+          />
         );
       },
       dataIndex: 'reviewScore',
@@ -291,23 +261,21 @@ export const getFullColumns = (params: any) => {
       children: [
         {
           title: () => {
-            const menu = (
-              <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                { getMenuItem('orderCount7day', 'ascend', '7天订单量升序') }
-                { getMenuItem('orderCount7day', 'descend', '7天订单量降序') }
-                { getMenuItem('orderFluctuation_7', 'ascend', '7天环比升序') }
-                { getMenuItem('orderFluctuation_7', 'descend', '7天环比降序') }
-              </Menu>
-            );
             return (
-              <Dropdown overlay={menu} placement="bottomRight">
-                <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'leftTitle')}>
-                  7天
-                  {
-                    (sort === 'orderCount7day' || sort === 'orderFluctuation_7') ? renderSortIcon(order) : null
-                  }
-                </span>
-              </Dropdown>
+              <DropdownSortTh
+                sort={sort}
+                order={order}
+                handleSortMenuClick={handleSortMenuClick}
+                content={
+                  <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'leftTitle')}>
+                    7 天
+                  </span>
+                }
+                sortItems={[
+                  { name: '7天订单量', key: 'orderCount7day' },
+                  { name: '7天环比', key: 'orderFluctuation_7' },
+                ]}
+              />
             );
           },
           dataIndex: 'orderCount7day',
@@ -322,23 +290,21 @@ export const getFullColumns = (params: any) => {
           ),
         }, {
           title: () => {
-            const menu = (
-              <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                { getMenuItem('orderCount15day', 'ascend', '15天订单量升序') }
-                { getMenuItem('orderCount15day', 'descend', '15天订单量降序') }
-                { getMenuItem('orderFluctuation_15', 'ascend', '15天环比升序') }
-                { getMenuItem('orderFluctuation_15', 'descend', '15天环比降序') }
-              </Menu>
-            );
             return (
-              <Dropdown overlay={menu} placement="bottomRight">
-                <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'middleTitle')}>
-                  15天
-                  {
-                    (sort === 'orderCount15day' || sort === 'orderFluctuation_15') ? renderSortIcon(order) : null
-                  }
-                </span>
-              </Dropdown>
+              <DropdownSortTh
+                sort={sort}
+                order={order}
+                handleSortMenuClick={handleSortMenuClick}
+                content={
+                  <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'middleTitle')}>
+                    15 天
+                  </span>
+                }
+                sortItems={[
+                  { name: '15天订单量', key: 'orderCount15day' },
+                  { name: '15天环比', key: 'orderFluctuation_15' },
+                ]}
+              />
             );
           },
           dataIndex: 'orderCount15day',
@@ -353,23 +319,21 @@ export const getFullColumns = (params: any) => {
           ),
         }, {
           title: () => {
-            const menu = (
-              <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                { getMenuItem('orderCount30day', 'ascend', '30天订单量升序') }
-                { getMenuItem('orderCount30day', 'descend', '30天订单量降序') }
-                { getMenuItem('orderFluctuation_30', 'ascend', '30天环比升序') }
-                { getMenuItem('orderFluctuation_30', 'descend', '30天环比降序') }
-              </Menu>
-            );
             return (
-              <Dropdown overlay={menu} placement="bottomRight">
-                <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'rightTitle')}>
-                  30天
-                  {
-                    (sort === 'orderCount30day' || sort === 'orderFluctuation_30') ? renderSortIcon(order) : null
-                  }
-                </span>
-              </Dropdown>
+              <DropdownSortTh
+                sort={sort}
+                order={order}
+                handleSortMenuClick={handleSortMenuClick}
+                content={
+                  <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'rightTitle')}>
+                    30 天
+                  </span>
+                }
+                sortItems={[
+                  { name: '30天订单量', key: 'orderCount30day' },
+                  { name: '30天环比', key: 'orderFluctuation_30' },
+                ]}
+              />
             );
           },
           dataIndex: 'orderCount30day',
@@ -391,23 +355,21 @@ export const getFullColumns = (params: any) => {
       children: [
         {
           title: () => {
-            const menu = (
-              <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                { getMenuItem('orderSalesCount7day', 'ascend', '7天销量升序') }
-                { getMenuItem('orderSalesCount7day', 'descend', '7天销量降序') }
-                { getMenuItem('salesFluctuation_7', 'ascend', '7天环比升序') }
-                { getMenuItem('salesFluctuation_7', 'descend', '7天环比降序') }
-              </Menu>
-            );
             return (
-              <Dropdown overlay={menu} placement="bottomRight">
-                <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'leftTitle')}>
-                  7天
-                  {
-                    (sort === 'orderSalesCount7day' || sort === 'salesFluctuation_7') ? renderSortIcon(order) : null
-                  }
-                </span>
-              </Dropdown>
+              <DropdownSortTh
+                sort={sort}
+                order={order}
+                handleSortMenuClick={handleSortMenuClick}
+                content={
+                  <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'leftTitle')}>
+                    7 天
+                  </span>
+                }
+                sortItems={[
+                  { name: '7天销量', key: 'orderSalesCount7day' },
+                  { name: '7天环比', key: 'salesFluctuation_7' },
+                ]}
+              />
             );
           },
           dataIndex: 'orderSalesCount7day',
@@ -422,23 +384,21 @@ export const getFullColumns = (params: any) => {
           ),
         }, {
           title: () => {
-            const menu = (
-              <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                { getMenuItem('orderSalesCount15day', 'ascend', '15天销量升序') }
-                { getMenuItem('orderSalesCount15day', 'descend', '15天销量降序') }
-                { getMenuItem('salesFluctuation_15', 'ascend', '15天环比升序') }
-                { getMenuItem('salesFluctuation_15', 'descend', '15天环比降序') }
-              </Menu>
-            );
             return (
-              <Dropdown overlay={menu} placement="bottomRight">
-                <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'middleTitle')}>
-                  15天
-                  {
-                    (sort === 'orderSalesCount15day' || sort === 'salesFluctuation_15') ? renderSortIcon(order) : null
-                  }
-                </span>
-              </Dropdown>
+              <DropdownSortTh
+                sort={sort}
+                order={order}
+                handleSortMenuClick={handleSortMenuClick}
+                content={
+                  <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'middleTitle')}>
+                    15 天
+                  </span>
+                }
+                sortItems={[
+                  { name: '15天销量', key: 'orderSalesCount15day' },
+                  { name: '15天环比', key: 'salesFluctuation_15' },
+                ]}
+              />
             );
           },
           dataIndex: 'orderSalesCount15day',
@@ -453,23 +413,21 @@ export const getFullColumns = (params: any) => {
           ),
         }, {
           title: () => {
-            const menu = (
-              <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-                { getMenuItem('orderSalesCount30day', 'ascend', '30天销量升序') }
-                { getMenuItem('orderSalesCount30day', 'descend', '30天销量降序') }
-                { getMenuItem('salesFluctuation_30', 'ascend', '30天环比升序') }
-                { getMenuItem('salesFluctuation_30', 'descend', '30天环比降序') }
-              </Menu>
-            );
             return (
-              <Dropdown overlay={menu} placement="bottomRight">
-                <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'rightTitle')}>
-                  30天
-                  {
-                    (sort === 'orderSalesCount30day' || sort === 'salesFluctuation_30') ? renderSortIcon(order) : null
-                  }
-                </span>
-              </Dropdown>
+              <DropdownSortTh
+                sort={sort}
+                order={order}
+                handleSortMenuClick={handleSortMenuClick}
+                content={
+                  <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn', 'rightTitle')}>
+                    30 天
+                  </span>
+                }
+                sortItems={[
+                  { name: '30天销量', key: 'orderSalesCount30day' },
+                  { name: '30天环比', key: 'salesFluctuation_30' },
+                ]}
+              />
             );
           },
           dataIndex: 'orderSalesCount30day',

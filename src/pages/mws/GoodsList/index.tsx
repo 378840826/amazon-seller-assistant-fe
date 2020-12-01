@@ -109,17 +109,6 @@ const GoodsList: React.FC = () => {
     }
   }, [dispatch, currentShopId]);
 
-  // 高亮已排序的表头
-  useEffect(() => {
-    const activeClassName = 'sortActiveTh';
-    const nowTh = document.querySelector(`.${activeClassName}`);
-    nowTh?.classList.remove(activeClassName);
-    const el = document.querySelector('.ant-table-column-sorter .active') ||
-      document.querySelector('.sort-menu-btn .ant-table-column-sorter');
-    const th = el && el.closest('th');
-    th?.classList.add(activeClassName);
-  }, [sort]);
-
   // 勾选商品
   const rowSelection = {
     onChange: (selectedRowKeys: ReactText[]) => {
