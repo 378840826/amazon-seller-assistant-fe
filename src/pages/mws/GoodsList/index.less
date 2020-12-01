@@ -110,11 +110,6 @@
       font-size: @font-size-sm;
     }
 
-    // 高亮已排序的表头
-    .ant-table-header .ant-table-cell.sortActiveTh {
-      background: #e5e8eb;
-    }
-
     .ant-table-container {
       border: 1px solid @divider-line-color;
     }
@@ -126,52 +121,6 @@
 
     .ant-checkbox {
       transform: scale(0.875);
-    }
-
-    .ant-table-column-sorter {
-      margin-left: 0;
-
-      svg {
-        display: none;
-      }
-
-      .ant-table-column-sorter-up {
-        &::after {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-color: transparent transparent @text-color-secondary @text-color-secondary;
-          border-style: solid;
-          border-width: 1px;
-          transform: rotate(135deg) translate(-2px, -6px);
-          margin-right: 6px;
-        }
-      }
-
-      .ant-table-column-sorter-down {
-        &::after {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-color: transparent transparent @text-color-secondary @text-color-secondary;
-          border-style: solid;
-          border-width: 1px;
-          transform: rotate(-45deg) translate(6px, 5px);
-          margin-right: 6px;
-        }
-      }
-
-      .ant-table-column-sorter-inner {
-        & > span {
-          display: none;
-        }
-
-        & > span.active {
-          display: inline-block;
-        }
-      }
     }
   }
 }
@@ -256,14 +205,9 @@
   cursor: pointer;
 }
 
-// 下拉菜单（自定义排序和下拉菜单）
+// 下拉菜单（操作栏）
 .titleMenu li {
   font-size: @font-size-sm;
-
-  &.active {
-    background: #f0faff;
-    color: @heading-color;
-  }
 }
 
 .sku {

@@ -14,9 +14,9 @@ import {
 import { ColumnProps } from 'antd/es/table';
 import GoodsIcon from '@/pages/components/GoodsIcon';
 import { day, strToMoneyStr } from '@/utils/utils';
-import { renderSortIcon } from './utils';
 import editable from '@/pages/components/EditableCell';
 import GoodsImg from '@/pages/components/GoodsImg';
+import DropdownSortTh from '@/pages/components/DropdownSortTh';
 import classnames from 'classnames';
 import { MenuClickEventHandler } from 'rc-menu/lib/interface.d';
 import styles from './index.less';
@@ -54,13 +54,6 @@ export const getFullColumns = (params: any) => {
     order,
     currency,
   } = params;
-
-  // 获取自定义排序下拉框的 menuItem
-  const getMenuItem = (menuItemSort: string, menuItemOrder: string, name: string) => {
-    const key = `${menuItemSort}-${menuItemOrder}`;
-    const className = (menuItemOrder === order && menuItemSort === sort) ? styles.active : null;
-    return <MenuItem key={key} className={className}>{name}</MenuItem>;
-  };
 
   // 点击下拉排序
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -241,33 +234,31 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const menu = (
-          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            { getMenuItem('sellable', 'ascend', '库存升序') }
-            { getMenuItem('sellable', 'descend', '库存降序') }
-            { getMenuItem('sellableDays', 'ascend', '可售天数升序') }
-            { getMenuItem('sellableDays', 'descend', '可售天数降序') }
-          </Menu>
-        );
         return (
-          <Dropdown overlay={menu} placement="bottomRight">
-            <span
-              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
-              title="可售库存，等同于后台available库存"
-            >
-              可售库存
-              { GoodsIcon.question('可售库存，等同于后台available库存') }
-              {
-                (sort === 'sellable' || sort === 'sellableDays') ? renderSortIcon(order) : null
-              }
-            </span>
-          </Dropdown>
+          <DropdownSortTh
+            sort={sort}
+            order={order}
+            handleSortMenuClick={handleSortMenuClick}
+            content={
+              <span
+                className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+                title="可售库存，等同于后台available库存"
+              >
+                可售库存
+                { GoodsIcon.question('可售库存，等同于后台available库存') }
+              </span>
+            }
+            sortItems={[
+              { name: '库存', key: 'sellable' },
+              { name: '可售天数', key: 'sellableDays' },
+            ]}
+          />
         );
       },
       dataIndex: 'sellable',
       key: 'sellable-sellableDays',
       align: 'center',
-      width: 100,
+      width: 118,
       render: (sellable, record) => (
         <Space direction="vertical">
           {
@@ -434,33 +425,31 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const menu = (
-          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            { getMenuItem('profit', 'ascend', '利润升序')}
-            { getMenuItem('profit', 'descend', '利润降序')}
-            { getMenuItem('profitMargin', 'ascend', '利润率升序')}
-            { getMenuItem('profitMargin', 'descend', '利润率降序')}
-          </Menu>
-        );
         return (
-          <Dropdown overlay={menu} placement="bottomRight">
-            <span
-              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
-              title="利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%"
-            >
-              利润
-              { GoodsIcon.question('利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%') }
-              {
-                (sort === 'profit' || sort === 'profitMargin') ? renderSortIcon(order) : null
-              }
-            </span>
-          </Dropdown>
+          <DropdownSortTh
+            sort={sort}
+            order={order}
+            handleSortMenuClick={handleSortMenuClick}
+            content={
+              <span
+                className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+                title="利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%"
+              >
+                利润
+                { GoodsIcon.question('利润=售价-成本-头程-FBA fee-佣金-推广-仓储-其他费用；利润率=利润/售价*100%') }
+              </span>
+            }
+            sortItems={[
+              { name: '利润', key: 'profit' },
+              { name: '利润率', key: 'profitMargin' },
+            ]}
+          />
         );
       },
       dataIndex: 'profit',
       key: 'profit-profitMargin',
       align: 'right',
-      width: 80,
+      width: 94,
       render: (profit, record) => (
         profit
           ?
@@ -483,33 +472,31 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const menu = (
-          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            { getMenuItem('dayOrder7Count', 'ascend', '7天订单升序')}
-            { getMenuItem('dayOrder7Count', 'descend', '7天订单降序')}
-            { getMenuItem('dayOrder7Ratio', 'ascend', '7天环比升序')}
-            { getMenuItem('dayOrder7Ratio', 'descend', '7天环比降序')}
-          </Menu>
-        );
         return (
-          <Dropdown overlay={menu} placement="bottomRight">
-            <span
-              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
-              title={`周期：${dateRange7[0]}-${dateRange7[1]}`}
-            >
-              7天订单
-              { GoodsIcon.question(`周期：${dateRange7[0]}-${dateRange7[1]}`) }
-              {
-                (sort === 'dayOrder7Count' || sort === 'dayOrder7Ratio') ? renderSortIcon(order) : null
-              }
-            </span>
-          </Dropdown>
+          <DropdownSortTh
+            sort={sort}
+            order={order}
+            handleSortMenuClick={handleSortMenuClick}
+            content={
+              <span
+                className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+                title={`周期：${dateRange7[0]}-${dateRange7[1]}`}
+              >
+                7天订单
+                { GoodsIcon.question(`周期：${dateRange7[0]}-${dateRange7[1]}`) }
+              </span>
+            }
+            sortItems={[
+              { name: '7天订单', key: 'dayOrder7Count' },
+              { name: '7天环比', key: 'dayOrder7Ratio' },
+            ]}
+          />
         );
       },
       dataIndex: 'dayOrder7Count',
       key: 'dayOrder7Count-dayOrder7Ratio',
       align: 'center',
-      width: 96,
+      width: 110,
       render: (orderCount, record) => (
         <Space direction="vertical">
           { customCols.dayOrder7Count && orderCount }
@@ -528,33 +515,31 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: () => {
-        const menu = (
-          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            { getMenuItem('dayOrder30Count', 'ascend', '30天订单升序')}
-            { getMenuItem('dayOrder30Count', 'descend', '30天订单降序')}
-            { getMenuItem('dayOrder30Ratio', 'ascend', '30天环比升序')}
-            { getMenuItem('dayOrder30Ratio', 'descend', '30天环比降序')}
-          </Menu>
-        );
         return (
-          <Dropdown overlay={menu} placement="bottomRight">
-            <span
-              className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
-              title={`周期：${dateRange30[0]}-${dateRange30[1]}`}
-            >
-              30天订单
-              { GoodsIcon.question(`周期：${dateRange30[0]}-${dateRange30[1]}`) }
-              {
-                (sort === 'dayOrder30Count' || sort === 'dayOrder30Ratio') ? renderSortIcon(order) : null
-              }
-            </span>
-          </Dropdown>
+          <DropdownSortTh
+            sort={sort}
+            order={order}
+            handleSortMenuClick={handleSortMenuClick}
+            content={
+              <span
+                className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}
+                title={`周期：${dateRange30[0]}-${dateRange30[1]}`}
+              >
+                30天订单
+                { GoodsIcon.question(`周期：${dateRange30[0]}-${dateRange30[1]}`) }
+              </span>
+            }
+            sortItems={[
+              { name: '30天订单', key: 'dayOrder30Count' },
+              { name: '30天环比', key: 'dayOrder30Ratio' },
+            ]}
+          />
         );
       },
       dataIndex: 'dayOrder30Count',
       key: 'dayOrder30Count-dayOrder30Ratio',
       align: 'center',
-      width: 100,
+      width: 120,
       render: (orderCount, record) => (
         <Space direction="vertical">
           { customCols.dayOrder30Count && orderCount }
@@ -603,23 +588,17 @@ export const getFullColumns = (params: any) => {
       },
     }, {
       title: () => {
-        const menu = (
-          <Menu className={styles.titleMenu} onClick={handleSortMenuClick}>
-            { getMenuItem('reviewScore', 'ascend', '评分升序') }
-            { getMenuItem('reviewScore', 'descend', '评分降序') }
-            { getMenuItem('reviewCount', 'ascend', '评论数升序') }
-            { getMenuItem('reviewCount', 'descend', '评论数降序') }
-          </Menu>
-        );        
         return (
-          <Dropdown overlay={menu} placement="bottomRight">
-            <span className={classnames(styles.sortMenuBtn, 'sort-menu-btn')}>
-              Review
-              {
-                (sort === 'reviewScore' || sort === 'reviewCount') ? renderSortIcon(order) : null
-              }
-            </span>
-          </Dropdown>
+          <DropdownSortTh
+            sort={sort}
+            order={order}
+            handleSortMenuClick={handleSortMenuClick}
+            content="Review"
+            sortItems={[
+              { name: '评分', key: 'reviewScore' },
+              { name: '评轮数', key: 'reviewCount' },
+            ]}
+          />
         );
       },
       dataIndex: 'reviewScore',

@@ -135,6 +135,16 @@ a:hover {
     box-shadow: inset 8px 0 8px -8px rgba(0, 0, 0, 0.1);
   }
 
+  // 去掉排序表头默认的 hover 色块
+  .ant-table-thead th.ant-table-column-has-sorters:hover {
+    background: @table-header-bg;
+  }
+
+  // 表头排序箭头和文字的间距
+  .ant-table-column-sorter {
+    margin-left: 4px;
+  }
+
   // 分页器在右边时
   .ant-table-pagination-right {
     // total 放在左边

@@ -54,11 +54,6 @@
       }
     }
 
-    // 高亮已排序的表头
-    .ant-table-header .ant-table-cell.sortActiveTh {
-      background: #e5e8eb;
-    }
-
     // 分级表头的分隔线 左中右 三个
     .leftTitle {
       &::after {
@@ -116,67 +111,6 @@
         top: 0;
         left: 0;
         background: #ccc;
-      }
-    }
-
-    .ant-table-column-sorter {
-      margin-left: 0;
-
-      svg {
-        display: none;
-      }
-
-      .ant-table-column-sorter-up {
-        &::after {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-color: transparent transparent @text-color-secondary @text-color-secondary;
-          border-style: solid;
-          border-width: 1px;
-          transform: rotate(135deg) translate(-5px, -6px);
-        }
-      }
-
-      .ant-table-column-sorter-down {
-        &::after {
-          content: '';
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-color: transparent transparent @text-color-secondary @text-color-secondary;
-          border-style: solid;
-          border-width: 1px;
-          transform: rotate(-45deg) translate(6px, 5px);
-        }
-      }
-
-      .ant-table-column-sorter-inner {
-        & > span {
-          display: none;
-        }
-
-        & > span.active {
-          display: inline-block;
-        }
-      }
-    }
-
-    // 二级表头的排序箭头
-    .ant-table-thead {
-      tr:last-child {
-        .ant-table-column-sorter-up {
-          &::after {
-            transform: rotate(135deg) translate(-4px, -6px);
-          }
-        }
-
-        .ant-table-column-sorter-down {
-          &::after {
-            transform: rotate(-45deg) translate(6px, 3px);
-          }
-        }
       }
     }
   }
@@ -279,11 +213,6 @@
 
 .titleMenu li {
   font-size: @font-size-sm;
-
-  &.active {
-    background: #f0faff;
-    color: @heading-color;
-  }
 }
 
 .inTransitQuantityTd {

@@ -1,6 +1,4 @@
-import React from 'react';
 import { message } from 'antd';
-import { Order } from '@/models/goodsList';
 
 // 快捷设置时判断 售价/最高价/最低价 是否合理，并返回提示语（批量/单个）
 export const judgeFastPrice = function (key: string, goodsRecord: API.IGoods[]) {
@@ -79,17 +77,3 @@ export const judgeRuleOpen = function (goodsRecord: API.IGoods[]) {
   return true;
 };
 
-// 排序图标
-export const renderSortIcon = function (order: Order) {
-  let className = '';
-  if (order === 'ascend') {
-    className = 'ant-table-column-sorter-up';
-  } else {
-    className = 'ant-table-column-sorter-down';
-  }
-  return (
-    <span className="ant-table-column-sorter">
-      <span className={className}></span>
-    </span>
-  );
-};
