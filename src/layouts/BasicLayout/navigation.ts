@@ -1,6 +1,14 @@
 /**
  * 功能页的菜单结构
  */
+import {
+  ruleListRouter,
+  ruleAddRouter,
+  ruleAddSalesRouter,
+  ruleAddCartRouter,
+  ruleAddCompetitorRouter,
+  ruleHistoryRouter,
+} from '@/utils/routes';
 export interface IMenu {
   title: string;
   path: string;
@@ -40,8 +48,12 @@ const navigation: INavigation[] = [
   {
     title: '调价',
     menu: [
-      { title: '调价规则', path: '/reprice/rules' },
-      { title: '调价记录', path: '/reprice/history' },
+      { title: '调价规则', path: ruleListRouter },
+      { title: '选择规则类型', path: ruleAddRouter, hide: true },
+      { title: '根据销售表现调价', path: ruleAddSalesRouter, hide: true },
+      { title: '根据黄金购物车调价', path: ruleAddCartRouter, hide: true },
+      { title: '根据竞品价格调价', path: ruleAddCompetitorRouter, hide: true },
+      { title: '调价记录', path: ruleHistoryRouter },
     ],
   },
   {

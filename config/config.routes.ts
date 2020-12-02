@@ -1,6 +1,15 @@
 /*
   路由配置
 */
+
+import {
+  ruleListRouter,
+  ruleAddRouter,
+  ruleAddSalesRouter,
+  ruleAddCartRouter,
+  ruleAddCompetitorRouter
+} from '../src/utils/routes';
+
 export default [
   // 账户
   {
@@ -117,10 +126,39 @@ export default [
     path: '/reprice',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: '调价规则', path: '/reprice/rules', component: './mws/GoodsList' },
+      {
+        path: ruleListRouter,
+        routes: [
+          {
+            path: ruleListRouter,
+            title: '调价规则',
+            component: './reprice/rules/Index'
+          },
+          {
+            path: ruleAddRouter,
+            title: '调价规则',
+            component: './reprice/rules/AddIndex'
+          },
+          {
+            path: ruleAddSalesRouter,
+            title: '调价规则',
+            component: './reprice/rules/Sales'
+          },
+          {
+            path: ruleAddCartRouter,
+            title: '调价规则',
+            component: './reprice/rules/Cart'
+          },
+          {
+            path: ruleAddCompetitorRouter,
+            title: '调价规则',
+            component: './reprice/rules/Competitor'
+          },
+        ]
+      },
       { title: '调价记录', path: '/reprice/history', component: './mws/GoodsList' },
       // 重定向
-      { path: '/reprice', redirect: '/reprice/rules' },
+      { path: '/reprice', redirect: ruleListRouter },
     ],
   },
 
@@ -229,3 +267,5 @@ export default [
     ],
   },
 ]
+
+ 

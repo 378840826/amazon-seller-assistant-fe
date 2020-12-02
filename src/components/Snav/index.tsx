@@ -25,6 +25,7 @@ const Snav: React.FC<Snav.IProps> = (props) => {
                   search: item.search,
                 }} 
                 key={index}
+                target={item.target ? item.target : '_self'}
               >
                 {item.label}
               </Link> 
@@ -40,7 +41,7 @@ const Snav: React.FC<Snav.IProps> = (props) => {
               <a 
                 key={index}
                 href={item.path}
-                target="_blank"
+                target={item.target ? item.target : '_self'}
                 rel="noreferrer"
               >
                 {item.label}

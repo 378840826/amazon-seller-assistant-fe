@@ -1,0 +1,108 @@
+.frequencySelect {
+  :global(.ant-select-item) {
+    text-align: center;
+  }
+}
+
+.addCompetitorBox {
+  background-color: #fff;
+}
+
+.addCompetitor {
+  margin: 13px auto;
+  padding: 30px 0;
+  width: 950px;
+
+  div:global(.ant-form-item-label) {
+    width: 98px;
+  }
+
+  .ruleNameColumn {
+    .ruleName {
+      width: 280px;
+    }
+
+    .nameIcon {
+      font-size: @font-size-sm;
+      color: @error-color;
+    }
+
+    label::before {
+      position: absolute;
+      right: -10px;
+    }
+  }
+
+  .textarea {
+    resize: none;
+    width: 530px;
+    height: 160px !important;
+  }
+
+  .priceSetting,
+  .safeSetting,
+  .frequency {
+    .titleName {
+      width: 98px;
+    }
+  }
+
+  .priceSetting {
+    display: flex;
+    align-items: center;
+    margin-top: 35px;
+
+    :global(.ant-select-selection-item),
+    :global(.ant-select-arrow) {
+      color: @link-color;
+    }
+
+    input:global(.ant-input) {
+      text-align: center;
+    }
+
+    .priceText {
+      margin-right: 6px;
+    }
+
+    div:global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    .downlist {
+      margin-right: 15px;
+    }
+
+    .input {
+      width: 80px;
+    }
+  }
+
+  .safeSetting {
+    display: flex;
+    margin-top: 45px;
+  }
+
+  .frequency {
+    display: flex;
+    align-items: center;
+
+    span:global(.ant-select-selection-item) {
+      text-align: center;
+    }
+
+    .downlists {
+      width: 280px;
+      margin-bottom: 0;
+    }
+  }
+
+  .btns {
+    text-align: center;
+    padding: 30px 0;
+
+    button {
+      margin: 0 15px;
+    }
+  }
+}

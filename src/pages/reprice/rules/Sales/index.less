@@ -1,0 +1,160 @@
+
+.box {
+  background-color: #fff;
+  margin-top: 13px;
+  border-radius: @border-radius-base;
+  padding: 30px 0;
+}
+
+.modal {
+  span:global(.anticon-check-circle) {
+    display: none;
+  }
+
+  .successIcon {
+    color: @success-color;
+    font-size: @font-size-sm * 2;
+    float: left;
+    margin-top: -2px;
+  }
+}
+
+.contentBox {
+  width: 1280px;
+  margin: 0 auto;
+
+  div:global(.ant-form-item-label) {
+    width: 91px;
+  }
+
+  .ruleNameColumn {
+    .ruleName {
+      width: 280px;
+    }
+
+    .nameIcon {
+      font-size: @font-size-sm;
+      color: @error-color;
+    }
+
+    label::before {
+      position: absolute;
+      right: -10px;
+    }
+  }
+
+  .textarea {
+    resize: none;
+    width: 530px;
+    height: 160px !important;
+  }
+
+  .conditions {
+    > header {
+      display: flex;
+      justify-content: space-between;
+
+      .add {
+        transition: all 0.3s;
+        cursor: pointer;
+
+        .icon {
+          color: @primary-color;
+          transition: all 0.3s;
+        }
+
+        span {
+          padding-left: 10px;
+          color: @heading-color;
+        }
+
+        &:hover {
+          .icon {
+            transform: scale(1.2);
+          }
+
+          span {
+            color: @primary-color;
+          }
+        }
+      }
+    }
+
+    input:global(.ant-input) {
+      text-align: center;
+    }
+  }
+
+  .securitySettings {
+    display: flex;
+    margin-top: 45px;
+
+    span.textName {
+      padding-right: 22px;
+    }
+  }
+
+  .timingBox {
+    display: flex;
+    align-items: center;
+
+    .textName {
+      margin-right: 50px;
+    }
+
+    .timing {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border: 1px solid @border-color-base;
+      background-color: #fff;
+      border-radius: @border-radius-base;
+
+      :global(.timing-show-text) {
+        width: 280px;
+        height: 30px;
+        line-height: 30px;
+        display: block;
+        text-align: center;
+        z-index: 3;
+        position: relative;
+
+        :global(.anticon-down) {
+          display: none;
+        }
+      }
+
+      .iconAdd {
+        position: absolute;
+        left: 20px;
+        color: @text-color-secondary;
+      }
+
+      .iconChange {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 30px;
+        text-align: center;
+        border-left: 1px solid @border-color-base;
+        transition: all 0.3s;
+        opacity: 0;
+        color: @text-color-secondary;
+      }
+
+      &:hover .iconChange {
+        opacity: 1;
+      }
+    }
+  }
+
+  .btns {
+    text-align: center;
+
+    button {
+      margin: 0 15px;
+    }
+  }
+}

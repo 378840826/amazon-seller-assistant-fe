@@ -1,0 +1,54 @@
+.SecuritySettings {
+  .LayoutOneRow,
+  .LayoutTwoRow,
+  .LayoutThreeRow {
+    width: 515px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+
+    div:global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    span:global(.ant-select-selection-item),
+    span:global(.ant-select-arrow) {
+      color: @link-color;
+    }
+
+    .select {
+      width: 150px;
+    }
+  }
+
+  div.LayoutOneRow {
+    input {
+      width: 96px;
+      margin: 0 6px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+    }
+
+    .tooltip {
+      width: 200px;
+    }
+
+    .securityValue {
+      text-align: center;
+    }
+
+    .hintIcon {
+      color: @text-color-secondary;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: @warning-color;
+      }
+    }
+  }
+}
