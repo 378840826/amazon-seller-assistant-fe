@@ -577,10 +577,10 @@ const AddSales: React.FC = () => {
               </div>
 
               <div className={styles.conditionsHead}>
-                <span>有竞争对手时：</span>
-                <div className={styles.add}>
+                <span className={styles.other}>有竞争对手时：</span>
+                <div className={styles.add} onClick={addHaveOpponentCondition}>
                   <Iconfont type="icon-zengjiatianjiajiahao" className={styles.icon} />
-                  <span onClick={addHaveOpponentCondition}>添加条件</span>
+                  <span>添加条件</span>
                 </div>
               </div>
               <div>
@@ -598,9 +598,9 @@ const AddSales: React.FC = () => {
               </div>
               <header className={styles.conditionsHead}>
                 <span className={styles.title}>2.当竞争对手占据黄金购物车</span>
-                <div className={styles.add}>
+                <div className={styles.add} onClick={addHoldCartCondition}>
                   <Iconfont type="icon-zengjiatianjiajiahao" className={styles.icon} />
-                  <span onClick={addHoldCartCondition}>添加条件</span>
+                  <span>添加条件</span>
                 </div>
               </header>
               <div>
@@ -619,9 +619,9 @@ const AddSales: React.FC = () => {
 
               <header className={styles.conditionsHead}>
                 <span className={styles.title}>3.没有任何卖家占据黄金购物车时</span> 
-                <div className={styles.add}>
+                <div className={styles.add} onClick={addNotHoldCartCondition}>
                   <Iconfont type="icon-zengjiatianjiajiahao" className={styles.icon} />
-                  <span onClick={addNotHoldCartCondition}>添加条件</span>
+                  <span>添加条件</span>
                 </div>
               </header>
               <div>
@@ -646,7 +646,10 @@ const AddSales: React.FC = () => {
               竞争对手设定：
             </span>
             <div className={styles.opponentBox}>
-              <div className={styles.showText} onClick={() => setVisibleopponent(!visibleopponent)}>
+              <div 
+                className={classnames(styles.showText, visibleopponent ? styles.active : '')} 
+                onClick={() => setVisibleopponent(!visibleopponent)}
+              >
                 {visibleopponent ? '收起' : '展开'}
                 <Iconfont type="icon-zhankai" className={classnames(
                   styles.iconArrow,
@@ -704,6 +707,7 @@ const AddSales: React.FC = () => {
                     </div>
                     <div className={classnames(
                       styles.sellerList,
+                      sellerId.length ? '' : 'none',
                       'h-scroll'
                     )}>
                       {
@@ -754,8 +758,11 @@ const AddSales: React.FC = () => {
           </div>
         </div>
         <div className={styles.btns}>
-          <Button>
-            <Link to={ruleAddRouter}>上一步</Link>
+          <Button className={type ? 'none' : ''}>
+            <Link to={{
+              pathname: ruleAddRouter,
+              state: 'cart',
+            }}>上一步</Link>
           </Button>
           <Button>
             <Link to={ruleListRouter}>取消</Link>

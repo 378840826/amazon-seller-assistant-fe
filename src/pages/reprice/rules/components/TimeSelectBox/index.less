@@ -6,7 +6,8 @@
   cursor: pointer;
 
   .icon {
-    color: @text-color-secondary;
+    color: rgba(0, 0, 0, 0.25);
+    margin-left: 8px;
   }
 
   &:hover {
@@ -32,6 +33,8 @@
       .beijing {
         color: @text-color-secondary;
         font-size: @font-size-sm;
+        position: relative;
+        right: -8px;
       }
     }
 
@@ -42,19 +45,23 @@
       row-gap: 10px;
 
       li {
-        border: 1px solid @divider-line-color;
-        border-radius: @border-radius-base;
-        text-align: center;
-        padding: 2px 0;
-        transition: all 0.3s;
-        cursor: pointer;
+        .numBtn {
+          width: 58px;
+          min-width: auto;
+          border: 1px solid @divider-line-color;
+          border-radius: @border-radius-base;
+          text-align: center;
+          padding: 2px 0;
+          cursor: pointer;
 
-        &.active {
-          border: 1px solid @primary-color;
+          &:hover {
+            border-color: @primary-color;
+          }
         }
 
-        &:hover {
-          box-shadow: 0 0 5px 1px #c9c9c9;
+        .numBtn.active {
+          border: 1px solid @primary-color;
+          color: @primary-color;
         }
       }
     }

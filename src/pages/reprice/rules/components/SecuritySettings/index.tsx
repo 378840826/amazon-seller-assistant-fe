@@ -46,7 +46,7 @@ const SecuritySettings: React.FC<IProps> = props => {
     <Form form={form} onValuesChange={fieldChange}>
       <div className={styles.LayoutOneRow}>
         <div className={styles.item}>
-          条件1：当库存 ≤
+          <span className={styles.title}>条件1：</span>当库存 ≤
           <Item name="stockLeValue" normalize={limitedInput}>
             <Input className={styles.securityValue} />
           </Item>
@@ -66,7 +66,7 @@ const SecuritySettings: React.FC<IProps> = props => {
         </div>
       </div>
       <div className={styles.LayoutTwoRow}>
-        条件2：根据以上规则调价，若高于最高价， 则价格调至：
+        <span className={styles.title}>条件2：</span>根据以上规则调价，若高于最高价， 则价格调至：
         <Item name="gtMaxAction" initialValue="max" className={styles.select}>
           <Select>
             <Select.Option value="max">最高价</Select.Option>
@@ -75,7 +75,7 @@ const SecuritySettings: React.FC<IProps> = props => {
         </Item>
       </div>
       <div className={styles.LayoutThreeRow}>
-        条件3：根据以上规则调价，若低于最低价， 则价格调至：
+        <span className={styles.title}>条件3：</span>根据以上规则调价，若低于最低价， 则价格调至：
         <Item name="ltMinAction" initialValue="min" className={styles.select}>
           <Select>
             <Select.Option value="min">最低价</Select.Option>

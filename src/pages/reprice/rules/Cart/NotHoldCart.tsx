@@ -210,17 +210,17 @@ const HavaOpponent: React.FC<IProps> = props => {
         </div>
         <div className={styles.arrows}>
           <Iconfont 
-            type="icon-shangyi" 
+            type="icon-xiajiang" 
             onClick={() => moveCondition('up')} 
             className={classnames(styles.up, styles.icon)} 
           />
           <Iconfont 
-            type="icon-shangyi" 
+            type="icon-xiajiang" 
             onClick={() => moveCondition('down')}
             className={classnames(styles.down, styles.icon)} 
           />
         </div>
-        <Iconfont className={styles.close} type="icon-close" onClick={() => delCondition(index, 'notHoldCart')}/>
+        <Iconfont className={styles.close} type="icon-shanchu" onClick={() => delCondition(index, 'notHoldCart')}/>
       </div>
     </div>
   </Form>;

@@ -4,10 +4,10 @@
  * @Date: 2020-10-19 16:31:52
  * 智能调价 - 调价规则 - 添加规则 - 规则类型选择
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Link, history } from 'umi';
+import { Link, history, useLocation } from 'umi';
 import { 
   ruleListRouter,
   ruleAddSalesRouter,
@@ -23,9 +23,24 @@ import {
 
 
 const Rules: React.FC = () => {
+  const location = useLocation();
+  const { state } = location;
 
   // 选中的规则类型
   const [ruleindex, setRuleindex] = useState<number>(0);
+
+  // 如果是从添加返回的，默认选中之前的
+  useEffect(() => {
+    if (state) {
+      if (state === 'sales') {
+        setRuleindex(0);
+      } else if (state === 'cart') {
+        setRuleindex(1);
+      } else if (state === 'competitor') {
+        setRuleindex(2);
+      }
+    }
+  }, [state]);
 
   const navList: Snav.INavList[] = [
     {
@@ -106,7 +121,7 @@ const Rules: React.FC = () => {
     </div>
     <footer className={styles.foot}>
       <Button><Link to={ruleListRouter}>取消</Link></Button>
-      <Button type="primary" onClick={clickCheckConfirm}>确定</Button>
+      <Button type="primary" onClick={clickCheckConfirm}>下一步</Button>
     </footer>
   </div>;
 };

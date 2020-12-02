@@ -26,7 +26,6 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [showTime, setShowTime] = useState<string>(value); // 显示的时候
   const [beijing, setBeijing] = useState<string>(''); // 北京时间
-  const [saveValue, setSaveValue] = useState<string>(value); // 保存最新时间
 
   // console.log(value, 'initvalue');
   
@@ -98,7 +97,6 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
       setIsChange(false);
       onOk ? onOk(value) : '';
       setShowTime(value);
-      setSaveValue(value);
     }
   };
 
@@ -112,9 +110,13 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
         <ul>
           {hours.map((item, i) => {
             if (item === hour) {
-              return <li key={i} onClick={() => changeTime(item, 'hour')} className={styles.active}>{item}</li>;
+              return <li key={i} onClick={() => changeTime(item, 'hour')}>
+                <Button className={classnames(styles.active, styles.numBtn)}>{item}</Button>
+              </li>;
             }
-            return <li key={i} onClick={() => changeTime(item, 'hour')}>{item}</li>;
+            return <li key={i} onClick={() => changeTime(item, 'hour')}>
+              <Button className={styles.numBtn}>{item}</Button>
+            </li>;
           })}
         </ul>
       </div>
@@ -126,9 +128,13 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
         <ul>
           {minutes.map((item, i) => {
             if (item === minute) {
-              return <li key={i} onClick={() => changeTime(item, 'minute')} className={styles.active}>{item}</li>;
+              return <li key={i} onClick={() => changeTime(item, 'minute')}>
+                <Button className={classnames(styles.active, styles.numBtn)}>{item}</Button>
+              </li>;
             }
-            return <li key={i} onClick={() => changeTime(item, 'minute')}>{item}</li>;
+            return <li key={i} onClick={() => changeTime(item, 'minute')}>
+              <Button className={classnames(styles.numBtn)}>{item}</Button>
+            </li>;
           })}
         </ul>
       </div>

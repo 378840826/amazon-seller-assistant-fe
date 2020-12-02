@@ -243,12 +243,14 @@ const Rules: React.FC = () => {
       dataIndex: 'id',
       title: '规则ID',
       align: 'center',
-      width: 170,
+      width: 200,
     },
     {
       dataIndex: 'type',
       title: '规则类型',
       align: 'left',
+      width: 300,
+      className: styles.typeCol,
       render(value: string) {
         return getRuleType(value);
       },
@@ -257,6 +259,7 @@ const Rules: React.FC = () => {
       dataIndex: 'name',
       title: '规则名称',
       align: 'left',
+      width: 330,
       render: (value: string, { id, description }: Rules.ITableResponseType) => (
         <AsyncEditBox 
           onOk={(val) => ruleNameCallback(val, id, description)} 
@@ -271,6 +274,7 @@ const Rules: React.FC = () => {
       dataIndex: 'description',
       title: '规则说明',
       align: 'left',
+      width: 300,
       render(value: string, { id, name }: Rules.ITableResponseType) {
         return <MultiLineEdit 
           defaultValue={String(value)}
@@ -286,6 +290,7 @@ const Rules: React.FC = () => {
       dataIndex: 'timing',
       title: <span>时间<br/><span className="secondary">（{siteText}）</span></span>,
       align: 'center',
+      width: 190,
       render(value: string, { id, type }: Rules.ITableResponseType) {
         if (type === 'sell') {
           return <TimeSelectBox value={value} onOk={timing => setTiming(timing, id)}/>;
@@ -305,6 +310,7 @@ const Rules: React.FC = () => {
       dataIndex: 'productCount',
       title: '商品数量',
       align: 'center',
+      width: 88,
       render: (val: number) => {
         // window.open(`#goods?ruleId=${ruleId}&ruleName=${ruleName}`)
         if (val > 0) {
@@ -317,6 +323,7 @@ const Rules: React.FC = () => {
       dataIndex: 'updateTime',
       title: '更新时间',
       align: 'center',
+      width: 190,
     },
     {
       dataIndex: 'handleCol',

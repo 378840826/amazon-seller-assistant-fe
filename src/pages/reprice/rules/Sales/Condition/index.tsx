@@ -654,17 +654,17 @@ const SalesConditionItem: React.FC<IProps> = (props) => {
         </div>
         <div className={styles.arrows}>
           <Iconfont 
-            type="icon-shangyi" 
+            type="icon-xiajiang" 
             onClick={() => moveCondition('up')} 
             className={classnames(styles.up, styles.icon)} 
           />
           <Iconfont 
-            type="icon-shangyi" 
+            type="icon-xiajiang" 
             onClick={() => moveCondition('down')}
             className={classnames(styles.down, styles.icon)} 
           />
         </div>
-        <Iconfont className={styles.close} type="icon-close" onClick ={() => remove(index)}/>
+        <Iconfont className={styles.close} type="icon-shanchu" onClick ={() => remove(index)}/>
       </div>
     </div>
   </Form>;

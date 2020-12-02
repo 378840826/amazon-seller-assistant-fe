@@ -61,6 +61,7 @@
 
     .titleName {
       width: 120px;
+      color: @heading-color;
     }
 
     .downlists {
@@ -73,8 +74,12 @@
     justify-content: space-between;
     padding: 20px 0 10px;
 
+    .other {
+      color: @heading-color;
+    }
+
     .title {
-      color: #000;
+      color: #444;
       font-weight: bold;
     }
 
@@ -89,14 +94,9 @@
 
       span {
         padding-left: 10px;
-        color: @heading-color;
       }
 
       &:hover {
-        .icon {
-          transform: scale(1.2);
-        }
-
         span {
           color: @primary-color;
         }
@@ -124,10 +124,12 @@
     .titleName {
       width: 120px;
       flex: 0 0 auto;
+      color: @heading-color;
     }
 
     .notOpponent {
       padding: 10px 0 18px;
+      color: @heading-color;
     }
 
     .cartContent {
@@ -135,7 +137,7 @@
     }
 
     .header {
-      color: #000;
+      color: #444;
       font-weight: bold;
     }
 
@@ -178,13 +180,13 @@
 
         .medownList {
           width: 76px;
-          margin-left: 6px;
+          margin: 0 8px 0 6px;
         }
 
         .lowestdownList,
         .myPricedownList {
           width: 90px;
-          margin-left: 6px;
+          margin: 0 8px 0 6px;
         }
 
         .operatordownList {
@@ -198,7 +200,7 @@
         padding-right: 40px;
 
         .priceText {
-          color: #000;
+          color: #444;
         }
 
         .priceSubtext {
@@ -246,11 +248,11 @@
 
         .close {
           position: absolute;
-          right: -7px;
-          top: -9px;
+          right: -32px;
+          top: 25px;
           z-index: 3;
           color: @error-color;
-          font-size: 18px;
+          font-size: 14px;
           opacity: 0;
           transition: all 0.3s;
           cursor: pointer;
@@ -302,6 +304,7 @@
     .titleName {
       width: 120px;
       flex: 0 0 auto;
+      color: @heading-color;
     }
 
     .opponentBox {
@@ -321,8 +324,20 @@
           }
         }
 
-        &:hover .icond {
+        &.active {
           color: @primary-color;
+
+          .iconArrow {
+            color: @primary-color;
+          }
+        }
+
+        &:hover {
+          color: @primary-color;
+
+          .iconArrow {
+            color: @primary-color;
+          }
         }
       }
 
@@ -332,7 +347,7 @@
         padding: 22px 24px;
 
         .switch {
-          margin-right: 20px;
+          margin-right: 10px;
         }
 
         .radio {
@@ -372,7 +387,7 @@
           border-top: 0;
           border-radius: 0 0 @border-radius-base @border-radius-base;
           padding: 20px;
-          height: 195px;
+          max-height: 195px;
 
           .sellerItem {
             display: flex;
@@ -402,6 +417,7 @@
 
     .titleName {
       width: 120px;
+      color: @heading-color;
     }
   }
 

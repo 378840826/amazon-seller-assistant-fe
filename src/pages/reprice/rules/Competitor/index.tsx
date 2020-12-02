@@ -274,8 +274,11 @@ const AddSales: React.FC<IProps> = () => {
           </div>
         
           <div className={styles.btns}>
-            <Button>
-              <Link to={ruleAddRouter}>上一步</Link>
+            <Button className={type ? 'none' : ''}>
+              <Link to={{
+                pathname: ruleAddRouter,
+                state: 'competitor',
+              }}>上一步</Link>
             </Button>
             <Button>
               <Link to={ruleListRouter}>取消</Link>

@@ -370,7 +370,7 @@ const AddSales: React.FC = () => {
 
           <div className={styles.conditions}>
             <header>
-              <span>调价设定：</span>
+              <span className={styles.title}>调价设定：</span>
               <div className={styles.add} onClick={addConditionItem}>
                 <Iconfont type="icon-zengjiatianjiajiahao" className={styles.icon} />
                 <span>添加条件</span>
@@ -409,8 +409,11 @@ const AddSales: React.FC = () => {
           </div>
 
           <div className={styles.btns}>
-            <Button>
-              <Link to={ruleAddRouter}>上一步</Link>
+            <Button className={type ? 'none' : ''}>
+              <Link to={{
+                pathname: ruleAddRouter,
+                state: 'sales',
+              }}>上一步</Link>
             </Button>
             <Button>
               <Link to={ruleListRouter}>取消</Link>

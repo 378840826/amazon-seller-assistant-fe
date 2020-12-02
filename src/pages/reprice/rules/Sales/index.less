@@ -54,6 +54,10 @@
       display: flex;
       justify-content: space-between;
 
+      .title {
+        color: @heading-color;
+      }
+
       .add {
         transition: all 0.3s;
         cursor: pointer;
@@ -65,14 +69,9 @@
 
         span {
           padding-left: 10px;
-          color: @heading-color;
         }
 
         &:hover {
-          .icon {
-            transform: scale(1.2);
-          }
-
           span {
             color: @primary-color;
           }
@@ -91,6 +90,7 @@
 
     span.textName {
       padding-right: 22px;
+      color: @heading-color;
     }
   }
 
@@ -100,6 +100,7 @@
 
     .textName {
       margin-right: 50px;
+      color: @heading-color;
     }
 
     .timing {
