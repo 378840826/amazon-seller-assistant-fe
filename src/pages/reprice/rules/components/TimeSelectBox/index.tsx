@@ -26,7 +26,6 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [showTime, setShowTime] = useState<string>(value); // 显示的时候
   const [beijing, setBeijing] = useState<string>(''); // 北京时间
-  const [saveValue, setSaveValue] = useState<string>(value); // 保存最新时间
 
   // console.log(value, 'initvalue');
   
@@ -98,7 +97,6 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
       setIsChange(false);
       onOk ? onOk(value) : '';
       setShowTime(value);
-      setSaveValue(value);
     }
   };
 
