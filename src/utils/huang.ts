@@ -245,7 +245,10 @@ export function arrayRandomOne(arr: any[]) { // eslint-disable-line
   return arr[index];
 }
 
-
+/*
+ * 获取当前站点的对应的时区时间
+ * @param site 站点
+ */
 export function getSiteDate(site: string) {
   if (!site || typeof site !== 'string') {
     throw new Error('请传入一个站点');

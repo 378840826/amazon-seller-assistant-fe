@@ -7,8 +7,10 @@ import {
   ruleAddRouter,
   ruleAddSalesRouter,
   ruleAddCartRouter,
-  ruleAddCompetitorRouter
+  ruleAddCompetitorRouter,
+  ruleHistoryRouter,
 } from '../src/utils/routes';
+
 
 export default [
   // 账户
@@ -156,7 +158,7 @@ export default [
           },
         ]
       },
-      { title: '调价记录', path: '/reprice/history', component: './mws/GoodsList' },
+      { title: '调价记录', path: ruleHistoryRouter, component: './reprice/History' },
       // 重定向
       { path: '/reprice', redirect: ruleListRouter },
     ],
