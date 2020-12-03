@@ -37,6 +37,9 @@ export const asinPandectReturnRouter = '/asin/return'; // ASIN总览 - 退货分
 // 评论
 export const reviewListRouter = '/review/list'; // 评论列表
 
+// 竞品设定
+export const setCompetingGoodsRouter = '/product/cp'; // 商品ID
+
+
 // 商品列表
 export const productListRouter = '/product/list';
-
