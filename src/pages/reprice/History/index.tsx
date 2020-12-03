@@ -186,7 +186,7 @@ const History: React.FC = () => {
       render(val: string) {
         return <>
           <p>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</p>
-          <p>({timeText})</p>
+          <p className={styles.secondaryText}>({timeText})</p>
         </>;
       },
     },
@@ -200,12 +200,10 @@ const History: React.FC = () => {
         return <div className={styles.productCol}>
           <img src={imgLink || emptyImg} alt=""/>
           <div className={styles.details}>
-            <p>
-              <a className={styles.title} href={link} target="_blank" rel="noreferrer" title={value}>
-                <Iconfont type="icon-lianjie" className={styles.icon} />
-                {value}
-              </a>
-            </p>
+            <a className={styles.title} href={link} target="_blank" rel="noreferrer" title={value}>
+              <Iconfont type="icon-lianjie" className={styles.icon} />
+              {value}
+            </a>
             <p className={styles.foot}>
               <Link to={`${asinPandectBaseRouter}?asin=${asin}`} 
                 className={styles.asin}
@@ -259,7 +257,7 @@ const History: React.FC = () => {
       title: '条件',
       dataIndex: 'triggerCondition',
       align: 'center',
-      width: 200,
+      width: 300,
       render(val: string) {
         return <div className={styles.conditionContent}>
           {val}
@@ -330,6 +328,7 @@ const History: React.FC = () => {
       dataIndex: 'name',
       align: 'right',
       width: 100,
+      className: styles.priceChange,
       render(priceChange: number) {
         if (priceChange === null || priceChange === undefined ) {
           return <Empty />;
@@ -402,16 +401,17 @@ const History: React.FC = () => {
   
   return <div className={styles.historyBox}>
     <Form layout="inline" className={styles.header} form={form} onValuesChange={onValuesChange}>
-      <Item name="code">
-        <Search 
+      <Item name="code" className={styles.search}>
+        <Search
+          
           placeholder="输入标题、ASIN或SKU" 
           enterButton={<Iconfont type="icon-sousuo" />} 
           className="h-search"
           allowClear
         />
       </Item>
-      <div className="method">
-        <Item name="fulfillmentChannel" initialValue="all">
+      <div className={styles.method}>
+        <Item name="fulfillmentChannel" initialValue="all" colon={false} label="发货方式：">
           <Radio.Group >
             <Radio value="all">全部</Radio>
             <Radio value="fba">FBA</Radio>

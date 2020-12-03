@@ -28,18 +28,46 @@
     padding-bottom: 20px;
   }
 
+  .search {
+    width: 280px;
+    margin-right: 0;
+  }
+
+  .method {
+    width: 272px;
+
+    :global(.ant-form-item) {
+      margin-right: 0;
+    }
+
+    label:global(.ant-radio-wrapper:last-child) {
+      width: 55px;
+      margin-right: 0;
+
+      span {
+        padding-right: 0;
+      }
+    }
+  }
+
   .rules,
   .conditions {
     display: flex;
     align-items: center;
   }
 
+  // .conditions {
+  //   margin: 0 22px;
+  // }
+
   .rulesList {
     width: 280px;
+    margin-right: 0;
   }
 
   .conditaionsList {
     width: 280px;
+    margin-right: 0;
   }
 
   @media screen and (max-width: 1646px) {
@@ -50,6 +78,8 @@
 
   .calendar {
     margin-right: 0;
+    width: 280px;
+    // margin-left: auto;
   }
 }
 
@@ -63,6 +93,10 @@
 
 .table {
   width: 100%;
+
+  div:global(.ant-table-body) {
+    border-bottom: 1px solid @divider-line-color;
+  }
 
   thead th {
     height: 44px;
@@ -90,10 +124,15 @@
       background-color: @simple-table-header-bg;
     }
 
+    // tr:hover td {
+    //   background-color: @simple-table-header-bg !important;
+    // }
+
     .productCol {
       width: 260px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
 
       img {
         width: 28px;
@@ -108,14 +147,12 @@
         width: calc(100% - 36px);
         padding-right: 20px;
 
-        p {
+        .title {
           width: 100%;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-        }
 
-        .title {
           .icon {
             color: @text-color-secondary;
           }
@@ -163,5 +200,10 @@
     .method {
       color: @text-color-secondary;
     }
+  }
+
+  // 价格变动
+  .priceChange {
+    padding-right: 24px;
   }
 }
