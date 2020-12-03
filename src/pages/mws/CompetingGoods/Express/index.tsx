@@ -19,7 +19,9 @@ const Express: React.FC<IProps> = (props) => {
   return <span 
     style={style}
     className={`
-      ${text.toUpperCase() === 'FBM' ? styles.fbm : styles.fba}`
+      ${text.toUpperCase() === 'FBM' ? styles.fbm : styles.fba} 
+      ${text === '' || text === undefined ? '' : styles.border }
+      `
     }>
     {text.toUpperCase()}
   </span>;

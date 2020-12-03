@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import { productListRouter, ruleAddRouter } from '@/utils/routes';
 import classnames from 'classnames';
@@ -6,13 +6,13 @@ import { isFormal } from '@/utils/huang';
 
 
 import { 
-  Link,
   useDispatch, 
   useSelector, 
   ConnectProps, 
   ICompetingGoodsModelState,
   useLocation,
   Location,
+  history,
 } from 'umi';
 import HoldImg from '@/assets/stamp.png';
 import { Iconfont } from '@/utils/utils';
@@ -51,10 +51,12 @@ const CompetingGoods: React.FC = () => {
   const chosens = useSelector((state: IPage) => state.competingGoods.chosens);
   const dispatch = useDispatch();
   const location = useLocation();
+  const leftLayoutList = useRef(null) as React.MutableRefObject<null|HTMLDivElement>;
 
   const [asininfo, setAsininfo] = useState<CompetingGoods.ICompetingOneData|null>(null); // 搜索ASIN值
   const [searchValue, setSearchValue] = useState<string>(''); // ASIN值
   const [showsearch, setShowSearch] = useState<boolean>(false); // 是否显示搜索
+  const [addbtnclass, setAddBtnClass] = useState<boolean>(false); // 左边推荐竞品是否有滚动条， 有(true) fase没有
 
   const { query: { id: pid } } = location as ILocation;
 
@@ -85,6 +87,33 @@ const CompetingGoods: React.FC = () => {
     });
     
   }, [dispatch, pid, StoreId]);
+
+  // 监听右边是否有滚动条
+  function handleAllBtnPadding () {
+    if (leftLayoutList.current) {
+      if (leftLayoutList.current.offsetWidth - leftLayoutList.current.clientWidth ) {
+        //onsole.log('有滚动条');
+        setAddBtnClass(true);
+      } else {
+        // console.log('没有滚动条');
+        setAddBtnClass(false);
+      }
+
+      window.addEventListener('resize', () => {
+        if (leftLayoutList.current) {
+          if (leftLayoutList.current.offsetWidth - leftLayoutList.current.clientWidth ) {
+            setAddBtnClass(true);
+          } else {
+            setAddBtnClass(false);
+          }
+        }
+      });
+    }
+  }
+
+  useEffect(() => {
+    handleAllBtnPadding();
+  }, [leftLayoutList, recommends]);
 
   // 搜索
   const searchAsin = (value: string) => {
@@ -153,8 +182,6 @@ const CompetingGoods: React.FC = () => {
       newData.sellerName = data.delivery_method;
       newData.price = data.price;
       newData.fulfillmentChannel = data.prdelivery_methodice;
-
-
       setAsininfo({ ...newData });
     });
   };
@@ -207,10 +234,19 @@ const CompetingGoods: React.FC = () => {
     }
 
     if (isAllSelect) {
-      return <Button className={classnames(styles.addBtn, styles.allSelectBtn)}>已全选</Button>;
+      return <Button 
+        style={{
+          marginRight: addbtnclass ? 20 : 10,
+        }}
+        className={classnames(
+          styles.addBtn,
+          styles.allSelectBtn,
+        )}>已全选</Button>;
     }
 
-    return <Button className={styles.addBtn} onClick={addAll}>全选</Button>;
+    return <Button style={{
+      marginRight: addbtnclass ? 20 : 10,
+    }} className={styles.addBtn} onClick={addAll}>全选</Button>;
   };
 
 
@@ -278,6 +314,13 @@ const CompetingGoods: React.FC = () => {
     </div>;
   }
 
+  if (initvalue === undefined) {
+    return <h2 style={{
+      padding: 50,
+      textAlign: 'center',
+    }}>数据异常</h2>;
+  }
+
   return <div className={styles.cpBox}>
     <Snav navList={navList}></Snav>
     <header className={styles.parenthead}>
@@ -291,11 +334,11 @@ const CompetingGoods: React.FC = () => {
               rel="noreferrer"
               title={initvalue.title}
             >
-              {initvalue.title}
+              <Iconfont type="icon-lianjie" className={styles.linkIcon}/>{initvalue.title}
             </a>
             <p className={styles.asinSku}>
-              <span className="asin">{initvalue.asin}</span>
-              <span className="sku">{initvalue.sku}</span>
+              <span className={styles.asin1}>{initvalue.asin}</span>
+              <span className={styles.sku}>{initvalue.sku}</span>
             </p>
           </div>
         </div>
@@ -308,6 +351,7 @@ const CompetingGoods: React.FC = () => {
           )}
           onSearch={searchAsin}
           value={searchValue}
+          size="large"
           enterButton={<Iconfont type="icon-sousuo" />}
           onChange={e => setSearchValue(e.target.value)}
         />
@@ -321,23 +365,23 @@ const CompetingGoods: React.FC = () => {
     </header>
 
     <main className={styles.content}>
-      <div className={classnames(styles.leftLayout, 'h-scroll')}>
+      <div className={classnames(styles.leftLayout)}>
         <header>
           <strong>推荐竞品</strong>
           { getAddAllBtnStatus() }
         </header>
-        <div className={styles.list}>
+        <div className={classnames(styles.list, 'h-scroll')} ref={leftLayoutList}>
           {recommends.map((item, i) => {
             return <Recommend key={i} data={item} currency={currency} marketplace={marketplace}/>;
           })}
         </div>
       </div>
-      <div className={classnames(styles.rightLayout, 'h-scroll')}>
+      <div className={classnames(styles.rightLayout)}>
         <header>
           <strong>已选竞品</strong>
           {getdelAllbtnStatus()}
         </header>
-        <div className={styles.list}>
+        <div className={classnames(styles.list, 'h-scroll')}>
           {chosens.map((item, i) => {
             return <SelectRecommend 
               index={i} key={i} 
@@ -351,12 +395,19 @@ const CompetingGoods: React.FC = () => {
     </main>
   
     <footer className={styles.fooBtns}>
-      <Button type="link" className={classnames(styles.btn, styles.cancel)}>
-        <Link to={productListRouter}>取消</Link>
+      <Button 
+        className={classnames(styles.btn, styles.cancel)} 
+        onClick={() => history.push(productListRouter)}
+      >
+        取 消
       </Button>
       <Button type="primary" onClick={save} className={classnames(styles.btn)}>保存</Button>
-      <Button type="link" className={classnames(styles.btn)}>
-        <Link to={ruleAddRouter}>创建规则</Link>
+      <Button 
+        type="link" 
+        className={classnames(styles.btn, styles.AddRuleBtn)}
+        onClick={() => history.push(ruleAddRouter)}
+      >
+        创建规则 <Iconfont type="icon-zhankai-copy" className={styles.link}/>
       </Button>
     </footer>
   </div>;

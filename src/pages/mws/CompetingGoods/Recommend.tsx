@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './index.less';
 import {
   Button,
+  message,
 } from 'antd';
 import { 
   useSelector, 
@@ -29,8 +30,12 @@ const Recommend: React.FC<IProps> = props => {
   const dispatch = useDispatch();
   const chosens = useSelector((state: IPage) => state.competingGoods.chosens);
 
-
   const changeChosens = () => {
+    if (chosens.length >= 10) {
+      message.error('最多只能添加10个竞品');
+      return;
+    }
+    
     dispatch({
       type: 'competingGoods/changeChosens',
       payload: data,

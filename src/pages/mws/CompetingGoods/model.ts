@@ -44,8 +44,6 @@ const competingGoods: ICompetingGoodsModel = {
       } = payload;
       if (data) {
         state.initvalue = data;
-        console.log(data, 'dataa');
-        
         if (data.recommend && Array.isArray(data.recommend)) {
           state.recommends = data.recommend;
         }

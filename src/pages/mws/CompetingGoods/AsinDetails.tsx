@@ -7,6 +7,7 @@ import {
   useSelector,
 } from 'umi';
 import Empyt from './Empyt';
+import { Iconfont } from '@/utils/utils';
 
 interface IProps {
   style?: React.CSSProperties;
@@ -43,7 +44,7 @@ const AsinDetails: React.FC<IProps> = props => {
         target="_blank"
         rel="noreferrer"
       >
-        {asininfo.title}
+        <Iconfont type="icon-lianjie" className={styles.linkIcon1}/>{asininfo.title}
       </a>
       <div className={styles.foot}>
         <p className={styles.brand} title={`品牌：${valueTransition(asininfo.brand)}`}>
@@ -52,7 +53,7 @@ const AsinDetails: React.FC<IProps> = props => {
         </p>
         <p className={styles.scale}>
           {valueTransition(asininfo.reviewScope)}
-          <span className="scale-details">({asininfo.reviewNum})</span> 
+          <span className={styles.scaleDetails}>({asininfo.reviewNum})</span> 
         </p>
         <p 
           className={styles.ranking} 
@@ -75,7 +76,7 @@ const AsinDetails: React.FC<IProps> = props => {
           <span>{valueTransition(asininfo.shipping, true)}</span>
         </p>
         <Express method={asininfo.fulfillmentChannel} style={{
-          paddingLeft: 6,
+          paddingLeft: 10,
         }}/>
       </div>
     </div>
