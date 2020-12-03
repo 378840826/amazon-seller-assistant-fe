@@ -415,6 +415,7 @@ const GlobalModel: IGlobalModelType = {
           '/mail/template',
           '/dynamic/asin-overview',
           '/dynamic/asin-monitor',
+          '/dynamic/rank-monitor',
         ];
         const isUnshow = unshownPageTitleUrl.some(path => path === pathname);
         dispatch({

@@ -222,7 +222,7 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
         return (
           status === '' ? <div className="null_bar"></div>
             :
-            <Switch checked={status} 
+            <Switch checked={status} className={styles.__switch}
               onChange={(checked: boolean) => onChange(checked, record.id, record.key)} />
         );
       },
@@ -292,6 +292,11 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
         locale={{ emptyText: state.message === '' ? 'Oops! 没有更多数据啦' : state.message }}
         dataSource={state.data}
         pagination={false}
+        rowClassName={(_, index) => {
+          if (index % 2 === 1) {
+            return styles.darkRow;
+          }
+        }}
       />
     </div>
   );

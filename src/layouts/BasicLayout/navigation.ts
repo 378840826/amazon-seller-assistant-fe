@@ -49,6 +49,7 @@ const navigation: INavigation[] = [
     menu: [
       { title: 'ASIN动态汇总', path: '/dynamic/asin-overview' },
       { title: 'ASIN动态监控设定', path: '/dynamic/asin-monitor' },
+      { title: '关键词搜索排名监控', path: '/dynamic/rank-monitor' },
     ],
   },
   {

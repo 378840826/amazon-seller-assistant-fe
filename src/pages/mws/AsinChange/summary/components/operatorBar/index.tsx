@@ -21,7 +21,7 @@ export const operaList = [
 
 export const adjustList = [
   { name: '分类', value: 'changeCategory', short: '分类' },
-  { name: "Amazon's choice", value: 'changeAc', short: 'AC' },
+  { name: "Amazon's Choice", value: 'changeAc', short: 'AC' },
   { name: 'Frequently Bought Together', value: 'changeFBT', short: 'FBT' },
   { name: 'Add-on item', value: 'changeAddItem', short: 'Add' },
 ];
@@ -47,7 +47,7 @@ export const yAxisList = [
   { name: '大类排名', value: 'bigCategoryRanking' },
   { name: '小类排名', value: 'smallCategoryRanking' },
   { name: '订单量', value: 'orderQuantity' },
-  { name: 'pageView', value: 'pageView' },
+  { name: 'PageView', value: 'pageView' },
   { name: 'Session', value: 'session' },
   { name: '转化率', value: 'conversionRate' },
   { name: '关联销售', value: 'associatedSales' },

@@ -380,8 +380,7 @@ const EchartsCom: React.FC<IEchartsCom> = ({
                 }
               } else if (item.seriesType === 'scatter'){
                 if (item.value && item.value[2]){
-                  pinHtml += `<span style="width:50px;display:inline-block">${item.name}：
-                    </span><span style="color:#555">
+                  pinHtml += `<span style="color:#555">
                   ${item.value[2]}</span><br/>`;
                 }
                 
@@ -393,10 +392,12 @@ const EchartsCom: React.FC<IEchartsCom> = ({
         },
       },
       grid: {
-        top: 67,
-        height: 347,
+        top: 87,
+        
         left: 60,
         right: 60,
+        bottom: 0,
+        
         containLabel: true,
       },
       legend: {

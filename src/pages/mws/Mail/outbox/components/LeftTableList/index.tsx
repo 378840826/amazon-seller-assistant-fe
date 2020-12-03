@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Tooltip } from 'antd';
 import { connect } from 'umi';
 
 import { ColumnProps, TablePaginationConfig } from 'antd/es/table';
@@ -40,8 +40,12 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, dispatch, request }) =
     render: (text, item) => {
       return (
         <div className={styles.__td_1}>
-          <Paragraph ellipsis className={styles.subject}>{item.subject}</Paragraph>
-          <Paragraph ellipsis={{ rows: 2 }} className={styles.content}>{item.content}</Paragraph>
+          <Tooltip title={item.subject}>
+            <Paragraph ellipsis className={styles.subject}>{item.subject}</Paragraph>
+          </Tooltip>
+          <Tooltip title={item.content}>
+            <Paragraph ellipsis={{ rows: 2 }} className={styles.content}>{item.content}</Paragraph>
+          </Tooltip>
         </div>
       );
     },
