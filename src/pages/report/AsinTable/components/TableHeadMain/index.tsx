@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styles from './index.less';
-import { Iconfont } from '@/utils/utils';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
 import {
   Tooltip,
@@ -10,8 +9,8 @@ import {
 interface IProps {
   title: string;
   titleparams: string;
-  subtitle: string;
-  visible: boolean;
+  subtitle?: string;
+  visible?: boolean;
   order: string;
   width?: number;
   hint?: string;
@@ -24,8 +23,8 @@ const TableHead: React.FC<IProps> = props => {
   const {
     title,
     titleparams, // 第一栏后端参数
-    subtitle, // 环比后端参数
-    visible, // 是否显示环比
+    subtitle = '', // 环比后端参数
+    visible = false, // 是否显示环比
     order, // 排序字段
     width,
     hint, // ？号图标的提示，有的话就显示出来
@@ -40,24 +39,45 @@ const TableHead: React.FC<IProps> = props => {
 
   // 排序回调
   const mainCallback = () => {
-    mainSort === '' ? callback(titleparams, false) : callback(titleparams, mainSort as boolean);
-    mainSort === '' ? setMainSort(true) : setMainSort(!mainSort);
+    // 升序
+    if (mainSort === '') {
+      callback(titleparams, true);
+      setMainSort(true);
+    } else {
+      callback(titleparams, !mainSort as boolean);
+      setMainSort(!mainSort);
+    }
+
+    // 已经是倒序的话，取消排序
+    if (mainSort === false) {
+      setMainSort('');
+      callback('', false);  
+    }
   };
 
   // 环比排序回调
   const ratioCallback = () => {
-    subSort === '' ? callback(subtitle, false) : callback(subtitle, subSort as boolean);
-    subSort === '' ? setSubSort(true) : setSubSort(!subSort);
+    // 升序
+    if (subSort === '') {
+      callback(subtitle, true);
+      setSubSort(true);
+    } else {
+      callback(subtitle, !subSort as boolean);
+      setSubSort(!subSort);
+    }
+
+    // 已经是倒序的话，取消排序
+    if (subSort === false) {
+      setSubSort('');
+      callback('', false);  
+    }
   };
 
   return (
     <div className={styles.tableHead} style={{
       width: width ? width : 'auto',
     }}>
-      <div className={classnames(
-        styles.oneLayout,
-        titleparams === order ? styles.sorted : '',
-      )} >
+      <div className={classnames(styles.oneLayout )} >
         <p className={classnames(
           styles.title,
           visible ? '' : styles.notShowTwo,
@@ -74,36 +94,27 @@ const TableHead: React.FC<IProps> = props => {
               <QuestionCircleOutlined className={styles.hint}/></Tooltip>
               : null
           }
-          <Iconfont 
-            type="icon-xiangxiajiantou" 
-            className={`${styles.sortIcon} ${mainSort === false ? styles.active : ''}`}
-            style={{
-              display: titleparams === order ? 'inline-block' : 'none',
-            }}
-          />
+          <span className={styles.sortIcons}>
+            <CaretUpOutlined className={classnames(styles.titleIcon, titleparams === order && mainSort ? styles.sorted : '')}/>
+            <CaretDownOutlined className={classnames(styles.titleIcon, titleparams === order && mainSort === false ? styles.sorted : '')}/>
+          </span>
         </p>
       </div>
       <div className={styles.twoLayout}>
         <p 
           style={{
-            display: visible ? 'block' : 'none',
+            display: visible ? 'inline-flex' : 'none',
             textAlign: subalign,
           }}
-          className={classnames(
-            styles.subTitle,
-            subtitle === order ? styles.sorted : ''
-          )}
+          className={classnames( styles.subTitle)}
           title="点击排序"
           onClick={ratioCallback}
         >
           环比 
-          <Iconfont
-            type="icon-xiangxiajiantou" 
-            className={`${styles.sortIcon} ${subSort === false ? styles.active : ''}`}
-            style={{
-              display: subtitle === order ? 'inline-block' : 'none',
-            }}
-          />
+          <span className={styles.sortIcons}>
+            <CaretUpOutlined className={classnames(styles.subIcon, subtitle === order && subSort ? styles.sorted : '')}/>
+            <CaretDownOutlined className={classnames(styles.subIcon, subtitle === order && subSort === false ? styles.sorted : '')}/>
+          </span>
         </p>
       </div>
     </div>

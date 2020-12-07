@@ -75,35 +75,61 @@ const Summary: React.FC<IProps> = (props) => {
   selectCustomCol.push(...other);
 
   // eslint-disable-next-line
-  const [visible, setVisible] = useState<boolean>(false); // SKUK这一列是否显示出来
+  const [skuasin, setSkukAsin] = useState<string>(''); // SKU、父ASIN这两列是否隐藏了
 
   // eslint-disable-next-line
   useEffect(() => { 
-    if (selectCustomCol.indexOf('skuInfo') === -1) { // 隐藏了
-      setVisible(false);
+    /**
+     * 有3种情况
+     * SKU隐藏
+     * 父ASIN隐藏
+     * 或两列都隐藏
+     */
+
+    if (selectCustomCol.indexOf('skuInfo') === -1 && selectCustomCol.indexOf('parentAsin') === -1) {
+      // 两列都隐藏了
+      setSkukAsin('all');
+    } else if (selectCustomCol.indexOf('skuInfo') === -1) {
+      // sku列隐藏了
+      setSkukAsin('sku');
+    } else if (selectCustomCol.indexOf('parentAsin') === -1) {
+      // 父ASIN列隐藏了
+      setSkukAsin('asin');
     } else {
-      setVisible(true);
+      setSkukAsin('');
     }
-  }, [selectCustomCol]);
+  }, [selectCustomCol, childCustomcol]);
 
 
   const summary = [
     {
       dataIndex: 'productCol',
-      component: <td className={classnames(styles.title, styles.productColSummary)} key="0">合计</td>,
+      component: <td className={classnames(
+        styles.title, 
+        styles.productColSummary,
+        skuasin === 'all' ? 'ant-table-cell-fix-left-last' : ''
+      )} key="0">合计</td>,
       fixed: 'left',
     },
     {
       dataIndex: 'skuInfo',
-      component: <td className={classnames(styles.title, styles.skuInfoSummary)} style={{
-        left: visible ? 239 : 0,
+      component: <td className={classnames(
+        styles.title, 
+        styles.skuInfoSummary,
+        skuasin === 'asin' ? 'ant-table-cell-fix-left-last' : ''
+      )} style={{
+        left: (skuasin === 'asin') ? (230) : (skuasin === '' ? 230 : '') , // eslint-disable-line
       }} key="1"></td>,
       fixed: 'left',
     },
     {
       dataIndex: 'parentAsin',
-      component: <td className={classnames(styles.title, styles.parentAsinSummary)} style={{
-        left: visible ? 441 : 239,
+      component: <td className={classnames(
+        styles.title, 
+        styles.parentAsinSummary,
+        skuasin === 'sku' || skuasin === '' ? 'ant-table-cell-fix-left-last' : ''
+      )} style={{
+        left: skuasin === 'sku' ? 230 : (skuasin === '' ? 430 : ''), // eslint-disable-line
       }} key="2"></td>,
       fixed: 'left',
     },
@@ -359,7 +385,7 @@ const Summary: React.FC<IProps> = (props) => {
     },
     {
       dataIndex: 'handle',
-      component: <td className={styles.title} key="45"></td>,
+      component: <td className={classnames(styles.title, styles.handleFixed, 'ant-table-cell-fix-right ant-table-cell-fix-right-first')} key="45"></td>,
     },
   ];
 

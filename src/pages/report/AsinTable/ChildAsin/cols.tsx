@@ -8,7 +8,6 @@ import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import { Link } from 'umi';
 import TableHeadMain from '../components/TableHeadMain';
 import TableHeadTwo from '../components/TableHeadTwo';
-import TableHeadOne from '../components/TableHeadOne';
 import Deliver from '../components/Deliver';
 import Empty from '../components/Empty';
 import Rate from '@/components/Rate';
@@ -133,29 +132,27 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 110,
       fixed: 'left',
       render(val: number) {
-        return <p className={styles.parentAsinCol}>{val}</p>;
+        return <p className={styles.parentAsinCol}>{val ? val : <Empty />}</p>;
       },
     },
     {
       dataIndex: 'reviewNum',
-      title: <TableHeadOne
+      title: <TableHeadMain
         title="Review"
         titleparams="reviewNum"
         callback={sortCallback}
         order={order}
-        align="center"
       />,
       align: 'center',
       width: 80,
     },
     {
       dataIndex: 'reviewScore',
-      title: <TableHeadOne
+      title: <TableHeadMain
         title="评分"
         titleparams="reviewScore"
         callback={sortCallback}
         order={order}
-        align="center"
       />,
       align: 'center',
       width: 80,
@@ -844,10 +841,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
-        width={110}
+        width={130}
       />,
       align: 'center',
-      width: 122,
+      width: 142,
       render(val: number, { skuAdSalesRingRatio, skuAdSalesProportion }: AsinTable.IChildResocds) {
         return (
           <div className={styles.haveProportion}>
@@ -943,10 +940,10 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
-        width={110}
+        width={130}
       />,
       align: 'center',
-      width: 122,
+      width: 142,
       render(val: number, { 
         skuAdOrderQuantityRingRatio, skuAdOrderQuantityProportion,
       }: AsinTable.IChildResocds) {
