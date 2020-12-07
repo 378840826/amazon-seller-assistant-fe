@@ -3,6 +3,7 @@ import { Link } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import styles from './common.less';
 import { competitorListRouter } from '@/utils/routes';
+import ShowData from '@/components/ShowData';
 
 interface IProps {
   data: Message.IFollowDataType;
@@ -41,9 +42,10 @@ const Five: React.FC<IProps> = (props) => {
         <p className={styles.freight}>
           <span className={styles.text}>运费：</span>
           {
-            currency + (
-              data.followSellers[0] && data.followSellers[0].shippingFee ? data.followSellers[0].shippingFee : '0'
-            ) 
+            data.followSellers[0] 
+            && data.followSellers[0].shippingFee ? 
+              <ShowData value={data.followSellers[0].shippingFee} isCurrency />  
+              : <ShowData value={0} isCurrency />
           }
         </p>
       </div>
@@ -55,7 +57,7 @@ const Five: React.FC<IProps> = (props) => {
           详情
           <Iconfont type="icon-zhankai-copy" style={{
             marginLeft: 7,
-            color: '#999',
+            color: '#c1c1c1',
           }}/>
         </Link>
         <span className={styles.date}>{data.catchDate}</span>

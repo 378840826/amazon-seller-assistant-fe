@@ -29,6 +29,10 @@
     font-size: @font-size-sm !important;
   }
 
+  div:global(.ant-table-container) {
+    border-right: 1px  solid #f0f0f0 !important;
+  }
+
   thead th {
     border: 0 !important;
     height: 44px;
@@ -47,13 +51,14 @@
   }
 
   tbody tr:hover td {
-    background-color: #f2f6fb !important;
+    background-color: #fafafa !important;
   }
 
   // 商品列
   .product_col {
     display: flex;
     min-width: 433px;
+    align-items: center;
 
     .img {
       width: 46px;
@@ -157,39 +162,66 @@
 
 // 提醒设定
 .remind {
-  padding-bottom: 23px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  border-radius: @border-radius-base;
 
-  li {
-    background-color: transparent !important;
-    cursor: default;
-  }
+  .switchRow {
+    margin: 0;
+    display: inline-flex;
 
-  .one {
-    padding: 17px 20px 10px;
-  }
-
-  .seller {
-    margin: 0 20px 0;
-  }
-
-  .downlist {
-    margin: 30px 20px 0;
-  }
-
-  .buybox {
-    margin: 30px 20px 0;
-  }
-
-  .dwt {
-    display: inline-block;
-    width: 32px;
-  }
-
-  .foot_btn {
-    margin-top: 25px;
-
-    button.btns {
-      margin-left: 20px;
+    div:global(.ant-form-item-label) {
+      order: 2;
+      margin-left: 14px;
     }
   }
+
+  .twoRow {
+    display: flex;
+    padding: 6px 0 30px 0;
+    margin-left: 43px;
+
+    .checkbox {
+      display: flex;
+      margin-bottom: 0;
+
+      div:global(.ant-form-item-control) {
+        padding-right: 15px;
+      }
+    }
+
+    .inputs {
+      margin-bottom: 0;
+
+      input {
+        width: 196px;
+      }
+    }
+  }
+
+  .threeRow {
+    display: flex;
+  }
+
+  .downList {
+    width: 100px;
+    text-align: center;
+
+    :global(.ant-select-arrow) {
+      color: @text-color-secondary;
+    }
+  }
+
+  .btns {
+    margin-top: 20px;
+
+    button {
+      margin-right: 20px;
+    }
+  }
+}
+
+.globalDownList {
+  text-align: center;
 }

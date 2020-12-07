@@ -16,6 +16,7 @@ import Frequency from './components/Frequency';
 import { CheckOutlined } from '@ant-design/icons';
 import TableNotData from '@/components/TableNotData';
 import SwitchComponent from './components/Switch';
+import Showdata from '@/components/ShowData';
 import {
   Table,
 } from 'antd';
@@ -23,7 +24,7 @@ import {
 // 私
 import styles from './index.less';
 import './global.less';
-import placeholderImg from '@/assets/stamp.png';
+import GoodsImg from '@/pages/components/GoodsImg';
 import { isObject } from '@/utils/huang';
 import { getAmazonAsinUrl } from '@/utils/utils';
 import { competitorHistoryRouter } from '@/utils/routes';
@@ -122,10 +123,11 @@ const Monitor: React.FC = () => {
           fulfillmentChannel,
           price,
           title,
+          imgUrl,
         } = productInfo;
         
         return <div className={styles.product_col}>
-          <img src={placeholderImg} className={styles.img} />
+          <GoodsImg src={imgUrl} className={styles.img} alt="商品" width={46} />
           <div className={styles.details}>
             <a 
               className={styles.title} 
@@ -141,7 +143,7 @@ const Monitor: React.FC = () => {
               <span className={styles.sku}>{asin}</span>
               <p className={styles.right}>
                 <span className={styles.price}>
-                  {currentShop.currency}{price}
+                  <Showdata value={price} isCurrency/>
                 </span>
                 <Express method={fulfillmentChannel} style={{
                   paddingLeft: 10,

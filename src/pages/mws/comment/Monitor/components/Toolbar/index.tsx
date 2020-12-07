@@ -269,6 +269,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
           value={reviewerName}
           onChange={changeReviewerName}
           onPressEnter={InputDownEnter}
+          allowClear
         />
       </div>
 
@@ -290,20 +291,21 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
           onChange={changeAsin}
           onPressEnter={InputDownEnter}
           maxLength={10}
+          allowClear
         />
       </div>
 
       <div className={styles.layout_four_div}>
         <span className={styles.text}>评分：</span>
         <Input
-          placeholder="min"
+          placeholder="0"
           value={scopeMin}
           onChange={copeMinChange}
           onPressEnter={InputDownEnter}
         />
         <span className={styles.line}></span>
         <Input 
-          placeholder="max"
+          placeholder="5.0"
           value={scopeMax}
           onChange={copeMaxChange}
           onPressEnter={InputDownEnter}
@@ -313,12 +315,14 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
       <div className={styles.layout_eight_div}>
         <span className={styles.text}>Review：</span>
         <Input
+          placeholder="min"
           value={reviewsNumMin}
           onChange={changeReviewMin}
           onPressEnter={InputDownEnter}
         />
         <span className={styles.line}></span>
         <Input
+          placeholder="max"
           value={reviewsNumMax}
           onChange={ changeReviewMax }
           onPressEnter={InputDownEnter}

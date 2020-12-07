@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-05-22 09:31:45
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\mws\order\List\index.tsx
  * 订单列表
  * 
@@ -16,22 +16,24 @@ import styles from './index.less';
 import { Table, message } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import { connect } from 'dva';
-import { useDispatch, useLocation, useSelector } from 'umi';
+import { useDispatch, useLocation, useSelector, Link } from 'umi';
 import { Iconfont, getAmazonBaseUrl } from '@/utils/utils';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-import imgUrl from '@/assets/stamp.png';
+import GoodsImg from '@/pages/components/GoodsImg';
 import Toolbar from './components/Toolbar';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import { getRangeDate } from '@/utils/huang';
+import { asinPandectBaseRouter } from '@/utils/routes';
+import ShowData from '@/components/ShowData';
 
 let hisrotyRequest = {};// 保存所有筛选信息
 const OrderList: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation() as MwsOrderList.ILocation;
-  const { start: startDate, end: endDate } = getRangeDate(7, false);
+  const { start: startDate, end: endDate } = getRangeDate(130, false);
   const [startTime] = useState<string>(startDate); // 日历默认开始日期
   const [endTime] = useState<string>(endDate); // 日历默认结束日期
   const [tableLoadingStatus, setTableLoadingStatus] = useState<boolean>(true); // 表格是否显示loading
@@ -206,6 +208,7 @@ const OrderList: React.FC = () => {
     pageSize,
     current: pageCurrent,
     showQuickJumper: true, // 快速跳转到某一页
+    showSizeChanger: true,
     showTotal: (total: number) => `共 ${total} 个`,
     onChange(current: number, size: number | undefined){
       console.log(current, pageSize);
@@ -247,9 +250,15 @@ const OrderList: React.FC = () => {
                       rowIndex === 0 ? '' : <p className={styles.empty} data-index={rowIndex}></p>
                     }
                     <header className={`clearfix ${styles.order_head}`}>
-                      <span>下单时间：{row.purchaseDate}</span>
-                      <span>订单ID：{row.orderId as string}</span>
-                      <span>{row.isBusinessOrder ? 'B2B' : ''}</span>
+                      <span className={styles.downTime}>
+                        <span className={styles.text}>下单时间：</span>
+                        {row.purchaseDate}
+                      </span>
+                      <span className={styles.orderId}>
+                        <span className={styles.text}>订单ID：</span>
+                        {row.orderId as string}
+                      </span>
+                      <span className={styles.b2b}>{row.isBusinessOrder ? 'B2B' : ''}</span>
                     </header>
                     <Table 
                       pagination={false}
@@ -271,7 +280,7 @@ const OrderList: React.FC = () => {
                             const url = getAmazonBaseUrl(site as 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT');
                             return (
                               <div className={`${styles.table_product_col} clearfix`}>
-                                <img src={rows.imgUrl || imgUrl } alt=""/>
+                                <GoodsImg src={rows.imgUrl} alt="商品" className={styles.img} width={68} />
                                 <div className={`${styles.datails}`}>
                                   <a href={`${url}/dp/${rows.asin}`} 
                                     rel="noopener noreferrer" 
@@ -279,19 +288,26 @@ const OrderList: React.FC = () => {
                                     title={rows.productName}
                                     className={`${styles.title} line-animation`}>
                                     <Iconfont type="icon-lianjie" style={{
-                                      fontSize: 16,
-                                      color: '#555',
+                                      fontSize: 14,
+                                      color: '#888',
                                       marginRight: 2,
                                     }} />
                                     {rows.productName || ''}
                                   </a>
                                   <p>
                                     <span>{rows.sku || ''}</span>
-                                    <span>{unitPrice ? currentShop.currency + unitPrice : '—' }</span>
+                                    <span><ShowData value={unitPrice} isCurrency /></span>
                                   </p>
                                   <p>
-                                    <span>{rows.asin || ''}</span>
-                                    <span>X{rows.quantity || 0}</span>
+                                    <span>
+                                      <Link 
+                                        to={`${asinPandectBaseRouter}?asin=${rows.asin}`} 
+                                        className={styles.asin}
+                                      >
+                                        {rows.asin || ''}
+                                      </Link>
+                                    </span>
+                                    <span>x{rows.quantity || 0}</span>
                                   </p>
                                 </div>
                               </div>
@@ -304,34 +320,24 @@ const OrderList: React.FC = () => {
                           render(value, rows: MwsOrderList.IRowChildDataType) {
                             return <div className={styles.table_cost_info}>
                               <p className={styles.p_one_and_two}>
-                                <span>价格合计：</span>
-                                <span>{currentShop.currency + (rows.price || 0)}</span>
+                                <span className={styles.text}>价格合计：</span>
                                 <span>
-                                  （优惠 
-                                  {currentShop.currency}
-                                  {rows.itemPromotionDiscount || 0}
-                                  ）
+                                  <ShowData value={rows.price} isCurrency />
+                                </span>
+                                <span>
+                                  （优惠 <ShowData value={rows.itemPromotionDiscount} isCurrency />）
                                 </span>
                               </p>
                               <p className={styles.p_one_and_two}>
-                                <span>配送费：</span>
+                                <span className={styles.text}>配送费：</span>
+                                <span><ShowData value={rows.shippingPrice} isCurrency /></span>
                                 <span>
-                                  {
-                                    currentShop.currency 
-                                    + (rows.shippingPrice || 0)
-                                  }
-                                </span>
-                                <span>
-                                  （优惠 
-                                  {
-                                    currentShop.currency 
-                                    + (rows.shipPromotionDiscount || 0)
-                                  }）
+                                  （优惠 <ShowData value={rows.shipPromotionDiscount} isCurrency />）
                                 </span>
                               </p>
                               <p className={styles.p_three}>
-                                <span>小计：</span>
-                                <span>{currentShop.currency}{rows.subTotal}</span>
+                                <span className={styles.text}>小计：</span>
+                                <span><ShowData value={rows.subTotal} isCurrency /></span>
                               </p>
                             </div>;
                           },
@@ -391,7 +397,7 @@ const OrderList: React.FC = () => {
                             }
                             return {
                               children: <div className={styles.money}>
-                                {currentShop.currency}{row.actuallyPaid || 0}
+                                <ShowData value={row.actuallyPaid} isCurrency />
                               </div>,
                               props: {
                                 colSpan: 1,

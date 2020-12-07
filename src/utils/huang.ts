@@ -2,7 +2,6 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 11:14:36
- * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\utils\huang.ts
  */
 
@@ -164,6 +163,7 @@ export function getRangeDate(query: string|number, isMoment = true, date = {}) {
  * @param decimals 保留几位小数
  * @param thousandsSep  千分位符号
  * @param decPoint 小数点符号
+ * @param zeroIsSave 保留的小数位为0是否显示 如 1,255.000 true=1,255.000 false=1,255
  */
 // eslint-disable-next-line
 export function moneyFormat(
@@ -171,6 +171,7 @@ export function moneyFormat(
   decimals = 0,
   thousandsSep = ',',
   decPoint = '.',
+  zeroIsSave = true,
 ) {
 
   const num = String(dataNumber).replace(/[^0-9+-Ee.]/g, '');
@@ -195,7 +196,22 @@ export function moneyFormat(
     s[1] = s[1] || '';
     s[1] += new Array(prec - s[1].length + 1).join('0');
   }
+
+  // 去掉0
+  if (zeroIsSave === false && decimals > 0 && Number(s[1]) === 0) {
+    s.splice(1, 1);
+  }
+  
   return s.join(dec);
+}
+
+/**
+ * 转换成指定位数的数字
+ * @param {Number|String} value {}
+ * @param {Number} index 
+ */
+export function toIndexFixed(value: number|string, index = 2): string {
+  return new Number(value).toFixed(index);
 }
 
 
@@ -206,3 +222,4 @@ export function moneyFormat(
 export function isObject(param: any) { // eslint-disable-line
   return Object.prototype.toString.call(param) === '[object Object]';
 }
+

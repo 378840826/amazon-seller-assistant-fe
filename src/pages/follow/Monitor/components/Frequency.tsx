@@ -4,7 +4,6 @@ import { frequencyList } from '../config';
 import { useSelector, useDispatch } from 'umi';
 import RangeTime from './RangeTime';
 import { isObject } from '@/utils/huang';
-import moment from 'moment';
 import {
   Button,
   Spin,
@@ -52,6 +51,11 @@ const Frequency: React.FC<IProps> = (props) => {
     if (Number(currentShop.id) === -1) {
       return;
     }
+
+    if (frequency === false) {
+      return;
+    }
+    setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'tomMonitor/getFrequency',
@@ -64,6 +68,7 @@ const Frequency: React.FC<IProps> = (props) => {
         reject,
       });
     }).then( datas => {
+      setLoading(false);
       const { data } = datas as {
         data: {
           startTime: string;
@@ -72,7 +77,6 @@ const Frequency: React.FC<IProps> = (props) => {
         };
       };
       
-      setLoading(false);
       if (isObject(data)) {
         setStartTime(data.startTime || '18:00');
         setEndTime(data.endTime || '9:00');
@@ -84,7 +88,7 @@ const Frequency: React.FC<IProps> = (props) => {
       console.error(err);
       setLoading(false);
     });
-  }, [dispatch, currentShop]);
+  }, [dispatch, currentShop, frequency]);
 
   // 修改监控频率
   const updateFrequency = () => {
@@ -119,13 +123,6 @@ const Frequency: React.FC<IProps> = (props) => {
       console.error(err);
       setLoading(false);
     });
-  };
-
-  // 时间范围改变的回调
-  // eslint-disable-next-line
-  const handleRangeChange = (time: any) => {
-    setStartTime(moment(time[0]).format('HH:mm'));
-    setEndTime(moment(time[1]).format('HH:mm'));
   };
 
   // 监控提醒设定组件
@@ -202,7 +199,7 @@ const Frequency: React.FC<IProps> = (props) => {
         trigger={['click']} 
         visible={frequency}
       >
-        <Button onClick={() => setFrequency(!frequency)}>频率设定</Button>
+        <Button onClick={() => setFrequency(!frequency)}>监控频率设定</Button>
       </Dropdown>
     </div>
   );

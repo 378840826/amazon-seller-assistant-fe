@@ -15,6 +15,7 @@ import { handleDouFu, handleRange, tooltipPosition, douFuDefaultList } from './f
 import { storage } from '@/utils/utils';
 import echarts from 'echarts';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import ShowData from '@/components/ShowData';
 
 import { 
   Table, 
@@ -92,7 +93,6 @@ const Order: React.FC = () => {
         StoreId,
       },
     };
-
     if (dateRangeItem === 'week' || dateRangeItem === 'month') {
       req.timeMethod = dateRangeItem.toUpperCase();
       const { startDate, endDate } = storage.get(`${asinOrderDateRange}_date`);
@@ -393,12 +393,7 @@ const Order: React.FC = () => {
       dataIndex: 'sales',
       align: 'right',
       render(value: number) {
-        if (value === null) {
-          return <span style={{
-            color: '#888',
-          }}>—</span>;
-        }
-        return `${currency}${value}`;
+        return <ShowData value={value} isCurrency fillZero/>;
       },
     },
     {
@@ -445,12 +440,7 @@ const Order: React.FC = () => {
       dataIndex: 'avgPrice',
       align: 'right',
       render(value: number) {
-        if (value === null) {
-          return <span style={{
-            color: '#888',
-          }}>—</span>;
-        }
-        return `${currency}${value}`;
+        return <ShowData value={value} isCurrency fillZero/>;
       },
     },
     {
@@ -458,12 +448,7 @@ const Order: React.FC = () => {
       dataIndex: 'pct',
       align: 'right',
       render(value: number) {
-        if (value === null) {
-          return <span style={{
-            color: '#888',
-          }}>—</span>;
-        }
-        return `${currency}${value}`;
+        return <ShowData value={value} isCurrency fillZero/>;
       },
     },
     {
@@ -715,13 +700,16 @@ const Order: React.FC = () => {
         <div className={styles.lineCharts_box}>
           <Spin spinning={lcLoading}>
             <header>
-              <Checkbox.Group 
-                options={lineSkus}
-                value={checkedSkus}
-                onChange={handleCheckedSku}
-                style={{
-                  margin: '5px 10px 0 0',
-                }}></Checkbox.Group>
+              {
+                // 应产品要求，只有勾选了销量额、销量、订单量的折线图时，才显示sku复选框
+                attributes.indexOf('sales') > -1 || attributes.indexOf('orderQuantity') > -1 || attributes.indexOf('salesQuantity') > -1 ? <Checkbox.Group 
+                  options={lineSkus}
+                  value={checkedSkus}
+                  onChange={handleCheckedSku}
+                  style={{
+                    margin: '5px 10px 0 0',
+                  }}></Checkbox.Group> : ''
+              }
               {
                 homochronousvisible ? 
                   <Checkbox checked={showWeekMonth} 

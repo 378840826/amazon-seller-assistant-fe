@@ -3,18 +3,23 @@
  */
 import React from 'react';
 import styles from './index.less';
+import classnames from 'classnames';
 
 interface IProps {
+  className?: React.CSSProperties;
   src: string;
   alt?: string;
   width: number | string;
 }
 
 const Img: React.FC<IProps> = (props) => {
-  const { src, alt, width } = props;
+  const { src, alt, width, className } = props;
 
   return (
-    <div className={styles.container} style={{ width: width, height: width }}>
+    <div 
+      className={classnames(styles.container, className)} 
+      style={{ width: width, height: width }}
+    >
       <img
         src={src}
         alt={alt}
