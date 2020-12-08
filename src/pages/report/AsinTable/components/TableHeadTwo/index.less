@@ -1,0 +1,129 @@
+.tableHead {
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
+  max-height: 44px;
+  margin: 0 6px;
+
+  p {
+    height: 22px;
+    line-height: 22px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sorted {
+    color: @primary-color !important;
+  }
+
+  .sortIcon {
+    color: @text-color-secondary;
+    transition: all 0.3s;
+    font-size: @font-size-sm;
+    margin-left: 5px;
+  }
+
+  .sortIcon.active {
+    transform: rotate(180deg);
+  }
+
+  .oneLayout {
+    cursor: pointer;
+
+    .title {
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+
+      .hint {
+        color: @text-color-secondary;
+        font-size: @font-size-sm;
+        margin: 0 0 0 5px;
+        transition: 0.3 all;
+
+        &:hover {
+          color: @warning-color;
+        }
+      }
+    }
+
+    .sortIcons {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      margin: -2px 0 0 4px;
+      color: #bfbfbf;
+
+      .titleIcon {
+        font-size: 11px;
+        height: 8px;
+        display: inline-block;
+        color: inherit;
+        font-style: normal;
+        line-height: 0;
+        text-align: center;
+        text-transform: none;
+        vertical-align: -0.125em;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+
+        &:last-child {
+          top: -1px;
+        }
+      }
+    }
+  }
+
+  .twoLayout {
+    cursor: pointer;
+    display: flex;
+
+    .subTitle {
+      width: 50%;
+      flex: 0 0 auto;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid #d3d3dd;
+
+      // 环比
+      &.ratio {
+        border-right: 1px solid #d3d3dd;
+      }
+
+      // 不显示环比的样式
+      &.hideRatio {
+        width: 100%;
+      }
+    }
+
+    .sortIcons {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      margin: -2px 0 0 4px;
+      color: #bfbfbf;
+
+      .subIcon {
+        font-size: 11px;
+        height: 8px;
+        display: inline-block;
+        color: inherit;
+        font-style: normal;
+        line-height: 0;
+        text-align: center;
+        text-transform: none;
+        vertical-align: -0.125em;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+
+        &:last-child {
+          top: -1px;
+        }
+      }
+    }
+  }
+}

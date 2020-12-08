@@ -170,7 +170,7 @@ export default [
     path: '/report',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: 'ASIN报表', path: '/report/asin-overview', component: './asinTable' },
+      { title: 'ASIN报表', path: '/report/asin-overview', component: './report/AsinTable' },
       { title: 'Business Rport导入', path: '/report/import', component: './businessRport/Import' },
       { title: 'Business Rport详情', path: '/report/details', component: './businessRport/Details' },
     ],
@@ -247,13 +247,6 @@ export default [
       // 重定向
       { path: '/competitor', redirect: '/competitor/monitor' },
     ],
-  },
-
-   //子账号
-   {
-    path:'/asinTable',
-    component: '../layouts/BasicLayout',
-    routes:[{ path: '/asinTable', component: './asinTable', title: 'dddddd' }]
   },
 
   // 首页

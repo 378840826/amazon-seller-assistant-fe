@@ -9,7 +9,7 @@ import classnames from 'classnames';
 // 组件
 import { Link } from 'umi';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
-import TableHeadOne from '../components/TableHeadOne';
+import TableHeadMain from '../components/TableHeadMain';
 import TableHeadTwo from '../components/TableHeadTwo';
 import Deliver from '../components/Deliver';
 import Empty from '../components/Empty';
@@ -46,12 +46,6 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   }
   selectCustomCol.push(...other);
  
-  const style = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  };
-
-
   // 子asin
   const childasinCol = {
     width: colsWidth.asin,
@@ -78,12 +72,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
       styles.totalSales,
       commonStyles.tdTextRight,
     ),
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="总销售额"
       titleparams="totalSales"
       callback={sortCallback}
       order={order}
-      style={style as React.CSSProperties}
     />,
     dataIndex: 'totalSales',
     align: 'right',
@@ -92,7 +85,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 总订单量
   const totalOrderQuantityCol = {
     className: styles.totalOrderQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="总订单量"
       titleparams="totalOrderQuantity"
       callback={sortCallback}
@@ -105,7 +98,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 总销量
   const totalSalesQuantityCol = {
     className: styles.totalSalesQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="总销量"
       titleparams="totalSalesQuantity"
       callback={sortCallback}
@@ -118,7 +111,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 回评率
   const replyReviewRateCol = {
     className: styles.replyReviewRate,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="回评率"
       titleparams="replyReviewRate"
       callback={sortCallback}
@@ -135,12 +128,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
       styles.profit,
       commonStyles.tdTextRight,
     ),
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="利润"
       titleparams="profit"
       callback={sortCallback}
       order={order}
-      style={style as React.CSSProperties}
     />,
     dataIndex: 'profit',
     align: 'right',
@@ -150,7 +142,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 利润率
   const profitRateCol = {
     className: styles.profitRate,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="利润率"
       titleparams="profitRate"
       callback={sortCallback}
@@ -163,7 +155,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 销量/订单量
   const salesQuantityExceptOrderQuantityCol = {
     className: styles.salesQuantityExceptOrderQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="销量/订单量"
       titleparams="salesQuantityExceptOrderQuantity"
       callback={sortCallback}
@@ -179,12 +171,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
       styles.avgSellingPrice,
       commonStyles.tdTextRight,
     ),
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="平均售价"
       titleparams="avgSellingPrice"
       callback={sortCallback}
       order={order}
-      style={style as React.CSSProperties}
     />,
     dataIndex: 'avgSellingPrice',
     align: 'right',
@@ -196,12 +187,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
       styles.avgCustomerPrice,
       commonStyles.tdTextRight,
     ),
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="平均客单价"
       titleparams="avgCustomerPrice"
       callback={sortCallback}
       order={order}
-      style={style as React.CSSProperties}
     />,
     dataIndex: 'avgCustomerPrice',
     align: 'right',
@@ -210,7 +200,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 优惠订单
   const preferentialOrderQuantityCol = {
     className: styles.preferentialOrderQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="优惠订单"
       titleparams="preferentialOrderQuantity"
       callback={sortCallback}
@@ -224,7 +214,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 关联销售
   const associateSalesCol = {
     className: styles.associateSales,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="关联销售"
       titleparams="associateSales"
       callback={sortCallback}
@@ -238,7 +228,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // PageView
   const pageViewCol = {
     className: styles.pageView,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="PageView"
       titleparams="pageView"
       callback={sortCallback}
@@ -251,7 +241,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // Session
   const sessionCol = {
     className: styles.session,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="Session"
       titleparams="session"
       callback={sortCallback}
@@ -264,7 +254,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // PageView/Session
   const pageViewExceptSessionCol = {
     className: styles.pageViewExceptSession,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="PageView/Session"
       titleparams="pageViewExceptSession"
       callback={sortCallback}
@@ -277,7 +267,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 转化率
   const conversionsRateCol = {
     className: styles.conversionsRate,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="转化率"
       titleparams="conversionsRate"
       callback={sortCallback}
@@ -290,7 +280,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 退货量
   const returnQuantityCol = {
     className: styles.returnQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="退货量"
       titleparams="returnQuantity"
       callback={sortCallback}
@@ -303,7 +293,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // 退货率
   const returnRateCol = {
     className: styles.returnRate,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="退货率"
       titleparams="returnRate"
       callback={sortCallback}
@@ -332,7 +322,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B销量
   const b2bSalesQuantity = {
     className: styles.b2bSalesQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="B2B销量"
       titleparams="b2bSalesQuantity"
       callback={sortCallback}
@@ -345,7 +335,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B订单量
   const b2bOrderQuantityCol = {
     className: styles.b2bOrderQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="B2B订单量"
       titleparams="b2bOrderQuantity"
       callback={sortCallback}
@@ -358,7 +348,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B销量/订单量
   const b2bSalesQuantityExceptOrderQuantityCol = {
     className: styles.b2bSalesQuantityExceptOrderQuantity,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="B2B销量/订单量"
       titleparams="b2bSalesQuantityExceptOrderQuantity"
       callback={sortCallback}
@@ -371,7 +361,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // B2B平均售价
   const b2bAvgSellingPriceCol = {
     className: styles.b2bAvgSellingPrice,
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="B2B平均售价"
       titleparams="b2bAvgSellingPrice"
       callback={sortCallback}
@@ -387,12 +377,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
       styles.b2bAvgCustomerPrice,
       commonStyles.tdTextRight,
     ),
-    title: <TableHeadOne
+    title: <TableHeadMain
       title="B2B平均客单价"
       titleparams="b2bAvgCustomerPrice"
       callback={sortCallback}
       order={order}
-      style={style as React.CSSProperties}
     />,
     dataIndex: 'b2bAvgCustomerPrice',
     align: 'right',
