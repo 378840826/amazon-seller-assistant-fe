@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './index.less';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, strToMoneyStr } from '@/utils/utils';
 import classnames from 'classnames';
 import {
   Form,
@@ -76,6 +76,11 @@ const HavaOpponent: React.FC<IProps> = props => {
     }
   };
 
+  // 限制输入
+  const limitedInput = (value: string) => {
+    return strToMoneyStr(value);
+  };
+
   return <Form
     onValuesChange={onValuesChange}
     name={`HoldCart${index}`}
@@ -134,7 +139,7 @@ const HavaOpponent: React.FC<IProps> = props => {
             <Option value="percent" >%</Option>;
           </Select>
         </Item>
-        <Item name={['value']}>
+        <Item name={['value']} normalize={limitedInput}>
           <Input />
         </Item>
         <div className={styles.arrows}>

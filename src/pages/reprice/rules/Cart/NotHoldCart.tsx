@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, strToMoneyStr } from '@/utils/utils';
 import classnames from 'classnames';
 import {
   Form,
@@ -46,12 +46,13 @@ const HavaOpponent: React.FC<IProps> = props => {
     const initValue = initValues;
     const a = JSON.stringify(initValues) as string;
     const callbackInit = JSON.parse(a) as Rules.IHaveTypeData;
-    if (initValues.operator !== cartPriceList[3].value) {
-      initValue.myPrice = cartCurrentPrint[0].value;
+    if (initValues.operator === cartPriceList[3].value) {
       delete callbackInit.myPrice;
-    } else {
       setOperator(cartPriceList[3].value);
+    } else {
+      initValue.myPrice = initValues.myPrice;
     }
+
 
     if (initValues.action !== cartsmmr[3].value) {
       initValue.actionOperator = addSubtract[0].value;
@@ -76,7 +77,7 @@ const HavaOpponent: React.FC<IProps> = props => {
     setOperator(values.operator);
     setAction(values.action);
 
-    if (values.operator !== cartPriceList[3].value) {
+    if (values.operator === cartPriceList[3].value) {
       delete values.myPrice;
     }
     
@@ -116,6 +117,12 @@ const HavaOpponent: React.FC<IProps> = props => {
       move(index, 'down', 'haveOpponent');
     }
   };
+
+  // 限制输入
+  const limitedInput = (value: string) => {
+    return strToMoneyStr(value);
+  };
+
 
   return <Form
     form={form}
@@ -159,7 +166,7 @@ const HavaOpponent: React.FC<IProps> = props => {
           </Select>
         </Item>
         <div className={classnames(
-          operator === cartPriceList[3].value ? '' : 'none',
+          operator !== cartPriceList[3].value ? '' : 'none',
           styles.myPricedownListBox
         )}>
           <span>我的</span>
@@ -204,7 +211,7 @@ const HavaOpponent: React.FC<IProps> = props => {
               <Option value="percent" >%</Option>;
             </Select>
           </Item>
-          <Item name={['value']}>
+          <Item name={['value']} normalize={limitedInput}>
             <Input />
           </Item>
         </div>

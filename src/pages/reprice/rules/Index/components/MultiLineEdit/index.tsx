@@ -2,7 +2,7 @@
  * 多行编辑框
  * 可换行
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './index.less';
 import './iconfont.less';
 import {
@@ -33,6 +33,15 @@ const MultilLineEdit: React.FC<IProps> = props => {
   const [editValue, setEditValue] = useState<string>(defaultValue); // 编辑框的值
   const [visible, setVisible] = useState<boolean>(false); // 是否显示输入框
   const [loading, setLoading] = useState<boolean>(false); // 确定按钮的loading
+
+  const boxRef = useRef(null);
+
+
+  useEffect(() => {
+    window.addEventListener('click', () => {
+      setVisible(false);
+    });
+  }, [boxRef]);
 
   /**
    * 
@@ -94,7 +103,8 @@ const MultilLineEdit: React.FC<IProps> = props => {
     fontSize: 20,
   }} spin />;
 
-  return <div className={styles.editBox}>
+  return <div className={styles.editBox} 
+    onClick={e => e.nativeEvent.stopImmediatePropagation()} ref={boxRef}>
     <div className={classnames(
       styles.showBox,
       visible ? 'none' : '',

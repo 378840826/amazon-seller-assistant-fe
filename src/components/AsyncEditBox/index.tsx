@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
 import classnames from 'classnames';
@@ -40,9 +40,19 @@ export default (props: IProps) => {
   const [editValue, setEditValue] = useState<string>(value); // 编辑框的值
   const [showValue, setShowValue] = useState<string>(value); // 默认显示的值
 
+  const boxRef = useRef(null);
+
   message.config({
     maxCount: 1,
   });
+
+
+  useEffect(() => {
+    window.addEventListener('click', () => {
+      setVisible(true);
+    });
+  }, [boxRef]);
+
 
   // 点击编辑
   const clickEdit = () => {
@@ -73,6 +83,11 @@ export default (props: IProps) => {
 
   // 确定修改
   const onOkHandle = () => {
+    if (showValue === editValue) {
+      message.error('没修改任何值');
+      return;
+    }
+
     setLoading(true);
     onOk(editValue).then(isSuccess => {
       setLoading(false);
@@ -103,7 +118,7 @@ export default (props: IProps) => {
       className, 
       loading ? 'h-disabled' : '',
     )
-  } style={style}>
+  } style={style} ref={boxRef} onClick={e => e.nativeEvent.stopImmediatePropagation()}>
     <div className={styles.editBox} style={{
       display: visible ? 'flex' : 'none',
     }}>
@@ -142,6 +157,7 @@ export default (props: IProps) => {
             styles.btn,
             loading ? styles.loadingBox : '',
             loading ? 'h-disabled' : '',
+            showValue === editValue ? styles.disable : '',
             'h-async-editbox-confire'
           )
         } onClick={onOkHandle}>
