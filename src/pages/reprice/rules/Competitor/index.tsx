@@ -137,14 +137,18 @@ const AddSales: React.FC<IProps> = () => {
       return;
     }
 
+    data.description = data.description ? data.description : '';
+
     if (!data.condition.value) {
       message.error('输入数值不能为空');
       return;
     }
 
-    if (safeData.stockLeValue === '' || safeData.stockLeValue === undefined) {
-      message.error('安全设定值不能为空');
-      return;
+    if (
+      safeData.stockLeValue === undefined
+      || safeData.stockLeValue === null
+    ) {
+      safeData.stockLeValue = '';
     }
 
     // 修改

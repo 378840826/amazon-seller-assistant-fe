@@ -300,6 +300,7 @@ const Rules: React.FC = () => {
           defaultValue={value} 
           className={styles.tableSelect} 
           bordered={false} onChange={val => setTiming(val, id)}
+          dropdownClassName={styles.globalSelect}
         >
           <Option value="20">每20分钟</Option>
           <Option value="60">每60分钟</Option>

@@ -208,25 +208,28 @@ const AddSales: React.FC = () => {
     const conditions = transitionArr(conditionsData);
     let flag = true; // 条件是否正确条件
 
-    if (ruleName === '' || ruleName === undefined) {
-      message.error('规则名称不能为空');
-      return;
-    }
+    // if (ruleName === '' || ruleName === undefined) {
+    //   message.error('规则名称不能为空');
+    //   return;
+    // }
 
     // 条件组处理
     for (let i = 0; i < conditions.length; i++) {
       const item = conditions[i];
       const basis = item.basis;
       const operator = item.operator;
+      const type = item.type;
+      const rateBasis = item.rateBasis;
 
       if (operator) {
+        // 输入框不能为空的验证
         if (
           operator === mmsrList[0].value
           || operator === mmsrList[1].value
           || operator === mmsrList[3].value
         ) {
           if (basis === '' || basis === undefined) {
-            message.error('输入值不能为空111');
+            message.error('输入值不能为空');
             flag = false;
             break;
           }
@@ -241,13 +244,30 @@ const AddSales: React.FC = () => {
             break;
           }
         }
-        
-        // 环比 &&  退过转化率 - 环比  - 不变  的验证
-        if (operator === mmsrList[2].value && item.rateTrend !== upDownUnchange[2].value) {
-          if (item.rateBasis === '' || item.rateBasis === undefined) {
-            message.error('输入值不能为空222');
-            flag = false;
-            break;
+
+        // 订单量、销量、session 环比的判断
+        if (
+          type === salesConditionTypes[0].value
+          || type === salesConditionTypes[1].value
+          || type === salesConditionTypes[2].value
+        ) {
+          if (operator === mmsrList[2].value 
+            && (item.rateTrend === oosmmRates[0].value || item.rateTrend === oosmmRates[2].value)
+          ) {
+            if (rateBasis === '' || rateBasis === undefined) {
+              message.error('输入值不能为空');
+              flag = false;
+              break;
+            }
+          }
+        } else if (type === salesConditionTypes[4].value) {
+          // 转化率 -  环比  - 不变  的验证
+          if (operator === mmsrList[2].value && item.rateTrend !== upDownUnchange[2].value) {
+            if (rateBasis === '' || rateBasis === undefined) {
+              message.error('输入值不能为空');
+              flag = false;
+              break;
+            }
           }
         }
       }
@@ -261,6 +281,7 @@ const AddSales: React.FC = () => {
         }
       }
 
+      // 调价操作
       if (
         item.action 
         && (
@@ -280,13 +301,15 @@ const AddSales: React.FC = () => {
       return;
     }
 
-    if (safeData.stockLeValue === '' || safeData.stockLeValue === undefined) {
-      message.error('安全设定值不能为空');
-      return;
+    if (
+      safeData.stockLeValue === undefined
+      || safeData.stockLeValue === null
+    ) {
+      safeData.stockLeValue = '';
     }
 
     data.name = ruleName;
-    data.description = form.getFieldValue('description');
+    data.description = form.getFieldValue('description') || '';
     data.conditions = conditions;
     data.safe = safeData;
     data.timing = timingData;

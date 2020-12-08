@@ -434,11 +434,13 @@ const AddSales: React.FC = () => {
       return;
     }
 
+    data.description = data.description ? data.description : '';
+
     data.self.unonly = transitionArr(haveOpponentData);
     for (let i = 0; i < data.self.unonly.length; i++) {
       if (data.self.unonly[i].action === cartsmmr[3].value) {
         if (!data.self.unonly[i].value) {
-          message.error('此数值不能为空1');
+          message.error('此数值不能为空');
           return;
         }
       }
@@ -447,7 +449,7 @@ const AddSales: React.FC = () => {
     data.other = transitionArr(holdCartData);
     for (let i = 0; i < data.other.length; i++) {
       if (!data.other[i].value) {
-        message.error('此数值不能为空2');
+        message.error('此数值不能为空');
         return;
       }
     }
@@ -456,7 +458,7 @@ const AddSales: React.FC = () => {
     for (let i = 0; i < data.nobody.length; i++) {
       if (data.nobody[i].action === cartsmmr[3].value) {
         if (!data.nobody[i].value) {
-          message.error('此数值不能为空3');
+          message.error('此数值不能为空');
           return;
         }
       }
@@ -470,9 +472,11 @@ const AddSales: React.FC = () => {
       delete data.competitor.productType;
     }
 
-    if (safeData.stockLeValue === '' || safeData.stockLeValue === undefined) {
-      message.error('安全设定值不能为空');
-      return;
+    if (
+      safeData.stockLeValue === undefined
+      || safeData.stockLeValue === null
+    ) {
+      safeData.stockLeValue = '';
     }
 
     data.safe = safeData;

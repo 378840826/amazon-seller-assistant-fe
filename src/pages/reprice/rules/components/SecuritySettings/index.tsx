@@ -29,6 +29,15 @@ const SecuritySettings: React.FC<IProps> = props => {
     if (!isEmptyObj(initValues)) {
       form.setFieldsValue(initValues);
       getDataFn(initValues);
+    } else {
+      const initvalues = {
+        stockLeValue: '',
+        stockLeAction: 'unchange',
+        gtMaxAction: 'max',
+        ltMinAction: 'min',
+      };
+      form.setFieldsValue(initvalues);
+      getDataFn(initvalues);
     }
   }, [form, initValues, getDataFn]);
 

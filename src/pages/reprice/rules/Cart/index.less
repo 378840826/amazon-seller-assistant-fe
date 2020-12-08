@@ -93,7 +93,7 @@
       }
 
       span {
-        padding-left: 10px;
+        padding-left: 8px;
       }
 
       &:hover {
@@ -234,15 +234,14 @@
           }
 
           .up {
-            top: 0;
-            border-radius: 0 @border-radius-base 0 0;
+            transform: rotate(180deg);
+            border-radius: 0  0 0 @border-radius-base;
           }
 
           .down {
             bottom: 0;
-            border-bottom: 0;
-            transform: rotate(180deg);
-            border-radius: 0 0 @border-radius-base 0;
+            border-top: 0;
+            border-radius: 0 0 @border-radius-base  0;
           }
         }
 

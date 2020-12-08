@@ -42,6 +42,10 @@ main.table {
     }
 
     tr:hover {
+      td {
+        background-color: @simple-table-header-bg !important;
+      }
+
       i:global(.update-icon) {
         opacity: 1;
       }
@@ -54,6 +58,10 @@ main.table {
 
   .typeCol {
     padding-left: 70px;
+  }
+
+  .tableSelect {
+    font-size: @font-size-sm;
   }
 
   // 操作列
@@ -79,11 +87,11 @@ main.table {
       color: @btn-text-color;
 
       &.disabled {
-        color: @text-color-secondary;
+        color: #72e1d2;
         cursor: not-allowed;
 
         &:hover {
-          color: @text-color-secondary;
+          color: #72e1d2;
         }
       }
 
@@ -92,4 +100,8 @@ main.table {
       }
     }
   }
+}
+
+.globalSelect {
+  text-align: center;
 }
