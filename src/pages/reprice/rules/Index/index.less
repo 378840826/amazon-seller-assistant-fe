@@ -71,7 +71,6 @@ main.table {
     span {
       padding: 0 5px;
       transition: all 0.3s;
-      cursor: pointer;
     }
 
     a.setting {
@@ -85,10 +84,11 @@ main.table {
 
     span.del {
       color: @btn-text-color;
+      cursor: pointer;
 
       &.disabled {
         color: #72e1d2;
-        cursor: not-allowed;
+        cursor: not-allowed !important;
 
         &:hover {
           color: #72e1d2;

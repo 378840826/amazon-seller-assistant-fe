@@ -84,16 +84,20 @@ export default (props: IProps) => {
   // 确定修改
   const onOkHandle = () => {
     if (showValue === editValue) {
-      message.error('没修改任何值');
+      message.error('未修改任何值');
+      return;
+    }
+
+    if (editValue.trim() === '') {
       return;
     }
 
     setLoading(true);
-    onOk(editValue).then(isSuccess => {
+    onOk(editValue.trim()).then(isSuccess => {
       setLoading(false);
       console.log(isSuccess, 'isSuccess');
       if (isSuccess) {
-        setShowValue(editValue);
+        setShowValue(editValue.trim());
         setVisible(true);
         successText ? message.success(successText) : '';
       } else {
@@ -157,7 +161,7 @@ export default (props: IProps) => {
             styles.btn,
             loading ? styles.loadingBox : '',
             loading ? 'h-disabled' : '',
-            showValue === editValue ? styles.disable : '',
+            showValue === editValue || editValue.trim() === '' ? styles.disable : '',
             'h-async-editbox-confire'
           )
         } onClick={onOkHandle}>

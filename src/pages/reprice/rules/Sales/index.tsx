@@ -45,9 +45,9 @@ import {
   Spin,
 } from 'antd';
 interface ILocation extends Location {
-  state: {
-    id: string;
-    type: string;
+  query: {
+    type?: string;
+    id?: string;
   };
 }
 
@@ -94,8 +94,8 @@ const AddSales: React.FC = () => {
       return;
     }
 
-    const { state } = location as ILocation ;
-    if (state) {
+    const { query } = location as ILocation ;
+    if (query && query.type && query.type === 'settings') {
       setType(true);
       setLoading(true);
       new Promise((resolve, reject) => {
@@ -107,7 +107,7 @@ const AddSales: React.FC = () => {
             headersParams: {
               StoreId: StoreId,
             },
-            ruleId: state.id,
+            ruleId: query.id,
           },
         });
       }).then(datas => {
@@ -208,10 +208,10 @@ const AddSales: React.FC = () => {
     const conditions = transitionArr(conditionsData);
     let flag = true; // 条件是否正确条件
 
-    // if (ruleName === '' || ruleName === undefined) {
-    //   message.error('规则名称不能为空');
-    //   return;
-    // }
+    if (ruleName === '' || ruleName === undefined) {
+      message.error('规则名称不能为空');
+      return;
+    }
 
     // 条件组处理
     for (let i = 0; i < conditions.length; i++) {
@@ -316,9 +316,9 @@ const AddSales: React.FC = () => {
 
     // 修改
     if (type) {
-      const { state } = location as ILocation ;
-      if (state && state.id) {
-        data.ruleId = state.id;
+      const { query } = location as ILocation ;
+      if (query && query.id) {
+        data.ruleId = query.id;
       } else {
         message.error('规则ID有误~');
       }
