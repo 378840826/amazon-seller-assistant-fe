@@ -312,9 +312,9 @@ const Rules: React.FC = () => {
       title: '商品数量',
       align: 'center',
       width: 88,
-      render: (val: number) => {
+      render: (val: number, { id }: Rules.ITableResponseType) => {
         if (val > 0) {
-          return <Link to={productListRouter} target="_blank">{val}</Link>;
+          return <Link to={`${productListRouter}?ruleId=${id}`} target="_blank">{val}</Link>;
         }
         return val;
       },
