@@ -54,7 +54,6 @@ const TablePage: React.FC<ITablePageProps> = ({
   };
 
   const onTableChange = (pagination: TablePaginationConfig) => {
-    console.log(pagination);
     const { current, pageSize } = pagination;
     setParams({ current, size: pageSize });
   };

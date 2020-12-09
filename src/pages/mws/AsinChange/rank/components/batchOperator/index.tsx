@@ -33,7 +33,6 @@ const BatchOperator: React.FC<IBatchOperator> = ({ StoreId, dispatch, toggleChan
 
   // => 监控任务框弹出切换
   const toggleEvent = () => {
-    console.log('toggleEvent:', JSON.stringify(state.open));
     setState((state) => ({
       ...state,
       open: !state.open,
