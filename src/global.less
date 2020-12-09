@@ -206,7 +206,10 @@ a:hover {
     width: 16px;
     height: 16px;
     top: 2px;
-    left: calc(100% - 16px - 2px) !important;
+  }
+
+  &[aria-checked=true] .ant-switch-handle {
+    left: calc(100% - 18px) !important;
   }
 }
 

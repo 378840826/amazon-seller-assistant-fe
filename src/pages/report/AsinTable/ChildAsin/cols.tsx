@@ -99,6 +99,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 200,
       fixed: 'left',
       render(list: AsinTable.ISkuinfo[]) {
+        if (list === null) {
+          return <Empty />;
+        }
         return <div className={styles.skuListCol}>
           {list.map((item, i) => {
             return <div className={styles.skuItem} key={i}>

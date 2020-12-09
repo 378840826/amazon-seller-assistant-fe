@@ -57,7 +57,7 @@ const ChildAsin: React.FC<IProps> = props => {
   // state
   const [visiblefiltern, setVisibleFiltern] = useState<boolean>(false); // 高级筛选是否显示
   const [conditions, setConditions] = useState<API.IParams[]>([]); // 偏好列表
-  const [ratio, setRatio] = useState<boolean>(true); // 环比按钮
+  const [ratio, setRatio] = useState<boolean>(false); // 环比按钮
   const [visibleCustom, setVisibleCustom] = useState<boolean>(false); // 自定义列是否显示
   // 高级筛选条件组
   const [screecondition, setScreecondition] = useState<AsinTable.IFiltrateList[]>([]);
