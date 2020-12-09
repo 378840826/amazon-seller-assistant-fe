@@ -169,6 +169,7 @@ const DynamicModel: IDynamicModelType = {
     *msMonitorAdd({ payload, callback }, { call }){
       const response = yield call(msMonitorAdd, payload);
       if (response.code === 200){
+        message.success(response.message);
         callback && callback();
       } else {
         message.error(response.message);

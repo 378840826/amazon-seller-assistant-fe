@@ -50,10 +50,9 @@ const TaskContainer: React.FC<ITaskContainer> = ({
     let list = [];
     if (refText.current){
       const content = refText.current.state.value;
-      if (content === undefined) {
-        return; 
-      }
-      list = content.split(/\n/ig).map( (item: string) => item.trim()).filter((item1: string) => item1 !== ''); 
+      console.log('content:', content);
+      list = content !== undefined && content.split(/\n/ig).map( (item: string) => item.trim())
+        .filter((item1: string) => item1 !== ''); 
     }
   
     if (state.asinList.length > 0 && state.keywordList.length > 0 ){
