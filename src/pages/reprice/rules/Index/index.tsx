@@ -313,7 +313,6 @@ const Rules: React.FC = () => {
       align: 'center',
       width: 88,
       render: (val: number) => {
-        // window.open(`#goods?ruleId=${ruleId}&ruleName=${ruleName}`)
         if (val > 0) {
           return <Link to={productListRouter} target="_blank">{val}</Link>;
         }
@@ -347,29 +346,31 @@ const Rules: React.FC = () => {
           //
         }
         return <div className={styles.handleCol}>
-          <Link className={styles.setting} to={{
-            pathname: router,
-            state: {
-              type: 'settings', 
-              id,
-            },
-          }}>设置</Link>
+          <Link 
+            className={styles.setting} 
+            to={`${router}?type=settings&id=${id}`}
+          >
+            设置
+          </Link>
           <span className={classnames(
             styles.del,
             system ? styles.disabled : '',
           )}>
-            <Popconfirm
-              title="确定删除规则？"
-              onConfirm={() => delRule(id, system, productCount)}
-              okText="确定"
-              cancelText="取消"
-              placement="bottom"
-              overlayStyle={{
-                width: 155,
-              }}
-            > 
-              删除
-            </Popconfirm></span>
+            {
+              system ? '删除' : <Popconfirm
+                title="确定删除规则？"
+                onConfirm={() => delRule(id, system, productCount)}
+                okText="确定"
+                cancelText="取消"
+                placement="bottom"
+                overlayStyle={{
+                  width: 155,
+                }}
+              > 
+                删除
+              </Popconfirm>
+            }
+          </span>
         </div>;
       },
     },

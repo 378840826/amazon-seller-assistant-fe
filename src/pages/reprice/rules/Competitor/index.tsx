@@ -27,9 +27,9 @@ import {
 } from 'antd';
 
 interface ILocation extends Location {
-  state: {
-    id: string;
-    type: string; // setting是查询修改
+  query: {
+    type?: string;
+    id?: string;
   };
 }
 
@@ -41,9 +41,9 @@ const { Item } = Form;
 const { Option } = Select;
 const AddSales: React.FC<IProps> = () => {
   const [form] = Form.useForm();
-  const location = useLocation();
+  const location = useLocation() as any;// eslint-disable-line
   const dispatch = useDispatch();
-  const { state } = location as ILocation;
+  const { query } = location as ILocation;
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   
   const [safe, setSafe] = useState<Rules.ISafeDataType|{}>({});
@@ -73,7 +73,7 @@ const AddSales: React.FC<IProps> = () => {
     }
 
     // 查询修改
-    if (state && state.type && state.type === 'settings') {
+    if (query && query.type && query.type === 'settings') {
       setType(true);
       new Promise((resolve, reject) => {
         dispatch({
@@ -84,7 +84,7 @@ const AddSales: React.FC<IProps> = () => {
             headersParams: {
               StoreId,
             },
-            ruleId: (state && state.id ? state.id : undefined),
+            ruleId: (query && query.id ? query.id : undefined),
           },
         });
       }).then(datas => {
@@ -103,7 +103,7 @@ const AddSales: React.FC<IProps> = () => {
         setSafe(data.safe as Rules.ISafeDataType);
       });
     }
-  }, [state, dispatch, form, StoreId]);
+  }, [query, dispatch, form, StoreId]);
 
   // 离开规则名称
   const onMouseoutRuleName = () => {
@@ -153,8 +153,8 @@ const AddSales: React.FC<IProps> = () => {
 
     // 修改
     if (type) {
-      if (state && state.id) {
-        data.ruleId = state.id;
+      if (query && query.id) {
+        data.ruleId = query.id;
       } else {
         message.error('规则ID有误~');
       }

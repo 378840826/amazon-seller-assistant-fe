@@ -22,7 +22,6 @@ import {
 import { 
   moveArrItem,
   transitionObj,
-  transitionArr,
   cartsmmr,
   action,
 } from '../config';
@@ -47,18 +46,21 @@ import {
 } from 'antd';
 
 interface ILocation extends Location {
-  state: {
-    id: string;
-    type: string; // setting是查询修改
+  query: {
+    type?: string;
+    id?: string;
   };
 }
 
 const { Item } = Form;
 const { Option } = Select;
+let haveOpponentData = {}; // 保存1. 有竞争对手时的数组
+let holdCartData = {}; // 保存2.当竞争对手占据黄金购物车的数组
+let nothaveOpponentData = {}; // 保存3.没有任何卖家占据黄金购物车时的数组
 import { ffs, ffas, cartPriceList, cartCurrentPrint, addSubtract } from '../config';
 const AddSales: React.FC = () => {
   const [form] = Form.useForm();
-  const location = useLocation();
+  const location = useLocation() as any; // eslint-disable-line
   const dispatch = useDispatch();
 
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -132,9 +134,7 @@ const AddSales: React.FC = () => {
     },
   ]);
 
-  let haveOpponentData = {}; // 保存1. 有竞争对手时的数组
-  let holdCartData = {}; // 保存2.当竞争对手占据黄金购物车的数组
-  let nothaveOpponentData = {}; // 保存3.没有任何卖家占据黄金购物车时的数组
+  
   const navList: Snav.INavList[] = [
     {
       path: ruleListRouter,
@@ -166,7 +166,7 @@ const AddSales: React.FC = () => {
     },
     timing: '20',
   };
-  const { state } = location as ILocation;
+  const { query } = location as ILocation; // eslint-disable-line
   const { id: StoreId } = currentShop;
   let safeData: { [key: string]: any} = {}; // eslint-disable-line
 
@@ -176,7 +176,7 @@ const AddSales: React.FC = () => {
     }
 
     // 查询修改
-    if (state && state.type && state.type === 'settings') {
+    if (query && query.type && query.type === 'settings') {
       setType(true);
       setLoading(true);
       new Promise((resolve, reject) => {
@@ -188,7 +188,7 @@ const AddSales: React.FC = () => {
             headersParams: {
               StoreId,
             },
-            ruleId: (state && state.id ? state.id : undefined),
+            ruleId: (query && query.id ? query.id : undefined),
           },
         });
       }).then(datas => {
@@ -236,7 +236,7 @@ const AddSales: React.FC = () => {
         setSafe(data.safe as Rules.ISafeDataType);
       });
     }
-  }, [state, dispatch, form, StoreId]);
+  }, [query, dispatch, form, StoreId]);
 
   // 离开规则名称
   const onMouseoutRuleName = () => {
@@ -407,17 +407,38 @@ const AddSales: React.FC = () => {
   };
 
   // 获取 1. 有竞争对手时的数据
-  const getDataHaveOpponent = (data: {}, index: number) => {
+  const getDataHaveOpponent = (data: Rules.IHaveTypeData, index: number) => {
+    // 修改值时保存
+    for (let i = 0; i < haveopponets.length; i++ ) {
+      const item = haveopponets[i];
+      if ( index === item.key) {
+        item.state = data;
+      }
+    }
     haveOpponentData = transitionObj(haveOpponentData, data, index + 1);
   };
 
   // 获取 2.当竞争对手占据黄金购物车
-  const getDataHoldCart = (data: {}, index: number) => {
+  const getDataHoldCart = (data: Rules.IHoldCartType, index: number) => {
+    // 修改值时保存
+    for (let i = 0; i < holdCarts.length; i++ ) {
+      const item = holdCarts[i];
+      if ( index === item.key) {
+        item.state = data;
+      }
+    }
     holdCartData = transitionObj(holdCartData, data, index + 1);
   };
 
   // 获取 3.没有任何卖家占据黄金购物车时
-  const getDatanotHaveOpponent = (data: {}, index: number) => {
+  const getDatanotHaveOpponent = (data: Rules.INotHaveTypeData, index: number) => {
+    // 修改值时保存
+    for (let i = 0; i < notHoldCart.length; i++ ) {
+      const item = notHoldCart[i];
+      if ( index === item.key) {
+        item.state = data;
+      }
+    }
     nothaveOpponentData = transitionObj(nothaveOpponentData, data, index + 1);
   };
 
@@ -436,7 +457,12 @@ const AddSales: React.FC = () => {
 
     data.description = data.description ? data.description : '';
 
-    data.self.unonly = transitionArr(haveOpponentData);
+    data.self.unonly = [];
+    haveopponets.forEach(item => {
+      data.self.unonly.push(item.state);
+    });
+
+    // data.self.unonly = transitionArr(haveOpponentData);
     for (let i = 0; i < data.self.unonly.length; i++) {
       if (data.self.unonly[i].action === cartsmmr[3].value) {
         if (!data.self.unonly[i].value) {
@@ -446,7 +472,12 @@ const AddSales: React.FC = () => {
       }
     }
 
-    data.other = transitionArr(holdCartData);
+    // data.other = transitionArr(holdCartData);
+    data.other = [];
+    holdCarts.forEach(item => {
+      data.other.push(item.state);
+    });
+    
     for (let i = 0; i < data.other.length; i++) {
       if (!data.other[i].value) {
         message.error('此数值不能为空');
@@ -454,7 +485,11 @@ const AddSales: React.FC = () => {
       }
     }
 
-    data.nobody = transitionArr(nothaveOpponentData);
+    // data.nobody = transitionArr(nothaveOpponentData);
+    data.nobody = [];
+    notHoldCart.forEach(item => {
+      data.nobody.push(item.state);
+    });
     for (let i = 0; i < data.nobody.length; i++) {
       if (data.nobody[i].action === cartsmmr[3].value) {
         if (!data.nobody[i].value) {
@@ -480,11 +515,11 @@ const AddSales: React.FC = () => {
     }
 
     data.safe = safeData;
-    
+
     // 修改
     if (type) {
-      if (state && state.id) {
-        data.ruleId = state.id;
+      if (query && query.id) {
+        data.ruleId = query.id;
       } else {
         message.error('规则ID有误~');
       }
@@ -610,8 +645,8 @@ const AddSales: React.FC = () => {
               <div>
                 {holdCarts.map((Item, i) => {
                   return <Item.Component 
-                    key={Item.key} 
-                    index={i} 
+                    key={i} 
+                    index={Item.key} 
                     total={holdCarts.length}
                     delCondition={delCondition}
                     move={moveCondition}
