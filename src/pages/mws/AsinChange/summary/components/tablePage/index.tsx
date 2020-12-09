@@ -17,7 +17,6 @@ const TablePage: React.FC<ITablePage> = (
     loading, 
     modifySendState,
   }) => {
-  console.log('tableInfo:', tableInfo);
   const paginationProps = {
     current: tableInfo.current,
     pageSize: tableInfo.size,

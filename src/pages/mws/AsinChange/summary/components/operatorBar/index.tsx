@@ -117,7 +117,6 @@ const OperatorBar: React.FC<IOperatorBar> = ( {
       }
     } else { //新点击的元素存在
       newState.splice(index, 1);
-      console.log(JSON.stringify(newState));
     }
     modifySendState({ changeType: newState });
   };

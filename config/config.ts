@@ -13,6 +13,7 @@ const config =  {
     hmr: true,
     immer: true,
   },
+  terserOptions:{ compress: { drop_console:process.env.NODE_ENV==='production'?true:false, } },
   dynamicImport: {
     loading: '@/components/PageLoading/index',
   },

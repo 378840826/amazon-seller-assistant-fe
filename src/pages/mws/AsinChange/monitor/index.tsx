@@ -41,7 +41,6 @@ const Monitor: React.FC<IMonitorProps> = ({ StoreId, dispatch }) => {
 
   //修改分页信息的回调
   const changePage = (params: API.IParams) => {
-    console.log('changePage:', params);
     setParams((state) => ({
       ...state,
       ...params,

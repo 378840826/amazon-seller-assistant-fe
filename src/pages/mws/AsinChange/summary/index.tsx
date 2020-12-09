@@ -65,7 +65,6 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
         },
       },
       callback: (res: {code: number;data: API.IParams;message: string}) => {
-        console.log('res:', res);
         if (res.code === 200){
           setState((state) => ({
             ...state,
