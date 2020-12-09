@@ -41,17 +41,17 @@ const TableHead: React.FC<IProps> = props => {
   const mainCallback = () => {
     // 升序
     if (mainSort === '') {
-      callback(titleparams, true);
-      setMainSort(true);
+      callback(titleparams, false);
+      setMainSort(false);
     } else {
       callback(titleparams, !mainSort as boolean);
       setMainSort(!mainSort);
     }
 
     // 已经是倒序的话，取消排序
-    if (mainSort === false) {
+    if (mainSort === true) {
       setMainSort('');
-      callback('', false);  
+      callback('', true);  
     }
   };
 
@@ -59,17 +59,17 @@ const TableHead: React.FC<IProps> = props => {
   const ratioCallback = () => {
     // 升序
     if (subSort === '') {
-      callback(subtitle, true);
-      setSubSort(true);
+      callback(subtitle, false);
+      setSubSort(false);
     } else {
       callback(subtitle, !subSort as boolean);
       setSubSort(!subSort);
     }
 
     // 已经是倒序的话，取消排序
-    if (subSort === false) {
+    if (subSort === true) {
       setSubSort('');
-      callback('', false);  
+      callback('', true);  
     }
   };
 
