@@ -14,7 +14,7 @@ import {
 import AsinDetail from './AsinDetails';
 
 interface IProps {
-  asininfo: CompetingGoods.ICompetingOneData|null;
+  asininfo: CompetingGoods.ICompetingOneData|null|string;
 }
 
 interface IPage extends ConnectProps {
@@ -45,6 +45,9 @@ const SearchResult: React.FC<IProps> = props => {
   // 是否已添加
   const getBtnStatus = () => {
     let isSelect = false;
+    if (typeof asininfo === 'string') {
+      return;
+    }
     chosens.forEach((item) => {
       if (item.asin === asininfo.asin) {
         isSelect = true;
@@ -61,6 +64,12 @@ const SearchResult: React.FC<IProps> = props => {
 
   if (asininfo === null) {
     return <></>;
+  }
+
+  if (typeof asininfo === 'string') {
+    return <h2 style={{
+      color: '#888',
+    }}>{asininfo}</h2>;
   }
 
   return <div className={classnames(styles.listItem, styles.twoLayoutContent)}>

@@ -52,7 +52,11 @@ const AsinDetails: React.FC<IProps> = props => {
           <span>{valueTransition(asininfo.brand)}</span>
         </p>
         <p className={styles.scale}>
-          {valueTransition(asininfo.reviewScope)}
+          {
+            valueTransition(asininfo.reviewScope) ? 
+              parseFloat(valueTransition(asininfo.reviewScope) as string).toFixed(1) : 
+              valueTransition(asininfo.reviewScope)
+          }
           <span className={styles.scaleDetails}>({asininfo.reviewNum})</span> 
         </p>
         <p 

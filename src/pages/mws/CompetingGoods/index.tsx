@@ -52,8 +52,8 @@ const CompetingGoods: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const leftLayoutList = useRef(null) as React.MutableRefObject<null|HTMLDivElement>;
-
-  const [asininfo, setAsininfo] = useState<CompetingGoods.ICompetingOneData|null>(null); // 搜索ASIN值
+  // 搜索ASIN值
+  const [asininfo, setAsininfo] = useState<CompetingGoods.ICompetingOneData|null|string>(null); 
   const [searchValue, setSearchValue] = useState<string>(''); // ASIN值
   const [showsearch, setShowSearch] = useState<boolean>(false); // 是否显示搜索
   const [addbtnclass, setAddBtnClass] = useState<boolean>(false); // 左边推荐竞品是否有滚动条， 有(true) fase没有
@@ -158,31 +158,39 @@ const CompetingGoods: React.FC = () => {
     }).then(datas => {
       const {
         data,
+        msg = '',
       } = datas as {
         data: CompetingGoods.ISearchAsinInfo;
+        msg?: string;
       };
       message.config({
         duration: 6,
         maxCount: 1,
       });
 
-      if (data.seller_name === '' || data.price === '') {
-        message.error('该商品目前不在售，建议选择在售商品');
+      if (msg === 'Oops! There is something wrong with the network. Please try again later') {
+        setAsininfo(msg);
+      } else {
+        if (data.seller_name === '' || data.price === '') {
+          message.error('该商品目前不在售，建议选择在售商品');
+        }
+  
+        const newData: any = {}; // eslint-disable-line
+        newData.imgUrl = data.pictures[0];
+        newData.title = data.title;
+        newData.asin = data.asin;
+        newData.brand = data.brand_name;
+        newData.reviewNum = data.review_info.review_count;
+        newData.reviewScope = data.review_info.review_avg_star;
+        newData.categoryRank = data.large_category[0] ? data.large_category[0].ranking : '';
+        newData.categoryName = data.large_category[0] ? data.large_category[0].name : '';
+        newData.sellerName = data.delivery_method;
+        newData.price = data.price;
+        newData.fulfillmentChannel = data.prdelivery_methodice;
+        setAsininfo({ ...newData });
       }
 
-      const newData: any = {}; // eslint-disable-line
-      newData.imgUrl = data.pictures[0];
-      newData.title = data.title;
-      newData.asin = data.asin;
-      newData.brand = data.brand_name;
-      newData.reviewNum = data.review_info.review_count;
-      newData.reviewScope = data.review_info.review_avg_star;
-      newData.categoryRank = data.large_category[0] ? data.large_category[0].ranking : '';
-      newData.categoryName = data.large_category[0] ? data.large_category[0].name : '';
-      newData.sellerName = data.delivery_method;
-      newData.price = data.price;
-      newData.fulfillmentChannel = data.prdelivery_methodice;
-      setAsininfo({ ...newData });
+      
     });
   };
 
