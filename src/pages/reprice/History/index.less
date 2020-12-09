@@ -1,6 +1,6 @@
 .historyBox {
   background-color: #fff;
-  padding: 20px 18px 10px;
+  padding: 20px 18px 0;
 
   div:global(.ant-table-body) {
     overflow-y: auto !important;
@@ -36,6 +36,10 @@
   .method {
     width: 272px;
 
+    label:global(.ant-form-item-no-colon) {
+      color: @text-color;
+    }
+
     :global(.ant-form-item) {
       margin-right: 0;
     }
@@ -63,6 +67,10 @@
   .rulesList {
     width: 280px;
     margin-right: 0;
+
+    :global(.ant-select-item-option-selected:not(.ant-select-item-option-disabled)) {
+      font-weight: normal !important;
+    }
   }
 
   .conditaionsList {
@@ -85,9 +93,12 @@
 
 // 条件下拉框
 .conditionsSelects {
+  width: 500px !important;
+
   div:global(.ant-select-item-option-content) {
     overflow: visible;
     white-space: pre-wrap;
+    font-weight: normal !important;
   }
 }
 

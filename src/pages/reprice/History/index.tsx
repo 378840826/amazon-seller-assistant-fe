@@ -61,6 +61,7 @@ const History: React.FC = () => {
       },
       startTime: start3,
       endTime: end3,
+      size: pageSize,
     };
     setLoading(true);
     payload = Object.assign({}, payload, params);
@@ -92,7 +93,7 @@ const History: React.FC = () => {
         setDataSource(data.records);
       }
     });
-  }, [dispatch, StoreId, start3, end3]);
+  }, [dispatch, StoreId, start3, end3]); // eslint-disable-line
 
   // 条件下拉列表
   const getConditions = useCallback(() => {
