@@ -1,0 +1,47 @@
+
+.btns {
+  padding: 15px 17px 13px 17px;
+
+  .up {
+    transform: rotate(180deg);
+    transition: 0.3s;
+  }
+
+  button + button {
+    margin-left: 20px;
+  }
+}
+
+.menu {
+  background-color: #fff;
+  padding: 16px 16px 5px 16px;
+  border-radius: 4px;
+
+  .title {
+    font-size: 16px;
+    color: @heading-color;
+  }
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 10px;
+    }
+
+    .ant-form-item-control-input-content {
+      text-align: center;
+    }
+  }
+
+  .menuRadio {
+    padding-top: 3px;
+    padding-bottom: 3px;
+
+    .desc {
+      color: #888;
+    }
+  }
+
+  button + button {
+    margin-left: 10px;
+  }
+}

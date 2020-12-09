@@ -6,7 +6,7 @@ import { createFromIconfontCN } from '@ant-design/icons';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_1799129_3drrpze77q6.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_tnifedvy8o.js',
 });
 
 // 获取亚马逊站点基本链接
@@ -340,6 +340,22 @@ export const changeHS = (second: number | string) => {
     M = M > 10 ? M : `0${M}`;
     return `${H}:${M}`;
   }
+};
+//给数字每三位加上,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const toThousands = (nStr: any) => {
+  if (typeof nStr === 'number') {
+    nStr = `${nStr }`;
+    const x = nStr.split('.');
+    let x1 = x[0];
+    const x2 = x.length > 1 ? `.${ x[1]}` : '';
+    const rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+  }
+  return nStr;
 };
 
 

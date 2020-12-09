@@ -3,7 +3,7 @@ import { Table } from 'antd';
 import { connect } from 'umi';
 
 import { ColumnProps, TablePaginationConfig } from 'antd/es/table';
-import { Typography, message } from 'antd';
+import { Typography, message, Tooltip } from 'antd';
 import CountDown from '../Countdown';
 import { Iconfont } from '@/utils/utils';
 import classnames from 'classnames';
@@ -70,8 +70,12 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch, req
     render: (text, item) => {
       return (
         <div>
-          <Paragraph ellipsis className={styles.subject}>{item.subject}</Paragraph>
-          <Paragraph ellipsis={{ rows: 2 }} className={styles.content}>{item.content}</Paragraph>
+          <Tooltip title={item.subject}>
+            <Paragraph ellipsis className={styles.subject}>{item.subject}</Paragraph>
+          </Tooltip>
+          <Tooltip title={item.content}>
+            <Paragraph ellipsis={{ rows: 2 }} className={styles.content}>{item.content}</Paragraph>
+          </Tooltip>
         </div>
       );
     },

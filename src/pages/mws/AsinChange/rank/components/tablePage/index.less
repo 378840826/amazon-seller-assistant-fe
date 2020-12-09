@@ -1,0 +1,60 @@
+
+.custom_table {
+  .darkRow {
+    background-color: #fafafa;
+  }
+
+  .keyword {
+    text-align: left;
+  }
+
+  .yes_icon {
+    color: #888;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .close_icon {
+    color: #888;
+  }
+
+  .__switch {
+    transform: scale(0.818);
+  }
+
+  .__naturalRanking {
+    :global {
+      .ant-table-column-sorters {
+        padding-right: 16px;
+      }
+    }
+  }
+
+  :global {
+    tr {
+      &:hover {
+        .zhexiantu {
+          color: @btn-text-color;
+        }
+      }
+    }
+
+    .ant-table-column-sorters {
+      padding: 0;
+
+      .ant-table-column-sorter {
+        margin-left: 4px;
+      }
+    }
+
+    .ant-table-thead > tr > th {
+      padding: 0;
+      height: 44px;
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: none;
+      padding: 0;
+    }
+  }
+}

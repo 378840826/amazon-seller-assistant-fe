@@ -2,26 +2,9 @@
   padding-top: 14px;
   padding-bottom: 12px;
 
-  button {
-    width: 82px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    color: @text-color;
-    font-size: 14px;
-    border: 1px solid @border-color-base;
-    border-radius: 4px;
-    background-color: #fff;
-    outline: none;
-    cursor: pointer;
-
-    & + button {
+  .__button {
+    & + .__button {
       margin-left: 10px;
-    }
-
-    &:hover {
-      color: @link-color;
-      border-color: @primary-color;
     }
   }
 }

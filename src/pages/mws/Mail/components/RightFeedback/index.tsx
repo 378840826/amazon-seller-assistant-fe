@@ -235,8 +235,8 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
               <Form.Item
                 className={styles.buttons}
               >
-                <Row>
-                  <Col span={14}>
+                <div className={styles.__upload_both}>
+                  <div className={styles.__upload_left}>
                     <Form.Item 
                       name="uploadItem"
                       valuePropName="fileList"
@@ -255,13 +255,11 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
                     <div className={styles.tips}>
                       附件仅支持.doc  .txt  .xls  .pdf文件，大小不可超过5MB
                     </div>
-                  </Col>
-                  <Col span={10}>
+                  </div>
+                  <div className={styles.__upload_right}>
                     <Row gutter={[14, 16]}>
-                      <Col span={12}>
-                        <Button onClick={onReset}>清空</Button>
-                      </Col>
-                      <Col span={12}>
+                      <Col span={24} style={{ textAlign: 'right' }}>
+                        <Button onClick={onReset} style={{ marginRight: '14px' }}>清空</Button>
                         <Button onClick={() => onToggleModal(true)}>模板</Button>
                         <ModalTemplate 
                           templates={templateList}
@@ -272,15 +270,13 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
                       </Col>
                     </Row>
                     <Row gutter={[14, 16]}>
-                      <Col span={12}>
-                        <Button onClick={() => goBack(-1)}>取消</Button>
-                      </Col>
-                      <Col span={12}>
+                      <Col span={24} style={{ textAlign: 'right' }}>
+                        <Button style={{ marginRight: '14px' }} onClick={() => goBack(-1)}>取消</Button>
                         <Button disabled={state.sendStatus} type="primary" htmlType="submit">回复</Button>
                       </Col>
                     </Row>
-                  </Col>
-                </Row>
+                  </div>
+                </div>
               </Form.Item>
             </Form>
             
