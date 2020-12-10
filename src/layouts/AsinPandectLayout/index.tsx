@@ -13,6 +13,7 @@ import BasicLoyout from '../BasicLayout';
 import { Iconfont } from '@/utils/utils';
 import MySearch from '@/components/Search';
 import TableNotData from '@/components/TableNotData';
+import GoodsImg from '@/pages/components/GoodsImg';
 import zhCN from 'antd/es/locale/zh_CN';
 import {
   Link,
@@ -96,8 +97,8 @@ const AsinBase: React.FC = (props) => {
     });
   }, [dispatch, storeAsin, StoreId]);
 
-  // 验证ASIN是否存在的请求体
   /**
+   * 验证ASIN是否存在的请求体
    * flag 为true时 ,请求兄弟ASIN
    */
   const verifyAsin = useCallback((flag = false, value = urlAsin) => {
@@ -172,24 +173,19 @@ const AsinBase: React.FC = (props) => {
       }
 
       verifyAsin(true);
-
-      // 登录接口(暂时)
-      // dispatch({
-      //   type: 'returnProduct/test',
-      //   payload: {
-      //     data: {
-      //       email: '10086@qq.com',
-      //       password: 'hello2020',
-      //       rememberMe: true,
-      //     },
-      //   },
-      // });
     }
   }, [dispatch, current, location, verifyAsin]);
   
 
   const handleChange = (value: string) => {
     setCurrentSelect(value);
+    console.log('value', value);
+    dispatch({
+      type: 'asinGlobal/changeAsin',
+      payload: {
+        asin: value,
+      },
+    });
   };
  
   const onSearch = (value: string) => {
@@ -244,7 +240,6 @@ const AsinBase: React.FC = (props) => {
           
           <div className={`${styles.filltrate} asin-filltrate-box`}>
             {
-              
               skuListVisible ? 
                 <Spin spinning={skuLoading}>
                   <Select
@@ -257,7 +252,7 @@ const AsinBase: React.FC = (props) => {
                       siblingAsins.map((item, i) => {
                         return <Option value={item.asin} key={i}>
                           <div className={styles.list}>
-                            <img className={styles.product} src={item.imgLink}/>
+                            <GoodsImg className={styles.product} src={item.imgLink} width={28} alt=" " />
                             <div>
                               <p className={styles.title}>{item.title}</p>
                               <p className={styles.asin}>{item.asin}</p>

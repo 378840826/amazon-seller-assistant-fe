@@ -73,7 +73,7 @@ class TextContainer extends React.Component<IProps, IState, {}> {
       newNode = document.body.appendChild(clonedNode);
     }
     // 新增的dom宽度与原dom的宽度*限制行数做对比
-    const differ = newNode.offsetWidth - ele.offsetWidth * rowCount + 40;
+    const differ = newNode.offsetWidth - ele.offsetWidth * rowCount + 50;
     // console.log(differ, 'differ');
     if (removeChild) {
       document.body.removeChild(newNode);
@@ -120,15 +120,15 @@ class TextContainer extends React.Component<IProps, IState, {}> {
                   <span className="text">展开</span>
                   <Iconfont type="icon-zhankai"
                     className={`icon`} style={{
-                      color: '#999',
+                      color: '#888',
                     }} />
                 </div> : <div className="text-container-off" style={{
-                  color: '#999',
+                  color: '#888',
                 }}>
                   <span className="text">收起</span>
                   <Iconfont type="icon-zhankai" 
                     className="icon" style={{
-                      color: '#999',
+                      color: '#888',
                       transform: 'rotate(182deg)',
                     }} />
                 </div> 

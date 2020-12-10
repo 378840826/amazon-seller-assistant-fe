@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-07-30 09:47:27
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\asinPandect\ReturnProduct\index.tsx
  */ 
 
@@ -14,11 +14,12 @@ import ReturnRatioComponent from './components/ReturnRatio';
 import StatisticComponent from './components/Statistic';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import Rate from '@/components/Rate';
-import { storageKeys, isEmptyObj, getRangeDate } from '@/utils/huang';
+import { storageKeys, isEmptyObj, getRangeDate, toIndexFixed } from '@/utils/huang';
 import { storage } from '@/utils/utils';
 import { handleTooltip } from './function';
 import moment from 'moment';
 import TableNotData from '@/components/TableNotData';
+
 import {
   useSelector,
   useDispatch,
@@ -432,7 +433,7 @@ const ReturnProduct: React.FC = () => {
             color: '#ccc',
           }}>{value}</span>;
         }
-        return value;
+        return value; //这里后端补全了
       },
     },
   ];

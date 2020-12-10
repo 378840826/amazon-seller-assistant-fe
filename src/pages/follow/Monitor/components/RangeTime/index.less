@@ -40,12 +40,33 @@
   padding-left: 14px;
   box-shadow: 0 0 0 0 rgba(47, 153, 253, 0);
   margin: 0 auto;
+
+  input {
+    text-align: center;
+  }
+
+  &.timepickerLast {
+    padding: 0;
+
+    input {
+      text-align: left;
+    }
+  }
 }
 
-div:global(.h-range-time) {
-  li:global(.ant-picker-ok) button {
-    height: 30px;
-    line-height: 30px;
-    margin-top: 5px;
+.rangeTimeAlert {
+  ul:global(.ant-picker-ranges) {
+    text-align: center;
+  }
+
+  li:global(.ant-picker-ok) {
+    margin-left: 0;
+    float: none;
+
+    button {
+      height: 30px;
+      line-height: 30px;
+      margin-top: 5px;
+    }
   }
 }

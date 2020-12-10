@@ -12,10 +12,11 @@ import {
 import {
   Table,
 } from 'antd';
-import placeholderImg from '@/assets/stamp.png';
+import GoodsImg from '@/pages/components/GoodsImg';
 import TableNotData from '@/components/TableNotData';
 import Snav from '@/components/Snav';
 import { competitorHistoryRouter, competitorMonitorRouter } from '@/utils/routes';
+import ShowData from '@/components/ShowData';
 
 interface ILocation extends Location {
   query: {
@@ -78,7 +79,9 @@ const List: React.FC<IProps> = () => {
       if (isObject(data)) {
         setAsinInfo(data.productInfo);
         setDataSource(data.page.records);
-        setFollowNum(data.page.total);
+        //产品那边要求卖家id相同的只能算一个卖家, 我在跟卖者列表接口新加了一个字段 followQuantity
+        // 跟卖者列表的跟卖者个数就用这个字段了, 你那边啥时候有空麻烦改一下吧
+        setFollowNum(data.followQuantity || 0);
         setCurrent(data.page.current);
         setSize(data.page.size);
         setHistoryId(data.productInfo.followMonitorId);
@@ -166,8 +169,9 @@ const List: React.FC<IProps> = () => {
         } = rows;
         // 运费没有时为0
         return <div style={{ whiteSpace: 'nowrap' }}>
-          {price ? currentShop.currency + price : <span style={{ color: '#888' }}>—</span>} &nbsp; + &nbsp;
-          {shippingFee !== null && String(shippingFee) !== '' ? currentShop.currency + shippingFee : 0 }
+          <ShowData value={price} isCurrency />
+           &nbsp; + &nbsp;
+          <ShowData value={shippingFee} isCurrency />
         </div>;
       },
     },
@@ -225,7 +229,7 @@ const List: React.FC<IProps> = () => {
       }} />
       <div className={styles.box}>
         <div className={styles.layoutLeft}>
-          <img src={asinInfo?.imgUrl || placeholderImg} />
+          <GoodsImg src={asinInfo?.imgUrl || ''} className={styles.img} alt="商品" width={112} />
           <a 
             className={styles.title} 
             href={`${getAmazonAsinUrl(asinInfo?.asin || '', currentShop.marketplace ) }`}
@@ -237,15 +241,15 @@ const List: React.FC<IProps> = () => {
             {asinInfo?.title}
           </a>
           <p className={styles.details}>
-            <span>asin：</span> 
+            <span className={styles.text}>Asin：</span> 
             <span className={styles.content}>{asinInfo?.asin}</span>
           </p>
           <p className={styles.details}>
-            <span>价格：</span>
-            <span className={styles.content}>{currentShop.currency}{asinInfo?.price}</span>
+            <span className={styles.text}>价格：</span>
+            <span className={styles.content}><ShowData value={asinInfo?.price} isCurrency/></span>
           </p>
           <p className={styles.details}>
-            <span>发货方式：</span>
+            <span className={styles.text}>发货方式：</span>
             <span className={styles.content}>{asinInfo?.fulfillmentChannel}</span>
           </p>
         </div>

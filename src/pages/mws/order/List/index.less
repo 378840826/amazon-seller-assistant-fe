@@ -33,6 +33,7 @@ div:global(.ant-table) {
 
   div:global(.ant-table-body) {
     overflow: visible;
+    overflow-y: auto !important;
   }
 
   // 表头
@@ -78,23 +79,30 @@ div:global(.ant-table) {
       }
     }
 
-    header {
+    header.order_head {
       line-height: 42px;
       color: @text-color;
       background-color: #fff;
       border-bottom: 1px solid @divider-line-color;
 
-      span:first-child {
+      .downTime,
+      .orderId {
         float: left;
+
+        .text {
+          color: @text-color-secondary;
+        }
+      }
+
+      span.downTime {
         padding: 0 0 0 10px;
       }
 
-      span:nth-child(2) {
-        float: left;
+      .orderId {
         padding: 0 50px;
       }
 
-      span:last-child {
+      .b2b {
         float: right;
         color: #ffaf4d;
         padding: 0 15px;
@@ -121,7 +129,7 @@ div:global(.ant-table) {
       display: flex;
       min-width: 433px;
 
-      > img {
+      .img {
         width: 68px;
         height: 68px;
         flex: 0 0 auto;
@@ -158,6 +166,14 @@ div:global(.ant-table) {
           display: flex;
           justify-content: space-between;
           line-height: 15px;
+
+          .asin {
+            color: @btn-text-color;
+
+            &:hover {
+              color: @link-color;
+            }
+          }
         }
       }
     }
@@ -172,6 +188,10 @@ div:global(.ant-table) {
 
       p.p_one_and_two,
       p.p_three {
+        .text {
+          color: @text-color-secondary;
+        }
+
         line-height: 26px;
       }
 
@@ -225,6 +245,10 @@ div:global(.ant-table) {
         line-height: 26px;
         color: @text-color;
 
+        .title {
+          color: @text-color-secondary;
+        }
+
         p:first-child {
           width: 180px;
         }
@@ -237,6 +261,10 @@ div:global(.ant-table) {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
+
+        .title {
+          color: @text-color-secondary;
+        }
       }
     }
 

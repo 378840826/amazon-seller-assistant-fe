@@ -2,7 +2,6 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 11:14:36
- * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\utils\huang.ts
  */
 
@@ -225,6 +224,15 @@ export function moneyFormat(
   }
   
   return s.join(dec);
+}
+
+/**
+ * 转换成指定位数的数字
+ * @param {Number|String} value {}
+ * @param {Number} index 
+ */
+export function toIndexFixed(value: number|string, index = 2): string {
+  return new Number(value).toFixed(index);
 }
 
 

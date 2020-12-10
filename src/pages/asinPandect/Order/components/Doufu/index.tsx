@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.less';
 import { useSelector, useDispatch } from 'umi';
 import Rate from '@/components/Rate';
-import { moneyFormat } from '@/utils/huang';
+import { toIndexFixed } from '@/utils/huang';
 
 interface IProps {
   list: AsinOrder.IDouFuListTyep[];
@@ -29,39 +29,43 @@ const Toolbar: React.FC<IProps> = (props) => {
   // 豆腐块的改变
   const change = (label: string) => {
     let checkeds = [];
+    const temColors = JSON.stringify(colors);
+    const newColors: string[] = JSON.parse(temColors); 
+    const temSelectDouFu = JSON.stringify(selectDouFu);
+    const newSelectDouFu: string[] = JSON.parse(temSelectDouFu);
     if (label === '') {
       return;
     }
 
-    if (selectDouFu.length >= maxLength) {
-      if (selectDouFu.indexOf(label) > -1) {
-        const index = selectDouFu.indexOf(label);
-        const newColor = colors.splice(index, 1)[0];
-        colors.push(newColor);
+    if (newSelectDouFu.length >= maxLength) {
+      if (newSelectDouFu.indexOf(label) > -1) {
+        const index = newSelectDouFu.indexOf(label);
+        const newColor = newColors.splice(index, 1)[0];
+        newColors.push(newColor);
       } else {
-        const newColor = colors.shift();
-        colors.push(newColor as string);
+        const newColor = newColors.shift();
+        newColors.push(newColor as string);
       }
 
       dispatch({
         type: 'asinOrder/changeColor',
         payload: {
-          colors,
+          colors: newColors,
         },
       });
     }
 
     // 选中的直接删除
-    if (selectDouFu.indexOf(label) > -1) {
-      const index = selectDouFu.indexOf(label);
-      selectDouFu.splice(index, 1);
-      checkeds = [...selectDouFu];
+    if (newSelectDouFu.indexOf(label) > -1) {
+      const index = newSelectDouFu.indexOf(label);
+      newSelectDouFu.splice(index, 1);
+      checkeds = [...newSelectDouFu];
     } else {
       // 限制数量
-      if (selectDouFu.length >= maxLength) {
-        selectDouFu.shift();
+      if (newSelectDouFu.length >= maxLength) {
+        newSelectDouFu.shift();
       }
-      checkeds = [...selectDouFu, label];
+      checkeds = [...newSelectDouFu, label];
     }
 
     dispatch({
@@ -126,7 +130,7 @@ const Toolbar: React.FC<IProps> = (props) => {
                 }}>{ showSymbol ? currency : ''}</span>
                 <span style={{
                   display: mianflag ? 'none' : 'inline-block',
-                }}>{item.data}</span>
+                }}>{ toIndexFixed(item.data)}</span>
                 <span style={{
                   display: mianflag ? 'none' : 'inline-block',
                 }}>{percent ? '%' : ''}</span>
@@ -142,8 +146,8 @@ const Toolbar: React.FC<IProps> = (props) => {
                 上期：
                 <span className={styles.text}>
                   <span className={ !flag ? '' : 'none'}>{(showSymbol ? currency : '')}</span>
-                  { !flag ? 
-                    item.lastData : 
+                  { !flag ? // eslint-disable-line
+                    (showSymbol ? toIndexFixed(item.lastData) : item.lastData ) : 
                     <span style={{
                       color: '#888',
                     }}>—</span>}

@@ -7,7 +7,7 @@
     border: 1px solid @divider-line-color;
 
     .inputStyle {
-      padding: 3px 12px;
+      padding: 3px 6px 3px 10px;
       width: 280px;
       float: left;
 
@@ -17,6 +17,14 @@
 
       &:nth-child(2) {
         margin: 0 20px 0 0;
+      }
+
+      :global(.ant-input-suffix) {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
       }
     }
 
@@ -39,7 +47,7 @@
 
 .radio_filtrate {
   font-size: 14px;
-  padding: 20px 20px 10px;
+  padding: 14px 20px 10px;
   min-width: 1340px;
   overflow: hidden;
   display: flex;

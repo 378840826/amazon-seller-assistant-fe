@@ -15,7 +15,7 @@ header.monitor_toolbar {
     span.text {
       min-width: 62px;
       display: inline-block;
-      color: @heading-color;
+      color: @text-color;
     }
 
     // 横线
@@ -32,61 +32,6 @@ header.monitor_toolbar {
   input,
   button {
     height: 30px;
-  }
-
-  // 工具栏有大小屏
-  @media screen and (max-width: 1800px) {
-    padding: 20px 20px;
-    background-color: coral;
-    column-gap: 80px;
-    // .layout_five_div {
-    //   margin: 0 0 0 100px;
-    // }
-
-    // .layout_six_div {
-    //   margin: 0 0 0 119px;
-    // }
-
-    // .btns {
-    //   margin: 0 0 0 559px;
-    // }
-
-    .btns {
-      margin-top: -50px;
-    }
-
-    .empty {
-      width: 0;
-    }
-  }
-
-  @media screen and (min-width: 1799px) {
-    padding: 20px 70px;
-    background-color: pink;
-
-    .btns {
-      margin-top: 0;
-    }
-
-    .empty {
-      width: 343px;
-    }
-
-    // .layout_six_div {
-    //   margin: 0 0 0 103px;
-    // }
-
-    // .layout_four_div {
-    //   margin: 0 0 0 116px;
-    // }
-
-    // .layout_seven_div {
-    //   margin: 0 0 0 113px;
-    // }
-
-    // .btns {
-    //   margin: 0 0 0 114px;
-    // }
   }
 
   // 第一个div
@@ -108,6 +53,12 @@ header.monitor_toolbar {
     display: flex;
     line-height: 30px;
     // margin: 0 115px 0 100px;
+
+    :global(.ant-input-affix-wrapper) {
+      width: 280px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
 
     input {
       width: 280px;
@@ -163,11 +114,23 @@ header.monitor_toolbar {
     span.text {
       min-width: 72px;
       line-height: 30px;
-      margin: 0 0 0 -13px;
+      margin: 0 0 0 -11px;
+    }
+
+    :global(.ant-input-affix-wrapper) {
+      width: 280px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    :global(.ant-input-suffix) {
+      margin-left: -26px;
+      position: relative;
+      z-index: 2;
     }
 
     input {
-      width: 280px;
+      width: 260px;
       flex: 0 0 auto;
       position: relative;
     }
@@ -177,11 +140,14 @@ header.monitor_toolbar {
   .layout_eight_div {
     .text {
       line-height: 24px;
+      position: relative;
+      left: -11px;
     }
 
     input {
       width: 128px;
       flex: 0 0 auto;
+      text-align: center;
     }
   }
 
@@ -191,6 +157,41 @@ header.monitor_toolbar {
 
     button {
       margin-left: 20px;
+    }
+  }
+
+  // 工具栏有大小屏
+  @media screen and (max-width: 1800px) {
+    padding: 20px 20px;
+    column-gap: 80px;
+
+    .btns {
+      margin-top: -50px;
+    }
+
+    .empty {
+      width: 0;
+    }
+
+    .layout_eight_div .text {
+      left: 0;
+    }
+
+    .layout_four_div .text {
+      position: relative;
+      left: -10px;
+    }
+  }
+
+  @media screen and (min-width: 1799px) {
+    padding: 20px 50px;
+
+    .btns {
+      margin-top: 0;
+    }
+
+    .empty {
+      width: 343px;
     }
   }
 }

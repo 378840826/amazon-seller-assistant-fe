@@ -182,10 +182,20 @@
       span:global(.anticon) {
         margin-right: 7px;
         transition: all 0.3s;
+        color: #c1c1c1;
       }
 
       span:global(.anticon.active) {
         transform: rotate(182deg);
+        color: @primary-color;
+      }
+
+      &:hover {
+        color: @primary-color;
+
+        span:global(.anticon) {
+          color: @primary-color;
+        }
       }
     }
 

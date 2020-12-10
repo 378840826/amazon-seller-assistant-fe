@@ -2,7 +2,6 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-02 15:57:07
- * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\pages\mws\comment\Monitor\index.tsx
  * 
  * 评论监控
@@ -10,17 +9,15 @@
 'user stairt';
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from './index.less';
-import './index.css';
 import { ColumnsType } from 'antd/lib/table';
 import { Iconfont } from '@/utils/utils';
-import emptyImg from '@/assets/stamp.png';
+import GoodsImg from '@/pages/components/GoodsImg';
 import moment from 'moment';
 import TableNotData from '@/components/TableNotData';
 import Toolbar from './components/Toolbar';
 import { storage } from '@/utils/utils';
 import SignHandle from './components/SignHandle';
-import { getRangeDate } from '@/utils/huang';
-import SortComponent from './components/Sort';
+import { getRangeDate, toIndexFixed } from '@/utils/huang';
 import {
   Link,
   useDispatch,
@@ -46,6 +43,8 @@ moment.locale('zh-cn');
 interface ICommentMonitorList {
   code: number;
   data: {
+    asc: null|boolean;
+    order: string;
     total: number;
     current: number;
     size: number;
@@ -53,6 +52,12 @@ interface ICommentMonitorList {
     records: [];
   };
 }
+
+interface ISortedInfo {
+  order: 'ascend' | 'descend'; // 升序降序
+  columnKey: string; // 排序字段
+}
+
 
 let requestHeader = {};
 const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => {
@@ -70,7 +75,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
   const [dateEnd] = useState<string>(end);
   const { storeName } = storage.get('currentShop') as API.IShop; // 当前选中店铺
   const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
-  const [currentOrder, setCurrentOrder] = useState(''); // 当前排序的列字段
+  const [sortedInfo, setSortedInfo] = useState<ISortedInfo|null>(null);
 
   // 初始化请求数据
   const requestData: CommectMonitor.IRequestDataType = {
@@ -113,12 +118,28 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         size,
         total,
         current,
+        asc,
+        order,
       } } = datas as ICommentMonitorList;
       if ( code === 200) {
+        let myAsc = null;
         setDataSource(records);
         setPageSize(size);
         setPageTotal(total);
         setPageCurrent(current);
+        if (asc === null) {
+          myAsc = null;
+        } else if (asc === true) {
+          myAsc = 'ascend';
+        } else if (asc === false) {
+          myAsc = 'descend';
+        }
+        setSortedInfo({
+          ...{
+            columnKey: order,
+            order: myAsc,
+          },
+        } as ISortedInfo);
       } else {
         message.error('列表异常！');
       }
@@ -207,31 +228,17 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     }
   };
 
-  const handleOrder = (obj: { value: string; order: string|boolean }) => {
-    setCurrentOrder(obj.value);
-    const objs = {
-      order: obj.value,
-      asc: obj.order,
-    };
-
-    const data = Object.assign(requestData, requestHeader, objs);
-    setLoading(true);
-    requestBody(data);
-  };
 
   const columns: ColumnsType = [
     {
-      title: <SortComponent 
-        title="日期" 
-        isTabBoolean
-        defaultSort="asc"
-        orderValue={currentOrder} 
-        value="reviewTime" 
-        callback={handleOrder} />,
+      title: '日期',
       dataIndex: 'reviewTime',
-      key: 'name',
+      key: 'reviewTime',
       align: 'center',
       width: '100px', 
+      sorter: true,
+      sortOrder: sortedInfo?.columnKey === 'reviewTime' ? sortedInfo?.order : null,
+      showSorterTooltip: false,
       render(value) {
         return (
           <div className={styles.date}>
@@ -240,17 +247,14 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         );
       },
     }, {
-      title: <SortComponent 
-        title="星级" 
-        isTabBoolean 
-        value="star"
-        defaultSort="asc"
-        orderValue={currentOrder} 
-        callback={handleOrder} />,
+      title: '星级',
       dataIndex: 'star',
-      key: 'age',
+      key: 'star',
       align: 'center',
       width: '150px',
+      sorter: true,
+      sortOrder: sortedInfo?.columnKey === 'star' ? sortedInfo?.order : null,
+      showSorterTooltip: false,
       render(value) {
         return <Rate 
           allowHalf 
@@ -267,7 +271,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       title: '评论内容',
       dataIndex: 'reviewContent',
       key: 'reviewContent',
-      align: 'center',
+      align: 'left',
       width: 330,
       className: styles.commect_content,
       render(value, rowData){
@@ -290,8 +294,9 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       title: '用户笔名',
       dataIndex: 'reviewerName',
       key: 'reviewerName',
-      align: 'center',
+      align: 'left',
       width: 140,
+      className: styles.reviewerName,
       render(value, row) {
         const { reviewerLink } = row as { reviewerLink: string };
         return (
@@ -326,7 +331,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         const titleLink = data.titleLink;
         return (
           <div className={styles.product_info}>
-            <img src={data.imgLink || emptyImg as string}/>
+            <GoodsImg src={data.imgLink} className={styles.img} alt="商品" width={46} />
             <div>
               <Tooltip 
                 getPopupContainer={() => document.querySelector('.monitor_box') as HTMLElement}
@@ -347,22 +352,19 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         );
       },
     }, {
-      title: <SortComponent 
-        title="Review" 
-        isTabBoolean
-        defaultSort="asc"
-        orderValue={currentOrder} 
-        value="reviewNum" 
-        callback={handleOrder} />,
+      title: 'Review',
       dataIndex: 'reviewScore',
       key: 'reviewScore',
       align: 'center',
-      width: 120, 
+      width: 120,
+      sorter: true,
+      sortOrder: sortedInfo?.columnKey === 'reviewScore' ? sortedInfo?.order : null,
+      showSorterTooltip: false,
       render(value, row) {
         const { reviewScore, reviewNum } = row as CommectMonitor.IRowDataType;
         return (
           <div className={styles.reviewScore}>
-            { reviewScore }
+            { toIndexFixed(reviewScore, 1) }
             <span>（{reviewNum}）</span>
           </div>
         );
@@ -486,6 +488,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     pageSize,
     current: pageCurrent,
     showQuickJumper: true, // 快速跳转到某一页
+    showSizeChanger: true,
     showTotal: (total: number) => `共 ${total} 个`,
     onChange(current: number, size: number | undefined){
       setPageCurrent(current);
@@ -506,7 +509,26 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     rowClassName: () => styles.rowStyle,
     pagination: pageConfig,
     scroll: { 
-      y: 'calc(100vh - 370px)', 
+      y: 'calc(100vh - 410px)', 
+    },
+    // eslint-disable-next-line
+    sortDirections: ['descend', 'ascend'],
+    onChange(pagination: {}, filters: {}, sorter: any) {
+      const {
+        field,
+        order,
+      } = sorter;
+      //只有排序处理
+      // eslint-disable-next-line
+      const asc  = order === 'ascend' ? true : order === 'descend' ? false : null;
+      // eslint-disable-next-line
+      const objs: any = {
+        order: field,
+        asc,
+      };
+      const data = Object.assign(requestData, requestHeader, objs);
+      setLoading(true);
+      requestBody(data);
     },
     className: 'h-scroll',
   };
