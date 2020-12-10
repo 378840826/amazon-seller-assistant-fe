@@ -23,6 +23,22 @@ const UserModel: IUserModelType = {
       email: '',
       phone: '',
       topAccount: false,
+      memberExpirationDate: '',
+      memberExpired: false,
+      memberFunctionalSurplus: [
+        { functionName: '绑定店铺', frequency: 0 },
+        { functionName: '广告授权店铺', frequency: 0 },
+        { functionName: '子账号', frequency: 0 },
+        { functionName: '智能调价', frequency: 0 },
+        { functionName: 'ASIN总览报表导出', frequency: 0 },
+        { functionName: 'ASIN动态监控', frequency: 0 },
+        { functionName: '跟卖监控', frequency: 0 },
+        { functionName: 'Review监控', frequency: 0 },
+        { functionName: '搜索排名监控', frequency: 0 },
+        { functionName: '自动邮件', frequency: 0 },
+        { functionName: '补货计划导出', frequency: 0 },
+        { functionName: 'PPC托管', frequency: 0 },
+      ],
     },
   },
 
@@ -114,6 +130,19 @@ const UserModel: IUserModelType = {
     },
     modifyCurrentUsername(state, { payload }) {
       state.currentUser.username = payload;
+    },
+
+    // 更新功能余量次数（默认调用一次余量减少 1）
+    updateMemberFunctionalSurplus(state, { payload }) {
+      // quantity 功能余量减少的数值，默认为 1， 增加则设为负数
+      const { functionName, quantity } = payload;
+      for (let index = 0; index < state.currentUser.memberFunctionalSurplus?.length; index++) {
+        const element = state.currentUser.memberFunctionalSurplus[index];
+        if (element.functionName === functionName) {
+          element.frequency -= quantity || 1;
+          return;
+        }
+      }
     },
   },
 };

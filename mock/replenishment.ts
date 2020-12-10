@@ -174,4 +174,14 @@ export default {
       });
     }, 500);
   },  
+
+  // 更新时间
+  'GET /api/mws/fis/update-time': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: '2020-12-08 16:41:25 (太平洋时间)',
+      });
+    }, 500);
+  },
 };

@@ -5,6 +5,7 @@ import { Table, Pagination, message, Modal } from 'antd';
 import { requestFeedback, requestErrorFeedback, getPageQuery } from '@/utils/utils';
 import { judgeFastPrice, judgeRuleOpen } from './utils';
 import GoodsIcon from '@/pages/components/GoodsIcon';
+import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import { getFullColumns } from './cols';
 import Header from './Header';
 import { addMonitor } from '@/services/goodsList';
@@ -315,6 +316,7 @@ const GoodsList: React.FC = () => {
 
   return (
     <div className={styles.page}>
+      <PageTitleRightInfo functionName={'智能调价'} />
       <Header />
       <Table
         size="middle"

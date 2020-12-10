@@ -222,9 +222,28 @@ const GoodsListModel: IGoodsListModelType = {
     },
 
     // 商品调价开关
-    *switchAdjustSwitch({ payload, callback }, { call, put }) {
+    *switchAdjustSwitch({ payload, callback }, { call, put, select }) {
       const res = yield call(updateAdjustSwitch, payload);
       if (res.code === 200) {
+        // 更新会员功能余量(批量操作时，可能部分商品的开关状态不会改变，找出改变了开关状态的商品的数量)
+        const { adjustSwitch, ids } = payload;
+        const goodsRecords: API.IGoods[] = yield select(
+          (state: IConnectState) => state.goodsList.goods.records
+        );
+        let quantity = 0;
+        goodsRecords.forEach(goods => {
+          if (ids.includes(goods.id) && goods.adjustSwitch !== adjustSwitch) {
+            quantity++;
+          }
+        });
+        yield put({
+          type: 'user/updateMemberFunctionalSurplus',
+          payload: {
+            functionName: '智能调价',
+            quantity: adjustSwitch ? quantity : -quantity,
+          },
+        });
+        // 更新商品数据
         const { data: { records } } = res;
         yield put({
           type: 'updateGoodsList',
