@@ -10,6 +10,7 @@ import { requestErrorFeedback, requestFeedback, Iconfont, objToQueryString, day 
 import { IConnectState } from '@/models/connect';
 import CustomCols from '../CustomCols';
 import BatchSetting from '../BatchSetting';
+import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import styles from './index.less';
 
 const { Search } = Input;
@@ -203,27 +204,49 @@ const Header: React.FC = () => {
 
   // 导出
   const handleDownload = () => {
-    setExportBtnLoading(true);
-    const url = getExportFileUrl();
-    fetch(url, {
-      method: 'GET',
-      headers: new Headers({
-        StoreId: currentShopId,
-      }),
-    })
-      .then(res => res.blob())
-      .then(data => {
-        const blobUrl = window.URL.createObjectURL(data);
-        download(blobUrl);
-        setExportBtnLoading(false);
-      });
+    Modal.confirm({
+      title: '本次导出将消耗1次导出次数',
+      icon: null,
+      okText: '确定',
+      cancelText: '取消',
+      centered: true,
+      onOk() {
+        setExportBtnLoading(true);
+        const url = getExportFileUrl();
+        fetch(url, {
+          method: 'GET',
+          headers: new Headers({
+            StoreId: currentShopId,
+          }),
+        })
+          .catch(err => {
+            message.error('导出失败，请稍后再试！');
+            return err;
+          })
+          .then(res => res.blob())
+          .then(data => {
+            const blobUrl = window.URL.createObjectURL(data);
+            download(blobUrl);
+            setExportBtnLoading(false);
+            // 减少一次导出次数
+            dispatch({
+              type: 'user/updateMemberFunctionalSurplus',
+              payload: {
+                functionName: '补货计划导出',
+              },
+            });
+          })
+          .catch(err => {
+            console.error('导出发生错误', err);
+            setExportBtnLoading(false);
+          });
+      },
+    });
   };
   
   return (
     <div className={styles.Header}>
-      <div className={styles.updateTime}>
-        <span>更新时间：</span>{updateTime}
-      </div>
+      <PageTitleRightInfo functionName={'补货计划导出'} updateTime={updateTime} />
       <span className={styles.SearchContainer}>
         <Search
           className={styles.Search}

@@ -10,7 +10,7 @@ import {
   bindShop,
 } from '@/services/shop';
 import { storage } from '@/utils/utils';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 import { history } from 'umi';
 import { 
   ruleAddRouter, 
@@ -133,6 +133,14 @@ const GlobalModel: IGlobalModelType = {
             type: 'deleteMwsShop',
             payload: { id: storeId },
           });
+          // 更新可绑定店铺数量
+          yield put({
+            type: 'user/updateMemberFunctionalSurplus',
+            payload: {
+              functionName: '绑定店铺',
+              quantity: -1,
+            },
+          });
         }
       }
       callback && callback(res.code, res.message);
@@ -163,18 +171,33 @@ const GlobalModel: IGlobalModelType = {
     },
 
     // 绑定 mws 店铺
-    *bindShop({ payload, callback }, { call, put }) {
+    *bindShop({ payload, callback }, { call, put, select }) {
       const { sellerId, storeName, token, europe, northAmerica, asiaPacific } = payload;
       const marketplaces = [].concat(northAmerica || [], europe || [], asiaPacific || []);
+      // 判断绑定店铺的数量和剩余可绑定的数量
+      const memberFunctionalSurplus: { functionName: string; frequency: number }[] = yield select(
+        (state: IConnectState) => {
+          return state.user.currentUser.memberFunctionalSurplus;
+        }
+      );
+      // 可绑定店铺的数量
+      const remaining = memberFunctionalSurplus?.find(item => 
+        item.functionName === '绑定店铺'
+      )?.frequency || 0;
+      // 不能超过可绑定店铺的数量
+      if (marketplaces.length > remaining) {
+        message.error(`当前会员等级剩余可绑定店铺：${remaining}个`);
+        return;
+      }
       const res = yield call(bindShop, { sellerId, storeName, token, marketplaces });
       if (res.code === 200) {
-        callback && callback(res.message);
         // 接口没有返回绑定成功的店铺，重新获取店铺列表
         yield put({
           type: 'fetchShopList',
           payload: { type: 'mws' },
         });
       }
+      callback && callback(res.code, res.message);
     },
   },
 

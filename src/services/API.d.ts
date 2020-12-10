@@ -22,6 +22,9 @@ declare namespace API {
     email: string;
     phone: string;
     topAccount: boolean;
+    memberExpirationDate: string;
+    memberExpired: boolean;
+    memberFunctionalSurplus: { functionName: string; frequency: number }[];
   }
 
   export type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';

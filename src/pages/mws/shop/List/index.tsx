@@ -6,6 +6,7 @@ import { ColumnProps } from 'antd/es/table';
 import editable from '@/pages/components/EditableCell';
 import tokenEditable from './TokenEditableCell';
 import { requestFeedback } from '@/utils/utils';
+import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import styles from './index.less';
 
 const { confirm } = Modal;
@@ -158,13 +159,20 @@ const ShopList: React.FC = () => {
   ];
 
   const loading = loadingEffect.effects['global/fetchShopList'];
+  const unbindLoading = loadingEffect.effects['global/unbindMwsShop'];
   return (
     <div className={styles.page}>
-      <Link to="/shop/bind">
-        <Button type="primary" className={styles.bindBtn}>添加店铺</Button>
-      </Link>
+      <PageTitleRightInfo
+        functionName={'绑定店铺'}
+        rightElement={
+          <Link to="/shop/bind">
+            <Button type="primary" className={styles.bindBtn}>添加店铺</Button>
+          </Link>
+        }
+        containerStyle={{ top: -44 }}
+      />
       <Table
-        loading={loading}
+        loading={loading || unbindLoading}
         columns={columns}
         rowKey="id"
         dataSource={mwsShop}

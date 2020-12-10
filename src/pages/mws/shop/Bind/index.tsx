@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useDispatch, useSelector, history } from 'umi';
+import { Link, useDispatch, useSelector } from 'umi';
 import { Store } from 'redux';
 import { copyText } from '@/utils/utils';
 import {
@@ -79,9 +79,13 @@ const ShopBind: React.FC = () => {
     dispatch({
       type: 'global/bindShop',
       payload: { ...values },
-      callback: (msg: string) => {
-        history.push('./list');
-        message.success(msg);
+      callback: (code: number, msg: string) => {
+        if (code === 200) {
+          window.location.href = '/shop/list';
+          message.success(msg);
+        } else {
+          message.error(msg);
+        }
       },
     });
   };
