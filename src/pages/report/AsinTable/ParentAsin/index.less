@@ -1,0 +1,393 @@
+@bg-color: @table-row-hover-bg;
+
+.childAsin {
+  width: 100%;
+
+  :global(.ant-table-body) {
+    overflow-y: auto !important;
+  }
+
+  div:global(.ant-table) {
+    margin: 0 !important;
+  }
+
+  :global(.ant-table-container)::after {
+    box-shadow: none !important;
+  }
+
+  .table {
+    background-color: #fff;
+    margin: 20px 0 0 0;
+
+    & > :global(.ant-spin-nested-loading) > div:global(.ant-spin-container) > div:global(.ant-table:first-child) {
+      border: 1px solid @divider-line-color;
+    }
+  }
+
+  tbody tr {
+    td {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      color: @text-color;
+      border: 0;
+    }
+
+    &:hover * {
+      background-color: @bg-color !important;
+    }
+  }
+
+  thead {
+    th {
+      border-width: 0 !important;
+      padding: 0 !important;
+      height: 44px;
+      // border: 1px solid red !important;
+    }
+  }
+
+  .childTable {
+    td {
+      border-bottom: 1px solid #eee;
+      padding: 0 6px;
+    }
+
+    // tr:nth-child(odd) > td {
+    //   border-bottom: 1px solid red !important;
+    // }
+  }
+
+  // asin外面的容器行
+  .asinRowStyle {
+    th {
+      padding: 0;
+    }
+
+    > td {
+      border-width: 0 !important;
+      padding: 0;
+    }
+
+    &:nth-child(odd) td {
+      background-color: #f9f9f9;
+      border-color: #e8e8e8;
+    }
+
+    &:nth-child(odd) tfoot td {
+      border-color: #e8e8e8;
+    }
+
+    // 父ASIN列表
+    .parentAsinCol {
+      padding: 16px 0 !important;
+
+      &::after {
+        box-shadow: none;
+      }
+    }
+
+    &:nth-child(odd) tfoot {
+      td.childTableChildAsin,
+      td.summarySku {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+
+  .mainTd {
+    padding: 0 !important;
+  }
+
+  // 表头
+  .headTable {
+    tbody {
+      display: none;
+    }
+  }
+
+  th.childAsinCol {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+    padding-left: 0;
+
+    .text {
+      max-width: 210px;
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .childAsinCol {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+    padding: 0;
+    left: 100px !important;
+    z-index: 999;
+  }
+
+  th.skuCol {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+    left: 310px !important;
+    padding: 0 10px 0 20px;
+
+    .text {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  td.skuCol {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+    left: 310px !important;
+    padding: 0 10px 0 20px;
+
+    .price {
+      color: @error-color;
+    }
+  }
+
+  // 商品列
+  .productCol {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+
+    img {
+      width: 46px;
+      height: 46px;
+      margin-right: 6px;
+    }
+
+    .imgFont {
+      font-size: 46px;
+      margin-right: 6px;
+    }
+
+    .details {
+      text-align: left;
+
+      .linkIcon {
+        color: @text-color-secondary;
+        margin-right: 2px;
+      }
+
+      .title {
+        width: 155px;
+        overflow: hidden;
+        line-height: 18px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        color: @link-color;
+
+        &:hover {
+          color: @primary-color;
+
+          .linkIcon {
+            color: @primary-color;
+          }
+        }
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+
+        a.title {
+          color: @btn-text-color;
+          width: 88px;
+
+          &:hover {
+            color: @primary-color;
+          }
+        }
+
+        span:last-child {
+          color: @warning-color;
+        }
+      }
+    }
+  }
+
+  // 小计
+  .summary {
+    height: 48px;
+    line-height: 48px;
+    font-weight: 600;
+
+    td.base {
+      border-top: 1px solid #eee;
+      border-bottom: 0;
+      height: 48px;
+      line-height: 48px;
+
+      p {
+        line-height: 16px;
+      }
+    }
+
+    // 子ASIN列
+    .summaryChildAsin {
+      position: sticky;
+      z-index: 2;
+      background-color: #fff;
+      left: 100px;
+
+      .text {
+        max-width: 190px;
+        text-align: right;
+        display: block;
+      }
+    }
+
+    // SKU
+    .summarySku {
+      position: sticky;
+      z-index: 2;
+      left: 310px;
+      background-color: #fff;
+      padding: 0 !important;
+
+      .text {
+        max-width: 170px;
+        text-align: right;
+        display: block;
+        padding-right: 33px;
+      }
+      // &::after {
+      //   box-shadow: inset 8px 0 8px -8px rgba(0, 0, 0, 0.1);
+      //   position: absolute;
+      //   top: 0;
+      //   right: 0;
+      //   bottom: -1px;
+      //   width: 30px;
+      //   transform: translateX(100%);
+      //   transition: box-shadow 0.3s;
+      //   content: '';
+      //   pointer-events: none;
+      // }
+    }
+  }
+}
+
+.totalSales {
+  width: 115px;
+  min-width: 115px;
+}
+
+.totalOrderQuantity {
+  width: 115px;
+  min-width: 115px;
+}
+
+.totalSalesQuantity {
+  width: 95px;
+  min-width: 95px;
+}
+
+.replyReviewRate {
+  width: 110px;
+  min-width: 110px;
+}
+
+.profit {
+  width: 100px;
+  min-width: 100px;
+}
+
+.profitRate {
+  width: 100px;
+  min-width: 100px;
+}
+
+.salesQuantityExceptOrderQuantity {
+  width: 125px;
+  min-width: 125px;
+}
+
+.avgSellingPrice {
+  width: 105px;
+  min-width: 105px;
+}
+
+.avgCustomerPrice {
+  width: 115px;
+  min-width: 115px;
+}
+
+.preferentialOrderQuantity {
+  width: 120px;
+  min-width: 120px;
+}
+
+.associateSales {
+  width: 120px;
+  min-width: 120px;
+}
+
+.pageView {
+  width: 90px;
+  min-width: 90px;
+}
+
+.session {
+  width: 105px;
+  min-width: 105px;
+}
+
+.pageViewExceptSession {
+  width: 145px;
+  min-width: 145px;
+}
+
+.conversionsRate {
+  width: 105px;
+  min-width: 105px;
+}
+
+.returnQuantity {
+  width: 105px;
+  min-width: 105px;
+}
+
+.returnRate {
+  width: 95px;
+  min-width: 95px;
+}
+
+.b2bSales {
+  width: 120px;
+  min-width: 120px;
+}
+
+.b2bSalesQuantity {
+  width: 110px;
+  min-width: 110px;
+}
+
+.b2bOrderQuantity {
+  width: 120px;
+  min-width: 120px;
+}
+
+.b2bSalesQuantityExceptOrderQuantity {
+  width: 160px;
+  min-width: 160px;
+}
+
+.b2bAvgSellingPrice {
+  width: 130px;
+  min-width: 130px;
+}
+
+.b2bAvgCustomerPrice {
+  width: 150px;
+  min-width: 150px;
+}

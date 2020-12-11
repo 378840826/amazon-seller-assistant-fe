@@ -2,12 +2,10 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 11:14:36
- * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\utils\huang.ts
  */
 
 import { storage } from '@/utils/utils';
-import { Moment } from 'moment';
 /**
   storageKeys localStorage Key 放这里
   isEmptyObj 判断对象是否为空
@@ -26,6 +24,9 @@ export const storageKeys = {
   asinOrderCheckDoufu: 'asinOrderCheckDoufu', // ASIN总览 - 订单解读选中的豆腐块
   asinB2BCheckDoufu: 'asinB2BCheckDoufu', // ASIN总览 - B2B销售 选中的豆腐块
   asinB2BDateRange: 'asinB2BDateRange', // ASIN总览 - B2B销售 周期
+  adinTableCalendar: 'adinTableCalendar', // ASIN报表 周期
+  asinTableChildCustomCol: 'asinTableChildCustomCol', // ASIN报表 子ASIN自定义列
+  asinTableParentCustomCol: 'asinTableParentCustomCol', // ASIN报表 子ASIN自定义列
 };
 
 // 判断对象是否为空
@@ -140,6 +141,10 @@ export function getRangeDate(query: string|number, isMoment = true, date = {}) {
     start = moment(date).subtract(1, 'year').startOf('year');
     end = moment(date).subtract(1, 'year').endOf('year');
     break;
+  case 'quarter': // 季度
+    start = moment(moment(date)).startOf('quarter').format('YYYY-MM-DD');
+    end = moment(moment(date)).endOf('quarter').format('YYYY-MM-DD');
+    break;
   default: 
     start = moment(date).subtract(query as number - 1, 'day');
     end = moment(date);
@@ -164,6 +169,7 @@ export function getRangeDate(query: string|number, isMoment = true, date = {}) {
  * @param decimals 保留几位小数
  * @param thousandsSep  千分位符号
  * @param decPoint 小数点符号
+ * @param zeroIsSave 保留的小数位为0是否显示 如 1,255.000 true=1,255.000 false=1,255
  */
 // eslint-disable-next-line
 export function moneyFormat(
@@ -171,6 +177,7 @@ export function moneyFormat(
   decimals = 0,
   thousandsSep = ',',
   decPoint = '.',
+  zeroIsSave = true,
 ) {
 
   const num = String(dataNumber).replace(/[^0-9+-Ee.]/g, '');
@@ -195,6 +202,12 @@ export function moneyFormat(
     s[1] = s[1] || '';
     s[1] += new Array(prec - s[1].length + 1).join('0');
   }
+
+  // 去掉0
+  if (zeroIsSave === false && decimals > 0 && Number(s[1]) === 0) {
+    s.splice(1, 1);
+  }
+  
   return s.join(dec);
 }
 

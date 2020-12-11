@@ -1,0 +1,43 @@
+.tableHead {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 44px;
+  line-height: 44px;
+
+  .hint {
+    color: @text-color-secondary;
+    font-size: @font-size-sm;
+    margin: 0 0 0 5px;
+
+    &:hover {
+      color: @warning-color;
+    }
+  }
+
+  .sort {
+    color: @text-color-secondary;
+    transition: all 0.3s;
+    font-size: @font-size-sm;
+    margin-left: 5px;
+  }
+
+  .sort.active {
+    transform: rotate(180deg);
+  }
+
+  &.sorted {
+    background-color: #e5e8eb;
+  }
+
+  // 不显示环比的样式
+  &.notShowTwo {
+    height: 44px;
+    line-height: 44px;
+  }
+
+  &:hover {
+    background-color: #e5eef7;
+    cursor: pointer;
+  }
+}

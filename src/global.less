@@ -269,7 +269,13 @@ a:hover {
   }
 
   .ant-switch-handle {
-    top: 1px;
+    width: 16px;
+    height: 16px;
+    top: 2px;
+  }
+
+  &[aria-checked=true] .ant-switch-handle {
+    left: calc(100% - 18px) !important;
   }
 }
 
@@ -317,4 +323,21 @@ div.ant-typography {
   height: 1px;
   background-color: #666;
   display: inline-block;
+}
+
+// 搜索框 280px
+.h-search {
+  width: 240px !important;
+
+  button.ant-input-search-button {
+    min-width: 40px;
+    width: 40px;
+    font-size: 19px;
+    padding: 0;
+
+    span {
+      width: 40px;
+      margin-left: -2px;
+    }
+  }
 }

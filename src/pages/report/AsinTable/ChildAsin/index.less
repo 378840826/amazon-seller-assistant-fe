@@ -1,0 +1,159 @@
+.childAsin {
+  width: 100%;
+
+  .table {
+    margin: 20px 0 0;
+    background-color: #fff;
+
+    :global(.ant-spin-container) :global(.ant-table) {
+      border: 1px solid @divider-line-color;
+
+      :global(.ant-table-body) {
+        overflow-y: auto !important;
+      }
+    }
+
+    // 表头
+    thead th {
+      background-color: @table-row-hover-bg;
+      height: 44px;
+      max-height: 44px;
+      padding: 0 !important;
+      color: @heading-color;
+      border-width: 0 !important;
+      // border: 1px solid #00c6a5 !important;
+    }
+
+    tbody {
+      td {
+        padding: 0 6px;
+        border: 0;
+        // border: 1px solid #00c6a5 !important;
+      }
+
+      tr:hover td {
+        background-color: @table-row-hover-bg !important;
+      }
+
+      tr:nth-child(2n+1) td {
+        background-color: @simple-table-header-bg;
+      }
+    }
+  }
+}
+
+// 关联销售
+.relatedSalesBox {
+  width: 390px;
+  position: relative;
+
+  div:global(.ant-popover-title) {
+    color: @heading-color;
+    font-size: @font-size-lg;
+    padding: 16px 20px;
+  }
+
+  div:global(.ant-popover-inner-content) {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-bottom: 0;
+    padding-top: 5px;
+  }
+
+  .loading {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 0 -16px;
+    padding-bottom: 30px;
+  }
+
+  .listBox {
+    width: 100%;
+
+    .num {
+      margin: 10px 10px 0 3px;
+    }
+
+    .productImg {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 auto;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid @divider-line-color;
+      }
+
+      .details {
+        margin: 0 0 5px 6px;
+
+        .title {
+          overflow: hidden;
+          line-height: 18px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          white-space: normal;
+
+          .icon {
+            color: @text-color-secondary;
+          }
+
+          &:hover {
+            color: @primary-color;
+
+            .icon {
+              color: @link-color;
+            }
+          }
+        }
+
+        .p {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .asin {
+          color: @btn-text-color;
+
+          &:hover {
+            color: @link-color;
+          }
+        }
+
+        .price {
+          color: @error-color;
+        }
+
+        .ranking {
+          color: @warning-color;
+          margin-right: 12px;
+        }
+      }
+    }
+  }
+
+  .notTable {
+    color: @text-color-secondary;
+    font-size: @font-size-base;
+  }
+}
+
+.showRsText {
+  color: @link-color;
+  cursor: pointer;
+
+  &.active {
+    color: #00c6a5;
+  }
+
+  &:hover {
+    color: #00c6a5;
+  }
+}

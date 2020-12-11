@@ -1,0 +1,64 @@
+.parentCustom {
+  width: 328px;
+
+  .common {
+    display: flex;
+    flex-direction: column;
+
+    div:global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    div:global(.ant-checkbox-group) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label:global(.ant-checkbox-group-item) {
+      margin-bottom: 6px;
+    }
+
+    span:global(.ant-checkbox) {
+      width: 14px;
+      height: 14px;
+
+      span:global(.ant-checkbox-inner) {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .title {
+      color: #444;
+      font-size: @font-size-base;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+  }
+
+  .leftLayout {
+    float: left;
+
+    .asin {
+      display: flex;
+      flex-direction: column;
+
+      label:global(.ant-checkbox-wrapper) {
+        margin: 0 0 6px;
+      }
+    }
+
+    .sales {
+      margin-top: 74px;
+    }
+  }
+
+  .rightLayout {
+    float: right;
+
+    .refund,
+    .parentb2b {
+      margin-top: 8px;
+    }
+  }
+}

@@ -1,0 +1,394 @@
+// 搜索框栏
+.search {
+  background-color: #fff;
+  padding: 0 20px;
+
+  div:global(.ant-form-item) {
+    margin-bottom: 0;
+  }
+
+  .filternBtn {
+    background-color: @primary-color;
+    color: #fff;
+    float: left;
+    margin-left: 60px;
+    margin-top: 14px;
+
+    .arrowIcon {
+      transition: all 0.3s;
+      font-size: @font-size-sm;
+    }
+
+    .arrowIcon.active {
+      transform: rotate(182deg) translateY(2px);
+    }
+  }
+
+  // 自定义列
+  div:global(.customBox),
+  div:global(.customBox1) {
+    margin-left: 20px;
+
+    li:global(.ant-dropdown-menu-item):hover {
+      background-color: #fff;
+    }
+
+    .downArrow {
+      transition: all 0.3s;
+      font-size: 12px !important;
+      transform: translateY(2px);
+      color: #bfbfbf;
+    }
+
+    .downArrow.active {
+      transform: rotate(180deg);
+      color: #59b4ff;
+    }
+
+    &:hover .downArrow {
+      color: #59b4ff;
+    }
+  }
+
+  .searchInput {
+    padding: 14px 0;
+    color: red;
+  }
+
+  // 条件组
+  .conditions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding: 14px 0 0 20px;
+    float: left;
+
+    @media screen and (max-width: 1620px) {
+      & {
+        float: none;
+      }
+    }
+
+    .nameText {
+      color: @text-color;
+      margin: 4px 0 0 0;
+    }
+
+    .condition {
+      width: 120px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border: 1px solid @border-color-base;
+      color: @text-color;
+      border-radius: @border-radius-base;
+      margin: 0 10px 0 0;
+      cursor: pointer;
+      position: relative;
+
+      span.text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        padding: 0 10px;
+      }
+
+      .closeIcon {
+        width: 16px;
+        height: 18px;
+        font-size: 22px;
+        color: @error-color;
+        background-color: #fff;
+        right: -4px;
+        top: -13px;
+        opacity: 0;
+        position: absolute;
+      }
+
+      &:hover {
+        .closeIcon {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .rightLayout {
+    display: flex;
+    align-items: center;
+    float: right;
+    padding: 14px 0;
+
+    .ratioSwitch .text {
+      padding-right: 3px;
+    }
+
+    .calendar {
+      display: flex;
+      align-items: center;
+      margin: 0 20px;
+    }
+
+    .line {
+      width: 106px;
+      margin: 0 0 0 20px;
+
+      .icon {
+        color: @text-color-secondary;
+      }
+
+      &:hover .icon {
+        color: @primary-color;
+      }
+    }
+  }
+}
+
+// 高级筛选出来的条件组
+.conditionBox {
+  background-color: #fafafa;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 14px 20px 0;
+
+  .conditionItem {
+    border: 1px solid @border-color-base;
+    border-radius: 2px;
+    margin-right: 8px;
+    position: relative;
+    color: @text-color;
+    padding: 0 38px 0 10px;
+    margin-bottom: 14px;
+    transition: all 0.3s;
+    background-color: #fff;
+
+    .textName {
+      color: @text-color-secondary;
+    }
+
+    .close {
+      width: 32px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      color: @error-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+        background-color: @error-color;
+      }
+    }
+  }
+
+  .clearAll {
+    color: @link-color;
+    padding-left: 12px;
+    transition: all 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      color: @error-color;
+    }
+  }
+}
+
+.filtern {
+  background-color: #fafafa;
+}
+
+// 高级筛选___
+span.emptyLine {
+  display: inline-block;
+  width: 24px;
+  border-bottom: 1px solid #ccc;
+
+  &.left {
+    margin-right: 5px;
+  }
+
+  &.right {
+    margin-left: 5px;
+  }
+}
+
+.adType {
+  padding-left: 16px;
+
+  .text1 {
+    color: @text-color-secondary;
+    padding: 0 2px;
+  }
+
+  .text2 {
+    color: @text-color;
+    padding: 0 2px;
+  }
+}
+
+// 商品列
+.productCol {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+
+  img {
+    width: 46px;
+    height: 46px;
+    margin-right: 6px;
+  }
+
+  .imgFont {
+    font-size: 46px;
+    margin-right: 6px;
+  }
+
+  .details {
+    text-align: left;
+
+    .linkIcon {
+      color: @text-color-secondary;
+      margin-right: 2px;
+    }
+
+    .title {
+      width: 155px;
+      overflow: hidden;
+      line-height: 18px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      white-space: normal;
+      color: @link-color;
+
+      &:hover {
+        color: @primary-color;
+
+        .linkIcon {
+          color: @primary-color;
+        }
+      }
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+
+      a.title {
+        color: @btn-text-color;
+        width: 88px;
+
+        &:hover {
+          color: @primary-color;
+        }
+      }
+
+      span:last-child {
+        color: @warning-color;
+      }
+    }
+  }
+}
+
+// SKU
+.skuListCol {
+  width: 170px;
+
+  .skuItem {
+    text-align: left;
+    padding: 5px 0 5px;
+
+    p.skus {
+      display: flex;
+      justify-content: space-between;
+
+      span:first-child {
+        width: 96px;
+        flex: 0 0 auto;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .price {
+        color: @error-color;
+      }
+    }
+
+    .footer {
+      span.stock {
+        float: left;
+      }
+
+      span.status {
+        float: right;
+        padding: 0 20px 0 10px;
+      }
+      // 在售
+      span.status.normal {
+        color: @text-color;
+      }
+
+      // 不可售    禁止显示    移除
+      span.status.other {
+        color: #bbb;
+      }
+    }
+  }
+
+  .skuItem:not(:last-child) {
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+// 有占比的列
+.haveProportion {
+  p:last-child {
+    // width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    // span.num {
+    //   width: 50%;
+    // }
+
+    span.num:first-child {
+      padding-right: 5px;
+      white-space: nowrap;
+    }
+
+    span.num:last-child {
+      padding-left: 5px;
+      white-space: nowrap;
+    }
+  }
+}
+
+.handleCol {
+  padding: 16px 6px !important;
+
+  .handleLink {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
+
+.parentAsinCol {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+// 右对齐的列
+tbody tr td.tdTextRight {
+  padding-right: 20px !important;
+}

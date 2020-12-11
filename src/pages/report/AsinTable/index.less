@@ -1,0 +1,265 @@
+div.asinTable {
+  color: @text-color;
+  position: relative;
+
+  // 表格公用
+  div:global(.ant-table) {
+    font-size: @font-size-sm !important;
+  }
+
+  ul:global(.ant-pagination) {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .tabs {
+    width: 100%;
+
+    div:global(.ant-tabs-nav) {
+      padding-left: 20px;
+      background-color: #fff;
+      margin-bottom: 0;
+    }
+
+    div:global(.ant-tabs-tab-active) div:global(.ant-tabs-tab-btn) {
+      color: @link-color;
+    }
+  }
+
+  .messageIcon {
+    position: absolute;
+    right: 20px;
+    top: 0;
+
+    .icon {
+      margin-top: 15px;
+      cursor: pointer;
+      color: @text-color-secondary;
+
+      &:hover {
+        color: @warning-color;
+      }
+    }
+
+    .icon.active {
+      color: @warning-color;
+    }
+
+    .messageBox {
+      position: absolute;
+      right: 0;
+      z-index: 1055;
+
+      .base {
+        height: 92px;
+        background-color: #fff;
+        box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+        margin-left: auto;
+        text-align: center;
+        border-radius: @border-radius-base;
+        transition: all 0.3s;
+
+        p {
+          padding: 20px 0 10px;
+          text-align: center;
+        }
+
+        button {
+          border: 0;
+          box-shadow: none;
+        }
+
+        span.ignore {
+          color: @text-color-secondary;
+          padding-right: 12px;
+          cursor: pointer;
+          transition: all 0.3s;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+
+        .to {
+          color: @link-color;
+          padding-left: 12px;
+          cursor: pointer;
+          transition: all 0.3s;
+
+          &:hover {
+            color: @primary-color;
+          }
+        }
+      }
+
+      .base:not(:first-child) {
+        margin-top: 10px;
+      }
+
+      .data {
+        width: 390px;
+      }
+
+      .profit {
+        width: 390px;
+      }
+
+      .ad {
+        width: 390px;
+      }
+    }
+  }
+
+  .handleLink {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @btn-text-hover-color;
+    }
+  }
+
+  // 子ASIN
+  .table {
+    margin: 20px 0 0;
+    background-color: #fff;
+
+    // 表头
+    thead th {
+      background-color: #f2f6fb;
+      height: 44px;
+      padding-bottom: 0;
+      padding-top: 0;
+      color: @heading-color;
+    }
+
+    tbody td {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .adType {
+      .text1 {
+        color: @text-color-secondary;
+        padding: 0 2px;
+      }
+
+      .text2 {
+        color: @text-color;
+        padding: 0 2px;
+      }
+    }
+
+    // 商品列
+    .productCol {
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 46px;
+        height: 46px;
+        margin-right: 6px;
+      }
+
+      .details {
+        text-align: left;
+
+        .linkIcon {
+          color: @text-color-secondary;
+          margin-right: 2px;
+        }
+
+        .title {
+          width: 146px;
+          overflow: hidden;
+          line-height: 18px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          white-space: normal;
+
+          &:hover .linkIcon {
+            color: @primary-color;
+          }
+        }
+
+        footer {
+          display: flex;
+          justify-content: space-between;
+
+          a.title {
+            color: @btn-text-color;
+
+            &:hover {
+              color: @link-color;
+            }
+          }
+
+          span:last-child {
+            color: @warning-color;
+          }
+        }
+      }
+    }
+
+    // SKU
+    .skuListCol {
+      width: 170px;
+
+      .skuItem {
+        text-align: left;
+        padding: 5px 0 5px;
+
+        p.skus {
+          display: flex;
+          justify-content: space-between;
+
+          span:first-child {
+            width: 96px;
+            flex: 0 0 auto;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .footer {
+          span.stock {
+            float: left;
+          }
+
+          span.status {
+            float: right;
+            padding: 0 20px 0 10px;
+          }
+        }
+      }
+
+      .skuItem:not(:last-child) {
+        border-bottom: 1px solid @border-color-base;
+      }
+    }
+
+    // 有占比的列
+    .haveProportion {
+      p:last-child {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        // justify-content: space-between;
+        justify-content: center;
+
+        span.num {
+          width: 50%;
+        }
+
+        span.num:first-child {
+          padding-right: 3px;
+        }
+
+        span.num:last-child {
+          padding-right: 3px;
+        }
+      }
+    }
+  }
+}
