@@ -133,7 +133,8 @@ const AddSales: React.FC<IProps> = () => {
   const clickSaveConditions = () => {
     const data = form.getFieldsValue();
     data.safe = safeData;
-    if (!data.name) {
+    if (!data.name || data.name.trim() === '') {
+      message.error('规则名称不能为空');
       return;
     }
 

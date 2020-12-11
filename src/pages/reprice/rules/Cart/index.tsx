@@ -450,7 +450,7 @@ const AddSales: React.FC = () => {
   // 保存数据
   const clickSaveConditions = () => {
     const data = form.getFieldsValue();
-    if (!data.name) {
+    if (!data.name || data.name.trim() === '') {
       message.error('规则名称不能为空');
       return;
     }
@@ -466,7 +466,7 @@ const AddSales: React.FC = () => {
     for (let i = 0; i < data.self.unonly.length; i++) {
       if (data.self.unonly[i].action === cartsmmr[3].value) {
         if (!data.self.unonly[i].value) {
-          message.error('此数值不能为空');
+          message.error('条件和操作的输入值不能为空');
           return;
         }
       }
@@ -480,7 +480,7 @@ const AddSales: React.FC = () => {
     
     for (let i = 0; i < data.other.length; i++) {
       if (!data.other[i].value) {
-        message.error('此数值不能为空');
+        message.error('条件和操作的输入值不能为空');
         return;
       }
     }
@@ -493,7 +493,7 @@ const AddSales: React.FC = () => {
     for (let i = 0; i < data.nobody.length; i++) {
       if (data.nobody[i].action === cartsmmr[3].value) {
         if (!data.nobody[i].value) {
-          message.error('此数值不能为空');
+          message.error('条件和操作的输入值不能为空');
           return;
         }
       }
