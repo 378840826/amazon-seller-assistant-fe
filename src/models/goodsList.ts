@@ -2,6 +2,7 @@ import { IModelType, IConnectState } from '@/models/connect';
 import {
   queryGoodsList,
   getShopGroups,
+  getShopRules,
   updateAdjustSwitch,
   updatePriceFast,
   updateGoodsPrice,
@@ -19,6 +20,11 @@ import { storage } from '@/utils/utils';
 export type Order = 'descend' | 'ascend' | null | undefined;
 export type ParamsValue = string | number | boolean | undefined;
 
+export interface IRule {
+  id: string;
+  name: string;
+}
+
 export interface IGoodsListModelState {
   goods: {
     total: number;
@@ -33,6 +39,7 @@ export interface IGoodsListModelState {
       [key: string]: ParamsValue;
     };
   groups: API.IGroup[];
+  rules: IRule[];
   customCols: {
     [key: string]: boolean;
   };
@@ -74,6 +81,8 @@ const GoodsListModel: IGoodsListModelType = {
     },
     // 全部分组
     groups: [],
+    // 全部调价规则
+    rules: [],
     // 自定义列
     customCols: storage.get('goodsListCustomCols') || {
       group: true,
@@ -176,6 +185,19 @@ const GoodsListModel: IGoodsListModelType = {
         const { data: { records } } = res;
         yield put({
           type: 'saveShopGroups',
+          payload: { records },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 获取店铺全部调价规则
+    *fetchShopRules({ payload, callback }, { call, put }) {
+      const res = yield call(getShopRules, payload);
+      if (res.code === 200) {
+        const { data: { records } } = res;
+        yield put({
+          type: 'saveShopRules',
           payload: { records },
         });
       }
@@ -393,6 +415,12 @@ const GoodsListModel: IGoodsListModelType = {
     saveShopGroups(state, { payload }) {
       const { records } = payload;
       state.groups = records;
+    },
+
+    // 保存全部调价规则
+    saveShopRules(state, { payload }) {
+      const { records } = payload;
+      state.rules = records;
     },
     
     // 修改分组名称

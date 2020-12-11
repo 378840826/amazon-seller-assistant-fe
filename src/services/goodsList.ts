@@ -28,6 +28,13 @@ export async function getShopGroups(params: API.IParams) {
   });
 }
 
+// 获取全部规则
+export async function getShopRules(params: API.IParams) {
+  return request('/api/mws/nrule/list', {
+    data: params,
+  });
+}
+
 // 修改商品售价（单个/批量）
 export async function updateGoodsPrice(params: API.IParams) {
   return request('/api/mws/product/batch/update/price', {

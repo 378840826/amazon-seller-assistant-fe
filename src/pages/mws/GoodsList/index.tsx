@@ -23,7 +23,7 @@ interface IUpdatePrice {
 }
 
 interface IUpdateGoodsUserDefined {
-  (params: {
+  (record: API.IGoods, params: {
     id: string;
     sku: string;
     cost?: number;
@@ -45,6 +45,7 @@ const GoodsList: React.FC = () => {
   const {
     goods: goodsData,
     groups,
+    rules,
     customCols,
     searchParams,
     tableLoading,
@@ -87,6 +88,13 @@ const GoodsList: React.FC = () => {
       window.history.replaceState(null, '', '/product/list');
       dispatch({
         type: 'goodsList/fetchShopGroups',
+        payload: {
+          headersParams: { StoreId: currentShopId },
+        },
+        callback: requestErrorFeedback,
+      });
+      dispatch({
+        type: 'goodsList/fetchShopRules',
         payload: {
           headersParams: { StoreId: currentShopId },
         },
@@ -232,26 +240,17 @@ const GoodsList: React.FC = () => {
     });
   };
 
-  // 修改商品信息（成本，运费，最高价，最低价，调价规则）
-  const updateGoodsUserDefined: IUpdateGoodsUserDefined = (options) => {
-    const { id, sku, cost, freight, minPrice, maxPrice, ruleId, ruleName } = options;
-    // 后端没有返回这些数据，打包用来更新页面
-    const goods: {
-      id: string;
-      sku: string;
-      cost?: number;
-      freight?: number;
-      minPrice?: number;
-      maxPrice?: number;
-      ruleId?: string;
-      ruleName?: string;
-    } = { id, sku };
-    cost ? goods.cost = cost : null;
-    freight ? goods.freight = freight : null;
-    minPrice ? goods.minPrice = minPrice : null;
-    maxPrice ? goods.maxPrice = maxPrice : null;
-    ruleId ? goods.ruleId = ruleId : null;
-    ruleName ? goods.ruleName = ruleName : null;
+  // 修改商品信息（成本，运费，最高价，最低价，调价规则）record 为商品全部的数据
+  const updateGoodsUserDefined: IUpdateGoodsUserDefined = (record, options) => {
+    const newRecord = { ...record, ...options };
+    const goods = {
+      sku: newRecord.sku,
+      cost: newRecord.cost,
+      freight: newRecord.freight,
+      minPrice: newRecord.minPrice,
+      maxPrice: newRecord.maxPrice,
+      ruleId: newRecord.ruleId,
+    };
     dispatch({
       type: 'goodsList/updateGoods',
       payload: {
@@ -304,6 +303,7 @@ const GoodsList: React.FC = () => {
       handleFastPrice,
       handleAddMonitor,
       groups,
+      rules,
       customCols,
       sort,
       order,
