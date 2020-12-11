@@ -46,7 +46,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
   const five = 98; // 5个字的列宽度
   const outer1 = 110; // PageView、 B2B订单量、综合ACoS、综合RoAS
   const outer2 = 100; // Session、B2B销量
-  const outer3 = 110; // PageView/Session , 本SKU广告销售额、本SKU广告订单量
+  const outer3 = 150; // PageView/Session , 本SKU广告销售额、本SKU广告订单量
   // B2B销量/订单量、B2B平均客单价、自然销售额、自然订单量
   const outer4 = 115; 
   const outer5 = 110; // B2B平均售价、
@@ -148,6 +148,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       />,
       align: 'center',
       width: 80,
+      render(val: number) {
+        return <p className={styles.parentAsinCol}>{val ? val : <Empty />}</p>;
+      },
     },
     {
       dataIndex: 'reviewScore',

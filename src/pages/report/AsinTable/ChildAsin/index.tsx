@@ -562,7 +562,7 @@ const ChildAsin: React.FC<IProps> = props => {
   };
 
   return <div className={styles.childAsin}>
-    <div className={`${commonStyles.search} clearfix`}>
+    <div className={`${commonStyles.search} clearfix`} onmo>
       <Update update={update} style={{
         position: 'absolute',
         right: 0,
@@ -571,7 +571,7 @@ const ChildAsin: React.FC<IProps> = props => {
       <Form form={searchForm} style={{
         'float': 'left',
       }}>
-        <Form.Item name="search">
+        <Form.Item name="search" className={commonStyles.searchInput}>
           <Input.Search
             allowClear
             className="h-search"

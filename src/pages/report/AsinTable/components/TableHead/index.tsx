@@ -36,7 +36,6 @@ const TableHead: React.FC<IProps> = props => {
     hint, // ？号图标的提示，有的话就显示出来 
     align = 'center', // 文本对齐
     callback,
-    style,
   } = props;
 
   // 排序字段   true:升序,false:降序

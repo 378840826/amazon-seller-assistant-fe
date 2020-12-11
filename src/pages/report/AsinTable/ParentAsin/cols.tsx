@@ -360,7 +360,10 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   
   // B2B平均售价
   const b2bAvgSellingPriceCol = {
-    className: styles.b2bAvgSellingPrice,
+    className: classnames(
+      styles.b2bAvgSellingPrice,
+      commonStyles.tdTextRight,
+    ),
     title: <TableHeadMain
       title="B2B平均售价"
       titleparams="b2bAvgSellingPrice"
@@ -368,7 +371,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
       order={order}
     />,
     dataIndex: 'b2bAvgSellingPrice',
-    align: 'center',
+    align: 'right',
   };
   
   // B2B平均客单价

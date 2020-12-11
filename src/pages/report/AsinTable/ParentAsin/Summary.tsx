@@ -206,13 +206,13 @@ export default (props: IProps) => {
     },
     {
       dataIndex: 'b2bAvgSellingPrice',
-      component: <td className={classnames(styles.base, commonStyles.tdTextRight)} align="center" key="23">
+      component: <td className={classnames(styles.base, commonStyles.tdTextRight)} align="right" key="23">
         {b2bAvgSellingPrice === null ? <Empty /> : `${currency + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', true)}`}
       </td>,
     },
     {
       dataIndex: 'b2bAvgCustomerPrice',
-      component: <td className={classnames(styles.base)} align="right" key="24">
+      component: <td className={classnames(styles.base, commonStyles.tdTextRight,)} align="right" key="24">
         {b2bAvgCustomerPrice === null ? <Empty /> : currency + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', true) }
       </td>,
     },
