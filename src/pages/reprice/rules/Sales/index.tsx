@@ -162,6 +162,11 @@ const AddSales: React.FC = () => {
 
   // 删除条件
   const removeCondition = (index: number) => {
+    if (conditions.length === 1) {
+      message.error('规则内至少要包含1个条件');
+      return;
+    }
+
     conditions.splice(index, 1);
     setConditions([...conditions]);
   };
@@ -207,9 +212,14 @@ const AddSales: React.FC = () => {
     const ruleName = form.getFieldValue('name');
     const conditions = transitionArr(conditionsData);
     let flag = true; // 条件是否正确条件
-
-    if (ruleName === '' || ruleName === undefined) {
+  
+    if (ruleName === undefined || ruleName.trim() === '' ) {
       message.error('规则名称不能为空');
+      return;
+    }
+
+    if (conditions.length === 0) {
+      message.error('规则内至少要包含1个条件');
       return;
     }
 
@@ -229,7 +239,7 @@ const AddSales: React.FC = () => {
           || operator === mmsrList[3].value
         ) {
           if (basis === '' || basis === undefined) {
-            message.error('输入值不能为空');
+            message.error('条件和操作的输入值不能为空');
             flag = false;
             break;
           }
@@ -255,7 +265,7 @@ const AddSales: React.FC = () => {
             && (item.rateTrend === oosmmRates[0].value || item.rateTrend === oosmmRates[2].value)
           ) {
             if (rateBasis === '' || rateBasis === undefined) {
-              message.error('输入值不能为空');
+              message.error('条件和操作的输入值不能为空');
               flag = false;
               break;
             }
@@ -264,7 +274,7 @@ const AddSales: React.FC = () => {
           // 转化率 -  环比  - 不变  的验证
           if (operator === mmsrList[2].value && item.rateTrend !== upDownUnchange[2].value) {
             if (rateBasis === '' || rateBasis === undefined) {
-              message.error('输入值不能为空');
+              message.error('条件和操作的输入值不能为空');
               flag = false;
               break;
             }
@@ -290,7 +300,7 @@ const AddSales: React.FC = () => {
         ) 
       ) {
         if (item.value === undefined || item.value === '') {
-          message.error('操作值不能为空');
+          message.error('条件和操作的输入值不能为空');
           flag = false;
           break;
         }
