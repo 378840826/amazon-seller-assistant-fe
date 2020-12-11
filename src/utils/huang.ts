@@ -2,12 +2,10 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-18 11:14:36
- * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\utils\huang.ts
  */
 
 import { storage } from '@/utils/utils';
-import { Moment } from 'moment';
 /**
   storageKeys localStorage Key 放这里
   isEmptyObj 判断对象是否为空

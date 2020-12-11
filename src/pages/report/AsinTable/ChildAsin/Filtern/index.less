@@ -78,6 +78,10 @@ div.layoutBox {
 
     div:global(.ant-form-item-label) {
       margin-top: 2px;
+
+      > label {
+        color: @text-color;
+      }
     }
 
     div:global(.ant-row) {
@@ -120,6 +124,10 @@ div.layoutBox {
   // 下拉列表
   .selectBox {
     height: 30px;
+
+    :global(.ant-form-item-no-colon) {
+      color: @text-color;
+    }
 
     .formSelect {
       width: @formItemWidth;
