@@ -9,6 +9,7 @@ import {
   strToNaturalNumStr,
   strToMinusMoneyStr,
 } from '@/utils/utils';
+import { ISelectOption } from './BatchSet';
 import styles from './index.less';
 
 const { Item: FormItem } = Form;
@@ -21,19 +22,12 @@ interface IProps {
   filtrateParams: {
     [key: string]: ParamsValue;
   };
-  groupsOptions: {
-    value: string;
-    name: string;
-  }[];
+  groupsOptions: ISelectOption[];
+  rulesOptions: ISelectOption[];
   currency: string;
   getEmptyFiltrateParams: () => {
     [x: string]: ParamsValue;
   };
-}
-
-interface ISelectOption {
-  value: string;
-  name: string;
 }
 
 // 筛选器 min - max 范围, valueFormat 为输入框限制的格式
@@ -96,7 +90,8 @@ const getFiltrateSelectItem = (label: string, name: string, options: ISelectOpti
       name={name}
       labelAlign="left"
       labelCol={{ span: 6 }}
-      style={{ marginBottom: 0 }}
+      style={{ marginBottom: 0, display: 'flex', flexWrap: 'nowrap' }}
+
     >
       <Select style={{ width: '100%' }}>
         <Option value="">全部</Option>
@@ -117,6 +112,7 @@ const Filtrate: React.FC<IProps> = props => {
     handleClickFiltrate,
     filtrateParams,
     groupsOptions,
+    rulesOptions,
     currency,
     getEmptyFiltrateParams,
   } = props;
@@ -232,7 +228,7 @@ const Filtrate: React.FC<IProps> = props => {
       <Row gutter={{ xl: 48, xxl: 96 }}>
         { getFiltrateRangeItem(getCurrencyLabel('利润'), 'profit', 'minusMoney') }
         { getFiltrateRangeItem(getCurrencyLabel('利润率'), 'profitMargin', 'minusMoney') }
-        { getFiltrateSelectItem('调价规则', 'ruleId', groupsOptions) }
+        { getFiltrateSelectItem('调价规则', 'ruleId', rulesOptions) }
         <Col span={6}>
           <div className={styles.filtrateBtns}>
             <Button onClick={handleClickFiltrate}>取消</Button>

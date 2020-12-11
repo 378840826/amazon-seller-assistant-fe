@@ -23,6 +23,7 @@ const Header: React.FC = () => {
   const goodsListPage = useSelector((state: IConnectState) => state.goodsList);
   const {
     groups,
+    rules,
     customCols,
     filtrateParams,
     checkedGoodsIds,
@@ -44,6 +45,7 @@ const Header: React.FC = () => {
   // 批量查询的 value
   const [batchText, setBatchText] = useState<string>('');
   const groupsOptions = groups.map(group => ({ value: group.id, name: group.groupName }));
+  const rulesOptions = rules.map(rule => ({ value: rule.id, name: rule.name }));
   // 选中的商品的 asin， 用于批量添加监控
   const checkedGoodsAsins = checkedGoodsIds.map(checkedId => {
     return records.find(goods => goods.id === checkedId )?.asin;
@@ -156,7 +158,12 @@ const Header: React.FC = () => {
   // 删除筛选项面包屑
   const handleClickDelete = (key: string) => {
     const newFiltrateParams = { ...filtrateParams };
-    newFiltrateParams[key] = undefined;
+    // 分组和规则的筛选值“全部” 的值是 空字符串
+    if (key === 'groupId' || key === 'ruleId') {
+      newFiltrateParams[key] = '';
+    } else {
+      newFiltrateParams[key] = undefined;
+    }
     newFiltrateParams[`${key}Min`] = undefined;
     newFiltrateParams[`${key}Max`] = undefined;
     dispatch({
@@ -260,7 +267,11 @@ const Header: React.FC = () => {
       });
       break;
     case 'ruleId':
-      name = '写死的规则';
+      rulesOptions.forEach(rule => {
+        if (rule.value === value) {
+          name = rule.name;
+        }
+      });
       break;
     case 'ac':
       name = value === 'true' ? '有' : '无';
@@ -444,6 +455,7 @@ const Header: React.FC = () => {
             handleFiltrate={handleFiltrate}
             filtrateParams={filtrateParams}
             groupsOptions={groupsOptions}
+            rulesOptions={rulesOptions}
             currency={currency}
             getEmptyFiltrateParams={getEmptyFiltrateParams}
           />
@@ -457,6 +469,7 @@ const Header: React.FC = () => {
             disabled={!checkedGoodsIds.length}
             overlay={<BatchSet
               groupsOptions={groupsOptions}
+              rulesOptions={rulesOptions}
               currentShop={currentShop}
               goodsListRecords={records}
               checkedGoodsIds={checkedGoodsIds}

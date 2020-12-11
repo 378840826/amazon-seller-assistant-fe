@@ -17,6 +17,7 @@ import { day, strToMoneyStr } from '@/utils/utils';
 import editable from '@/pages/components/EditableCell';
 import GoodsImg from '@/pages/components/GoodsImg';
 import DropdownSortTh from '@/pages/components/DropdownSortTh';
+import { IRule } from '@/models/goodsList';
 import classnames from 'classnames';
 import { MenuClickEventHandler } from 'rc-menu/lib/interface.d';
 import styles from './index.less';
@@ -49,6 +50,7 @@ export const getFullColumns = (params: any) => {
     handleFastPrice,
     handleAddMonitor,
     groups,
+    rules,
     customCols,
     sort,
     order,
@@ -72,14 +74,25 @@ export const getFullColumns = (params: any) => {
       }
     </>
   );
+
+  // 调价规则下拉选择
+  const rulesOptions = (
+    <>
+      {
+        rules.map((rule: IRule) => (
+          <Option key={rule.id} value={rule.id}>{rule.name}</Option>
+        ))
+      }
+    </>
+  );
   
   // 全部列
   const columns: ColumnProps<API.IGoods>[] = [
     {
-      title: '分组',
+      title: () => <span className={styles.selectThTitle}>分组</span>,
       dataIndex: 'groupId',
       key: 'group',
-      align: 'center',
+      align: 'left',
       width: 130,
       fixed: 'left',
       render: (_, record) => (
@@ -154,7 +167,7 @@ export const getFullColumns = (params: any) => {
                   { record.isCoupon && GoodsIcon.coupon(record.coupon) }
                 </>
               }
-              <div style={{ float: 'right' }}>
+              <div className={styles.sellNum}>
                 {
                   customCols.usedNewSellNum
                   &&
@@ -353,7 +366,7 @@ export const getFullColumns = (params: any) => {
           prefix: price === null ? '' : currency,
           maxLength: 20,
           confirmCallback: value => {
-            updateGoodsUserDefined({
+            updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
               cost: parseFloat(value).toFixed(2),
@@ -376,7 +389,7 @@ export const getFullColumns = (params: any) => {
           prefix: freight === null ? '' : currency,
           maxLength: 20,
           confirmCallback: value => {
-            updateGoodsUserDefined({
+            updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
               freight: parseFloat(value).toFixed(2),
@@ -645,7 +658,7 @@ export const getFullColumns = (params: any) => {
               message.error('最低价必须小于最高价');
               return;
             }
-            updateGoodsUserDefined({
+            updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
               minPrice: minPrice.toFixed(2),
@@ -681,7 +694,7 @@ export const getFullColumns = (params: any) => {
               message.error('最高价必须大于最低价');
               return;
             }
-            updateGoodsUserDefined({
+            updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
               maxPrice: maxPrice.toFixed(2),
@@ -703,16 +716,27 @@ export const getFullColumns = (params: any) => {
         <Link to={`/product/cp?id=${record.id}`}>{competingCount || 0}</Link>
       ),
     }, {
-      title: '调价规则',
+      title: () => <span className={styles.selectThTitle}>调价规则</span>,
       dataIndex: 'ruleName',
       key: 'ruleName',
-      align: 'center',
+      align: 'left',
       width: 136,
-      render: () => (
-        <Select defaultValue="未开发的功能0" className={styles.tableSelect} style={{ width: 136 }} bordered={false}>
-          <Option value="未开发的功能0">未开发的功能0</Option>
-          <Option value="未开发的功能1">未开发的功能1</Option>
-          <Option value="未开发的功能2">未开发的功能2</Option>
+      render: (_, record) => (
+        <Select
+          size="small"
+          className={styles.tableSelect}
+          dropdownClassName={styles.SelectDropdown}
+          bordered={false}
+          defaultValue={record.ruleId}
+          value={record.ruleId}
+          listHeight={330}
+          onChange={newRuleId => {
+            updateGoodsUserDefined(record, {
+              ruleId: newRuleId,
+            });
+          }}
+        >
+          { rulesOptions }
         </Select>
       ),
     }, {

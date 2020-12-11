@@ -33,6 +33,14 @@
     }
   }
 
+  .sellNum {
+    float: right;
+  }
+
+  .selectThTitle {
+    padding-left: 6px;
+  }
+
   .darkRow td {
     background-color: #fafafa;
   }
@@ -126,6 +134,8 @@
 }
 
 .SelectDropdown {
+  max-width: 120px;
+
   * {
     font-size: @font-size-sm;
   }
@@ -177,6 +187,7 @@
   // justify-content: center;
   align-items: center;
   min-width: 100%;
+  max-width: 100px;
 
   :global {
     .ant-select-arrow {
@@ -190,6 +201,7 @@
 
     .ant-select-selector {
       width: auto !important;
+      max-width: 100%;
       padding: 0 7px !important;
 
       .ant-select-selection-item {

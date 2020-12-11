@@ -12,11 +12,14 @@ const { Item: FormItem } = Form;
 const { Option } = Select;
 const { Item: MenuItem } = Menu;
 
+export interface ISelectOption {
+  value: string;
+  name: string;
+}
+
 interface IProps {
-  groupsOptions: {
-    value: string;
-    name: string;
-  }[];
+  groupsOptions: ISelectOption[];
+  rulesOptions: ISelectOption[];
   currentShop: API.IShop;
   checkedGoodsIds: string[];
   checkedGoodsAsins: (string | undefined)[];
@@ -38,6 +41,7 @@ const BatchSet: React.FC<IProps> = props => {
 
   const {
     groupsOptions,
+    rulesOptions,
     currentShop,
     checkedGoodsIds,
     checkedGoodsAsins,
@@ -283,13 +287,16 @@ const BatchSet: React.FC<IProps> = props => {
         >
           <span className={styles.batchSetTitle}>调价规则：</span>
           <FormItem name="ruleId">
-            <Select style={{ width: 270 }} onChange={() => setBatchSetFocus('rule')}>
+            <Select style={{ width: 270 }} onChange={() => setBatchSetFocus('ruleId')}>
               <Option value="">请选择</Option>
-              <Option value="0">规则0</Option>
-              <Option value="1">规则1</Option>
+              {
+                rulesOptions.map(item => (
+                  <Option key={item.value} value={item.value}>{item.name}</Option>
+                ))
+              }
             </Select>
           </FormItem>
-          <FormItem>{renderOkBtn('rule')}</FormItem>
+          <FormItem>{renderOkBtn('ruleId')}</FormItem>
         </Form>
         <Form
           layout="inline"
