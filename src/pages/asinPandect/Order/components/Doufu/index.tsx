@@ -97,7 +97,7 @@ const Toolbar: React.FC<IProps> = (props) => {
       {
         douFuList.map((item, i) => {
           let showSymbol = false; // 是否显示货币符号
-          let percent = false; // 百分比货号
+          let percent = false; // 主要数据的百分比货号
           const mianflag = item.data === undefined || item.data === null; // 主要数据是否为空
           const flag = item.lastData === undefined || item.lastData === null; // 上期
           let lastDataSymbol = '';
@@ -112,7 +112,7 @@ const Toolbar: React.FC<IProps> = (props) => {
 
           if (item.label === '转化率') {
             percent = true;
-            lastDataSymbol = '%';
+            flag ? '' : lastDataSymbol = '%';
           }
 
           return <div className={`${styles.item}`} 
@@ -130,7 +130,7 @@ const Toolbar: React.FC<IProps> = (props) => {
                 }}>{ showSymbol ? currency : ''}</span>
                 <span style={{
                   display: mianflag ? 'none' : 'inline-block',
-                }}>{ toIndexFixed(item.data)}</span>
+                }}>{showSymbol ? toIndexFixed(item.data) : item.data}</span>
                 <span style={{
                   display: mianflag ? 'none' : 'inline-block',
                 }}>{percent ? '%' : ''}</span>

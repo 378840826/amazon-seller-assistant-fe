@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-07-22 14:10:52
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\asinPandect\Order\AsinOrder.d.ts
  */ 
 declare namespace AsinOrder {

@@ -37,11 +37,12 @@ import {
   Spin,
 } from 'antd';
 import 'moment/locale/zh-cn';
+import ShowData from '@/components/ShowData';
 moment.locale('zh-cn');
-
 
 interface ICommentMonitorList {
   code: number;
+  message: string;
   data: {
     asc: null|boolean;
     order: string;
@@ -113,15 +114,17 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       });
     }).then((datas) => {
       setLoading(false);
-      const { code, data: { 
-        records,
-        size,
-        total,
-        current,
-        asc,
-        order,
-      } } = datas as ICommentMonitorList;
+      const { code, data, message: msg } = datas as ICommentMonitorList;
       if ( code === 200) {
+        const { 
+          records,
+          size,
+          total,
+          current,
+          asc,
+          order,
+        } = data;
+
         let myAsc = null;
         setDataSource(records);
         setPageSize(size);
@@ -141,7 +144,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
           },
         } as ISortedInfo);
       } else {
-        message.error('列表异常！');
+        message.error(msg || '列表加载异常！');
       }
     }).catch(err => {
       setLoading(false);
@@ -259,7 +262,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         return <Rate 
           allowHalf 
           disabled 
-          defaultValue={value}
+          value={value}
           style={{
             color: '#ffaf4d',
             opacity: 1,
@@ -290,6 +293,13 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
           </div>
         );
       },
+    }, {
+      title: '回复',
+      dataIndex: 'comments',
+      key: 'comments',
+      align: 'center',
+      width: 140,
+      render: (val: number) => <ShowData value={val} fillNumber={0} />,
     }, {
       title: '用户笔名',
       dataIndex: 'reviewerName',
@@ -388,7 +398,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>5星</a>
                     : '5星'
                 }
-                <Tooltip title={ `${starPart.five * 100 } %` }>
+                <Tooltip title={ `${Math.floor(starPart.five * 100 ) } %` }>
                   <Progress percent={ starPart.five * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
@@ -401,7 +411,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>4星</a>
                     : '4星'
                 }
-                <Tooltip title={ `${starPart.four * 100 } %`}>
+                <Tooltip title={ `${Math.floor(starPart.four * 100) } %`}>
                   <Progress percent={ starPart.four * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
@@ -416,7 +426,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>3星</a>
                     : '3星'
                 }
-                <Tooltip title={ `${starPart.three * 100 } %` }>
+                <Tooltip title={ `${Math.floor(starPart.three * 100) } %` }>
                   <Progress percent={ starPart.three * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
@@ -429,7 +439,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     className={styles.title}>2星</a>
                     : '2星'
                 }
-                <Tooltip title={ `${starPart.two * 100 } %` }>
+                <Tooltip title={ `${Math.floor(starPart.two * 100) } %` }>
                   <Progress percent={ starPart.two * 100 } strokeColor="#ffaf4d" showInfo={false} />
                 </Tooltip>
               </div>
@@ -443,7 +453,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                   className={styles.title}>1星</a>
                   : '1星'
               }
-              <Tooltip title={ `${starPart.one * 100 } %` }>
+              <Tooltip title={ `${Math.floor(starPart.one * 100) } %` }>
                 <Progress percent={ starPart.one * 100 } strokeColor="#ffaf4d" showInfo={false} />
               </Tooltip>
             </div>
@@ -490,16 +500,10 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     showQuickJumper: true, // 快速跳转到某一页
     showSizeChanger: true,
     showTotal: (total: number) => `共 ${total} 个`,
-    onChange(current: number, size: number | undefined){
-      setPageCurrent(current);
-      setPageSize(size as number);
-    },
-    onShowSizeChange(current: number, size: number | undefined){
-      console.log(current, size,);
-    },
     className: 'h-page-small',
   };
 
+  let keyCount = 0;
   const tableConfig = {
     dataSource,
     locale: {
@@ -508,23 +512,34 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     columns: columns as [],
     rowClassName: () => styles.rowStyle,
     pagination: pageConfig,
+    rowKey: () => keyCount++,
     scroll: { 
-      y: 'calc(100vh - 410px)', 
+      y: 'calc(100vh - 415px)', 
     },
+    sortDirections: ['descend', 'ascend'] as ('ascend' | 'descend' | null)[],
     // eslint-disable-next-line
-    sortDirections: ['descend', 'ascend'],
-    onChange(pagination: {}, filters: {}, sorter: any) {
+    onChange({ current, pageSize }: any, filters: any, sorter: any, { action }: any) {
       const {
         field,
         order,
       } = sorter;
+      let myCurrent = 1; // 当前页数
       //只有排序处理
       // eslint-disable-next-line
       const asc  = order === 'ascend' ? true : order === 'descend' ? false : null;
+
+      if (action === 'paginate') {
+        myCurrent = current as number;
+      } else if (action === 'sort') {
+        // 点击字段排序回到第一页
+        myCurrent = 1;
+      }
       // eslint-disable-next-line
       const objs: any = {
-        order: field,
+        order: asc === null ? '' : field,
         asc,
+        current: myCurrent,
+        size: pageSize,
       };
       const data = Object.assign(requestData, requestHeader, objs);
       setLoading(true);
@@ -539,7 +554,6 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         <Toolbar asin={asin} handleToolbar={handleToolbar}/>
         <div className={styles.content}>
           <Table 
-            key="id" rowKey="id" 
             {...tableConfig}
           />
         </div>
