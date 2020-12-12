@@ -8,8 +8,11 @@ export async function queryPpcShopList() {
   return request('/api/adshop/list');
 }
 
-export async function modifyShopAutoPrice() {
-  return request('/api/mws/store/modify/auto-price');
+export async function modifyShopAutoPrice(params: API.IParams) {
+  return request('/api/mws/store/modify/auto-price', {
+    method: 'POST',
+    data: params,
+  });
 }
 
 export async function unbindShop(params: API.IParams) {

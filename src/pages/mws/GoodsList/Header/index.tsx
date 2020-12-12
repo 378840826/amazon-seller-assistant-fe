@@ -439,9 +439,8 @@ const Header: React.FC = () => {
           </Button>
         </Dropdown>
         <Button
-          className={
-            classnames(styles.btnFiltrate, visible.filtrate ? styles.btnActive : '')
-          }
+          type="primary"
+          className={styles.btnFiltrate}
           onClick={handleClickFiltrate}
         >
           筛选 { visible.filtrate ? <UpOutlined /> : <DownOutlined /> }

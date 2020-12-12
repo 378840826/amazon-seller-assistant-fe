@@ -7,6 +7,7 @@ import editable from '@/pages/components/EditableCell';
 import tokenEditable from './TokenEditableCell';
 import { requestFeedback } from '@/utils/utils';
 import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
+import TableNotData from '@/components/TableNotData';
 import styles from './index.less';
 
 const { confirm } = Modal;
@@ -22,6 +23,7 @@ const ShopList: React.FC = () => {
     confirm({
       maskClosable: true,
       centered: true,
+      icon: false,
       title: '店铺操作',
       content: `${text}店铺的所有功能设置？`,
       okText: '确定',
@@ -40,6 +42,7 @@ const ShopList: React.FC = () => {
     confirm({
       maskClosable: true,
       centered: true,
+      icon: false,
       title: '店铺操作',
       content: '解绑将清除该账号的所有数据，确定解绑？',
       okText: '确定',
@@ -61,7 +64,7 @@ const ShopList: React.FC = () => {
       align: 'center',
     },
     {
-      title: '店铺名称',
+      title: <span className={styles.shopNameThTitle}>店铺名称</span>,
       dataIndex: 'storeName',
       align: 'center',
       width: 300,
@@ -174,10 +177,11 @@ const ShopList: React.FC = () => {
       <Table
         loading={loading || unbindLoading}
         columns={columns}
+        rowClassName={styles.tableTr}
         rowKey="id"
         dataSource={mwsShop}
         pagination={false}
-        locale={{ emptyText: '未绑定店铺，请点击右上角按钮完成绑定' }}
+        locale={{ emptyText: <TableNotData hint="未绑定店铺，请点击右上角按钮完成绑定" /> }}
       />
     </div>
   );

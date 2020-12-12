@@ -252,6 +252,7 @@ const Replenishment: React.FC = () => {
         rowKey="sku"
         dataSource={goodsList}
         locale={{ emptyText: <TableNotData hint="没有找到相关数据" /> }}
+        sortDirections={['descend', 'ascend']}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {
             return styles.darkRow;

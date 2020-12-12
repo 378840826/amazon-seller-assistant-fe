@@ -295,7 +295,7 @@ const Header: React.FC = () => {
         </Button>
       </Dropdown>
       <span>
-        <span className={styles.head}>环比：</span>
+        <span>环比：</span>
         <Radio.Group
           options={[
             { label: '百分比', value: 'percent' },
@@ -308,7 +308,7 @@ const Header: React.FC = () => {
         />
       </span>
       <span>
-        <span className={styles.head}>建议补货：</span>
+        <span>建议补货：</span>
         <Radio.Group
           options={[
             { label: '不限', value: '' },
@@ -320,7 +320,7 @@ const Header: React.FC = () => {
         />
       </span>
       <span className={styles.leftLast}>
-        <span className={styles.head}>停发：</span>
+        <span>停发：</span>
         <Radio.Group
           options={[
             { label: '不限', value: '' },
