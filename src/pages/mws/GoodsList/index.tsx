@@ -9,6 +9,7 @@ import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import { getFullColumns } from './cols';
 import Header from './Header';
 import { addMonitor } from '@/services/goodsList';
+import TableNotData from '@/components/TableNotData';
 import styles from './index.less';
 
 interface IUpdatePrice {
@@ -327,7 +328,8 @@ const GoodsList: React.FC = () => {
         columns={columns}
         rowKey="id"
         dataSource={goodsList as API.IGoods[]}
-        locale={{ emptyText: '未找到相关商品' }}
+        locale={{ emptyText: <TableNotData hint="未找到相关商品" /> }}
+        sortDirections={['descend', 'ascend']}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {
             return styles.darkRow;

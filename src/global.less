@@ -70,6 +70,27 @@ a:hover {
 
 .ant-btn {
   min-width: 82px;
+
+  // 下拉按钮和下拉框右边箭头的颜色
+  .anticon-down,
+  .anticon-up {
+    color: @text-color-secondary;
+  }
+  // primary 主色按钮的箭头不修改
+  &.ant-btn-primary {
+    .anticon-down,
+    .anticon-up {
+      color: inherit;
+    }
+  }
+}
+
+// 下拉框右边箭头的颜色
+.ant-select {
+  .anticon-down,
+  .anticon-up {
+    color: @text-color-secondary;
+  }
 }
 
 .ant-btn-sm {
@@ -170,24 +191,24 @@ a:hover {
   }
 }
 
-@media (max-width: @screen-xl) {
-  .ant-table {
-    width: 100%;
-    overflow-x: auto;
+// @media (max-width: @screen-xl) {
+//   .ant-table {
+//     width: 100%;
+//     overflow-x: auto;
 
-    &-thead > tr,
-    &-tbody > tr {
-      > th,
-      > td {
-        white-space: pre;
+//     &-thead > tr,
+//     &-tbody > tr {
+//       > th,
+//       > td {
+//         white-space: pre;
 
-        > span {
-          display: block;
-        }
-      }
-    }
-  }
-}
+//         > span {
+//           display: block;
+//         }
+//       }
+//     }
+//   }
+// }
 
 @keyframes fadeIn {
   from {

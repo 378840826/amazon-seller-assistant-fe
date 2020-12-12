@@ -136,10 +136,10 @@ export const getFullColumns = (params: any) => {
               {
                 record.newProduct ? <span className={styles.newProduct}>新品</span> : null
               }
-              <div className={styles.goodsTitle}>
+              <Paragraph ellipsis className={styles.goodsTitle}>
                 { GoodsIcon.link() }
                 <a title={title} href={record.url} target="_blank" rel="noopener noreferrer">{title}</a>
-              </div>
+              </Paragraph>
             </Paragraph>
             <div className={styles.goodsInfoRow}>
               <div className={styles.asin}>
@@ -180,7 +180,7 @@ export const getFullColumns = (params: any) => {
             content="Review"
             sortItems={[
               { name: '评分', key: 'reviewScore' },
-              { name: '评轮数', key: 'reviewCount' },
+              { name: '评论数', key: 'reviewCount' },
             ]}
           />
         );
