@@ -1,0 +1,39 @@
+.topAlert {
+  background: #fff7e6;
+  font-size: @font-size-sm;
+
+  & > div {
+    padding: 0 30px;
+    line-height: 22px;
+  }
+
+  & > div:first-child {
+    padding-top: 4px;
+  }
+
+  & > div:last-child {
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ffdb8f;
+  }
+
+  .fixedWidth {
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  @media screen and (min-width: 1800px) {
+    .fixedWidth {
+      width: 1443px;
+    }
+  }
+
+  @media screen and (max-width: 1799px) {
+    .fixedWidth {
+      width: 1225px;
+    }
+  }
+
+  .vipValidPeriod {
+    color: @error-color;
+  }
+}

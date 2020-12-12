@@ -8,6 +8,7 @@ import { connect } from 'umi';
 import IndexRightContent from '@/components/GlobalHeader/IndexRightContent';
 import { Layout } from 'antd';
 import { IConnectProps, IConnectState } from '@/models/connect';
+import TopAlert from '@/components/TopAlert';
 import styles from './index.less';
 import MenuCom from './components/Menu';
 
@@ -43,6 +44,7 @@ class BasicLayout extends React.Component<IProps, IState> {
     return (
       <Layout>
         <Header className={styles.Header}>
+          <TopAlert fixedWidth />
           <div className={styles.heardContainer}>
             <a href="/">
               <img src={logo} alt="logo" style={{ verticalAlign: 'sub' }} />

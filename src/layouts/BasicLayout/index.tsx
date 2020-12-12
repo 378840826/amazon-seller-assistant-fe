@@ -8,6 +8,7 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { Layout, Menu, Dropdown } from 'antd';
 import { IConnectState } from '@/models/connect';
 import navigation, { IMenu } from './navigation';
+import TopAlert from '@/components/TopAlert';
 import styles from './index.less';
 
 const { Header, Content } = Layout;
@@ -114,21 +115,11 @@ const BasicLayout: React.FC = props => {
     dispatch({
       type: 'global/fetchUnreadNotices',
     });
-    //  登录接口(暂时)
-    // dispatch({
-    //   type: 'commentMonitor/test',
-    //   payload: {
-    //     data: {
-    //       email: '10086@qq.com',
-    //       password: 'hello2020',
-    //       rememberMe: true,
-    //     },
-    //   },
-    // });
   }, [dispatch]);
   
   return (
     <Layout style={{ height: '100%' }}>
+      <TopAlert />
       <Header className={`${styles.Header} g-header-nav`}>
         <a href="/">
           <img src={logo} alt="logo" className={styles.logo} />
