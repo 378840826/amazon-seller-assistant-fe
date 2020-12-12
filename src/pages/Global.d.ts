@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-07-11 17:15:23
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\Global.d.ts
  * 
  * 全局TS类型
@@ -15,19 +15,7 @@ declare namespace Global {
   interface IGlobalShopType {
     global: {
       shop: {
-        // current: API.IShop;
-        current: {
-          id: string;
-          storeName: string;
-          marketplace: Site;
-          sellerId: string;
-          token: string;
-          autoPrice: boolean;
-          timezone: string;
-          currency: string;
-          marketplace: string;
-          tokenInvalid: boolean;
-        };
+        current: API.IShop;
       };
     };
   }
