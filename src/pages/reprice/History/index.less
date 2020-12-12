@@ -1,0 +1,220 @@
+.historyBox {
+  background-color: #fff;
+  padding: 20px 18px 0;
+
+  div:global(.ant-table-body) {
+    overflow-y: auto !important;
+  }
+}
+
+.successText {
+  color: @success-color;
+}
+
+.errorText {
+  color: @error-color;
+}
+
+.secondaryText {
+  color: @text-color-secondary;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > * {
+    padding-bottom: 20px;
+  }
+
+  .search {
+    width: 280px;
+    margin-right: 0;
+  }
+
+  .method {
+    width: 272px;
+
+    label:global(.ant-form-item-no-colon) {
+      color: @text-color;
+    }
+
+    :global(.ant-form-item) {
+      margin-right: 0;
+    }
+
+    label:global(.ant-radio-wrapper:last-child) {
+      width: 55px;
+      margin-right: 0;
+
+      span {
+        padding-right: 0;
+      }
+    }
+  }
+
+  .rules,
+  .conditions {
+    display: flex;
+    align-items: center;
+  }
+
+  // .conditions {
+  //   margin: 0 22px;
+  // }
+
+  .rulesList {
+    width: 280px;
+    margin-right: 0;
+
+    :global(.ant-select-item-option-selected:not(.ant-select-item-option-disabled)) {
+      font-weight: normal !important;
+    }
+  }
+
+  .conditaionsList {
+    width: 280px;
+    margin-right: 0;
+  }
+
+  @media screen and (max-width: 1646px) {
+    .conditions {
+      order: 2;
+    }
+  }
+
+  .calendar {
+    margin-right: 0;
+    width: 280px;
+    // margin-left: auto;
+  }
+}
+
+// 条件下拉框
+.conditionsSelects {
+  width: 500px !important;
+
+  div:global(.ant-select-item-option-content) {
+    overflow: visible;
+    white-space: pre-wrap;
+    font-weight: normal !important;
+  }
+}
+
+.table {
+  width: 100%;
+
+  div:global(.ant-table-body) {
+    border-bottom: 1px solid @divider-line-color;
+  }
+
+  thead th {
+    height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: 0;
+  }
+
+  tbody {
+    td {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border: 0;
+    }
+
+    td:first-child {
+      border-left: 1px solid #eee;
+    }
+
+    td:last-child {
+      border-right: 1px solid #eee;
+    }
+
+    tr:nth-child(2n+1) td {
+      background-color: @simple-table-header-bg;
+    }
+
+    // tr:hover td {
+    //   background-color: @simple-table-header-bg !important;
+    // }
+
+    .productCol {
+      width: 260px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      img {
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        margin-right: 8px;
+      }
+
+      .details {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 36px);
+        padding-right: 20px;
+
+        .title {
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          .icon {
+            color: @text-color-secondary;
+          }
+
+          &:hover {
+            color: @primary-color;
+
+            .icon {
+              color: @primary-color;
+            }
+          }
+        }
+
+        .foot {
+          display: flex;
+          justify-content: space-between;
+          color: @success-color;
+
+          .asin {
+            color: @btn-text-color;
+
+            &:hover {
+              color: @link-color;
+            }
+          }
+        }
+      }
+    }
+
+    .conditioinsCol {
+      div.content {
+        min-width: 150px;
+      }
+    }
+  }
+
+  // 条件
+  .conditionContent {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  // 触发价格
+  .trggerContent {
+    .method {
+      color: @text-color-secondary;
+    }
+  }
+
+  // 价格变动
+  .priceChange {
+    padding-right: 24px;
+  }
+}
