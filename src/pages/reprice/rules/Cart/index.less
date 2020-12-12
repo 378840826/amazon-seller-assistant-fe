@@ -1,0 +1,431 @@
+.frequencySelect {
+  :global(.ant-select-item) {
+    text-align: center;
+  }
+}
+
+.cartBox {
+  .box {
+    background-color: #fff;
+    margin-top: 13px;
+    border-radius: @border-radius-base;
+    padding: 30px 0;
+  }
+
+  .contentBox {
+    width: 1280px;
+    margin: 0 auto;
+
+    div:global(.ant-form-item-label) {
+      width: 120px;
+    }
+  }
+
+  .ruleNameColumn {
+    .ruleName {
+      width: 280px;
+    }
+
+    .nameIcon {
+      font-size: @font-size-sm;
+      color: @error-color;
+    }
+
+    label::before {
+      position: absolute;
+      right: -10px;
+    }
+  }
+
+  .textarea {
+    resize: none;
+    width: 530px;
+    height: 160px !important;
+  }
+
+  .downlist,
+  .LayoutTwoCol {
+    :global(.ant-select-selection-item),
+    :global(.ant-select-arrow) {
+      color: @link-color;
+    }
+  }
+
+  .frequency {
+    display: flex;
+
+    div:global(.ant-select-item-option-selected),
+    span:global(.ant-select-selection-item) {
+      text-align: center;
+    }
+
+    .titleName {
+      width: 120px;
+      color: @heading-color;
+    }
+
+    .downlists {
+      width: 280px;
+    }
+  }
+
+  .conditionsHead {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0 10px;
+
+    .other {
+      color: @heading-color;
+    }
+
+    .title {
+      color: #444;
+      font-weight: bold;
+    }
+
+    .add {
+      transition: all 0.3s;
+      cursor: pointer;
+
+      .icon {
+        color: @primary-color;
+        transition: all 0.3s;
+      }
+
+      span {
+        padding-left: 8px;
+      }
+
+      &:hover {
+        span {
+          color: @primary-color;
+        }
+      }
+    }
+  }
+
+  // 购物车设定
+  .cartSettings {
+    display: flex;
+    margin-top: 30px;
+
+    div:global(.ant-form-item) {
+      margin-bottom: 0;
+
+      span:global(.ant-select-selection-item) {
+        font-size: @font-size-sm !important;
+      }
+    }
+
+    input:global(.ant-input) {
+      text-align: center;
+    }
+
+    .titleName {
+      width: 120px;
+      flex: 0 0 auto;
+      color: @heading-color;
+    }
+
+    .notOpponent {
+      padding: 10px 0 18px;
+      color: @heading-color;
+    }
+
+    .cartContent {
+      width: 100%;
+    }
+
+    .header {
+      color: #444;
+      font-weight: bold;
+    }
+
+    .handlePrice {
+      display: flex;
+      align-items: center;
+
+      .downlist {
+        width: 150px;
+      }
+    }
+
+    .cartConditions {
+      display: flex;
+      justify-content: space-between;
+      background-color: @layout-body-background;
+      padding: 20px 0;
+      margin-bottom: 20px;
+      position: relative;
+      font-size: @font-size-sm;
+
+      .LayoutOneCol,
+      .LayoutTwoCol {
+        display: flex;
+        align-items: center;
+      }
+
+      div:global(.ant-select-selector) {
+        padding: 0 6px 0 10px;
+      }
+
+      .myPricedownListBox,
+      .rightOuterBox {
+        display: flex;
+        align-items: center;
+      }
+
+      .LayoutOneCol {
+        padding-left: 10px;
+
+        .medownList {
+          width: 76px;
+          margin: 0 8px 0 6px;
+        }
+
+        .lowestdownList,
+        .myPricedownList {
+          width: 90px;
+          margin: 0 8px 0 6px;
+        }
+
+        .operatordownList {
+          width: 196px;
+          margin: 0 6px;
+        }
+      }
+
+      .LayoutTwoCol {
+        min-width: 450px;
+        padding-right: 40px;
+
+        .priceText {
+          color: #444;
+        }
+
+        .priceSubtext {
+          color: @text-color;
+          padding: 0 10px 0 5px;
+        }
+
+        input {
+          width: 80px;
+        }
+
+        .arrows {
+          position: absolute;
+          right: 0;
+          width: 28px;
+          height: 70px;
+          top: 0;
+          background-color: #fff;
+
+          .icon {
+            width: 100%;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            color: #b3b3b3;
+            z-index: 2;
+            font-size: 16px;
+            border: 1px solid @border-color-base;
+            transition: all 0.3s;
+            cursor: not-allowed;
+          }
+
+          .up {
+            transform: rotate(180deg);
+            border-radius: 0  0 0 @border-radius-base;
+          }
+
+          .down {
+            bottom: 0;
+            border-top: 0;
+            border-radius: 0 0 @border-radius-base  0;
+          }
+        }
+
+        .close {
+          position: absolute;
+          right: -32px;
+          top: 25px;
+          z-index: 3;
+          color: @error-color;
+          font-size: 14px;
+          opacity: 0;
+          transition: all 0.3s;
+          cursor: pointer;
+        }
+
+        .actionDownlist {
+          width: 150px;
+        }
+
+        .actionOperatorDownlist,
+        .unitDownlist {
+          width: 60px;
+        }
+
+        .actionDownList {
+          width: 126px;
+        }
+      }
+
+      &:hover .close {
+        opacity: 1;
+      }
+    }
+
+    .cartConditions.up .up:hover {
+      cursor: pointer;
+      color: @primary-color;
+    }
+
+    .cartConditions.down .down:hover {
+      cursor: pointer;
+      color: @primary-color;
+    }
+  }
+
+  // 竞争对手
+  .opponent {
+    display: flex;
+
+    header {
+      display: flex;
+      align-items: center;
+
+      :global(.ant-form-item) {
+        margin-bottom: 0;
+      }
+    }
+
+    .titleName {
+      width: 120px;
+      flex: 0 0 auto;
+      color: @heading-color;
+    }
+
+    .opponentBox {
+      width: 560px;
+
+      .showText {
+        cursor: pointer;
+
+        .iconArrow {
+          color: #c1c1c1;
+          transition: all 0.3s;
+          font-size: @font-size-sm;
+          margin-left: 5px;
+
+          &.active {
+            transform: rotate(180deg);
+          }
+        }
+
+        &.active {
+          color: @primary-color;
+
+          .iconArrow {
+            color: @primary-color;
+          }
+        }
+
+        &:hover {
+          color: @primary-color;
+
+          .iconArrow {
+            color: @primary-color;
+          }
+        }
+      }
+
+      .centent {
+        background-color: @layout-body-background;
+        margin-top: 20px;
+        padding: 22px 24px;
+
+        .switch {
+          margin-right: 10px;
+        }
+
+        .radio {
+          margin-left: 30px;
+        }
+
+        .checkboxs {
+          display: flex;
+
+          .checkbox {
+            margin: 28px 0 12px;
+          }
+
+          .checkboxTwo {
+            margin-left: 10px;
+          }
+        }
+
+        .input {
+          display: flex;
+
+          div:global(.ant-row) {
+            margin-bottom: 0;
+          }
+
+          input {
+            width: 280px;
+            margin: 0 15px 0 0;
+            border-radius: @border-radius-base @border-radius-base 0 0;
+          }
+        }
+
+        .sellerList {
+          width: 280px;
+          background-color: #fff;
+          border: 1px solid @border-color-base;
+          border-top: 0;
+          border-radius: 0 0 @border-radius-base @border-radius-base;
+          padding: 20px;
+          max-height: 195px;
+
+          .sellerItem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            line-height: 28px;
+
+            .iconClose {
+              color: #c1c1c1;
+              transition: all 0.3s;
+              cursor: pointer;
+
+              &:hover {
+                color: @error-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 安全设定
+  .securitySettings {
+    display: flex;
+    margin-top: 43px;
+
+    .titleName {
+      width: 120px;
+      color: @heading-color;
+    }
+  }
+
+  .btns {
+    text-align: center;
+    padding: 30px 0;
+
+    button {
+      margin: 0 15px;
+    }
+  }
+}

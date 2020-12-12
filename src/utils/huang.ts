@@ -162,6 +162,21 @@ export function getRangeDate(query: string|number, isMoment = true, date = {}) {
   };
 }
 
+/**
+ * 根据站点获取北京时间
+ */
+export function getBeijingTime(time = '00:00:00', format = 'HH:mm:ss') {
+  const moment = require('moment-timezone'); // eslint-disable-line
+  const { timezone } = storage.get('currentShop');
+  if (time.indexOf(':') === -1) {
+    throw new Error('时间格式错误！');
+  }
+  const times = time.split(':');
+  const hour = times[0];
+  const minute = times[1];
+  const seconds = times[2];
+  return moment().tz(timezone).hour(hour).minute(minute).seconds(seconds).tz('Asia/Shanghai').format(format);
+}
 
 /**
  * 金额格式
@@ -229,3 +244,57 @@ export function isObject(param: any) { // eslint-disable-line
   return Object.prototype.toString.call(param) === '[object Object]';
 }
 
+/**
+ * 随机返回数组的一个元素，只用于mock
+ */
+export function arrayRandomOne(arr: any[]) { // eslint-disable-line
+  const length = arr.length;
+  const index = Math.floor(Math.random() * length);
+  return arr[index];
+}
+
+
+export function getSiteDate(site: string) {
+  if (!site || typeof site !== 'string') {
+    throw new Error('请传入一个站点');
+  }
+  switch (site) {
+  case 'US':
+    return {
+      nationality: '美国',
+      timeText: '太平洋时间',
+    };
+  case 'CA':
+    return {
+      nationality: '加拿大',
+      timeText: '太平洋时间',
+    };
+  case 'UK':
+    return {
+      nationality: '英国',
+      timeText: '英国时间',
+    };
+  case 'ES':
+    return {
+      nationality: '西班牙',
+      timeText: '西班牙时间',
+    };
+  case 'DE':
+    return {
+      nationality: '德国',
+      timeText: '德国时间',
+    };
+  case 'FR':
+    return {
+      nationality: '法国',
+      timeText: '法国时间',
+    };
+  case 'IT':
+    return {
+      nationality: '意大利',
+      timeText: '意大利时间',
+    };
+  default: 
+    // 
+  }
+}

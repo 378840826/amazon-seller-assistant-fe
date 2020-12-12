@@ -1,0 +1,187 @@
+.conditionItem {
+  background-color: #f6f6f6;
+  height: 70px;
+  position: relative;
+  margin: 15px 0 18px 92px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  width: 1194px;
+  border-radius: @border-radius-base;
+
+  input {
+    text-align: center;
+  }
+
+  .layoutOneRow {
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 20px;
+
+    div:global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    div:global(.ant-select-selector) {
+      padding: 0 6px 0 10px;
+    }
+
+    span:global(.ant-input-suffix) {
+      color: @text-color-secondary;
+    }
+
+    .rangeDate {
+      margin-right: 10px;
+      width: 96px;
+    }
+
+    .mmsrBox,
+    .rateBox,
+    .rangeDownConditions,
+    .rangeBox,
+    .reteBox,
+    .gteleBox,
+    .ratioBox,
+    .upDownBox,
+    .salesIntentoryBox {
+      display: flex;
+      align-items: center;
+    }
+
+    .glrr,
+    .percentValueBox,
+    .pcglrr,
+    .pcudn,
+    .siglrr {
+      width: 86px;
+    }
+
+    .rangeBox {
+      input {
+        width: 100px;
+      }
+
+      .line {
+        color: @text-color-secondary;
+        margin: 0 6px;
+      }
+    }
+
+    .ossRateRange,
+    .pcBasis {
+      width: 180px;
+    }
+
+    .beiPrecent {
+      width: 190px;
+    }
+
+    .basisInput {
+      width: 100px;
+    }
+
+    .rangeDownConditions,
+    .upDownBox {
+      .symbol {
+        margin: 0 5px;
+      }
+    }
+  }
+
+  .layoutTwoRow {
+    width: 439px;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    span:global(.ant-select-selection-item),
+    span:global(.ant-select-arrow) {
+      color: @link-color;
+    }
+
+    .arrows {
+      position: absolute;
+      right: 0;
+      width: 28px;
+      height: 70px;
+      top: 0;
+      background-color: #fff;
+
+      .icon {
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+        text-align: center;
+        color: #b3b3b3;
+        z-index: 2;
+        font-size: 16px;
+        border: 1px solid @border-color-base;
+        transition: all 0.3s;
+        cursor: not-allowed;
+      }
+
+      .up {
+        transform: rotate(180deg);
+        border-radius: 0  0 0 @border-radius-base;
+      }
+
+      .down {
+        bottom: 0;
+        border-top: 0;
+        border-radius: 0 0 @border-radius-base  0;
+      }
+    }
+
+    .close {
+      position: absolute;
+      right: -32px;
+      top: 25px;
+      z-index: 3;
+      color: @error-color;
+      font-size: 14px;
+      opacity: 0;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+
+      .upDownBox {
+        display: flex;
+        align-items: center;
+      }
+
+      .symbolList {
+        width: 66px;
+        margin: 0 10px;
+      }
+
+      input {
+        width: 96px;
+      }
+
+      div:global(.ant-form-item) {
+        margin: 0;
+      }
+    }
+  }
+
+  &:hover {
+    .close {
+      opacity: 1;
+    }
+  }
+
+  //箭头的处理
+  &.up .layoutTwoRow .arrows .up:hover {
+    color: @primary-color !important;
+    cursor: pointer;
+  }
+
+  &.down .layoutTwoRow .arrows .down:hover {
+    color: @primary-color !important;
+    cursor: pointer;
+  }
+}
