@@ -29,6 +29,10 @@ const config =  {
       'changeOrigin': true,
       // 'pathRewrite': { '^/api' : '' },
     },
+    '/compete/search': {
+      target: 'https://amzics.workics.cn',
+      changeOrigin: true
+    }
   },
 }
 

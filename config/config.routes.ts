@@ -9,8 +9,8 @@ import {
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
   ruleHistoryRouter,
+  setCompetingGoodsRouter,
 } from '../src/utils/routes';
-
 
 export default [
   // 账户
@@ -79,6 +79,7 @@ export default [
     routes: [
       { title: '商品列表', path: '/product/list', component: './mws/GoodsList' },
       { title: '错误报告', path: '/product/error-report', component: './mws/ErrorReport' },
+      { title: '竞品设定', path: setCompetingGoodsRouter, component: './mws/CompetingGoods' }, // 入口是商品列表
       // 重定向
       { path: '/product', redirect: '/product/list' },
     ],
