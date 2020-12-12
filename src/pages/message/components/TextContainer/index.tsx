@@ -120,15 +120,15 @@ class TextContainer extends React.Component<IProps, IState, {}> {
                   <span className="text">展开</span>
                   <Iconfont type="icon-zhankai"
                     className={`icon`} style={{
-                      color: '#888',
+                      color: '#c1c1c1',
                     }} />
                 </div> : <div className="text-container-off" style={{
-                  color: '#888',
+                  color: '#c1c1c1',
                 }}>
                   <span className="text">收起</span>
                   <Iconfont type="icon-zhankai" 
                     className="icon" style={{
-                      color: '#888',
+                      color: '#c1c1c1',
                       transform: 'rotate(182deg)',
                     }} />
                 </div> 

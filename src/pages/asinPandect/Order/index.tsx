@@ -10,7 +10,7 @@ import Statistic from './components/Statistic';
 import Total from './components/Total';
 import DouFu from './components/Doufu';
 import LineChartsComponent from './components/LineChart';
-import { storageKeys } from '@/utils/huang';
+import { storageKeys, toIndexFixed } from '@/utils/huang';
 import { handleDouFu, handleRange, tooltipPosition, douFuDefaultList } from './function';
 import { storage } from '@/utils/utils';
 import echarts from 'echarts';
@@ -456,12 +456,7 @@ const Order: React.FC = () => {
       dataIndex: 'salesQuantityDivOrderQuantity',
       align: 'center',
       render(value: string) {
-        if (value === null) {
-          return <span style={{
-            color: '#888',
-          }}>—</span>;
-        }
-        return value;
+        return <ShowData value={value}/>;
       },
     },
     {
@@ -469,12 +464,7 @@ const Order: React.FC = () => {
       dataIndex: 'sessions',
       align: 'center',
       render(value: string) {
-        if (value === null) {
-          return <span style={{
-            color: '#888',
-          }}>—</span>;
-        }
-        return value;
+        return <ShowData value={value} fillNumber={0}/>;
       },
     },
     {
@@ -487,7 +477,7 @@ const Order: React.FC = () => {
             color: '#888',
           }}>—</span>;
         }
-        return `${value}%`;
+        return `${toIndexFixed(value)}%`;
       },
     },
     {
@@ -495,12 +485,7 @@ const Order: React.FC = () => {
       dataIndex: 'pageView',
       align: 'center',
       render(value: string) {
-        if (value === null) {
-          return <span style={{
-            color: '#888',
-          }}>—</span>;
-        }
-        return value;
+        return <ShowData value={value} fillNumber={0}/>;
       },
     },
     {
@@ -509,12 +494,7 @@ const Order: React.FC = () => {
       align: 'center',
       width: 140,
       render(value: string) {
-        if (value === null) {
-          return <span style={{
-            color: '#888',
-          }}>—</span>;
-        }
-        return value;
+        return <ShowData value={value}/>;
       },
     },
     {

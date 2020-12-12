@@ -135,6 +135,8 @@ const Settings: React.FC = () => {
       setPageCurrent(data.current);
     } else {
       message.error(msg || 'OOP! 网络有点问题~');
+      setDataSource([]);
+      setPageTotal(0);
     }
   }, [datas]);
 
@@ -435,7 +437,7 @@ const Settings: React.FC = () => {
         <div className={styles.search}>
           <SearchDownList callback={successCb} reset={searchComponent} />
         </div>
-        <div className="downlist" style={{
+        <div className={styles.downlist} style={{
           width: 108,
         }}>
           <Dropdown 
@@ -443,7 +445,7 @@ const Settings: React.FC = () => {
             onVisibleChange={setStar}
             visible={starIsVisible} >
             <Button>
-              评论提醒 <DownOutlined />
+              评论提醒 <DownOutlined className={styles.icon}/>
             </Button>
           </Dropdown>
         </div>

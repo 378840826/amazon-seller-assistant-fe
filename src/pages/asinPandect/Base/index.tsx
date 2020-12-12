@@ -5,6 +5,7 @@ import {
   useSelector,
 } from 'umi';
 import echarts from 'echarts';
+import classnames from 'classnames';
 
 // ---
 import Update from './components/Update';
@@ -341,7 +342,17 @@ const AsinBase: React.FC = () => {
                 {asinInfo?.answerQuestionNum || 0}条Q&A
               </span>
             </div>
-            <div className={styles.icons}>
+            <div className={classnames(
+              styles.icons,
+              asinInfo?.isAc
+              || asinInfo?.isBs
+              || asinInfo?.idAdd
+              || asinInfo?.isCoupon
+              || asinInfo?.isPrime
+              || asinInfo?.isPrime
+              || asinInfo?.isPromotion
+              || asinInfo?.isNr ? '' : 'none',
+            )}>
               <span className={styles.iconItem} style={{
                 display: asinInfo?.isAc ? 'inline-block' : 'none',
               }}>

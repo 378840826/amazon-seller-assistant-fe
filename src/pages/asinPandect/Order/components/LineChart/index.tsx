@@ -49,10 +49,7 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
   const selectDouFu = useSelector((state: AsinOrder.IDFChecke) => state.asinOrder.dfCheckedTypes);
   const colors = useSelector((state: AsinOrder.IDFChecke) => state.asinOrder.doufuSelectColor);
   const { currency } = currentShop;
-  const maxLength = 2;
-  // const [yLeftName, setYleftName] = useState<string>('');
-  // const [yRightName, setYrightName] = useState<string>('');
-  
+
   useEffect(() => {
     if (refLineCharts && !isEmptyObj(datas) ) {
       const myChart = echarts.init(refLineCharts.current as HTMLDivElement);
@@ -64,6 +61,8 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
         polylineX, // 本期的X轴数据
       } = datas.thisPeriod; // 本期数据
       
+      myChart.off('legendselectchanged'); // 防止重复绑定事件
+
       if (datas.firstWeekOrMonthHalf) {
         weekMonthXData = datas.firstWeekOrMonthHalf.polylineX;
       }
@@ -299,24 +298,6 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
 
         if (label === '') {
           return;
-        }
-
-        if (selectDouFu.length >= maxLength) {
-          if (selectDouFu.indexOf(label) > -1) {
-            const index = selectDouFu.indexOf(label);
-            const newColor = colors.splice(index, 1)[0];
-            colors.push(newColor);
-          } else {
-            const newColor = colors.shift();
-            colors.push(newColor as string);
-          }
-
-          dispatch({
-            type: 'asinOrder/changeColor',
-            payload: {
-              colors,
-            },
-          });
         }
 
         for (const key in lastYearObj) {

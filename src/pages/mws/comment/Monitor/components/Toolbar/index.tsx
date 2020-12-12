@@ -55,8 +55,6 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   const [asin, setAsin] = useState<string>(props.asin || ''); // asin
   const [scopeMin, setScopeMin] = useState<string>(''); // 最小评分
   const [scopeMax, setScopeMax] = useState<string>(''); // 最大评分
-  // const [dateStart, setDateStart] = useState<string>(''); // 开始日期
-  // const [dateEnd, setDateEnd] = useState<string>(''); // 结束日期
   const [reviewerName, setReviewerName] = useState<string>(''); // 笔名
   const [reviewsNumMin, setReviewsNumMin] = useState<string>(''); // reviews起始值
   const [reviewsNumMax, setReviewsNumMax] = useState<string>(''); // reviews结束值
@@ -209,7 +207,9 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
 
   // 回复的改变
   const changReply = (e: RadioChangeEvent) => {
-    setReply(e.target.value);
+    const replyStatus = e.target.value;
+    setReply(replyStatus);
+    gather({ replyStatus });
   };
 
   const { start: start7, end: end7 } = getRangeDate(7);
