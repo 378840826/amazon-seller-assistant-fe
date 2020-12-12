@@ -3,6 +3,8 @@ import { Link } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import styles from './common.less';
 import { competitorListRouter } from '@/utils/routes';
+import ShowData from '@/components/ShowData';
+
 
 interface IProps {
   data: Message.IFollowDataType;
@@ -17,7 +19,7 @@ const Outer: React.FC<IProps> = (props) => {
   } = props;
 
   const [visible, setSivible] = useState<boolean>(true);
-  const [showText, setShowText] = useState<string>('展开');
+  const [showtext, setShowText] = useState<string>('展开');
 
   const handleVisible = () => {
     setSivible(!visible);
@@ -54,11 +56,7 @@ const Outer: React.FC<IProps> = (props) => {
               </p>
               <p className={styles.freight}>
                 <span className={styles.text}>运费：</span>
-                {
-                  currency + (
-                    item.shippingFee ? item.shippingFee : '0'
-                  ) 
-                }
+                <ShowData value={item.shippingFee} isCurrency/>
               </p>
             </div>;
           })
@@ -67,10 +65,10 @@ const Outer: React.FC<IProps> = (props) => {
       <div className={styles.right}>
         {
           data.followSellers.length > 1 ? <span 
-            className={styles.show}
+            className={`${styles.show} ${showtext === '收起' ? 'primaryTextColor' : ''}`}
             onClick={handleVisible}
           >
-            {showText}<Iconfont 
+            {showtext}<Iconfont 
               type="icon-zhankai"
               style={{
                 marginLeft: 7,
@@ -88,7 +86,7 @@ const Outer: React.FC<IProps> = (props) => {
             详情
             <Iconfont type="icon-zhankai-copy" style={{
               marginLeft: 7,
-              color: '#999',
+              color: '#c1c1c1',
             }}/>
           </Link>
           <span className={styles.date}>{data.catchDate}</span>

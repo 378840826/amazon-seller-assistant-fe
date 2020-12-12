@@ -33,7 +33,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   const [multipleSku, setMultipleSku] = useState<string | boolean>(''); // 一单多SKU
   const [deliverMethod, setDeliverMethod] = useState<string>(''); // 发货方式
   const [shipServiceLevel, setShipServiceLevel] = useState<string>(''); // 配送服务
-  const [filtrateboxheight, setFiltrateBoxHeight] = useState<string>('88px'); // 筛选框高度
+  const [filtrateboxheight, setFiltrateBoxHeight] = useState<string>('76px'); // 筛选框高度
   const [filtrateMoreButText, setFiltrateMoreButText] = useState<string>('展开');
   const [filtrateMoreButClass, setFiltrateMoreButClass] = useState<string>('');
   const current = useSelector((state: MwsOrderList.IGlobalType) => state.global.shop.current);
@@ -127,7 +127,7 @@ const Toolbar: React.FC<MwsOrderList.IToolbarProps> = (props) => {
   // 筛选工具栏的高度设置
   const handleFiltrateHeight = () => {
     if (filtrateMoreButText === '收起') {
-      setFiltrateBoxHeight('88px');
+      setFiltrateBoxHeight('76px');
       setFiltrateMoreButText('展开');
       setFiltrateMoreButClass('');
     } else {

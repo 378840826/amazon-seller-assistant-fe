@@ -5,11 +5,16 @@ import {
   useSelector,
 } from 'umi';
 import echarts from 'echarts';
+import classnames from 'classnames';
 
 // ---
-import notImg from '@/assets/stamp.png';
 import Update from './components/Update';
 import Empty from './components/Empty';
+import ShowData from '@/components/ShowData';
+import { toIndexFixed } from '@/utils/huang';
+import { strToMoneyStr } from '@/utils/utils';
+import GoodsImg from '@/pages/components/GoodsImg';
+import { bigIcon } from '@/pages/components/GoodsIcon';
 import {
   Rate, 
   Tooltip,
@@ -286,6 +291,10 @@ const AsinBase: React.FC = () => {
     });
     setImgs([...imgs]);
   };
+
+  const transitionInput = (value: string) => {
+    return strToMoneyStr(value);
+  };
   
   return (
     <div className={styles.baseBox}>
@@ -302,17 +311,17 @@ const AsinBase: React.FC = () => {
                     key={i} 
                     className={styles.active} 
                     onClick={() => switchImg(item)}>
-                    <img src={item.img || notImg}/>
+                    <GoodsImg src={item.img} alt="商品" width={40} />
                   </li>;
                 }
                 return <li 
                   key={i} 
                   onClick={() => switchImg(item)}>
-                  <img src={item.img || notImg}/>
+                  <GoodsImg src={item.img} alt="商品" width={40} />
                 </li>;
               })}
             </ul>
-            <img src={lgImg || notImg} className={styles.imgLg}/>
+            <GoodsImg src={lgImg} alt="商品" className={styles.imgLg} width={316} />
           </div>
           <div className={styles.infos}>
             <p className={styles.title}>
@@ -333,88 +342,77 @@ const AsinBase: React.FC = () => {
                 {asinInfo?.answerQuestionNum || 0}条Q&A
               </span>
             </div>
-            <div className={styles.icons}>
-              <span style={{
+            <div className={classnames(
+              styles.icons,
+              asinInfo?.isAc
+              || asinInfo?.isBs
+              || asinInfo?.idAdd
+              || asinInfo?.isCoupon
+              || asinInfo?.isPrime
+              || asinInfo?.isPrime
+              || asinInfo?.isPromotion
+              || asinInfo?.isNr ? '' : 'none',
+            )}>
+              <span className={styles.iconItem} style={{
                 display: asinInfo?.isAc ? 'inline-block' : 'none',
               }}>
                 <Tooltip title="keyword">
-                  <img
-                    src={require('@/assets/icon/ac.svg')} 
-                    className={styles.img}
-                  />
+                  {bigIcon.ac()}
                 </Tooltip>
               </span>
               
-              <span style={{
+              <span className={styles.iconItem} style={{
                 display: asinInfo?.isBs ? 'inline-block' : 'none',
               }}>
                 <Tooltip title="category名称">
-                  <img
-                    src={require('@/assets/icon/bs.svg')} 
-                    className={styles.img}
-                  />
+                  {bigIcon.bs()}
                 </Tooltip>
               </span>
 
-              <span style={{
+              <span className={styles.iconItem} style={{
                 display: asinInfo?.idAdd ? 'inline-block' : 'none',
               }}>
                 <Tooltip title="Add-on item">
-                  <img
-                    src={require('@/assets/icon/add.svg')} 
-                    className={styles.img}
-                  />
+                  {bigIcon.add()}
                 </Tooltip>
               </span>
 
-              <span style={{
+              <span className={styles.iconItem} style={{
                 display: asinInfo?.isCoupon ? 'inline-block' : 'none',
               }}>
                 <Tooltip title={asinInfo?.coupon}>
-                  <img
-                    src={require('@/assets/icon/jian.svg')} 
-                    className={styles.img}
-                  />
+                  {bigIcon.coupon()}
                 </Tooltip>
               </span>
 
-              <span style={{
+              <span className={styles.iconItem} style={{
                 display: asinInfo?.isPrime ? 'inline-block' : 'none',
               }}>
                 <Tooltip title="Prime">
-                  <img
-                    src={require('@/assets/icon/pr.svg')} 
-                    className={styles.img}
-                  />
+                  {bigIcon.prime()}
                 </Tooltip>
               </span>
 
-              <span style={{
+              <span className={styles.iconItem} style={{
                 display: asinInfo?.isPromotion ? 'inline-block' : 'none',
               }}>
                 <Tooltip title="Promotion">
-                  <img
-                    src={require('@/assets/icon/promotion.svg')} 
-                    className={styles.img}
-                  />
+                  {bigIcon.promotion()}
                 </Tooltip>
               </span>
 
-              <span style={{
+              <span className={styles.iconItem} style={{
                 display: asinInfo?.isNr ? 'inline-block' : 'none',
               }}>
                 <Tooltip title={asinInfo?.nrCategory}>
-                  <img
-                    src={require('@/assets/icon/nr.svg')} 
-                    className={styles.img}
-                  />
+                  {bigIcon.nr()}
                 </Tooltip>
               </span>
             </div>
             <p className={styles.price}>
               Price：
               <span className={styles.num}>
-                {asinInfo?.price === null ? '-' : currentShop.currency + asinInfo?.price}
+                <ShowData value={asinInfo?.price} fillZero isCurrency/>
               </span>
             </p>
             <p className={styles.dayPrice} style={{
@@ -480,22 +478,25 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>售价：</span>
                   <span className={styles.va1}>
-                    {priceEs?.price === null ? <Empty /> : currentShop.currency + priceEs?.price}
+                    {
+                    priceEs?.price === null || priceEs?.price === undefined ? <Empty/> : 
+                      currentShop.currency + toIndexFixed(priceEs?.price)
+                    }
                   </span>
-                  <span className={styles.va12}>（￥{priceEs?.priceCny}）</span>
+                  <span className={styles.va12}>（{priceEs?.priceCny ? `￥${toIndexFixed(priceEs?.priceCny)}` : ''}）</span>
                 </div>
 
                 <div className={styles.common}>
                   <label className={styles.label}>
                     <span className={styles.labelText}>采购成本：</span>
                     <span>{currentShop.currency}</span>
-                    <Form.Item name="cost">
+                    <Form.Item name="cost" normalize={transitionInput}>
                       <Input className={ styles.input } />
                     </Form.Item>
                     <span className={styles.placehoader} style={{
                       display: priceEs?.costCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{priceEs?.costCny}）
+                    （￥{ (priceEs?.costCny !== null && priceEs?.costCny !== undefined) ? toIndexFixed(priceEs?.costCny as number) : ''}）
                     </span>
                   </label>
                 </div>
@@ -504,13 +505,13 @@ const AsinBase: React.FC = () => {
                   <label className={styles.label}>
                     <span className={styles.labelText}>头程：</span>
                     <span>{currentShop.currency}</span>
-                    <Form.Item name="freight" >
+                    <Form.Item name="freight" normalize={transitionInput}>
                       <Input className={ styles.input }/>
                     </Form.Item>
                     <span className={styles.placehoader} style={{
                       display: priceEs?.freightCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{priceEs?.freightCny}）
+                    （￥{(priceEs?.freightCny !== null && priceEs?.freightCny !== undefined) ? toIndexFixed(priceEs?.freightCny as number) : ''}）
                     </span>
                   </label>
                 </div>
@@ -519,26 +520,27 @@ const AsinBase: React.FC = () => {
                   <span className={styles.text}>佣金：</span>
                   <span className={styles.va1}>
                     {
-                      priceEs?.commission === null 
-                        ? <Empty /> : currentShop.currency + priceEs?.commission
+                      priceEs?.commission === null || priceEs?.commission === undefined
+                        ? <Empty /> : currentShop.currency + toIndexFixed(priceEs?.commission) 
                     }
                   </span>
                   <span className={styles.va12} style={{
                     display: priceEs?.commissionCny === null ? 'none' : 'inline-block',
                   }}>
-                    （￥{priceEs?.commissionCny}）
+                    （￥{(priceEs?.commissionCny !== null && priceEs?.commissionCny !== undefined) ? toIndexFixed(priceEs?.commissionCny as number) : ''}）
                   </span>
                 </div>
 
                 <div className={styles.base}>
                   <span className={styles.text}>FBA fee：</span>
                   <span className={styles.va1}>
-                    {priceEs?.fbaFee === null ? <Empty /> : currentShop.currency + priceEs?.fbaFee}
+                    {priceEs?.fbaFee === null || priceEs?.fbaFee === undefined ? <Empty /> : 
+                      currentShop.currency + toIndexFixed(priceEs?.fbaFee)}
                   </span>
                   <span className={styles.va12} style={{
                     display: priceEs?.fbaFeeCny === null ? 'none' : 'inline-block',
                   }}>
-                    （￥{priceEs?.fbaFeeCny}）
+                    （￥{(priceEs?.fbaFeeCny !== null && priceEs?.fbaFeeCny !== undefined) ? toIndexFixed(priceEs?.fbaFeeCny as number) : ''}）
                   </span>
                 </div>
 
@@ -551,13 +553,13 @@ const AsinBase: React.FC = () => {
                       </Tooltip>
                     </span>
                     <span>{currentShop.currency}</span>
-                    <Form.Item name="promotionFee">
+                    <Form.Item name="promotionFee" normalize={transitionInput}>
                       <Input className={ styles.input }/>
                     </Form.Item>
                     <span className={styles.placehoader} style={{
                       display: priceEs?.promotionFeePer === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{priceEs?.promotionFeePer}）
+                    （￥{(priceEs?.promotionFeePer !== null && priceEs?.promotionFeePer !== undefined) ? toIndexFixed(priceEs?.promotionFeePer as number) : ''}）
                     </span>
                   </label>
                 </div>
@@ -571,13 +573,13 @@ const AsinBase: React.FC = () => {
                       </Tooltip>
                     </span>
                     <span>{currentShop.currency}</span>
-                    <Form.Item name="storageFee">
+                    <Form.Item name="storageFee" normalize={transitionInput}>
                       <Input className={ styles.input }/>
                     </Form.Item>
                     <span className={styles.placehoader} style={{
                       display: priceEs?.storageFeeCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{priceEs?.storageFeeCny}）
+                    （￥{(priceEs?.storageFeeCny !== null && priceEs?.storageFeeCny !== undefined) ? toIndexFixed(priceEs?.storageFeeCny as number) : ''}）
                     </span>
                   </label>
                 </div>
@@ -586,13 +588,13 @@ const AsinBase: React.FC = () => {
                   <label className={styles.label}>
                     <span className={styles.labelText}>其他：</span>
                     <span>{currentShop.currency}</span>
-                    <Form.Item name="otherFee">
+                    <Form.Item name="otherFee" normalize={transitionInput}>
                       <Input className={ styles.input }/>
                     </Form.Item>
                     <span className={styles.placehoader} style={{
                       display: priceEs?.otherFeeCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{priceEs?.otherFeeCny}）
+                    （￥{(priceEs?.otherFeeCny !== null && priceEs?.otherFeeCny !== undefined) ? toIndexFixed(priceEs?.otherFeeCny as number) : ''}）
                     </span>
                   </label>
                 </div>
@@ -600,22 +602,31 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>利润：</span>
                   <span className={styles.va1}>
-                    {priceEs?.profit === null ? <Empty /> : currentShop.currency + priceEs?.profit}
+                    {
+                    priceEs?.profit === null || priceEs?.profit === undefined ? <Empty /> : 
+                      currentShop.currency + toIndexFixed(priceEs?.profit)
+                    }
                   </span>
-                  <span className={styles.va12}>（￥{priceEs?.profitCny}）</span>
+                  <span className={styles.va12}>
+                    （￥{(priceEs?.profitCny !== null && priceEs?.profitCny !== undefined) ? toIndexFixed(priceEs?.profitCny as number) : ''}）
+                  </span>
                 </div>
 
                 <div className={styles.base}>
                   <span className={styles.text}>利润率：</span>
                   <span className={styles.va1}>
-                    {priceEs?.profit === null ? <Empty /> : `${priceEs?.profitMargin}%`}
+                    {
+                      priceEs?.profitMargin === null || priceEs?.profitMargin === undefined ? 
+                        <Empty /> : 
+                        `${priceEs?.profitMargin}%`
+                    }
                   </span>
                 </div>
               </Form>
             </div>
             <div className={styles.costPrice}>
               <h2>成本估算：</h2>
-              <p>总成本：{currentShop.currency + priceEs?.totalCost}</p>
+              <p>总成本：<ShowData value={priceEs?.totalCost} isCurrency /></p>
               <div className={styles.bar} ref={barRef as React.RefObject<HTMLDivElement>}></div>
             </div>
           </div>

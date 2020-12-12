@@ -9,7 +9,7 @@
   background-color: #fafafa;
   flex: 0 0 auto;
 
-  img {
+  .img {
     width: 112px;
     height: 112px;
     display: block;
@@ -21,6 +21,15 @@
     padding: 10px 15px;
     white-space: pre-wrap;
     word-break: break-all;
+
+    .icon {
+      color: @text-color-secondary;
+      margin-right: 2px;
+    }
+
+    &:hover .icon {
+      color: @primary-color;
+    }
   }
 
   p.details {
@@ -30,6 +39,10 @@
     .content {
       width: 80px;
       word-break: break-all;
+    }
+
+    .text {
+      color: @text-color-secondary;
     }
   }
 }

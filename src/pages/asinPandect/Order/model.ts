@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-07-18 16:16:40
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\asinPandect\Order\model.ts
  */ 
 import { Effect, Reducer } from 'umi';

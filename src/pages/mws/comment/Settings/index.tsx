@@ -6,7 +6,7 @@ import { Iconfont, storage } from '@/utils/utils';
 import SearchDownList from './components/SearchDownList';
 import TableNotData from '@/components/TableNotData';
 import MySwitch from './components/MySwitch';
-import sittingImg from '@/assets/stamp.png';
+import GoodsImg from '@/pages/components/GoodsImg';
 import {
   Button,
   Dropdown,
@@ -20,6 +20,7 @@ import moment from 'moment';
 import {
   reviewListRouter,
 } from '@/utils/routes';
+import { toIndexFixed } from '@/utils/huang';
 
 
 const Settings: React.FC = () => {
@@ -134,6 +135,8 @@ const Settings: React.FC = () => {
       setPageCurrent(data.current);
     } else {
       message.error(msg || 'OOP! 网络有点问题~');
+      setDataSource([]);
+      setPageTotal(0);
     }
   }, [datas]);
 
@@ -309,7 +312,7 @@ const Settings: React.FC = () => {
         } = row.productInfo;
         return (
           <div className={styles.product_cols}>
-            <img src={imgLink || sittingImg} alt=""/>
+            <GoodsImg src={imgLink} className={styles.img} alt="商品" width={46} />
             <div className={styles.product_box}>
               <a href={ titleLink }
                 title={title} 
@@ -325,9 +328,9 @@ const Settings: React.FC = () => {
               </a>
               <div className={styles.details}>
                 <span className={styles.asin}>{asin}</span>
-                <p>
+                <p className={styles.rightInfo}>
                   <span className={styles.price}>
-                    {currentShop.currency}{price}
+                    {price ? currentShop.currency + toIndexFixed(price) : '-' }
                   </span>
                   <span className={styles.line}></span>
                   <span className={`${fulfillmentChannel}`}>{fulfillmentChannel}</span>
@@ -346,7 +349,7 @@ const Settings: React.FC = () => {
       width: '15%',
       render(value: string, row: CommectMonitor.IRowDataType) {
         return (<div className={styles.monitor}>
-          {row.reviewScore || 0} 
+          {toIndexFixed(row.reviewScore || 0, 1)} 
           <span>({row.reviewNum || 0})</span>
         </div>);
       },
@@ -379,9 +382,10 @@ const Settings: React.FC = () => {
   const pageConfig = {
     pageSizeOptions: ['20', '50', '100'],
     total: pageTotal,
-    pageSize: 20,
+    pageSize,
     current: pageCurrent,
     showQuickJumper: true, // 快速跳转到某一页
+    showSizeChanger: true,
     showTotal: (total: number) => `共 ${total} 个`,
     onChange(current: number, size: number | undefined){
       setPageCurrent(current);
@@ -433,7 +437,7 @@ const Settings: React.FC = () => {
         <div className={styles.search}>
           <SearchDownList callback={successCb} reset={searchComponent} />
         </div>
-        <div className="downlist" style={{
+        <div className={styles.downlist} style={{
           width: 108,
         }}>
           <Dropdown 
@@ -441,7 +445,7 @@ const Settings: React.FC = () => {
             onVisibleChange={setStar}
             visible={starIsVisible} >
             <Button>
-              评论提醒 <DownOutlined />
+              评论提醒 <DownOutlined className={styles.icon}/>
             </Button>
           </Dropdown>
         </div>

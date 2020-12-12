@@ -12,6 +12,7 @@ const PageViewSession = () => {
       <QuestionCircleOutlined style={{
         fontSize: 12,
         color: '#888',
+        cursor: 'pointer',
       }}/>
     </div>
   </Tooltip>;

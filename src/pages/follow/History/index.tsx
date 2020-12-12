@@ -13,10 +13,11 @@ import {
 import {
   Table,
 } from 'antd';
-import placeholderImg from '@/assets/stamp.png';
+import GoodsImg from '@/pages/components/GoodsImg';
 import TableNotData from '@/components/TableNotData';
 import Snav from '@/components/Snav';
 import { competitorMonitorRouter, competitorListRouter } from '@/utils/routes';
+import ShowData from '@/components/ShowData';
 
 interface ILocation extends Location {
   query: {
@@ -48,6 +49,7 @@ const History: React.FC<IProps> = () => {
   const [current, setCurrent] = useState<number>(1); // 当前分页
   const [size, setSize] = useState<number>(20); // 分页大小
   const [loading, setLoading] = useState<boolean>(true);
+
 
   const navList: Snav.INavList[] = [
     {
@@ -161,8 +163,9 @@ const History: React.FC<IProps> = () => {
         } = rows;
         // 运费没有时为0
         return <div style={{ whiteSpace: 'nowrap' }}>
-          {buyboxPrice ? currentShop.currency + buyboxPrice : <span style={{ color: '#888' }}>—</span>} &nbsp; + &nbsp;
-          {buyboxShippingFee !== null && buyboxShippingFee !== '' ? currentShop.currency + buyboxShippingFee : 0 }
+          <ShowData value={buyboxPrice} isCurrency/>
+           &nbsp; + &nbsp;
+          <ShowData value={buyboxShippingFee} isCurrency/>
         </div>;
       },
     },
@@ -225,7 +228,7 @@ const History: React.FC<IProps> = () => {
       }} />
       <div className={styles.box}>
         <div className={styles.layoutLeft}>
-          <img src={asinInfo?.imgUrl || placeholderImg} />
+          <GoodsImg src={asinInfo?.imgUrl || ''} className={styles.img} alt="商品" width={112} />
           <div style={{
             display: monitorNum > 0 ? 'block' : 'none',
           }}>
@@ -240,15 +243,15 @@ const History: React.FC<IProps> = () => {
               {asinInfo?.title}
             </a>
             <p className={styles.details}>
-              <span>asin：</span> 
+              <span className={styles.text}>Asin：</span> 
               <span className={styles.content}>{asinInfo?.asin}</span>
             </p>
             <p className={styles.details}>
-              <span>价格：</span>
-              <span className={styles.content}>{currentShop.currency}{asinInfo?.price}</span>
+              <span className={styles.text}>价格：</span>
+              <span className={styles.content}><ShowData value={asinInfo?.price} isCurrency/></span>
             </p>
             <p className={styles.details}>
-              <span>发货方式：</span>
+              <span className={styles.text}>发货方式：</span>
               <span className={styles.content}>{asinInfo?.fulfillmentChannel}</span>
             </p>
           </div>

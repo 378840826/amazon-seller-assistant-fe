@@ -211,6 +211,15 @@ export function moneyFormat(
   return s.join(dec);
 }
 
+/**
+ * 转换成指定位数的数字
+ * @param {Number|String} value {}
+ * @param {Number} index 
+ */
+export function toIndexFixed(value: number|string, index = 2): string {
+  return new Number(value).toFixed(index);
+}
+
 
 /**
  * 判断是否为真正的对象
@@ -219,3 +228,4 @@ export function moneyFormat(
 export function isObject(param: any) { // eslint-disable-line
   return Object.prototype.toString.call(param) === '[object Object]';
 }
+

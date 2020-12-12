@@ -43,6 +43,7 @@ declare namespace MonitorType {
     code: number;
     data: {
       productInfo: IMontorRowProduct;
+      followQuantity: number;
       page: {
         records: IHistoryRecordsType[];
         total: number;

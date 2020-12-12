@@ -7,6 +7,7 @@ import {
   message,
 } from 'antd';
 import TextContainer from '../components/TextContainer';
+import classnames from 'classnames';
 
 interface IReviewTemplateProps {
   item: Message.IReviewData;
@@ -72,7 +73,7 @@ const ReviewTemplate: React.FC<IReviewTemplateProps> = ({ item }) => {
       </div>
       <div className={`${styles.layout_two_row}`}>
         <span className={styles.title}>评论内容：</span>
-        <div className={`contents content_box`} >
+        <div className={classnames('contents', 'content_box', styles.content)} >
           {/* {item.reviewContent} */}
           <TextContainer content={item.reviewContent}>
             <a href={item.reviewLink} 

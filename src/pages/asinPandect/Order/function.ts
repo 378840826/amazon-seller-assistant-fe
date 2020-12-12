@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-07-24 14:48:07
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\asinPandect\Order\function.ts
  */ 
 import moment from 'moment';
@@ -446,7 +446,7 @@ export const douFuDefaultList = [
   },
   {
     label: 'Session',
-    value: 'sessions',
+    value: 'session',
     show: true,
     data: 0,
     lastData: 0,

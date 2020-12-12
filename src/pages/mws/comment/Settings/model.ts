@@ -2,8 +2,8 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-05 15:04:27
- * @LastEditors: Huang Chao Yi
- * @LastEditTime: 2020-07-06 18:08:12
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-12-12 11:00:29
  * @FilePath: \amzics-react\src\pages\mws\comment\Settings\model.ts
  */ 
 import { Effect, Reducer } from 'umi';
@@ -48,8 +48,6 @@ const Model: ICommentSettings = {
   },
 
   reducers: {
-   
-
     getTableList(state, { payload }) {
       state.datas = payload;
     },

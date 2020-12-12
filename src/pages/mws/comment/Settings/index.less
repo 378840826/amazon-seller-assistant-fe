@@ -11,10 +11,6 @@
     margin: 0;
   }
 
-  :global(.ant-select-dropdown) {
-    width: 530px !important;
-  }
-
   > header {
     display: flex;
     justify-content: space-between;
@@ -25,6 +21,16 @@
 
       button {
         margin: 0 10px;
+      }
+    }
+
+    .downlist {
+      .icon {
+        color: #bfbfbf;
+      }
+
+      &:hover .icon {
+        color: @primary-color;
       }
     }
   }
@@ -65,7 +71,7 @@
         flex-direction: column;
       }
 
-      img {
+      .img {
         width: 46px;
         height: 46px;
         margin: 10px 10px 0 0;
@@ -105,23 +111,28 @@
           padding-right: 10px;
         }
 
-        .price {
-          color: @error-color;
-        }
+        .rightInfo {
+          display: flex;
+          align-items: center;
 
-        .line {
-          height: 12px;
-          display: inline-block;
-          margin: 1px 6px 0;
-          border-right: 1px solid @border-color-base;
-        }
+          .price {
+            color: @error-color;
+          }
 
-        :global(.FBA) {
-          color: @warning-color;
-        }
+          .line {
+            height: 12px;
+            display: inline-block;
+            margin: 1px 6px 0;
+            border-right: 1px solid @border-color-base;
+          }
 
-        :global(.FBM) {
-          color: @success-color;
+          :global(.FBA) {
+            color: @warning-color;
+          }
+
+          :global(.FBM) {
+            color: @success-color;
+          }
         }
       }
     }

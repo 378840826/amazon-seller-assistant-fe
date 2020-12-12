@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-09-14 16:55:26
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * 
  * antd的时间范围插件满足不了需求
  * 1. 开始时间可以大于结束时间
@@ -14,6 +14,7 @@ import styles from './index.less';
 import { TimePicker } from 'antd';
 import moment from 'moment';
 import { SwapRightOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import classnames from 'classnames';
 
 
 interface ICbParams {
@@ -88,10 +89,7 @@ const RangeTime: React.FC<IProps> = (props) => {
         allowClear={false}
         showNow={false}
         className={styles.timepicker}
-        popupClassName="h-range-time"
-        popupStyle={{
-          color: 'red',
-        }}
+        popupClassName={classnames('h-range-time', styles.rangeTimeAlert)}
       />
       <SwapRightOutlined className={styles.icon1} />
       <TimePicker 
@@ -102,7 +100,8 @@ const RangeTime: React.FC<IProps> = (props) => {
         allowClear={false}
         suffixIcon=""
         showNow={false}
-        className={styles.timepicker}
+        className={`${styles.timepicker} ${styles.timepickerLast}`}
+        popupClassName={classnames('h-range-time', styles.rangeTimeAlert)}
       />
       <ClockCircleOutlined className={styles.icon2} />
       <span className={styles.tomorrow} style={{
