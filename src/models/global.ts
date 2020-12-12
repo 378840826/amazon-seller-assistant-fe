@@ -97,7 +97,7 @@ const GlobalModel: IGlobalModelType = {
 
     // 切换 mws 店铺总开关
     *switchShopAutoPrice({ payload: { id, autoPrice }, callback }, { call, put }) {
-      const res = yield call(modifyShopAutoPrice, { id });
+      const res = yield call(modifyShopAutoPrice, { storeId: id, autoPrice });
       if (res.code === 200) {
         yield put({
           type: 'saveShopAutoPrice',

@@ -369,7 +369,7 @@ export const getFullColumns = (params: any) => {
             updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
-              cost: parseFloat(value).toFixed(2),
+              cost: value === '' ? '' : parseFloat(value).toFixed(2),
             });
           },
         })
@@ -392,7 +392,7 @@ export const getFullColumns = (params: any) => {
             updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
-              freight: parseFloat(value).toFixed(2),
+              freight: value === '' ? '' : parseFloat(value).toFixed(2),
             });
           },
         })
@@ -609,7 +609,7 @@ export const getFullColumns = (params: any) => {
             content="Review"
             sortItems={[
               { name: '评分', key: 'reviewScore' },
-              { name: '评轮数', key: 'reviewCount' },
+              { name: '评论数', key: 'reviewCount' },
             ]}
           />
         );
@@ -625,7 +625,7 @@ export const getFullColumns = (params: any) => {
             customCols.reviewCount
             &&
             <Text type="secondary">
-              (<Link to={`/review/monitor?asin=${record.asin}`}>{record.reviewCount}</Link>)
+              (<Link to={`/review/list?asin=${record.asin}`}>{record.reviewCount}</Link>)
             </Text>
           }
         </Space>
@@ -661,7 +661,7 @@ export const getFullColumns = (params: any) => {
             updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
-              minPrice: minPrice.toFixed(2),
+              minPrice: value === '' ? '' : minPrice.toFixed(2),
             });
           },
         })
@@ -697,7 +697,7 @@ export const getFullColumns = (params: any) => {
             updateGoodsUserDefined(record, {
               id: record.id,
               sku: record.sku,
-              maxPrice: maxPrice.toFixed(2),
+              maxPrice: value === '' ? '' : maxPrice.toFixed(2),
             });
           },
         })
@@ -726,10 +726,11 @@ export const getFullColumns = (params: any) => {
           size="small"
           className={styles.tableSelect}
           dropdownClassName={styles.SelectDropdown}
+          dropdownMatchSelectWidth={false}
           bordered={false}
           defaultValue={record.ruleId}
           value={record.ruleId}
-          listHeight={330}
+          listHeight={360}
           onChange={newRuleId => {
             updateGoodsUserDefined(record, {
               ruleId: newRuleId,
@@ -789,10 +790,10 @@ export const getFullColumns = (params: any) => {
               <Dropdown overlay={priceMenu} placement="bottomCenter">
                 <span className={styles.optionsItem}>改价</span>
               </Dropdown>
-              <Link to={`/dynamic/asin-overview?asin=${record.asin}`}>动态</Link>
+              <Link to={`/asin/dynamic?asin=${record.asin}`}>动态</Link>
             </Space>
             <Space>
-              <Link to={`/order?asin=${record.asin}`}>订单</Link>
+              <Link to={`/asin/order?asin=${record.asin}`}>订单</Link>
               <Dropdown overlay={monitorMenu} placement="bottomCenter">
                 <span className={styles.optionsItem}>监控</span>
               </Dropdown>

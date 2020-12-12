@@ -30,6 +30,7 @@
 │   ├── models               # 全局 dva model
 │   ├── pages                # 页面和常用模板
 │   │   ├── __tests__        # 测试用例文件目录
+│   │   ├── components       # 页面通用组件
 │   │   ├── 404.tsx          # 404页面
 │   │   └── .umi/            # dev 临时目录，已添加到 .gitignore
 │   ├── services             # 后台接口
@@ -104,3 +105,8 @@
 * api 相关的通用数据类型定义在 service/API.d.ts
 * 若接口中需要 Headers 参数，在 request payload 中添加 headersParams 字段，并在其中定义具体参数
 * 谨慎修改全局配置和全局数据类型格式，修改前与相关人员沟通
+
+### 公共组件说明
+* 会员各功能余量显示组件，显示在部分页面 title 的右边，有时会和更新时间一起
+    *  src/pages/components/PageTitleRightInfo
+    *  更新余量数值的方法在 src/models/user/updateMemberFunctionalSurplus

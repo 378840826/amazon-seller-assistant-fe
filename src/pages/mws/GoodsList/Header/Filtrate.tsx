@@ -168,7 +168,8 @@ const Filtrate: React.FC<IProps> = props => {
         <Col span={6}>
           <FormItem
             className={styles.acFormItem}
-            label="Amazon's Choice"
+            label="Amazon's Choice :"
+            colon={false}
             name="ac"
             labelAlign="left"
             labelCol={{ span: 6 }}

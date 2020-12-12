@@ -22,11 +22,6 @@
       font-size: 10px;
     }
   }
-
-  .btnActive {
-    color: @primary-color;
-    border-color: @primary-color;
-  }
 }
 
 .filtrateBtns {
@@ -201,8 +196,14 @@
     }
   }
 
-  :global(.ant-form-item-control) {
-    overflow: auto;
+  :global {
+    .ant-form-item-control {
+      overflow: auto;
+    }
+
+    .ant-form-item-label > label {
+      color: @text-color;
+    }
   }
 }
 
