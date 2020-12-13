@@ -43,7 +43,7 @@ const TableHead: React.FC<IProps> = props => {
     if (mainSort === '') {
       callback(titleparams, false);
       setMainSort(false);
-    } else {
+    } else if (mainSort === false) {
       callback(titleparams, !mainSort as boolean);
       setMainSort(!mainSort);
     }
@@ -51,7 +51,7 @@ const TableHead: React.FC<IProps> = props => {
     // 已经是倒序的话，取消排序
     if (mainSort === true) {
       setMainSort('');
-      callback('', true);  
+      callback('', true);
     }
   };
 
@@ -61,7 +61,7 @@ const TableHead: React.FC<IProps> = props => {
     if (subSort === '') {
       callback(subtitle, false);
       setSubSort(false);
-    } else {
+    } else if (subSort === false){
       callback(subtitle, !subSort as boolean);
       setSubSort(!subSort);
     }

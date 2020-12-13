@@ -4,12 +4,12 @@ export const frequencyList = [
   {
     text: '每10分钟',
     value: 10,
-    subtext: '（每小时的0/10/20/30/40/50/60）',
+    subtext: '（每小时的0/10/20/30/40/50分）',
   },
   {
     text: '每20分钟',
     value: 20, 
-    subtext: '（每小时的0/20/40/60分）',
+    subtext: '（每小时的0/20/40分）',
   },
   {
     text: '每30分钟',

@@ -562,7 +562,7 @@ const ChildAsin: React.FC<IProps> = props => {
   };
 
   return <div className={styles.childAsin}>
-    <div className={`${commonStyles.search} clearfix`} onmo>
+    <div className={`${commonStyles.search} clearfix`}>
       <Update update={update} style={{
         position: 'absolute',
         right: 0,

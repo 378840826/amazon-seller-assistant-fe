@@ -27,9 +27,11 @@ const config =  {
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',
+      // 'target': 'https://test.workics.cn',
       'changeOrigin': true,
       // 'pathRewrite': { '^/api' : '' },
     },
+    // 竞品设定的
     '/compete/search': {
       target: 'https://amzics.workics.cn',
       changeOrigin: true
