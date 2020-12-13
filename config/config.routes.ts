@@ -170,7 +170,7 @@ export default [
     path: '/report',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: 'ASIN报表', path: '/report/asin-overview', component: './mws/GoodsList' },
+      { title: 'ASIN报表', path: '/report/asin-overview', component: './report/AsinTable' },
       { title: 'Business Rport导入', path: '/report/import', component: './businessRport/Import' },
       { title: 'Business Rport详情', path: '/report/details', component: './businessRport/Details' },
     ],

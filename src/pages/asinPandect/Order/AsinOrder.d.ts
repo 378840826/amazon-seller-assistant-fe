@@ -39,7 +39,7 @@ declare namespace AsinOrder {
     pct?: number;
     salesQuantityDivOrderQuantity?: number;
     sessions?: number;
-    takeRates?: number;
+    takeRates?: number|string;
     pageView?: number;
     pageViewsDivSessions?: number;
     relatedSalesFrequency?: number;

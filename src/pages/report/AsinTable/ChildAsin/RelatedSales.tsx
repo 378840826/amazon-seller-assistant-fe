@@ -35,12 +35,10 @@ const Demo: React.FC<IProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(true); // 加载完
   const [data, setData] = useState<AsinTable.IChildRsType[]>([]);
 
-
   useEffect(() => {
-    if (childControlRSASIN === '') {
-      return;
-    }
-    if (childControlRSASIN !== asin) {
+    if (childControlRSASIN === asin) {
+      setVisible(true);
+    } else {
       setVisible(false);
     }
   }, [childControlRSASIN, asin]);
@@ -50,46 +48,38 @@ const Demo: React.FC<IProps> = (props) => {
       type: 'asinTable/changechildControlRSASIN',
       payload: asin,
     });
-    setVisible(!visible);
+
+    setLoading(true);
+    new Promise((resolve, reject) => {
+      dispatch(({
+        type: 'asinTable/getChildRs',
+        payload: {
+          asin,
+          sellerId,
+          marketplace,
+          headersParams: {
+            StoreId,
+          },
+          ...getCalendarFields(storage.get(adinTableCalendar), adinTableCalendar),
+        },
+        resolve,
+        reject,
+      }));
+    }).then(datas => {
+      setLoading(false);
+      const {
+        data: {
+          records,
+        },
+      } = datas as {
+        data: {
+          records: AsinTable.IChildRsType[];
+        };
+      };
+      setData(records);
+    });
   };
 
-  useEffect(() => {
-    if (StoreId === '-1') {
-      return;
-    }
-
-    if (visible) {
-      setLoading(true);
-      new Promise((resolve, reject) => {
-        dispatch(({
-          type: 'asinTable/getChildRs',
-          payload: {
-            asin,
-            sellerId,
-            marketplace,
-            headersParams: {
-              StoreId,
-            },
-            ...getCalendarFields(storage.get(adinTableCalendar), adinTableCalendar),
-          },
-          resolve,
-          reject,
-        }));
-      }).then(datas => {
-        setLoading(false);
-        const {
-          data: {
-            records,
-          },
-        } = datas as {
-          data: {
-            records: AsinTable.IChildRsType[];
-          };
-        };
-        setData(records);
-      });
-    }
-  }, [dispatch, visible, asin, StoreId, sellerId, marketplace]);
 
   useEffect(() => {
     document.addEventListener('click', () => {
@@ -123,7 +113,7 @@ const Demo: React.FC<IProps> = (props) => {
                 </p>
                 <p className={styles.p}>
                   <span>{item.sku}</span>
-                  <span>{item.associateSalesTimes}</span>
+                  <span>{item.associateSalesTimes || 0} 次</span>
                 </p>
                 <Tooltip 
                   title={`大类排名：#${
@@ -145,6 +135,7 @@ const Demo: React.FC<IProps> = (props) => {
   };
   
   return <div onClick={e => e.nativeEvent.stopImmediatePropagation()} >
+    <span className="none">{asin}</span> {/* 这个没起显示作用，主要是为了解决bug，勿删除 */}
     <Popover
       content={content() as JSX.Element}
       title={`${asin}关联销售详情`}
