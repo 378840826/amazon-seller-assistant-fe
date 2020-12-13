@@ -42,7 +42,7 @@ const TableHead: React.FC<IProps> = props => {
     if (mainSort === '') {
       callback(titleparams, false);
       setMainSort(false);
-    } else {
+    } else if (mainSort === false) {
       callback(titleparams, !mainSort as boolean);
       setMainSort(!mainSort);
     }
@@ -60,7 +60,7 @@ const TableHead: React.FC<IProps> = props => {
     if (subSort === '') {
       callback(subtitle, false);
       setSubSort(false);
-    } else {
+    } else if (subSort === false) {
       callback(subtitle, !subSort as boolean);
       setSubSort(!subSort);
     }
@@ -78,7 +78,7 @@ const TableHead: React.FC<IProps> = props => {
     if (subProportionSort === '') {
       callback(proportion, false);
       setSubProportionSort(false);
-    } else {
+    } else if (subProportionSort === false){
       callback(proportion, !subProportionSort as boolean);
       setSubProportionSort(!subProportionSort);
     }

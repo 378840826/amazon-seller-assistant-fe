@@ -1,5 +1,6 @@
 import React from 'react';
 import { isEmptyObj } from '@/utils/huang';
+import ShowData from '@/components/ShowData';
 
 interface IProps {
   obj: AsinOrder.ITotalType;
@@ -16,7 +17,7 @@ const Total: React.FC<IProps> = (props) => {
     sales, // 销售额
     orderQuantity, // 订单量
     salesQuantity, // 销量
-    couponOrderQuantity, // 销量
+    couponOrderQuantity, // 优惠订单量
     avgPrice, // 平均售价量
     pct, // 客单量
     salesQuantityDivOrderQuantity, // 销量/订单量
@@ -32,19 +33,22 @@ const Total: React.FC<IProps> = (props) => {
         <td align="center" style={{
           color: '#222',
         }}>总计</td>
-        <td align="right">{symbol}{sales}</td>
-        <td align="center">{orderQuantity}</td>
-        <td align="center">{salesQuantity}</td>
-        <td align="center">{couponOrderQuantity}</td>
-        <td align="right">{symbol}{avgPrice}</td>
-        <td align="right">{symbol}{pct}</td>
-        <td align="center">{salesQuantityDivOrderQuantity}</td>
-        <td align="center">{sessions}</td>
-        <td align="center">{takeRates}%</td>
-        <td align="center">{pageView}</td>
-        <td align="center">{pageViewsDivSessions}</td>
+        <td align="right"><ShowData value={sales} isCurrency/></td>
+        <td align="center"><ShowData value={orderQuantity} fillNumber={0}/></td>
+        <td align="center"><ShowData value={salesQuantity} fillNumber={0}/></td>
+        <td align="center"><ShowData value={couponOrderQuantity} fillNumber={0}/></td>
+        <td align="right"><ShowData value={avgPrice} isCurrency/></td>
+        <td align="right"><ShowData value={pct} isCurrency/></td>
+        <td align="center"><ShowData value={salesQuantityDivOrderQuantity} /></td>
+        <td align="center"><ShowData value={sessions} fillNumber={0}/></td>
         <td align="center">
-          {relatedSalesFrequency || ''}
+          <ShowData value={takeRates} fillNumber={2}/>
+          { takeRates === '' || takeRates === null ? '' : '%'}
+        </td>
+        <td align="center"><ShowData value={pageView} fillNumber={0}/></td>
+        <td align="center"><ShowData value={pageViewsDivSessions} fillNumber={2}/></td>
+        <td align="center">
+          <ShowData value={relatedSalesFrequency} fillNumber={0}/>
         </td>
       </tr>
     );
