@@ -69,8 +69,8 @@ const BiBoard: React.FC = () => {
       reviewKanban,
       feedbackKanban,
       acKeywordKanban,
-      // adKeywordKanban,
-      // adIneligibleKanban,
+      adKeywordKanban,
+      adIneligibleKanban,
     },
   } = page;
   const currentShop = useSelector((state: IConnectState) => state.global.shop.current);
@@ -249,36 +249,34 @@ const BiBoard: React.FC = () => {
     </div>
   );
 
-  // // 一条内容-广告关键词表现
-  // const renderAdKeywordKanbanItem = (record: API.IAdKeywordKanban) => (
-  //   <div className={styles.adKeywordKanbanItem} key={record.keyword}>
-  //     <div className={styles.row}>
-  //       <span>{record.keyword}</span>
-  //       <span>
-  //         ACoS≥<span className={styles.red}>{record.acos.toFixed(2)}%</span>
-  //       </span>
-  //     </div>
-  //     <Text type="secondary" className={styles.smallFont}>
-  //       {record.adCampaignsName} &gt; {record.adGroupName}
-  //     </Text>
-  //   </div>
-  // );
+  // 一条内容-广告关键词表现
+  const renderAdKeywordKanbanItem = (record: API.IAdKeywordKanban) => (
+    <div className={styles.adKeywordKanbanItem} key={record.keyword}>
+      <div className={styles.row}>
+        <span>{record.keyword}</span>
+        <span>
+          ACoS≥<span className={styles.red}>{record.acos.toFixed(2)}%</span>
+        </span>
+      </div>
+      <Text type="secondary" className={styles.smallFont}>{record.adCampaignsName} &gt; {record.adGroupName}</Text>
+    </div>
+  );
 
-  // // 一条内容-广告Ineligible原因
-  // const renderAdIneligibleKanbanItem = (record: API.IAdIneligibleKanban) => (
-  //   <div className={styles.adIneligibleKanbanItem} key={record.asin}>
-  //     <div className={styles.goodsContainer}>
-  //       <GoodsImg src={record.img} width={30} />
-  //       <div className={styles.goodsInfo}>
-  //         <div className={styles.row}>
-  //           <span>{record.asin}</span>
-  //           <span className={styles.red}>{record.Ineligible}</span>
-  //         </div>
-  //         <div>{record.sku}</div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
+  // 一条内容-广告Ineligible原因
+  const renderAdIneligibleKanbanItem = (record: API.IAdIneligibleKanban) => (
+    <div className={styles.adIneligibleKanbanItem} key={record.asin}>
+      <div className={styles.goodsContainer}>
+        <GoodsImg src={record.img} width={30} />
+        <div className={styles.goodsInfo}>
+          <div className={styles.row}>
+            <span>{record.asin}</span>
+            <span className={styles.red}>{record.Ineligible}</span>
+          </div>
+          <div>{record.sku}</div>
+        </div>
+      </div>
+    </div>
+  );
 
   // 全部卡片
   const allCard = {
@@ -359,28 +357,32 @@ const BiBoard: React.FC = () => {
       annotation: '需加入ASIN动态监控',
       content: <>{acKeywordKanban.asinInfos.map((item) => renderAcKeywordKanbanItem(item))}</>,
     },
-    // adKeywordKanban: {
-    //   title: '广告关键词表现',
-    //   titleExplain: '最近7天',
-    //   link: '/ppc/targeting',
-    //   linkText: '更多',
-    //   annotation: '需设置提醒规则',
-    //   content: (
-    //     <div className={styles.adKeywordContent}>
-    //       { adKeywordKanban.map((item) => renderAdKeywordKanbanItem(item)) }
-    //     </div>
-    //   ),
-    // },
-    // adIneligibleKanban: {
-    //   title: '广告Ineligible原因',
-    //   link: '/ppc/product',
-    //   linkText: '更多',
-    //   content: (
-    //     <div className={styles.adIneligibleContent}>
-    //       { adIneligibleKanban.map((item) => renderAdIneligibleKanbanItem(item)) }
-    //     </div>
-    //   ),
-    // },
+    adKeywordKanban: {
+      title: '广告关键词表现',
+      titleExplain: '最近7天',
+      // link: '/ppc/targeting',
+      link: '/overview/bi',
+      linkText: '更多',
+      annotation: '需设置提醒规则',
+      content: (
+        <div className={styles.adKeywordContent}>
+          <div style={{ textAlign: 'center' }}>功能正在开发中</div>
+          { adKeywordKanban.map((item) => renderAdKeywordKanbanItem(item)) }
+        </div>
+      ),
+    },
+    adIneligibleKanban: {
+      title: '广告Ineligible原因',
+      // link: '/ppc/product',
+      link: '/overview/bi',
+      linkText: '更多',
+      content: (
+        <div className={styles.adIneligibleContent}>
+          <div style={{ textAlign: 'center' }}>功能正在开发中</div>
+          { adIneligibleKanban.map((item) => renderAdIneligibleKanbanItem(item)) }
+        </div>
+      ),
+    },
   };
 
   // 按顺序显示

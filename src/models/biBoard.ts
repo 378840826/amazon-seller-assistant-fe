@@ -32,8 +32,8 @@ const GoodsListModel: IBiBoardModelType = {
       'reviewKanban',
       'feedbackKanban',
       'acKeywordKanban',
-      // 'adKeywordKanban',
-      // 'adIneligibleKanban',
+      'adKeywordKanban',
+      'adIneligibleKanban',
     ],
     // 自定义显示
     customCols: storage.get('biBoardCustomCols') || {
@@ -118,20 +118,20 @@ const GoodsListModel: IBiBoardModelType = {
         }],
         lastTime: '',
       },
-      // // 广告关键词表现
-      // adKeywordKanban: [{
-      //   adCampaignsName: '',
-      //   adGroupName: '',
-      //   acos: 0,
-      //   keyword: '',
-      // }],
-      // // 广告Ineligible原因
-      // adIneligibleKanban: [{
-      //   asin: '',
-      //   sku: '',
-      //   img: '',
-      //   Ineligible: '',
-      // }],
+      // 广告关键词表现
+      adKeywordKanban: [{
+        adCampaignsName: '',
+        adGroupName: '',
+        acos: 0,
+        keyword: '',
+      }],
+      // 广告Ineligible原因
+      adIneligibleKanban: [{
+        asin: '',
+        sku: '',
+        img: '',
+        Ineligible: '',
+      }],
     },
   },
 
