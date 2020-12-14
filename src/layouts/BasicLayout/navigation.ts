@@ -37,7 +37,7 @@ const navigation: INavigation[] = [
       { title: '商品列表', path: '/product/list' },
       // 隐藏的 asin总览， 需要高亮 '商品' 一级导航， 所以放这里
       { title: '', path: '/asin/base', hide: true },
-      { title: '', path: '/asin/dynamic', hide: true },
+      { title: '', path: '/asin/dt', hide: true },
       { title: '', path: '/asin/order', hide: true },
       { title: '', path: '/asin/b2b', hide: true },
       { title: '', path: '/asin/ppc', hide: true },

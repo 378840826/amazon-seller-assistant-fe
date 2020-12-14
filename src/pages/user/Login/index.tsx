@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { history } from 'umi';
+// import { history } from 'umi';
 import { Tabs, message } from 'antd';
 import { connect } from 'dva';
 import { validate } from '@/utils/utils';
@@ -78,7 +78,9 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
               type: 'user/saveCurrentUser',
               payload: res.data.user,
               callback: () => {
-                history.push('/');
+                // history.push('/');
+                // 如果是登录失效后再次登录，需要请求前面因登录失效没有拿到的店铺列表等数据
+                window.location.href = '/';
               },
             });
           }

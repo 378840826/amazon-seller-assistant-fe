@@ -579,24 +579,32 @@ export const getFullColumns = (params: any) => {
       width: 80,
       render: (ranking, record) => {
         if (!ranking.length) {
-          return <span className={styles.ranking}>—</span>;
+          return <span className={styles.ranking} title="无">—</span>;
         }
+        // 排名显示规则：只显示一个大类排名，没有大类排名则显示横杆。鼠标移入显示全部排名
         const top = record.ranking.filter(rank => rank.isTopCategory)[0];
+        // 小类排名
         const minCategory = record.ranking.filter(rank => !rank.isTopCategory);
-        const titleArr = minCategory.map(category => (
+        // 小类排名显示在 hover title 中
+        const minCategoryTitleArr = minCategory?.map(category => (
           <div key={category.categoryRanking}>
             #{category.categoryRanking} {category.categoryName}
           </div>
         ));
-        const title = (<div>#{top.categoryRanking} {top.categoryName} {titleArr}</div>);
+        const title = (
+          <div>
+            { top && <>#{top.categoryRanking} {top.categoryName}</> }
+            { minCategoryTitleArr }
+          </div>
+        );
         return (
-          top
-            ?
-            <Tooltip placement="top" title={title}>
-              <span className={styles.ranking}>#{top.categoryRanking}</span>
-            </Tooltip>
-            :
-            <span className={styles.ranking}>—</span>
+          <Tooltip placement="top" title={title}>
+            {
+              top
+                ? <span className={styles.ranking}>#{top.categoryRanking}</span>
+                : <span className={styles.ranking}>—</span>
+            }
+          </Tooltip>
         );
       },
     }, {
@@ -790,7 +798,7 @@ export const getFullColumns = (params: any) => {
               <Dropdown overlay={priceMenu} placement="bottomCenter">
                 <span className={styles.optionsItem}>改价</span>
               </Dropdown>
-              <Link to={`/asin/dynamic?asin=${record.asin}`}>动态</Link>
+              <Link to={`/asin/dt?asin=${record.asin}`}>动态</Link>
             </Space>
             <Space>
               <Link to={`/asin/order?asin=${record.asin}`}>订单</Link>

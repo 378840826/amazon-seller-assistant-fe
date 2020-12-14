@@ -99,7 +99,7 @@ const BiCard: React.FC<IProps> = props => {
             {titleExplain ? <span className={styles.titleExplain}>（{titleExplain}）</span> : null}
           </div>
         )}
-        extra={<Iconfont title="隐藏" type="icon-guanbi1" className={styles.close} onClick={onClose} />}
+        extra={<Iconfont title="隐藏" type="icon-cuo" className={styles.close} onClick={onClose} />}
         loading={loading}
         className={classnames(styles.card, cardClassName, notDataClassName)}
       >

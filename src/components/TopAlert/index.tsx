@@ -4,6 +4,7 @@
 import React from 'react';
 import { Link, useSelector } from 'umi';
 import { IConnectState } from '@/models/connect';
+import { Iconfont } from '@/utils/utils';
 import styles from './index.less';
 
 // 不需要显示过期店铺的页面路径
@@ -35,15 +36,25 @@ interface IProps {
 
 const TopAlert: React.FC<IProps> = props => {
   const state = useSelector((state: IConnectState) => state);
-  // 计算会员剩余有效期
-  const dayMs = 86400000;
-  const nowTimestamp = new Date().getTime();
-  const expirationTimestamp = new Date(state.user.currentUser.memberExpirationDate).getTime();
-  // 向上取整计算剩余天数
-  const validPeriod = Math.ceil((expirationTimestamp - nowTimestamp) / dayMs);
+  const icon = <Iconfont type="icon-zhankai-copy" className={styles.linkIcon} />;
 
   // vip 到期提示
   const renderVipAlert = () => {
+    // 未登录不显示
+    if (state.user.currentUser.id === -1) {
+      return;
+    }
+    const memberExpirationDate = state.user.currentUser.memberExpirationDate;
+    // 没有返回到期日 不显示
+    if (!memberExpirationDate) {
+      return;
+    }
+    // 计算会员剩余有效期
+    const dayMs = 86400000;
+    const nowTimestamp = new Date().getTime();
+    const expirationTimestamp = new Date(memberExpirationDate).getTime();
+    // 向上取整计算剩余天数
+    const validPeriod = Math.ceil((expirationTimestamp - nowTimestamp) / dayMs);
     if (validPeriod > 7) {
       return;
     }
@@ -53,7 +64,7 @@ const TopAlert: React.FC<IProps> = props => {
         { validPeriod > 0 ? validPeriod : 0 }天
       </span>
     );
-    const vipLink = <Link to="/vip/menbership">续费&gt;&gt;</Link>;
+    const vipLink = <Link to="/vip/menbership"><span>续费</span>{icon}</Link>;
     const text = validPeriod > 0 ? '为避免影响使用' : '部分功能已暂停更新数据';
     return (
       <div className={className}>
@@ -73,7 +84,7 @@ const TopAlert: React.FC<IProps> = props => {
     return (
       <div>
         该店铺授权已过期，请前往Seller Central的User Permission页面Enable授权并更新MWS Auth Token，
-        去<Link to="/shop/list">更新&gt;&gt;</Link>
+        去<Link to="/shop/list"><span>更新</span>{icon}</Link>
       </div>
     );
   };
@@ -82,6 +93,7 @@ const TopAlert: React.FC<IProps> = props => {
     <div className={styles.topAlert}>
       { renderVipAlert() }
       { renderShopAlert() }
+      <span className={styles.divider}></span>
     </div>
   );
 };
