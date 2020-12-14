@@ -17,6 +17,11 @@
   }
 }
 
+.__keyword,
+.__keyword_title {
+  padding-left: 59px;
+}
+
 .not_select_table {
   text-align: right;
 }
@@ -28,17 +33,25 @@
 
 .all_button {
   cursor: pointer;
+  font-size: 12px;
 }
 
 .select_button {
+  margin-right: 35px;
+  font-size: 12px;
+  color: @btn-text-color;
+
   &:hover {
     color: @link-color;
   }
 }
 
 .remove_button {
+  margin-right: 23px;
+  color: @error-color;
+
   &:hover {
-    color: @error-color;
+    color: #ff000d;
   }
 }
 
@@ -57,6 +70,7 @@
 
 .select_no {
   color: @error-color;
+  cursor: pointer;
 
   &:hover {
     color: #ff000d;

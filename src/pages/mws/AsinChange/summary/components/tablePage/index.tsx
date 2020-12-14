@@ -3,6 +3,7 @@ import { Table } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/es/table';
 import styles from './index.less';
 import { Link } from 'umi';
+import TableNotData from '@/components/TableNotData';
 import RenderValue from '../../../components/renderValue';
 import ColumnOrderInfo from '../../../components/columnInfo';
 interface ITablePage{
@@ -37,7 +38,7 @@ const TablePage: React.FC<ITablePage> = (
     {
       title: '数据获取时间',
       dataIndex: 'collectionTime',
-      width: 130,
+      width: 65,
       align: 'center',
       render: (text) => {
         return (
@@ -62,7 +63,7 @@ const TablePage: React.FC<ITablePage> = (
     {
       title: 'SKU',
       dataIndex: 'skuList',
-      width: 50,
+      width: 115,
       align: 'left',
       render: (text) => {
         return (
@@ -123,17 +124,18 @@ const TablePage: React.FC<ITablePage> = (
   return (
     <div>
       <Table 
+        size="middle"
         className={styles.__table}
         rowKey="key"
         columns={columns}
         loading={loading}
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
-        scroll={{ x: true, y: 662 }}
+        scroll={{ y: '662px', scrollToFirstRowOnChange: true }}
         dataSource={tableInfo.records}
         locale={{ 
           emptyText: tableErrorMsg === '' ? 
-            'Oops! 没有更多数据啦' : tableErrorMsg }}
+            <TableNotData hint="没有找到相关数据"/> : <TableNotData hint={tableErrorMsg}/> }}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {
             return styles.dark_row;

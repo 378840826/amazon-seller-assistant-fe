@@ -153,12 +153,12 @@ const proxy = {
           searchResultsNumber: random.integer(),
           naturalRankingData: {
             ranking: 10,
-            pages: random.integer(),
+            pages: 3,
             rankingChange: 2,
           },
           advertisingRankingData: {
             ranking: 10,
-            pages: random.integer(),
+            pages: 3,
             rankingChange: 2,
           },
           isAc: random.boolean(),

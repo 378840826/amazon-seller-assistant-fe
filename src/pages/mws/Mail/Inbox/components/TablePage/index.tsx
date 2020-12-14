@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { ColumnProps, TablePaginationConfig } from 'antd/es/table';
 import CountDown from '../Countdown';
 const { Paragraph } = Typography;
+import TableNotData from '@/components/TableNotData';
 import ColumnOrderInfo from '../../../components/ColumnOrderInfo';
 
 
@@ -150,6 +151,7 @@ const TablePage: React.FC<ITablePage> = ({
       align: 'left',
       render: (text) => <Paragraph 
         className={styles.subject} 
+        title={text}
         ellipsis={{ rows: 2 }}>{text}</Paragraph>,
     },
     {
@@ -180,7 +182,8 @@ const TablePage: React.FC<ITablePage> = ({
         onChange={onTableChange}
         loading={loading}
         scroll={{ y: 'calc(100vh - 284px)' }}
-        locale={{ emptyText: msg === '' ? 'Oops! 没有更多数据啦' : msg }}
+        locale={{ emptyText: msg === '' ? <TableNotData hint="没找到相关数据"/> : 
+          <TableNotData hint={msg}/> }}
         dataSource={tableInfo.records}
         rowClassName={(record, index) => {
           return classnames({ [styles.bold]: !record.hasRead,

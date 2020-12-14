@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Iconfont } from '@/utils/utils';
-import classnames from 'classnames';
 import { Radio, Button, Dropdown, Row, Form, message } from 'antd';
 import TaskContainer from '../taskContainer';
 import styles from './index.less';
 import { IConnectProps } from '@/models/connect';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 
 
 const hzList = [
@@ -21,9 +20,14 @@ interface IBatchOperator{
   StoreId: string;
   dispatch: IConnectProps['dispatch'];
   toggleChange: (status: boolean) => void;
+  fetchList: () => void;
 }
 
-const BatchOperator: React.FC<IBatchOperator> = ({ StoreId, dispatch, toggleChange }) => {
+const BatchOperator: React.FC<IBatchOperator> = ({ 
+  StoreId, 
+  dispatch, 
+  toggleChange, 
+  fetchList }) => {
   const [state, setState] = useState({
     open: false, //添加监控任务弹出框
     monitorOpen: false, //频率监控设定是否打开
@@ -46,6 +50,7 @@ const BatchOperator: React.FC<IBatchOperator> = ({ StoreId, dispatch, toggleChan
     }));
   };
 
+  //=> 监控频率设定
   const onFinish = (values: {radios: number}) => {
     if (state.frequency === values.radios){
       onVisible(false);
@@ -104,6 +109,17 @@ const BatchOperator: React.FC<IBatchOperator> = ({ StoreId, dispatch, toggleChan
     });
     
   }, [StoreId, dispatch]);
+
+  //处理添加监控任务在切换店铺时候的弹出框变化
+  useEffect(() => {
+    if (state.open){
+      setState((state) => ({
+        ...state,
+        open: false,
+      }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [StoreId]);
   const menu = (
     <div className={styles.menu}>
       <div className={styles.title}>监控频率</div>
@@ -144,15 +160,14 @@ const BatchOperator: React.FC<IBatchOperator> = ({ StoreId, dispatch, toggleChan
       <div className={styles.btns}>
         <Button type="primary" onClick={toggleEvent}>
         添加监控任务
-          <Iconfont 
-            className={classnames({ [styles.up]: (state.open ? true : false) })} 
-            type="icon-xiangxiajiantou"/>
+          {state.open ? <UpOutlined /> : <DownOutlined />}
+          
         </Button>
         <Button onClick={() => toggleChange(false)}>批量暂停</Button>
         <Button onClick={() => toggleChange(true)}>批量开启</Button>
         <Dropdown
           overlay={menu}
-          placement="bottomCenter"
+          placement="bottomLeft"
           trigger={['click']}
           onVisibleChange={(flag) => onVisible(flag)}
           visible={state.monitorOpen}
@@ -165,9 +180,9 @@ const BatchOperator: React.FC<IBatchOperator> = ({ StoreId, dispatch, toggleChan
           StoreId={StoreId}
           dispatch ={dispatch}
           toggleEvent={toggleEvent}
+          fetchList={fetchList}
         />} 
       </div>
-      
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
 import { Input, Table, Spin } from 'antd';
@@ -72,7 +72,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
     selectedList: [],
     emptyText: '',
   });
- 
+  
 
   useEffect(() => {
     setState((state) => ({
@@ -214,9 +214,14 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
       <div className={styles.search_container}>
         <Search 
           size="middle" 
+          allowClear
           className={styles.search_input}
           placeholder="输入标题、ASIN或SKU" 
-          onSearch={value => onSearch(value)} 
+          onSearch={(value, event) => {
+            if (!event?.['__proto__']?.type){
+              onSearch(value);
+            }
+          }}
           disabled={state.loading}
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>} />
       </div>
@@ -231,7 +236,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
           <Spin spinning={state.loading}>
             <RTable
               width={624}
-              height={ state.notSelectedList.length === 0 ? 88 : 228}
+              height={ state.notSelectedList.length === 0 ? 88 : 220}
               headerHeight={44}
               rowHeight={46}
               className={styles.__virtual_table}
@@ -279,7 +284,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
             className={styles.table_selected}
             dataSource={state.selectedList}
             columns={checkedColumns}
-            scroll={{ x: 'max-content', y: '184px' }}
+            scroll = {{ y: '220px' }}
             locale={{ emptyText: 'Oops! 没有更多选中的数据啦！' }}
             // eslint-disable-next-line react/jsx-no-duplicate-props
             rowClassName={(_, index) => index % 2 === 1 ? 'darkRow' : ''}

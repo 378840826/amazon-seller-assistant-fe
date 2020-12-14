@@ -24,12 +24,14 @@ interface IState{
 const { TabPane } = Tabs;
 const { Search, TextArea } = Input;
 const commonColumns: ColumnProps<API.IParams>[] = [{
-  title: '关键词',
-  align: 'center',
+  title: () => { 
+    return (<div className={styles.__keyword_title}>关键词</div>) ; 
+  },
+  align: 'left',
   width: 335,
   render: (record) => {
     return (
-      <div>{record.title}</div>
+      <div className={styles.__keyword}>{record.title}</div>
     );
   },
 }];
@@ -77,8 +79,6 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
           headersParams: {
             StoreId,
           },
-        },
-        params: {
           searchKeyword: state.searchKeyword,
           asinList,
         },
@@ -199,11 +199,16 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
           <div className={styles.search_container}>
             <Search 
               size="middle" 
+              allowClear
               className={styles.search_input}
               placeholder="输入关键词" 
               value={state.keyword}
               onChange={value => onKeywordChange(value)}
-              onSearch={value => onSearch(value)} 
+              onSearch={(value, event) => {
+                if (!event?.['__proto__']?.type){
+                  onSearch(value);
+                }
+              }}
               disabled={state.loading}
               enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>} />
           </div>
@@ -220,7 +225,7 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
               dataSource={state.keywordList}
               rowKey="title"
               columns={unCheckedColumns}
-              scroll={{ x: 'max-content', y: '222px' }}
+              scroll={{ y: '220px' }}
               rowClassName={(_, index) => index % 2 === 1 ? 'darkRow' : ''}
               locale={{ emptyText: state.keywordListMsg === '' ? 'Oops! 没有找到相关的信息' : state.keywordListMsg }}
             />
@@ -248,7 +253,7 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
           dataSource={state.selectedList}
           columns={checkedColumns}
           rowClassName={(_, index) => index % 2 === 1 ? 'darkRow' : ''}
-          scroll={{ x: 'max-content', y: '222px' }}
+          scroll={{ y: '220px' }}
           locale={{ emptyText: 'Oops! 没有更多选中的数据啦' }}
         />
       </div>

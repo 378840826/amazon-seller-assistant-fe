@@ -35,7 +35,7 @@ const TablePage: React.FC<ITablePage> = ({
   fetchList,
   onTableChange }) => {
  
-  const { order, asc, size, current, total } = tableInfo;
+  const { order, asc, size, current, total, records = [] } = tableInfo;
   
   //1. 页脚
   const paginationProps = {
@@ -62,6 +62,7 @@ const TablePage: React.FC<ITablePage> = ({
       key: 'monitoringSwitch',
       align: 'center',
       width: 78,
+      fixed: 'left',
       render: (text, record) => {
         return (
           text === '' ?
@@ -79,6 +80,7 @@ const TablePage: React.FC<ITablePage> = ({
       dataIndex: 'updateTime',
       key: 'updateTime',
       sorter: true,
+      fixed: 'left',
       sortOrder: order === 'updateTime' ? asc : null,
       align: 'center',
       width: 93,
@@ -87,7 +89,7 @@ const TablePage: React.FC<ITablePage> = ({
           text === '' ?
             <div className="null_bar"></div>
             :
-            <span>{text}</span>
+            <span className={styles.time}>{text}</span>
         );
       },
     },
@@ -96,6 +98,7 @@ const TablePage: React.FC<ITablePage> = ({
       dataIndex: 'monitoringNumber',
       key: 'monitoringNumber',
       align: 'center',
+      fixed: 'left',
       width: 85,
       render: (text) => {
         return (
@@ -111,6 +114,7 @@ const TablePage: React.FC<ITablePage> = ({
       dataIndex: 'productInfo',
       key: 'productInfo',
       align: 'center',
+      fixed: 'left',
       width: 303,
       render: (text) => {
         return (
@@ -126,6 +130,7 @@ const TablePage: React.FC<ITablePage> = ({
       dataIndex: 'skuInfo',
       key: 'skuInfo',
       align: 'left',
+      fixed: 'left',
       width: 212,
       render: (text) => {
         return (
@@ -140,6 +145,7 @@ const TablePage: React.FC<ITablePage> = ({
       title: '关键词',
       dataIndex: 'keyword',
       key: 'keyword',
+      fixed: 'left',
       align: 'center',
       width: 158,
       render: (text) => {
@@ -196,9 +202,7 @@ const TablePage: React.FC<ITablePage> = ({
       key: 'naturalRankingData',
       render: (text, record) => {
         return (
-          text === '' ? <div className="null_bar"></div>
-            :
-            <EchartsInfo type="natural" item={text} StoreId={StoreId} id={record.id}/>
+          <EchartsInfo type="natural" item={text} StoreId={StoreId} id={record.id}/>
         );
       },
     },
@@ -213,9 +217,7 @@ const TablePage: React.FC<ITablePage> = ({
       key: 'advertisingRankingData',
       render: (text, record) => {
         return (
-          text === '' ? <div className="null_bar"></div>
-            :
-            <EchartsInfo type="ad" item={text} StoreId={StoreId} id={record.id}/>
+          <EchartsInfo type="ad" item={text} StoreId={StoreId} id={record.id}/>
         );
       },
     },
@@ -260,8 +262,8 @@ const TablePage: React.FC<ITablePage> = ({
           text === '' ?
             <div className="null_bar"></div>
             :
-            <span>{text === true ? <Iconfont className={classnames(styles.iconfont, styles.__yes)} type="icon-duigou"/> 
-              : <Iconfont className={styles.iconfont} type="icon-guanbi1"/>}</span>
+            <span>{text === true ? <Iconfont className={styles.yes_icon} type="icon-dui"/> 
+              : <Iconfont className={styles.close_icon} type="icon-guanbi1"/>}</span>
         );
       },
     },
@@ -293,6 +295,7 @@ const TablePage: React.FC<ITablePage> = ({
       title: '操作',
       width: 65,
       align: 'center',
+      fixed: 'right',
       render: (_, record) => {
         return (
           <CompetitionOperator 
@@ -304,32 +307,34 @@ const TablePage: React.FC<ITablePage> = ({
       },
     },
   ];
+
   return (
-    <div style={{ paddingLeft: '17px', paddingRight: '17px' }}>
-      <Table
-        pagination={{ ...paginationProps }}
-        rowSelection={{
-          type: 'checkbox',
-          ...rowSelection,
-        }}
-        loading={loading}
-        rowKey="id"
-        showSorterTooltip={false}
-        scroll={{ x: 1825, y: '769px' }}
-        dataSource={tableInfo.records}
-        columns={columns}
-        className={styles.custom_table}
-        onChange={onTableChange}
-        locale={{ emptyText: tableMessage === '' ? 
-          <TableNotData hint="没找到相关数据"/> : 
-          <TableNotData hint={tableMessage}/> }}
-        rowClassName={(_, index) => {
-          if (index % 2 === 1) {
-            return styles.darkRow;
-          }
-        }}
-      />
-    </div>
+   
+    <Table
+      pagination={{ ...paginationProps }}
+      rowSelection={{
+        type: 'checkbox',
+        ...rowSelection,
+      }}
+      loading={loading}
+      rowKey="id"
+      showSorterTooltip={false}
+      dataSource={records}
+      columns={columns}
+      sortDirections={['descend', 'ascend']}
+      scroll={records.length > 0 ? Object.assign({ x: 1825 }, { y: 'calc(100vh - 317px)' }) : { x: 1825 }}
+      className={styles.custom_table}
+      onChange={onTableChange}
+      locale={{ emptyText: tableMessage === '' ? 
+        <TableNotData hint="没找到相关数据"/> : 
+        <TableNotData hint={tableMessage}/> }}
+      
+      rowClassName={(_, index) => {
+        if (index % 2 === 1) {
+          return styles.darkRow;
+        }
+      }}
+    />
   );
 };
 export default TablePage;

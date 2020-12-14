@@ -87,7 +87,6 @@ export default {
   // 有排序功能的表头hover颜色
   '@table-header-sort-active-bg':'#e5eef7',
   // 排序后的表头不需要改变颜色
-  '@table-header-sort-bg': '#e5e8fb',
   '@table-body-sort-bg': 'null',
   // 全局 Header 相关
   '@layout-header-padding': '0 30px',

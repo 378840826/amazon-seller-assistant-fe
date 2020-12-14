@@ -1,5 +1,5 @@
 import { IConnectProps } from '@/models/connect';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './index.less';
 import TaskLeft from '../taskContainerLeft';
 import TaskCenter from '../taskContainerCenter';
@@ -9,8 +9,7 @@ interface ITaskContainer{
   StoreId: string;
   dispatch: IConnectProps['dispatch'];
   toggleEvent: () => void;
- 
-
+  fetchList: () => void;
 }
 interface IState{
   asinList: string[];
@@ -23,6 +22,7 @@ const TaskContainer: React.FC<ITaskContainer> = ({
   StoreId, 
   dispatch, 
   toggleEvent,
+  fetchList,
 }) => {
   const [state, setState] = useState<IState>({
     asinList: [],
@@ -79,6 +79,8 @@ const TaskContainer: React.FC<ITaskContainer> = ({
             ...state,
             loading: false,
           }));
+          toggleEvent();
+          fetchList();
         },
       });
     } else {
@@ -114,6 +116,7 @@ const TaskContainer: React.FC<ITaskContainer> = ({
         <Button onClick={toggleEvent} >取消</Button>
         <Button loading={state.loading} onClick={onSave} type="primary">确定</Button>
       </div>
+      <div className={styles.__bg_white}></div>
     </div>
   );
 };
