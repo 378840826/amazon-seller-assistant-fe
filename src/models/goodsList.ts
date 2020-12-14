@@ -420,7 +420,7 @@ const GoodsListModel: IGoodsListModelType = {
     // 保存全部调价规则
     saveShopRules(state, { payload }) {
       const { records } = payload;
-      state.rules = records;
+      state.rules = records || [];
     },
     
     // 修改分组名称

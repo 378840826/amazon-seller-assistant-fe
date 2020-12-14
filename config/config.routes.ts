@@ -66,8 +66,8 @@ export default [
     path: '/overview',
     component: '../layouts/BasicLayout',
     routes: [
-      { title: '数据大盘', path: '/overview', component: './mws/GoodsList' },
-      { title: '店铺报告', path: '/overview/shop', component: './mws/GoodsList' },
+      { title: '数据大盘', path: '/overview', component: './UncompletedPage' },
+      { title: '店铺报告', path: '/overview/shop', component: './UncompletedPage' },
       { title: 'BI诊断', path: '/overview/bi', component: './BiBoard' },
     ],
   },
@@ -185,20 +185,21 @@ export default [
     ],
   },
 
-  // 广告系统
-  {
-    path: '/ppc',
-    component: '../layouts/BasicLayout',
-    routes: [
-      { title: '广告系列', path: '/ppc/campaign', component: './ppc/Campaign' },
-      { title: '广告组', path: '/ppc/group', component: './ppc/Campaign' },
-      { title: '广告', path: '/ppc/product', component: './ppc/Campaign' },
-      { title: 'Targeting', path: '/ppc/targeting', component: './ppc/Campaign' },
-      { title: 'search term 报表', path: '/ppc/search-report', component: './ppc/Campaign' },
-      // 以下为重定向路由
-      { path: '/ppc', redirect: '/ppc/campaign' },
-    ],
-  },
+  // // 广告系统
+  // {
+  //   path: '/ppc',
+  //   component: '../layouts/BasicLayout',
+  //   routes: [
+  //     { title: '广告系列', path: '/ppc/campaign', component: './UncompletedPage' },
+  //     { title: '广告组', path: '/ppc/group', component: './UncompletedPage' },
+  //     { title: '广告', path: '/ppc/product', component: './UncompletedPage' },
+  //     { title: 'Targeting', path: '/ppc/targeting', component: './UncompletedPage' },
+  //     { title: 'search term 报表', path: '/ppc/search-report', component: './UncompletedPage' },
+  //     { title: '广告店铺授权', path: '/ppc/shop/list', component: './UncompletedPage' },
+  //     // 以下为重定向路由
+  //     { path: '/ppc', redirect: '/ppc/campaign' },
+  //   ],
+  // },
 
   // 评论
   {

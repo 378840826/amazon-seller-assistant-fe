@@ -287,8 +287,8 @@ declare namespace API {
     reviewKanban: IReviewKanban;
     feedbackKanban: IFeedbackKanban;
     acKeywordKanban: IAcKeywordKanban;
-    adKeywordKanban: IAdKeywordKanban[];
-    adIneligibleKanban: IAdIneligibleKanban[];
+    // adKeywordKanban: IAdKeywordKanban[];
+    // adIneligibleKanban: IAdIneligibleKanban[];
   }
 
   interface ILabel {

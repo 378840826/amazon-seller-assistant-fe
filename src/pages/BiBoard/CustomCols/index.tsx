@@ -54,8 +54,8 @@ const CustomCols: React.FC = () => {
     { value: 'reviewKanban', name: 'Review' },
     { value: 'feedbackKanban', name: 'Feedback' },
     { value: 'acKeywordKanban', name: 'Amazon\'s Choice 关键词' },
-    { value: 'adKeywordKanban', name: '广告关键词表现' },
-    { value: 'adIneligibleKanban', name: '广告Ineligible原因' },
+    // { value: 'adKeywordKanban', name: '广告关键词表现' },
+    // { value: 'adIneligibleKanban', name: '广告Ineligible原因' },
   ];
 
   // 根据 queue 顺序重新排序
