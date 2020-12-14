@@ -360,21 +360,25 @@ const BiBoard: React.FC = () => {
     adKeywordKanban: {
       title: '广告关键词表现',
       titleExplain: '最近7天',
-      link: '/ppc/targeting',
+      // link: '/ppc/targeting',
+      link: '/overview/bi',
       linkText: '更多',
       annotation: '需设置提醒规则',
       content: (
         <div className={styles.adKeywordContent}>
+          <div style={{ textAlign: 'center' }}>功能正在开发中</div>
           { adKeywordKanban.map((item) => renderAdKeywordKanbanItem(item)) }
         </div>
       ),
     },
     adIneligibleKanban: {
       title: '广告Ineligible原因',
-      link: '/ppc/product',
+      // link: '/ppc/product',
+      link: '/overview/bi',
       linkText: '更多',
       content: (
         <div className={styles.adIneligibleContent}>
+          <div style={{ textAlign: 'center' }}>功能正在开发中</div>
           { adIneligibleKanban.map((item) => renderAdIneligibleKanbanItem(item)) }
         </div>
       ),
