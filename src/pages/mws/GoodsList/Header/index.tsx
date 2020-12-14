@@ -443,7 +443,7 @@ const Header: React.FC = () => {
           className={styles.btnFiltrate}
           onClick={handleClickFiltrate}
         >
-          筛选 { visible.filtrate ? <UpOutlined /> : <DownOutlined /> }
+          高级筛选 { visible.filtrate ? <UpOutlined /> : <DownOutlined /> }
         </Button>
       </div>
       {

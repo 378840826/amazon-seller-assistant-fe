@@ -66,30 +66,35 @@ const ShopList: React.FC = () => {
     {
       title: <span className={styles.shopNameThTitle}>店铺名称</span>,
       dataIndex: 'storeName',
-      align: 'center',
+      align: 'left',
       width: 300,
+      className: styles.shopNameCol,
       render: (storeName, record) => {
         return (
-          editable({
-            ghostEditBtn: true,
-            inputValue: storeName,
-            maxLength: 20,
-            confirmCallback: value => {
-              const storeName = value.replace(/(^\s*)|(\s*$)/g, '');
-              if (!storeName) {
-                message.error('请输入店铺名称');
-                return;
-              }
-              dispatch({
-                type: 'global/modifyMwsShopName',
-                payload: {
-                  storeId: record.id,
-                  storeName: storeName,
+          <div>
+            {
+              editable({
+                ghostEditBtn: true,
+                inputValue: storeName,
+                maxLength: 20,
+                confirmCallback: value => {
+                  const storeName = value.replace(/(^\s*)|(\s*$)/g, '');
+                  if (!storeName) {
+                    message.error('请输入店铺名称');
+                    return;
+                  }
+                  dispatch({
+                    type: 'global/modifyMwsShopName',
+                    payload: {
+                      storeId: record.id,
+                      storeName: storeName,
+                    },
+                    callback: requestFeedback,
+                  });
                 },
-                callback: requestFeedback,
-              });
-            },
-          })
+              })
+            }
+          </div>
         );
       },
     },

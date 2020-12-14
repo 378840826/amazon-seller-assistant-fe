@@ -10,10 +10,10 @@ const GlobalSearch: React.FC = () => {
   const dict = {
     调价设定: '/product/list?search=',
     调价记录: '/reprice/history?code=',
-    订单: '/order/list?asinRelatedSearch=',
+    订单: '/order?asinRelatedSearch=',
     评论: '/review/list?asin=',
-    报表: '/report/asin/base?asin=',
-    动态: '/dynamic/asin-overview?asin=',
+    报表: '/report/asin-overview?search=',
+    动态: '/asin/dt?asin=',
   };
   
   const handleChange = (event: { target: { value: string } }) => {
