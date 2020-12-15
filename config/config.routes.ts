@@ -31,6 +31,20 @@ export default [
     routes: [{ path: '/center', component: './user/Center', title: '个人中心' }]
   },
 
+  // 会员中心
+  {
+    path: '/vip',
+    component: '../layouts/IndexLayout',
+    routes: [
+      { path: '/vip/membership', component: './vip/MyVip', title: '我的会员' },
+      { path: '/vip/upgrade', component: './vip/buy/Upgrade', title: '会员升级' },
+      { path: '/vip/renew', component: './vip/buy/Renew', title: '会员续费' },
+      { path: '/vip/instructions', component: './vip/LevelExplain', title: '付费说明' },
+      // 重定向
+      { path: '/vip', redirect: '/vip/membership' },
+    ]
+  },
+
   // 消息中心
   {
     path: '/message',
