@@ -22,14 +22,20 @@ const config =  {
   ignoreMomentLocale: true,
   favicon: '/favicon.ico',
   title: '安知助手',
-  // mock: false,
-  // proxy: {
-  //   '/api': {
-  //     'target': 'http://dev.workics.cn',
-  //     'changeOrigin': true,
-  //     // 'pathRewrite': { '^/api' : '' },
-  //   },
-  // },
+  mock: false,
+  proxy: {
+    '/api': {
+      'target': 'http://dev.workics.cn',
+      // 'target': 'https://test.workics.cn',
+      'changeOrigin': true,
+      // 'pathRewrite': { '^/api' : '' },
+    },
+    // 竞品设定的
+    '/compete/search': {
+      target: 'https://amzics.workics.cn',
+      changeOrigin: true
+    }
+  },
 }
 
 export default config;

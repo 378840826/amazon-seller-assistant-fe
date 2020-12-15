@@ -6,7 +6,7 @@ import { createFromIconfontCN } from '@ant-design/icons';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_1799129_kskuwbez1kg.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_s9saorxi6vm.js',
 });
 
 // 获取亚马逊站点基本链接

@@ -1,6 +1,7 @@
 .page {
   margin: 0 auto;
   width: 1240px;
+  padding-top: 70px;
 
   table {
     text-align: center;
@@ -17,7 +18,7 @@
 
   th {
     color: @heading-color;
-    font-weight: 500;
+    font-weight: normal;
     background: #f2f6fb;
   }
 }
@@ -27,51 +28,7 @@
 }
 
 .vipInfo {
-  display: flex;
-  align-items: center;
   padding: 30px 44px 20px 44px;
-
-  img {
-    width: 55px;
-    margin-right: 10px;
-  }
-}
-
-.remainDays {
-  margin-left: 70px;
-}
-
-.remainDaysNumber {
-  font-size: 24px;
-  color: #01c060;
-}
-
-.vipLevel {
-  display: inline-block;
-}
-
-.vipName {
-  transform: translateY(10px);
-  color: #ca9e6e;
-  font-size: @font-size-lg;
-}
-
-.btnRenew {
-  display: inline-block;
-  margin-left: 10px;
-  width: 64px;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  color: #fff;
-  background: #ca9e6e;
-  border-radius: 12px;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-    color: #fff;
-  }
 }
 
 .upgradeVip {
@@ -79,10 +36,13 @@
   padding: 15px 44px 20px 44px;
   border-top: 1px solid #e2eaf1;
 
-  img {
+  .imgContainer {
     position: absolute;
     bottom: 0;
     right: 0;
+    width: 120px;
+    height: 138px;
+    background-image: url('~@/assets/vip/diamond.png');
   }
 }
 
@@ -110,6 +70,18 @@
   padding: 12px 0;
   border-radius: 4px;
 
+  &.vip1Card {
+    background: linear-gradient(90deg, #5ec8ff 0%, #2f99fd 100%);
+  }
+
+  &.vip2Card {
+    background: linear-gradient(90deg, #ffcd5e 0%, #ffaf4d 100%);
+  }
+
+  &.vip3Card {
+    background: linear-gradient(90deg, #696596 0%, #3a375f 100%);
+  }
+
   .name {
     color: #fff;
     font-size: 20px;
@@ -124,33 +96,29 @@
     background: #fff;
     border-radius: @border-radius-base;
     cursor: pointer;
+  }
+
+  .btn1Buy {
+    color: @link-color;
 
     &:hover {
-      opacity: 0.8;
+      box-shadow: 0 0 9px 0 #207cce;
     }
   }
 
-  &.vip1Card {
-    background: linear-gradient(90deg, #5ec8ff 0%, #2f99fd 100%);
+  .btn2Buy {
+    color: #ffaf4d;
 
-    .btnBuy {
-      color: @link-color;
+    &:hover {
+      box-shadow: 0 0 9px 0 #d89034;
     }
   }
 
-  &.vip2Card {
-    background: linear-gradient(90deg, #ffcd5e 0%, #ffaf4d 100%);
+  .btn3Buy {
+    color: #3a375f;
 
-    .btnBuy {
-      color: #ffaf4d;
-    }
-  }
-
-  &.vip3Card {
-    background: linear-gradient(90deg, #696596 0%, #3a375f 100%);
-
-    .btnBuy {
-      color: #3a375f;
+    &:hover {
+      box-shadow: 0 0 9px 0 #120b5a;
     }
   }
 }

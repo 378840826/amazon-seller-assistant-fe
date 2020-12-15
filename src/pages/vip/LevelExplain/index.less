@@ -7,6 +7,7 @@
 .page {
   margin: 0 auto;
   width: 1360px;
+  padding-top: 70px;
 }
 
 .livePrice {
@@ -20,6 +21,7 @@
   color: #fff;
   font-size: 20px;
   background: linear-gradient(90deg, #d0dcf1 0%, @vip0Color 100%);
+  border-radius: 4px 4px 0 0;
 }
 
 .cardContent {
@@ -30,6 +32,11 @@
   border-top: none;
   height: 149px;
   color: @text-color-secondary;
+  border-radius: 0 0 4px 4px;
+}
+
+.cardContent.customized {
+  color: @text-color;
 }
 
 .price {
@@ -155,4 +162,8 @@
       background: #eee;
     }
   }
+}
+
+.unusable {
+  color: @error-color;
 }

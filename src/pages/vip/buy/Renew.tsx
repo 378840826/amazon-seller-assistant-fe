@@ -5,11 +5,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
 import { Spin, Checkbox } from 'antd';
 import { IConnectState } from '@/models/connect';
-import { vipLevelDict } from '@/models/vip';
+import { typeOfFeeToChineseDict } from '@/models/vip';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import wePayLogo from '@/assets/vip/wePayLogo.png';
-import QRCode from 'qrcode.react';
+import QrCode from './QrCode';
 import Agreement from './Agreement';
+import Success from './Success';
+import MyVipInfo from '../components/MyVipInfo';
 import classnames from 'classnames';
 import styles from './index.less';
 
@@ -17,28 +18,69 @@ const VipRenew: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch({
-      type: 'vip/fetchMyVipInfo',
-    });
-    dispatch({
-      type: 'vip/fetchRenewCodeUrl',
+      type: 'vip/fetchRenewInfo',
     });
   }, [dispatch]);
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
-  const pageLoading = loadingEffect['vip/fetchMyVipInfo'];
+  const pageLoading = loadingEffect['vip/fetchRenewInfo'];
   const qrCodeLoading = loadingEffect['vip/fetchRenewCodeUrl'];
   const page = useSelector((state: IConnectState) => state.vip);
-  const { data: { level, remainDays }, renewCodeUrl } = page;
-  const myVipLevel = vipLevelDict[String(level)];
-  
-  // 选中的卡片
-  const [activeCardInfo, setActiveCardInfo] = useState({
-    unit: 'year',
-    price: myVipLevel.year.price,
+  const {
+    renewInfo: {
+      info: { memberLevel, validPeriod, vipList, seniorVipList, extremeVipList },
+      payStatus, codeUrl, orderId,
+    },
+  } = page;
+  const usableVipList = [vipList, seniorVipList, extremeVipList].find(list => {
+    return list.length !== 0;
   });
+
+  // 轮询支付状态
+  useEffect(() => {
+    orderId && dispatch({
+      type: 'vip/pollPayStatus-start',
+      payload: { orderId, type: 'renew' },
+    });
+    // 卸载时停止
+    return () => {
+      dispatch({
+        type: 'vip/pollPayStatus-stop',
+      });
+    };
+  }, [dispatch, orderId]);
+
+  useEffect(() => {
+    // 支付成功后停止轮询, 延时跳转至我的会员
+    if (payStatus === true) {
+      dispatch({
+        type: 'vip/pollPayStatus-stop',
+      });
+      setTimeout(() => {
+        window.location.href = './membership';
+      }, 3000);
+    }
+  }, [dispatch, payStatus]);
+  
+  // 选中的卡片, 1：月费 2：年费
+  const [activeCardType, setActiveCardType] = useState<string>('2');
   // 勾选协议
   const [checked, setChecked] = useState<boolean>(false);
   // 协议弹窗显示
   const [agreementVisible, setAgreementVisible] = useState<boolean>(false);
+
+  // 获取 codeUrl
+  useEffect(() => {
+    memberLevel && dispatch({
+      type: 'vip/fetchRenewCodeUrl',
+      payload: {
+        memberLevel,
+        typeOfFee: activeCardType,
+        purchaseType: 3,
+        price: usableVipList?.find(vip => vip.typeOfFee === activeCardType)?.currentPrice,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, activeCardType, memberLevel]);
   
   // 会员协议勾选 
   const handleChange = ({ target: { checked } }: CheckboxChangeEvent) => {
@@ -46,71 +88,44 @@ const VipRenew: React.FC = () => {
   };
 
   // 卡片选择
-  const handleClickCard = (unit: string, price: number) => {
+  const handleClickCard = (typeOfFee: string) => {
     // 避免混乱
-    if (qrCodeLoading) {
-      return;
-    }
-    setActiveCardInfo({ unit, price });
-    dispatch({
-      type: 'vip/fetchRenewCodeUrl',
-      payload: { unit },
-    });
+    !qrCodeLoading && setActiveCardType(typeOfFee);
   };
 
-  // 单个卡片，参数对应 models 中 vipLevelDict
-  const createCard = (option: {
-    name: string;
-    month: {
-      price: number;
-      originalPrice: number;
-    };
-    year: {
-      price: number;
-      originalPrice: number;
-    };
-    unit: 'month' | 'year';
-    active?: boolean;
+  // 单个卡片
+  const createCard = (info: {
+    memberLevel: string;
+    currentPrice: number;
+    originalPrice: number;
+    typeOfFee: string;
   }) => {
-    const { name, unit, active } = option;
-    const priceObj = option[unit];
-    const unitDict = {
-      month: '月',
-      year: '年',
-    };
+    const { memberLevel, currentPrice, originalPrice, typeOfFee } = info;
+    const active = activeCardType === typeOfFee;
     return (
       <div
         className={
           classnames(styles.card, active ? styles.active : '', qrCodeLoading && !active ? styles.disabled : '')
         }
-        key={`${unit}-${priceObj.price}`}
-        onClick={() => handleClickCard(unit, priceObj.price)}
+        key={currentPrice}
+        onClick={() => handleClickCard(typeOfFee)}
       >
-        <div className={styles.cardTitle}>{name}</div>
+        <div className={styles.cardTitle}>{memberLevel}</div>
         <div className={styles.price}>
-          <span>{priceObj.price}</span>元/{unitDict[unit]}
+          <span>{currentPrice}</span>元/{typeOfFeeToChineseDict[typeOfFee]}
         </div>
-        <div className={styles.originalPrice}>原价：{priceObj.originalPrice}元/{unitDict[unit]}</div>
+        <div className={styles.originalPrice}>
+          原价：{originalPrice}元/{typeOfFeeToChineseDict[typeOfFee]}
+        </div>
       </div>
     );
   };
 
-  // 续费/升级 卡片
+  // 续费卡片
   const renderCard = () => {
     return (
       <div className={styles.renewContainer}>
-        {[
-          createCard({
-            unit: 'month',
-            ...vipLevelDict[level],
-            active: activeCardInfo.unit === 'month',
-          }),
-          createCard({
-            unit: 'year',
-            ...vipLevelDict[level],
-            active: activeCardInfo.unit === 'year',
-          }),
-        ]}
+        { usableVipList?.map(info => createCard(info)) }
       </div>
     );
   };
@@ -118,58 +133,36 @@ const VipRenew: React.FC = () => {
   return (
     <Spin spinning={pageLoading} size="large">
       <div className={classnames(styles.page, styles.renewPage)}>
-        <div className={styles.vipInfo}>
-          <img src={myVipLevel.icon} alt="" />
-          <div className={styles.vipLevel}>
-            <div className={styles.vipName}>{myVipLevel.name}</div>
-            <div>
-              <span>当前会员等级</span>
-              <span className={styles.remainDays}>
-                有效期剩余：
-                {
-                  remainDays >= 0
-                    ? <span className={styles.remainDaysNumber}>{remainDays}天</span>
-                    : <>{remainDays}天</>
-                }
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className={styles.buyVip}>
-          <div className={styles.title}>会员续费</div>
-          { renderCard() }
-          <div className={styles.payment}>
-            <div className={styles.payPrice}>
-              实付：
-              <span className={styles.price}>{activeCardInfo.price}元</span>
-              <span className={styles.secondary}>（付款成功后，立即生效）</span>
-            </div>
-            <Checkbox onChange={handleChange}>
-              <span className={styles.secondary}>本人已阅且同意</span>
-            </Checkbox>
-            <span className={styles.protocol} onClick={() => setAgreementVisible(true)}>会员协议</span>
-            <div className={styles.qrCodeContainer}>
-              <div className={classnames(styles.qrCode, checked ? styles.qrCodeChecked : '')}>
-                {
-                  checked
-                    ?
-                    <Spin spinning={qrCodeLoading} size="large">
-                      <QRCode
-                        size={130}
-                        value={renewCodeUrl}
-                      />
-                    </Spin>
-                    :
-                    <QRCode
-                      size={130}
-                      value="请先阅读并勾选会员协议"
-                    />
-                }
+        {
+          payStatus
+            ? <Success />
+            : 
+            <>
+              <div className={styles.vipInfo}>
+                <MyVipInfo memberLevel={memberLevel} validPeriod={validPeriod} />
               </div>
-            </div>
-            <img src={wePayLogo} className={styles.wePayLogo} />
-          </div>
-        </div>
+              <div className={styles.buyVip}>
+                <div className={styles.title}>会员续费</div>
+                { renderCard() }
+                <div className={styles.payment}>
+                  <div className={styles.payPrice}>
+                    实付：
+                    <span className={styles.price}>
+                      {usableVipList?.find(vip => vip.typeOfFee === activeCardType)?.currentPrice}元
+                    </span>
+                    <span className={styles.secondary}>（付款成功后，立即生效）</span>
+                  </div>
+                  <Checkbox onChange={handleChange}>
+                    <span className={styles.secondary}>本人已阅且同意</span>
+                  </Checkbox>
+                  <span className={styles.protocol} onClick={() => setAgreementVisible(true)}>
+                    会员协议
+                  </span>
+                  <QrCode checked={checked} loading={qrCodeLoading} codeUrl={codeUrl || '网络有点问题，请稍后再试'} />
+                </div>
+              </div>
+            </>
+        }
       </div>
       <Agreement visible={agreementVisible} onCancel={() => setAgreementVisible(false)} />
     </Spin>

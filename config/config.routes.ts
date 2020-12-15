@@ -23,7 +23,7 @@ export default [
   // 会员中心
   {
     path: '/vip',
-    component: '../layouts/BasicLayout',
+    component: '../layouts/IndexLayout',
     routes: [
       { path: '/vip/membership', component: './vip/MyVip', title: '我的会员' },
       { path: '/vip/upgrade', component: './vip/buy/Upgrade', title: '会员升级' },

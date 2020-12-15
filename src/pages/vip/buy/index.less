@@ -1,12 +1,16 @@
+@cardWidth: 240px;
+@cardHeight: 118px;
+
 .page {
   margin: 0 auto;
-  width: 1100px;
+  width: 940px;
+  padding-top: 120px;
 }
 
 .vipInfo {
   display: flex;
   align-items: center;
-  padding: 30px 110px 20px 110px;
+  padding: 10px 86px;
   background: linear-gradient(180deg, #ebf6ff 0%, #fff 100%);
 
   img {
@@ -15,23 +19,8 @@
   }
 }
 
-.vipLevel {
-  display: inline-block;
-}
-
-.vipName {
-  transform: translateY(10px);
-  color: #ca9e6e;
-  font-size: @font-size-lg;
-}
-
 .remainDays {
   margin-left: 70px;
-}
-
-.remainDaysNumber {
-  font-size: 24px;
-  color: #01c060;
 }
 
 .title {
@@ -42,7 +31,7 @@
 
 .buyVip {
   position: relative;
-  padding: 10px 110px 20px 110px;
+  padding: 10px 86px 2px 86px;
   border-top: 1px solid #e2eaf1;
   background: #fff;
 }
@@ -53,9 +42,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 0;
-  width: 273px;
-  height: 136px;
+  padding: 12px 0;
+  width: @cardWidth;
+  height: @cardHeight;
   border-radius: 4px;
   border: 1px solid #d9d9d9;
   cursor: pointer;
@@ -112,7 +101,8 @@
 }
 
 .renewPage {
-  width: 900px;
+  width: 840px;
+  padding-top: 148px;
 
   .vipInfo {
     padding: 30px 162px 20px 162px;
@@ -125,7 +115,9 @@
 
 .renewContainer {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  grid-gap: 30px;
+  justify-content: center;
 }
 
 .cardGroup {
@@ -139,7 +131,24 @@
 
 .upgradeContainer {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  // 纵向排列
+  flex-direction: column;
+  max-height: 292px;
+  grid-gap: 20px;
+  align-items: center;
+
+  // 两个卡片时候，横向排列
+  &.upgradeContainerTwo {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  // 4个卡片时候，居中
+  &.upgradeContainerFour {
+    width: 586px;
+    margin: 0 auto;
+  }
 }
 
 .payment {
@@ -155,9 +164,16 @@
   font-size: @font-size-lg;
   color: @heading-color;
 
-  .price {
+  .price,
+  .actualPrice {
     font-size: 26px;
     color: @error-color;
+  }
+
+  .equation {
+    margin-left: 6px;
+    color: @text-color-secondary;
+    font-size: @font-size-base;
   }
 
   .secondary {
@@ -193,6 +209,24 @@
   }
 }
 
+.qrCodeContainer {
+  position: relative;
+}
+
+.qrCodeShelter {
+  position: absolute;
+  top: 50px;
+  margin-bottom: 6px;
+  width: 130px;
+  color: @heading-color;
+  font-size: @font-size-lg;
+
+  .icon {
+    font-size: 44px;
+    color: @text-color;
+  }
+}
+
 .agreement {
   border-radius: 4px;
 
@@ -205,5 +239,30 @@
     font-weight: bold;
     margin-bottom: 4px;
     margin-top: 26px;
+  }
+}
+
+// 支付成功
+.successPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 660px;
+  color: #222;
+  font-size: 34px;
+
+  span {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background: @success-color;
+    border-radius: 35px;
+    margin-right: 20px;
+  }
+
+  .successIcon {
+    color: #fff;
+    font-size: 30px;
+    line-height: 70px;
   }
 }

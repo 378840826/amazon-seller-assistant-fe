@@ -1,12 +1,12 @@
 /**
  * 会员价格和等级说明
  */
-import React, { ReactElement, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch, Link } from 'umi';
 import { Spin } from 'antd';
 import { IConnectState } from '@/models/connect';
-import { vipLevelDict } from '@/models/vip';
-import diamond from '@/assets/vip/diamond.png';
+import { IVipBuy, vipLevelToNumberDict } from '@/models/vip';
+import MyVipInfo from '../components/MyVipInfo';
 import classnames from 'classnames';
 import styles from './index.less';
 
@@ -16,26 +16,41 @@ const MyVip: React.FC = () => {
     dispatch({
       type: 'vip/fetchMyVipInfo',
     });
+    dispatch({
+      type: 'vip/fetchUpgradeInfo',
+    });
   }, [dispatch]);
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
   const loading = loadingEffect['vip/fetchMyVipInfo'];
   const page = useSelector((state: IConnectState) => state.vip);
-  console.log('page', page);
-  const { data: { level, remainDays, residue, paymentHistory } } = page;
-  const myVipLevel = vipLevelDict[String(level)];
-
+  const {
+    data: { memberLevel, validPeriod, functionalSurplus, paymentRecords },
+    upgradeInfo,
+  } = page;
+  const { info: { vipList, seniorVipList, extremeVipList } } = upgradeInfo;
+  // 会员等级对应的 number
+  const level = vipLevelToNumberDict[memberLevel];
+  
   // 升级卡片
   const upgradeCard = () => {
-    const result: ReactElement[] = [];
-    Object.keys(vipLevelDict).forEach(key => {
-      Number(key) > level && result.push(
-        <div key={key} className={classnames(styles.card, styles[`vip${key}Card`])}>
-          <div className={styles.name}>{vipLevelDict[key].name}</div>
-          <Link className={styles.btnBuy} to={`/vip/upgrade?level=${key}`}>购买</Link>
+    const list: IVipBuy[] = [];
+    list.push(vipList[0], seniorVipList[0], extremeVipList[0]);
+    return list.map(vipInfo => {
+      if (!vipInfo) {
+        return;
+      }
+      const { memberLevel } = vipInfo;
+      const key = vipLevelToNumberDict[memberLevel];
+      return (
+        <div key={memberLevel} className={classnames(styles.card, styles[`vip${key}Card`])}>
+          <div className={styles.name}>{memberLevel}</div>
+          <Link 
+            className={classnames(styles.btnBuy, styles[`btn${key}Buy`])}
+            to={`/vip/upgrade?level=${key}`}
+          >购买</Link>
         </div>
       );
     });
-    return result;
   };
   
   return (
@@ -43,26 +58,7 @@ const MyVip: React.FC = () => {
       <div className={styles.page}>
         <div className={styles.vipInfoContainer}>
           <div className={styles.vipInfo}>
-            <img src={myVipLevel.icon} alt=""/>
-            <div className={styles.vipLevel}>
-              <div className={styles.vipName}>{myVipLevel.name}</div>
-              <div>
-                <span>当前会员等级</span>
-                <span className={styles.remainDays}>
-                  有效期剩余：
-                  {
-                    remainDays >= 0
-                      ? <span className={styles.remainDaysNumber}>{remainDays}天</span>
-                      : <>{remainDays}天</>
-                  }
-                </span>
-                {
-                  level > 0
-                    ? <Link className={styles.btnRenew} to={`/vip/renew?level=${level}`}>续费</Link>
-                    : null
-                }
-              </div>
-            </div>
+            <MyVipInfo memberLevel={memberLevel} validPeriod={validPeriod} renewBtn level={level} />
           </div>
           {
             level < 3
@@ -72,7 +68,7 @@ const MyVip: React.FC = () => {
                 <div className={styles.upgradeVipCardContainer}>
                   { upgradeCard() }
                 </div>
-                <img src={diamond} alt="" />
+                <div className={styles.imgContainer}></div>
               </div>
               : null
           }
@@ -85,50 +81,14 @@ const MyVip: React.FC = () => {
                 <th>功能</th>
                 <th>剩余次数</th>
               </tr>
-              <tr>
-                <td>绑定店铺</td>
-                <td>{residue.mwsShop}</td>
-              </tr>
-              <tr>
-                <td>广告授权店铺</td>
-                <td>{residue.ppcShop}</td>
-              </tr>
-              <tr>
-                <td>子账号</td>
-                <td>{residue.subAccount}</td>
-              </tr>
-              <tr>
-                <td>智能调价</td>
-                <td>{residue.reprice}</td>
-              </tr>
-              <tr>
-                <td>ASIN总览报表导出</td>
-                <td>{residue.asinReport}</td>
-              </tr>
-              <tr>
-                <td>ASIN动态监控</td>
-                <td>{residue.asinMonitor}</td>
-              </tr>
-              <tr>
-                <td>跟卖监控</td>
-                <td>{residue.competitorMonitor}</td>
-              </tr>
-              <tr>
-                <td>Review监控</td>
-                <td>{residue.reviewMonitor}</td>
-              </tr>
-              <tr>
-                <td>自动邮件</td>
-                <td>{residue.autoMail}</td>
-              </tr>
-              <tr>
-                <td>补货计划导出</td>
-                <td>{residue.replenishmentExport}</td>
-              </tr>
-              <tr>
-                <td>PPC托管</td>
-                <td>{residue.ppcTrusteeship}</td>
-              </tr>
+              {
+                functionalSurplus.map(fun => (
+                  <tr key={fun.functionName}>
+                    <td>{fun.functionName}</td>
+                    <td>{fun.frequency}</td>
+                  </tr>
+                ))
+              }
               <tr>
                 <td>其他</td>
                 <td>免费，不限次数</td>
@@ -148,15 +108,21 @@ const MyVip: React.FC = () => {
                 <th>支付金额(￥)</th>
               </tr>
               {
-                paymentHistory.map(item => (
-                  <tr key={item.orderId}>
-                    <td>{item.time}</td>
-                    <td>{item.orderId}</td>
-                    <td>{item.orderDetail}</td>
-                    <td>{item.payment}</td>
-                    <td>{item.cost.toFixed(2)}</td>
+                paymentRecords.length
+                  ?
+                  paymentRecords.map(item => (
+                    <tr key={item.orderNo}>
+                      <td>{item.paymentTime}</td>
+                      <td>{item.orderNo}</td>
+                      <td>{item.orderInfo}</td>
+                      <td>{item.paymentMethod}</td>
+                      <td>{item.paymentAmount.toFixed(2)}</td>
+                    </tr>
+                  ))
+                  :
+                  <tr>
+                    <td colSpan={5}>没有付款记录</td>
                   </tr>
-                ))
               }
             </tbody>
           </table>
