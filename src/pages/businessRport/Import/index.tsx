@@ -371,7 +371,7 @@ const BsImport: React.FC = function () {
           </div>
           <Table
             className={styles.Table}
-            scroll={{ x: 'max-content', y: 'calc(100vh - 364px)', scrollToFirstRowOnChange: true }}
+            scroll={{ x: 'max-content', y: 'calc(100vh - 260px)', scrollToFirstRowOnChange: true }}
             loading={loading}
             columns={[
               {
