@@ -27,7 +27,7 @@ declare namespace API {
     memberFunctionalSurplus: { functionName: string; frequency: number }[];
   }
 
-  export type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
+  export type Site = 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT' | 'JP';
 
   interface IShop {
     id: string;

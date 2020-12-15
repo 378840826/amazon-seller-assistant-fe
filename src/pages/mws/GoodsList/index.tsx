@@ -56,7 +56,7 @@ const GoodsList: React.FC = () => {
   const { total, records: goodsList } = goodsData;
   // 店铺
   const currentShop = useSelector((state: IConnectState) => state.global.shop.current);
-  const { currency, id: currentShopId } = currentShop;
+  const { currency, id: currentShopId, autoPrice } = currentShop;
   const headersParams = { StoreId: currentShopId };
 
   // 分页
@@ -134,6 +134,20 @@ const GoodsList: React.FC = () => {
 
   // 单个修改调价开关
   const handleAdjustSwitchClick = (checked: boolean, record: API.IGoods) => {
+    // 店铺总开关关闭时，不能操作调价开关
+    if (!autoPrice) {
+      Modal.confirm({
+        icon: null,
+        centered: true,
+        title: null,
+        content: '调价总开关为暂停状态，如需设置智能调价，请前往开启',
+        okText: '前往',
+        onOk() {
+          history.push('/shop/list');
+        },
+      });
+      return;
+    }
     const { id } = record;
     // 如果是开启调价，判断是否设置了最低价和最高价
     const judge = !checked ? judgeRuleOpen([record]) : true;
