@@ -12,7 +12,6 @@ import AD from './components/AD';
 import ASIN from './components/Asin';
 import Price from './components/Price';
 import Data from './components/Data';
-import PayRule from './components/PayRule';
 import Faq from './components/Faq';
 import GlobalFooter from '@/components/GlobalFooter';
 import styles from './index.less';

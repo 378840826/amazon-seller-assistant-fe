@@ -69,6 +69,7 @@ request.interceptors.response.use(async (response, options) => {
     '/index/crx',
     '/index/privacy', 
     '/index/logs',
+    '/vip/instructions',
   ];
   const { code, message } = resBody;
   // 请求异常

@@ -3,6 +3,7 @@ import { IGoodsListModelState } from './goodsList';
 import { IReplenishmentModelState } from './replenishment';
 import { IBsModelState } from './bs';
 import { IBiBoardModelState } from './biBoard';
+import { IVipModelState } from './vip';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { IUserModelState } from './user';
@@ -43,6 +44,7 @@ export interface IConnectState {
   replenishment: IReplenishmentModelState;
   bs: IBsModelState;
   biBoard: IBiBoardModelState;
+  vip: IVipModelState;
   loading: ILoading;
   settings: SettingModelState;
   user: IUserModelState;

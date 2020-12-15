@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 55px;
+    margin-right: 10px;
+  }
+}
+
+.vipLevel {
+  display: inline-block;
+}
+
+.vipName {
+  transform: translateY(10px);
+  color: #ca9e6e;
+  font-size: @font-size-lg;
+}
+
+.validPeriod {
+  margin-left: 70px;
+}
+
+.remainDaysNumber {
+  font-size: 24px;
+  color: #01c060;
+  vertical-align: sub;
+
+  &.isExpiringSoon {
+    color: @error-color;
+  }
+}
+
+.btnRenew {
+  display: inline-block;
+  margin-left: 10px;
+  width: 64px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  color: #fff;
+  background: #ca9e6e;
+  border-radius: 12px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+    color: #fff;
+  }
+}
