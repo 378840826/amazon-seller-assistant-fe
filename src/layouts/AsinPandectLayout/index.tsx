@@ -254,7 +254,7 @@ const AsinBase: React.FC = (props) => {
                           <div className={styles.list}>
                             <GoodsImg className={styles.product} src={item.imgLink} width={28} alt=" " />
                             <div>
-                              <p className={styles.title}>{item.title}</p>
+                              <p className={styles.title} title={item.title}>{item.title}</p>
                               <p className={styles.asin}>{item.asin}</p>
                             </div>
                           </div>
@@ -265,7 +265,7 @@ const AsinBase: React.FC = (props) => {
                 </Spin> : ''
             }
             <MySearch 
-              placeholder="搜索其他ASIN/SKU"
+              placeholder="搜索其他ASIN、SKU"
               value={searchValue}
               // loading={searchBtnLoading}
               onChange={(value) => setSearchValue(value)} 
@@ -309,7 +309,7 @@ const AsinBase: React.FC = (props) => {
       
       <div className={`${styles.filltrate} asin-filltrate-box`}>
         <MySearch 
-          placeholder="搜索其他ASIN/SKU"
+          placeholder="搜索其他ASIN、SKU"
           value={searchValue}
           onChange={(value) => setSearchValue(value)} 
           onSearch={onSearch}

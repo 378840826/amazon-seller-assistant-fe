@@ -3,7 +3,7 @@ import styles from './index.less';
 import { DownOutlined } from '@ant-design/icons';
 import { Link, useDispatch, useSelector } from 'umi';
 import { Iconfont, storage } from '@/utils/utils';
-import SearchDownList from './components/SearchDownList';
+import Complete from './components/Complete';
 import TableNotData from '@/components/TableNotData';
 import MySwitch from './components/MySwitch';
 import GoodsImg from '@/pages/components/GoodsImg';
@@ -39,7 +39,6 @@ const Settings: React.FC = () => {
   const [fourStar, setFourStar] = useState<boolean>(false); // 提醒星级设置4星
   const [fiveStar, setFiveStar] = useState<boolean>(false); // 提醒星级设置5星
   const [asyncGetview] = useState<boolean>(true); // 用作 提醒星级设置获取
-  const [searchComponent, setSearchComponent] = useState<boolean>(false); // 是否重置搜索框内容
   const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
 
   // 点击设置星级提醒
@@ -53,7 +52,6 @@ const Settings: React.FC = () => {
     }
     setTableLoadingStatus(true);
     setCurrentShop(current as CommectMonitor.ICurrentShopType);
-    setSearchComponent(true);
     const headersParams = {
       StoreId: current.id,
     };
@@ -435,7 +433,7 @@ const Settings: React.FC = () => {
     <div className={`${styles.settings_box} settings`}>
       <header>
         <div className={styles.search}>
-          <SearchDownList callback={successCb} reset={searchComponent} />
+          <Complete successCallback={successCb}/>
         </div>
         <div className={styles.downlist} style={{
           width: 108,

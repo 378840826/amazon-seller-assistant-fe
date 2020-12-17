@@ -15,12 +15,12 @@ import AdTypeData from '../components/AdTypeData';
 import RelatedSales from './RelatedSales';
 import { getlistingStatus } from '../config';
 import { Tooltip } from 'antd';
+import ShowData from '@/components/ShowData';
 
 
 export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
   const {
     ratio = false, // 环比开关
-    currency, // 货币符号
     order = '', // 正序或倒序
     sortCallback,
     childCustomcol,
@@ -107,7 +107,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
             return <div className={styles.skuItem} key={i}>
               <p className={styles.skus}>
                 <span>{item.sku}</span>
-                <span className={styles.price}>{item.price ? currency + item.price : ''}</span>
+                <span className={styles.price}>
+                  <ShowData value={item.price} isCurrency isMoney/>
+                </span>
               </p>
               <p className={styles.footer}>
                 <span>库存：{item.sellable}</span>
@@ -184,9 +186,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { totalSalesRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -284,9 +284,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { profitRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -362,9 +360,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { avgSellingPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -392,9 +388,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { avgCustomerPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -442,9 +436,9 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       />,
       align: 'center',
       width: 125,
-      render(val: number, { associateSalesRingRatio, asin }: AsinTable.IChildResocds) {
+      render(val: number|string, { associateSalesRingRatio, asin }: AsinTable.IChildResocds) {
         return <div>
-          <p>{val}</p>
+          <p>{val === null || val === '' ? <Empty /> : val}</p>
           <p style={{
             display: ratio ? 'block' : 'none',
           }}>
@@ -610,9 +604,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return (
           <div className={styles.haveProportion}>
             <p>
-              {
-                val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-              }
+              <ShowData value={val} isCurrency isMoney/>
             </p>
             <p>
               <span style={{
@@ -718,9 +710,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { b2bAvgSellingPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -748,9 +738,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { b2bAvgCustomerPriceRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -825,9 +813,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { adSalesRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -855,9 +841,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return (
           <div className={styles.haveProportion}>
             <p>
-              {
-                val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-              }
+              <ShowData value={val} isCurrency isMoney/>
             </p>
             <p>
               <span style={{
@@ -893,9 +877,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         return (
           <div className={styles.haveProportion}>
             <p>
-              {
-                val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-              }
+              <ShowData value={val} isCurrency isMoney/>
             </p>
             <p>
               <span style={{
@@ -1035,9 +1017,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { cpcRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',
@@ -1065,9 +1045,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       render(val: number, { spendRingRatio }: AsinTable.IChildResocds) {
         return <>
           <p>
-            {
-              val !== null ? currency + moneyFormat(val, 2, ',', '.', true) : <Empty />
-            }
+            <ShowData value={val} isCurrency isMoney/>
           </p>
           <p style={{
             display: ratio ? 'block' : 'none',

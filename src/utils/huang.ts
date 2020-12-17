@@ -297,6 +297,11 @@ export function getSiteDate(site: string) {
       nationality: '意大利',
       timeText: '意大利时间',
     };
+  case 'JP':
+    return {
+      nationality: '日本',
+      timeText: '日本时间',
+    };
   default: 
     // 
   }

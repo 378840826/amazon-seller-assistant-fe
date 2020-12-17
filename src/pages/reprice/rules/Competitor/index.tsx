@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { Link, useSelector, useLocation, useDispatch } from 'umi';
-import { strToMoneyStr } from '@/utils/utils';
+import { strToMoneyStr, strToNaturalNumStr } from '@/utils/utils';
 import {
   ruleAddRouter,
   ruleListRouter,
@@ -126,6 +126,10 @@ const AddSales: React.FC<IProps> = () => {
 
   // 限制输入
   const limitedInput = (value: string) => {
+    if (currentShop.marketplace === 'JP') {
+      return strToNaturalNumStr(value);
+    }
+
     return strToMoneyStr(value);
   };
 

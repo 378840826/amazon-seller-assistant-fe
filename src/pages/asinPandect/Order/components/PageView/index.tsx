@@ -69,10 +69,6 @@ const PageView: React.FC<IProps> = (props) => {
     setVisible(visible);
   };
 
-  const handleDetailClick = () => {
-    hide();
-  };
-
   const clickDetail = () => {
     setVisible(true);
   };
@@ -87,14 +83,14 @@ const PageView: React.FC<IProps> = (props) => {
       placement="left"
       onClick={hide}
       onVisibleChange={handleVisibleChange}
+      overlayClassName={styles.popoverBox}
       content={
         <div 
           className={`${styles.PageView} page_view_order`}
           ref={alerts}
         >
           <header>
-            {currentAsin}关联销售
-            <CloseOutlined onClick={handleDetailClick} />
+            {currentAsin}关联销售详情
           </header>
           <ul className={styles.list}>
             {
@@ -119,12 +115,14 @@ const PageView: React.FC<IProps> = (props) => {
                       <span>{item.asin}</span>
                       <span className={styles.price}>{symbol}{item.price || 0}</span>
                     </p>
-                    <p>{item.sku}</p>
-                    <div className={styles.detail}>
+                    <div className={styles.twoRow}>
+                      <p className={styles.sku}>{item.sku}</p>
                       <p className={styles.sales}>
-                        关联销售：
                         <span>{item.relatedSalesFrequency || 0}次</span>
                       </p>
+                    </div>
+                    <div className={styles.detail}>
+                      
                       <p>
                         <span className={`${styles.ranking} ${ item.bigCategoryRank ? '' : 'none' }`} >
                           #{item.bigCategoryRank}

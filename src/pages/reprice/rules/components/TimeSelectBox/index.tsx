@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styles from './index.less';
 import { DownOutlined } from '@ant-design/icons';
 import { getBeijingTime } from '@/utils/huang';
+import { TooltipPlacement } from 'antd/lib/tooltip/index';
 import {
   Popover,
   Button,
@@ -11,12 +12,14 @@ import classnames from 'classnames';
 interface IProps {
   value: string;
   onOk?: (time: string) => void;
+  placement?: TooltipPlacement;
 }
 
 const TimeSelectBox: React.FC<IProps> = (props) => {
   const {
     value = '00:20',
     onOk,
+    placement = 'left',
   } = props;
 
   // state
@@ -26,16 +29,6 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [showTime, setShowTime] = useState<string>(value); // 显示的时候
   const [beijing, setBeijing] = useState<string>(''); // 北京时间
-
-  // console.log(value, 'initvalue');
-  
-
-  // 点击其它地方隐藏
-  useEffect(() => {
-    document.addEventListener('click', () => {
-      visible ? setVisible(false) : '';
-    });
-  });
 
   const splitDate = useCallback(() => {
     if (value.indexOf(':') > -1) {
@@ -100,6 +93,10 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
     }
   };
 
+  const handleVisibleChange = (visible: boolean) => {
+    setVisible(visible);
+  };
+
   const content = () => {
     return <div className={styles.contentBox}>
       <div className={styles.hour}>
@@ -153,15 +150,18 @@ const TimeSelectBox: React.FC<IProps> = (props) => {
     </div>;
   };
 
-  return <div>
-    <div className={styles.showBox} onClick={e => e.nativeEvent.stopImmediatePropagation()}>
-      <Popover content={content} visible={visible} title="" placement="left" trigger={['click']}>
-        <span className={`${styles.showText} timing-show-text`} onClick={() => setVisible(true)}>
-          {showTime} <DownOutlined className={styles.icon}/>
-        </span>
-      </Popover>
-    </div>
-  </div>;
+  return <Popover 
+    content={content} 
+    visible={visible} 
+    title=""
+    placement={placement}
+    trigger={['click']} 
+    onVisibleChange={handleVisibleChange}
+  >
+    <span className={`${styles.showText} timing-show-text`} onClick={() => setVisible(true)}>
+      {showTime} <DownOutlined className={styles.icon}/>
+    </span>
+  </Popover>;
 };
 
 export default TimeSelectBox;

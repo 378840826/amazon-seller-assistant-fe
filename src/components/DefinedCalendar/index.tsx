@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { CalendarOutlined, SwapRightOutlined } from '@ant-design/icons';
-import zhCN from 'antd/es/locale/zh_CN';
 import { Moment } from 'moment/Moment';
 import 'moment/locale/zh-cn';
 import { storage } from '@/utils/utils';
@@ -12,7 +11,6 @@ import {
   Dropdown,
   Menu,
   DatePicker,
-  ConfigProvider,
 } from 'antd';
 
 
@@ -124,7 +122,6 @@ const DefinedCalendar: React.FC<IProps> = props => {
   const changeSelect = (current: any) => { // eslint-disable-line 
     const key = current.key;
     let obj = {} as { start: string; end: string } ;
-    console.log(key, 'key');
     
     switch (key) {
     case 'month': // 选择的是月查看
@@ -156,8 +153,6 @@ const DefinedCalendar: React.FC<IProps> = props => {
 
   // 处理季/月/周的函数
   const handleWeebMonth = (type: string, date: Moment | null| Date) => {
-    console.log(date, 'date,,');
-    
     const { start, end } = getRangeDate(type, false, date as Date);
     setStartDate(start); // 页面开始日期
     setEndDate(end); // 页面结束日期
@@ -216,43 +211,41 @@ const DefinedCalendar: React.FC<IProps> = props => {
   );
   return (
     <div style={ props.style } className={`${styles.definedCalendar} ${className}`}>
-      <ConfigProvider locale={zhCN}>
-        <Dropdown overlay={menu} placement="bottomCenter" trigger={['click']}>
-          <div className={`${styles.showDate} clearfix`}>
-            <Input className={styles.input} readOnly onFocus={inputFocus} />
-            <i className={`${styles.icon} ${styles.calendarIcon}`}>
-              <CalendarOutlined />
-            </i>
-            <i className={`${styles.icon} ${styles.arrow}`}>
-              <SwapRightOutlined />
-            </i>
-            <div className={styles.startDate}>{startDate}</div>
-            <div className={styles.endDate}>{endDate}</div>
-            <div className={styles.downlist}></div>
-          </div>
-        </Dropdown>
-        <DatePicker 
-          onChange={changeWeek}
-          picker="week" 
-          open={weekCalendar}
-          value={weekValue}
-          className={styles.weekCalendar}
-        />
-        <DatePicker 
-          onChange={changeMonth} 
-          picker="month" 
-          open={monthCalendar}
-          value={monehtValue}
-          className={styles.weekCalendar}
-        />
-        <DatePicker
-          onChange={changeQuarter} 
-          picker="quarter" 
-          open={quarterCalendar}
-          value={quarterValue}
-          className={styles.quarterCalendar}
-        />
-      </ConfigProvider>
+      <Dropdown overlay={menu} placement="bottomCenter" trigger={['click']}>
+        <div className={`${styles.showDate} clearfix`}>
+          <Input className={styles.input} readOnly onFocus={inputFocus} />
+          <i className={`${styles.icon} ${styles.calendarIcon}`}>
+            <CalendarOutlined />
+          </i>
+          <i className={`${styles.icon} ${styles.arrow}`}>
+            <SwapRightOutlined />
+          </i>
+          <div className={styles.startDate}>{startDate}</div>
+          <div className={styles.endDate}>{endDate}</div>
+          <div className={styles.downlist}></div>
+        </div>
+      </Dropdown>
+      <DatePicker 
+        onChange={changeWeek}
+        picker="week" 
+        open={weekCalendar}
+        value={weekValue}
+        className={styles.weekCalendar}
+      />
+      <DatePicker 
+        onChange={changeMonth} 
+        picker="month" 
+        open={monthCalendar}
+        value={monehtValue}
+        className={styles.weekCalendar}
+      />
+      <DatePicker
+        onChange={changeQuarter} 
+        picker="quarter" 
+        open={quarterCalendar}
+        value={quarterValue}
+        className={styles.quarterCalendar}
+      />
     </div>
   );
 };

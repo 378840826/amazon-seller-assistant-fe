@@ -7,14 +7,12 @@ import ShowData from '@/components/ShowData';
 
 interface IProps {
   data: Message.IFollowDataType;
-  currency: string;
 }
 
 // 情况5
 const Five: React.FC<IProps> = (props) => {
   const {
     data,
-    currency,
   } = props;
 
   return (
@@ -37,7 +35,7 @@ const Five: React.FC<IProps> = (props) => {
         <p className={styles.method}>FBA</p>
         <p className={styles.price}>
           <span className={styles.gatherText}>价格：</span>
-          {currency}{data.followSellers[0].price}
+          <ShowData value={data.followSellers[0].price} isCurrency/>
         </p>
         <p className={styles.freight}>
           <span className={styles.text}>运费：</span>

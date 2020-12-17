@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-10-23 15:57:06
  * 
- * 根据销售表现调价 添加或 更新  根据 location.state.type settings是更新
+ * 根据销售表现调价 添加或 更新  
  */
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
@@ -36,6 +36,7 @@ import Condition from './Condition/index';
 import SecuritySettings from '../components/SecuritySettings';
 import TimeSelectBox from '../components/TimeSelectBox';
 import skip from '../components/Skip';
+import { DownOutlined } from '@ant-design/icons';
 
 import {
   Button,
@@ -435,9 +436,9 @@ const AddSales: React.FC = () => {
           <div className={styles.timingBox}>
             <span className={styles.textName}>定时：</span>
             <div className={styles.timing}>
-              <TimeSelectBox value={timingData} onOk={getTimingData}/>
+              <TimeSelectBox value={timingData} placement="topLeft" onOk={getTimingData}/>
               <Iconfont type="icon-dingshi" className={styles.iconAdd} />
-              <Iconfont type="icon-xiugai" className={styles.iconChange} />
+              <DownOutlined className={styles.iconChange} />
             </div>
           </div>
 

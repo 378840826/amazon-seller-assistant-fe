@@ -5,15 +5,14 @@ import classnames from 'classnames';
 
 
 interface IProps {
-  symbol: string;
   data: AsinTable.IChildSummaryType|null;
   childCustomcol: {};
 }
 import Empty from '../../components/Empty';
+import ShowData from '@/components/ShowData';
 
 const Summary: React.FC<IProps> = (props) => {
   const {
-    symbol = '',
     data = {},
     childCustomcol,
   } = props;
@@ -144,7 +143,7 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'totalSales',
       component: <td className={styles.right} key="5">
-        {totalSales !== null ? symbol + moneyFormat(totalSales, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={totalSales} isCurrency isMoney/>
       </td>,
     },
     {
@@ -168,7 +167,7 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'profit',
       component: <td className={styles.right} key="9">
-        {profit !== null ? symbol + moneyFormat(profit, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={profit} isCurrency isMoney/>
       </td>,
     },
     {
@@ -187,13 +186,13 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'avgSellingPrice',
       component: <td className={styles.right} key="12">
-        {avgSellingPrice !== null ? symbol + moneyFormat(avgSellingPrice, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={avgSellingPrice} isCurrency isMoney/>
       </td>,
     },
     {
       dataIndex: 'avgCustomerPrice',
       component: <td className={styles.right} key="13">
-        {avgCustomerPrice !== null ? symbol + moneyFormat(avgCustomerPrice, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={avgCustomerPrice} isCurrency isMoney/>
       </td>,
     },
     {
@@ -247,7 +246,7 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'b2bSales',
       component: <td className={styles.center} key="22">
-        {b2bSales !== null ? symbol + moneyFormat(b2bSales, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={b2bSales} isCurrency isMoney/>
       </td>,
     },
     {
@@ -274,13 +273,13 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'b2bAvgSellingPrice',
       component: <td className={styles.right} key="26">
-        {b2bAvgSellingPrice !== null ? symbol + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={b2bAvgSellingPrice} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'b2bAvgCustomerPrice',
       component: <td className={styles.right} key="27">
-        {b2bAvgCustomerPrice !== null ? symbol + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={b2bAvgCustomerPrice} isCurrency isMoney/> 
       </td>,
     },
     {
@@ -290,19 +289,19 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'adSales',
       component: <td className={styles.right} key="29">
-        {adSales !== null ? symbol + moneyFormat(adSales, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={adSales} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'skuAdSales',
       component: <td className={styles.center} key="30">
-        {skuAdSales !== null ? symbol + moneyFormat(skuAdSales, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={skuAdSales} isCurrency isMoney/>  
       </td>,
     },
     {
       dataIndex: 'naturalSales',
       component: <td className={styles.center} key="31">
-        {naturalSales !== null ? symbol + moneyFormat(naturalSales, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={naturalSales} isCurrency isMoney/>  
       </td>,
     },
     {
@@ -326,13 +325,13 @@ const Summary: React.FC<IProps> = (props) => {
     {
       dataIndex: 'cpc',
       component: <td className={styles.center} key="35">
-        {cpc !== null ? symbol + moneyFormat(cpc, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={cpc} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'spend',
       component: <td className={styles.right} key="36">
-        {spend !== null ? symbol + moneyFormat(spend, 2, ',', '.', true) : <Empty/>} 
+        <ShowData value={spend} isCurrency isMoney/> 
       </td>,
     },
     {

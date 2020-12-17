@@ -223,7 +223,6 @@ declare namespace AsinTable {
   
   interface IChildAsinColsProps {
     ratio: boolean;
-    currency: string;
     order: string;
     marketplace: string;
     parentCol?: {};

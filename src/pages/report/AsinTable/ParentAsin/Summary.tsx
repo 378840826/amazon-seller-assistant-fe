@@ -6,15 +6,14 @@ import classnames from 'classnames';
 import { moneyFormat } from '@/utils/huang';
 import Empty from '../components/Empty';
 import { parentsprs } from './config';
+import ShowData from '@/components/ShowData';
 
 interface IProps {
-  currency: string;
   total: AsinTable.IParentChildTotal;
   parentCustomcol: {};
 }
 export default (props: IProps) => {
   const {
-    currency,
     total,
     parentCustomcol,
   } = props;
@@ -80,7 +79,7 @@ export default (props: IProps) => {
     {
       dataIndex: 'totalSales',
       component: <td className={classnames(styles.base, commonStyles.tdTextRight)} align="right" key="2">
-        {totalSales === null ? <Empty /> : currency + moneyFormat(totalSales, 2, ',', '.', true) }
+        <ShowData value={totalSales} isCurrency isMoney />
       </td>,
     },
     {
@@ -104,7 +103,7 @@ export default (props: IProps) => {
     {
       dataIndex: 'profit',
       component: <td className={classnames(styles.base, commonStyles.tdTextRight)} align="right" key="6">
-        {profit === null ? <Empty /> : currency + moneyFormat(profit, 2, ',', '.', true) }
+        <ShowData value={profit} isCurrency isMoney />
       </td>,
     },
     {
@@ -122,13 +121,13 @@ export default (props: IProps) => {
     {
       dataIndex: 'avgSellingPrice',
       component: <td className={classnames(styles.base, commonStyles.tdTextRight)} align="right" key="9">
-        {avgSellingPrice === null ? <Empty /> : currency + moneyFormat(avgSellingPrice, 2, ',', '.', true) }
+        <ShowData value={avgSellingPrice} isCurrency isMoney />
       </td>,
     },
     {
       dataIndex: 'avgCustomerPrice',
       component: <td className={classnames(styles.base, commonStyles.tdTextRight,)} align="right" key="10">
-        {avgCustomerPrice === null ? <Empty /> : currency + moneyFormat(avgCustomerPrice, 2, ',', '.', true) }
+        <ShowData value={avgCustomerPrice} isCurrency isMoney />
       </td>,
     },
     {
@@ -182,7 +181,10 @@ export default (props: IProps) => {
     {
       dataIndex: 'b2bSales',
       component: <td className={classnames(styles.base)} align="center" key="19">
-        <p>{b2bSales === null ? <Empty /> : currency + moneyFormat(b2bSales, 2, ',', '.', true) }</p>
+        <p>
+          <ShowData value={b2bSales} isCurrency isMoney />
+        </p>
+        
         <p>{b2bSalesProportion === null ? <Empty /> : `${moneyFormat(b2bSalesProportion, 2, ',', '.', true)}%`}</p>
       </td>,
     },
@@ -207,13 +209,13 @@ export default (props: IProps) => {
     {
       dataIndex: 'b2bAvgSellingPrice',
       component: <td className={classnames(styles.base, commonStyles.tdTextRight)} align="right" key="23">
-        {b2bAvgSellingPrice === null ? <Empty /> : `${currency + moneyFormat(b2bAvgSellingPrice, 2, ',', '.', true)}`}
+        <ShowData value={b2bAvgSellingPrice} isCurrency isMoney />
       </td>,
     },
     {
       dataIndex: 'b2bAvgCustomerPrice',
       component: <td className={classnames(styles.base, commonStyles.tdTextRight,)} align="right" key="24">
-        {b2bAvgCustomerPrice === null ? <Empty /> : currency + moneyFormat(b2bAvgCustomerPrice, 2, ',', '.', true) }
+        <ShowData value={b2bAvgCustomerPrice} isCurrency isMoney />
       </td>,
     },
   ];

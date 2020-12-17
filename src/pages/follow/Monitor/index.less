@@ -175,12 +175,28 @@
       order: 2;
       margin-left: 14px;
     }
+
+    :global(.ant-switch) {
+      width: 36px;
+      height: 18px;
+    }
+
+    :global(.ant-switch-handle) {
+      width: 14px;
+      height: 14px;
+    }
+
+    :global(.ant-switch-small.ant-switch-checked) {
+      :global(.ant-switch-handle) {
+        left: calc(100% - 14px - 2px) !important;
+      }
+    }
   }
 
   .twoRow {
     display: flex;
     padding: 6px 0 30px 0;
-    margin-left: 43px;
+    margin-left: 51px;
 
     .checkbox {
       display: flex;

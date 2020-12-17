@@ -9,7 +9,7 @@ import {
 
 
 // 组件
-import SearchComponent from './components/SearchDownList';
+import AutoComplete from './components/Complete';
 import Express from './components/Express';
 import Remind from './components/Remind';
 import Frequency from './components/Frequency';
@@ -236,7 +236,8 @@ const Monitor: React.FC = () => {
   return (
     <div className={styles.monitor}>
       <header className={styles.head}>
-        <SearchComponent callback={searchCallback}/>
+        <AutoComplete successCallback={searchCallback}/>
+
         <div className={styles.btns}>
           <Remind flag={remindState} cb={handleFrequency} />
           <Frequency cb={handleRemind} flag={frequencyState} />

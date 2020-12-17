@@ -43,16 +43,14 @@ const Follow: React.FC<IProps> = (props) => {
         <FiveComponent // 情况5(当跟卖者数量达到若干个)
           data={data} 
           key={data.id} 
-          currency={currentShop.currency}
         />
         : 
         data.buyboxOccupied 
           ? <SixComponent // 情况6(当buybox卖家不是我)
             data={data} 
             key={data.id} 
-            currency={currentShop.currency}
           /> 
-          : <Outer data={data} key={data.id} currency={currentShop.currency} />
+          : <Outer data={data} key={data.id} />
     }
   </div>;
 };

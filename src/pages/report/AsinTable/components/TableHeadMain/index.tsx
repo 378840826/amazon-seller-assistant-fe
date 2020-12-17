@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { QuestionCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
@@ -37,6 +37,22 @@ const TableHead: React.FC<IProps> = props => {
   const [mainSort, setMainSort] = useState<boolean|string>(''); // 第一栏的
   const [subSort, setSubSort] = useState<boolean|string>(''); // 第二栏的环比
 
+  // 点击其它字段排序后，默认回到初始化状态
+  useEffect(() => {
+    if (order === '' || order === null) {
+      return;
+    }
+
+    if (order !== titleparams) {
+      setMainSort('');
+    }
+
+    if (order !== subtitle) {
+      setSubSort('');
+    }
+  }, [order, titleparams, subtitle]);
+
+  
   // 排序回调
   const mainCallback = () => {
     // 升序

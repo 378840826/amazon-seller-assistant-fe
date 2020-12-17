@@ -154,10 +154,10 @@ const AsinBase: React.FC = () => {
           {
             name: '访问来源',
             type: 'pie',
-            // center: ['50%', '60%'],
             radius: ['50%', '70%'],
             height: 260,
             top: 30,
+            left: 0,
             data: newData,
             hoverAnimation: false,
             labelLine: {

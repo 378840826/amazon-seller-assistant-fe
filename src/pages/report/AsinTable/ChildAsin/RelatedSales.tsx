@@ -10,6 +10,7 @@ import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import { getCalendarFields } from '../config';
 import { storageKeys } from '@/utils/huang';
 import { storage } from '@/utils/utils';
+import GoodsImg from '@/pages/components/GoodsImg';
 
 const { adinTableCalendar } = storageKeys;
 interface IProps {
@@ -95,7 +96,7 @@ const Demo: React.FC<IProps> = (props) => {
           data.map((item, i) => {
             return <div key={i} className={styles.item}>
               <span className={styles.num}>{i + 1}</span>
-              <img src={item.imgUrl} alt="" className={styles.productImg}/>
+              <GoodsImg src={item.imgUrl} alt="商品" className={styles.productImg} width={50}/>
               <div className={styles.details}>
                 <a href={getAmazonAsinUrl(asin, marketplace)} 
                   className={styles.title}
@@ -112,7 +113,7 @@ const Demo: React.FC<IProps> = (props) => {
                   <span className={styles.price}>{item.price ? currency + item.price : ''}</span>
                 </p>
                 <p className={styles.p}>
-                  <span>{item.sku}</span>
+                  <span className={styles.sku}>{item.sku}</span>
                   <span>{item.associateSalesTimes || 0} 次</span>
                 </p>
                 <Tooltip 

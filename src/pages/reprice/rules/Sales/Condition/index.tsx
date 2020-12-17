@@ -10,7 +10,7 @@ import {
   upDownHLs,
 } from '../../config';
 import classnames from 'classnames';
-import { Iconfont, strToMoneyStr } from '@/utils/utils';
+import { Iconfont, strToMoneyStr, strToNaturalNumStr } from '@/utils/utils';
 import { useSelector } from 'umi';
 import {
   Select,
@@ -299,6 +299,10 @@ const SalesConditionItem: React.FC<IProps> = (props) => {
 
   // 限制输入
   const limitedInput = (value: string) => {
+    if (currentShop.marketplace === 'JP') {
+      return strToNaturalNumStr(value);
+    }
+    
     return strToMoneyStr(value);
   };
 

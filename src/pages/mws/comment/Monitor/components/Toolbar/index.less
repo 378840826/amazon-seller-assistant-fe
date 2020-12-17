@@ -1,6 +1,5 @@
 header.monitor_toolbar {
   background-color: #fff;
-  padding: 0 20px 20px;
   display: grid;
   grid-auto-columns: repeat(auto-fill, 343px);
   grid-template-columns: repeat;
@@ -153,7 +152,7 @@ header.monitor_toolbar {
 
   .btns {
     text-align: right;
-    padding: 20px 0 0 0;
+    padding: 7px 0 0 0;
 
     button {
       margin-left: 20px;
@@ -162,11 +161,11 @@ header.monitor_toolbar {
 
   // 工具栏有大小屏
   @media screen and (max-width: 1800px) {
-    padding: 20px 20px;
+    padding: 0 20px;
     column-gap: 80px;
 
     .btns {
-      margin-top: -50px;
+      margin-top: -37px;
     }
 
     .empty {
@@ -181,10 +180,14 @@ header.monitor_toolbar {
       position: relative;
       left: -10px;
     }
+
+    .ayout_six_div {
+      margin-top: 3px;
+    }
   }
 
   @media screen and (min-width: 1799px) {
-    padding: 20px 50px;
+    padding: 0 50px 20px;
 
     .btns {
       margin-top: 0;

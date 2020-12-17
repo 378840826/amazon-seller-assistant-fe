@@ -4,12 +4,13 @@
   background-color: #fff;
 
   > header {
-    padding: 15px 13px 0 13px;
+    font-weight: 500;
+    color: @heading-color;
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
     font-size: @font-size-lg;
-    font-weight: bold;
-    color: @heading-color;
+    border-bottom: 1px solid #f0f0f0;
 
     span:global(.anticon-close) {
       color: @text-color-secondary;
@@ -83,6 +84,18 @@
         }
       }
 
+      .twoRow {
+        display: flex;
+        justify-content: space-between;
+
+        .sku {
+          max-width: 100px;
+          white-space: pre-wrap;
+          word-break: break-all;
+          line-height: 14px;
+        }
+      }
+
       div.detail {
         display: flex;
         justify-content: space-between;
@@ -108,5 +121,11 @@
 
   &:hover {
     color: @primary-color;
+  }
+}
+
+.popoverBox {
+  :global(.ant-popover-inner-content) {
+    padding: 0;
   }
 }

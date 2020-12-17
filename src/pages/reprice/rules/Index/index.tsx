@@ -11,6 +11,7 @@ import { useSelector, history, Link } from 'umi';
 import { getRuleType } from '../config';
 import classnames from 'classnames';
 import { getSiteDate } from '@/utils/huang';
+import { Iconfont } from '@/utils/utils';
 import {
   ruleAddRouter,
   ruleAddSalesRouter,
@@ -360,12 +361,12 @@ const Rules: React.FC = () => {
               system ? '删除' : <Popconfirm
                 title="确定删除规则？"
                 onConfirm={() => delRule(id, system, productCount)}
+                icon={<Iconfont type="icon-tishi2" />}
                 okText="确定"
                 cancelText="取消"
-                placement="bottom"
-                overlayStyle={{
-                  width: 155,
-                }}
+                placement="right"
+                arrowPointAtCenter
+                overlayClassName={styles.delTooltip}
               > 
                 删除
               </Popconfirm>
