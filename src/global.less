@@ -359,9 +359,9 @@ div.ant-typography {
   display: inline-block;
 }
 
-// 搜索框 280px
+// 搜索框 280px // 为什么是w:240px ，这个antd的bug，打包后的环境包了两个容器进去，所以减掉40
 .h-search {
-  width: 280px !important;
+  width: 240px !important;
 
   button.ant-input-search-button {
     min-width: 40px;
