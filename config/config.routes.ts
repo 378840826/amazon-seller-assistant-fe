@@ -79,6 +79,7 @@ export default [
   {
     path: '/overview',
     component: '../layouts/BasicLayout',
+    // wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '数据大盘', path: '/overview', component: './UncompletedPage' },
       { title: '店铺报告', path: '/overview/shop', component: './UncompletedPage' },

@@ -190,6 +190,7 @@ const GlobalModel: IGlobalModelType = {
         return;
       }
       const res = yield call(bindShop, { sellerId, storeName, token, marketplaces });
+      console.log(res, 'res');
       if (res.code === 200) {
         // 接口没有返回绑定成功的店铺，重新获取店铺列表
         yield put({
