@@ -71,6 +71,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const [order, setOrder] = useState<string>('');
   const [sort, setSort] = useState<boolean>(false);
   const [exportText, setExportText] = useState<string>('导出');
+  const [calendarFlag, setCalendarFlag] = useState<boolean>(false);
 
   // 保存当前点击筛选的偏好ID ，删除如果是当前ID,就删除掉
   const [loadPreferenceId, setLoadPreferenceId] = useState<string>('');
@@ -135,6 +136,7 @@ const ChildAsin: React.FC<IProps> = props => {
         setPageSize(page.size);
         setTotal(page.total);
         setSort(page.asc);
+        setOrder(page.order);
       } else {
         setDataSource([]);
         setCurrent(1);
@@ -143,7 +145,7 @@ const ChildAsin: React.FC<IProps> = props => {
         setSort(false);
       }
     });
-  }, [dispatch, currentShop, searchForm, calendar]); // eslint-disable-line
+  }, [dispatch, currentShop, searchForm, calendar, calendarFlag]); // eslint-disable-line
   
   // 父ASIN 父asin列表载入偏好
   const getParentPreference = useCallback(() => {
@@ -437,7 +439,7 @@ const ChildAsin: React.FC<IProps> = props => {
 
   // 排序
   const sortCallback = (order: string, asc: boolean) => {
-    setOrder(order);
+    // setOrder(order);
     requestFn({
       order,
       asc,
@@ -556,6 +558,11 @@ const ChildAsin: React.FC<IProps> = props => {
     rowClassName: styles.asinRowStyle,
   };
 
+  const calendarChange = (selectItem: string) => {
+    setCalendar(selectItem);
+    setCalendarFlag(!calendarFlag);
+  };
+
   // 自定义列容器
   const customBox = (
     <Menu>
@@ -585,6 +592,7 @@ const ChildAsin: React.FC<IProps> = props => {
             }}
             enterButton={<Iconfont type="icon-sousuo" />}
             onSearch={changeSearch}
+            autoComplete="off"
           />
         </Form.Item>
       </Form>
@@ -601,7 +609,9 @@ const ChildAsin: React.FC<IProps> = props => {
         {
           conditions.map((item, i) => {
             return <div key={i} data-id={item.id} className={commonStyles.condition}>
-              <span className={commonStyles.text} onClick={() => clickPreferenceName(item.id)}>
+              <span className={commonStyles.text} 
+                onClick={() => clickPreferenceName(item.id)} title={item.preferenceName}
+              >
                 {item.preferenceName}
               </span>
               <span 
@@ -622,7 +632,7 @@ const ChildAsin: React.FC<IProps> = props => {
             checkedItem={calendar} 
             storageKey={adinTableCalendar} 
             index={1}
-            change={({ selectItem }) => setCalendar(selectItem)}
+            change={({ selectItem }) => calendarChange(selectItem)}
             style={{
               width: 280,
             }} />

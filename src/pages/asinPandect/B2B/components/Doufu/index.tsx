@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.less';
 import { useSelector, useDispatch } from 'umi';
 import Rate from '@/components/Rate';
-import { toIndexFixed } from '@/utils/huang';
+import ShowData from '@/components/ShowData';
 
 interface IProps {
   list: AsinB2B.IDouFuListTyep[];
@@ -16,9 +16,6 @@ const Toolbar: React.FC<IProps> = (props) => {
   } = props;
 
   const dispatch = useDispatch();
-  // 选中店铺
-  const current = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
-  const { currency } = current;
 
   // 已选中的豆腐块
   const selectDouFu = useSelector((state: AsinB2B.IDFChecke) => state.asinB2B.dfCheckedTypes);
@@ -126,10 +123,8 @@ const Toolbar: React.FC<IProps> = (props) => {
                 <span className={styles.title}>
                   <span style={{
                     display: mianflag ? 'none' : 'inline-block',
-                  }}>{ showSymbol ? currency : ''}</span>
-                  <span style={{
-                    display: mianflag ? 'none' : 'inline-block',
-                  }}>{showSymbol ? toIndexFixed(item.data) : item.data}</span>
+                  }}>{showSymbol ? <ShowData value={item.data} isCurrency /> : 
+                      <ShowData value={item.data} />}</span>
                   <span style={{
                     display: mianflag ? 'none' : 'inline-block',
                   }}>{percent ? '%' : ''}</span>
@@ -145,11 +140,11 @@ const Toolbar: React.FC<IProps> = (props) => {
               <p className={styles.title}>
                 上期：
                 <span className={styles.text}>
-                  <span className={ flag ? 'none' : ''}>{(showSymbol ? currency : '')}</span>
                   { flag ? // eslint-disable-line
                     <span style={{
                       color: '#888',
-                    }}>—</span> : (showSymbol ? toIndexFixed(item.lastData) : item.lastData)
+                    }}>—</span> : (showSymbol ? <ShowData value={item.lastData} isCurrency /> : 
+                      <ShowData value={item.lastData} />)
                   }
                 </span>
               </p>

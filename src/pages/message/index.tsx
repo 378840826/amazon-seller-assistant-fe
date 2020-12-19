@@ -132,6 +132,7 @@ const MessageAll: React.FC = () => {
 
   // 监控评论提醒请求
   const getReviewMessage = useCallback((current = 1, size = 20) => {
+    setLoadingFlag(true);
     dispatch({
       type: 'messageModel/getReviewMessageList',
       payload: {
@@ -148,6 +149,7 @@ const MessageAll: React.FC = () => {
 
   // 监控跟卖消息请求
   const getFollowMessage = useCallback((current = 1, size = 20) => {
+    setLoadingFlag(true);
     dispatch({
       type: 'messageModel/getFollowMessage',
       payload: {
@@ -196,8 +198,17 @@ const MessageAll: React.FC = () => {
     showQuickJumper: true, // 快速跳转到某一页
     showTotal: (total: number) => `共 ${total} 个`,
     onChange(current: number, size: number | undefined){
+      const myCurrent = pageSize === size ? current : 1; // 切换分页器时回到第一页
       setPageCurrent(current);
       setPageSize(size as number);
+
+      if (menuDefault === 'all') {
+        getAllMessage(myCurrent, size);
+      } else if (menuDefault === 'review') {
+        getReviewMessage(myCurrent, size);
+      } else if (menuDefault === 'follow') {
+        getFollowMessage(myCurrent, size);
+      }
     },
     onShowSizeChange(current: number, size: number | undefined){
       setPageCurrent(current);
@@ -219,47 +230,44 @@ const MessageAll: React.FC = () => {
 
   return (
     <div className={styles.message_box}>
-      <Spin spinning={loadingFlag} 
-        size="large" style={{
-          fontSize: 40,
-          marginTop: 100,
+      <div className={styles.message}>
+        <nav>
+          <span>消息中心</span>
+        </nav>
+        <header >
+          <Menu onClick={handleClickMenu} 
+            selectedKeys={[menuDefault]} 
+            mode="horizontal" 
+            className={styles.menu}
+          >
+            <Menu.Item key="all">
+              <span className={styles.text}>全部消息</span>
+              <Badge count={notCount.allUnReadCount} 
+                overflowCount={99} 
+                className={styles.badge} />
+            </Menu.Item>
+            <Menu.Item key="review">
+              <span className={styles.text}>评论提醒</span>
+              <Badge 
+                count={notCount.reviewRemindCount} 
+                overflowCount={99} className={styles.badge} />
+            </Menu.Item>
+            <Menu.Item key="follow">
+              <span className={styles.text}>跟卖提醒</span>
+              <Badge 
+                count={notCount.followUnReadCount} 
+                overflowCount={99} 
+                className={styles.badge} 
+              />
+            </Menu.Item>
+          </Menu>
+        </header>
+
+        <main className={`${styles.list} h-scroll`} style={{
+          display: emptydata ? 'none' : 'block',
         }}>
-        <div className={styles.message}>
-          <nav>
-            <span>消息中心</span>
-          </nav>
-
-          <header >
-            <Menu onClick={handleClickMenu} 
-              selectedKeys={[menuDefault]} 
-              mode="horizontal" 
-              className={styles.menu}
-            >
-              <Menu.Item key="all">
-                <span className={styles.text}>全部消息</span>
-                <Badge count={notCount.allUnReadCount} 
-                  overflowCount={99} 
-                  className={styles.badge} />
-              </Menu.Item>
-              <Menu.Item key="review">
-                <span className={styles.text}>评论提醒</span>
-                <Badge 
-                  count={notCount.reviewRemindCount} 
-                  overflowCount={99} className={styles.badge} />
-              </Menu.Item>
-              <Menu.Item key="follow">
-                <span className={styles.text}>跟卖提醒</span>
-                <Badge 
-                  count={notCount.followUnReadCount} 
-                  overflowCount={99} 
-                  className={styles.badge} 
-                />
-              </Menu.Item>
-            </Menu>
-          </header>
-
-          <main className={`${styles.list} h-scroll`} style={{
-            display: emptydata ? 'none' : 'block',
+          <Spin spinning={loadingFlag} style={{
+            marginTop: 30,
           }}>
             {
               // 全部消息
@@ -290,17 +298,17 @@ const MessageAll: React.FC = () => {
                 })
                 : ''
             }
-          </main>
-          <TableNotData hint="暂无消息" style={{
-            display: emptydata ? 'block' : 'none',
-          }} />
-          <footer style={{
-            display: emptydata ? 'none' : 'block',
-          }}>
-            <Pagination {...pageConfig} />
-          </footer>
-        </div>
-      </Spin>
+          </Spin>
+        </main>
+        <TableNotData hint="暂无消息" style={{
+          display: emptydata ? 'block' : 'none',
+        }} />
+        <footer style={{
+          display: emptydata ? 'none' : 'block',
+        }}>
+          <Pagination {...pageConfig} />
+        </footer>
+      </div>
     </div>
   );
 };

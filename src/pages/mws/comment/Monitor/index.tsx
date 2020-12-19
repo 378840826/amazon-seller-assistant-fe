@@ -343,19 +343,15 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
           <div className={styles.product_info}>
             <GoodsImg src={data.imgLink} className={styles.img} alt="商品" width={46} />
             <div>
-              <Tooltip 
-                getPopupContainer={() => document.querySelector('.monitor_box') as HTMLElement}
-                title={ title }>
-                <a href={titleLink} target="_blank" rel="noopener noreferrer">
-                  <Iconfont type="icon-lianjie" 
-                    style={{
-                      fontSize: 12,
-                      color: '#888',
-                      marginRight: 2,
-                    }} />
-                  {title || ''} &nbsp;
-                </a>
-              </Tooltip>
+              <a href={titleLink} target="_blank" rel="noopener noreferrer" title={title}>
+                <Iconfont type="icon-lianjie" 
+                  style={{
+                    fontSize: 12,
+                    color: '#888',
+                    marginRight: 2,
+                  }} />
+                {title || ''} &nbsp;
+              </a>
               <p>{asin}</p>
             </div>
           </div>
@@ -396,7 +392,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     rel="noopener noreferrer" 
                     target="_blank" 
                     className={styles.title}>5星</a>
-                    : '5星'
+                    : <span className={styles.outerStat}>5星</span>
                 }
                 <Tooltip title={ `${Math.floor(starPart.five * 100 ) } %` }>
                   <Progress percent={ starPart.five * 100 } strokeColor="#ffaf4d" showInfo={false} />
@@ -409,7 +405,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     rel="noopener noreferrer" 
                     target="_blank" 
                     className={styles.title}>4星</a>
-                    : '4星'
+                    : <span className={styles.outerStat}>4星</span>
                 }
                 <Tooltip title={ `${Math.floor(starPart.four * 100) } %`}>
                   <Progress percent={ starPart.four * 100 } strokeColor="#ffaf4d" showInfo={false} />
@@ -424,7 +420,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     rel="noopener noreferrer" 
                     target="_blank" 
                     className={styles.title}>3星</a>
-                    : '3星'
+                    : <span className={styles.outerStat}>3星</span>
                 }
                 <Tooltip title={ `${Math.floor(starPart.three * 100) } %` }>
                   <Progress percent={ starPart.three * 100 } strokeColor="#ffaf4d" showInfo={false} />
@@ -437,7 +433,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                     rel="noopener noreferrer" 
                     target="_blank" 
                     className={styles.title}>2星</a>
-                    : '2星'
+                    : <span className={styles.outerStat}>2星</span>
                 }
                 <Tooltip title={ `${Math.floor(starPart.two * 100) } %` }>
                   <Progress percent={ starPart.two * 100 } strokeColor="#ffaf4d" showInfo={false} />
@@ -451,7 +447,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
                   rel="noopener noreferrer" 
                   target="_blank" 
                   className={styles.title}>1星</a>
-                  : '1星'
+                  : <span className={styles.outerStat}>1星</span>
               }
               <Tooltip title={ `${Math.floor(starPart.one * 100) } %` }>
                 <Progress percent={ starPart.one * 100 } strokeColor="#ffaf4d" showInfo={false} />
@@ -514,7 +510,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
     pagination: pageConfig,
     rowKey: () => keyCount++,
     scroll: { 
-      y: 'calc(100vh - 415px)', 
+      y: 'calc(100vh - 390px)', 
     },
     sortDirections: ['descend', 'ascend'] as ('ascend' | 'descend' | null)[],
     // eslint-disable-next-line

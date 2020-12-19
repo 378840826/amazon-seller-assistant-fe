@@ -8,14 +8,12 @@ import ShowData from '@/components/ShowData';
 
 interface IProps {
   data: Message.IFollowDataType;
-  currency: string;
 }
 
 // 情况1 2 3 4
 const Outer: React.FC<IProps> = (props) => {
   const {
     data,
-    currency,
   } = props;
 
   const [visible, setSivible] = useState<boolean>(true);
@@ -52,7 +50,7 @@ const Outer: React.FC<IProps> = (props) => {
               <p className={styles.method}>FBA</p>
               <p className={styles.price}>
                 <span className={styles.gatherText}>价格：</span>
-                {currency}{item.price}
+                <ShowData value={item.price} isCurrency/>
               </p>
               <p className={styles.freight}>
                 <span className={styles.text}>运费：</span>

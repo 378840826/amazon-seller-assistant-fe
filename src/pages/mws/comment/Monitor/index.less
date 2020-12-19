@@ -46,7 +46,7 @@
       padding: 0;
 
       &:global(.ant-table-column-has-sorters):hover {
-        background-color: #eee !important;
+        background-color: #fafafa !important;
       }
     }
 
@@ -54,6 +54,7 @@
       border-top: 1px solid transparent;
       padding-top: 0;
       padding-bottom: 0;
+      font-size: @font-size-sm !important;
     }
 
     tr:last-child {
@@ -194,6 +195,12 @@
       :global(.ant-progress-bg) {
         height: 10px !important;
         border-radius: 6px;
+      }
+
+      .outerStat {
+        min-width: 24px;
+        height: 24px;
+        line-height: 24px;
       }
 
       .title {

@@ -55,6 +55,7 @@ const History: React.FC = () => {
 
   // 调价记录列表
   const getList = useCallback((params = {}) => {
+    console.log(form.getFieldsValue());
     let payload = {
       headersParams: {
         StoreId,
@@ -63,8 +64,11 @@ const History: React.FC = () => {
       endTime: end3,
       size: pageSize,
     };
+
+    payload = Object.assign({}, payload, form.getFieldsValue(), params);
+    delete payload.rangepicker;
+
     setLoading(true);
-    payload = Object.assign({}, payload, params);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'ruleHistory/getHistory',
@@ -221,7 +225,7 @@ const History: React.FC = () => {
     {
       title: 'SKU',
       dataIndex: 'sku',
-      align: 'center',
+      align: 'left',
       width: 100,
     },
     {
@@ -257,7 +261,7 @@ const History: React.FC = () => {
     {
       title: '条件',
       dataIndex: 'triggerCondition',
-      align: 'center',
+      align: 'left',
       width: 300,
       render(val: string) {
         return <div className={styles.conditionContent}>
@@ -404,7 +408,7 @@ const History: React.FC = () => {
     <Form layout="inline" className={styles.header} form={form} onValuesChange={onValuesChange}>
       <Item name="code" className={styles.search}>
         <Search
-          
+          autoComplete="off"
           placeholder="输入标题、ASIN或SKU" 
           enterButton={<Iconfont type="icon-sousuo" />} 
           className="h-search"

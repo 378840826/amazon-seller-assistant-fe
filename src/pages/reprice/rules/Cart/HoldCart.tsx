@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './index.less';
-import { Iconfont, strToMoneyStr } from '@/utils/utils';
+import { Iconfont, strToMoneyStr, strToNaturalNumStr } from '@/utils/utils';
 import classnames from 'classnames';
 import {
   Form,
@@ -78,6 +78,10 @@ const HavaOpponent: React.FC<IProps> = props => {
 
   // 限制输入
   const limitedInput = (value: string) => {
+    if (currentShop.marketplace === 'JP') {
+      return strToNaturalNumStr(value);
+    }
+    
     return strToMoneyStr(value);
   };
 

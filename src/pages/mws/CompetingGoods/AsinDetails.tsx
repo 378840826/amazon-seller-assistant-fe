@@ -8,6 +8,7 @@ import {
 } from 'umi';
 import Empyt from './Empyt';
 import { Iconfont } from '@/utils/utils';
+import ShowData from '@/components/ShowData';
 
 interface IProps {
   style?: React.CSSProperties;
@@ -74,10 +75,10 @@ const AsinDetails: React.FC<IProps> = props => {
           卖家：
           <span className="seller-name">{valueTransition(asininfo.sellerName)}</span>
         </p>
-        <span className={styles.price}>{valueTransition(asininfo.price, true) }</span>
+        <span className={styles.price}><ShowData value={asininfo.price} isCurrency /></span>
         <p className={styles.freight} title={`运费：${valueTransition(asininfo.shipping, true)}`}>
           运费：
-          <span>{valueTransition(asininfo.shipping, true)}</span>
+          <span><ShowData value={asininfo.shipping} isCurrency /></span>
         </p>
         <Express method={asininfo.fulfillmentChannel} style={{
           paddingLeft: 10,

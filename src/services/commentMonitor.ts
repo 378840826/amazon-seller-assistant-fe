@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-06-03 15:33:11
- * @LastEditors: Huang Chao Yi
+ * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\services\commentMonitor.ts
  * 监控评价模块API
  */ 
@@ -51,7 +51,7 @@ export async function commentMonitorSettingsList(params: { headersParams: {} }) 
 // 获取建议ASIN  (搜索下拉框)
 export async function getSearchAsinList(params: { asin: string; headersParams: {} }) {
   return request('/api/mws/review/monitoring-settings/search/', {
-    params: { asin: params.asin },
+    params,
     data: { headersParams: params.headersParams },
   });
 }

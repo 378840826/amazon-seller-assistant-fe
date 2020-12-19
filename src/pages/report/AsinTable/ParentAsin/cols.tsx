@@ -13,6 +13,7 @@ import TableHeadMain from '../components/TableHeadMain';
 import TableHeadTwo from '../components/TableHeadTwo';
 import Deliver from '../components/Deliver';
 import Empty from '../components/Empty';
+import ShowData from '@/components/ShowData';
 
 import Summary from './Summary';
 import {
@@ -526,7 +527,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...totalSalesCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
+              <p><ShowData value={val} isCurrency isMoney /></p>
             </>;
           },
         },
@@ -558,7 +559,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...profitCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
+              <p><ShowData value={val} isCurrency isMoney /></p>
             </>;
           },
         },
@@ -582,7 +583,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...avgSellingPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
+              <p><ShowData value={val} isCurrency isMoney /></p>
             </>;
           },
         },
@@ -590,7 +591,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...avgCustomerPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
+              <p><ShowData value={val} isCurrency isMoney /></p>
             </>;
           },
         },
@@ -662,7 +663,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bSalesCol,
           render(val: number, row: AsinTable.IParentChildAsin) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
+              <p><ShowData value={val} isCurrency isMoney /></p>
               <p>{moneyFormat(row.b2bSalesProportion, 2, ',', '.', true)}%</p>
             </>;
           },
@@ -695,7 +696,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bAvgSellingPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
+              <p><ShowData value={val} isCurrency isMoney /></p>
             </>;
           },
         },
@@ -703,7 +704,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...b2bAvgCustomerPriceCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : currency + moneyFormat(val, 2, ',', '.', true) }</p>
+              <p><ShowData value={val} isCurrency isMoney /></p>
             </>;
           },
         },
@@ -711,7 +712,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
         dataIndex: string;
         render: any; // eslint-disable-line
       }[],
-      summary: () => <Summary currency={currency} total={total} parentCustomcol={parentCustomcol}/>,
+      summary: () => <Summary total={total} parentCustomcol={parentCustomcol}/>,
     };
     
     // 自定义列的

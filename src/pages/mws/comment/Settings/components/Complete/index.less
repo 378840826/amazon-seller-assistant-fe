@@ -1,0 +1,19 @@
+.downlistBox {
+  display: flex;
+}
+
+.downlist {
+  div:global(.ant-select-item[aria-selected=true]) {
+    font-weight: normal !important;
+  }
+}
+
+.optionItem {
+  .title {
+    width: 480px;
+    color: @link-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

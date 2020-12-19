@@ -1,15 +1,15 @@
 // 安全设定
 import React, { useEffect } from 'react';
 import styles from './index.less';
-import { strToMoneyStr } from '@/utils/utils';
 import { isEmptyObj } from '@/utils/huang';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, strToNaturalNumStr, strToMoneyStr } from '@/utils/utils';
 import {
   Form,
   Input,
   Select,
   Tooltip,
 } from 'antd';
+import { useSelector } from 'umi';
 
 interface IProps {
   getDataFn: (params: {}) => void;
@@ -23,6 +23,7 @@ const SecuritySettings: React.FC<IProps> = props => {
     initValues,
   } = props;
   const [form] = Form.useForm();
+  const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
 
   // 修改时、初始化值
   useEffect(() => {
@@ -47,6 +48,9 @@ const SecuritySettings: React.FC<IProps> = props => {
 
   // 限制输入
   const limitedInput = (value: string) => {
+    if (currentShop.marketplace === 'JP') {
+      return strToNaturalNumStr(value);
+    }
     return strToMoneyStr(value);
   };
  

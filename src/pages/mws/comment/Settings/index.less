@@ -52,6 +52,10 @@
     table {
       border: 1px solid #eee;
       border-bottom: 0;
+
+      tr:hover td {
+        background-color: #fafafa !important;
+      }
     }
 
     td {
@@ -150,5 +154,9 @@
         color: #009881;
       }
     }
+  }
+
+  :global(.ant-pagination) {
+    border-top: 1px solid @divider-line-color;
   }
 }

@@ -256,7 +256,7 @@ const Order: React.FC = () => {
       setTableLoading(false);
       console.error(err);
     });
-  }, [dispatch, shopId, dateRangeItem, statistic, currentAsin]);  // eslint-disable-line
+  }, [dispatch, shopId, dateRangeItem, statistic, currentAsin, chCondition]);  // eslint-disable-line
 
   // 折线图的数据请求
   const changeLineChart = (params = {}) => {
@@ -393,7 +393,7 @@ const Order: React.FC = () => {
       dataIndex: 'sales',
       align: 'right',
       render(value: number) {
-        return <ShowData value={value} isCurrency fillZero/>;
+        return <ShowData value={value} isCurrency/>;
       },
     },
     {
@@ -440,7 +440,7 @@ const Order: React.FC = () => {
       dataIndex: 'avgPrice',
       align: 'right',
       render(value: number) {
-        return <ShowData value={value} isCurrency fillZero/>;
+        return <ShowData value={value} isCurrency />;
       },
     },
     {
@@ -448,7 +448,7 @@ const Order: React.FC = () => {
       dataIndex: 'pct',
       align: 'right',
       render(value: number) {
-        return <ShowData value={value} isCurrency fillZero/>;
+        return <ShowData value={value} isCurrency />;
       },
     },
     {
@@ -549,6 +549,10 @@ const Order: React.FC = () => {
     },
     loading: tableLoading,
     summary: () => {
+      if (dataSource.length === 0) {
+        return;
+      }
+
       return <Total 
         obj={ aggregate as AsinOrder.ITotalType} 
         symbol={currency}

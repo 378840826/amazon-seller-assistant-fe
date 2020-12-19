@@ -14,7 +14,7 @@ import ReturnRatioComponent from './components/ReturnRatio';
 import StatisticComponent from './components/Statistic';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import Rate from '@/components/Rate';
-import { storageKeys, isEmptyObj, getRangeDate, toIndexFixed } from '@/utils/huang';
+import { storageKeys, isEmptyObj, getRangeDate } from '@/utils/huang';
 import { storage } from '@/utils/utils';
 import { handleTooltip } from './function';
 import moment from 'moment';

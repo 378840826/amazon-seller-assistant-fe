@@ -19,6 +19,7 @@ export const getAmazonBaseUrl = function (state: API.Site): string {
     FR: 'https://www.amazon.fr',
     ES: 'https://www.amazon.es',
     IT: 'https://www.amazon.it',
+    JP: 'https://www.amazon.co.jp', // 日本站
   };
   return urlDict[state];
 };
