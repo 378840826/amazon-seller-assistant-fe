@@ -30,7 +30,7 @@
 
       .ant-modal-body {
         font-size: 16px;
-        color: #666;
+        color: #222;
         padding-bottom: 15px;
       }
 
@@ -49,24 +49,45 @@
 }
 
 .__table {
+  border-bottom: 1px solid  #eee;
+
   .delete {
     margin-left: 20px;
+
+    &:hover {
+      color: #ff464f;
+    }
   }
 
   .update,
   .delete {
     color: #09c2a6;
     cursor: pointer;
+  }
 
+  .update {
     &:hover {
       color: #0084ff;
     }
+  }
+
+  .darkRow {
+    background-color: #fafafa;
+  }
+
+  .__switch {
+    transform: scale(0.818);
   }
 
   :global {
     .ant-table-body {
       border-left: 1px solid #eee;
       border-right: 1px solid #eee;
+    }
+
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      border-bottom: none;
     }
   }
 }

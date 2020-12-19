@@ -128,6 +128,7 @@ export default [
     routes: [
       { title: 'ASIN动态汇总', path: '/dynamic/asin-overview', component: './mws/AsinChange/summary' },
       { title: 'ASIN动态监控设定', path: '/dynamic/asin-monitor', component: './mws/AsinChange/monitor' },
+      { title: '关键词搜索排名监控', path: '/dynamic/rank-monitor', component: './mws/AsinChange/rank' },
       // 重定向
       { path: '/dynamic', redirect: '/dynamic/asin-overview' },
     ],

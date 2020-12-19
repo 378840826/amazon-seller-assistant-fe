@@ -92,6 +92,19 @@
             margin-top: 8px;
           }
 
+          .__upload_both {
+            display: flex;
+
+            .__upload_left {
+              width: calc(100% - 178px);
+              max-width: 620px;
+            }
+
+            .__upload_right {
+              width: 178px;
+            }
+          }
+
           :global {
             .ant-upload-list-item-error {
               .ant-upload-list-item-info {

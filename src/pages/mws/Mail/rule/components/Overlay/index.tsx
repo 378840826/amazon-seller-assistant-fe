@@ -133,7 +133,6 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
   };
 
   const onFinish = (values: API.IParams) => {
-    console.log('values:', values);
     const { rangeTime, skuList } = values;
     const start = Number(rangeTime[0].format('HH'));
     const end = Number(rangeTime[1].format('HH')); 
@@ -230,6 +229,7 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onSave }) => {
                 <Form.Item name="rangeTime">
                   <RangePicker
                     format="HH"
+                    dropdownClassName={styles.__rangePicker_hour}
                   />
                 </Form.Item>
               </Col>

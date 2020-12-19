@@ -40,8 +40,19 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, dispatch, request }) =
     render: (text, item) => {
       return (
         <div className={styles.__td_1}>
-          <Paragraph ellipsis className={styles.subject}>{item.subject}</Paragraph>
-          <Paragraph ellipsis={{ rows: 2 }} className={styles.content}>{item.content}</Paragraph>
+          <Paragraph 
+            title={item.subject} 
+            ellipsis 
+            className={styles.subject}>
+            {item.subject}
+          </Paragraph>
+          <Paragraph 
+            title={item.subject} 
+            ellipsis={{ rows: 2 }} 
+            className={styles.content}>
+            {item.content}
+          </Paragraph>
+         
         </div>
       );
     },

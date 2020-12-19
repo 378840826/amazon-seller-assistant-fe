@@ -4,6 +4,7 @@ import { Table, Typography } from 'antd';
 import ColumnOrderInfo from '../../../components/ColumnOrderInfo';
 import { ColumnProps, TablePaginationConfig } from 'antd/es/table';
 const { Paragraph } = Typography;
+import TableNotData from '@/components/TableNotData';
 interface ITablePage{
   msg: string;
   tableInfo: API.IParams;
@@ -157,8 +158,9 @@ const TablePage: React.FC<ITablePage> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={loading}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 258px)' }}
-        locale={{ emptyText: msg === '' ? 'Oops! 没有更多数据啦' : msg }}
+        scroll={{ y: 'calc(100vh - 258px)' }}
+        locale={{ emptyText: msg === '' ? <TableNotData hint="没找到相关数据"/> : 
+          <TableNotData hint={msg}/> }}
         dataSource={tableInfo.records}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {

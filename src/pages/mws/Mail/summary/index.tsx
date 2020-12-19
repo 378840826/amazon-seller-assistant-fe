@@ -4,6 +4,8 @@ import { connect } from 'umi';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { Table } from 'antd';
 import { ColumnProps } from 'antd/es/table';
+import TableNotData from '@/components/TableNotData';
+import classnames from 'classnames';
 
 interface ISummaryConnectProps extends IConnectProps{
   StoreId: string;
@@ -81,14 +83,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'statisticalTime',
       dataIndex: 'statisticalTime',
       width: 103,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.text}>{text}</div>
+            <div className={classnames(styles.text, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -97,14 +98,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'totalNumber',
       dataIndex: 'totalNumber',
       width: 62,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.text}>{text}</div>
+            <div className={classnames(styles.text, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -113,14 +113,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'automaticNumber',
       dataIndex: 'automaticNumber',
       width: 80,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.text}>{text}</div>
+            <div className={classnames(styles.text, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -129,14 +128,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'manualNumber',
       dataIndex: 'manualNumber',
       width: 74,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.text}>{text}</div>
+            <div className={classnames(styles.text, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -145,7 +143,6 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'successNumber',
       dataIndex: 'successNumber',
       width: 80,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
@@ -161,14 +158,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'automaticSuccessNumber',
       dataIndex: 'automaticSuccessNumber',
       width: 95,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.orange}>{text}</div>
+            <div className={classnames(styles.orange, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -177,14 +173,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'manualSuccessNumber',
       dataIndex: 'manualSuccessNumber',
       width: 107,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.orange}>{text}</div>
+            <div className={classnames(styles.orange, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -193,14 +188,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'failNumber',
       dataIndex: 'failNumber',
       width: 73,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.text}>{text}</div>
+            <div className={classnames(styles.text, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -209,14 +203,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'automaticFailNumber',
       dataIndex: 'automaticFailNumber',
       width: 107,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.text}>{text}</div>
+            <div className={classnames(styles.text, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -224,7 +217,6 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       title: '手动发送失败',
       key: 'manualFailNumber',
       dataIndex: 'manualFailNumber',
-      ellipsis: true,
       width: 94,
       align: 'center',
       render: (text) => {
@@ -232,7 +224,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.text}>{text}</div>
+            <div className={classnames(styles.text, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -247,7 +239,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.orange}>{text}</div>
+            <div className={classnames(styles.orange, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -262,7 +254,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.orange}>{text}</div>
+            <div className={classnames(styles.orange, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -271,14 +263,13 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
       key: 'sendingNowManualNumber',
       dataIndex: 'sendingNowManualNumber',
       width: 94,
-      ellipsis: true,
       align: 'center',
       render: (text) => {
         return (
           text === '' ?
             <div className="null_bar"></div>
             :
-            <div className={styles.orange}>{text}</div>
+            <div className={classnames(styles.orange, 'ellipsis_one')}>{text}</div>
         );
       },
     },
@@ -296,10 +287,11 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
         pagination={{ ...paginationProps }}
         loading={state.tableLoading}
         columns={columns}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 193px)' }}
+        scroll={{ y: 'calc(100vh - 193px)' }}
         dataSource={state.tableInfo.records}
         onChange={onTableChange}
-        locale={{ emptyText: state.msg === '' ? 'Oops! 没有更多数据啦' : state.msg }}
+        locale={{ emptyText: state.msg === '' ? <TableNotData hint="没找到相关数据"/> : 
+          <TableNotData hint={state.msg}/> }}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {
             return styles.darkRow;

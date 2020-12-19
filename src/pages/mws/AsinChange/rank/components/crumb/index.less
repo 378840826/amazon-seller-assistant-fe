@@ -1,0 +1,34 @@
+.bread {
+  display: flex;
+  justify-content: space-between;
+  line-height: 25px;
+  padding-top: 13px;
+  padding-bottom: 11px;
+
+  .left {
+    padding-left: 12px;
+    color: #333;
+    font-size: 16px;
+    position: relative;
+
+    &::before {
+      content: '';
+      clear: both;
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 4px;
+      height: 16px;
+      background-color: @primary-color;
+    }
+  }
+
+  .right {
+    color: @text-color;
+    font-size: 12px;
+
+    .number {
+      color: #0dc757;
+    }
+  }
+}

@@ -1,0 +1,58 @@
+.__popConfirm {
+  .braftClassName {
+    max-height: 328px;
+    min-height: 120px;
+    overflow: auto;
+    padding-top: 5px;
+  }
+
+  :global {
+    .ant-popover-message-title {
+      padding-left: 0;
+    }
+
+    .ant-popover-buttons {
+      margin-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        margin: 0;
+      }
+    }
+  }
+}
+
+.blue {
+  color: @btn-text-color;
+  cursor: pointer;
+
+  &:hover {
+    color: @link-color;
+  }
+
+  &.active {
+    color: @link-color;
+  }
+}
+
+.container {
+  background-color: #fff;
+  text-align: center;
+  width: 174px;
+
+  .top {
+    border: 1px solid @border-color-base;
+    border-radius: 4px;
+
+    .scroll {
+      :global {
+        .bf-container {
+          line-height: 24px;
+          text-align: left;
+          text-indent: 14px;
+        }
+      }
+    }
+  }
+}

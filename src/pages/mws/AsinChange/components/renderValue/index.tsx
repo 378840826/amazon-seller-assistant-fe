@@ -1,8 +1,8 @@
 import React from 'react';
 import LazyLoad from 'react-lazy-load';
-import { Link } from 'umi';
 import defaultImage from '@/assets/stamp.png';
 import { Dropdown } from 'antd';
+import classnames from 'classnames';
 import styles from './index.less';
 
 interface IRenderValue{
@@ -47,6 +47,11 @@ const RenderValue: React.FC<IRenderValue> = ({ text, record }) => {
       </>
     );
     
+  }
+  if (['changeTitle', 'changeProm', 'changeBP', 'changeDescription'].includes(record.changeType)){
+    return (
+      <div className={classnames(styles.gap, styles.left)}>{text}</div>
+    );
   }
   return (
     <div className={styles.gap}>{text}</div>

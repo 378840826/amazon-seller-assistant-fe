@@ -27,7 +27,7 @@ export const competitorHistoryRouter = '/competitor/history'; // 跟卖历史
 
 // ASIN总览
 export const asinPandectBaseRouter = '/asin/base'; // ASIN总览 - 基本信息
-export const asinPandectDynamicRouter = '/asin/dynamic'; // ASIN总览 - ASIN动态
+export const asinPandectDynamicRouter = '/asin/dt'; // ASIN总览 - ASIN动态
 export const asinPandectOrderRouter = '/asin/order'; // ASIN总览 - 订单解读
 export const asinPandectB2bRouter = '/asin/b2b'; // ASIN总览 - B2B
 export const asinPandectPpcRouter = '/asin/ppc'; // ASIN总览 - 广告表现

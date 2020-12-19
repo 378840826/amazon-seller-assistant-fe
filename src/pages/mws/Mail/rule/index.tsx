@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'umi';
-import { Table, Switch, Modal, message } from 'antd';
+import { Table, Switch, Modal } from 'antd';
 import styles from './index.less';
+import TableNotData from '@/components/TableNotData';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { ColumnProps } from 'antd/lib/table';
 import Overlay from './components/Overlay';
@@ -173,26 +174,25 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
       dataIndex: 'ruleName',
       align: 'center',
       width: 128,
-      ellipsis: true,
       render: (text) => {
         return (
           text === '' ? <div className="null_bar"></div>
             :
-            <span>{text}</span>
+            <div>{text}</div>
         );
       },
     },
     {
       title: '触发时间',
       dataIndex: 'triggerTime',
+      key: 'triggerTime',
       align: 'center',
       width: 245,
-      ellipsis: true,
       render: (text) => {
         return (
           text === '' ? <div className="null_bar"></div>
             :
-            <span>{text}</span>
+            <div>{text}</div>
         );
       },
     },
@@ -222,7 +222,7 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
         return (
           status === '' ? <div className="null_bar"></div>
             :
-            <Switch checked={status} 
+            <Switch checked={status} className={styles.__switch}
               onChange={(checked: boolean) => onChange(checked, record.id, record.key)} />
         );
       },
@@ -288,10 +288,16 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
         columns={columns}
         rowKey="id"
         loading={state.loading}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 100px)' }}
-        locale={{ emptyText: state.message === '' ? 'Oops! 没有更多数据啦' : state.message }}
+        scroll={{ y: 'calc(100vh - 100px)' }}
+        locale={{ emptyText: state.message === '' ? <TableNotData hint="没找到相关数据"/> : 
+          <TableNotData hint={state.message}/> }}
         dataSource={state.data}
         pagination={false}
+        rowClassName={(_, index) => {
+          if (index % 2 === 1) {
+            return styles.darkRow;
+          }
+        }}
       />
     </div>
   );

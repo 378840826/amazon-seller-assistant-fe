@@ -462,6 +462,7 @@ const GlobalModel: IGlobalModelType = {
           ruleAddSalesRouter,
           ruleAddCartRouter,
           ruleAddCompetitorRouter,
+          '/dynamic/rank-monitor',
         ];
         const isUnshow = unshownPageTitleUrl.some(path => path === pathname);
         dispatch({
