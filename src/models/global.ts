@@ -243,7 +243,7 @@ const GlobalModel: IGlobalModelType = {
         // 不需要绑定店铺的
         const exclude = [
           '/vip/instructions',
-          '/overview',
+          // '/overview',
           '/users',
           '/center',
           '/message',
@@ -251,6 +251,7 @@ const GlobalModel: IGlobalModelType = {
         ];
         const isExclude = exclude.some(url => pathname.includes(url));
         if (!isExclude) {
+          message.destroy();
           const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
           !pathname.includes('/shop/') && history.push(url);
         }
