@@ -11,6 +11,7 @@ export async function queryMyVip(params: API.IParams) {
 // 获取付款二维码
 export async function queryCodeUrl(params: API.IParams) {
   return request('/api/system/member/qr-code', {
+    method: 'POST',
     data: params,
     params,
   });
