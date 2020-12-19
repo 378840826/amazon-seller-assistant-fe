@@ -1,7 +1,7 @@
 /**
  * 功能页的店铺选择器
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'umi';
 import { Select } from 'antd';
 import { IConnectState } from '@/models/connect';
@@ -17,13 +17,13 @@ const ShopSelector: React.FC = () => {
   const loading = loadingEffect.effects['global/fetchShopList'];
   const shop = useSelector((state: IConnectState) => state.global.shop);
 
-  useEffect(() => {
-    const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
-    dispatch({
-      type: 'global/fetchShopList',
-      payload: { type },
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
+  //   dispatch({
+  //     type: 'global/fetchShopList',
+  //     payload: { type },
+  //   });
+  // }, [dispatch]);
 
   const handleChange = (value: string) => {
     dispatch({
