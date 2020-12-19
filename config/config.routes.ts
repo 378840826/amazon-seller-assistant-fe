@@ -49,6 +49,7 @@ export default [
   {
     path: '/message',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { path: '/message/all', component: './message/', title: '消息中心' },
       // 重定向
@@ -79,8 +80,9 @@ export default [
   {
     path: '/overview',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
-      { title: '数据大盘', path: '/overview', component: './UncompletedPage' },
+      { title: '数据大盘', path: '/overview', component: './UncompletedPage' }, // 数据大盘不需要店铺，可以抽出去
       { title: '店铺报告', path: '/overview/shop', component: './UncompletedPage' },
       { title: 'BI诊断', path: '/overview/bi', component: './BiBoard' },
     ],
@@ -90,6 +92,7 @@ export default [
   {
     path: '/product',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '商品列表', path: '/product/list', component: './mws/GoodsList' },
       { title: '错误报告', path: '/product/error-report', component: './mws/ErrorReport' },
@@ -103,7 +106,7 @@ export default [
   {
     path: '/asin',
     component: '../layouts/AsinPandectLayout',
-    wrappers: ['../layouts/AsinPandectLayout/guard.tsx'],
+    wrappers: ['../layouts/BasicLayout/guard.tsx', '../layouts/AsinPandectLayout/guard.tsx'],
     routes: [
       { title: 'ASIN总览', path: '/asin/base', component: './asinPandect/Base' },
       { title: 'ASIN总览', path: '/asin/dt', component: './asinPandect/Dynamic' },
@@ -121,6 +124,7 @@ export default [
   {
     path: '/dynamic',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: 'ASIN动态汇总', path: '/dynamic/asin-overview', component: './mws/AsinChange/summary' },
       { title: 'ASIN动态监控设定', path: '/dynamic/asin-monitor', component: './mws/AsinChange/monitor' },
@@ -134,6 +138,7 @@ export default [
   {
     path: '/order',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '订单列表', path: '/order', component: './mws/order/List' },
     ],
@@ -143,6 +148,7 @@ export default [
   {
     path: '/reprice',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       {
         path: ruleListRouter,
@@ -184,6 +190,7 @@ export default [
   {
     path: '/report',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: 'ASIN报表', path: '/report/asin-overview', component: './report/AsinTable' },
       { title: 'Business Rport导入', path: '/report/import', component: './businessRport/Import' },
@@ -195,6 +202,7 @@ export default [
   {
     path: '/replenishment',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '补货计划', path: '/replenishment', component: './mws/Replenishment' },
     ],
@@ -220,6 +228,7 @@ export default [
   {
     path: '/review',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '评论列表', path: '/review/list', component: './mws/comment/Monitor' },
       { title: '评论监控设定', path: '/review/monitor', component: './mws/comment/Settings' },
@@ -232,6 +241,7 @@ export default [
   {
     path: '/mail',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       {
         path: '/mail', component: './mws/Mail/components/Menu', routes: [
@@ -256,6 +266,7 @@ export default [
   {
     path: '/competitor',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '跟卖监控', path: '/competitor/monitor', component: './follow/Monitor' },
       { title: '跟卖列表', path: '/competitor/list', component: './follow/List' },
