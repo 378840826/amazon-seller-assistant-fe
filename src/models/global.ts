@@ -190,6 +190,7 @@ const GlobalModel: IGlobalModelType = {
         return;
       }
       const res = yield call(bindShop, { sellerId, storeName, token, marketplaces });
+      console.log(res, 'res');
       if (res.code === 200) {
         // 接口没有返回绑定成功的店铺，重新获取店铺列表
         yield put({
@@ -243,7 +244,7 @@ const GlobalModel: IGlobalModelType = {
         // 不需要绑定店铺的
         const exclude = [
           '/vip/instructions',
-          // '/overview',
+          '/overview',
           '/users',
           '/center',
           '/message',
@@ -251,7 +252,7 @@ const GlobalModel: IGlobalModelType = {
         ];
         const isExclude = exclude.some(url => pathname.includes(url));
         if (!isExclude) {
-          message.destroy();
+          // message.destroy();
           const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
           !pathname.includes('/shop/') && history.push(url);
         }
