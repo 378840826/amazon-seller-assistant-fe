@@ -381,6 +381,13 @@ const GlobalModel: IGlobalModelType = {
         }
       }
     },
+
+    // 当前店铺切换回切换之前的店铺
+    saveHistoryShop(state) {
+      const historyShop = { ...state.shop.current };
+      storage.set('currentShop', historyShop);
+      state.shop.current = historyShop;
+    },
   },
 
   subscriptions: {
@@ -461,6 +468,33 @@ const GlobalModel: IGlobalModelType = {
           type: 'switchShowPageTitle',
           payload: { isShow: !isUnshow },
         });
+      });
+    },
+
+    // 监听店铺是否已切换（多开标签页时切换店铺、另一标签页提示）
+    watchShop({ dispatch }) {
+      window.addEventListener('storage', e => {
+        const key = e.key;
+        if (key === 'currentShop') {
+          Modal.destroyAll();
+          confirm({
+            title: `店铺已切换！`,
+            okText: `刷新查看新店铺`,
+            cancelText: '继续浏览原店铺',
+            centered: true,
+            icon: null,
+            className: 'g-watch-shop-modal',
+            zIndex: 99999,
+            onOk() {
+              history.go();
+            },
+            onCancel() {
+              dispatch({
+                type: 'saveHistoryShop',
+              });
+            },
+          });
+        }
       });
     },
   },
