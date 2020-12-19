@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import LinkHeader from '../components/LinkHeader';
 import styles from './index.less';
@@ -38,6 +39,8 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
   };
 
   const onSearch = (value: string) => {
+    console.log('onSearch:', value);
+    
     setSendState(state => ({
       ...state,
       asin: value.trim(),
@@ -99,9 +102,14 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
       <div className={styles.other_container}>
         <Search 
           size="middle" 
+          allowClear
           className={styles.__search_input}
           placeholder="输入标题、ASIN、SKU" 
-          onSearch={value => onSearch(value)} 
+          onSearch={(value, event) => {
+            if (!event?.['__proto__']?.type){
+              onSearch(value);
+            }
+          }}
           disabled={state.tableLoading}
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>}
           style={{ width: '280px' }}

@@ -2,6 +2,12 @@
 .custom_table {
   .darkRow {
     background-color: #fafafa;
+
+    :global {
+      td {
+        background-color: #fafafa;
+      }
+    }
   }
 
   .keyword {
@@ -22,12 +28,8 @@
     transform: scale(0.818);
   }
 
-  .__naturalRanking {
-    :global {
-      .ant-table-column-sorters {
-        padding-right: 16px;
-      }
-    }
+  .time {
+    white-space: break-spaces;
   }
 
   :global {
@@ -55,6 +57,21 @@
     .ant-table-tbody > tr > td {
       border-bottom: none;
       padding: 0;
+    }
+
+    .ant-table-body {
+      border-left: 1px solid #e5e5e5;
+      border-right: 1px solid #e5e5e5;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .ant-table-content {
+      border-bottom: 1px solid #e5e5e5;
+
+      .ant-table-expanded-row-fixed {
+        border-left: 1px solid #e5e5e5;
+        border-right: 1px solid #e5e5e5;
+      }
     }
   }
 }

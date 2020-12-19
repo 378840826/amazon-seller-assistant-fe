@@ -18,7 +18,8 @@
 }
 
 .addBtnWrap {
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
   padding-bottom: 16px;
 
   .AddAccount {
@@ -31,6 +32,16 @@
           width: 110px;
         }
       }
+    }
+  }
+
+  .left_number {
+    color: @text-color;
+    font-size: @font-size-sm;
+    line-height: 30px;
+
+    .green {
+      color: @success-color;
     }
   }
 }

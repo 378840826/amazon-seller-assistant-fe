@@ -1,10 +1,9 @@
 .__popConfirm {
-  background-color: #fff;
-
   .braftClassName {
     max-height: 328px;
     min-height: 120px;
     overflow: auto;
+    padding-top: 5px;
   }
 
   :global {
@@ -47,9 +46,12 @@
     border-radius: 4px;
 
     .scroll {
-      div {
-        line-height: 24px;
-        text-align: center;
+      :global {
+        .bf-container {
+          line-height: 24px;
+          text-align: left;
+          text-indent: 14px;
+        }
       }
     }
   }

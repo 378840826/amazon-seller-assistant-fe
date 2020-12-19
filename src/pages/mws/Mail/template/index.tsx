@@ -5,6 +5,8 @@ import styles from './index.less';
 import { ColumnProps } from 'antd/lib/table';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import Overlay from './components/Overlay';
+import TableNotData from '@/components/TableNotData';
+
 const { Paragraph } = Typography;
 
 
@@ -175,7 +177,6 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       dataIndex: 'templateType',
       align: 'center',
       width: 180,
-      ellipsis: true,
       render: (text) => {
         return (
           text === '' ? <div className="null_bar"></div>
@@ -189,7 +190,6 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
       dataIndex: 'templateName',
       align: 'center',
       width: 110,
-      ellipsis: true,
       render: (text) => {
         return (
           text === '' ? <div className="null_bar"></div>
@@ -288,8 +288,9 @@ const MailTemplate: React.FC<IMailTemplate> = ({ StoreId, dispatch }) => {
         columns={columns}
         rowKey="id"
         loading={state.loading}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 100px)' }}
-        locale={{ emptyText: state.message === '' ? 'Oops! 没有更多数据啦' : state.message }}
+        scroll={{ y: 'calc(100vh - 100px)' }}
+        locale={{ emptyText: state.message === '' ? <TableNotData hint="没找到相关数据"/> : 
+          <TableNotData hint={state.message}/> }}
         dataSource={state.data}
         pagination={false}
         rowClassName={(_, index) => {

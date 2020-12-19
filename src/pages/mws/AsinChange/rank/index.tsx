@@ -147,7 +147,7 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch }) => {
             loading: false,
             tableInfo: {},
             remainingTasksNumber: 0,
-            tableMessage: res.message,
+            tableMessage: res.message || '没找到相关数据',
           }));
         }
       },
@@ -174,6 +174,7 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch }) => {
             toggleChange={toggleChange}
             StoreId={StoreId}
             dispatch={dispatch}
+            fetchList={fetchList}
           />
           <TablePage
             onTableChange={onTableChange}

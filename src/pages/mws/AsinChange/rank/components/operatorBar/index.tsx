@@ -49,10 +49,15 @@ const OperatorBar: React.FC<IOperatorBar> = ({
       <div className={styles.search_container}>
         <Search 
           size="middle" 
+          allowClear
           className={styles.search_input}
-          placeholder="订单编号、标题、ASIN、SKU、发件人邮箱" 
+          placeholder="输入标题、ASIN、SKU或关键词" 
           defaultValue={searchTerms}
-          onSearch={value => onSearch(value)} 
+          onSearch={(value, event) => {
+            if (!event?.['__proto__']?.type){
+              onSearch(value);
+            }
+          }}
           disabled={loading}
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>} />
       </div>

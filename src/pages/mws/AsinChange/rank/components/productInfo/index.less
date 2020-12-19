@@ -2,6 +2,7 @@
 .single_orderInfo {
   display: flex;
   align-items: center;
+  padding-right: 20px;
 
   & + .single_orderInfo {
     border-top: 1px solid #d9d9d9;
@@ -50,7 +51,12 @@
       display: flex;
       justify-content: space-between;
       text-indent: 12px;
-      color: @text-color;
+      color: #00c6a5;
+      cursor: pointer;
+
+      &:hover {
+        color: #0083ff;
+      }
     }
   }
 }

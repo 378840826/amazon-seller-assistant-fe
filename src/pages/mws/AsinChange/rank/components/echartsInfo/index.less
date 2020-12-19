@@ -1,6 +1,16 @@
 .__echarts_info {
   .container {
+    :global {
+      .null_bar {
+        margin-right: 20px;
+      }
+    }
+
     .rank {
+      margin-right: 10px;
+    }
+
+    .change0 {
       margin-right: 10px;
     }
 
@@ -35,26 +45,42 @@
         color: @primary-color;
       }
     }
+
+    .__pages {
+      color: #888;
+      font-size: 12px;
+      margin-right: 26px;
+    }
   }
 }
 
 .modalWrapper {
   :global {
+    .ant-modal {
+      padding-bottom: 0;
+    }
+
     .ant-modal-body {
-      padding: 20px 0 0 0;
+      padding: 15px 0 0 0;
     }
   }
 }
 
-.react_for_echarts {
-  height: 348px;
-}
-
 .title_checkbox {
-  display: flex;
   padding-left: 30px;
   padding-right: 30px;
-  justify-content: space-between;
+
+  .title_rank_font {
+    font-size: 16px;
+    color: #222;
+    line-height: 30px;
+    text-align: left;
+    padding-bottom: 6px;
+  }
+
+  .__ul_select {
+    text-align: right;
+  }
 
   ul {
     display: inline-block;

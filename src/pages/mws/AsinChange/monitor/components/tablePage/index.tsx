@@ -5,6 +5,7 @@ import { Link, connect } from 'umi';
 import ColumnInfo from '../../../components/columnMonitorInfo';
 import { ColumnProps, TablePaginationConfig } from 'antd/es/table';
 import { IConnectState, IConnectProps } from '@/models/connect';
+import TableNotData from '@/components/TableNotData';
 
 interface ITablePageProps extends IConnectProps{
   tableInfo: API.IParams;
@@ -126,9 +127,12 @@ const TablePage: React.FC<ITablePageProps> = ({
         loading={loading}
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 271px)' }}
+        scroll={{ y: 'calc(100vh - 271px)' }}
         dataSource={tableInfo.records}
-        locale={{ emptyText: tableErrorMsg === '' ? 'Oops! 没有更多数据啦' : tableErrorMsg }}
+        locale={{
+          emptyText: tableErrorMsg === '' ? <TableNotData hint="没找到相关数据"/> : 
+            <TableNotData hint={tableErrorMsg}/>, 
+        }}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {
             return styles.dark_row;

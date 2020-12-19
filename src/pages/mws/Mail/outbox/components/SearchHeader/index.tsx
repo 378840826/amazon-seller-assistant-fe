@@ -114,9 +114,14 @@ const SearchHeader: React.FC<ISearchHeader> = ({
       <div className={styles.search_container}>
         <Search 
           size="middle" 
+          allowClear
           className="__search_input"
           placeholder="订单编号、标题、ASIN、SKU、发件人邮箱" 
-          onSearch={value => onSearch(value)} 
+          onSearch={(value, event) => {
+            if (!event?.['__proto__']?.type){
+              onSearch(value);
+            }
+          }}
           disabled={tableLoading}
           enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>} />
       </div>

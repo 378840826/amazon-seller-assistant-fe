@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Modal, Button, Form, Input } from 'antd';
+import { Modal, Button, Form, Input, message } from 'antd';
 import { validate } from '@/utils/utils';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { ISubModelState } from '@/models/sub';
@@ -32,6 +32,9 @@ interface IStoreListConnectProps extends IConnectProps{
 const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch }){
 
   const storeList = sub.storeList;
+  const userList = sub.userList;
+  console.log('userList:', userList);
+  
   const [status, setStatus] = useState<IStatus>({ 
     width: 532,
     closable: false, //dialog的头部关闭图案消失
@@ -54,6 +57,10 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
   };
 
   const onOpen = () => {
+    if (userList.length >= 10){
+      message.error('当前会员等级剩余可添加子账号:0个');
+      return;
+    }
     setStatus( (status) => {
       return {
         ...status,
@@ -94,9 +101,17 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
     dispatch({
       type: 'sub/addUser',
       payload: params,
-      callback: (res: { code: number }) => {
+      callback: (res: { code: number; message: string }) => {
         if (res.code === 200){
           handleCancel();
+        } else {
+          setStatus((status) => ({
+            ...status,
+            confirmLoading: false,
+          }));
+          Modal.error({
+            content: res.message, centered: true, 
+          });
         }
       },
     });
@@ -203,12 +218,9 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
               <Input.Password autoComplete="new-password" />
             </Form.Item>
             <Form.Item name="checkboxs" label="负责店铺：">
-              
-              <StoreList checkedList={status.checkedIndexList} checkboxChange={checkboxChange}/>
-               
+              <StoreList checkedList={status.checkedIndexList} 
+                checkboxChange={checkboxChange}/>       
             </Form.Item>
-           
-
             <Form.Item {...tailLayout}>
               <Button htmlType="button" disabled={status.confirmLoading} onClick={handleCancel} className="__cancel">取消</Button>
               <Button type="primary" htmlType="submit" loading={status.confirmLoading} className="__save">保存</Button>
@@ -216,6 +228,9 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
           </Form>
         </Modal>
       </div>  
+      <div className={styles.left_number}>
+            剩余可添加子账号:<span className={styles.green}>{10 - userList.length}个</span>
+      </div>
     </div>
   );
 };

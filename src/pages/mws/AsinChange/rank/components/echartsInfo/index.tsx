@@ -11,12 +11,19 @@ const myLabel = {
   show: 'true',
   position: 'inside',
   formatter: '{b}',
+  color: '#fff',
+  borderColor: '#fff',
 };
 interface IEchartsInfo{
   StoreId: string;
   id: number;
-  item: API.IParams;
+  item: IItem | string;
   type: string;
+}
+interface IItem{
+  ranking: number;
+  rankingChange: number;
+  pages: number | string;
 }
 let echartsReact: ReactEcharts | null;
 
@@ -27,9 +34,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
   type,
 
 }) => {
-  const dispatch = useDispatch();
-  const { ranking, rankingChange } = item;
-  
+  const dispatch = useDispatch(); 
   const [state, setState] = useState({
     visible: false,
     cycle: 3, //默认选中3天
@@ -42,7 +47,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
     },
     color: ['#49B5FF', '#ffc279'],
     grid: {
-      top: 50,
+      top: 45,
       left: 30,
       right: 30,
       bottom: 20,
@@ -77,7 +82,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
       type: 'time',
       axisLine: {
         lineStyle: {
-          color: '#999', //左边线的颜色
+          color: '#ccc', //左边线的颜色
         },
       },
       axisLabel: {
@@ -152,6 +157,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
               normal: myLabel,
               emphasis: myLabel,
             },
+            animation: false,
           };
           type === 'natural' ? Object.assign(options, option, { series: [series1, series2] })
             :
@@ -195,36 +201,54 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
     <>
       <div className={styles.__echarts_info}>
         <div className={styles.container}>
-          <span className={styles.rank}>{ranking}</span>
-          {rankingChange === 0 ? <span className={styles.change}>0</span>
-            : <span className={rankingChange > 0 ? styles.up : styles.down}>
-              <span className={styles.rankingChange}>{Math.abs(rankingChange)}</span>
-              <Iconfont type="icon-xiajiang" className={styles.arrow} />
-            </span>}
-          <span><Iconfont onClick={showModal} className={classnames(styles.zhexiantu, 'zhexiantu')} type="icon-zhexiantu"/></span>
+          { item === '' ? <>
+            <div className="null_bar"></div>
+            <span><Iconfont onClick={showModal} className={classnames(styles.zhexiantu, 'zhexiantu')} type="icon-zhexiantu"/></span>
+          </>
+            :
+            <>
+              <div>
+                <span className={styles.rank}>{(item as IItem).ranking}</span>
+                {(item as IItem).rankingChange === 0 ? <span className={styles.change0}>0</span>
+                  : <span className={(item as IItem).rankingChange > 0 ? styles.up : styles.down}>
+                    <span className={styles.rankingChange}>
+                      {Math.abs((item as IItem).rankingChange)}
+                    </span>
+                    <Iconfont type="icon-xiajiang" className={styles.arrow} />
+                    
+                  </span>}
+                <span><Iconfont onClick={showModal} className={classnames(styles.zhexiantu, 'zhexiantu')} type="icon-zhexiantu"/></span>
+              </div>
+              {(item as IItem).pages === '' ? '' : <div className={styles.__pages}>第{(item as IItem).pages}页</div>}
+            </>
+          }
+          
           
         </div>
       </div>
       <Modal 
+        centered
+        closable={true}
         visible={state.visible}
-        closable={false}
         width={1034}
         footer={null}
         onCancel={handleCancel}
         wrapClassName={styles.modalWrapper}
       >
         <div className={styles.title_checkbox}>
-          <div>搜索结果排名</div>
-          <ul>{[3, 7, 30].map((item) => {
-            return (
-              <li key={item} onClick={() => onCycleChange(item)} className={item === state.cycle ? styles.active : ''}>{item}天</li>
-            );
-          })}</ul>
+          <div className={styles.title_rank_font}>搜索结果排名</div>
+          <div className={styles.__ul_select}>
+            <ul>{[3, 7, 30].map((item) => {
+              return (
+                <li key={item} onClick={() => onCycleChange(item)} className={item === state.cycle ? styles.active : ''}>{item}天</li>
+              );
+            })}</ul>
+          </div>
         </div>
         {
           state.visible && 
           <ReactEcharts
-            style={{ height: '314px' }}
+            style={{ height: '419px' }}
             option={getOption()}
             onChartReady={onChartReady}
             loadingOption={loadingOption()}

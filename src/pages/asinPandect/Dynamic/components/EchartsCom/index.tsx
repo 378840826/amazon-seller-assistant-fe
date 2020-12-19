@@ -393,11 +393,9 @@ const EchartsCom: React.FC<IEchartsCom> = ({
       },
       grid: {
         top: 87,
-        
         left: 60,
         right: 60,
-        bottom: 0,
-        
+        bottom: 10,
         containLabel: true,
       },
       legend: {
@@ -460,7 +458,7 @@ const EchartsCom: React.FC<IEchartsCom> = ({
   //echarts的属性
   const echartsProps = {
     ref: refEcharts,
-    style: { width: '100%', height: '414px' },
+    style: { width: '100%', height: '434px' },
     option: getOption(),
     notMerge: false,
     loadingOption: loadingOption(),

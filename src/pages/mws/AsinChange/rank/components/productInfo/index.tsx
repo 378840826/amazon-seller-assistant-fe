@@ -24,7 +24,7 @@ const ColumnOrderInfo: React.FC<IColumnOrderProps> = ({ item, className }) => {
       </div> 
       <div className={styles.column_img_right}>
         <div className={styles.link_part}>
-          <Paragraph ellipsis className={styles.typography}>
+          <Paragraph title={item.title} ellipsis className={styles.typography}>
             <Iconfont className={styles.icon_link} type="icon-lianjie"/>
             <a onClick={(e) => e.stopPropagation()} href={item.titleLink} target="_blank" rel="noreferrer">
               <span>{item.title}</span>
