@@ -8,8 +8,6 @@ import EchartsInfo from '../echartsInfo';
 import TableNotData from '@/components/TableNotData';
 import SkuInfo from '../skuInfo';
 import { Iconfont, toThousands } from '@/utils/utils';
-import classnames from 'classnames';
-
 interface ITablePage{
   loading: boolean;
   tableInfo: API.IParams;

@@ -1,4 +1,3 @@
-import { parse } from 'querystring';
 import request from '@/utils/request';
 //asin动态汇总列表
 export function getSummaryList(params: API.IParams){

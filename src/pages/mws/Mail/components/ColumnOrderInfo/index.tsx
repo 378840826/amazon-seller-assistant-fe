@@ -2,7 +2,7 @@ import React from 'react';
 import LazyLoad from 'react-lazy-load';
 import defaultImage from '@/assets/stamp.png';
 import styles from './index.less';
-import { Typography, Tooltip } from 'antd';
+import { Typography } from 'antd';
 const { Paragraph } = Typography;
 import { Iconfont } from '@/utils/utils';
 

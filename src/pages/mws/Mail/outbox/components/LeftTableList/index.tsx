@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Tooltip } from 'antd';
+import { Table } from 'antd';
 import { connect } from 'umi';
 
 import { ColumnProps, TablePaginationConfig } from 'antd/es/table';

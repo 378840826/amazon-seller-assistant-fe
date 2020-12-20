@@ -1,6 +1,5 @@
 import React from 'react';
 import LazyLoad from 'react-lazy-load';
-import { Link } from 'umi';
 import defaultImage from '@/assets/stamp.png';
 import { Dropdown } from 'antd';
 import classnames from 'classnames';

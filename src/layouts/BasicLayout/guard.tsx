@@ -17,7 +17,7 @@ const Guard: React.FC = (props) => {
     if (currentShop.id === undefined ) {
       const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
       const url = type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-      history.push(url);
+      location.pathname === url ? '' : history.push(url);
     }
   }, [currentShop]);
 
