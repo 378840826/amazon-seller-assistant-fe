@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-10-16 16:43:26
- * @LastEditors: Please set LastEditors
+ * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\services\adinTable.ts
  * 
  * ASIN报表总览

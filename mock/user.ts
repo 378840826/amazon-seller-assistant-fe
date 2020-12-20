@@ -24,7 +24,7 @@ export default {
             { functionName: '广告授权店铺', frequency: 0 },
             { functionName: '子账号', frequency: 0 },
             { functionName: '智能调价', frequency: 0 },
-            { functionName: 'ASIN报表导出', frequency: 0 },
+            { functionName: 'ASIN总览报表导出', frequency: 0 },
             { functionName: 'ASIN动态监控', frequency: 0 },
             { functionName: '跟卖监控', frequency: 0 },
             { functionName: 'Review监控', frequency: 0 },

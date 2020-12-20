@@ -19,7 +19,6 @@ import {
   useDispatch,
   useSelector,
 } from 'umi';
-import { IConnectState } from '@/models/connect';
 
 interface IProps {
   successCallback: () => void; // 添加成功后的回调
@@ -28,7 +27,6 @@ interface IProps {
 const { Option } = AutoComplete;
 const Complete: React.FC<IProps> = ({ successCallback }) => {
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
-  const functionCount = useSelector((state: IConnectState) => state.user.currentUser.memberFunctionalSurplus.find(item => item.functionName === '跟卖监控')?.frequency || 0);  
 
   const dispatch = useDispatch();
 
@@ -36,7 +34,6 @@ const Complete: React.FC<IProps> = ({ successCallback }) => {
   const [addBtnLoading, setAddBtnLoading] = useState<boolean>(false); // 添加ASIN时给添加按钮加个状态
   const [searchLoading, setSearchLoading] = useState<boolean>(false); // true表示正在搜索下拉列表的内容
   const [options, setOptions] = useState<{ asin: string; title: string }[]>([]);
-
 
   // 下拉列表数据请求
   const request = useCallback(value => {
@@ -66,11 +63,6 @@ const Complete: React.FC<IProps> = ({ successCallback }) => {
   
   // 将ASIN添加到数据库
   const addAsinRequest = useCallback((asin: string) => {
-    if (functionCount <= 0 ) {
-      message.error(`当前会员等级剩余可添加ASIN：${functionCount}个`);
-      return;
-    }
-
     if (asin.trim() === '') {
       message.error('ASIN不能为空!');
       return;
@@ -95,13 +87,6 @@ const Complete: React.FC<IProps> = ({ successCallback }) => {
       if (code === 200) {
         message.success(msg || '添加成功！');
         successCallback();
-
-        dispatch({
-          type: 'user/updateMemberFunctionalSurplus',
-          payload: {
-            functionName: '跟卖监控',
-          },
-        });
       } else {
         message.error(msg || '添加失败！');
       }
@@ -109,7 +94,7 @@ const Complete: React.FC<IProps> = ({ successCallback }) => {
       setAddBtnLoading(false);
       message.error(err || '添加失败!');
     });
-  }, [dispatch, currentShop, successCallback, functionCount]);
+  }, [dispatch, currentShop, successCallback]);
 
   const debounceRequest = useMemo(() => debounce(request, 500), [request]);
 
