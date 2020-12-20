@@ -16,26 +16,22 @@ import styles from './index.less';
 import { Table, message } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import { connect } from 'dva';
-import { useDispatch, useLocation, useSelector, Link } from 'umi';
+import { useDispatch, useSelector, Link } from 'umi';
 import { Iconfont, getAmazonBaseUrl } from '@/utils/utils';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 import GoodsImg from '@/pages/components/GoodsImg';
 import Toolbar from './components/Toolbar';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Form } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
-import { getRangeDate } from '@/utils/huang';
 import { asinPandectBaseRouter } from '@/utils/routes';
 import ShowData from '@/components/ShowData';
 
-let hisrotyRequest = {};// 保存所有筛选信息
 const OrderList: React.FC = () => {
   const dispatch = useDispatch();
-  const location = useLocation() as MwsOrderList.ILocation;
-  const { start: startDate, end: endDate } = getRangeDate(130, false);
-  const [startTime] = useState<string>(startDate); // 日历默认开始日期
-  const [endTime] = useState<string>(endDate); // 日历默认结束日期
+  const [form] = Form.useForm();
+
   const [tableLoadingStatus, setTableLoadingStatus] = useState<boolean>(true); // 表格是否显示loading
   const [dataSource, setDataSource] = useState<[]>([]); // 表格数据
   const [pageTotal, setPageTotal] = useState<number>(0); // 分页数量
@@ -43,35 +39,29 @@ const OrderList: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   let rowNumber = 0; // 行key
-  const { asin = '', buyer = '' } = location.query as {
-    asin: string;
-    buyer: string;
-  };
 
-  const handleRequest = useCallback((params = {}) => {
-    let obj: any = { // eslint-disable-line
-      current: pageCurrent,
-      size: pageSize,
-      startTime,
-      endTime,
-      headersParams: {
-        StoreId: currentShop.id,
-      },
-    };
+  const handleParams = useCallback(() => {
+    const params = form.getFieldsValue();
+    params.startTime = moment(params.rangepicker[0]).format('YYYY-MM-DD');
+    params.endTime = moment(params.rangepicker[1]).format('YYYY-MM-DD');
+    delete params.rangepicker;
+    return params;
+  }, [form]);
 
-    obj.asinRelatedSearch = asin;
-    obj.buyerRelatedSearch = buyer;
-
-    obj = Object.assign({}, obj, params, hisrotyRequest);
-    return obj;
-  }, [currentShop, asin, buyer, startTime, endTime]); // eslint-disable-line
 
   // 请求体
-  const requestFn = useCallback((requestData = handleRequest()) => {
+  const requestFn = useCallback((params = {}) => {
     if (Number(currentShop.id) === -1) {
       return;
     } 
-    const payload = requestData;
+    const data = {
+      headersParams: {
+        StoreId: currentShop.id,
+      },
+      current: pageCurrent,
+      size: pageSize,
+    };
+    const payload = Object.assign(data, handleParams(), params);
     setTableLoadingStatus(true);
     new Promise((resolve, reject) => {
       dispatch({
@@ -98,31 +88,29 @@ const OrderList: React.FC = () => {
     }).catch(() => {
       setTableLoadingStatus(false);
     });
-  }, [dispatch, currentShop, handleRequest]);
+  }, [dispatch, currentShop]);// eslint-disable-line
 
-  // 接收工具框(子组件)的参数并重新请求
-  const filtrateFn = (requestData: {}) => {
-    setTableLoadingStatus(true);
-
-    hisrotyRequest = Object.assign({}, handleRequest(), hisrotyRequest, requestData);
-
-    // 筛选掉单选框里面的不限选择
-    // for (const key in hisrotyRequest ) {
-    //   const item = hisrotyRequest[key]; // 值
-    //   if (item === '') {
-    //     delete hisrotyRequest[key];
-    //   }
-    // }
-    setPageCurrent(1); 
-    setPageSize(20);
-    requestFn(hisrotyRequest);
-  };
-  
   // 首次 请求表格信息
   useEffect(() => {
-    setTableLoadingStatus(true);
     requestFn();
   }, [dispatch, requestFn]);
+
+  // 字段变化
+  const fieldChange = (changedValues: any) => { // eslint-disable-line
+    if (changedValues.asinRelatedSearch
+      || changedValues.asinRelatedSearch === ''
+      || changedValues.buyerRelatedSearch
+      || changedValues.buyerRelatedSearch === ''
+    ) {
+      return;
+    }
+    requestFn();
+  };
+
+  // 搜索或者回车时
+  const onFinish = () => {
+    requestFn();
+  };
 
   // 标题头部
   const rowColumns = (
@@ -211,10 +199,9 @@ const OrderList: React.FC = () => {
     showSizeChanger: true,
     showTotal: (total: number) => `共 ${total} 个`,
     onChange(current: number, size: number | undefined){
-      console.log(current, pageSize);
       setPageCurrent(current);
       setPageSize(size as number);
-      requestFn(Object.assign({}, handleRequest(), hisrotyRequest, { current, size }));
+      requestFn(Object.assign({}, { current, size }));
     },
     onShowSizeChange(current: number, size: number | undefined){
       console.log(current, size,);
@@ -224,14 +211,14 @@ const OrderList: React.FC = () => {
 
   return (
     <div className={styles.order_list} key="table">
-      <Toolbar handleFiltarte={filtrateFn} />
+      <Toolbar form={form} fieldChange={fieldChange} onFinish={onFinish}/>
       <ConfigProvider locale={zhCN}>
         <Table 
           {...tableConfig}
           pagination={pageConfig}
           className={styles.table_style}
           id="id-table"
-          scroll={{ y: 'calc(100vh - 360px)' }}
+          scroll={{ y: 'calc(100vh - 355px)' }}
           columns = {
             [{
               title: rowColumns,
