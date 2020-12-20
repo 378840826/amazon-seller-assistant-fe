@@ -16,6 +16,7 @@ import {
   Input,
   Radio,
   Select,
+  message,
 } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import { Iconfont } from '@/utils/utils';
@@ -56,7 +57,8 @@ const History: React.FC = () => {
   // 调价记录列表
   const getList = useCallback((params = {}) => {
     console.log(form.getFieldsValue());
-    let payload = {
+    const toolbarParams = form.getFieldsValue();
+    let payload: any = { // eslint-disable-line
       headersParams: {
         StoreId,
       },
@@ -65,7 +67,9 @@ const History: React.FC = () => {
       size: pageSize,
     };
 
-    payload = Object.assign({}, payload, form.getFieldsValue(), params);
+    payload = Object.assign({}, payload, toolbarParams, params);
+    payload.startTime = moment(toolbarParams.rangepicker[0]).format('YYYY-MM-DD');
+    payload.endTime = moment(toolbarParams.rangepicker[1]).format('YYYY-MM-DD');
     delete payload.rangepicker;
 
     setLoading(true);
@@ -80,7 +84,11 @@ const History: React.FC = () => {
       setLoading(false);
       const {
         data,
+        code,
+        message: msg,
       } = datas as {
+        message: string;
+        code: number;
         data: {
           records: RuleHistory.IRecord[];
           current: number;
@@ -89,13 +97,19 @@ const History: React.FC = () => {
         };
       };
 
-      setCurrent(data.current);
-      setPagesize(data.size);
-      setTotal(data.total);
-
-      if (data && data.records) {
-        setDataSource(data.records);
+      if (code === 200) {
+        setCurrent(data.current);
+        setPagesize(data.size);
+        setTotal(data.total);
+  
+        if (data && data.records) {
+          setDataSource(data.records);
+        }
+      } else {
+        message.error(msg || '列表加载失败');
       }
+
+      
     });
   }, [dispatch, StoreId, start3, end3]); // eslint-disable-line
 
@@ -440,6 +454,7 @@ const History: React.FC = () => {
 
       <div className={classnames(styles.conditions)} style={{
         visibility: selectrule === '' || selectrule === null ? 'hidden' : 'visible',
+        display: selectrule === '' || selectrule === null ? 'none' : 'flex',
       }}>
         <span className="text">
           条件：

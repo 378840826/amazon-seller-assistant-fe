@@ -91,7 +91,9 @@ declare namespace MwsOrderList {
 
   // toolbar 组件的回调函数
   interface IToolbarProps {
-    handleFiltarte: (param) => void;
+    form: any; // eslint-disable-line
+    fieldChange: (changeField: {}) => void;
+    onFinish: () => void;
   }
 
   interface IRequestDatas {

@@ -73,7 +73,7 @@ const AddSales: React.FC = () => {
     rateBasis: '',
     action: upDownUnchange[0].value,
     unit: 'value',
-    value: '',
+    value: currentShop.marketplace === 'JP' ? '5' : '0.5',
   };
   const [conditions, setConditions] = useState<Rules.ISalesConditions[]>([
     {

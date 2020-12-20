@@ -651,7 +651,7 @@ const SalesConditionItem: React.FC<IProps> = (props) => {
                 <Option value="percent">%</Option>
               </Select>
             </Item>
-            <Item name="value" initialValue="0.5" normalize={limitedInput}>
+            <Item name="value" initialValue={currentShop.marketplace === 'JP' ? '5' : '0.5'} normalize={limitedInput}>
               <Input onBlur={() => checkValues('price')}/>
             </Item>
           </div>

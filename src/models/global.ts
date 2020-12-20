@@ -474,7 +474,20 @@ const GlobalModel: IGlobalModelType = {
     },
 
     // 监听店铺是否已切换（多开标签页时切换店铺、另一标签页提示）
-    watchShop({ dispatch }) {
+    watchShop({ dispatch, history: umiHistory }) {
+      const pathname = umiHistory.location.pathname;
+      const excludeUrls = [
+        '/',
+        '/users/login',
+        '/center',
+        '/vip/membership',
+        '/shop/list',
+        '//shop/bind',
+      ];
+      if (excludeUrls.indexOf(pathname) > -1) {
+        return;
+      }
+
       window.addEventListener('storage', e => {
         const key = e.key;
         if (key === 'currentShop') {

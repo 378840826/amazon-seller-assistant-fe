@@ -2,9 +2,20 @@
   background-color: #fff;
   margin: 0 0 20px;
 
+  :global(.ant-form-item) {
+    margin: 0;
+  }
+
   .search {
     padding: 20px 0 14px 20px;
     border: 1px solid @divider-line-color;
+    // display: flex;
+    // justify-content: space-between;
+
+    .leftLayout {
+      display: flex;
+      float: left;
+    }
 
     .inputStyle {
       padding: 3px 6px 3px 10px;
@@ -28,14 +39,10 @@
       }
     }
 
-    :global(.ant-btn) {
-      float: left;
-    }
-
     .datepicker {
-      float: right;
       margin: 0 10px;
       position: relative;
+      float: right;
     }
 
     // 日历范围按钮
@@ -60,7 +67,7 @@
     }
 
     .layout_one_item {
-      padding-bottom: 10px;
+      padding-bottom: 3px;
 
       .text {
         text-align: left;
@@ -77,44 +84,57 @@
   }
 
   .left_layout {
-    .layout_one_item .text {
+    :global(.ant-form-item-label) {
       min-width: 73px;
+      text-align: left;
+
+      > label::after {
+        margin: 0;
+      }
     }
   }
 
   .right_layout {
     margin-left: 100px;
 
-    .layout_one_item .text {
+    :global(.ant-form-item-label) {
       min-width: 85px;
-      display: inline-block;
+      text-align: left;
+
+      > label::after {
+        margin: 0;
+      }
     }
 
-    .icon {
-      cursor: pointer;
-      margin-left: 20px;
-      display: inline-block;
-      position: relative;
-      top: -63px;
-      transition: all 0.3s;
+    .action {
+      display: flex;
 
-      &:global(.active) {
-        top: 0;
-      }
-
-      &:hover {
-        color: @primary-color;
-      }
-
-      .i {
-        color: @primary-color;
-        font-size: 14px;
-        margin-right: 8px;
+      .icon {
+        cursor: pointer;
+        top: -60px;
+        margin-left: 20px;
+        display: inline-block;
+        position: relative;
         transition: all 0.3s;
-      }
 
-      .i:global(.active) {
-        transform: rotate(182deg);
+        &:global(.active) {
+          top: 0;
+        }
+
+        &:hover {
+          color: @primary-color;
+        }
+
+        .i {
+          color: @primary-color;
+          font-size: 14px;
+          margin-right: 8px;
+          transition: all 0.3s;
+        }
+
+        .i:global(.active) {
+          transform: rotate(182deg);
+        }
       }
     }
   }
