@@ -1,7 +1,7 @@
 /**
  * 功能页的店铺选择器
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'umi';
 import { Select } from 'antd';
 import { IConnectState } from '@/models/connect';
@@ -17,13 +17,15 @@ const ShopSelector: React.FC = () => {
   const loading = loadingEffect.effects['global/fetchShopList'];
   const shop = useSelector((state: IConnectState) => state.global.shop);
 
-  // useEffect(() => {
-  //   const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
-  //   dispatch({
-  //     type: 'global/fetchShopList',
-  //     payload: { type },
-  //   });
-  // }, [dispatch]);
+  useEffect(() => {
+    const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
+    const isRequest = shop[type].length > 0 ? false : true;
+    isRequest && dispatch({
+      type: 'global/fetchShopList',
+      payload: { type },
+    });
+  }, [dispatch]); // eslint-disable-line
+  // 因为使用路由守卫后，不再需要监听shop，监听shop就会无限请求(店铺列表为0的情况下)
 
   const handleChange = (value: string) => {
     dispatch({
