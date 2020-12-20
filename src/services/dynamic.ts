@@ -56,3 +56,92 @@ export function updateRemarks(params: API.IParams){
     ...params,
   });
 }
+//===================关键词搜索排名监控==================
+//关键词搜索排名监控列表
+export function msGetList(params: API.IParams){
+  console.log('params:', params);
+  const asc = params.params.asc;
+  let order = params.params.order;
+  if (order === 'advertisingRankingData'){
+    order = 'advertisingRanking';
+  } else if (order === 'naturalRankingData'){
+    order = 'naturalRanking';
+  }
+  params.params.asc = asc === 'ascend' ? true : false;
+  params.params.order = [undefined, null].includes(asc) ? '' : order;
+  
+  return request('/api/mws/search-ranking/monitoring-settings/list', {
+    method: 'POST',
+    ...params,
+  });
+}
+//修改任务状态
+export function msUpdateStatus(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/update-status', {
+    method: 'POST',
+    ...params,
+  });
+}
+//监控设定频率按钮
+export function msFrequency(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/frequency', {
+    method: 'GET',
+    ...params,
+  });
+}
+//监控频率修改
+export function msFrequencyUpdate(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/frequency-update', {
+    method: 'GET',
+    ...params,
+  });
+}
+//竞品按钮
+export function msGetAsinList(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/asin-list', {
+    method: 'GET',
+    ...params,
+  });
+}
+//修改竞品列表
+export function msAsinUpdate(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/asin-update', {
+    method: 'POST',
+    ...params,
+  });
+}
+//自然排名折线图
+export function msGetNaturalData(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/natural-data', {
+    method: 'POST',
+    ...params,
+  });
+}
+//广告排名折线图
+export function msGetAd(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/advertising-data', {
+    method: 'POST',
+    ...params,
+  });
+}
+//添加监控任务的搜索商品
+export function msSearchProduct(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/search-product', {
+    method: 'GET',
+    ...params,
+  });
+}
+//添加监控任务的建议关键词搜索
+export function msSearchKeyword(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/search-keyword', {
+    method: 'POST',
+    ...params,
+  });
+}
+//添加监控
+export function msMonitorAdd(params: API.IParams){
+  return request('/api/mws/search-ranking/monitoring-settings/add', {
+    method: 'POST',
+    ...params,
+  });
+}

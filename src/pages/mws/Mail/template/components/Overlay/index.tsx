@@ -265,19 +265,20 @@ const Overlay: React.FC<IOverlay> = ({ StoreId, id, onCancel, onConfirm }) => {
                 className={styles.buttons}
                 style={{ marginBottom: 0 }} 
                 {...formItem1Layout}>
-                <>
-                  <Button htmlType="button" disabled={confirmLoading} onClick={() => onCancel()}>
-                  取消
-                  </Button>
-                  <Button type="primary" disabled={confirmLoading} htmlType="submit">
-                  保存
-                  </Button>
-                </>
+                <div className={styles.tips}>
+                  <Iconfont className={styles.orange} type="icon-yiwen"/> 请勿在邮件中提及违禁字眼
+                </div>
+               
               </Form.Item>
             </Col>
             <Col span={5}>
-              <div className={styles.tips}>
-                <Iconfont className={styles.orange} type="icon-yiwen"/> 请勿在邮件中提及违禁字眼
+              <div className={styles.button_container}>
+                <Button htmlType="button" disabled={confirmLoading} onClick={() => onCancel()}>
+                  取消
+                </Button>
+                <Button type="primary" className={styles.__onSave} disabled={confirmLoading} htmlType="submit">
+                  保存
+                </Button>
               </div>
             </Col>
           </Row>

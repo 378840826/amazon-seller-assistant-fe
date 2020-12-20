@@ -69,9 +69,19 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch, req
     align: 'left',
     render: (text, item) => {
       return (
-        <div>
-          <Paragraph ellipsis className={styles.subject}>{item.subject}</Paragraph>
-          <Paragraph ellipsis={{ rows: 2 }} className={styles.content}>{item.content}</Paragraph>
+        <div>   
+          <Paragraph 
+            title={item.subject} 
+            ellipsis 
+            className={styles.subject}>
+            {item.subject}
+          </Paragraph>    
+          <Paragraph 
+            title={item.content} 
+            ellipsis={{ rows: 2 }} 
+            className={styles.content}>
+            {item.content}
+          </Paragraph>
         </div>
       );
     },

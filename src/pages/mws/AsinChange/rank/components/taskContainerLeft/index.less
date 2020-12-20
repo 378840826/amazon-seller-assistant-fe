@@ -1,0 +1,152 @@
+.search_container {
+  width: 280px;
+  margin-top: 12px;
+
+  .search_input {
+    :global {
+      .ant-btn {
+        min-width: 40px !important;
+        width: 40px;
+        padding: 0;
+      }
+    }
+  }
+
+  .icon_sousuo {
+    font-size: 20px;
+    margin-top: 5px;
+  }
+}
+
+.tables {
+  .not_select_table {
+    text-align: right;
+  }
+
+  .all_button {
+    color: @text-color;
+    cursor: pointer;
+    margin-right: 26px;
+    font-size: 12px;
+  }
+
+  //虚拟表格
+  .__virtual_table {
+    background-color: #fff;
+    font-size: 12px;
+
+    :global {
+      .ReactVirtualized__Table__headerRow {
+        background-color: @table-header-bg;
+      }
+
+      .ReactVirtualized__Table__Grid {
+        outline: none;
+        border-left: 1px solid #e5e5e5;
+        border-right: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+      }
+
+      .ReactVirtualized__Table__row {
+        &:hover {
+          background-color: @table-header-bg;
+        }
+      }
+    }
+
+    .__no_data {
+      color: @text-color-disabled;
+      text-align: center;
+      line-height: 44px;
+    }
+
+    .__goods_column {
+      text-align: center;
+      font-weight: normal;
+      color: @heading-color;
+      margin: 0;
+    }
+
+    .__goods_body {
+      text-align: left;
+      margin: 0;
+      margin-left: 20px;
+    }
+
+    .__sku_body {
+      text-align: left;
+    }
+
+    .__operator_body {
+      text-align: center;
+      margin-right: 0;
+    }
+
+    .__sku_column {
+      text-align: left;
+      font-weight: normal;
+      color: @heading-color;
+      margin: 0;
+    }
+
+    .__operator_column {
+      text-align: center;
+      font-weight: normal;
+      color: @heading-color;
+      margin: 0;
+    }
+  }
+
+  .table_selected {
+    .__product_info {
+      padding-left: 20px;
+    }
+  }
+
+  .select_button {
+    margin-right: 26px;
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  .remove_button {
+    margin-right: 16px;
+    color: @error-color;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+
+  .select_yes {
+    color: @btn-text-color;
+    cursor: pointer;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  .select_already {
+    color: #bbb;
+  }
+
+  .select_no {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+
+  .selected_table_bar {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 16px;
+    padding-bottom: 6px;
+  }
+}

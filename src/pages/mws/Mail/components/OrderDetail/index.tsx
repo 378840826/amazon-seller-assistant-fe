@@ -12,7 +12,7 @@ const { Paragraph } = Typography;
 
 const OrderDetail: React.FC<IOrderDetail> = ({ item, key, bottom }) => {
   const contentStyle = {
-    paddingTop: '40px',
+    paddingTop: '20px',
     paddingBottom: bottom,
   };
   return (
