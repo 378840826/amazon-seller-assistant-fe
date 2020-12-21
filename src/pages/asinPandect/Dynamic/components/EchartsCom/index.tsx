@@ -99,15 +99,19 @@ const EchartsCom: React.FC<IEchartsCom> = ({
   const RangePickerProps: API.IParams = {
     ranges: rangeList,
     onChange: (dates: Moment[]): void => {
+      console.log('dates:', dates, dates[0].format('YYYY-MM-DD'), dates[1].format('YYYY-MM-DD'));
+      
       range.dateStart = dates[0].format('YYYY-MM-DD');
       range.dateEnd = dates[1].format('YYYY-MM-DD');
     },
     onOpenChange: (open: boolean) => {
+      console.log('open:', open);
       if (range.dateStart === dateStart && range.dateEnd === dateEnd) {
         return; 
       }
       if (!open){
-        modifySendState({ ...range });
+        // modifySendState({ ...range });
+        console.log('instance:', refEcharts.current.getEchartsInstance());
         refEcharts.current.getEchartsInstance().dispatchAction({
           type: 'dataZoom',
           startValue: range.dateStart,
@@ -122,8 +126,9 @@ const EchartsCom: React.FC<IEchartsCom> = ({
       if (refEcharts.current){
         const { startValue, endValue } = 
         refEcharts.current.getEchartsInstance().getOption().dataZoom[0];
-        range.dateStart = moment(startValue).format('YYYY-MM-DD');
-        range.dateEnd = moment(endValue).format('YYYY-MM-DD');
+        console.log('startValue:', startValue, endValue);
+        range.dateStart = isNaN(startValue) ? range.dateStart : moment(startValue).format('YYYY-MM-DD');
+        range.dateEnd = isNaN(endValue) ? range.dateEnd : moment(endValue).format('YYYY-MM-DD');
         modifySendState({ ...range });
         form.setFieldsValue({
           dateRange: [moment(range.dateStart), moment(range.dateEnd)],

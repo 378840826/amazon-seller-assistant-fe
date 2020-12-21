@@ -158,7 +158,7 @@ const TablePage: React.FC<ITablePage> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={loading}
-        scroll={{ y: 'calc(100vh - 258px)' }}
+        scroll={{ y: 'calc(100vh - 291px)' }}
         locale={{ emptyText: msg === '' ? <TableNotData hint="没找到相关数据"/> : 
           <TableNotData hint={msg}/> }}
         dataSource={tableInfo.records}

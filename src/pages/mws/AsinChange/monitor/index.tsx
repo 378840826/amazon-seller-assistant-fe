@@ -8,13 +8,16 @@ import { IConnectState, IConnectProps } from '@/models/connect';
 
 interface IMonitorProps extends IConnectProps{
   StoreId: string;
+  currentUser: API.ICurrentUser;
 }
 interface IState{
   tableLoading: boolean;
   tableInfo: API.IParams;
   tableErrorMsg: string;
 }
-const Monitor: React.FC<IMonitorProps> = ({ StoreId, dispatch }) => {
+const Monitor: React.FC<IMonitorProps> = ({ StoreId, dispatch, currentUser }) => {
+  const leftNumList = currentUser.memberFunctionalSurplus.filter(item => item.functionName === 'ASIN动态监控');
+  const leftNum = leftNumList.length > 0 ? leftNumList[0].frequency : 0;
   const [state, setState] = useState<IState>({
     tableLoading: false,
     tableInfo: {},
@@ -91,7 +94,13 @@ const Monitor: React.FC<IMonitorProps> = ({ StoreId, dispatch }) => {
   }, [dispatch, StoreId, params, fetchCallback]);
   return (
     <div className={styles.container} style={{ marginTop: '20px' }}>
-      <LinkHeader/>
+      <div className={styles.header_left}>
+        <LinkHeader/>
+        <span className={styles.left_wrap}>
+          剩余可添加ASIN:
+          <span>{leftNum}个</span>
+        </span>
+      </div>
       <div className={styles.autocomplete_table}>
         <AutoComplete 
           StoreId={StoreId} 
@@ -111,6 +120,7 @@ const Monitor: React.FC<IMonitorProps> = ({ StoreId, dispatch }) => {
     </div>
   );
 };
-export default connect(({ global }: IConnectState) => ({
+export default connect(({ global, user }: IConnectState) => ({
   StoreId: global.shop.current.id,
+  currentUser: user.currentUser,
 }))(Monitor);

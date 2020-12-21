@@ -50,6 +50,9 @@ const TablePage: React.FC<ITablePageProps> = ({
       },
       callback: () => {
         onTableSwitchChange(status, record);
+        dispatch({
+          type: 'user/fetchCurrent',
+        });
       },
     });
   };
