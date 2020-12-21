@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { IModelType } from './connect';
 import { nTs } from '@/utils/utils';
 import { getStoreList, getUserList, addUser, deleteUser, modifySUsername, modifySEmail, modifySPassword, modifyStores } from '@/services/sub';
@@ -55,11 +56,16 @@ const SubModel: ISubModelType = {
           type: 'modifyUsername',
           payload: payload,
         });
+      } else {
+        message.error(response.message);
       } 
       callback && typeof callback === 'function' && callback(response);
     },
     *modifySPassword({ payload, callback }, { call }){
       const response = yield call(modifySPassword, payload);
+      if (response.code !== 200){
+        message.error(response.message);
+      }
       callback && typeof callback === 'function' && callback(response);
     },
     *modifySEmail({ payload, callback }, { call, put }){
@@ -69,6 +75,8 @@ const SubModel: ISubModelType = {
           type: 'modifyEmail',
           payload: payload,
         });
+      } else {
+        message.error(response.message);
       }
       callback && typeof callback === 'function' && callback(response);
     },
@@ -76,9 +84,18 @@ const SubModel: ISubModelType = {
       const response = yield call(modifyStores, payload);
       callback && typeof callback === 'function' && callback(response);
     },
-    *deleteUser({ payload, callback }, { call }){
+    *deleteUser({ payload, callback }, { call, put }){
       const response = yield call(deleteUser, payload);
-      callback && typeof callback === 'function' && callback(response);
+      if (response.code === 200){
+        callback && typeof callback === 'function' && callback(response);
+        yield put({
+          type: 'deleteSingleUser',
+          payload: payload,
+        });
+      } else {
+        message.error(response.message);
+      }
+      
     },
   },
   reducers: {
@@ -90,7 +107,7 @@ const SubModel: ISubModelType = {
       nTs(payload);
       state.userList = payload.data;
     },
-    deleteUser: (state, { payload }) => {
+    deleteSingleUser: (state, { payload }) => {
       const id = payload.id;
       state.userList = state.userList.filter( (item: { id: string }) => item.id !== id);
     },

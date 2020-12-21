@@ -88,6 +88,7 @@ const DynamicAsin: React.FC = () => {
     JSON.stringify(sendState.properties)]);
  
   const modifySendState = (params: API.IParams) => {
+    console.log('params:', params);
     setSendState((state) => ({
       ...state,
       ...params,

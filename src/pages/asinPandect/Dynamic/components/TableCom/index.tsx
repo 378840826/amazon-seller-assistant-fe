@@ -5,6 +5,7 @@ import styles from './index.less';
 import editable from '@/pages/components/EditableCell';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import RenderValue from '@/pages/mws/AsinChange/components/renderValue'; 
+import TableNotData from '@/components/TableNotData';
 
 interface ITableCom{
   StoreId: string;
@@ -200,8 +201,9 @@ const TableCom: React.FC<ITableCom> = ({
         pagination={{ ...paginationProps }}
         onChange={onTableChange}
         loading={state.loading}
-        scroll={{ x: true, y: 618 }}
-        locale={{ emptyText: state.message === '' ? 'Oops! 没有更多数据啦' : state.message }}
+        scroll={{ y: 618 }}
+        locale={{ emptyText: state.message === '' ? <TableNotData hint="没有相关数据"/> : 
+          <TableNotData hint={state.message}/> }}
         dataSource = {state.tableInfo.records}
         rowClassName={(_, index) => {
           if (index % 2 === 1) {

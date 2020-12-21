@@ -87,8 +87,6 @@ export default {
   '@simple-table-header-bg': '#fafafa',
   // 表格行 hover 背景色, 和表头一样
   '@table-row-hover-bg': '@table-header-bg',
-  // 有排序功能的表头hover颜色
-  '@table-header-sort-active-bg':'#e5eef7',
   // 排序后的表头不需要改变颜色
   '@table-body-sort-bg': 'null',
   // 全局 Header 相关

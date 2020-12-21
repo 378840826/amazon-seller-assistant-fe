@@ -97,6 +97,9 @@ const AutoCompleteCom: React.FC<IAutoCompleteCom> = ({
         },
         callback: () => {
           addRequest();
+          dispatch({
+            type: 'user/fetchCurrent',
+          });
         },
       });
     }

@@ -83,7 +83,7 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, dispatch, request }) =
         className={styles.__table}
         columns={columns}
         pagination={{ ...paginationProps }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 280px)' }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 313px)' }}
         onChange={onTableChange}
         dataSource={tableInfo.records}
         loading={tableLoading}

@@ -9,6 +9,7 @@ import styles from './index.less';
 import { IConnectState, IConnectProps } from '@/models/connect';
 interface IRankMonitorProps extends IConnectProps{
   StoreId: string;
+  currentUser: API.ICurrentUser;
 }
 
 interface IState{
@@ -17,6 +18,7 @@ interface IState{
   remainingTasksNumber: number | string;
   tableMessage: string;
   selectedRows: ReactText[];
+  
 }
 export interface IParams{
   size: number;
@@ -27,7 +29,9 @@ export interface IParams{
   switchStatus: string;
   isAc: string;
 }
-const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch }) => {
+const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch, currentUser }) => {
+  const surplus = currentUser.memberFunctionalSurplus.filter(item => item.functionName === '搜索排名监控');
+  const leftNum = surplus.length > 0 ? surplus[0].frequency : 0;
   const [state, setState] = useState<IState>({
     loading: false,
     tableInfo: {},
@@ -100,6 +104,9 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch }) => {
               records,
             },
           }));
+          dispatch({
+            type: 'user/fetchCurrent',
+          });
         } else {
           message.error(res.message);
         }
@@ -158,7 +165,7 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch }) => {
   }, [fetchList]);
   return (
     <div>
-      <CrumbCom remainingTasksNumber={state.remainingTasksNumber}/>
+      <CrumbCom remainingTasksNumber={leftNum}/>
       <div className={styles.main}>
         <OperaBar
           loading={state.loading}
@@ -193,6 +200,7 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch }) => {
     </div>
   );
 };
-export default connect(({ global }: IConnectState) => ({
+export default connect(({ global, user }: IConnectState) => ({
   StoreId: global.shop.current.id,
+  currentUser: user.currentUser,
 }))(RankMonitor);
