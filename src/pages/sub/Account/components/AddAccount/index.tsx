@@ -28,13 +28,12 @@ interface IStatus {
 
 interface IStoreListConnectProps extends IConnectProps{
   sub: ISubModelState;
+  currentUser: API.ICurrentUser;
 }
-const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch }){
-
-  const storeList = sub.storeList;
-  const userList = sub.userList;
-  console.log('userList:', userList);
-  
+const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, currentUser, dispatch }){
+  const surplus = currentUser.memberFunctionalSurplus.filter(item => item.functionName === '子账号');
+  const leftNum = surplus.length > 0 ? surplus[0].frequency : 0;
+  const storeList = sub.storeList;  
   const [status, setStatus] = useState<IStatus>({ 
     width: 532,
     closable: false, //dialog的头部关闭图案消失
@@ -57,10 +56,12 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
   };
 
   const onOpen = () => {
-    if (userList.length >= 10){
+    if (leftNum <= 0){
       message.error('当前会员等级剩余可添加子账号:0个');
       return;
     }
+    console.log('当前剩余的：', JSON.stringify(status));
+    
     setStatus( (status) => {
       return {
         ...status,
@@ -69,7 +70,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
     });
   };
   const handleCancel = () => {
-    form.resetFields();
+    // form.resetFields();
     setStatus( (status) => {
       return {
         ...status,
@@ -104,6 +105,9 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
       callback: (res: { code: number; message: string }) => {
         if (res.code === 200){
           handleCancel();
+          dispatch({
+            type: 'user/fetchCurrent',
+          });
         } else {
           setStatus((status) => ({
             ...status,
@@ -126,6 +130,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
           width={status.width}
           mask
           centered
+          destroyOnClose={true}
           closable={status.closable}
           visible={status.visible}
           footer={status.footer}
@@ -136,6 +141,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
             name="basic"
             form={form}
             onFinish={onFinish}
+            preserve={false}
             autoComplete="off"
           >
             <Form.Item
@@ -229,11 +235,12 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, dispatch })
         </Modal>
       </div>  
       <div className={styles.left_number}>
-            剩余可添加子账号:<span className={styles.green}>{10 - userList.length}个</span>
+            剩余可添加子账号:<span className={styles.green}>{leftNum}个</span>
       </div>
     </div>
   );
 };
-export default connect(({ sub }: IConnectState) => ({
+export default connect(({ sub, user }: IConnectState) => ({
   sub,
+  currentUser: user.currentUser,
 }))(AddAccount);

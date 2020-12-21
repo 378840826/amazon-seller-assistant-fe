@@ -131,7 +131,7 @@ const LeftTableList: React.FC<ILeftTableList> = ({ state, StoreId, dispatch, req
           ...rowLeftSelection,
         }}
         pagination={{ ...paginationProps }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 325px)' }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 358px)' }}
         onChange={onTableChange}
         dataSource={tableInfo.records}
         loading={tableLoading}

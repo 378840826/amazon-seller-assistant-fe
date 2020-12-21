@@ -288,7 +288,7 @@ const MailRule: React.FC<IMailRule> = ({ StoreId, dispatch }) => {
         columns={columns}
         rowKey="id"
         loading={state.loading}
-        scroll={{ y: 'calc(100vh - 100px)' }}
+        scroll={{ y: 'calc(100vh - 255px)' }}
         locale={{ emptyText: state.message === '' ? <TableNotData hint="没找到相关数据"/> : 
           <TableNotData hint={state.message}/> }}
         dataSource={state.data}

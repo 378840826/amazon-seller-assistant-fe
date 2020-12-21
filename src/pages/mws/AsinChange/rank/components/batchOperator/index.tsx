@@ -160,7 +160,7 @@ const BatchOperator: React.FC<IBatchOperator> = ({
       <div className={styles.btns}>
         <Button type="primary" onClick={toggleEvent}>
         添加监控任务
-          {state.open ? <UpOutlined /> : <DownOutlined />}
+          {state.open ? <UpOutlined style={{ fontSize: '12px' }}/> : <DownOutlined style={{ fontSize: '12px' }} />}
           
         </Button>
         <Button onClick={() => toggleChange(false)}>批量暂停</Button>

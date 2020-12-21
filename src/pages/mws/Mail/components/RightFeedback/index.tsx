@@ -85,6 +85,9 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
         let status = 'success';
         if (res.code === 200){
           status = 'success';
+          dispatch({
+            type: 'user/fetchCurrent',
+          });
         } else {
           status = 'fail';
           message.error(res.message);

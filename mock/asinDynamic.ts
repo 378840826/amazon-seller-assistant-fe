@@ -116,6 +116,15 @@ const proxy = {
   'POST /api/mws/asin-dynamic/polyline-list': Mock.mock(() => {
     return json.data1;
   }),
+  /* 'POST /api/mws/asin-dynamic/polyline-list': Mock.mock({
+    code: 200,
+    data: {
+      polylineResult: {},
+      categoryRanking: {},
+      listingChangeVo: [],
+      'updateTime': '2019-10-01',
+    },
+  }), */
   //备注修改
   'POST /api/mws/asin-dynamic/list/update-remarks': Mock.mock({
     code: 200,

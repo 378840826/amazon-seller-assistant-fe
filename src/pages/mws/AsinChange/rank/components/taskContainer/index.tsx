@@ -50,7 +50,6 @@ const TaskContainer: React.FC<ITaskContainer> = ({
     let list = [];
     if (refText.current){
       const content = refText.current.state.value;
-      console.log('content:', content);
       if (content === '' || content === undefined){
         list = [];
       } else {
@@ -81,6 +80,9 @@ const TaskContainer: React.FC<ITaskContainer> = ({
           }));
           toggleEvent();
           fetchList();
+          dispatch({
+            type: 'user/fetchCurrent',
+          });
         },
       });
     } else {
