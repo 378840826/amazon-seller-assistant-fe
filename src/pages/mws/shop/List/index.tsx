@@ -25,7 +25,7 @@ const ShopList: React.FC = () => {
       centered: true,
       icon: false,
       title: '店铺操作',
-      content: `${text}店铺的所有功能设置？`,
+      content: `${text}店铺智能调价功能？`,
       okText: '确定',
       cancelText: '取消',
       onOk() {

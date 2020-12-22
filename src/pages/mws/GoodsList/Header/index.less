@@ -17,10 +17,10 @@
 
   .btnFiltrate {
     width: @btn-long-width;
+  }
 
-    :global(.anticon) {
-      font-size: 10px;
-    }
+  :global(.anticon) {
+    font-size: 10px;
   }
 }
 
@@ -123,6 +123,10 @@
 
   .Search {
     width: 280px;
+
+    input {
+      padding-right: 28px;
+    }
 
     :global(.ant-input-search-button) {
       padding: 3px 8px;
@@ -359,19 +363,16 @@
 }
 
 .importFile {
-  &:hover,
-  &.active {
-    .icon {
-      color: @link-color;
-    }
-  }
-
   .icon {
     transition: all 0.3s;
     color: @text-color-secondary;
     font-size: 12px;
     margin-left: 7px;
     cursor: help;
+
+    &:hover {
+      color: @warning-color;
+    }
   }
 }
 

@@ -175,18 +175,32 @@ const VipUpgrade: React.FC = () => {
     vip => vip.typeOfFee === '2' && vip.memberLevel === vipNumberToLevelDict[certainBuyLevel]
   )?.currentPrice;
 
+  // 实付价格/公式/有效期/日期
+  const actualAndResult = geyActualPrice({
+    // 新等级价格
+    newLevelPrice: Number(activeCard.price || activeCardPrice),
+    // 用户当前会员等级价格
+    currentPrice,
+    // 购买的费用类型，月/年 1/2
+    typeOfFee: activeCard.typeOfFee,
+    // 当前的费用类型
+    oldTypeOfFee,
+    // 当前会员等级有效期剩余天数
+    validPeriod: Number(validPeriod),
+  });
+
   // 获取 codeUrl
   useEffect(() => {
     memberLevel && dispatch({
       type: 'vip/fetchUpgradeCodeUrl',
       payload: {
-        memberLevel,
+        memberLevel: activeCard.memberLevel,
         typeOfFee: activeCard.typeOfFee,
         purchaseType: memberLevel === '普通会员' ? 1 : 2,
-        price: 0,
+        price: Number(actualAndResult.price),
       },
     });
-  }, [dispatch, activeCard, memberLevel]);
+  }, [dispatch, activeCard, memberLevel, actualAndResult.price]);
 
   // 卡片点击
   const handleClickCard = (typeOfFee: string, memberLevel: string, currentPrice: number) => {
@@ -202,20 +216,6 @@ const VipUpgrade: React.FC = () => {
   const handleChange = ({ target: { checked } }: CheckboxChangeEvent) => {
     setChecked(checked);
   };
-
-  // 实付价格/公式/有效期/日期
-  const actualAndResult = geyActualPrice({
-    // 新等级价格
-    newLevelPrice: Number(activeCard.price || activeCardPrice),
-    // 用户当前会员等级价格
-    currentPrice,
-    // 购买的费用类型，月/年 1/2
-    typeOfFee: activeCard.typeOfFee,
-    // 当前的费用类型
-    oldTypeOfFee,
-    // 当前会员等级有效期剩余天数
-    validPeriod: Number(validPeriod),
-  });
 
   // 单个卡片
   const createCard = (info: {

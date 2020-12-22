@@ -13,7 +13,7 @@ export async function queryCodeUrl(params: API.IParams) {
   return request('/api/system/member/qr-code', {
     method: 'POST',
     data: params,
-    params,
+    // params,
   });
 }
 

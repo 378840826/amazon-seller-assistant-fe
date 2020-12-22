@@ -31,7 +31,7 @@ const Header: React.FC = () => {
     cycle,
   } = goodsListPage;
   const currentShop = useSelector((state: IConnectState) => state.global.shop.current);
-  const { currency, id: currentShopId } = currentShop;
+  const { currency, id: currentShopId, marketplace } = currentShop;
   const headersParams = { StoreId: currentShopId };
   const [visible, setVisible] = useState({
     batchSearch: false,
@@ -435,7 +435,7 @@ const Header: React.FC = () => {
           onVisibleChange={flag => setVisible({ ...visible, batchSearch: flag })}
         >
           <Button type="primary">
-            批量查询 <DownOutlined />
+            批量查询 {visible.batchSearch ? <UpOutlined /> : <DownOutlined />}
           </Button>
         </Dropdown>
         <Button
@@ -473,6 +473,7 @@ const Header: React.FC = () => {
               goodsListRecords={records}
               checkedGoodsIds={checkedGoodsIds}
               checkedGoodsAsins={checkedGoodsAsins}
+              marketplace={marketplace}
             />}
             trigger={['click']}
             visible={visible.batchSet}
