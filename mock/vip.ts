@@ -24,7 +24,7 @@ export default {
               functionName: '智能调价',
               frequency: 4,
             }, {
-              functionName: 'ASIN总览报表导出',
+              functionName: 'ASIN报表导出',
               frequency: 5,
             }, {
               functionName: 'ASIN动态监控',
