@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
 import { Link, useDispatch, useSelector } from 'umi';
 
@@ -10,6 +10,7 @@ import ParentAsin from './ParentAsin';
 import { Iconfont, storage } from '@/utils/utils';
 import { storageKeys } from '@/utils/huang';
 import { getCalendarFields } from './config';
+
 
 const { TabPane } = Tabs;
 const { adinTableCalendar } = storageKeys;
@@ -39,7 +40,7 @@ const AsinTable = () => {
     setMessageprofitAsync(messageprofit);
   };
 
-  useEffect(() => {
+  const checkData = useCallback(function() {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
       return;
     }
@@ -58,7 +59,7 @@ const AsinTable = () => {
         payload: {
           sellerId: currentShop.sellerId,
           marketplace: currentShop.marketplace,
-          ...getCalendarFields(storage.get(adinTableCalendar) || '6', adinTableCalendar),
+          ...getCalendarFields(storage.get(adinTableCalendar) || '7', adinTableCalendar),
         },
       });
     }).then(datas => {
@@ -97,6 +98,16 @@ const AsinTable = () => {
     });
   }, [dispatch, currentShop, currentTab]);
 
+
+  useEffect(() => {
+    checkData();
+  }, [checkData]);
+
+  // 周期改变时，重新验证是否导入数据和通过MWS绑定或者广告授权
+  const canlendarCallback = () => {
+    checkData();
+  };
+
   // 忽略
   useEffect(() => {
     if (!messagedata && !messageprofit && !messagead ) {
@@ -125,7 +136,17 @@ const AsinTable = () => {
       <TabPane tab="父ASIN" key="parent">
       </TabPane>
     </Tabs>
-    {currentTab === 'child' ? <ChildAsin tabValue={currentTab} receptionMessage={receptionMessage}/> : <ParentAsin tabValue={currentTab} receptionMessage={receptionMessage}/>}
+    {currentTab === 'child' ? <ChildAsin 
+      tabValue={currentTab} 
+      receptionMessage={receptionMessage} 
+      canlendarCallback={canlendarCallback}
+    /> : 
+      <ParentAsin 
+        tabValue={currentTab} 
+        receptionMessage={receptionMessage} 
+        canlendarCallback={canlendarCallback}
+      />
+    }
 
     <div className={styles.messageIcon}>
       <Iconfont 

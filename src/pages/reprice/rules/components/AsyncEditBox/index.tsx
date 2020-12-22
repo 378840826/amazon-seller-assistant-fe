@@ -20,6 +20,8 @@ interface IProps {
   errorText?: string; // 修改失败后的提示、return Promise.resolve(false);
   maxLength?: number; // 输入最大长度
   maxLengthHint?: string; // 超出最大长度的提醒
+  id: number; // 隐藏相同的
+  clickText: (id: number) => void;
 }
 
 export default (props: IProps) => {
@@ -33,12 +35,15 @@ export default (props: IProps) => {
     errorText,
     maxLength = 20,
     maxLengthHint,
+    id,
+    clickText,
   } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(true); // 默认编辑框显隐
   const [editValue, setEditValue] = useState<string>(value); // 编辑框的值
   const [showValue, setShowValue] = useState<string>(value); // 默认显示的值
+  const [privateId] = useState(Math.random()); // 用来控制已经打开的编辑框隐藏的条件
 
   const boxRef = useRef(null);
 
@@ -46,17 +51,34 @@ export default (props: IProps) => {
     maxCount: 1,
   });
 
+  useEffect(() => {
+    if (id === 0) {
+      return;
+    }
+    
+    if (id === privateId) {
+      // 同相件
+    } else {
+      setVisible(true);
+    }
+  }, [privateId, id]);
 
   useEffect(() => {
     window.addEventListener('click', () => {
-      setVisible(true);
+      visible !== undefined ? setVisible(true) : '';
     });
-  }, [boxRef]);
+  }, [boxRef, visible]);
 
 
   // 点击编辑
   const clickEdit = () => {
-    setVisible(!visible);
+    new Promise(resolve => {
+      clickText(privateId);
+      resolve(``);
+    }).then(() => {
+      setVisible(false);
+      // 隐藏已打开的编辑框，暂时没想到啥好的方法
+    });
   };
 
   // 编辑框的修改监听
@@ -95,7 +117,6 @@ export default (props: IProps) => {
     setLoading(true);
     onOk(editValue.trim()).then(isSuccess => {
       setLoading(false);
-      console.log(isSuccess, 'isSuccess');
       if (isSuccess) {
         setShowValue(editValue.trim());
         setVisible(true);
@@ -123,9 +144,11 @@ export default (props: IProps) => {
       loading ? 'h-disabled' : '',
     )
   } style={style} ref={boxRef} onClick={e => e.nativeEvent.stopImmediatePropagation()}>
-    <div className={styles.editBox} style={{
-      display: visible ? 'flex' : 'none',
-    }}>
+    <div className={classnames(
+      styles.editBox,
+      'async-default-text',
+      visible ? '' : 'none',
+    )}>
       <div className={styles.editContent} onClick={clickEdit}>
         {showValue}
         <Iconfont 
@@ -135,9 +158,11 @@ export default (props: IProps) => {
       </div>
     </div>
 
-    <div className={styles.editInputBox} style={{
-      display: visible ? 'none' : 'flex',
-    }}>
+    <div className={classnames(
+      styles.editInputBox, 
+      'async-editbox-input',
+      visible ? 'none' : ''
+    )}>
       <Input 
         value={editValue} 
         size={size}

@@ -21,7 +21,6 @@ import {
   reviewListRouter,
 } from '@/utils/routes';
 import { toIndexFixed } from '@/utils/huang';
-import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 
 
 const Settings: React.FC = () => {
@@ -432,7 +431,6 @@ const Settings: React.FC = () => {
 
   return (
     <div className={`${styles.settings_box} settings`}>
-      <PageTitleRightInfo functionName="Review监控"/>
       <header>
         <div className={styles.search}>
           <Complete successCallback={successCb}/>

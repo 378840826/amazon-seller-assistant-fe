@@ -21,7 +21,7 @@ import {
 } from '@/utils/routes';
 
 // component
-import AsyncEditBox from '@/components/AsyncEditBox';
+import AsyncEditBox from '../components/AsyncEditBox';
 import TimeSelectBox from '../components/TimeSelectBox';
 import MultiLineEdit from './components/MultiLineEdit';
 import {
@@ -44,6 +44,7 @@ const Rules: React.FC = () => {
   const [dataSource, setDataSource] = useState<Rules.ITableResponseType[]>([]);
   const [siteText, setTimeText] = useState<string>(''); // 站点时间
   const [loading, setLoading] = useState<boolean>(true);
+  const [boxid, setBoxid] = useState<number>(0); // 记录当前已经打开的编辑框ID - 名称 
 
   const requestFn = useCallback(() => {
     if (Number(currentShop.id) === -1) {
@@ -268,6 +269,8 @@ const Rules: React.FC = () => {
           errorText="修改失败" 
           successText="修改成功"
           maxLength={20}
+          id={boxid}
+          clickText={(id) => setBoxid(id)}
         />
       ),
     },
@@ -284,7 +287,10 @@ const Rules: React.FC = () => {
             marginLeft: 0,
           }}
           onOk={(val) => setDescription(val, id, name)}
-          id={id}/>;
+          id={id}
+          pid={boxid}
+          clickText={(id) => setBoxid(id)}
+        />;
       },
     },
     {

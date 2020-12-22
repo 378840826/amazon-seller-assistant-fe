@@ -9,7 +9,6 @@ import {
   useDispatch,
   useSelector,
 } from 'umi';
-import { IConnectState } from '@/models/connect';
 
 // 组件
 import Update from '../components/Update';
@@ -29,13 +28,13 @@ import {
   message,
   Input,
   Form,
-  Modal,
 } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
 interface IProps {
   tabValue: string;
   receptionMessage: (messageprofit: boolean) => void;
+  canlendarCallback: () => void;
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -50,7 +49,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const childCustomcol = useSelector(
     (state: AsinTable.IDvaState) => state.asinTable.childCustomcol
   );
-  const functionCount = useSelector((state: IConnectState) => state.user.currentUser.memberFunctionalSurplus.find(item => item.functionName === 'ASIN报表导出')?.frequency || 0);  
+
 
   // hooks
   const [searchForm] = Form.useForm();
@@ -67,7 +66,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const [loading, setLoading] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<AsinTable.IChildResocds[]>([]);
   const [summary, setSummary] = useState<AsinTable.IChildSummaryType|null>(null);
-  const [calendar, setCalendar] = useState<string>(storage.get(adinTableCalendar) || '7'); // 日历
+  const [calendar, setCalendar] = useState<string>(storage.get(`${adinTableCalendar}_dc_itemKey`) || '7'); // 日历
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
@@ -515,91 +514,59 @@ const ChildAsin: React.FC<IProps> = props => {
   const calendarChange = (selectItem: string) => {
     setCalendar(selectItem);
     setCalendarFlag(!calendarFlag);
+    props.canlendarCallback();
   };
 
   // 导出
   const uploadTable = () => {
-    // if (functionCount <= 0 ) {
-    //   message.error(`当前会员等级本月剩余可导出：${functionCount}次`);
-    //   return;
-    // }
-
-    Modal.confirm({
-      title: '本次导出将消耗1次导出次数',
-      icon: null,
-      okText: '确定',
-      cancelText: '取消',
-      centered: true,
-      onOk() {
-        const payload = {
-          headersParams: {
-            StoreId: currentShop.id,
-          },
-          current,
-          size: pageSize,
-          sellerId: currentShop.sellerId,
-          marketplace: currentShop.marketplace,
-          search: searchForm.getFieldValue(['search']),
-          ...getCalendarFields(calendar, adinTableCalendar),
-          ...searchForm.getFieldsValue(),
-        };
-    
-        setExportText('正在导出');
-        new Promise((resolve, reject) => {
-          dispatch({
-            type: 'asinTable/exportChildTable',
-            payload,
-            reject,
-            resolve,
-          });
-        }).then(datas => {
-          const { type, message: msg } = datas as {
-            type: string;
-            message: string;
-          };
-          // 返回的是blob的数据格式，如果格式不是application/octet-stream 的话，就证明导出失败了
-
-          setExportText('导出');
-          if (!type || type !== 'application/octet-stream') {
-            message.error(msg || '导出失败！');
-            return;
-          }
-          
-          dispatch({
-            type: 'user/updateMemberFunctionalSurplus',
-            payload: {
-              functionName: 'ASIN报表导出',
-            },
-          });
-          
-          const content = datas as BlobPart;
-          const blob = new Blob([content], {
-            type: 'application/octet-stream;charset=utf-8',
-          });
-          const {
-            startDate,
-            endDate,
-          } = storage.get(`${adinTableCalendar}_date`);
-          const fileName = `${currentShop.storeName}__${startDate}__${endDate}.xlsx`;
-          if ('download' in document.createElement('a')) { // 非IE下载
-            const elink = document.createElement('a');
-            elink.download = fileName;
-            elink.style.display = 'none';
-            elink.href = URL.createObjectURL(blob);
-            document.body.appendChild(elink);
-            elink.click();
-            URL.revokeObjectURL(elink.href); // 释放URL 对象
-            document.body.removeChild(elink);
-          } else { // IE10+下载
-            navigator.msSaveBlob(blob, fileName);
-          }
-          
-        }).catch(err => {
-          console.error(err);
-          message.error('导出失败！');
-          setExportText('导出失败');
-        });
+    const payload = {
+      headersParams: {
+        StoreId: currentShop.id,
       },
+      current,
+      size: pageSize,
+      sellerId: currentShop.sellerId,
+      marketplace: currentShop.marketplace,
+      search: searchForm.getFieldValue(['search']),
+      ...getCalendarFields(calendar, adinTableCalendar),
+      ...searchForm.getFieldsValue(),
+    };
+
+    setExportText('正在导出');
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: 'asinTable/exportChildTable',
+        payload,
+        reject,
+        resolve,
+      });
+    }).then(datas => {
+      const content = datas as BlobPart;
+      const blob = new Blob([content], {
+        type: 'application/octet-stream;charset=utf-8',
+      });
+      const {
+        startDate,
+        endDate,
+      } = storage.get(`${adinTableCalendar}_date`);
+      const fileName = `${currentShop.storeName}__${startDate}__${endDate}.xlsx`;
+      if ('download' in document.createElement('a')) { // 非IE下载
+        const elink = document.createElement('a');
+        elink.download = fileName;
+        elink.style.display = 'none';
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click();
+        URL.revokeObjectURL(elink.href); // 释放URL 对象
+        document.body.removeChild(elink);
+      } else { // IE10+下载
+        navigator.msSaveBlob(blob, fileName);
+      }
+      setExportText('导出');
+    }).catch(err => {
+      console.error(err);
+      message.error('导出失败！');
+      setExportText('导出失败');
     });
   };
 
@@ -670,10 +637,10 @@ const ChildAsin: React.FC<IProps> = props => {
         </div>
         <div className={commonStyles.calendar}>
           <DefinedCalendar 
-            checkedItem={calendar} 
+            itemKey={calendar} 
             storageKey={adinTableCalendar} 
             index={1}
-            change={({ selectItem }) => calendarChange(selectItem)}
+            change={({ selectItemKey }) => calendarChange(selectItemKey)}
             style={{
               width: 280,
             }} />

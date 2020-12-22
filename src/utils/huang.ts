@@ -24,6 +24,7 @@ export const storageKeys = {
   asinOrderCheckDoufu: 'asinOrderCheckDoufu', // ASIN总览 - 订单解读选中的豆腐块
   asinB2BCheckDoufu: 'asinB2BCheckDoufu', // ASIN总览 - B2B销售 选中的豆腐块
   asinB2BDateRange: 'asinB2BDateRange', // ASIN总览 - B2B销售 周期
+  asinDsellDateRange: 'asinDsellDateRange', // ASIN总览 - 地区销售 周期
   adinTableCalendar: 'adinTableCalendar', // ASIN报表 周期
   asinTableChildCustomCol: 'asinTableChildCustomCol', // ASIN报表 子ASIN自定义列
   asinTableParentCustomCol: 'asinTableParentCustomCol', // ASIN报表 子ASIN自定义列

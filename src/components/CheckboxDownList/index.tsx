@@ -117,14 +117,9 @@ const CheckboxDownList: React.FC<IProps> = (props) => {
         onVisibleChange={commectFlag}
         className={styles.menu}
         visible={visible} >
-        <Button style={btnStyle}>
+        <Button style={btnStyle} className={`${styles.showBtn} ${visible ? styles.active : ''}`}>
           {showName} 
-          <DownOutlined 
-            className={`
-              ${styles.icon}
-              ${visible ? styles.select_icon : ''} 
-            `}
-          />
+          <DownOutlined className={` ${styles.icon}`}/>
         </Button>
       </Dropdown>
     </div>

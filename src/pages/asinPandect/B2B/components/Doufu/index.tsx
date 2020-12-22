@@ -124,7 +124,7 @@ const Toolbar: React.FC<IProps> = (props) => {
                   <span style={{
                     display: mianflag ? 'none' : 'inline-block',
                   }}>{showSymbol ? <ShowData value={item.data} isCurrency /> : 
-                      <ShowData value={item.data} />}</span>
+                      <ShowData value={item.data} fillNumber={0}/>}</span>
                   <span style={{
                     display: mianflag ? 'none' : 'inline-block',
                   }}>{percent ? '%' : ''}</span>
@@ -144,7 +144,7 @@ const Toolbar: React.FC<IProps> = (props) => {
                     <span style={{
                       color: '#888',
                     }}>—</span> : (showSymbol ? <ShowData value={item.lastData} isCurrency /> : 
-                      <ShowData value={item.lastData} />)
+                      <ShowData value={item.lastData} fillNumber={0}/>)
                   }
                 </span>
               </p>

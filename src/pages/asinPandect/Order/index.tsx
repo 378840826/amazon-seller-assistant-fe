@@ -3,7 +3,7 @@ import styles from './index.less';
 import UpdateComponent from './components/UpdateComponent';
 import PageViewSession from './components/PageViewSession';
 import PageView from './components/PageView';
-import DefineCalendar from '@/components/DefinedCalendar';
+import DefinedCalendar from '@/components/DefinedCalendar';
 import CheckboxDownList from '@/components/CheckboxDownList';
 import TableNotData from '@/components/TableNotData';
 import Statistic from './components/Statistic';
@@ -298,7 +298,8 @@ const Order: React.FC = () => {
       return;
     }
     
-    // 初始化豆腐块、折线图数据
+    setLcLoading(true);
+    // 初始化豆腐块、折线图、 分页数据
     new Promise((resolve, reject) => {
       if (Number(StoreId) <= -1) {
         return;
@@ -311,6 +312,7 @@ const Order: React.FC = () => {
         payload,
       });
     }).then(datas => {
+      setLcLoading(false);
       setLcLoading(false);
       const { data } = datas as {
         data: {
@@ -590,7 +592,7 @@ const Order: React.FC = () => {
 
   // 周期的更改
   const handleRangeChange = (dates: DefinedCalendar.IChangeParams) => {
-    setDateRangeItem(dates.selectItem);
+    setDateRangeItem(dates.selectItemKey);
     setChCondition(!chCondition); // why? 更改不同月份时，不会重新渲染dateRangeItem
   };
 
@@ -660,6 +662,7 @@ const Order: React.FC = () => {
             cb={customColData}
             btnStyle={{
               width: 116,
+              marginRight: 15,
             }}
             listStyle={{
               width: 168,
@@ -669,7 +672,7 @@ const Order: React.FC = () => {
             showName="自定义数据"
           />
          
-          <DefineCalendar 
+          <DefinedCalendar 
             storageKey={asinOrderDateRange}
             className={styles.define}
             change={handleRangeChange}
