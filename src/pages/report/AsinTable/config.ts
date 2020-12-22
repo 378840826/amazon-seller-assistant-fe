@@ -224,7 +224,7 @@ export function getCalendarFields(val: string, key: string) {
     const {
       startDate,
       endDate,
-    } = storage.get(`${key}_date`);
+    } = storage.get(`${key}_dc_dateRange`);
     return {
       startTime: startDate,
       endTime: endDate,

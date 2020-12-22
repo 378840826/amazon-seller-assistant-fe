@@ -1,10 +1,11 @@
 /*
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
- * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\pages\asinPandect\models\global.ts
  * 
  * ASIN总览的store
+ * 
+ * DEV US/DROK 多个兄弟ASIN的B06XJF7LW6
  */
 import { Reducer, Effect } from 'umi';
 import {

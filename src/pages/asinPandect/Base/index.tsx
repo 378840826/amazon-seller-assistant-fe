@@ -568,7 +568,9 @@ const AsinBase: React.FC = () => {
                   <label className={styles.label}>
                     <span className={styles.labelText}>
                     仓储费用：
-                      <Tooltip title="平均每件货物的仓储费用（从入仓到卖出）">
+                      <Tooltip overlayStyle={{
+                        maxWidth: 285,
+                      }} title="平均每件货物的仓储费用（从入仓到卖出）">
                         <QuestionCircleOutlined className={styles.icon}/>
                       </Tooltip>
                     </span>
