@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './index.less';
+import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
+
 
 interface IProps {
   update: string;
@@ -26,10 +28,10 @@ const Update: React.FC<IProps> = props => {
   }, [update]);
 
   return <div className={styles.updateBox} style={style}>
-    <p className={styles.export}>
-      本月剩余可导出次数：
-      <span className={styles.exportTime}>{0}次</span>
-    </p>
+    <PageTitleRightInfo functionName="ASIN报表导出" containerStyle={{
+      position: 'static',
+      marginRight: 30,
+    }}/>
     <span>更新时间</span>
     <span className={styles.secondary}>（每天凌晨更新）：</span>
     <span>{date}</span>
