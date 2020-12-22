@@ -397,7 +397,7 @@ const BsImport: React.FC = function () {
                   );
                 },
               }, {
-                title: '操作',
+                title: <span className={styles.rightGap}>操作</span>,
                 align: 'center',
                 width: 260,
                 fixed: 'right',
@@ -418,7 +418,7 @@ const BsImport: React.FC = function () {
                           >删除</span>
                         </>
                         :
-                        <Upload {...getUploadProps('/api/mws/bs/upload', record.id)} data={{ id: record.id }}>导入</Upload>
+                        <Upload className={styles.rightGap} {...getUploadProps('/api/mws/bs/upload', record.id)} data={{ id: record.id }}>导入</Upload>
                     }
                   </div>
                 ),

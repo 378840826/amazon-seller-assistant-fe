@@ -56,7 +56,7 @@ const GoodsList: React.FC = () => {
   const { total, records: goodsList } = goodsData;
   // 店铺
   const currentShop = useSelector((state: IConnectState) => state.global.shop.current);
-  const { currency, id: currentShopId, autoPrice } = currentShop;
+  const { currency, id: currentShopId, autoPrice, marketplace } = currentShop;
   const headersParams = { StoreId: currentShopId };
 
   // 分页
@@ -245,6 +245,12 @@ const GoodsList: React.FC = () => {
   // 各种方式修改售价（按百分比，增量，目标值修改）
   const updatePrice: IUpdatePrice = (options) => {
     const { type, ids, price, operator, unit, changeValue } = options;
+    if (marketplace === 'JP') {
+      if (type === 1 && price !== undefined && price % 1 !== 0) {
+        message.error('日本站的金额不能设置为小数!');
+        return;
+      }
+    }
     dispatch({
       type: 'goodsList/updatePrice',
       payload: {
@@ -266,6 +272,18 @@ const GoodsList: React.FC = () => {
       maxPrice: newRecord.maxPrice,
       ruleId: newRecord.ruleId,
     };
+    if (marketplace === 'JP') {
+      if (
+        goods.cost % 1 !== 0 ||
+        goods.freight % 1 !== 0 ||
+        goods.minPrice % 1 !== 0 ||
+        goods.maxPrice % 1 !== 0
+      ) {
+        message.error('日本站的金额不能设置为小数!');
+        return;
+      }
+    }
+
     dispatch({
       type: 'goodsList/updateGoods',
       payload: {
@@ -323,6 +341,7 @@ const GoodsList: React.FC = () => {
       sort,
       order,
       currency,
+      marketplace,
     });
     return cols;
   };

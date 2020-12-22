@@ -55,7 +55,21 @@ export const getFullColumns = (params: any) => {
     sort,
     order,
     currency,
+    marketplace,
   } = params;
+
+  // 获取用于展示的价格（区分日本站）
+  const getShowPrice = (price: number | null) => {
+    let result = '';
+    if (price !== null) {
+      if (marketplace === 'JP') {
+        result = String(price);
+      } else {
+        result = price.toFixed(2);
+      }
+    }
+    return result;
+  };
 
   // 点击下拉排序
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -323,7 +337,7 @@ export const getFullColumns = (params: any) => {
             customCols.price
             &&
             editable({
-              inputValue: price && price.toFixed(2),
+              inputValue: getShowPrice(price),
               formatValueFun: strToMoneyStr,
               prefix: currency,
               maxLength: 20,
@@ -361,7 +375,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (price, record) => (
         editable({
-          inputValue: price && price.toFixed(2),
+          inputValue: getShowPrice(price),
           formatValueFun: strToMoneyStr,
           prefix: price === null ? '' : currency,
           maxLength: 20,
@@ -384,7 +398,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (freight, record) => (
         editable({
-          inputValue: freight && freight.toFixed(2),
+          inputValue: getShowPrice(freight),
           formatValueFun: strToMoneyStr,
           prefix: freight === null ? '' : currency,
           maxLength: 20,
@@ -416,7 +430,7 @@ export const getFullColumns = (params: any) => {
             (
               commission
                 ?
-                <div>{currency}{commission && commission.toFixed(2)}</div>
+                <div>{currency}{getShowPrice(commission)}</div>
                 :
                 '—'
             )
@@ -652,7 +666,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (minPrice, record) => (
         editable({
-          inputValue: minPrice && minPrice.toFixed(2),
+          inputValue: getShowPrice(minPrice),
           formatValueFun: strToMoneyStr,
           prefix: minPrice === null ? '' : currency,
           maxLength: 20,
@@ -688,7 +702,7 @@ export const getFullColumns = (params: any) => {
       width: 90,
       render: (maxPrice, record) => (
         editable({
-          inputValue: maxPrice && maxPrice.toFixed(2),
+          inputValue: getShowPrice(maxPrice),
           formatValueFun: strToMoneyStr,
           prefix: maxPrice === null ? '' : currency,
           maxLength: 20,

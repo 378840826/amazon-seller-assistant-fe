@@ -38,7 +38,7 @@
 
 .Table {
   tr .deleteBtn {
-    display: none;
+    opacity: 0;
     color: @error-color;
 
     &:hover {
@@ -49,8 +49,13 @@
 
   tr:hover {
     .deleteBtn {
-      display: initial;
+      opacity: 1;
     }
+  }
+
+  // 使整列看起来居中对齐
+  .rightGap {
+    padding-right: 36px;
   }
 
   :global {

@@ -64,7 +64,7 @@ const TopAlert: React.FC<IProps> = props => {
         { validPeriod > 0 ? validPeriod : 0 }天
       </span>
     );
-    const vipLink = <Link to="/vip/menbership"><span>续费</span>{icon}</Link>;
+    const vipLink = <Link to="/vip/membership"><span>续费</span>{icon}</Link>;
     const text = validPeriod > 0 ? '为避免影响使用' : '部分功能已暂停更新数据';
     return (
       <div className={className}>

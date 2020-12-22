@@ -24,6 +24,7 @@ interface IProps {
   checkedGoodsIds: string[];
   checkedGoodsAsins: (string | undefined)[];
   goodsListRecords: API.IGoods[];
+  marketplace: API.Site;
 }
 
 const BatchSet: React.FC<IProps> = props => {
@@ -46,6 +47,7 @@ const BatchSet: React.FC<IProps> = props => {
     checkedGoodsIds,
     checkedGoodsAsins,
     goodsListRecords,
+    marketplace,
   } = props;
 
   const headersParams = { StoreId: currentShop.id };
@@ -64,6 +66,15 @@ const BatchSet: React.FC<IProps> = props => {
     }
     setBatchSetFocus('');
     const type = values.operator === '=' ? 1 : 2;
+    if (marketplace === 'JP') {
+      if (
+        type === 1 && Number(values.price) % 1 !== 0 ||
+        type === 2 && values.unit === 'currency' && Number(values.changeValue) % 1 !== 0
+      ) {
+        message.error('日本站的金额不能设置为小数!');
+        return;
+      }
+    }
     dispatch({
       type: 'goodsList/updatePrice',
       payload: {

@@ -77,7 +77,6 @@ const BsDetails: React.FC = () => {
     },
   };
 
-
   return (
     <div className={styles.page}>
       <div className={styles.pageTitle}>
@@ -104,7 +103,7 @@ const BsDetails: React.FC = () => {
           }, {
             title: 'Title',
             dataIndex: 'title',
-            align: 'center',
+            align: 'left',
             fixed: 'left',
             width: 300,
             render: title => <Paragraph title={title} ellipsis={{ rows: 2 }}>{title}</Paragraph>,
