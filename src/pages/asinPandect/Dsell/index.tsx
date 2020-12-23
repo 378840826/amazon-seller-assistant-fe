@@ -1,10 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styles from './index.less';
 import './index.css';
+import { storageKeys } from '@/utils/huang';
+import { storage } from '@/utils/utils';
 import { 
   handleMapBarCoordinates,
   sumBarHeight,
   sumBarY,
+  geDateFields,
 } from './function';
 import { useDispatch, useSelector } from 'dva';
 import echarts from 'echarts';
@@ -21,6 +24,7 @@ interface IMapOptionsType {
   series: any[]; /* eslint-disable-line */
 }
 
+const { asinDsellDateRange } = storageKeys;
 const AsinBase: React.FC = () => {
   const dispatch = useDispatch();
   const current = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -30,23 +34,14 @@ const AsinBase: React.FC = () => {
   const [salesBar] = useState<boolean>(true); // 销量柱
   const [repertoryBar] = useState<boolean>(true); // 库存柱
   const [update, setUpdate] = useState<string>('');
-  const [dateStart, setDateStart] = useState<string>('');
-  const [dateEnd, setDateEnd] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [calendar, setCalendar] = useState<string>(storage.get(`${asinDsellDateRange}_dc_itemKey`) || '7');
+  const [chCondition, setChCondition] = useState<boolean>(false); // 专门用于控制请求的
   
   useEffect(() => {
     setLoading(true);
     if (Number(StoreId) <= -1) {
       return;
-    }
-
-    if (dateStart === '') {
-      return ;
-    }
-
-    if (dateEnd === '') {
-      return ;
     }
 
     new Promise((resolve, reject) => {
@@ -56,8 +51,7 @@ const AsinBase: React.FC = () => {
         reject,
         payload: {
           asin: currentAsin,
-          dateStart,
-          dateEnd,
+          ...geDateFields(calendar, asinDsellDateRange),
           headersParams: {
             StoreId,
           },
@@ -276,13 +270,12 @@ const AsinBase: React.FC = () => {
       console.error(err);
       setLoading(false);
     });
-  }, [dispatch, current, StoreId, currentAsin, dateStart, dateEnd, mapRef]);
+  }, [dispatch, current, StoreId, currentAsin, mapRef, calendar, chCondition]);
 
-
-  // 自定义日期的回调
-  const dateCb = (dates: DefinedCalendar.ICbType) => {
-    setDateStart(dates.dateStart);
-    setDateEnd(dates.dateEnd);
+  // 日历的回调
+  const calendarCb = (dates: DefinedCalendar.IChangeParams) => {
+    setCalendar(dates.selectItemKey);
+    setChCondition(!chCondition);
   };
 
   return (
@@ -292,11 +285,14 @@ const AsinBase: React.FC = () => {
           <header>
             <Update update={update} />
             <div>
-              <DefinedCalendar style={
-                {
-                  width: 280,
-                }
-              } cb={dateCb} storageKey="test"/>
+              <DefinedCalendar style={{
+                width: 280,
+              }} 
+              change={calendarCb} 
+              storageKey={asinDsellDateRange}
+              itemKey={storage.get(`${asinDsellDateRange}_dc_itemKey`) || '7'}
+              />
+
             </div>
           </header>
           <div ref={mapRef} style={

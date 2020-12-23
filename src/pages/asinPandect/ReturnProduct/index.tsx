@@ -2,7 +2,6 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-07-30 09:47:27
- * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\pages\asinPandect\ReturnProduct\index.tsx
  */ 
 
@@ -14,9 +13,9 @@ import ReturnRatioComponent from './components/ReturnRatio';
 import StatisticComponent from './components/Statistic';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import Rate from '@/components/Rate';
-import { storageKeys, isEmptyObj, getRangeDate } from '@/utils/huang';
+import { storageKeys, isEmptyObj } from '@/utils/huang';
 import { storage } from '@/utils/utils';
-import { handleTooltip } from './function';
+import { handleTooltip, geDateFields } from './function';
 import moment from 'moment';
 import TableNotData from '@/components/TableNotData';
 
@@ -33,7 +32,6 @@ import echarts from 'echarts';
 
 
 const { asinBrDateRange } = storageKeys;
-let req = {}; // 请求参数
 const ReturnProduct: React.FC = () => {
   const dispatch = useDispatch();
   // 折线图容器
@@ -53,29 +51,20 @@ const ReturnProduct: React.FC = () => {
   const [dataSource, setDataSource] = useState<ReturnProduct.IReturnReason[]>([]); // 退货详情
   const [loading, setLoading] = useState<boolean>(true); // loading
   const asin = useSelector((state: ReturnProduct.IAsinGlobal) => state.asinGlobal.asin );
-  const { startDate, endDate } = storage.get(`asinBrDateRange_date`);
-  const { start, end } = getRangeDate(7, false);
 
-
-  // 初始化请求数据
-  req = {
-    headersParams: {
-      StoreId: current.id,
-    },
-    dateStart: startDate || start,
-    dateEnd: endDate || end,
-    cycle: 1,
-    statisticalMethods: statisCurrent,
-    asin,
-  };
 
   const requestBody = useCallback((params = {}) => {
-    let payload = {};
-    if (params) {
-      payload = Object.assign({}, req, params);
-    } else {
-      payload = req;
-    }
+    let payload = {
+      headersParams: {
+        StoreId: current.id,
+      },
+      statisticalMethods: statisCurrent,
+      ...geDateFields(storage.get(`${asinBrDateRange}_dc_itemKey`) || '7', asinBrDateRange),
+      asin,
+    };
+
+    payload = Object.assign({}, payload, params);
+    
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
@@ -93,7 +82,7 @@ const ReturnProduct: React.FC = () => {
       message.error(err);
       setLoading(false);
     });
-  }, [dispatch]);
+  }, [dispatch, current, asin, statisCurrent]);
 
   // 请求数据
   useEffect(() => {
@@ -455,14 +444,13 @@ const ReturnProduct: React.FC = () => {
   };
 
   // 日历的回调
-  const calendarCb = (dates: {}) => {
+  const calendarCb = (dates: DefinedCalendar.IChangeParams) => {
     requestBody(dates);
   };
 
   // 统计周期
   const statisticCb = (value: string) => {
     setStatisCurrent(value);
-    requestBody({ statisticalMethods: value });
   };
 
   // 点击豆腐块退货量
@@ -486,7 +474,8 @@ const ReturnProduct: React.FC = () => {
           } update={updateTime}/>
           <DefinedCalendar 
             change={calendarCb} 
-            storageKey={asinBrDateRange} 
+            storageKey={asinBrDateRange}
+            itemKey={storage.get(`${asinBrDateRange}_dc_itemKey`) || '7'}
             style={
               {
                 width: 280,

@@ -20,6 +20,8 @@ interface IProps {
   onOk: (value: string) => Promise<boolean|unknown>; // true 修改值， false不修改值
   successText?: string; // 修改成功后的提示、return Promise.resolve(true);
   errorText?: string; // 修改失败后的提示、return Promise.resolve(false);
+  pid: number;
+  clickText: (id: number) => void;
 }
 
 const MultilLineEdit: React.FC<IProps> = props => {
@@ -28,13 +30,28 @@ const MultilLineEdit: React.FC<IProps> = props => {
     onOk,
     successText,
     errorText,
+    pid,
+    clickText,
   } = props;
   const [showValue, setShowValue] = useState<string>(''); // 显示的值
   const [editValue, setEditValue] = useState<string>(defaultValue); // 编辑框的值
   const [visible, setVisible] = useState<boolean>(false); // 是否显示输入框
   const [loading, setLoading] = useState<boolean>(false); // 确定按钮的loading
+  const [privateId] = useState(Math.random()); // 用来控制已经打开的编辑框隐藏的条件
 
   const boxRef = useRef(null);
+
+  useEffect(() => {
+    if (pid === 0) {
+      return;
+    }
+    
+    if (pid === privateId) {
+      // 同相件
+    } else {
+      setVisible(false);
+    }
+  }, [privateId, pid]);
 
 
   useEffect(() => {
@@ -98,6 +115,16 @@ const MultilLineEdit: React.FC<IProps> = props => {
     });
   };
 
+  // 点击编辑
+  const clickEdit = () => {
+    new Promise(resolve => {
+      clickText(privateId);
+      resolve('');
+    }).then(() => {
+      setVisible(true);
+    });
+  };
+
   // 加载中
   const antIcon = <LoadingOutlined style={{
     fontSize: 20,
@@ -112,12 +139,13 @@ const MultilLineEdit: React.FC<IProps> = props => {
       <div
         className={styles.showContentDiv} 
         dangerouslySetInnerHTML={{ __html: showValue }}
-        onClick={() => setVisible(!visible)}
+        onClick={clickEdit}
       />
     </div>
     <div className={classnames(
       styles.editInputBox,
       visible ? '' : 'none',
+      'h-multi-line-editbox'
     )}>
       <Input.TextArea
         value={editValue} 

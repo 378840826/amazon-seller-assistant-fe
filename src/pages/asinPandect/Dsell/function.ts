@@ -1,4 +1,5 @@
 // 处理函数
+import { storage } from '@/utils/utils';
 
 /**
  * @name handleMapBarCoordinates 根据州名(英文)处理地图上桩形坐标
@@ -159,3 +160,57 @@ export function sumBarY(num: number, y: number) {
   const offset = 80 - num;
   return y + offset;
 }
+
+/**
+ * 将日期参数转换成后端想要的参数
+ * 周期类型：{1代表最近7天，2代表最近30天，3代表最近60天，4代表最近90天，5代表最近180天，6代表最近365天，7代表今年，8代表上年}
+ * 
+ * 按月/周查看传dateStart dateEnd
+ */
+export function geDateFields(val: string, key: string) {
+  const newVal = Number(val);
+  const result = {
+    cycle: 0,
+  };
+  if (isNaN(newVal)) {
+    if (val === 'year') {
+      result.cycle = 7;
+      return result;
+    } else if (val === 'lastYear') {
+      result.cycle = 8;
+      return result;
+    }
+    const {
+      startDate,
+      endDate,
+    } = storage.get(`${key}_date`);
+    return {
+      startTime: startDate,
+      endTime: endDate,
+    };
+  } 
+  switch (newVal) {
+  case 7:
+    result.cycle = 1;
+    break;
+  case 30:
+    result.cycle = 2;
+    break;
+  case 60:
+    result.cycle = 3;
+    break;
+  case 90:
+    result.cycle = 4;
+    break;
+  case 180:
+    result.cycle = 5;
+    break;
+  case 365:
+    result.cycle = 6;
+    break;
+  default: 
+    //
+  }
+  return result;
+}
+

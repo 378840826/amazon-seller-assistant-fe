@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { CalendarOutlined, SwapRightOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import { Moment } from 'moment/Moment';
 import 'moment/locale/zh-cn';
 import { storage } from '@/utils/utils';
@@ -19,8 +20,7 @@ interface IProps {
   className?: string;
   width?: number|string; // 显示日期框的宽度
   storageKey?: string; // storageKey属性存在时会本地存储
-  checkedItem?: string; // 默认选中的key 
-  cb?: (dateInfo: DefinedCalendar.IChangeParams) => void; // 初始化触发、改变时也会触发
+  itemKey?: string; // 默认选中的key 
   change?: (dateInfo: DefinedCalendar.IChangeParams) => void; // 点击改变时才触发
   selectList?: DefinedCalendar.IDownListType[];
   index?: number; // ... 不想传下拉列表选项过来?.... 写在selectList.ts文件里吧 selectList优先级更高
@@ -31,92 +31,77 @@ interface IDownListType {
   key: string;
 }
 /**
- * 选中周/月/季时，会以${storageKey}_${selectItem}做localStorage储存
- * 选中其它时，删除周/月的记录
- * 日期保存在 storage.get(`${storageKey}_date`)
- * 再保存一个值 本地保存选中项  storageKey存在时保存  storage.get(`${storageKey}_date_checked`)
+ * 选中周/月/季时，会以${storageKey}_dc_${selectItemKey}做localStorage储存
+ * 选中其它时，删除周/月/季的记录
+ * 开始日期、结束日期保存在 storage.get(`${storageKey}_dc_dateRange`)
+ * 保存选中项 storage.get(`${storageKey}_dc_itemKey`) 即downlist下拉列表 key的值
+ * 
+ * 如果选中的是 按周 / 月 / 季查看时, 下次打开时，拿选中的开始值放进去即可保证选中组件的默认值
+ * 
  */
 const DefinedCalendar: React.FC<IProps> = props => {
   const {
     storageKey,
     className,
-    cb,
     change,
-    checkedItem,
+    itemKey,
     selectList,
     index = 0,
   } = props;
+  
 
   const [startDate, setStartDate] = useState<string>(''); // 开始日期
   const [endDate, setEndDate] = useState<string>(''); // 结束日期
-  const [selectItem, setSelectItem] = useState<string>(checkedItem || '7');// 下拉列表选中内容，默认是 “最近7天”
+  // 下拉列表选中内容，默认是 “最近7天”
+  const [selectItemKey, setSelectItemKey] = useState<string>(
+    itemKey || (storageKey ? storage.get(`${storageKey}_dc_itemKey`) : '') || '7'
+  );
 
   // 周日历相关
   const [weekCalendar, setWeekCalendar] = useState<boolean>(false); // 周日历是否显示
-  const [weekValue, setWeekValue] = useState<Moment | null>(null); // 目前只用来做清空作用
+  const [weekValue, setWeekValue] = useState<Moment | null>(null); // 清空、选中周
   
   // 月日历相关
   const [monthCalendar, setMonthCalendar] = useState<boolean>(false); // 月日历是否显示
-  const [monehtValue, setMonthValue] = useState<Moment | null>(null); // 目前只用来做清空作用
+  const [monehtValue, setMonthValue] = useState<Moment | null>(null); // 清空、选中月
 
   // 季相关
   const [quarterCalendar, setQuarterCalendar] = useState<boolean>(false); // 季日历是否显示
-  const [quarterValue, setQuarterValue] = useState<Moment | null>(null); // 目前只用来做清空作用
+  const [quarterValue, setQuarterValue] = useState<Moment | null>(null); // 清空、选中季
 
   // 下拉列表选项
   const downlist = selectList || list[index];
 
   // 渲染初始化日期
   useEffect(() => {
-    // 本地储存
-    if (storageKey) {
-      storage.set(`${storageKey}_date_checked`, selectItem);
+    const { start, end } = getRangeDate(selectItemKey, false);
 
-      if (storage.get(storageKey) === '') {
-        // 首次进入页面时初始化值
-        storage.set(storageKey, selectItem);
-        const { start, end } = getRangeDate(selectItem, false);
+    // 本地记录并且是周、月、季时
+    if (storageKey) {
+      // 主要作用：不传默认key时，下次也能获取
+      storage.set(`${storageKey}_dc_itemKey`, String(selectItemKey));
+
+      if (selectItemKey === 'week' 
+        || selectItemKey === 'month' 
+        || selectItemKey === 'quarter'
+      ) {
+        const {
+          startDate: start,
+          endDate: end,
+        } = storage.get(`${storageKey}_dc_dateRange`);
         setStartDate(start);
         setEndDate(end);
+  
+        selectItemKey === 'week' && setWeekValue(moment(start));
+        selectItemKey === 'month' && setMonthValue(moment(start));
+        selectItemKey === 'quarter' && setQuarterValue(moment(start));
         return;
       }
-      // 保存选中项
-      setSelectItem(String(storage.get(storageKey)));
-
-      // 如果选中的是按月、按周查看、按季、拿出选中的日期
-      if (selectItem === 'week' || selectItem === 'month' || selectItem === 'quarter') {
-        const strDate = storage.get(`${storageKey}_${selectItem}`);
-        const arr: string[] = strDate.split('至');
-        setStartDate(arr[0]);
-        setEndDate(arr[1]);
-      } else {
-        const { start, end } = getRangeDate(selectItem, false);
-        setStartDate(start);
-        setEndDate(end);
-      }
-    } else {
-      const { start, end } = getRangeDate(selectItem, false);
-      setStartDate(start);
-      setEndDate(end);
-    }
-  }, [selectItem, storageKey]);
-
-  useEffect(() => {
-    if (storageKey && startDate && endDate) {
-      storage.set(`${storageKey}_date`, {
-        startDate,
-        endDate,
-      });
-    }
-
-    if (cb && startDate && endDate) {
-      cb({
-        dateStart: startDate,
-        dateEnd: endDate,
-        selectItem,
-      });
-    }
-  }, [startDate, endDate, cb, storageKey, selectItem]);
+    } 
+    setStartDate(start);
+    setEndDate(end);
+    
+  }, [selectItemKey, storageKey]);
 
   // 改变下拉列表时
   const changeSelect = (current: any) => { // eslint-disable-line 
@@ -134,63 +119,61 @@ const DefinedCalendar: React.FC<IProps> = props => {
       setQuarterCalendar(true);
       break;
     default: // 最近N天
-      setMonthValue(null as null); // 清空选中的月
-      setWeekValue(null as null); // 清空选中的周
-      setQuarterValue(null as null); // 清空选中的季
       obj = getRangeDate(key, false);
       setStartDate(obj.start);
       setEndDate(obj.end);
-      setSelectItem(key);
-      storageKey ? storage.set(storageKey, key) : null;
-      storage.remove(`${storageKey}_${selectItem}`);
+      setSelectItemKey(key);
+      storageKey ? storage.set(`${storageKey}_dc_itemKey`, String(key)) : null;
+
       change ? change({
         dateStart: obj.start,
         dateEnd: obj.end,
-        selectItem: key,
+        selectItemKey: key,
       }) : null;
     }
   };
 
   // 处理季/月/周的函数
-  const handleWeebMonth = (type: string, date: Moment | null| Date) => {
+  const handleWeebMonthQuarter = (type: string, date: Moment | null| Date) => {
     const { start, end } = getRangeDate(type, false, date as Date);
     setStartDate(start); // 页面开始日期
     setEndDate(end); // 页面结束日期
-    setSelectItem(type); // 记录选中的下拉列表
-    storageKey ? storage.set(storageKey, type) : null; // 是否本地储存选择项
-    storage.set(`${storageKey}_${type}`, `${start}至${end}`); // 存在本地，以便读取
+    setSelectItemKey(type); // 记录选中的下拉列表
+    storage.set(`${storageKey}_dc_dateRange`, {
+      startDate: start,
+      endDate: end,
+    });
+
+    setMonthValue(null as null); // 清空选中的月
+    setWeekValue(null as null); // 清空选中的周
+    setQuarterValue(null as null); // 清空选中的季
+    type === 'week' && setWeekValue(moment(start));
+    type === 'month' && setMonthValue(moment(start));
+    type === 'quarter' && setQuarterValue(moment(start));
+
     change ? change({
       dateStart: start,
       dateEnd: end,
-      selectItem: type,
+      selectItemKey: type,
     }) : null;
   };
 
   // 周日历改变时
   const changeWeek = (date: Moment | null| Date) => {
     setWeekCalendar(!weekCalendar);
-    handleWeebMonth('week', date);
-    storageKey ? storage.remove(`${storageKey}_month`) : null;
-    storageKey ? storage.remove(`${storageKey}_quarter`) : null;
-    setWeekValue(date as Moment);
+    handleWeebMonthQuarter('week', date);
   };
 
   // 月日历改变时
   const changeMonth = (date: Moment | null | Date) => {
     setMonthCalendar(!monthCalendar);
-    handleWeebMonth('month', date);
-    storageKey ? storage.remove(`${storageKey}_week`) : null;
-    storageKey ? storage.remove(`${storageKey}_quarter`) : null;
-    setMonthValue(date as Moment);
+    handleWeebMonthQuarter('month', date);
   };
 
   // 季日历改变时
   const changeQuarter = (date: Moment | null | Date) => {
     setQuarterCalendar(!quarterCalendar);
-    handleWeebMonth('quarter', date);
-    storageKey ? storage.remove(`${storageKey}_week`) : null;
-    storageKey ? storage.remove(`${storageKey}_month`) : null;
-    setQuarterValue(date as Moment);
+    handleWeebMonthQuarter('quarter', date);
   };
 
   // input获取焦点时 隐藏月/周的日期
@@ -201,10 +184,15 @@ const DefinedCalendar: React.FC<IProps> = props => {
   };
 
   const menu = (
-    <Menu onClick={changeSelect} selectedKeys={[selectItem]}> 
+    <Menu onClick={changeSelect} selectedKeys={[String(selectItemKey)]}> 
       {
         downlist.map((item: IDownListType) => {
-          return <Menu.Item key={item.key} className={styles.calendarItem}>{item.text}</Menu.Item>;
+          return <Menu.Item 
+            key={String(item.key)} 
+            className={styles.calendarItem}
+          >
+            {item.text}
+          </Menu.Item>;
         })
       }
     </Menu>

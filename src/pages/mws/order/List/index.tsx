@@ -218,7 +218,7 @@ const OrderList: React.FC = () => {
           pagination={pageConfig}
           className={styles.table_style}
           id="id-table"
-          scroll={{ y: 'calc(100vh - 355px)' }}
+          scroll={{ y: 'calc(100vh - 360px)' }}
           columns = {
             [{
               title: rowColumns,

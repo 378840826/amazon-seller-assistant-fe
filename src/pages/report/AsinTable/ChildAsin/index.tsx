@@ -34,6 +34,7 @@ import { CloseOutlined } from '@ant-design/icons';
 interface IProps {
   tabValue: string;
   receptionMessage: (messageprofit: boolean) => void;
+  canlendarCallback: () => void;
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -65,7 +66,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const [loading, setLoading] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<AsinTable.IChildResocds[]>([]);
   const [summary, setSummary] = useState<AsinTable.IChildSummaryType|null>(null);
-  const [calendar, setCalendar] = useState<string>(storage.get(adinTableCalendar) || '7'); // 日历
+  const [calendar, setCalendar] = useState<string>(storage.get(`${adinTableCalendar}_dc_itemKey`) || '7'); // 日历
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
@@ -513,6 +514,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const calendarChange = (selectItem: string) => {
     setCalendar(selectItem);
     setCalendarFlag(!calendarFlag);
+    props.canlendarCallback();
   };
 
   // 导出
@@ -635,10 +637,10 @@ const ChildAsin: React.FC<IProps> = props => {
         </div>
         <div className={commonStyles.calendar}>
           <DefinedCalendar 
-            checkedItem={calendar} 
+            itemKey={calendar} 
             storageKey={adinTableCalendar} 
             index={1}
-            change={({ selectItem }) => calendarChange(selectItem)}
+            change={({ selectItemKey }) => calendarChange(selectItemKey)}
             style={{
               width: 280,
             }} />
