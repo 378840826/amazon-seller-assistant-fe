@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'umi';
 import moment from 'moment';
 import styles from './index.less';
+import { storage } from '@/utils/utils';
 import { IConnectState } from '@/models/connect';
 import OperatorBar from './components/operatorBar';
 import EchartsCom from './components/EchartsCom';
@@ -19,6 +20,7 @@ interface IState{
   message: string;
   chartLoading: boolean;
 }
+
 const MemoEchartsCom = memo(EchartsCom);
 const DynamicAsin: React.FC = () => {
   const dispatch = useDispatch();
@@ -31,8 +33,9 @@ const DynamicAsin: React.FC = () => {
     dateStart: moment().subtract(29, 'days').format('YYYY-MM-DD'),
     dateEnd: moment().format('YYYY-MM-DD'),
     cycle: '',
-    properties: ['orderQuantity', 'bigCategoryRanking'],
-    changeType: ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'],
+    properties: (storage.get('asinDynamic') && storage.get('asinDynamic').properties) || ['orderQuantity', 'bigCategoryRanking'],
+    changeType: (storage.get('asinDynamic') && storage.get('asinDynamic').changeType) || ['changeImage', 'changeTitle', 'changeDeal', 
+      'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'],
   });
 
   const [state, setState] = useState<IState>({

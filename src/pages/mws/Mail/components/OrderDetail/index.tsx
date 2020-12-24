@@ -1,5 +1,5 @@
 import React from 'react';
-import defaultImage from '@/assets/stamp.png';
+import defaultImage from '@/assets/default.svg';
 import { Typography } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import styles from './index.less';
@@ -24,7 +24,7 @@ const OrderDetail: React.FC<IOrderDetail> = ({ item, key, bottom }) => {
           }} />
         </div>
         
-        <Paragraph className={styles.title_link} ellipsis={{ rows: 2 }}>
+        <Paragraph title={item.title} className={styles.title_link} ellipsis={{ rows: 2 }}>
           <Iconfont className={styles.icon_link} type="icon-lianjie"/>
           <a href={item.titleLink} rel="noreferrer" target="_blank">
             {item.title}

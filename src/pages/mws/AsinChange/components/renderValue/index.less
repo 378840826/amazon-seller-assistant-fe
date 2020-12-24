@@ -12,12 +12,16 @@
 }
 
 .imgsContainer {
-  display: flex;
+  text-align: center;
 
   .imgContainer {
-    flex: 1;
+    display: inline-block;
     width: 28px;
     height: 28px;
+
+    & + .imgContainer {
+      margin-left: 8px;
+    }
 
     img {
       max-width: 100%;

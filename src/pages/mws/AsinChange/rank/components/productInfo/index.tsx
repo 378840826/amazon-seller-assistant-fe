@@ -17,7 +17,7 @@ const ColumnOrderInfo: React.FC<IColumnOrderProps> = ({ item, className }) => {
       { [`${className}`]: className !== undefined })}>
       <div className={styles.img}>
         <LazyLoad height={'100%'} width={'100%'} offsetVertical={100}>
-          <img src={item.imgLink} onError={(e) => { 
+          <img src={item.imgLink === '' ? defaultImage : item.imgLink} onError={(e) => { 
             e.target.onerror = null;e.target.src = `${defaultImage}` ; 
           }} />
         </LazyLoad>

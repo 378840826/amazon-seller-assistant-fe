@@ -1,6 +1,6 @@
 import React from 'react';
 import LazyLoad from 'react-lazy-load';
-import defaultImage from '@/assets/stamp.png';
+import defaultImage from '@/assets/default.svg';
 import styles from './index.less';
 import { Typography } from 'antd';
 const { Paragraph } = Typography;
