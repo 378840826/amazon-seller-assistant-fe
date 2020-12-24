@@ -314,7 +314,7 @@ const Header: React.FC = () => {
             handleClickDelete(key);
           }}
         >
-          <Iconfont type="icon-guanbi1" />
+          <Iconfont type="icon-cuo" />
         </span>
       </span>
     );

@@ -129,7 +129,7 @@ export default (props: IProps) => {
       <div className={styles.editContent} onClick={clickEdit}>
         {showValue}
         <Iconfont 
-          type="icon-xiugaishubiaojingguo" 
+          type="icon-xiugai" 
           className={classnames(styles.editIcon, 'h-async-default-icon')}
         />
       </div>

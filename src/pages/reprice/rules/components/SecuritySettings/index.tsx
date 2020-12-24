@@ -64,7 +64,7 @@ const SecuritySettings: React.FC<IProps> = props => {
             <Input className={styles.securityValue} />
           </Item>
           <Tooltip title="现有库存=available库存+reserved可售库存" overlayClassName={styles.tooltip} >
-            <Iconfont type="icon-shuoming-shubiaojingguo-copy" className={styles.hintIcon}/>
+            <Iconfont type="icon-yiwen" className={styles.hintIcon}/>
           </Tooltip>
         </div>
        

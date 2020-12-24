@@ -39,7 +39,7 @@ const Recommend: React.FC<IProps> = props => {
       placement="left"
       className={styles.delIcon}
     >
-      <Iconfont type="icon-guanbi1" />
+      <Iconfont type="icon-cuo" />
     </Popconfirm>
   </div>;
 };

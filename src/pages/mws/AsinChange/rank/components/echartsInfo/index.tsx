@@ -203,7 +203,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
         <div className={styles.container}>
           { item === '' ? <>
             <div className="null_bar"></div>
-            <span><Iconfont onClick={showModal} className={classnames(styles.zhexiantu, 'zhexiantu')} type="icon-zhexiantu"/></span>
+            <span><Iconfont onClick={showModal} className={classnames(styles.zhexiantu, 'zhexiantu')} type="icon-zhexiantongji"/></span>
           </>
             :
             <>
@@ -217,7 +217,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
                     <Iconfont type="icon-xiajiang" className={styles.arrow} />
                     
                   </span>}
-                <span><Iconfont onClick={showModal} className={classnames(styles.zhexiantu, 'zhexiantu')} type="icon-zhexiantu"/></span>
+                <span><Iconfont onClick={showModal} className={classnames(styles.zhexiantu, 'zhexiantu')} type="icon-zhexiantongji"/></span>
               </div>
               {(item as IItem).pages === '' ? '' : <div className={styles.__pages}>第{(item as IItem).pages}页</div>}
             </>

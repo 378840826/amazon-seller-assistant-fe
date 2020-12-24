@@ -36,7 +36,7 @@ interface IProps {
 
 const TopAlert: React.FC<IProps> = props => {
   const state = useSelector((state: IConnectState) => state);
-  const icon = <Iconfont type="icon-zhankai-copy" className={styles.linkIcon} />;
+  const icon = <Iconfont type="icon-zhankai" className={styles.linkIcon} />;
 
   // vip 到期提示
   const renderVipAlert = () => {

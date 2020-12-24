@@ -40,7 +40,7 @@ const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
           {
             carouselProps.showControl ?  
               <Iconfont className={styles.prev} 
-                type="icon-xiangyoujiantou-copy" 
+                type="icon-xiangyoujiantou" 
                 onClick={(e) => onPrevious(e)}/>
               :
               ''
@@ -63,7 +63,7 @@ const OrderInfo: React.FC<IOrderInfo> = ({ info }) => {
             carouselProps.showControl ? 
               <Iconfont 
                 className={styles.next} 
-                type="icon-jiantou" 
+                type="icon-xiangyoujiantou" 
                 onClick={(e) => onNext(e)}/>
               :
               ''

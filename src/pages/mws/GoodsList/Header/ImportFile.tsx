@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, Input } from 'antd';
 import { request, Link, useDispatch } from 'umi';
-import styles from './index.less';
+import { PaperClipOutlined } from '@ant-design/icons';
 import { Iconfont, storage } from '@/utils/utils';
+import styles from './index.less';
 
 const ImportFile: React.FC = () => {
   const dispatch = useDispatch();
@@ -75,7 +76,7 @@ const ImportFile: React.FC = () => {
         file
           ?
           <div key="" className={styles.fileName}>
-            <Iconfont type="icon-lianjie1" className={styles.fileIcon} />
+            <PaperClipOutlined className={styles.fileIcon} />
             {file.name}
           </div>
           :
@@ -95,7 +96,7 @@ const ImportFile: React.FC = () => {
       </Button>
       <div className={styles.fileFooter}>
         <a href="/api/mws/product/report/template-download">下载导入模版</a>
-        <Link to="/product/error-report">错误报告<Iconfont type="icon-zhankai-copy" /></Link>
+        <Link to="/product/error-report">错误报告<Iconfont type="icon-zhankai" className={styles.icon} /></Link>
       </div>
     </div>
   );

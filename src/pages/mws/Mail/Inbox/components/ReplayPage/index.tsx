@@ -18,7 +18,7 @@ const ReplayPage: React.FC<IReplayPage> = ({ request }) => {
   return (
     <div style={{ paddingBottom: '20px' }}>
       <p onClick={() => goBack(-1)} className={styles.back}>
-        <Iconfont className={styles.icon_back} type="icon-zhankai-"/>
+        <Iconfont className={styles.icon_back} type="icon-zhankai"/>
         <span>返回</span>
       </p>
       <div className={styles.down_part_overflow}>

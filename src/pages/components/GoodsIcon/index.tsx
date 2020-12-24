@@ -44,7 +44,7 @@ const icon = {
   redFlag: (title?: string) => (<Iconfont type="icon-dangqian" className={styles.redFlag} title={title} />),
   // 带圈问号
   question: (text: string) => (
-    <Iconfont title={text} type="icon-shuoming1-copy-copy" className={styles.question} />
+    <Iconfont title={text} type="icon-yiwen" className={styles.question} />
   ),
 };
 

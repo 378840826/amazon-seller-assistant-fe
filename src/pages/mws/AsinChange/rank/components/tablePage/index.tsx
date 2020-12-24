@@ -238,7 +238,7 @@ const TablePage: React.FC<ITablePage> = ({
             <div className="null_bar"></div>
             :
             <span>{text === true ? <Iconfont className={styles.yes_icon} type="icon-dui"/> 
-              : <Iconfont className={styles.close_icon} type="icon-guanbi1"/>}</span>
+              : <Iconfont className={styles.close_icon} type="icon-cuo"/>}</span>
         );
       },
     },
@@ -261,7 +261,7 @@ const TablePage: React.FC<ITablePage> = ({
             <div className="null_bar"></div>
             :
             <span>{text === true ? <Iconfont className={styles.yes_icon} type="icon-dui"/> 
-              : <Iconfont className={styles.close_icon} type="icon-guanbi1"/>}</span>
+              : <Iconfont className={styles.close_icon} type="icon-cuo"/>}</span>
         );
       },
     },

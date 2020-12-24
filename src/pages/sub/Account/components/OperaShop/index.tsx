@@ -5,6 +5,7 @@ import { Popover } from 'antd';
 import { Iconfont } from '@/utils/utils';
 import menu from '../Menu';
 import { IConnectProps } from '@/models/connect';
+import { DownOutlined } from '@ant-design/icons';
 import styles from './index.less';
 
 const style = {
@@ -76,7 +77,7 @@ const OperaShop: React.FC<IOperaShopConnectProps> = ({ storeList, stores, id }) 
               </div>
             ))}
         </div>
-        <Iconfont type="icon-xiangxiajiantou" className={styles.iconfont}/>
+        <DownOutlined className={styles.iconfont} />
       </div>
     </Popover>
   );
