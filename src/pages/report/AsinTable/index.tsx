@@ -33,6 +33,9 @@ const AsinTable = () => {
   const [messageprofitAsync, setMessageprofitAsync] = useState<boolean>(false);
   const [messageadAsync, setMessageadAsync] = useState<boolean>(false);
 
+  const [calendar, setCalendar] = useState<string>(storage.get(`${adinTableCalendar}_dc_itemKey`) || '7'); // 日历
+  const [canlendarFlag, setCanlendarFlag] = useState<boolean>(false); // 控制请求、比如点击2月、再点击3月时，
+
   // 接收消息（为提高利润统计的准确性，请在商品列表导入成本、运费 ）
   const receptionMessage = (messageprofit: boolean) => {
     setMessageProfit(messageprofit);
@@ -58,7 +61,7 @@ const AsinTable = () => {
         payload: {
           sellerId: currentShop.sellerId,
           marketplace: currentShop.marketplace,
-          ...getCalendarFields(storage.get(adinTableCalendar) || '7', adinTableCalendar),
+          ...getCalendarFields(calendar, adinTableCalendar),
         },
       });
     }).then(datas => {
@@ -95,16 +98,17 @@ const AsinTable = () => {
         setMessageadAsync(false);
       }
     });
-  }, [dispatch, currentShop, currentTab]);
+  }, [dispatch, currentShop, currentTab, calendar]);
 
 
   useEffect(() => {
     checkData();
-  }, [checkData]);
+  }, [checkData, canlendarFlag]);
 
   // 周期改变时，重新验证是否导入数据和通过MWS绑定或者广告授权
-  const canlendarCallback = () => {
-    checkData();
+  const canlendarCallback = (calendar: string) => {
+    setCalendar(calendar);
+    setCanlendarFlag(!canlendarFlag);
   };
 
   // 忽略

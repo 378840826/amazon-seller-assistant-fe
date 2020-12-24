@@ -97,10 +97,14 @@ const DefinedCalendar: React.FC<IProps> = props => {
         selectItemKey === 'quarter' && setQuarterValue(moment(start));
         return;
       }
+
+      storage.set(`${storageKey}_dc_dateRange`, {
+        startDate: start,
+        endDate: end,
+      });
     } 
     setStartDate(start);
     setEndDate(end);
-    
   }, [selectItemKey, storageKey]);
 
   // 改变下拉列表时
@@ -119,6 +123,9 @@ const DefinedCalendar: React.FC<IProps> = props => {
       setQuarterCalendar(true);
       break;
     default: // 最近N天
+      setMonthValue(null as null); // 清空选中的月
+      setWeekValue(null as null); // 清空选中的周
+      setQuarterValue(null as null); // 清空选中的季
       obj = getRangeDate(key, false);
       setStartDate(obj.start);
       setEndDate(obj.end);

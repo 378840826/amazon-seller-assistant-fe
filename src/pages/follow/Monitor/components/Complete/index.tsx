@@ -71,6 +71,7 @@ const Complete: React.FC<IProps> = ({ successCallback }) => {
       return;
     }
 
+    
     if (asin.trim() === '') {
       message.error('ASIN不能为空!');
       return;

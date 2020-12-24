@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 
-
 interface IProps {
   update: string;
   style?: React.CSSProperties;

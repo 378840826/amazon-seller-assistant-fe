@@ -36,7 +36,7 @@ import { CloseOutlined } from '@ant-design/icons';
 interface IProps {
   tabValue: string;
   receptionMessage: (messageprofit: boolean) => void;
-  canlendarCallback: () => void;
+  canlendarCallback: (calendar: string) => void;
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -516,15 +516,15 @@ const ChildAsin: React.FC<IProps> = props => {
   const calendarChange = (selectItem: string) => {
     setCalendar(selectItem);
     setCalendarFlag(!calendarFlag);
-    props.canlendarCallback();
+    props.canlendarCallback(selectItem);
   };
 
   // 导出
   const uploadTable = () => {
-    // if (functionCount <= 0 ) {
-    //   message.error(`当前会员等级本月剩余可导出：${functionCount}次`);
-    //   return;
-    // }
+    if (functionCount <= 0 ) {
+      message.error(`当前会员等级本月剩余可导出：${functionCount}次`);
+      return;
+    }
 
     Modal.confirm({
       title: '本次导出将消耗1次导出次数',
@@ -560,7 +560,6 @@ const ChildAsin: React.FC<IProps> = props => {
             message: string;
           };
           // 返回的是blob的数据格式，如果格式不是application/octet-stream 的话，就证明导出失败了
-
           setExportText('导出');
           if (!type || type !== 'application/octet-stream') {
             message.error(msg || '导出失败！');
@@ -581,7 +580,7 @@ const ChildAsin: React.FC<IProps> = props => {
           const {
             startDate,
             endDate,
-          } = storage.get(`${adinTableCalendar}_date`);
+          } = storage.get(`${adinTableCalendar}_dc_dateRange`);
           const fileName = `${currentShop.storeName}__${startDate}__${endDate}.xlsx`;
           if ('download' in document.createElement('a')) { // 非IE下载
             const elink = document.createElement('a');

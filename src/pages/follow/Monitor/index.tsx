@@ -238,6 +238,7 @@ const Monitor: React.FC = () => {
     <div className={styles.monitor}>
       <PageTitleRightInfo functionName="跟卖监控"/>
       <header className={styles.head}>
+        <PageTitleRightInfo functionName="跟卖监控"/>
         <AutoComplete successCallback={searchCallback}/>
 
         <div className={styles.btns}>

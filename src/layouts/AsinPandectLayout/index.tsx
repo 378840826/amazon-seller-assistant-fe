@@ -179,7 +179,6 @@ const AsinBase: React.FC = (props) => {
 
   const handleChange = (value: string) => {
     setCurrentSelect(value);
-    console.log('value', value);
     dispatch({
       type: 'asinGlobal/changeAsin',
       payload: {

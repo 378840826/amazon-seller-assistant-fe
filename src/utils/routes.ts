@@ -2,7 +2,6 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-10-19 16:53:46
- * @LastEditors: Please set LastEditors
  * @FilePath: \amzics-react\src\utils\routes.ts
  * 
  * 路由相关 , 懒得修改
@@ -30,7 +29,7 @@ export const asinPandectBaseRouter = '/asin/base'; // ASIN总览 - 基本信息
 export const asinPandectDynamicRouter = '/asin/dt'; // ASIN总览 - ASIN动态
 export const asinPandectOrderRouter = '/asin/order'; // ASIN总览 - 订单解读
 export const asinPandectB2bRouter = '/asin/b2b'; // ASIN总览 - B2B
-export const asinPandectPpcRouter = '/asin/ppc'; // ASIN总览 - 广告表现
+export const asinPandectPpcRouter = '/asin/ar'; // ASIN总览 - 广告表现
 export const asinPandectTerritoryRouter = '/asin/territory'; // ASIN总览 - 广告表现
 export const asinPandectReturnRouter = '/asin/return'; // ASIN总览 - 退货分析
 

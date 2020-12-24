@@ -112,7 +112,7 @@ export default [
       { title: 'ASIN总览', path: '/asin/dt', component: './asinPandect/Dynamic' },
       { title: 'ASIN总览', path: '/asin/order', component: './asinPandect/Order' },
       { title: 'ASIN总览', path: '/asin/b2b', component: './asinPandect/B2B' },
-      { title: 'ASIN总览', path: '/asin/ppc', component: './asinPandect/Base' },
+      { title: 'ASIN总览', path: '/asin/ar', component: './asinPandect/Ad' },
       { title: 'ASIN总览', path: '/asin/territory', component: './asinPandect/Dsell' },
       { title: 'ASIN总览', path: '/asin/return', component: './asinPandect/ReturnProduct' },
       // 重定向
