@@ -17,6 +17,7 @@ import { CheckOutlined } from '@ant-design/icons';
 import TableNotData from '@/components/TableNotData';
 import SwitchComponent from './components/Switch';
 import Showdata from '@/components/ShowData';
+import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import {
   Table,
 } from 'antd';
@@ -236,6 +237,7 @@ const Monitor: React.FC = () => {
   return (
     <div className={styles.monitor}>
       <header className={styles.head}>
+        <PageTitleRightInfo functionName="跟卖监控"/>
         <AutoComplete successCallback={searchCallback}/>
 
         <div className={styles.btns}>

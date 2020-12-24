@@ -20,7 +20,6 @@ export function handleTooltip(datas: ReturnProduct.ITooltip[]) {
     if (datas[0] && datas[1]) {
       const { seriesName: s1, data: d1, color: c1 } = datas[0] || {};
       const { seriesName: s2, data: d2, color: c2 } = datas[1] || {};
-      console.log(moneyFormat(d2, 2));
 
       return `<div class="echarts-line-tooltip">
         <p class="title">${date}</p>
@@ -71,6 +70,7 @@ export function geDateFields(val: string, key: string) {
   const result = {
     cycle: 0,
   };
+
   if (isNaN(newVal)) {
     if (val === 'year') {
       result.cycle = 7;
@@ -82,10 +82,10 @@ export function geDateFields(val: string, key: string) {
     const {
       startDate,
       endDate,
-    } = storage.get(`${key}_date`);
+    } = storage.get(`${key}_dc_dateRange`);
     return {
-      startTime: startDate,
-      endTime: endDate,
+      dateStart: startDate,
+      dateEnd: endDate,
     };
   } 
   switch (newVal) {

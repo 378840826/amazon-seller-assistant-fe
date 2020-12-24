@@ -51,19 +51,18 @@ const ReturnProduct: React.FC = () => {
   const [dataSource, setDataSource] = useState<ReturnProduct.IReturnReason[]>([]); // 退货详情
   const [loading, setLoading] = useState<boolean>(true); // loading
   const asin = useSelector((state: ReturnProduct.IAsinGlobal) => state.asinGlobal.asin );
+  const [calendar, setCalendar] = useState<string>(storage.get(`${asinBrDateRange}_dc_itemKey`) || '7');
+  const [chCondition, setChCondition] = useState<boolean>(false); // 专门用于控制请求的
 
-
-  const requestBody = useCallback((params = {}) => {
-    let payload = {
+  const requestBody = useCallback(() => {
+    const payload = {
       headersParams: {
         StoreId: current.id,
       },
       statisticalMethods: statisCurrent,
-      ...geDateFields(storage.get(`${asinBrDateRange}_dc_itemKey`) || '7', asinBrDateRange),
+      ...geDateFields(calendar, asinBrDateRange),
       asin,
     };
-
-    payload = Object.assign({}, payload, params);
     
     setLoading(true);
     new Promise((resolve, reject) => {
@@ -82,7 +81,7 @@ const ReturnProduct: React.FC = () => {
       message.error(err);
       setLoading(false);
     });
-  }, [dispatch, current, asin, statisCurrent]);
+  }, [dispatch, current, asin, statisCurrent, calendar]);
 
   // 请求数据
   useEffect(() => {
@@ -91,7 +90,7 @@ const ReturnProduct: React.FC = () => {
     }
     setLoading(true);
     requestBody();
-  }, [requestBody, asin, current]);
+  }, [requestBody, asin, current, chCondition]);
   
   // 接收参数
   useEffect(() => {
@@ -445,7 +444,8 @@ const ReturnProduct: React.FC = () => {
 
   // 日历的回调
   const calendarCb = (dates: DefinedCalendar.IChangeParams) => {
-    requestBody(dates);
+    setCalendar(dates.selectItemKey);
+    setChCondition(!chCondition);
   };
 
   // 统计周期
