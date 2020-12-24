@@ -119,12 +119,12 @@ const BiCard: React.FC<IProps> = props => {
                       ?
                       <a href={link} target="_blank" rel="noopener noreferrer">
                         {linkText}
-                        <Iconfont type="icon-zhankai-copy" className={styles.linkIcon} />
+                        <Iconfont type="icon-zhankai" className={styles.linkIcon} />
                       </a>
                       :
                       <Link to={link} target="_blank">
                         {linkText}
-                        <Iconfont type="icon-zhankai-copy" className={styles.linkIcon} />
+                        <Iconfont type="icon-zhankai" className={styles.linkIcon} />
                       </Link>
                   }
                 </>

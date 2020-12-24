@@ -41,7 +41,7 @@ function renderGoods(
 
 // 未绑定/授权/导入
 const renderNotData = (type: 'mwsShop' | 'ppcShop' | 'bsImport') => {
-  const icon = <Iconfont type="icon-zhankai-copy" className={styles.linkIcon} />;
+  const icon = <Iconfont type="icon-zhankai" className={styles.linkIcon} />;
   const dict = {
     mwsShop: <>店铺未绑定，<Link to="/shop/bind" target="_blank">去绑定{icon}</Link></>,
     ppcShop: <>未完成广告授权，<Link to="/ppc/shop" target="_blank">去授权{icon}</Link></>,

@@ -49,7 +49,7 @@ const Captcha: React.FC<ICapConnectProps> = (
     <div className={styles.captcha}>
       <div className={styles.container}>
         <div className={styles.iconfont}>
-          <Iconfont type="icon-guanbi1" className={styles.close} onClick={onClose}/>
+          <Iconfont type="icon-cuo" className={styles.close} onClick={onClose}/>
         </div>
         <div className={styles.formContainer}>
           <Form

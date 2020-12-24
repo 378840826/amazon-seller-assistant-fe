@@ -30,7 +30,7 @@ const Snav: React.FC<Snav.IProps> = (props) => {
                 {item.label}
               </Link> 
               {index !== navList.length ? 
-                <Iconfont type="icon-zhankai-copy" className={styles.icon}/> 
+                <Iconfont type="icon-zhankai" className={styles.icon}/> 
                 : ''
               }
             </div>;
@@ -47,7 +47,7 @@ const Snav: React.FC<Snav.IProps> = (props) => {
                 {item.label}
               </a> 
               {index !== navList.length ? 
-                <Iconfont type="icon-zhankai-copy" className={styles.icon}/> 
+                <Iconfont type="icon-zhankai" className={styles.icon}/> 
                 : ''
               }
             </div>;
@@ -57,7 +57,7 @@ const Snav: React.FC<Snav.IProps> = (props) => {
             <span>{item.label}</span>
             {index !== navList.length ? 
               <Iconfont 
-                type="icon-zhankai-copy" className={styles.icon} /> 
+                type="icon-zhankai" className={styles.icon} /> 
               : '' 
             }
           </div>;

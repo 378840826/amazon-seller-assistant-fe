@@ -53,10 +53,7 @@ const Five: React.FC<IProps> = (props) => {
           search: `?id=${data.followMonitorHistoryId}`,
         }} className={styles.details}>
           详情
-          <Iconfont type="icon-zhankai-copy" style={{
-            marginLeft: 7,
-            color: '#c1c1c1',
-          }}/>
+          <Iconfont type="icon-zhankai" className={styles.icon} />
         </Link>
         <span className={styles.date}>{data.catchDate}</span>
       </p>

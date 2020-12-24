@@ -12,6 +12,7 @@ import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import bsTips from '@/assets/bsTips.png';
 import classnames from 'classnames';
 import { RcFile } from 'antd/lib/upload';
+import { PaperClipOutlined } from '@ant-design/icons';
 import styles from './index.less';
 
 const { RangePicker } = DatePicker;
@@ -287,7 +288,7 @@ const BsImport: React.FC = function () {
       key={myFile.file.name}
     >
       <span className={styles.fileName}>
-        <Iconfont type="icon-lianjie1" />
+        <PaperClipOutlined />
         {myFile.file.name}
       </span>
       {
@@ -297,12 +298,12 @@ const BsImport: React.FC = function () {
             {
               myFile.msg
                 ? <span className={styles.fileMsg}>{myFile.msg}</span>
-                : <Iconfont type="icon-duigou" className={styles.checkIcon} />
+                : <Iconfont type="icon-dui" className={styles.checkIcon} />
             }
           </div>
           :
           <Iconfont
-            type="icon-guanbi1"
+            type="icon-cuo"
             className={styles.closeIcon}
             onClick={() => {
               dispatch({
@@ -450,7 +451,7 @@ const BsImport: React.FC = function () {
             <h5>方法2 :</h5>
             <p>
               1. 在常用电脑的浏览器上安装插件，
-              <a href="/">安装地址<Iconfont type="icon-zhankai-copy" className={styles.icon} /></a><br/>
+              <a href="/">安装地址<Iconfont type="icon-zhankai" className={styles.icon} /></a><br/>
               2. 在插件上使用安知账号登录<br/>
               3. 打开亚马逊后台的Business Report页面，插件会自动同步报表到安知<br/>
             </p>

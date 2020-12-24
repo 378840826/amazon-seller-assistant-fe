@@ -755,7 +755,7 @@ const AddSales: React.FC = () => {
                             <span>{item}</span>
                             <Iconfont 
                               className={styles.iconClose} 
-                              type="icon-guanbi1"
+                              type="icon-cuo"
                               onClick={() => delSellerId(i)}
                             >
                             </Iconfont>

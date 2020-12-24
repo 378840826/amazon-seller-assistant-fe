@@ -9,7 +9,7 @@ const Success: React.FC = () => {
   return (
     <div className={styles.successPage}>
       <span>
-        <Iconfont type="icon-duigou" className={styles.successIcon} />
+        <Iconfont type="icon-dui" className={styles.successIcon} />
       </span>
       支付成功！
     </div>

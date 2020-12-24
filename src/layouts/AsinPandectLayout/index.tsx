@@ -213,7 +213,7 @@ const AsinBase: React.FC = (props) => {
         <BasicLoyout></BasicLoyout>
         <nav className={styles.head }>
           <span className={styles.classify}>ASIN总览</span>
-          <Iconfont type="icon-zhankai-copy" className={styles.arrow}></Iconfont>
+          <Iconfont type="icon-zhankai" className={styles.arrow}></Iconfont>
           <span className={styles.asin}>{searchAsin}</span>
         </nav>
         <header className={styles.head_nav}>
@@ -284,7 +284,7 @@ const AsinBase: React.FC = (props) => {
     <BasicLoyout></BasicLoyout>
     <nav className={styles.head }>
       <span className={styles.classify}>ASIN总览</span>
-      <Iconfont type="icon-zhankai-copy" className={styles.arrow}></Iconfont>
+      <Iconfont type="icon-zhankai" className={styles.arrow}></Iconfont>
       <span className={styles.asin}>{storeAsin}</span>
     </nav>
     <header className={styles.head_nav}>

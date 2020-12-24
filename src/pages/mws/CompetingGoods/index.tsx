@@ -415,7 +415,7 @@ const CompetingGoods: React.FC = () => {
         className={classnames(styles.btn, styles.AddRuleBtn)}
         onClick={() => history.push(ruleAddRouter)}
       >
-        创建规则 <Iconfont type="icon-zhankai-copy" className={styles.link}/>
+        创建规则 <Iconfont type="icon-zhankai" className={styles.link}/>
       </Button>
     </footer>
   </div>;
