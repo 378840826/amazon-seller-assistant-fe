@@ -95,8 +95,7 @@ export function outerHeight(selector: string): number|undefined {
 
 /**
  * @param query 按最近N天 week本周 lastWeek上周 month本月 lastMonth上月 year今年 lastYear去年
- * @param isMoment true返回moment, false 返回 YYYY-MM-DD格式日期
- * @param date 可选 规定时间范围、用于获取某个月、如 getRange('week', new Date()),当前月，也可以指定其它
+ * @param isMoment true返回moment对象, false 返回 YYYY-MM-DD格式日期
   """夏令时"""：
   日本，北京时间-1个小时
   英国，北京时间-7个小时
@@ -108,47 +107,46 @@ export function outerHeight(selector: string): number|undefined {
   加拿大、美国，北京时间-16个小时
   德国、法国、意大利、西班牙，北京时间-7个小时
  */
-export function getRangeDate(query: string|number, isMoment = true, date = {}) {
-  const moment = require('moment-timezone'); // eslint-disable-line
+export function getRangeDate(query: string|number, isMoment = true) {
+  let moment = require('moment-timezone'); // eslint-disable-line
   const { timezone } = storage.get('currentShop');
-  timezone ? moment.tz.setDefault(timezone) : null; // 当前没有
-  date = isEmptyObj(date) ? moment() : date;
-  // console.log('当前站点时间', moment(date).format('YYYY-MM-DD HH:mm:ss'));
+  // moment = timezone ? moment.tz.setDefault(timezone) : null; // 这种方式会影响整个项目日期时间
+  // console.log('当前站点时间', moment().tz(timezone).format('YYYY-MM-DD HH:mm:ss'));
   let start = moment();
   let end = moment();
 
   switch (query) {
   case 'week': // 本周
-    start = moment(date).startOf('week');
-    end = moment(date).endOf('week');
+    start = moment().startOf('week');
+    end = moment().tz(timezone).endOf('week');
     break;
   case 'lastWeek': // 上周
-    start = moment(date).subtract(1, 'week').startOf('week');
-    end = moment(date).subtract(1, 'week').endOf('week');
+    start = moment().tz(timezone).subtract(1, 'week').startOf('week');
+    end = moment().tz(timezone).subtract(1, 'week').endOf('week');
     break;
   case 'month': // 本月
-    start = moment(date).startOf('month');
-    end = moment(date).endOf('month');
+    start = moment().tz(timezone).startOf('month');
+    end = moment().tz(timezone).endOf('month');
     break;
   case 'lastMonth': // 上月
-    start = moment(date).subtract(1, 'month').startOf('month');
-    end = moment(date).subtract(1, 'month').endOf('month');
+    start = moment().tz(timezone).subtract(1, 'month').startOf('month');
+    end = moment().tz(timezone).subtract(1, 'month').endOf('month');
     break;
   case 'year': // 今年
-    start = moment(date).startOf('year');
-    end = moment(date).endOf('year');
+    start = moment().tz(timezone).startOf('year');
+    end = moment().tz(timezone).endOf('year');
     break;
   case 'lastYear': // 去年
-    start = moment(date).subtract(1, 'year').startOf('year');
-    end = moment(date).subtract(1, 'year').endOf('year');
+    start = moment().tz(timezone).subtract(1, 'year').startOf('year');
+    end = moment().tz(timezone).subtract(1, 'year').endOf('year');
     break;
   case 'quarter': // 季度
-    start = moment(moment(date)).startOf('quarter').format('YYYY-MM-DD');
-    end = moment(moment(date)).endOf('quarter').format('YYYY-MM-DD');
+    start = moment().tz(timezone).startOf('quarter').format('YYYY-MM-DD');
+    end = moment().tz(timezone).endOf('quarter').format('YYYY-MM-DD');
     break;
-  default: 
-    start = moment(date).subtract(query as number - 1, 'day');
-    end = moment(date);
+  default: // 最近N天
+    start = moment().tz(timezone).subtract(query as number - 1, 'day');
+    end = moment().tz(timezone);
   }
 
   if (isMoment) {

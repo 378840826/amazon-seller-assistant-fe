@@ -21,6 +21,7 @@ import {
 } from '@/utils/routes';
 
 // component
+import TableNotData from '@/components/TableNotData';
 import AsyncEditBox from '../components/AsyncEditBox';
 import TimeSelectBox from '../components/TimeSelectBox';
 import MultiLineEdit from './components/MultiLineEdit';
@@ -398,6 +399,9 @@ const Rules: React.FC = () => {
     dataSource,
     loading,
     rowKey: () => rowCount++,
+    locale: {
+      emptyText: <TableNotData className={styles.notData} hint="调价规则列表为空"/>,
+    },
     scroll: {
       y: 'calc(100vh - 180px)',
     },

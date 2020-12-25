@@ -60,7 +60,7 @@ const Order: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
 
   // 默认选中的周期
-  const localDateType = storage.get(`${asinOrderDateRange}_date_checked`);
+  const localDateType = storage.get(`${asinOrderDateRange}_dc_itemKey`);
   const [dateRangeItem, setDateRangeItem] = useState<string>(localDateType || '7'); // 选中
   
   // 自定义数据及豆腐块
@@ -95,7 +95,7 @@ const Order: React.FC = () => {
     };
     if (dateRangeItem === 'week' || dateRangeItem === 'month') {
       req.timeMethod = dateRangeItem.toUpperCase();
-      const { startDate, endDate } = storage.get(`${asinOrderDateRange}_date`);
+      const { startDate, endDate } = storage.get(`${asinOrderDateRange}_dc_dateRange`);
       req.startTime = startDate;
       req.endTime = endDate;
     } else {
@@ -631,7 +631,7 @@ const Order: React.FC = () => {
       default: 
         //
       }
-      const { startDate, endDate } = storage.get(`${asinOrderDateRange}_date`);
+      const { startDate, endDate } = storage.get(`${asinOrderDateRange}_dc_dateRange`);
       const fileName = 
         `${current.storeName}_${currentAsin}_${startDate}_${endDate}${type}订单解读.xlsx`;
       if ('download' in document.createElement('a')) { // 非IE下载

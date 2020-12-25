@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './index.less';
 import {
   Popover,
@@ -23,9 +23,7 @@ const Demo: React.FC<IProps> = (props) => {
     asin,
   } = props;
   const dispatch = useDispatch();
-  const childControlRSASIN = useSelector(
-    (state: AsinTable.IDvaState) => state.asinTable.childControlRSASIN
-  );
+ 
   const {
     id: StoreId,
     sellerId,
@@ -36,21 +34,9 @@ const Demo: React.FC<IProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(true); // 加载完
   const [data, setData] = useState<AsinTable.IChildRsType[]>([]);
 
-  useEffect(() => {
-    if (childControlRSASIN === asin) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  }, [childControlRSASIN, asin]);
-
   const clickDetail = () => {
-    dispatch({
-      type: 'asinTable/changechildControlRSASIN',
-      payload: asin,
-    });
-
     setLoading(true);
+    setVisible(!visible);
     new Promise((resolve, reject) => {
       dispatch(({
         type: 'asinTable/getChildRs',
@@ -61,7 +47,7 @@ const Demo: React.FC<IProps> = (props) => {
           headersParams: {
             StoreId,
           },
-          ...getCalendarFields(storage.get(adinTableCalendar), adinTableCalendar),
+          ...getCalendarFields(storage.get(`${adinTableCalendar}_dc_itemKey`) || '7', adinTableCalendar),
         },
         resolve,
         reject,
@@ -80,78 +66,67 @@ const Demo: React.FC<IProps> = (props) => {
       setData(records);
     });
   };
-
-
-  useEffect(() => {
-    document.addEventListener('click', () => {
-      setVisible(false);
-    });
-  }, [visible]);
-
-  const content = () => {
-    return <div className={styles.contentBox}>
-      <Spin spinning={loading} className={styles.loading}></Spin>
-      <div className={styles.listBox}>
-        {
-          data.map((item, i) => {
-            return <div key={i} className={styles.item}>
-              <span className={styles.num}>{i + 1}</span>
-              <GoodsImg src={item.imgUrl} alt="商品" className={styles.productImg} width={50}/>
-              <div className={styles.details}>
-                <a href={getAmazonAsinUrl(asin, marketplace)} 
-                  className={styles.title}
-                  target="_blank" rel="noreferrer"
-                >
-                  <Iconfont type="icon-lianjie" className={styles.icon} />
-                  {item.title}
-                </a>
-                <p className={styles.p}>
+  return <Popover
+    content={
+      <div className={styles.contentBox} key={Math.random()}>
+        <Spin spinning={loading} className={styles.loading}></Spin>
+        <div className={styles.listBox}>
+          {
+            data.map((item, i) => {
+              return <div key={i} className={styles.item}>
+                <span className={styles.num}>{i + 1}</span>
+                <GoodsImg src={item.imgUrl} alt="商品" className={styles.productImg} width={50}/>
+                <div className={styles.details}>
                   <a href={getAmazonAsinUrl(asin, marketplace)} 
-                    className={styles.asin}
+                    className={styles.title}
                     target="_blank" rel="noreferrer"
-                  >{item.asin}</a>
-                  <span className={styles.price}>{item.price ? currency + item.price : ''}</span>
-                </p>
-                <p className={styles.p}>
-                  <span className={styles.sku}>{item.sku}</span>
-                  <span>{item.associateSalesTimes || 0} 次</span>
-                </p>
-                <Tooltip 
-                  title={`大类排名：#${
-                    item.categoryRanking ? item.categoryRanking : ''
-                  } ${item.categoryName ? item.categoryName : ''}`} 
-                  placement="bottomLeft">
-                  <span className={styles.ranking}>#{item.categoryRanking}</span> 
-                  {item.categoryName}
-                </Tooltip>
-              </div>
-            </div>;
-          })
-        }
-        {
-          loading === false && data.length === 0 ? <h2 className={styles.notTable}>暂无关联销售数据</h2> : ''
-        }
+                  >
+                    <Iconfont type="icon-lianjie" className={styles.icon} />
+                    {item.title}
+                  </a>
+                  <p className={styles.p}>
+                    <a href={getAmazonAsinUrl(asin, marketplace)} 
+                      className={styles.asin}
+                      target="_blank" rel="noreferrer"
+                    >{item.asin}</a>
+                    <span className={styles.price}>{item.price ? currency + item.price : ''}</span>
+                  </p>
+                  <p className={styles.p}>
+                    <span className={styles.sku}>{item.sku}</span>
+                    <span>{item.associateSalesTimes || 0} 次</span>
+                  </p>
+                  <Tooltip 
+                    title={`大类排名：#${
+                      item.categoryRanking ? item.categoryRanking : ''
+                    } ${item.categoryName ? item.categoryName : ''}`} 
+                    placement="bottomLeft">
+                    <span className={styles.ranking}>#{item.categoryRanking}</span> 
+                    {item.categoryName}
+                  </Tooltip>
+                </div>
+              </div>;
+            })
+          }
+          {
+            loading === false && data.length === 0 ? <h2 className={styles.notTable}>无关联销售订单</h2> : ''
+          }
+        </div>
       </div>
-    </div>;
-  };
-  
-  return <div onClick={e => e.nativeEvent.stopImmediatePropagation()} >
-    <span className="none">{asin}</span> {/* 这个没起显示作用，主要是为了解决bug，勿删除 */}
-    <Popover
-      content={content() as JSX.Element}
-      title={`${asin}关联销售详情`}
-      trigger="click"
-      visible={visible}
-      placement="left"
-      overlayClassName={styles.relatedSalesBox}
-      destroyTooltipOnHide
-    >
-      <span onClick={clickDetail} className={`
-        ${styles.showRsText}
-        ${visible ? styles.active : ''}
-      `}>详情</span>
-    </Popover>
-  </div>;
+    }
+    title={`${asin}关联销售详情`}
+    trigger="click"
+    visible={visible}
+    placement="left"
+    overlayClassName={styles.relatedSalesBox}
+    destroyTooltipOnHide
+    arrowPointAtCenter
+    onVisibleChange={visible => setVisible(visible)}
+  >
+    <span onClick={clickDetail} className={`
+      ${styles.showRsText}
+      ${visible ? styles.active : ''}
+    `}>详情</span>
+  </Popover>;
 };
 
 
