@@ -18,7 +18,7 @@ interface IProps {
   callback: (order: string, sort: boolean) => void;
 }
 
-const TableHead: React.FC<IProps> = props => {
+const TableHeadTwo: React.FC<IProps> = props => {
   const {
     title,
     titleparams, // 第一栏后端参数
@@ -164,4 +164,4 @@ const TableHead: React.FC<IProps> = props => {
   );
 };
 
-export default TableHead;
+export default TableHeadTwo;

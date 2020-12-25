@@ -141,11 +141,13 @@ const DefinedCalendar: React.FC<IProps> = props => {
   };
 
   // 处理季/月/周的函数
-  const handleWeebMonthQuarter = (type: string, date: Moment | null| Date) => {
-    const { start, end } = getRangeDate(type, false, date as Date);
+  const handleWeebMonthQuarter = (type: moment.unitOfTime.StartOf, date: Moment | null| Date) => {
+    // const { start, end } = getRangeDate(type, false, date as Date);
+    const start = moment(date).startOf(type).format('YYYY-MM-DD');
+    const end = moment(date).endOf(type).format('YYYY-MM-DD');
     setStartDate(start); // 页面开始日期
     setEndDate(end); // 页面结束日期
-    setSelectItemKey(type); // 记录选中的下拉列表
+    setSelectItemKey(String(type)); // 记录选中的下拉列表
     storage.set(`${storageKey}_dc_dateRange`, {
       startDate: start,
       endDate: end,
@@ -161,7 +163,7 @@ const DefinedCalendar: React.FC<IProps> = props => {
     change ? change({
       dateStart: start,
       dateEnd: end,
-      selectItemKey: type,
+      selectItemKey: String(type),
     }) : null;
   };
 

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './index.less';
-import { CloseOutlined } from '@ant-design/icons';
 import notImg from '@/assets/stamp.png';
 import { Iconfont } from '@/utils/utils';
 import { Tooltip, Popover } from 'antd';
@@ -137,7 +136,9 @@ const PageView: React.FC<IProps> = (props) => {
               })
             }
           </ul>
-          {/* <Spin spinning={listLoading}></Spin> */}
+          {
+            list.length === 0 ? <h2 className={styles.notTable}>无关联销售订单</h2> : ''
+          }
         </div>
       }
     >

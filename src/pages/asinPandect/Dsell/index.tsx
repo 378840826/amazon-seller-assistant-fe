@@ -3,6 +3,7 @@ import styles from './index.less';
 import './index.css';
 import { storageKeys } from '@/utils/huang';
 import { storage } from '@/utils/utils';
+import classnames from 'classnames';
 import { 
   handleMapBarCoordinates,
   sumBarHeight,
@@ -14,7 +15,8 @@ import echarts from 'echarts';
 import Update from './components/UpdateComponent';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import { lineConfig, notShowConfig } from './config';
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
+import TableNotData from '@/components/TableNotData';
 // eslint-disable-next-line
 const mapJson = require('./map.json') as any;
 interface IMapOptionsType {
@@ -37,6 +39,8 @@ const AsinBase: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [calendar, setCalendar] = useState<string>(storage.get(`${asinDsellDateRange}_dc_itemKey`) || '7');
   const [chCondition, setChCondition] = useState<boolean>(false); // 专门用于控制请求的
+  const [notVisible, setVisible] = useState<boolean>(false);
+  const [errorText, setErrorText] = useState<string>('');
   
   useEffect(() => {
     setLoading(true);
@@ -59,7 +63,10 @@ const AsinBase: React.FC = () => {
       });
     }).then(datas => {
       setLoading(false);
-      const { data } = datas as {
+      setVisible(false);
+      const { data, code, message: msg } = datas as {
+        code: number;
+        message: string;
         data: {
           updateTime: string;
           maxQuantity: string;
@@ -70,6 +77,14 @@ const AsinBase: React.FC = () => {
           }[];
         };
       };
+
+      if (code !== 200) {
+        message.error(msg);
+        setErrorText(msg);
+        setVisible(true);
+        return;
+      }
+
       const salesInventory = data.salesInventory; // 数据
       // const salesInventory = barData; // 数据
       const maxStockNumber = data.maxQuantity; // 最大数量
@@ -281,7 +296,7 @@ const AsinBase: React.FC = () => {
   return (
     <div className={styles.box}>
       <Spin spinning={loading}>
-        <main className={styles.main}>
+        <main className={classnames(styles.main, notVisible ? 'none' : '')}>
           <header>
             <Update update={update} />
             <div>
@@ -322,6 +337,12 @@ const AsinBase: React.FC = () => {
           </div>
         </main>
       </Spin>
+      <div className={notVisible ? '' : 'none'} style={{
+        marginTop: 100,
+      }}>
+        {}
+        <TableNotData hint={errorText}/>
+      </div>
     </div>
   );
 };
