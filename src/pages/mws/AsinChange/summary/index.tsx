@@ -100,20 +100,22 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
         </span>
       </div>
       <div className={styles.other_container}>
-        <Search 
-          size="middle" 
-          allowClear
-          className={styles.__search_input}
-          placeholder="输入标题、ASIN、SKU" 
-          onSearch={(value, event) => {
-            if (!event?.['__proto__']?.type){
-              onSearch(value);
-            }
-          }}
-          disabled={state.tableLoading}
-          enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>}
-          style={{ width: '280px' }}
-        />
+        <div className={styles.__search_container}>
+          <Search 
+            size="middle" 
+            allowClear
+            className={styles.__search_input}
+            placeholder="输入标题、ASIN、SKU" 
+            onSearch={(value, event) => {
+              if (!event?.['__proto__']?.type){
+                onSearch(value);
+              }
+            }}
+            disabled={state.tableLoading}
+            enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>}
+          />
+        </div>
+        
         <OperatorBar 
           list={sendState.changeType} 
           modifySendState={modifySendState} 

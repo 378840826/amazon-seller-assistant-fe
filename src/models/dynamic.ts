@@ -74,6 +74,7 @@ const DynamicModel: IDynamicModelType = {
     },
     *getDynamicList({ payload, callback }, { call }){
       const response = yield call(getDynamicList, payload);
+      nTs(response);
       if (response.code === 200){
         response.data.records.map((item: API.IParams, index: number) => {
           item.key = index;
@@ -115,6 +116,7 @@ const DynamicModel: IDynamicModelType = {
     },
     *msGetAsinList({ payload, callback }, { call }){
       const response = yield call(msGetAsinList, payload);
+      nTs(response);
       callback && callback(response);
     },
     *msAsinUpdate({ payload, callback }, { call }){
@@ -148,6 +150,7 @@ const DynamicModel: IDynamicModelType = {
     },
     *msSearchProduct({ payload, callback }, { call }){
       const response = yield call(msSearchProduct, payload);
+      nTs(response);
       if (response.code === 200){
         response.data.map((item: API.IParams, index: number) => {
           item.key = index;
@@ -157,6 +160,7 @@ const DynamicModel: IDynamicModelType = {
     },
     *msSearchKeyword({ payload, callback }, { call }){
       const response = yield call(msSearchKeyword, payload);
+      nTs(response);
       if (response.code === 200){
         const data: {title: string}[] = [];
         response.data.keywordList.map( (item: string) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import LazyLoad from 'react-lazy-load';
-import defaultImage from '@/assets/stamp.png';
+import defaultImage from '@/assets/default.svg';
 import { Dropdown } from 'antd';
 import classnames from 'classnames';
 import styles from './index.less';
