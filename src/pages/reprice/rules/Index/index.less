@@ -91,6 +91,7 @@ main.table {
       cursor: pointer;
 
       &.disabled {
+        margin: 0 10px;
         color: #72e1d2;
         cursor: not-allowed !important;
 
@@ -121,12 +122,12 @@ main.table {
     align-items: center;
     padding: 12px 0;
     font-size: @font-size-lg;
-  }
 
-  :global(.anticon) {
-    position: static;
-    padding-bottom: 6px;
-    padding-bottom: 0;
+    :global(.anticon) {
+      position: static;
+      padding-bottom: 6px;
+      padding-bottom: 0;
+    }
   }
 
   :global(.ant-popover-message-title) {
