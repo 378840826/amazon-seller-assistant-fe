@@ -56,7 +56,6 @@ const History: React.FC = () => {
 
   // 调价记录列表
   const getList = useCallback((params = {}) => {
-    console.log(form.getFieldsValue());
     const toolbarParams = form.getFieldsValue();
     let payload: any = { // eslint-disable-line
       headersParams: {

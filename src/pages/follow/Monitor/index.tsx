@@ -20,6 +20,7 @@ import Showdata from '@/components/ShowData';
 import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import {
   Table,
+  message,
 } from 'antd';
 
 // 私
@@ -73,14 +74,24 @@ const Monitor: React.FC = () => {
       setLoading(false);
       const {
         data,
+        code,
+        message: msg,
       } = datas as {
+        code: number;
+        message: string;
         data: MonitorType.IMonitorInitResponse;
       };
-      if (isObject(data)) {
-        setDataSource(data.records);
-        setCurrent(data.current);
-        setSize(data.size);
-        setTotal(data.total);
+
+      if (code === 200) {
+        if (isObject(data)) {
+          setDataSource(data.records);
+          setCurrent(data.current);
+          setSize(data.size);
+          setTotal(data.total);
+        }
+      } else {
+        message.error(msg);
+        setTotal(0);
       }
     });
   }, [currentShop, dispatch, current, size, flag]);

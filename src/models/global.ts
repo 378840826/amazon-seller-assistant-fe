@@ -475,41 +475,50 @@ const GlobalModel: IGlobalModelType = {
 
     // 监听店铺是否已切换（多开标签页时切换店铺、另一标签页提示）
     watchShop({ dispatch, history: umiHistory }) {
-      const pathname = umiHistory.location.pathname;
-      const excludeUrls = [
-        '/',
-        '/users/login',
-        '/center',
-        '/vip/membership',
-        '/shop/list',
-        '//shop/bind',
-      ];
-      if (excludeUrls.indexOf(pathname) > -1) {
-        return;
-      }
+      // 异步的、放在里面比较安全
+      umiHistory.listen(() => {
+        const pathname = umiHistory.location.pathname;
+        const excludeUrls = [
+          '/',
+          '/#fun',
+          '/#home',
+          '/#fqa',
+          '/index/crx',
+          '/users/send-email',
+          '/users/login',
+          '/center',
+          '/vip/membership',
+          '/shop/list',
+          '/shop/bind',
+        ];
 
-      window.addEventListener('storage', e => {
-        const key = e.key;
-        if (key === 'currentShop') {
-          Modal.destroyAll();
-          confirm({
-            title: `店铺已切换！`,
-            okText: `刷新查看新店铺`,
-            cancelText: '继续浏览原店铺',
-            centered: true,
-            icon: null,
-            className: 'g-watch-shop-modal',
-            zIndex: 99999,
-            onOk() {
-              history.go();
-            },
-            onCancel() {
-              dispatch({
-                type: 'saveHistoryShop',
-              });
-            },
-          });
+        if (excludeUrls.indexOf(pathname) > -1) {
+          return;
         }
+        
+        window.addEventListener('storage', e => {
+          const key = e.key;
+          if (key === 'currentShop') {
+            Modal.destroyAll();
+            confirm({
+              title: `店铺已切换！`,
+              okText: `刷新查看新店铺`,
+              cancelText: '继续浏览原店铺',
+              centered: true,
+              icon: null,
+              className: 'g-watch-shop-modal',
+              zIndex: 99999,
+              onOk() {
+                history.go();
+              },
+              onCancel() {
+                dispatch({
+                  type: 'saveHistoryShop',
+                });
+              },
+            });
+          }
+        });
       });
     },
   },
