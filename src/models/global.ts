@@ -231,9 +231,13 @@ const GlobalModel: IGlobalModelType = {
         ? currentShop
         : list[0] || {};
       storage.set('currentShop', current);
+      // 店铺按名称排序
+      const compare = (a: API.IShop, b: API.IShop) => (
+        a.storeName > b.storeName ? 1 : -1
+      );
       state.shop = {
         status: state.shop.status,
-        mws: payload.mws,
+        mws: payload.mws.sort(compare),
         ppc: payload.ppc,
         type: payload.type,
         current,

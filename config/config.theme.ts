@@ -88,6 +88,8 @@ export default {
   // 表格行 hover 背景色, 和表头一样
   '@table-row-hover-bg': '@table-header-bg',
   // 排序后的表头不需要改变颜色
+  '@table-header-sort-bg': 'null',
+  // 排序后的列不需要改变颜色
   '@table-body-sort-bg': 'null',
   // 全局 Header 相关
   '@layout-header-padding': '0 30px',
