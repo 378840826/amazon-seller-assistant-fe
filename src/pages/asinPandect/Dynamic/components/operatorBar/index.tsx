@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './index.less';
 import { Button, Tooltip } from 'antd';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, storage } from '@/utils/utils';
 import classnames from 'classnames';
 import {
   operaList,
@@ -42,16 +42,41 @@ const DynamicCom: React.FC<IDynamicCom> = ({
   updateTime,
 }) => {
 
-  //其他几个按钮点击
+  //其他几个按钮点击 最多8个的
   const buttonClickEvent = (value: string) => {
-    const newState = getNewState(value, list, 8);
+    const newState = getNewState(value, list, 8); 
     modifySendState({ changeType: newState });
+    const asinDynamic = storage.get('asinDynamic');
+    if (asinDynamic){
+      // storage.set('asinDynamic', Object.assign(asinDynamic, { properties: newState } )); 
+      storage.set('asinDynamic', 
+        { ...asinDynamic,
+          changeType: newState, 
+        }); 
+    } else {
+      storage.set('asinDynamic', {
+        changeType: newState,
+        properties,
+      });
+    }
   };
 
   //纵坐标点击
   const yAxisClick = (value: string) => {
     const newState = getNewState(value, properties, 2);
     modifySendState({ properties: newState });
+    const asinDynamic = storage.get('asinDynamic');
+    if (asinDynamic){
+      storage.set('asinDynamic', 
+        { ...asinDynamic,
+          properties: newState, 
+        }); 
+    } else {
+      storage.set('asinDynamic', {
+        changeType: list,
+        properties: newState,
+      });
+    }
   };
 
 

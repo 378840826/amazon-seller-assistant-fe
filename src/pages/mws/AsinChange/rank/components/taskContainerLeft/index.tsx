@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
 import { Input, Table, Spin } from 'antd';
@@ -65,6 +65,10 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
   dispatch,
   asinChange,
 }) => {
+  const tableRef = useRef(null);
+  if (tableRef.current){
+    console.log('tableRef:', tableRef.current, tableRef.current.state.scrollbarWidth);
+  }
   const [state, setState] = useState<IState>({
     loading: false,
     searchTerms: '',
@@ -180,7 +184,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
   //商品信息cellRenderer
   const goodsCellRender = ({ rowData }: API.IParams) => {
     return (
-      <ProductInfo item={rowData}/>
+      <ProductInfo item={rowData} className={styles.__product_info}/>
     );
   };
 
@@ -239,6 +243,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
               height={ state.notSelectedList.length === 0 ? 88 : 220}
               headerHeight={44}
               rowHeight={46}
+              ref={tableRef}
               className={styles.__virtual_table}
               rowCount={state.notSelectedList.length}
               noRowsRenderer={noRowsRenderer}

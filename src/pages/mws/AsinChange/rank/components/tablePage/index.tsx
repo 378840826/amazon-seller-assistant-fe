@@ -144,7 +144,7 @@ const TablePage: React.FC<ITablePage> = ({
       dataIndex: 'keyword',
       key: 'keyword',
       fixed: 'left',
-      align: 'center',
+      align: 'left',
       width: 158,
       render: (text) => {
         return (
