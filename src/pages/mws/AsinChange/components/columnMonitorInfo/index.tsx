@@ -2,10 +2,11 @@ import React from 'react';
 import LazyLoad from 'react-lazy-load';
 import defaultImage from '@/assets/default.svg';
 import styles from './index.less';
+import {} from 'umi';
 import { Typography } from 'antd';
 const { Paragraph } = Typography;
 import { Iconfont } from '@/utils/utils';
-
+import ShowData from '@/components/ShowData';
 interface IColumnOrderProps{
   item: API.IParams;
 }
@@ -33,7 +34,8 @@ const ColumnOrderInfo: React.FC<IColumnOrderProps> = ({ item }) => {
           <div className={styles.price_method}>
             {item.price === '' ? 
               <div className="null_bar"></div> : 
-              <div className={styles.price}>${(item.price).toFixed(2)}</div>} 
+              // <div className={styles.price}>${(item.price).toFixed(2)}</div>} 
+              <div className={styles.price}><ShowData color="#ff5958" isCurrency value={item.price} fillNumber={2}/></div>} 
             {item.fulfillmentChannel === '' ? 
               <div className="null_bar"></div> : 
               <div className={styles[item.fulfillmentChannel]}>{item.fulfillmentChannel}</div>}
