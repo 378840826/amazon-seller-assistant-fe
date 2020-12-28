@@ -135,6 +135,7 @@ const Reset: React.FC<IResetConnectProps> = function ({ dispatch, type, showMsg,
         modifyInputVal(inputVal, resolve, reject);
         
       } else {
+        inputVal = inputVal.trim();
         if (!validate.email.test(inputVal)){
           return reject('邮箱格式不正确');
         }

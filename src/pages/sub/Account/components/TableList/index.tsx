@@ -67,6 +67,7 @@ const TableList: React.FC<ITableListConnectProps> = function({ sub, dispatch }){
   };
 
   const confirmEmail = (value: string, id: string) => {
+    value = value.trim();
     if (!validate.email.test(value)){
       message.error('邮箱格式不正确');
       return;

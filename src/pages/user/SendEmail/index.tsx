@@ -43,7 +43,7 @@ const SendEmail: React.FC<IConnectProps> = function ({ dispatch }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
     const params = {
-      email: values.email,
+      email: values.email.trim(),
       code: values.captcha,
     };
     if (values.captcha.trim() !== ''){
@@ -96,7 +96,7 @@ const SendEmail: React.FC<IConnectProps> = function ({ dispatch }) {
                       { message: '', validateTrigger: 'onFocus' },
                       () => ({
                         validator: (rule, value) => new Promise((resolve, reject) => {
-                          if (!value){
+                          if (!(value.trim())){
                             reject('邮箱不能为空');
                             return;
                           }
@@ -108,7 +108,7 @@ const SendEmail: React.FC<IConnectProps> = function ({ dispatch }) {
                             dispatch({
                               type: 'user/existEmail',
                               payload: {
-                                email: value,
+                                email: value.trim(),
                               },
                               callback: (res: { data: { exist: boolean } }) => {
                                 if (!res.data.exist){

@@ -89,7 +89,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, currentUser
 
     const params = {
       username: values.username,
-      email: values.email,
+      email: values.email.trim(),
       password: values.password,
       stores: checkedList,
     };

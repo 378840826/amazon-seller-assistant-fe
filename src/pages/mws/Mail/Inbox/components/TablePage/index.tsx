@@ -183,7 +183,7 @@ const TablePage: React.FC<ITablePage> = ({
         loading={loading}
         scroll={{ y: 'calc(100vh - 317px)' }}
         locale={{ emptyText: msg === '' ? <TableNotData hint="没找到相关数据"/> : 
-          <TableNotData hint={msg}/> }}
+          <TableNotData hint={msg || '没有找到相关数据'}/> }}
         dataSource={tableInfo.records}
         rowClassName={(record, index) => {
           return classnames({ [styles.bold]: !record.hasRead,

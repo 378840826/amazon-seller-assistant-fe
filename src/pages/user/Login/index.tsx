@@ -105,12 +105,12 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
   };
  
   const onClickLR = (values: { email: string }) => {
-    Object.assign(status, values);
+    Object.assign(status, values, { email: values.email.trim() });
     setLoginLoading(true);
     dispatch({
       type: 'user/preLogin',
       payload: {
-        username: values.email,
+        username: status.email,
       },
       callback: (res: { code: number; data: { code: boolean } }) => {
         if (res.code === 200 && res.data.code ){
