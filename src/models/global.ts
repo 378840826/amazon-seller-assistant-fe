@@ -17,6 +17,7 @@ import {
   ruleAddSalesRouter,
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
+  ppcCampaignAddRouter,
 } from '@/utils/routes';
 
 const { confirm } = Modal;
@@ -257,8 +258,8 @@ const GlobalModel: IGlobalModelType = {
         const isExclude = exclude.some(url => pathname.includes(url));
         if (!isExclude) {
           // message.destroy();
-          const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-          !pathname.includes('/shop/') && history.push(url);
+          // const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
+          // !pathname.includes('/shop/') && history.push(url);
         }
       }
     },
@@ -421,7 +422,7 @@ const GlobalModel: IGlobalModelType = {
           '/sub-account',
         ];
         const disabledShopSelectorUrl = [
-          '/ppc/campaign/add',
+          ppcCampaignAddRouter,
           '/ppc/group/add',
           '/competitor/history',
           '/competitor/list',

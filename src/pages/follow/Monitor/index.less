@@ -242,3 +242,17 @@
 .globalDownList {
   text-align: center;
 }
+
+.switch {
+  min-width: 40px !important;
+  height: 20px !important;
+
+  :global(.ant-switch-handle) {
+    width: 16px;
+    height: 16px;
+  }
+
+  &[aria-checked=true] :global(.ant-switch-handle) {
+    left: calc(100% - 18px) !important;
+  }
+}

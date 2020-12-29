@@ -325,3 +325,25 @@ export function isFormal() {
   // 其它都是正式版
   return true;
 }
+
+
+/**
+ * 随机生成一段假的UUID码
+ * @param len 
+ */
+export function createUUID(len = 36): string {
+  const codeStr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/!@#$%^&*()_+';
+
+  function getRandom(m: number, n: number) {
+    const index = Math.floor(Math.random() * (m - n) + n);
+    return index;
+  }
+
+  let str = '';
+  for (let i = 0; i < len; i++) {
+    const ran = getRandom(0, codeStr.length);
+    str += codeStr.charAt(ran);
+  }
+  return str;
+}
+

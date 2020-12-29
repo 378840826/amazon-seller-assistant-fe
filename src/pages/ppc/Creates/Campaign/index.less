@@ -1,0 +1,212 @@
+.secondary {
+  color: @text-color-secondary;
+}
+
+.biddingDownList {
+  text-align: center;
+}
+
+.campaignAddBox {
+  :global(.ant-table-empty) td {
+    border-bottom: 0 !important;
+  }
+
+  .campaignAdd {
+    width: 1306px;
+    padding: 25px 20px 0;
+    margin: 0 auto;
+    background-color: #fff;
+  }
+
+  // 步骤
+  .stepBox {
+    height: 86px;
+    position: relative;
+    background-color: #fafafa;
+    padding: 0 70px 0;
+
+    :global(.ant-steps) {
+      padding-top: 10px;
+    }
+
+    :global(.ant-steps-item-icon) {
+      width: 40px;
+      height: 40px;
+    }
+
+    :global(.ant-steps-item) {
+      margin-right: 20px;
+    }
+
+    :global(.ant-steps-icon) {
+      font-size: 18px;
+      top: 5px;
+    }
+
+    :global(.ant-steps-item-title::after) {
+      top: 20px;
+      left: 28px;
+    }
+
+    :global(.ant-steps-item-process),
+    :global(.ant-steps-item-wait) {
+      :global(.ant-steps-item-title::after) {
+        background-color: #d9d9d9;
+      }
+    }
+
+    :global(.ant-steps-item-wait) {
+      :global(.ant-steps-item-icon) {
+        border-color: #abd6ff;
+
+        :global(.ant-steps-icon) {
+          color: @text-color-secondary;
+        }
+      }
+    }
+
+    .common {
+      position: absolute;
+      top: 56px;
+    }
+
+    .stepOne {
+      left: 48px;
+    }
+
+    .stepTwo {
+      left: 314px;
+    }
+
+    .stepThree {
+      left: 579px;
+    }
+
+    .stepFour {
+      right: 346px;
+    }
+
+    .stepFive {
+      right: 88px;
+    }
+  }
+}
+
+// 取消按钮的样式
+.cancelTooltip {
+  min-width: 276px;
+  text-align: center;
+
+  :global(.ant-popover-message) {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    font-size: @font-size-lg;
+
+    :global(.anticon) {
+      position: static;
+      padding-bottom: 6px;
+      padding-bottom: 0;
+    }
+  }
+
+  :global(.ant-popover-message-title) {
+    padding-left: 12px;
+    color: @heading-color;
+  }
+
+  :global(.ant-popover-buttons) {
+    text-align: center;
+
+    button {
+      min-width: 82px;
+      height: 30px;
+      line-height: 30px;
+      font-size: @font-size-base;
+      margin: 6px 10px;
+    }
+  }
+}
+
+// 广告活动类型选择
+.campaignTypeBox {
+  display: flex;
+  justify-content: center;
+  margin: 90px 0;
+
+  .typeItem {
+    width: 220px;
+    height: 220px;
+    text-align: center;
+    border: 1px solid #e5e5e5;
+    margin: 0 25px;
+    border-radius: 8px;
+    cursor: default;
+    transition: all 0.3s;
+
+    &.productItem,
+    &.showItem {
+      &:hover {
+        border-color: transparent;
+        box-shadow: 0 3px 13px 0 rgba(227, 227, 227, 0.75);
+      }
+    }
+  }
+
+  .imgIcon {
+    font-size: 60px;
+    margin: 48px 0 40px;
+
+    &.productIcon {
+      color: @warning-color;
+    }
+
+    &.showIcon {
+      color: @success-color;
+    }
+  }
+
+  .title {
+    font-size: @font-size-lg;
+  }
+
+  .subtitle {
+    color: @text-color-secondary;
+  }
+
+  // 选中的广告类型
+  .active {
+    background: linear-gradient(180deg, #5fb2ff 0%, #2f99fd 100%);
+    box-shadow: 0 3px 13px 0 rgba(227, 227, 227, 0.75);
+    color: #fff !important;
+    border-width: none;
+
+    .imgIcon,
+    .subtitle {
+      color: #fff !important;
+    }
+  }
+
+  // 品牌广告无法点击
+  .showItem,
+  .brandAd {
+    color: #bbb !important;
+    cursor: not-allowed;
+
+    .imgIcon,
+    .subtitle {
+      color: #bbb !important;
+    }
+  }
+}
+
+footer.btns {
+  text-align: center;
+  padding-bottom: 20px;
+
+  button {
+    margin: 0 10px;
+  }
+}
