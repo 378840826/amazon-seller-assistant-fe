@@ -96,7 +96,8 @@ const SendEmail: React.FC<IConnectProps> = function ({ dispatch }) {
                       { message: '', validateTrigger: 'onFocus' },
                       () => ({
                         validator: (rule, value) => new Promise((resolve, reject) => {
-                          if (!(value.trim())){
+                          console.log('value:', value);
+                          if (!value || !(value.trim())){
                             reject('邮箱不能为空');
                             return;
                           }
