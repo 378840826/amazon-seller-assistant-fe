@@ -30,6 +30,23 @@ export const storageKeys = {
   asinTableParentCustomCol: 'asinTableParentCustomCol', // ASIN报表 子ASIN自定义列
 };
 
+/**
+ * 所有在里面的数据字段都要补齐2位小数
+ */
+export const fillFields = [
+  '销售额',
+  '销量/订单量',
+  '平均客单价',
+  'PageView/Session',
+  '平均售价',
+  '转化率',
+  'B2B销售额',
+  'B2B销量/订单量',
+  'B2B平均售价',
+  'B2B销售额占比',
+  'B2B平均客单价',
+];
+
 // 判断对象是否为空
 export function isEmptyObj(obj = {}) {
   for (const key in obj) {
@@ -225,15 +242,6 @@ export function moneyFormat(
   return s.join(dec);
 }
 
-/**
- * 转换成指定位数的数字
- * @param {Number|String} value {}
- * @param {Number} index 
- */
-export function toIndexFixed(value: number|string, index = 2): string {
-  return new Number(value).toFixed(index);
-}
-
 
 /**
  * 判断是否为真正的对象
@@ -325,3 +333,12 @@ export function isFormal() {
   // 其它都是正式版
   return true;
 }
+
+/**
+ * 验证一个字段末尾是否需要补齐2位小数
+ * @param field 验证的字段
+ */
+export function isFillField(field: string): boolean {
+  return fillFields.indexOf(field) > -1 ? true : false;
+}
+

@@ -10,7 +10,7 @@ import Statistic from './components/Statistic';
 import Total from './components/Total';
 import DouFu from './components/Doufu';
 import LineChartsComponent from './components/LineChart';
-import { storageKeys, toIndexFixed } from '@/utils/huang';
+import { storageKeys } from '@/utils/huang';
 import { handleDouFu, handleRange, tooltipPosition, douFuDefaultList } from './function';
 import { storage } from '@/utils/utils';
 import echarts from 'echarts';
@@ -479,7 +479,7 @@ const Order: React.FC = () => {
             color: '#888',
           }}>—</span>;
         }
-        return `${toIndexFixed(value)}%`;
+        return `${parseFloat(String(value)).toFixed(2)}%`;
       },
     },
     {
@@ -688,7 +688,7 @@ const Order: React.FC = () => {
           <Spin spinning={lcLoading}>
             <header>
               {
-                // 应产品要求，只有勾选了销量额、销量、订单量的折线图时，才显示sku复选框
+                // 应产品要求，只有勾选了销售额、销量、订单量的折线图时，才显示sku复选框
                 attributes.indexOf('sales') > -1 || attributes.indexOf('orderQuantity') > -1 || attributes.indexOf('salesQuantity') > -1 ? <Checkbox.Group 
                   options={lineSkus}
                   value={checkedSkus}

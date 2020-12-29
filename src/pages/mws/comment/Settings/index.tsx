@@ -7,6 +7,7 @@ import Complete from './components/Complete';
 import TableNotData from '@/components/TableNotData';
 import MySwitch from './components/MySwitch';
 import GoodsImg from '@/pages/components/GoodsImg';
+import ShowData from '@/components/ShowData';
 import {
   Button,
   Dropdown,
@@ -20,7 +21,6 @@ import moment from 'moment';
 import {
   reviewListRouter,
 } from '@/utils/routes';
-import { toIndexFixed } from '@/utils/huang';
 import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 
 
@@ -329,7 +329,7 @@ const Settings: React.FC = () => {
                 <span className={styles.asin}>{asin}</span>
                 <p className={styles.rightInfo}>
                   <span className={styles.price}>
-                    {price ? currentShop.currency + toIndexFixed(price) : '-' }
+                    <ShowData value={price} isCurrency/>
                   </span>
                   <span className={styles.line}></span>
                   <span className={`${fulfillmentChannel}`}>{fulfillmentChannel}</span>
@@ -348,7 +348,7 @@ const Settings: React.FC = () => {
       width: '15%',
       render(value: string, row: CommectMonitor.IRowDataType) {
         return (<div className={styles.monitor}>
-          {toIndexFixed(row.reviewScore || 0, 1)} 
+          {parseFloat(row.reviewScore || '0').toFixed(1)} 
           <span>({row.reviewNum || 0})</span>
         </div>);
       },

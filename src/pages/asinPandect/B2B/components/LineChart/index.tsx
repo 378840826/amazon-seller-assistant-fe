@@ -141,7 +141,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
               color: '#888',
               interval: true,
               formatter(val: string) {
-                return lineChartSymbol(selectDouFu[0], val, currency);
+                return lineChartSymbol(selectDouFu[0], val, currency, 0);
               },
             },
             splitLine: {
@@ -165,7 +165,7 @@ const LineChart: React.FC<AsinB2B.ILineChartProps> = (props) => {
               color: '#888',
               interval: true,
               formatter(val: string) {
-                return lineChartSymbol(selectDouFu[1], val, currency);
+                return lineChartSymbol(selectDouFu[1], val, currency, 0);
               },
             },
             axisLine: {
