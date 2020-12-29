@@ -11,7 +11,6 @@ import classnames from 'classnames';
 import Update from './components/Update';
 import Empty from './components/Empty';
 import ShowData from '@/components/ShowData';
-import { toIndexFixed } from '@/utils/huang';
 import { strToMoneyStr } from '@/utils/utils';
 import GoodsImg from '@/pages/components/GoodsImg';
 import { bigIcon } from '@/pages/components/GoodsIcon';
@@ -325,7 +324,7 @@ const AsinBase: React.FC = () => {
           </div>
           <div className={styles.infos}>
             <p className={styles.title}>
-              <a href={asinInfo?.url} target="_blank" rel="noreferrer">{asinInfo?.title}</a>
+              <a href={asinInfo?.url} target="_blank" rel="noreferrer" title={asinInfo?.title}>{asinInfo?.title}</a>
             </p>
             <p className={styles.seller}>{asinInfo?.brandName}</p>
             <div className={styles.rate}>
@@ -478,12 +477,9 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>售价：</span>
                   <span className={styles.va1}>
-                    {
-                    priceEs?.price === null || priceEs?.price === undefined ? <Empty/> : 
-                      currentShop.currency + toIndexFixed(priceEs?.price)
-                    }
+                    <ShowData value={priceEs?.price} isCurrency/>
                   </span>
-                  <span className={styles.va12}>（{priceEs?.priceCny ? `￥${toIndexFixed(priceEs?.priceCny)}` : ''}）</span>
+                  <span className={styles.va12}>（￥<ShowData value={priceEs?.priceCny}/>）</span>
                 </div>
 
                 <div className={styles.common}>
@@ -496,7 +492,7 @@ const AsinBase: React.FC = () => {
                     <span className={styles.placehoader} style={{
                       display: priceEs?.costCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{ (priceEs?.costCny !== null && priceEs?.costCny !== undefined) ? toIndexFixed(priceEs?.costCny as number) : ''}）
+                    （￥<ShowData value={priceEs?.costCny}/>）
                     </span>
                   </label>
                 </div>
@@ -511,7 +507,7 @@ const AsinBase: React.FC = () => {
                     <span className={styles.placehoader} style={{
                       display: priceEs?.freightCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{(priceEs?.freightCny !== null && priceEs?.freightCny !== undefined) ? toIndexFixed(priceEs?.freightCny as number) : ''}）
+                      （￥<ShowData value={priceEs?.freightCny}/>）
                     </span>
                   </label>
                 </div>
@@ -519,28 +515,24 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>佣金：</span>
                   <span className={styles.va1}>
-                    {
-                      priceEs?.commission === null || priceEs?.commission === undefined
-                        ? <Empty /> : currentShop.currency + toIndexFixed(priceEs?.commission) 
-                    }
+                    <ShowData value={priceEs?.commission} isCurrency/>
                   </span>
                   <span className={styles.va12} style={{
                     display: priceEs?.commissionCny === null ? 'none' : 'inline-block',
                   }}>
-                    （￥{(priceEs?.commissionCny !== null && priceEs?.commissionCny !== undefined) ? toIndexFixed(priceEs?.commissionCny as number) : ''}）
+                    （￥<ShowData value={priceEs?.commissionCny}/>）
                   </span>
                 </div>
 
                 <div className={styles.base}>
                   <span className={styles.text}>FBA fee：</span>
                   <span className={styles.va1}>
-                    {priceEs?.fbaFee === null || priceEs?.fbaFee === undefined ? <Empty /> : 
-                      currentShop.currency + toIndexFixed(priceEs?.fbaFee)}
+                    <ShowData value={priceEs?.fbaFee} isCurrency/>
                   </span>
                   <span className={styles.va12} style={{
                     display: priceEs?.fbaFeeCny === null ? 'none' : 'inline-block',
                   }}>
-                    （￥{(priceEs?.fbaFeeCny !== null && priceEs?.fbaFeeCny !== undefined) ? toIndexFixed(priceEs?.fbaFeeCny as number) : ''}）
+                    （￥<ShowData value={priceEs?.fbaFeeCny}/>）
                   </span>
                 </div>
 
@@ -559,7 +551,7 @@ const AsinBase: React.FC = () => {
                     <span className={styles.placehoader} style={{
                       display: priceEs?.promotionFeePer === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{(priceEs?.promotionFeePer !== null && priceEs?.promotionFeePer !== undefined) ? toIndexFixed(priceEs?.promotionFeePer as number) : ''}）
+                      （￥<ShowData value={priceEs?.promotionFeePer}/>）
                     </span>
                   </label>
                 </div>
@@ -581,7 +573,7 @@ const AsinBase: React.FC = () => {
                     <span className={styles.placehoader} style={{
                       display: priceEs?.storageFeeCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{(priceEs?.storageFeeCny !== null && priceEs?.storageFeeCny !== undefined) ? toIndexFixed(priceEs?.storageFeeCny as number) : ''}）
+                      （￥<ShowData value={priceEs?.storageFeeCny}/>）
                     </span>
                   </label>
                 </div>
@@ -596,7 +588,7 @@ const AsinBase: React.FC = () => {
                     <span className={styles.placehoader} style={{
                       display: priceEs?.otherFeeCny === null ? 'none' : 'inline-block',
                     }}>
-                    （￥{(priceEs?.otherFeeCny !== null && priceEs?.otherFeeCny !== undefined) ? toIndexFixed(priceEs?.otherFeeCny as number) : ''}）
+                      （￥<ShowData value={priceEs?.otherFeeCny}/>）
                     </span>
                   </label>
                 </div>
@@ -604,13 +596,10 @@ const AsinBase: React.FC = () => {
                 <div className={styles.base}>
                   <span className={styles.text}>利润：</span>
                   <span className={styles.va1}>
-                    {
-                    priceEs?.profit === null || priceEs?.profit === undefined ? <Empty /> : 
-                      currentShop.currency + toIndexFixed(priceEs?.profit)
-                    }
+                    <ShowData value={priceEs?.profit} isCurrency/>
                   </span>
                   <span className={styles.va12}>
-                    （￥{(priceEs?.profitCny !== null && priceEs?.profitCny !== undefined) ? toIndexFixed(priceEs?.profitCny as number) : ''}）
+                  （￥<ShowData value={priceEs?.profitCny}/>）
                   </span>
                 </div>
 

@@ -17,7 +17,7 @@ import TableNotData from '@/components/TableNotData';
 import Toolbar from './components/Toolbar';
 import { storage } from '@/utils/utils';
 import SignHandle from './components/SignHandle';
-import { getRangeDate, toIndexFixed } from '@/utils/huang';
+import { getRangeDate } from '@/utils/huang';
 import {
   Link,
   useDispatch,
@@ -370,7 +370,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
         const { reviewScore, reviewNum } = row as CommectMonitor.IRowDataType;
         return (
           <div className={styles.reviewScore}>
-            { toIndexFixed(reviewScore, 1) }
+            { parseFloat(reviewScore).toFixed(1) }
             <span>（{reviewNum}）</span>
           </div>
         );

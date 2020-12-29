@@ -11,7 +11,7 @@
  */
 import React from 'react';
 import { useSelector } from 'umi';
-import { toIndexFixed, moneyFormat } from '@/utils/huang';
+import { moneyFormat } from '@/utils/huang';
 
 
 interface IProps {
@@ -48,7 +48,7 @@ export default (props: IProps) => {
         ...style,
       }}>—</span>
     ) : ( 
-      (isCurrency ? currency : '') + (isMoney ? moneyFormat(Number(value), privateFillNumber, ',', '.') : toIndexFixed(value, privateFillNumber))
+      (isCurrency ? currency : '') + (isMoney ? moneyFormat(Number(value), privateFillNumber, ',', '.') : parseFloat(String(value)).toFixed(privateFillNumber))
     )
   }</>;
 };

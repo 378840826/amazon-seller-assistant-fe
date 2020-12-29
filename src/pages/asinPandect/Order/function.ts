@@ -6,6 +6,7 @@
  * @FilePath: \amzics-react\src\pages\asinPandect\Order\function.ts
  */ 
 import moment from 'moment';
+import { isFillField } from '@/utils/huang';
 
 /**
  * 处理豆腐块的数据
@@ -110,7 +111,7 @@ export function handleChiese(value: string, flag = false): string {
       return 'pageViewsDivSessions';
     case '销量/订单量':
       return 'salesQuantityDivOrderQuantity';
-    case '销量额':
+    case '销售额':
       return 'sales';
     case '平均售价':
       return 'avgPrice';
@@ -141,7 +142,7 @@ export function handleChiese(value: string, flag = false): string {
   case 'salesQuantityDivOrderQuantity':
     return '销量/订单量';
   case 'sales':
-    return '销量额';
+    return '销售额';
   case 'avgPrice':
     return '平均售价';
   case 'pct':
@@ -178,32 +179,32 @@ export function handleRange(type: string): string {
 }
 
 // 各个指标的符号
-export function lineChartSymbol(type: string, value = '', symbol = '') {
+export function lineChartSymbol(type: string, value = '', symbol = '', fillNumber = 0) {  // eslint-disable-line
   switch (type) {
   case 'orderQuantity':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'salesQuantity':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'session':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'couponOrderQuantity':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'relatedSalesFrequency':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'pageViews':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'pageViewsDivSessions':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'salesQuantityDivOrderQuantity':
-    return value;
+    return parseFloat(value).toFixed(fillNumber);
   case 'sales':
-    return symbol + value;
+    return symbol + (parseFloat(value).toFixed(fillNumber));
   case 'avgPrice':
-    return symbol + value;
+    return symbol + (parseFloat(value).toFixed(fillNumber));
   case 'pct':
-    return symbol + value;
+    return symbol + (parseFloat(value).toFixed(fillNumber));
   case 'takeRates':
-    return `${value}%`;
+    return `${parseFloat(value).toFixed(fillNumber)}%`;
   default:
     return '';
   }
@@ -234,11 +235,13 @@ export function handleLineCahrtTooltip(params: {
   param.forEach(item => {
     const seriesName = item.seriesName;
     const color = item.color;
+    let fillNumber = 0; // 填充位数
     
     if (seriesName.indexOf('上年同期') !== -1){
       const name = seriesName.substr(4);
       const english = handleChiese(name, true);
-      const value = lineChartSymbol(english, item.value, symbol);
+      fillNumber = isFillField(name) ? 2 : 0;
+      const value = lineChartSymbol(english, item.value, symbol, fillNumber);
       let date = lastYearXData[dataIndex];
       date = moment(Number(date)).format('YYYY-MM-DD');
 
@@ -259,7 +262,8 @@ export function handleLineCahrtTooltip(params: {
     ) {
       const name = seriesName.substr(4);
       const english = handleChiese(name, true);
-      const value = lineChartSymbol(english, item.value, symbol);
+      fillNumber = isFillField(name) ? 2 : 0;
+      const value = lineChartSymbol(english, item.value, symbol, fillNumber);
       let date = weekMonthXData[dataIndex];
       date = moment(Number(date)).format('YYYY-MM-DD');
       if (date === '1970-01-01' || date === 'Invalid date') {
@@ -282,7 +286,10 @@ export function handleLineCahrtTooltip(params: {
         const arr = seriesName.split('-SKU-');
         const name = arr[0];
         const english = handleChiese(name, true);
-        const value = lineChartSymbol(english, item.value, symbol);
+        fillNumber = isFillField(name) ? 2 : 0;
+        console.log(name, 'name');
+        
+        const value = lineChartSymbol(english, item.value, symbol, fillNumber);
         if (temsku === '') {
           html1 += `<p class="sku-title">${arr[1]}</p>`;
           temsku = arr[1];
@@ -300,7 +307,8 @@ export function handleLineCahrtTooltip(params: {
         </p>`;
       } else {
         const english = handleChiese(item.seriesName, true);
-        const value = lineChartSymbol(english, item.value, symbol);
+        fillNumber = isFillField(item.seriesName) ? 2 : 0;
+        const value = lineChartSymbol(english, item.value, symbol, fillNumber);
         html1 += `
         <p class="data">
           <i class="icon" style="background-color: ${color}"></i>

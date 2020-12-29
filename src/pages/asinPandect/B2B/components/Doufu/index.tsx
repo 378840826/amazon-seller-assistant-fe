@@ -3,6 +3,7 @@ import styles from './index.less';
 import { useSelector, useDispatch } from 'umi';
 import Rate from '@/components/Rate';
 import ShowData from '@/components/ShowData';
+import { isFillField } from '@/utils/huang';
 
 interface IProps {
   list: AsinB2B.IDouFuListTyep[];
@@ -95,6 +96,7 @@ const Toolbar: React.FC<IProps> = (props) => {
         douFuList.map((item, i) => {
           let showSymbol = false; // 是否显示货币符号
           let percent = false; // 百分比货号
+          let fillNumber = 0; // 哪些数据是否要齐2位小数的
           const flag = item.lastData === null || item.lastData === undefined;
           const mianflag = item.data === undefined || item.data === null; // 主要数据是否为空
 
@@ -110,6 +112,7 @@ const Toolbar: React.FC<IProps> = (props) => {
             percent = true;
           }
 
+          isFillField(item.label) ? fillNumber = 2 : fillNumber = 0;
           return <div className={`${styles.item}`} 
             style={{
               borderTop: handlecolor(item.value) === 'transparent' ? '' : `3px solid ${ handlecolor(item.value)}`,
@@ -124,7 +127,7 @@ const Toolbar: React.FC<IProps> = (props) => {
                   <span style={{
                     display: mianflag ? 'none' : 'inline-block',
                   }}>{showSymbol ? <ShowData value={item.data} isCurrency /> : 
-                      <ShowData value={item.data} fillNumber={0}/>}</span>
+                      <ShowData value={item.data} fillNumber={fillNumber}/>}</span>
                   <span style={{
                     display: mianflag ? 'none' : 'inline-block',
                   }}>{percent ? '%' : ''}</span>
@@ -144,14 +147,14 @@ const Toolbar: React.FC<IProps> = (props) => {
                     <span style={{
                       color: '#888',
                     }}>—</span> : (showSymbol ? <ShowData value={item.lastData} isCurrency /> : 
-                      <ShowData value={item.lastData} fillNumber={0}/>)
+                      <ShowData value={item.lastData} fillNumber={fillNumber}/>)
                   }
                 </span>
               </p>
               <p>
                 环比：
                 <span className={styles.text}>
-                  <Rate value={item.ratio}/>
+                  <Rate value={item.ratio} decimals={2} />
                 </span>
               </p>
             </div>
