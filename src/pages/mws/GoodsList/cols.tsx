@@ -442,7 +442,7 @@ export const getFullColumns = (params: any) => {
               record.fbaFee
                 ?
                 <Text type="secondary">
-                  +{currency}{record.fbaFee.toFixed(2)}
+                  +{currency}{getShowPrice(record.fbaFee)}
                 </Text>
                 :
                 '—'
@@ -484,7 +484,7 @@ export const getFullColumns = (params: any) => {
             {
               customCols.profit
               &&
-              <div>{currency}{profit.toFixed(2)}</div>
+              <div>{currency}{getShowPrice(profit)}</div>
             }
             {
               customCols.profitMargin
@@ -534,8 +534,8 @@ export const getFullColumns = (params: any) => {
             &&
             (
               record.dayOrder7Ratio < 0
-                ? <span className={styles.down}>{record.dayOrder7Ratio}%</span>
-                : <span className={styles.up}>+{record.dayOrder7Ratio}%</span>
+                ? <span className={styles.down}>{record.dayOrder7Ratio.toFixed(2)}%</span>
+                : <span className={styles.up}>+{record.dayOrder7Ratio.toFixed(2)}%</span>
             )
           }
         </Space>
@@ -577,8 +577,8 @@ export const getFullColumns = (params: any) => {
             &&
             (
               record.dayOrder30Ratio < 0
-                ? <span className={styles.down}>{record.dayOrder30Ratio}%</span>
-                : <span className={styles.up}>+{record.dayOrder30Ratio}%</span>
+                ? <span className={styles.down}>{record.dayOrder30Ratio.toFixed(2)}%</span>
+                : <span className={styles.up}>+{record.dayOrder30Ratio.toFixed(2)}%</span>
             )
           }
         </Space>
