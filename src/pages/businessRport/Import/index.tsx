@@ -93,6 +93,7 @@ const BsImport: React.FC = function () {
           filtrateParams: {
             startDate: rangePickerDates[0],
             endDate: rangePickerDates[1],
+            current: 1,
           },
         },
       });
@@ -324,13 +325,13 @@ const BsImport: React.FC = function () {
     let text = '';
     switch (pluginStatus) {
     case 0:
-      text = `插件正在自动同步${pluginDate}`;
+      text = `插件正在自动导入${pluginDate}`;
       break;      
     case 1:
-      text = `${pluginDate}插件自动同步成功`;
+      text = `${pluginDate}插件自动导入成功`;
       break;
     case 2:
-      text = `插件自动同步${pluginDate}失败，等待下一次同步`;
+      text = `插件自动导入${pluginDate}失败，等待下一次导入`;
       break;
     default:
       break;
@@ -435,11 +436,11 @@ const BsImport: React.FC = function () {
         <div className={styles.right}>
           { getPluginStatus() }
           <div className={styles.direction}>
-            <h5>方法1 :</h5>
+            <h5>方法1 :手动导入</h5>
             <p>
               1. 前往亚马逊后台的Business Report页面<br/>
               2. 选择Detail Page Sales and Traffic by Child Item报表<br/>
-              3. 按天下载，修改文件名，格式为：yyyymmdd<br/>
+              3. 按天下载，修改文件名，格式为：yyyymmdd，例如2021年01月01日的报表，文件名改为20210101.csv<br/>
               4. 点击批量导入按钮，按住Ctrl键，选择多个文件导入<br/>
             </p>
             <h6>注意事项：</h6>
@@ -448,16 +449,17 @@ const BsImport: React.FC = function () {
               • 导入的文件单个不能超过10MB<br/>
               • 若文件导入失败，请检查文件名或文件内容是否有误<br/>
             </p>
-            <h5>方法2 :</h5>
+            <h5>方法2 :自动导入</h5>
             <p>
-              1. 在常用电脑的浏览器上安装插件，
-              <a href="/">安装地址<Iconfont type="icon-zhankai" className={styles.icon} /></a><br/>
+              1. 在常用于登录亚马逊后台的电脑的浏览器上安装插件，
+              <a href="/index/crx">安装地址<Iconfont type="icon-zhankai" className={styles.icon} /></a><br/>
               2. 在插件上使用安知账号登录<br/>
-              3. 打开亚马逊后台的Business Report页面，插件会自动同步报表到安知<br/>
+              3. 打开自动导入开关<br/>
+              4. 打开亚马逊后台的Business Report页面，插件会自动导入报表到安知<br/>
             </p>
             <h6>注意事项：</h6>
             <p>
-              • 第一次导入近2年的报表，耗时较长，后续每天导入近15天的报表<br/>
+              • 第一次会自动导入近2年的报表，耗时较长，后续每天导入近15天的报表<br/>
               • 需要在安知绑定店铺，未绑定的店铺不会自动同步报表<br/>
             </p>
             <div className={styles.imgContainer}>

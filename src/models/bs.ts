@@ -254,22 +254,28 @@ const BsModel: IBsModelType = {
     savePluginStatus(state, { payload }) {
       const { date, status } = payload;
       state.pluginStatus = payload;
+      // 如果插件没在同步
+      if (!date || status === 3) {
+        return;
+      }
+      // 把 date 改成和列表中的 date 相同的格式（进行比较）
+      const formatDate = `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6)}`;
       // 如果当前页数据有这个日期，同时更新这条数据的状态
       const length = state.list.records.length;
       for (let index = 0; index < length; index++) {
         const bs = state.list.records[index];
-        if (bs.reportTime === date) {
+        if (bs.reportTime === formatDate) {
           // 0 正在同步 1 同步成功 2 同步失败 3 代表目前无同步任务
           switch (status) {
           case 0:
-            bs.pluginMsg = '插件正在自动同步';
+            bs.pluginMsg = '插件正在自动导入';
             break;
           case 1:
             bs.reportStatus = true;
             bs.pluginMsg = '';
             break;
           case 2:
-            bs.pluginMsg = '插件自动同步失败，等待下一次同步';
+            bs.pluginMsg = '插件自动导入失败，等待下一次导入';
             break;                   
           default:
             break;
