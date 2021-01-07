@@ -27,7 +27,6 @@ const config =  {
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',
-      // 'target': 'https://www.amzics.com',
       'changeOrigin': true,
       // 'pathRewrite': { '^/api' : '' },
     },
