@@ -347,6 +347,10 @@ const GlobalModel: IGlobalModelType = {
           break;
         }
       }
+      if (state.shop.current.id === id) {
+        state.shop.current.autoPrice = autoPrice;
+        storage.set('currentShop', state.shop.current);
+      }
     },
 
     // 解绑 mws 店铺
