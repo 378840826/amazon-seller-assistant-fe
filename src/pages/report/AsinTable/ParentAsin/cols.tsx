@@ -567,7 +567,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           ...profitRateCol,
           render(val: number) {
             return <>
-              <p>{val === null ? <Empty /> : `${val}%` }</p>
+              <p>{val === null ? <Empty /> : `${moneyFormat(val, 2, ',', '.', true)}%` }</p>
             </>;
           },
         },
@@ -669,7 +669,8 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           },
         },
         {
-          ...b2bSalesQuantity,
+          // ...b2bSalesQuantity,
+          ...b2bOrderQuantityCol,
           render(val: number) {
             return <>
               <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', false) }</p>
@@ -677,7 +678,8 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
           },
         },
         {
-          ...b2bOrderQuantityCol,
+          // ...b2bOrderQuantityCol,
+          ...b2bSalesQuantity,
           render(val: number) {
             return <>
               <p>{val === null ? <Empty /> : moneyFormat(val, 2, ',', '.', false) }</p>

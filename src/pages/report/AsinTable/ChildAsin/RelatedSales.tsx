@@ -68,7 +68,7 @@ const Demo: React.FC<IProps> = (props) => {
   };
   return <Popover
     content={
-      <div className={styles.contentBox} key={Math.random()}>
+      <div className={styles.contentBox} key={String(Math.random())}>
         <Spin spinning={loading} className={styles.loading}></Spin>
         <div className={styles.listBox}>
           {
