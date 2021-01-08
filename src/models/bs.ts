@@ -159,7 +159,7 @@ const BsModel: IBsModelType = {
         }
         callback && callback(res.code, res.message);
       },
-      { type: 'poll', delay: 10000 },
+      { type: 'poll', delay: 5000 },
     ],
 
     // 获取报表详情

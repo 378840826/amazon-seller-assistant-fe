@@ -160,7 +160,7 @@ const GlobalModel: IGlobalModelType = {
 
     // 更新 mws 店铺 Auth Token
     *modifyShopToken({ payload: { id, token }, callback }, { call, put }) {
-      const res = yield call(updateShopToken, { id, token });
+      const res = yield call(updateShopToken, { storeId: id, token });
       if (res.code === 200) {
         yield put({
           type: 'updateShopToken',
@@ -377,6 +377,10 @@ const GlobalModel: IGlobalModelType = {
           break;
         }
       }
+      if (state.shop.current.id === storeId) {
+        state.shop.current.storeName = storeName;
+        storage.set('currentShop', state.shop.current);
+      }
     },
 
     // 更新店铺 Auth Token
@@ -389,6 +393,10 @@ const GlobalModel: IGlobalModelType = {
           shop.token = token;
           break;
         }
+      }
+      if (state.shop.current.id === id) {
+        state.shop.current.token = token;
+        storage.set('currentShop', state.shop.current);
       }
     },
 
