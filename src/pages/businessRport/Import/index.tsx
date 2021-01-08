@@ -105,6 +105,7 @@ const BsImport: React.FC = function () {
   const paginationProps: TablePaginationConfig = {
     total,
     current,
+    pageSize: size,
     showQuickJumper: true,
     showSizeChanger: true,
     defaultPageSize: 20,
