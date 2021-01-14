@@ -87,7 +87,15 @@ const AsinBase: React.FC = (props) => {
       setAsinLoading(false);
 
       if (Array.isArray(data) && data.length > 0) {
-        setCurrentSelect(data[0].asin);
+        let checkedSiblingsAsin = '';
+
+        data.forEach(item => {
+          if (item.asin === value || storeAsin) {
+            checkedSiblingsAsin = item.asin;
+          }
+        });
+        
+        setCurrentSelect(checkedSiblingsAsin || data[0].asin);
         setSiblingAsins(data);
       } else {
         setCurrentSelect('');
