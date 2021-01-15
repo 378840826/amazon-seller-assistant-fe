@@ -18,6 +18,7 @@ import {
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
 } from '@/utils/routes';
+import { notTagShopHint } from './config/array';
 
 const { confirm } = Modal;
 
@@ -493,21 +494,7 @@ const GlobalModel: IGlobalModelType = {
       // 异步的、放在里面比较安全
       umiHistory.listen(() => {
         const pathname = umiHistory.location.pathname;
-        const excludeUrls = [
-          '/',
-          '/#fun',
-          '/#home',
-          '/#fqa',
-          '/index/crx',
-          '/users/send-email',
-          '/users/login',
-          '/center',
-          '/vip/membership',
-          '/shop/list',
-          '/shop/bind',
-        ];
-
-        if (excludeUrls.indexOf(pathname) > -1) {
+        if (notTagShopHint.indexOf(pathname) > -1) {
           return;
         }
         
