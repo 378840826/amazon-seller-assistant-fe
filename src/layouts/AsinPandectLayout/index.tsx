@@ -88,13 +88,11 @@ const AsinBase: React.FC = (props) => {
 
       if (Array.isArray(data) && data.length > 0) {
         let checkedSiblingsAsin = '';
-
         data.forEach(item => {
-          if (item.asin === value || storeAsin) {
+          if (item.asin === (value || storeAsin)) {
             checkedSiblingsAsin = item.asin;
           }
         });
-        
         setCurrentSelect(checkedSiblingsAsin || data[0].asin);
         setSiblingAsins(data);
       } else {
@@ -135,6 +133,9 @@ const AsinBase: React.FC = (props) => {
           asin: string;
         };
       };
+
+      console.log(data.asin, 'data.asin');
+      
       
       // 判断是否从商品列表页面过来
       if (flag || (query?.page && query.page === 'plist')) {
