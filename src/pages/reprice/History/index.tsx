@@ -343,7 +343,7 @@ const History: React.FC = () => {
     },
     {
       title: '价格变动',
-      dataIndex: 'name',
+      dataIndex: 'priceChange',
       align: 'right',
       width: 100,
       className: styles.priceChange,
