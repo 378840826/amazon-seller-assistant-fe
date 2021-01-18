@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Spin, Switch, message } from 'antd';
 import { useDispatch } from 'umi';
+import styles from '../index.less';
 
 interface IProps {
   checked: boolean;
@@ -49,7 +50,7 @@ const SwitchComponent: React.FC<IProps> = (props) => {
   };
 
   return <Spin size="small" spinning={loading}>
-    <Switch checked={value} className="h-switch" onChange={change}></Switch>
+    <Switch checked={value}className={`h-switch ${styles.switch}`} onChange={change}></Switch>
   </Spin>;
 };
 

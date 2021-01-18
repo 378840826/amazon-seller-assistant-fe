@@ -35,7 +35,7 @@ export default (props: IProps) => {
     color = '#888',
   } = props;
   const { 
-    currency = '',
+    currency = '$',
     marketplace,
   } = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
 
