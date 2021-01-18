@@ -5,7 +5,6 @@ import {
 } from '@/utils/routes';
 
 import ShowData from '@/components/ShowData';
-import TableNotData from '@/components/TableNotData';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import GoodsImg from '@/pages/components/GoodsImg';
 import classnames from 'classnames';
@@ -51,7 +50,6 @@ const ProductSelect: React.FC = () => {
 
   // 请求数据
   useEffect(() => {
-    // return;
     if (id === '-1' || asin === 'notRequest') {
       setLoading(false);
       return;
@@ -229,9 +227,7 @@ const ProductSelect: React.FC = () => {
     },
     loading,
     locale: {
-      emptyText: <TableNotData hint="店铺无商品" style={{
-        padding: '50px 0 80px',
-      }}/>,
+      emptyText: <span className="secondaryText">店铺无商品</span>,
     },
     scroll: {
       y: 320,
@@ -249,9 +245,7 @@ const ProductSelect: React.FC = () => {
     },
     // loading,
     locale: {
-      emptyText: <TableNotData hint="左边添加商品" style={{
-        padding: '50px 0 80px',
-      }}/>,
+      emptyText: <span className="secondaryText">左边添加商品</span>,
     },
     scroll: {
       y: 320,

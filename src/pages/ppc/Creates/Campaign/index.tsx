@@ -55,7 +55,6 @@ const CampaignAdd = () => {
   const [campaignType, setCampaignType] = useState<CreateCampaign.ICampaignType>('sponsoredProducts'); // 当前选中的广告活动类型
   const [stepIndex, setStepIndex] = useState<number>(0); // 当前步骤
   const [pattern, setPattern] = useState<CreateCampaign.IManagementMode>('standard'); // 营销模式
-
   const [putMathod, setPutMathod] = useState<string>('auto'); // 广告活动投放方式
   const [autoGroupBidType, setAutoGroupBidType] = useState<string>('auto'); // 自动广告组的竞价方式
 
@@ -150,7 +149,7 @@ const CampaignAdd = () => {
       const min = marketplace === 'JP' ? 2 : 0.02; // 日本站最小值200
       reqData.adGroup = Object.assign({}, reqData.adGroup, groupData);
       reqData.adGroup.productAds = selects;
-      reqData.activeTimeState = groupData.activeTimeState;
+      reqData.switch = groupData.switch;
       reqData.adGroup.startDate = groupData ? moment(groupData).format('YYYY-MM-DD') : '';
       groupData.endDate ? reqData.adGroup.endDate = moment(groupData.endDate).format('YYYY-MM-DD') : '';
 
@@ -225,7 +224,7 @@ const CampaignAdd = () => {
       delete reqData.adGroup.manualType;
       delete reqData.adGroup.other;
       delete reqData.adGroup.bidType;
-      delete reqData.adGroup.activeTimeState;
+      delete reqData.adGroup.switch;
       delete reqData.adGroup.other;
 
       new Promise((resolve, reject) => {
@@ -276,10 +275,10 @@ const CampaignAdd = () => {
           <Steps.Step title=""/>
         </Steps>
         <span className={classnames(styles.common, styles.stepOne)}>选择广告类型</span>
-        <span className={classnames(styles.common, styles.stepTwo)}>管理模式设置</span>
-        <span className={classnames(styles.common, styles.stepThree)}>广告活动设置</span>
-        <span className={classnames(styles.common, styles.stepFour)}>广告组设置</span>
-        <span className={classnames(styles.common, styles.stepFive)}>创建完成</span>
+        <span className={classnames(styles.common, styles.stepTwo, stepIndex <= 0 ? styles.notReach : '')}>管理模式设置</span>
+        <span className={classnames(styles.common, styles.stepThree, stepIndex <= 1 ? styles.notReach : '')}>广告活动设置</span>
+        <span className={classnames(styles.common, styles.stepFour, stepIndex <= 2 ? styles.notReach : '')}>广告组设置</span>
+        <span className={classnames(styles.common, styles.stepFive, stepIndex <= 3 ? styles.notReach : '')}>创建完成</span>
       </div>
 
       {/* 选择广告活动类型 */}
@@ -364,7 +363,7 @@ const CampaignAdd = () => {
           labelAlign="left" 
           name="atuoGroupForm"
           initialValues={{
-            activeTimeState: true,
+            switch: true,
             other: {
               bidType: 'auto',
             },

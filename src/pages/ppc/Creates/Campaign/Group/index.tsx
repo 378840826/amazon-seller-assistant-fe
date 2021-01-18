@@ -105,7 +105,7 @@ const Group: React.FC<IProps> = props => {
     </div>
   
     <div className={styles.timing}>
-      <Item name="activeTimeState" label="时间：" className={styles.switch} valuePropName="checked">
+      <Item name="switch" label="时间：" className={styles.switch} valuePropName="checked">
         <Switch className="h-switch"/>
       </Item>
       <TimeSelectTable getValues={v => getTimingData(v)} />

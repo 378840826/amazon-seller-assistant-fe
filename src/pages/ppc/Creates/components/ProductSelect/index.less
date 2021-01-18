@@ -24,8 +24,8 @@
     .table {
       :global(.ant-table-body) {
         overflow-y: auto !important;
-        height: 320px;
         border: 1px solid #e5e5e5;
+        border-top: 0;
       }
 
       :global(.ant-table-placeholder td) {
@@ -42,16 +42,22 @@
         padding-bottom: 0;
         color: @heading-color;
         background-color: #f3f3f3;
+        border-bottom: 0;
       }
 
       td {
         padding: 7px 16px 5px;
       }
 
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
       .productCol {
         display: flex;
         width: 290px;
         text-align: left;
+        align-items: center;
 
         .details {
           width: 235px;
