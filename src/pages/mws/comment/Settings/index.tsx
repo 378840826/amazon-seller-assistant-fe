@@ -445,7 +445,7 @@ const Settings: React.FC = () => {
             onVisibleChange={setStar}
             visible={starIsVisible} >
             <Button>
-              评论提醒 <DownOutlined className={styles.icon}/>
+              评论提醒 <DownOutlined className={`${styles.icon} ${starIsVisible ? styles.active : ''}`}/>
             </Button>
           </Dropdown>
         </div>
