@@ -27,7 +27,6 @@ import { useDispatch, ConnectProps, ICreateGampaignState, useSelector } from 'um
 import { FormInstance } from 'antd/lib/form';
 import ShowData from '@/components/ShowData';
 import EditBox from '../../../../components/EditBox';
-import TableNotData from '@/components/TableNotData';
 import BatchSetBidMenu from '../BatchSetBidMenu';
 import MatchSelect from '../MatchSelect';
 
@@ -242,6 +241,7 @@ const SPManual: React.FC<IProps> = props => {
   // 添加关键词到右边的主函数
   const addKeywordfn = (keyword: string) => {
     const defaultBid = form.getFieldValue('defaultBid');
+    let itemId = ''; // 左边建议关键词的，用原来的id，其它用新id
 
     if ([undefined, null, ''].includes(defaultBid)) {
       message.error('关键词竞价不能为空，请填写默认竞价');
@@ -253,7 +253,7 @@ const SPManual: React.FC<IProps> = props => {
       return;
     }
 
-    let flag = false;
+    let flag = false; // 是否添加了
     for (let i = 0; i < addKeyword.length; i++) {
       const item = addKeyword[i];
       if (item.keyword === keyword && item[match]) {
@@ -268,12 +268,13 @@ const SPManual: React.FC<IProps> = props => {
     for (let i = 0; i < keywordDada.length; i++ ) {
       const item = keywordDada[i];
       if (item.keyword === keyword) {
+        itemId = item.id;
         item[match] = true;
       }
     }
 
     const data = {
-      id: createUUID(),
+      id: itemId || createUUID(),
       keyword, 
       bid: Number(defaultBid), 
       match,
@@ -296,7 +297,6 @@ const SPManual: React.FC<IProps> = props => {
     }
   };
   
-
   // 删除单个关键词
   const deleteItemKeyword = (keyword: string, match: string) => {
     for (let i = 0; i < addKeyword.length; i++ ) {
@@ -337,99 +337,6 @@ const SPManual: React.FC<IProps> = props => {
     addKeyword[index].bid = val;
     setAddKeyword([...addKeyword]);
     return Promise.resolve(true);
-  };
-
-  // 右边的关键词表格
-  const addTableConfig = {
-    pagination: false as false,
-    rowKey: (record: {id: string}) => record.id,
-    rowSelection: {
-      type: 'checkbox',
-      columnWidth: 70,
-      // 点击复选框时
-      onChange: (selectRecord: React.Key[], record: {id: string}[]) => {
-        const temArr: string[] = [];
-        record.forEach(item => {
-          temArr.push(item.id);
-        });
-        // setSelectedRowKeys([...temArr]);
-        selectedRowKeys = temArr;
-      },
-    } as any, // eslint-disable-line
-    columns: [
-      {
-        title: '关键词',
-        dataIndex: 'keyword',
-        key: createUUID(),
-        width: 200,
-      },
-      {
-        title: '匹配方式',
-        dataIndex: 'match',
-        align: 'center',
-        render(value: string, record: { keyword: string}) {
-          return <MatchSelect 
-            value={value} keyword={record.keyword} 
-            changeCallback={matchSelectCallback} 
-          />;
-        },
-      },
-      {
-        title: '建议竞价',
-        align: 'center',
-        dataIndex: 'b',
-        render() {
-          return <ShowData value={null} />;
-          // 现在后端暂时拿不到建议竞价
-          // return <div className={styles.suggestBidCol}>
-          //   <div className={styles.oneRow}>
-          //     <span><ShowData value={222} isCurrency /></span>
-          //     <Button size="small">应用</Button>
-          //   </div>
-          //   <p className={styles.secondary}>
-          //     （<ShowData value={2} isCurrency />-<ShowData value={58.2} isCurrency />）
-          //   </p>
-          // </div>;
-        },
-      },
-      {
-        title: '关键词竞价',
-        dataIndex: 'bid',
-        align: 'right',
-        width: 120,
-        className: styles.thKeywordCol,
-        render(value: string, record: {}, index: number) {
-          return (
-            <EditBox 
-              value={String(value)} 
-              currency={currency} 
-              marketplace={marketplace as API.Site}
-              chagneCallback={val => editBoxCallback(val, index)}
-            />
-          );
-        },
-      },
-      {
-        title: '操作',
-        align: 'center',
-        dataIndex: 'id',
-        render(val: string, record: { keyword: string; match: string }) {
-          return <span 
-            className={styles.handleCol}
-            onClick={() => deleteItemKeyword(record.keyword, record.match)}
-          >删除</span>;
-        },
-      },
-    ] as any, // eslint-disable-line
-    dataSource: addKeyword,
-    locale: {
-      emptyText: <TableNotData hint="请选择或输入关键词" style={{
-        padding: '36px 0 0',
-      }} />,
-    },
-    scroll: {
-      y: 226,
-    },
   };
 
   // 建议关键词全部添加
@@ -556,13 +463,118 @@ const SPManual: React.FC<IProps> = props => {
     }
     message.destroy();
 
+    console.log(type, 'type');
+    
     addKeyword.forEach(item => {
       if (selectedRowKeys.indexOf(item.id) > -1) {
+        console.log(item, 'item');
+        
         item.match = type;
+        
+        for (let i = 0; i < keywordDada.length; i++) {
+          const cItem = keywordDada[i];
+          console.log(cItem, 'cItem');
+          
+          if (item.id === cItem.id) {
+            console.log(cItem, '左边的');
+            break;
+          }
+        }
       }
     });
     setAddKeyword([...addKeyword]);
     setMatchingVisible(false);
+  };
+
+  // 右边的关键词表格
+  const addTableConfig = {
+    pagination: false as false,
+    rowKey: (record: {id: string}) => record.id,
+    rowSelection: {
+      type: 'checkbox',
+      columnWidth: 70,
+      // 点击复选框时
+      onChange: (selectRecord: React.Key[], record: {id: string}[]) => {
+        const temArr: string[] = [];
+        record.forEach(item => {
+          temArr.push(item.id);
+        });
+        // setSelectedRowKeys([...temArr]);
+        selectedRowKeys = temArr;
+      },
+    } as any, // eslint-disable-line
+    columns: [
+      {
+        title: '关键词',
+        dataIndex: 'keyword',
+        key: createUUID(),
+        width: 200,
+      },
+      {
+        title: '匹配方式',
+        dataIndex: 'match',
+        align: 'center',
+        render(value: string, record: { keyword: string}) {
+          return <MatchSelect 
+            value={value} keyword={record.keyword} 
+            changeCallback={matchSelectCallback} 
+          />;
+        },
+      },
+      {
+        title: '建议竞价',
+        align: 'center',
+        dataIndex: 'b',
+        render() {
+          return <ShowData value={null} />;
+          // 现在后端暂时拿不到建议竞价
+          // return <div className={styles.suggestBidCol}>
+          //   <div className={styles.oneRow}>
+          //     <span><ShowData value={222} isCurrency /></span>
+          //     <Button size="small">应用</Button>
+          //   </div>
+          //   <p className={styles.secondary}>
+          //     （<ShowData value={2} isCurrency />-<ShowData value={58.2} isCurrency />）
+          //   </p>
+          // </div>;
+        },
+      },
+      {
+        title: '关键词竞价',
+        dataIndex: 'bid',
+        align: 'right',
+        width: 120,
+        className: styles.thKeywordCol,
+        render(value: string, record: {}, index: number) {
+          return (
+            <EditBox 
+              value={String(value)} 
+              currency={currency} 
+              marketplace={marketplace as API.Site}
+              chagneCallback={val => editBoxCallback(val, index)}
+            />
+          );
+        },
+      },
+      {
+        title: '操作',
+        align: 'center',
+        dataIndex: 'id',
+        render(val: string, record: { keyword: string; match: string }) {
+          return <span 
+            className={styles.handleCol}
+            onClick={() => deleteItemKeyword(record.keyword, record.match)}
+          >删除</span>;
+        },
+      },
+    ] as any, // eslint-disable-line
+    dataSource: addKeyword,
+    locale: {
+      emptyText: <span className="secondaryText">请选择或输入关键词</span>,
+    },
+    scroll: {
+      y: 226,
+    },
   };
 
   return <>
@@ -627,9 +639,7 @@ const SPManual: React.FC<IProps> = props => {
             y: 226,
           }}
           locale={{
-            emptyText: <TableNotData hint={keywordHint} style={{
-              padding: '36px 0 0',
-            }}/>,
+            emptyText: <span className="secondaryText">{keywordHint}</span>,
           }}
           dataSource={keywordDada}
         />

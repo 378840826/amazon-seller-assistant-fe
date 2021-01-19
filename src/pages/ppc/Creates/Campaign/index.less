@@ -7,8 +7,18 @@
 }
 
 .campaignAddBox {
-  :global(.ant-table-empty) td {
-    border-bottom: 0 !important;
+  :global(.ant-table-empty) {
+    tr:global(.ant-table-placeholder) td {
+      border-bottom: 0 !important;
+      height: 44px !important;
+      padding: 0 !important;
+    }
+
+    tr:hover {
+      td {
+        background-color: transparent !important;
+      }
+    }
   }
 
   .campaignAdd {
@@ -68,6 +78,11 @@
     .common {
       position: absolute;
       top: 56px;
+      color: @text-color;
+    }
+
+    .notReach {
+      color: @text-color-secondary;
     }
 
     .stepOne {
@@ -146,8 +161,7 @@
     cursor: default;
     transition: all 0.3s;
 
-    &.productItem,
-    &.showItem {
+    &.productItem {
       &:hover {
         border-color: transparent;
         box-shadow: 0 3px 13px 0 rgba(227, 227, 227, 0.75);

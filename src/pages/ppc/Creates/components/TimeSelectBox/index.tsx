@@ -45,13 +45,13 @@ interface IDateItem {
 }
 
 export interface ITimingInitValueType {
-  Mon: IDateItem[];
-  Tues: IDateItem[];
-  Wed: IDateItem[];
-  Thur: IDateItem[];
-  Fri: IDateItem[];
-  Sat: IDateItem[];
-  Sun: IDateItem[];
+  mon: IDateItem[];
+  tues: IDateItem[];
+  wed: IDateItem[];
+  thur: IDateItem[];
+  fri: IDateItem[];
+  sat: IDateItem[];
+  sun: IDateItem[];
 }
 
 export interface ITimingSelectProps {
@@ -84,22 +84,41 @@ const TimeSelectBox: React.FC<ITimingSelectProps> = props => {
   });
 
  
-  // 返回数据级调用
+  // 返回数据级调用 - 精确到秒，开始时间变成::00秒  结束时间变成::59秒
   const handleData = () => {
     if (tds === null) {
       tds = document.querySelectorAll('#h-timing-table td:not(:first-child');
     }
 
     const data = {
-      Mon: [],
-      Tues: [],
-      Wed: [],
-      Thur: [],
-      Fri: [],
-      Sat: [],
-      Sun: [],
+      mon: [],
+      tues: [],
+      wed: [],
+      thur: [],
+      fri: [],
+      sat: [],
+      sun: [],
     };
-    let start = '';
+    let startTime = '';
+
+    // 处理开始时间
+    function handleStartTime(startTime: string): string {
+      const temp = startTime.split(':');
+      let hour: number|string = Number(temp[0]);
+      let minute: number|string = Number(temp[1]);
+      if (minute === 29) {
+        minute = 30;
+      } else if (minute === 59) {
+        ++hour;
+        minute = '00';
+      } else {
+        // 00:00
+        hour = '0';
+        minute = '00';
+      }
+      return (`${hour < 10 ? `0${hour}` : hour}:${minute}:00`);
+    }
+
     tds.forEach(item => {
       /**
        * 第一个开始的
@@ -109,25 +128,25 @@ const TimeSelectBox: React.FC<ITimingSelectProps> = props => {
       const temp = timer.split('-');
       const tdIndex = temp[1];
       if (state === 'true') {
-        start === '' ? start = times[tdIndex] : '';// 记录一段范围的开始时间
+        startTime === '' ? startTime = times[tdIndex] : '';// 记录一段范围的开始时间
 
         // 边界（最后一个选中时）
         if (tdIndex === '48') {
           // 放入对应的星期内
           data[rowtranstionWeek(temp[0])].push({
-            start,
-            end: '23:59',
+            startTime: handleStartTime(startTime),
+            endTime: '23:59:59',
           });
-          start = '';
+          startTime = '';
         }
       } else {
-        if (start) {
+        if (startTime) {
           // 放入对应的星期内
           data[rowtranstionWeek(temp[0])].push({
-            start,
-            end: times[tdIndex],
+            startTime: handleStartTime(startTime),
+            endTime: `${times[tdIndex]}:59`,
           });
-          start = '';
+          startTime = '';
         }
       }
     });

@@ -26,7 +26,6 @@ import {
 import { FormInstance } from 'antd/lib/form';
 import { DownOutlined } from '@ant-design/icons';
 import { Link } from 'umi';
-import TableNotData from '@/components/TableNotData';
 import BatchSetBidMenu from '../../BatchSetBidMenu';
 import ShowData from '@/components/ShowData';
 import EditBox from '../../../../../components/EditBox';
@@ -559,9 +558,7 @@ const ClassProduct: React.FC<IProps> = props => {
     ] as any, // eslint-disable-line
     dataSource: products,
     locale: {
-      emptyText: <TableNotData hint="请选择分类词" style={{
-        padding: '36px 0 0',
-      }} />,
+      emptyText: <span className="secondaryText">请选择分类词</span>,
     },
     scroll: {
       y: 226,
@@ -671,9 +668,7 @@ const ClassProduct: React.FC<IProps> = props => {
               y: 226,
             }}
             locale={{
-              emptyText: <TableNotData hint="请先添加商品" style={{
-                padding: '36px 0 0',
-              }}/>,
+              emptyText: <span className="secondaryText">请先添加商品</span>,
             }}
             dataSource={suggestProduct}
           />

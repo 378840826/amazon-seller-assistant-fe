@@ -7,53 +7,77 @@
 export const times = [
   '',
   '00:00', // 1
-  '00:30', // 2
-  '01:00', // 3
-  '01:30',
-  '02:00',
-  '02:30',
-  '03:00',
-  '03:30',
-  '04:00',
-  '04:30',
-  '05:00',
-  '05:30',
-  '06:00',
-  '06:30',
-  '07:00',
-  '07:30',
-  '08:00',
-  '08:30',
-  '09:00',
-  '09:30',
-  '10:00',
-  '10:30',
-  '10:00',
-  '11:30',
-  '11:00',
-  '12:30',
-  '12:00',
-  '13:30',
-  '13:00',
-  '14:30',
-  '14:00',
-  '15:30',
-  '15:00',
-  '16:30',
-  '16:00',
-  '17:30',
-  '17:00',
-  '18:30',
-  '18:00',
-  '19:30',
-  '19:00',
-  '20:30',
-  '20:00',
-  '21:30',
-  '22:00',
-  '22:30',
-  '23:00',
-  '23:30',
+  '00:29', // 2
+  '00:59', // 3
+
+  '01:29',
+  '01:59',
+
+  '02:29',
+  '02:59',
+
+  '03:29',
+  '03:59',
+
+  '04:29',
+  '04:59',
+
+  '05:29',
+  '05:59',
+  
+  '06:29',
+  '06:59',
+
+  '07:29',
+  '07:59',
+
+  '08:29',
+  '08:59',
+
+  '09:29',
+  '09:59',
+
+  '10:29',
+  '10:59',
+
+  '11:29',
+  '11:59',
+
+  '12:29',
+  '12:59',
+
+  '13:29',
+  '13:59',
+
+  '14:29',
+  '14:59',
+
+  '15:29',
+  '15:59',
+
+  '16:29',
+  '16:59',
+
+  '17:29',
+  '17:59',
+
+  '18:29',
+  '18:59',
+
+  '19:29',
+  '19:59',
+
+  '20:29',
+  '20:59',
+
+  '21:29',
+  '22:59',
+
+  '22:29',
+  '22:59',
+
+  '23:29',
+  '23:59',
 ];
 
 export function weekNumberToChinese(val: number): string {
@@ -81,19 +105,19 @@ export function weekNumberToChinese(val: number): string {
 export function rowtranstionWeek(val: string) {
   switch (Number(val)) {
   case 0: 
-    return 'Mon';
+    return 'mon';
   case 1: 
-    return 'Tues';
+    return 'tues';
   case 2: 
-    return 'Wed';
+    return 'wed';
   case 3: 
-    return 'Thur';
+    return 'thur';
   case 4: 
-    return 'Fri';
+    return 'fri';
   case 5: 
-    return 'Sat';
+    return 'sat';
   case 6: 
-    return 'Sun';
+    return 'sun';
   default:
     return 'other';
   }
@@ -103,19 +127,19 @@ export function rowtranstionWeek(val: string) {
 // 将后端给的英文字段转换成行的对应下标
 export function weekTransition(val: string): number {
   switch (val) {
-  case 'Mon':
+  case 'mon':
     return 0;
-  case 'Tues':
+  case 'tues':
     return 1;
-  case 'Wed':
+  case 'wed':
     return 2;
-  case 'Thur':
+  case 'thur':
     return 3;
-  case 'Fri':
+  case 'fri':
     return 4;
-  case 'Sat':
+  case 'sat':
     return 5;
-  case 'Sun':
+  case 'sun':
     return 6;
   default: 
     return -1;
