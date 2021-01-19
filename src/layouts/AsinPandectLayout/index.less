@@ -1,3 +1,8 @@
+.__left_header {
+  display: flex;
+  justify-content: space-between;
+}
+
 nav.head {
   padding: 0 30px 14px;
   margin: -5px 0 0 0;
@@ -15,6 +20,15 @@ nav.head {
     display: inline-block;
     color: @text-color-secondary;
     transform: scaleY(0.8) rotate(-90deg);
+  }
+
+  .__left {
+    color: @text-color;
+    font-size: 12px;
+
+    span {
+      color: @text-color-up;
+    }
   }
 }
 

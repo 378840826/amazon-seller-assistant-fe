@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-// import { history } from 'umi';
 import { Tabs, message } from 'antd';
 import { connect } from 'dva';
-import { validate } from '@/utils/utils';
+import { validate, getUrlParam } from '@/utils/utils';
 import logo from '@/assets/logoWhite.png';
 import { IConnectProps } from '@/models/connect';
 import { ILogin } from '@/services/user';
@@ -26,6 +25,7 @@ const tabBarStyle = {
   fontSize: '16px',
 };
 
+
 const Login: React.FC<IConnectProps> = function ({ dispatch }) {
   const { TabPane } = Tabs;
   const [show, setShow] = useState(false);//验证码弹出框展示与否
@@ -35,8 +35,6 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
   const [regSuccess, setRegSuccess] = useState(false);//注册成功的判断
   const [feedbackMessage, setFdMessage] = useState('');//验证码相关的错误的信息(验证码返回字段中有验证码相关字段)
   const [feedbackPwdMessage, setFeedbackPwdMessage] = useState('');//密码相关的错误信息
- 
-
   //登录注册事件
   const loginRegister = () => {
     
@@ -80,7 +78,8 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
               callback: () => {
                 // history.push('/');
                 // 如果是登录失效后再次登录，需要请求前面因登录失效没有拿到的店铺列表等数据
-                window.location.href = '/';
+                window.location.href = getUrlParam('redirect') || '/';
+
               },
             });
           }

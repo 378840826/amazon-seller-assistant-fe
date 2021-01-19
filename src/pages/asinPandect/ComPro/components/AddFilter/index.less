@@ -1,0 +1,71 @@
+.add_area {
+  background-color: @simple-table-header-bg;
+  padding-left: 20px;
+  display: flex;
+  padding-bottom: 20px;
+
+  .left {
+    width: 501px;
+  }
+
+  .right {
+    width: 501px;
+    margin-left: 80px;
+    padding-top: 91px;
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+
+      .check {
+        color: @heading-color;
+        font-size: 12px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .btns {
+    width: 185px;
+    margin-left: 40px;
+    display: flex;
+    align-items: flex-end;
+
+    .__save {
+      margin-left: 20px;
+    }
+  }
+}
+
+.remove_button {
+  color: @error-color;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    color: #ff000d;
+  }
+}
+
+.select_yes {
+  color: @btn-text-color;
+  cursor: pointer;
+
+  &:hover {
+    color: @link-color;
+  }
+}
+
+.select_already {
+  color: #bbb;
+  cursor: pointer;
+}
+
+.select_no {
+  color: @error-color;
+  cursor: pointer;
+
+  &:hover {
+    color: #ff000d;
+  }
+}

@@ -32,6 +32,7 @@ export const asinPandectB2bRouter = '/asin/b2b'; // ASIN总览 - B2B
 export const asinPandectPpcRouter = '/asin/ar'; // ASIN总览 - 广告表现
 export const asinPandectTerritoryRouter = '/asin/territory'; // ASIN总览 - 广告表现
 export const asinPandectReturnRouter = '/asin/return'; // ASIN总览 - 退货分析
+export const asinPandectComPro = '/asin/com-pro';//ASIN总览 - 竞品监控
 
 // 评论
 export const reviewListRouter = '/review/list'; // 评论列表

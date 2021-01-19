@@ -434,9 +434,8 @@ const EchartsCom: React.FC<IEchartsCom> = ({
           fontSize: 12,
           formatter: function (value: string) {
             // 格式化成月-日
-            const date = new Date(value);
-            const texts = [(date.getMonth() + 1), date.getDate()];
-            return texts.join('-');
+            const texts = moment(new Date(value)).format('YYYY-MM-DD');
+            return texts;
           },
         },
         axisTick: {
