@@ -1,0 +1,296 @@
+//  ---分类 start---------------------------------------------
+.classBox {
+  display: flex;
+  justify-content: space-between;
+
+  :global(.ant-table-body) {
+    overflow-y: auto !important;
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+  }
+
+  :global(.ant-table-row-selected) td {
+    background-color: transparent !important;
+  }
+
+  tr:global(.ant-table-row-selected:hover) > td,
+  tr:hover td {
+    background-color: #fafafa !important;
+  }
+
+  th {
+    background-color: #f3f3f3 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    height: 44px !important;
+    line-height: 44px !important;
+  }
+
+  .leftLayout {
+    width: 425px;
+
+    .threeNav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+
+      nav {
+        span {
+          padding-right: 20px;
+          cursor: pointer;
+        }
+
+        span.active {
+          color: @link-color;
+        }
+      }
+
+      .allBtn {
+        color: @btn-text-color;
+        cursor: pointer;
+        transition: all 0.3s;
+        padding-right: 24px;
+
+        &.paddingRight {
+          padding-right: 38px;
+        }
+
+        &:hover {
+          color: @link-color;
+        }
+      }
+
+      .allBtn.disable {
+        color: #bbb;
+        cursor: not-allowed;
+      }
+    }
+
+    .classCol {
+      .path {
+        color: @text-color-secondary;
+      }
+    }
+
+    .handleCol {
+      color: @btn-text-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: @link-color;
+      }
+    }
+
+    .handleCol.active {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+
+    .searchClass {
+      background-color: #fff;
+      width: 100%;
+      height: 270px;
+      line-height: 270px;
+      border: 1px solid #e5e5e5;
+      border-radius: @border-radius-base;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+    }
+  }
+
+  .rightLayout {
+    width: 653px;
+    margin-left: 40px;
+    margin-top: -12px;
+
+    tr:hover :global(.h-default-icon) {
+      opacity: 1 !important;
+    }
+
+    header {
+      display: flex;
+      margin: 0 0 10px;
+
+      button {
+        width: 106px;
+        min-width: 106px;
+        margin-right: 10px;
+        padding: 3px 10px;
+      }
+    }
+
+    td.thKeywordCol {
+      padding-right: 0;
+    }
+
+    .classCol {
+      div {
+        color: @text-color-secondary;
+        display: flex;
+        flex-wrap: wrap;
+
+        p {
+          margin-right: 6px;
+        }
+      }
+    }
+
+    .handleCol {
+      color: @error-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: #ff000d;
+      }
+    }
+  }
+}
+//  ---分类 end-----------------------------------------------
+
+// --- 细化弹窗 start=========================================
+.thiningDefaultText {
+  color: @link-color;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+.thiningDefaultText.active {
+  color: @btn-text-color;
+}
+
+.thiningBox {
+  width: 491px;
+
+  :global(.ant-popover-inner-content) {
+    padding: 20px 23px;
+  }
+
+  .brandList {
+    :global(.ant-form-item-label) {
+      min-width: 111px;
+      text-align: left;
+    }
+
+    :global(.ant-form-item-control-input) {
+      width: 280px;
+    }
+
+    .brandInput {
+      margin-bottom: 0;
+    }
+
+    .list {
+      width: 280px;
+      height: 156px;
+      border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
+      border-top: 0;
+      padding: 15px;
+      overflow-y: auto;
+      margin: 0 0 20px 111px;
+    }
+
+    :global(.ant-checkbox-group) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .priceRange {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+
+    input {
+      width: 100px;
+      text-align: center;
+    }
+
+    :global(.ant-form-item) {
+      margin: 0;
+    }
+
+    .text {
+      min-width: 111px;
+      color: @heading-color;
+    }
+
+    .subtitle {
+      color: @text-color-secondary;
+    }
+
+    .line {
+      margin: 0 6px;
+      color: #d9d9d9;
+    }
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 10px;
+
+    button {
+      margin: 0 5px;
+    }
+  }
+}
+
+.slider {
+  display: flex;
+
+  :global(.ant-slider-handle) {
+    background-color: @primary-color;
+    border: 0;
+  }
+
+  :global(.ant-slider) {
+    width: 280px;
+
+    &:hover {
+      :global(.ant-slider-track) {
+        height: 1px !important;
+        background-color: @primary-color;
+      }
+    }
+  }
+
+  :global(.ant-slider-dot) {
+    border-color: @primary-color;
+    background-color: @primary-color;
+    display: none;
+  }
+
+  :global(.ant-slider-rail) {
+    height: 1px;
+    background-color: @border-color-base;
+  }
+
+  :global(.ant-slider-track) {
+    height: 1px;
+    background-color: @primary-color;
+  }
+
+  .title {
+    color: @heading-color;
+    min-width: 111px;
+  }
+
+  .descript {
+    padding: 5px 0 0 14px;
+    white-space: nowrap;
+  }
+}
+
+.notHint {
+  padding: 30px 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+// --- 细化弹窗 end===========================================

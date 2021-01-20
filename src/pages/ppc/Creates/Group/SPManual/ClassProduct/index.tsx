@@ -21,15 +21,13 @@ interface IProps {
   currency: API.Site;
   marketplace: string;
   storeId: string|number;
-  putMathod: CreateCampaign.putMathod;
 }
 
 const { TabPane } = Tabs;
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
+  const { form, currency, marketplace, storeId } = props;
   
   const [twoNav, setTwoNav] = useState<'classify' |'product'>('classify'); // 
-
 
   useEffect(() => {
     form.setFieldsValue({
@@ -62,13 +60,11 @@ const ClassProduct: React.FC<IProps> = props => {
       form={form}
       marketplace={marketplace}
       storeId={storeId}
-      putMathod={putMathod}
     /> : <ProductComponent 
       currency={currency}
       form={form}
       marketplace={marketplace}
       storeId={storeId}
-      putMathod={putMathod}
     /> }
   </div>;
 };

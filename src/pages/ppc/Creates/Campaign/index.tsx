@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { 
@@ -23,7 +23,7 @@ import {
 import Group from './Group/';
 import Pattern from './Pattern';
 import Campaign from './Campaign';
-import skip from '../../../../components/Skip';
+import skip from '@/components/Skip';
 import { ITimingInitValueType } from '../components/TimeSelectBox';
 
 interface IPage extends ConnectProps {
@@ -55,19 +55,29 @@ const CampaignAdd = () => {
   const [campaignType, setCampaignType] = useState<CreateCampaign.ICampaignType>('sponsoredProducts'); // 当前选中的广告活动类型
   const [stepIndex, setStepIndex] = useState<number>(0); // 当前步骤
   const [pattern, setPattern] = useState<CreateCampaign.IManagementMode>('standard'); // 营销模式
-  const [putMathod, setPutMathod] = useState<string>('auto'); // 广告活动投放方式
+  const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 广告活动投放方式(SP SD)
   const [autoGroupBidType, setAutoGroupBidType] = useState<string>('auto'); // 自动广告组的竞价方式
+
+  // SD类型 投放方式设置
+  useEffect(() => {
+    campaignType === 'sd' && setPutMathod('classProduct');
+  }, [campaignType]);
 
   // 表单字段变化
   const valuesChange = (values: any) => { // eslint-disable-line
-
     // 第二步
     if (values.managementMode) {
       setPattern(values.managementMode);
     }
 
+    // 投放方式(SP)
     if (values.outer && values.outer.putMathod) {
       setPutMathod(values.outer.putMathod);
+    }
+
+    // 投放方式(SD)
+    if (values.outer && values.outer.sdPutMathod) {
+      setPutMathod(values.outer.sdPutMathod);
     }
 
     // 广告组设置 （第四步） 
@@ -157,6 +167,11 @@ const CampaignAdd = () => {
         message.error('广告组名称不能为空！');
         return;
       }
+      
+      if (reqData.adGroup.name.length < 1 || reqData.adGroup.name.length > 256) {
+        message.error('广告组名称长度不能小于1或者大于256位');
+        return;
+      }
 
       if (Array.isArray(reqData.adGroup.productAds) && reqData.adGroup.productAds.length === 0) {
         message.error('商品广告不能为空！');
@@ -167,21 +182,9 @@ const CampaignAdd = () => {
       if (putMathod === 'auto') {
         reqData.adGroup.defaultBid = groupData.auto.defaultBid;
         reqData.adGroup.autoTargetGroup = autoTargetGroupList;
-
       } else if (putMathod === 'manual') {
         // 手动
         const manualType = groupData.manualType;// 先查看当前选中的是哪一个分类下
-        
-        reqData.activeTime = { 
-          Mon: [],
-          Tues: [],
-          Wed: [],
-          Thur: [],
-          Fri: [],
-          Sat: [],
-          Sun: [],
-        };
-        
         // 手动 关键词模式
         if ( manualType === 'keyword') { 
           if (keywords.length === 0) {
@@ -192,19 +195,16 @@ const CampaignAdd = () => {
           // 关键词
           reqData.adGroup.keywords = keywords;
         } else {
-          const classProductType = groupData.other.classProductType;
           // 手动 商品/分类
-          if (classProductType === 'classify' ) {
-            // 分类
-            reqData.adGroup.targets = {
-              categories: classifys,
-            };
-          } else {
-            // 商品
-            reqData.adGroup.targets = {
-              asins: saveProducts,
-            };
+          if (classifys.length === 0) {
+            message.error('分类列表不能为空，请添加分类！');
+            return;
           }
+
+          reqData.adGroup.targets = {
+            categories: classifys,
+            asins: saveProducts,
+          };
         }
       }
 
@@ -299,7 +299,7 @@ const CampaignAdd = () => {
           styles.typeItem, 
           styles.showItem,
           campaignType === 'sd' ? styles.active : ''
-        )} title="暂时无法创建品牌广告">
+        )} onClick={() => setCampaignType('sd')}>
           <Iconfont className={classnames(styles.imgIcon, styles.showIcon)} type="icon-xianxingdianshangshujutubiao"/>
           <div>
             <p className={styles.title}>Sponsored Display</p>
@@ -369,12 +369,16 @@ const CampaignAdd = () => {
             },
           }}
         >
-          <Group 
-            autoGroupBidType={autoGroupBidType} 
-            putMathod={putMathod} 
-            form={groupForm}
-            getTimingData={getTimingData}
-            stepIndex={stepIndex}/>
+          {
+            stepIndex === 3 ? <Group 
+              autoGroupBidType={autoGroupBidType} 
+              putMathod={putMathod} 
+              form={groupForm}
+              getTimingData={getTimingData}
+              campaignType={campaignType}
+              stepIndex={stepIndex}/> : ''
+          }
+          
         </Form>
       </div>
 
@@ -384,7 +388,7 @@ const CampaignAdd = () => {
           onConfirm={() => history.push(ppcCampaginListRouter)}
           overlayClassName={styles.cancelTooltip}
         >
-          <Button className={classnames(stepIndex === 0 ? '' : 'none')}>取消</Button>
+          <Button>取消</Button>
         </Popconfirm>
         <Button 
           onClick={() => setStepIndex(stepIndex - 1)}

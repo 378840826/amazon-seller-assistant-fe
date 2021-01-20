@@ -1,0 +1,309 @@
+//  ---商品 start---------------------------------------------
+.productBox {
+  display: flex;
+  justify-content: space-between;
+
+  :global(.ant-table-body) {
+    overflow-y: auto !important;
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+  }
+
+  :global(.ant-table-row-selected) td {
+    background-color: transparent !important;
+  }
+
+  tr:global(.ant-table-row-selected:hover) > td,
+  tr:hover td {
+    background-color: #fafafa !important;
+  }
+
+  th {
+    background-color: #f3f3f3 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    height: 44px !important;
+    line-height: 44px !important;
+  }
+
+  td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .leftLayout {
+    width: 425px;
+
+    .threeNav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+
+      nav {
+        span {
+          padding-right: 20px;
+          cursor: pointer;
+        }
+
+        span.active {
+          color: @link-color;
+        }
+      }
+
+      .allBtn {
+        color: @btn-text-color;
+        cursor: pointer;
+        transition: all 0.3s;
+        padding-right: 24px;
+
+        &.paddingRight {
+          padding-right: 38px;
+        }
+
+        &:hover {
+          color: @link-color;
+        }
+      }
+
+      .allBtn.disable {
+        color: #bbb;
+        cursor: not-allowed;
+      }
+    }
+
+    .handleCol {
+      color: @btn-text-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: @link-color;
+      }
+    }
+
+    .handleCol.active {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+  }
+
+  .rightLayout {
+    width: 653px;
+    margin-left: 40px;
+    margin-top: -12px;
+
+    tr:hover :global(.h-default-icon) {
+      opacity: 1 !important;
+    }
+
+    header {
+      display: flex;
+      margin: 0 0 10px;
+
+      button {
+        width: 106px;
+        min-width: 106px;
+        margin-right: 10px;
+        padding: 3px 10px;
+      }
+    }
+
+    td.thKeywordCol {
+      padding-right: 0;
+    }
+
+    .handleCol {
+      color: @error-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: #ff000d;
+      }
+    }
+  }
+}
+
+// 商品信息列
+.productCol {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 0;
+
+  .img {
+    margin-right: 10px;
+  }
+
+  .title {
+    width: 300px;
+    color: @link-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    display: block;
+
+    .linkIcon {
+      color: @text-color-secondary;
+      transition: all 0.3s;
+      padding-right: 2px;
+    }
+
+    &:hover .linkIcon {
+      color: @primary-color;
+    }
+  }
+
+  footer {
+    display: flex;
+
+    .asin {
+      width: 80px;
+      color: @btn-text-color;
+      white-space: pre-wrap;
+      text-align: left;
+
+      &:hover {
+        color: @link-color;
+      }
+    }
+
+    .review {
+      width: 80px;
+      color: @warning-color;
+
+      span {
+        color: @text-color-secondary;
+      }
+    }
+
+    .stockpile {
+      width: 75px;
+    }
+
+    .price {
+      width: 50px;
+      color: @error-color;
+    }
+  }
+}
+
+td.tdProductCol {
+  padding: 0 !important;
+}
+
+// 搜索商品
+.suggestProductBox {
+  .hint {
+    width: 100%;
+    height: 270px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: @border-radius-base;
+  }
+
+  .search {
+    width: 427px !important;
+  }
+
+  .itemBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    font-size: @font-size-sm;
+  }
+
+  .listItem {
+    width: 356px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 0;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+
+    .img {
+      margin: 0 8px;
+    }
+
+    .title {
+      width: 300px;
+      color: @link-color;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+      display: block;
+
+      .linkIcon {
+        color: @text-color-secondary;
+        transition: all 0.3s;
+        padding-right: 2px;
+      }
+
+      &:hover .linkIcon {
+        color: @primary-color;
+      }
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+
+      .asin {
+        min-width: 70px;
+        color: @btn-text-color;
+
+        &:hover {
+          color: @link-color;
+        }
+      }
+
+      .review {
+        min-width: 80px;
+        color: @warning-color;
+
+        span {
+          color: @text-color-secondary;
+        }
+      }
+
+      .stockpile {
+        min-width: 50px;
+      }
+
+      .price {
+        min-width: 50px;
+        color: @error-color;
+      }
+    }
+  }
+
+  .selctBtn {
+    min-width: 58px;
+    width: 58px;
+  }
+
+  .selctBtn.disable {
+    color: #bbb;
+    cursor: not-allowed;
+  }
+}
+
+// 批量输入商品
+.batchImport {
+  text-align: center;
+
+  .textarea {
+    height: 226px;
+    margin-bottom: 12px;
+    resize: none;
+  }
+}
+
+//  ---商品 end-----------------------------------------------

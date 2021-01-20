@@ -28,7 +28,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Link } from 'umi';
 import BatchSetBidMenu from '../../BatchSetBidMenu';
 import ShowData from '@/components/ShowData';
-import EditBox from '../../../../../components/EditBox';
+import EditBox from '../../../../components/EditBox';
 import GoodsImg from '@/pages/components/GoodsImg';
 import { getAmazonAsinUrl, Iconfont } from '@/utils/utils';
 import { asinPandectBaseRouter } from '@/utils/routes';
@@ -38,7 +38,6 @@ interface IProps {
   currency: API.Site;
   marketplace: string;
   storeId: string|number;
-  putMathod: CreateCampaign.putMathod;
 }
 
 interface ISuggestedProduct extends CreateCampaign.IProductAwaitType {
@@ -46,13 +45,13 @@ interface ISuggestedProduct extends CreateCampaign.IProductAwaitType {
 }
 
 interface IPage extends ConnectProps {
-  createCampagin: ICreateGampaignState;
+  createGroup: ICreateGampaignState;
 }
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
-  const selectProducts = useSelector((state: IPage) => state.createCampagin.selectProduct);
+  const { form, currency, marketplace, storeId } = props;
+  const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   const dispatch = useDispatch();
   
 
@@ -63,7 +62,6 @@ const ClassProduct: React.FC<IProps> = props => {
   const [isSelectAllSuggestProduct, setIsSelectAllSuggestProduct] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [importAsin, setImportAsin] = useState<string[]>([]); // 输入商品内容
-  const [hint, setHint] = useState<string>('请先添加商品'); // 左边表格无数据的提示
   
   // 左边的建议商品列表
   const [suggestProduct, setSuggestProduct] = useState<CreateCampaign.IProductAwaitType[]>([
@@ -124,11 +122,6 @@ const ClassProduct: React.FC<IProps> = props => {
     const asins: string[] = [];
     selectProducts.forEach(item => asins.push(item.asin));
 
-    if (putMathod && putMathod === 'classProduct') {
-      setHint('SD展示广告暂无推荐商品');
-      return;
-    }
-
     if (asins.length === 0) {
       setProducts([...[]]);
       return;
@@ -137,7 +130,7 @@ const ClassProduct: React.FC<IProps> = props => {
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
-        type: 'createCampagin/getProductAsins',
+        type: 'createGroup/getProductAsins',
         resolve,
         reject,
         payload: {
@@ -191,14 +184,14 @@ const ClassProduct: React.FC<IProps> = props => {
       }
       message.error(msg);
     });
-  }, [storeId, dispatch, selectProducts]); // eslint-disable-line
+  }, [storeId, dispatch, selectProducts]);
 
   // 收集数据
   useEffect(() => {
     const jsonString = JSON.stringify(products);
     const newArray = JSON.parse(jsonString);
     dispatch({
-      type: 'createCampagin/setSaveProducts',
+      type: 'createGroup/setSaveProducts',
       payload: newArray,
     });
   }, [dispatch, products]);
@@ -675,7 +668,7 @@ const ClassProduct: React.FC<IProps> = props => {
               y: 226,
             }}
             locale={{
-              emptyText: <span className="secondaryText">{hint}</span>,
+              emptyText: <span className="secondaryText">请先添加商品</span>,
             }}
             dataSource={suggestProduct}
           />
