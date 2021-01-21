@@ -39,9 +39,7 @@ const EditableCell: React.FC<IProps> = props => {
   };
 
   const handelConfirm = () => {
-    if (value !== inputValue) {
-      confirmCallback(value);
-    }
+    confirmCallback(value);
     setEditable(false);
   };
 
