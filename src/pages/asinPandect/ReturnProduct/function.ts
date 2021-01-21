@@ -16,11 +16,10 @@ export function handleTooltip(datas: ReturnProduct.ITooltip[]) {
   if (Array.isArray(datas)) {
     const { axisValueLabel } = datas[0];
     const date = moment(axisValueLabel).format('YYYY-MM-DD');
+    const { seriesName: s1, data: d1, color: c1 } = datas[0] || {};
+    const { seriesName: s2, data: d2, color: c2 } = datas[1] || {};
     
-    if (datas[0] && datas[1]) {
-      const { seriesName: s1, data: d1, color: c1 } = datas[0] || {};
-      const { seriesName: s2, data: d2, color: c2 } = datas[1] || {};
-
+    if (s1 && s2) {
       return `<div class="echarts-line-tooltip">
         <p class="title">${date}</p>
         <p class="detail">
@@ -34,8 +33,7 @@ export function handleTooltip(datas: ReturnProduct.ITooltip[]) {
           <span class="money">${moneyFormat(d2, 2)}%</span>
         </p>
       </div>`;
-    } else if (datas[0]) {
-      const { seriesName: s1, data: d1, color: c1 } = datas[0] || {};
+    } else if (s1 === '退货量') {
       return `<div class="echarts-line-tooltip">
         <p class="title">${date}</p>
         <p class="detail">
@@ -44,17 +42,17 @@ export function handleTooltip(datas: ReturnProduct.ITooltip[]) {
           <span class="money">${moneyFormat(d1)}</span>
         </p>
       </div>`;
-    } else if (datas[1]) {
-      const { seriesName: s2, data: d2, color: c2 } = datas[1] || {};
+    } else if (s1 === '退货率') {
       return `<div class="echarts-line-tooltip">
         <p class="title">${date}</p>
         <p class="detail">
-          <span class="icon" style="background-color:${c2}"></span>
-          ${s2}：
-          <span class="money">${moneyFormat(d2, 2)}%</span>
+          <span class="icon" style="background-color:${c1}"></span>
+          ${s1}：
+          <span class="money">${moneyFormat(d1, 2)}%</span>
         </p>
       </div>`;
     }
+    return '数据错误！';
   }
   return '数据错误！';
 }
