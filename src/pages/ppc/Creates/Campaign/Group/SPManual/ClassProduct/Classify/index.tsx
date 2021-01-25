@@ -189,12 +189,12 @@ const ClassProduct: React.FC<IProps> = props => {
   }, [suggestClass]);
 
   
-  // 修改左边建议分类按钮的状态
-  const updateKeywordDataState = (classText: string) => {
+  // 修改左边建议分类按钮的状态(取消选中)
+  const setKeywordDataState = (classText: string) => {
     for (let i = 0; i < suggestClass.length; i++) {
       const item = suggestClass[i];
       if (item.categoryName === classText) {
-        item.isChecked = true;
+        item.isChecked = false;
         break;
       }
     }
@@ -377,7 +377,7 @@ const ClassProduct: React.FC<IProps> = props => {
         const addItem = suggestedClass[i];
         if (item === addItem.id) {
           suggestedClass.splice(i, 1);
-          updateKeywordDataState(addItem.categoryName);
+          setKeywordDataState(addItem.categoryName);
           break;
         }
       }
@@ -458,8 +458,6 @@ const ClassProduct: React.FC<IProps> = props => {
       // 点击复选框时
       onChange: (selectRecord: React.Key[], record: {id: string}[]) => {
         const temArr: string[] = [];
-        console.log(record);
-         
         record.forEach(item => {
           temArr.push(item.id);
         });

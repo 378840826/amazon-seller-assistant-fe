@@ -26,6 +26,7 @@ interface IProps {
   currency: API.Site;
   marketplace: string;
   storeId: string|number;
+  putMathod: CreateCampaign.putMathod;
 }
 
 interface IRecord {
@@ -53,7 +54,7 @@ interface IPage extends ConnectProps {
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId } = props;
+  const { form, currency, marketplace, storeId, putMathod } = props;
   const dispatch = useDispatch();
   const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   
@@ -63,6 +64,7 @@ const ClassProduct: React.FC<IProps> = props => {
   const [isSelectAllSuggestClass, setIsSelectAllSuggestClass] = useState<boolean>(false);
   const [isHaveScroll, setisHaveScroll] = useState<boolean>(false); // 左边建议分类表格是格有滚动条
   const [loading, setLoading] = useState<boolean>(false); 
+  const [hint, setHint] = useState<string>('请先添加商品'); // 左边表格无数据的提示
 
   // 左边的建议分类列表
   const [suggestClass, setSuggestClass] = useState<CreateCampaign.ISuggestClassType[]>([
@@ -93,6 +95,11 @@ const ClassProduct: React.FC<IProps> = props => {
   useEffect(() => {
     const asins: string[] = [];
     selectProducts.forEach(item => asins.push(item.asin));
+
+    if (putMathod && putMathod === 'classProduct') {
+      setHint('SD展示广告暂无建议分类');
+      return;
+    }
 
     if (asins.length === 0) {
       setSuggestClass([...[]]);
@@ -147,7 +154,7 @@ const ClassProduct: React.FC<IProps> = props => {
       }
       message.error(msg);
     });
-  }, [storeId, selectProducts, dispatch]);
+  }, [storeId, selectProducts, dispatch]); // eslint-disable-line
 
   // 收集数据
   useEffect(() => {
@@ -182,13 +189,13 @@ const ClassProduct: React.FC<IProps> = props => {
     setIsSelectAllSuggestClass(isAllSelct);
   }, [suggestClass]);
 
-  
-  // 修改左边建议分类按钮的状态
-  const updateKeywordDataState = (classText: string) => {
+
+  // 修改左边建议分类按钮的状态（取消选中）
+  const setKeywordDataState = (classText: string) => {
     for (let i = 0; i < suggestClass.length; i++) {
       const item = suggestClass[i];
       if (item.categoryName === classText) {
-        item.isChecked = true;
+        item.isChecked = false;
         break;
       }
     }
@@ -244,8 +251,6 @@ const ClassProduct: React.FC<IProps> = props => {
       if (item.categoryName === classText) {
         item.isChecked = true;
         data = item;
-        console.log(item.id, 'add');
-        
         break;
       }
     }
@@ -373,7 +378,7 @@ const ClassProduct: React.FC<IProps> = props => {
         const addItem = suggestedClass[i];
         if (item === addItem.id) {
           suggestedClass.splice(i, 1);
-          updateKeywordDataState(addItem.categoryName);
+          setKeywordDataState(addItem.categoryName);
           break;
         }
       }
@@ -454,8 +459,6 @@ const ClassProduct: React.FC<IProps> = props => {
       // 点击复选框时
       onChange: (selectRecord: React.Key[], record: {id: string}[]) => {
         const temArr: string[] = [];
-        console.log(record);
-         
         record.forEach(item => {
           temArr.push(item.id);
         });
@@ -624,7 +627,7 @@ const ClassProduct: React.FC<IProps> = props => {
             y: 226,
           }}
           locale={{
-            emptyText: <span className="secondaryText">请先添加商品</span>,
+            emptyText: <span className="secondaryText">{hint}</span>,
           }}
           loading={loading}
           dataSource={suggestClass as []}

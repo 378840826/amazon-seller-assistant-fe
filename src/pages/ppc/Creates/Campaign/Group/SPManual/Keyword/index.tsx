@@ -463,20 +463,14 @@ const SPManual: React.FC<IProps> = props => {
     }
     message.destroy();
 
-    console.log(type, 'type');
-    
     addKeyword.forEach(item => {
       if (selectedRowKeys.indexOf(item.id) > -1) {
-        console.log(item, 'item');
-        
         item.match = type;
         
         for (let i = 0; i < keywordDada.length; i++) {
           const cItem = keywordDada[i];
-          console.log(cItem, 'cItem');
           
           if (item.id === cItem.id) {
-            console.log(cItem, '左边的');
             break;
           }
         }

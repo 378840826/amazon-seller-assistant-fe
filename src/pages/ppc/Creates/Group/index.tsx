@@ -36,7 +36,15 @@ interface IPage extends ConnectProps {
 
 
 const { Item } = Form;
-let activeTime: any = {}; // eslint-disable-line
+let activeTime: any = { // eslint-disable-line
+  fri: [],
+  mon: [],
+  sat: [],
+  sun: [],
+  thur: [],
+  tues: [],
+  wed: [],
+};
 const Group: React.FC = () => {
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   const [form] = Form.useForm();
@@ -58,10 +66,23 @@ const Group: React.FC = () => {
   timezone = 'Asia/Shanghai';
   id = '2';
 
-  const [putMathod, setPutMathod] = useState<'auto'|'manual'>('auto');
+  const [campaignType, setCampaignType] = useState<CreateCampaign.ICampaignType>('sponsoredProducts');
+  const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 投放方式
   const [campaignList, setCampaignList] = useState<CreateGroup.ICampaignList[]>([]);
   const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone).format('YYYY-MM-DD HH:mm:ss'); // 站点时间
   const [startDate, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
+
+  const navList: Snav.INavList[] = [
+    {
+      label: '广告组',
+      type: 'Link',
+      path: ppcGroupListRouter,
+      target: '_blank',
+    },
+    {
+      label: '创建广告组',
+    },
+  ];
 
   // 请求广告活动下拉列表数据
   useEffect(() => {
@@ -98,6 +119,30 @@ const Group: React.FC = () => {
     });
   }, [dispatch, id]);
 
+  // 初始化广告活动名称及广告活动类型
+  useEffect(() => {
+    if (campaignList.length) {
+      const firstData = campaignList[0];
+      form.setFieldsValue({
+        campaignId: firstData.campaignId,
+      });
+      setPutMathod(firstData.targetingType || 'classProduct'); // sd 分类/商品
+      setCampaignType(firstData.campaignType);
+    }
+  }, [form, campaignList]);
+
+  // 广告活动下拉列表的改变
+  const campaignChange = (id: string) => {
+    for (let i = 0; i < campaignList.length; i++) {
+      const item = campaignList[i];
+      if (item.campaignId === id) {
+        setPutMathod(item.targetingType || 'classProduct'); // sd 分类/商品
+        setCampaignType(item.campaignType);
+        break;
+      }
+    }
+  };
+  
   function startDateChange (date: Moment | null) {
     const startDate = date?.format('YYYY-MM-DD HH:mm:ss');
     const endDate = form.getFieldValue('endDate');
@@ -124,11 +169,16 @@ const Group: React.FC = () => {
     const data = form.getFieldsValue();
     const defaultBidMin = marketplace === 'JP' ? 2 : 0.02;
     const manualType = data.other.manualType;// 先查看当前选中的是哪一个分类下
-    console.log(data, 'data start');
 
     data.productAds = selects;
     data.activeTime = activeTime;
-    data.startDate = moment(startDate).format('YYYY-MM-DD');
+    data.keywords = null;
+    data.targets = null;
+    
+    data.activeTime.timezone = timezone;
+    data.activeTime.switch = data.switch;
+    data.activeTime.startDate = moment(startDate).format('YYYY-MM-DD');
+    data.endDate ? data.activeTime.endDate = data.endDate.format('YYYY-MM-DD') : '';
   
     if (data.endData) {
       data.endData = moment(data.endData).format('YYYY-MM-DD');
@@ -144,13 +194,17 @@ const Group: React.FC = () => {
       return;
     }
 
-    console.log(putMathod, 'xxx', data.auto.defaultBid);
-    
     if (putMathod === 'auto') {
       data.defaultBid = data.auto.defaultBid;
-      data.autoTargetGroup = autoTargetGroupList;
-    } else if (putMathod === 'manual') {
-      // 手动
+      const stringJSON = JSON.stringify(autoTargetGroupList);
+        const list: any[] = JSON.parse(stringJSON);// eslint-disable-line
+      list.forEach(item => {
+        item.state = item.state ? 'enabled' : 'paused';
+      });
+
+      data.autoTargetGroup = list;
+    } else if (putMathod === 'manual' || putMathod === 'classProduct') {
+      // 手动 | sd的分类/商品
       // 关键词模式
       if ( manualType === 'keyword') { 
         if (keywords.length === 0) {
@@ -163,10 +217,10 @@ const Group: React.FC = () => {
         // const classProductType = data.other.classProductType;
         // 手动 商品/分类
 
-        if (classifys.length === 0) {
-          message.error('分类列表不能为空，请添加分类！');
-          return;
-        }
+        // if (classifys.length === 0) {
+        //   message.error('分类列表不能为空，请添加分类！');
+        //   return;
+        // }
 
         data.targets = {
           categories: classifys,
@@ -190,9 +244,11 @@ const Group: React.FC = () => {
     }
 
     // 删除多余数据
-    putMathod !== 'manual' || manualType !== 'keyword' && delete data.keywords;
+    // (putMathod === 'auto' || manualType !== 'keyword') && delete data.keywords;
     delete data.auto;
     delete data.other;
+    delete data.startDate;
+    data.endDate && delete data.endDate;
     
     new Promise((resolve, reject) => {
       dispatch({
@@ -230,38 +286,6 @@ const Group: React.FC = () => {
     });
   };
 
-  // 初始化广告活动名称及广告活动类型
-  useEffect(() => {
-    if (campaignList.length) {
-      form.setFieldsValue({
-        campaignId: campaignList[0].campaignId,
-      });
-      setPutMathod(campaignList[0].targetingType);
-    }
-  }, [form, campaignList]);
-
-  const campaignChange = (id: string) => {
-    for (let i = 0; i < campaignList.length; i++) {
-      const item = campaignList[i];
-      if (item.campaignId === id) {
-        setPutMathod(item.targetingType);
-        break;
-      }
-    }
-  };
-
-  const navList: Snav.INavList[] = [
-    {
-      label: '广告组',
-      type: 'Link',
-      path: ppcGroupListRouter,
-      target: '_blank',
-    },
-    {
-      label: '创建广告组',
-    },
-  ];
-
   return <div className={styles.groupBox}>
     <nav className={styles.nav}>
       <Snav navList={navList}/>
@@ -270,6 +294,7 @@ const Group: React.FC = () => {
       colon={false} 
       labelAlign="left"
       initialValues={{
+        switch: true,
         other: {
           bidType: 'auto',
         },
@@ -307,12 +332,14 @@ const Group: React.FC = () => {
         <SpAuto currency={currency} marketplace={marketplace}/>
       </div>
       
-      <div className={classnames(putMathod === 'manual' ? '' : 'none')}>
+      <div className={classnames(putMathod === 'manual' || putMathod === 'classProduct' ? '' : 'none')}>
         <SPManual 
           form={form}
           currency={currency}
           marketplace={marketplace}
           storeId={id}
+          campaignType={campaignType}
+          putMathod={putMathod}
         />
       </div>
       <div className={styles.rangeDate}>

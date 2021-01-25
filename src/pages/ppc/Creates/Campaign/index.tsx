@@ -53,7 +53,7 @@ const CampaignAdd = () => {
 
   
   const [campaignType, setCampaignType] = useState<CreateCampaign.ICampaignType>('sponsoredProducts'); // 当前选中的广告活动类型
-  const [stepIndex, setStepIndex] = useState<number>(0); // 当前步骤
+  const [stepIndex, setStepIndex] = useState<number>(1); // 当前步骤
   const [pattern, setPattern] = useState<CreateCampaign.IManagementMode>('standard'); // 营销模式
   const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 广告活动投放方式(SP SD)
   const [autoGroupBidType, setAutoGroupBidType] = useState<string>('auto'); // 自动广告组的竞价方式
@@ -101,7 +101,7 @@ const CampaignAdd = () => {
   reqData.headersParams = {
     StoreId: 2,
   };
-  reqData.targetingType = putMathod; // 手动或自动
+  reqData.targetingType = campaignType === 'sponsoredProducts' ? putMathod : null; // 手动或自动
   reqData.timezone = timezone; //
   reqData.marketingScenario = null; // 营销场景,目前都为null
   const nextStep = () => {
@@ -131,6 +131,7 @@ const CampaignAdd = () => {
     if (stepIndex === 2) {
       const name = campaignData.name;
       const dailyBudget = campaignData.dailyBudget;
+
       const startDate = campaignData.startDate.format('YYYY-MM-DD');
       let endDate = campaignData.endDate;
       const min = marketplace === 'JP' ? 200 : 1; // 日本站最小值200
@@ -146,7 +147,8 @@ const CampaignAdd = () => {
         return;
       }
       reqData.name = name;
-      reqData.dailyBudget = dailyBudget;
+      reqData.dailyBudget = campaignType === 'sponsoredProducts' ? dailyBudget : null;
+      reqData.budget = campaignType === 'sd' ? dailyBudget : null;
       reqData.startDate = startDate;
       reqData.endDate = endDate;
       reqData.biddingStrategy = campaignData.biddingStrategy;
@@ -159,6 +161,7 @@ const CampaignAdd = () => {
       const min = marketplace === 'JP' ? 2 : 0.02; // 日本站最小值200
       reqData.adGroup = Object.assign({}, reqData.adGroup, groupData);
       reqData.adGroup.productAds = selects;
+      reqData.adGroup.campaignId = null;
       reqData.switch = groupData.switch;
       reqData.adGroup.startDate = groupData ? moment(groupData).format('YYYY-MM-DD') : '';
       groupData.endDate ? reqData.adGroup.endDate = moment(groupData.endDate).format('YYYY-MM-DD') : '';
@@ -177,14 +180,21 @@ const CampaignAdd = () => {
         message.error('商品广告不能为空！');
         return;
       }
-
+      
       // 自动广告组
       if (putMathod === 'auto') {
         reqData.adGroup.defaultBid = groupData.auto.defaultBid;
-        reqData.adGroup.autoTargetGroup = autoTargetGroupList;
-      } else if (putMathod === 'manual') {
-        // 手动
+        const stringJSON = JSON.stringify(autoTargetGroupList);
+        const list: any[] = JSON.parse(stringJSON);// eslint-disable-line
+        list.forEach(item => {
+          item.state = item.state ? 'enabled' : 'paused';
+        });
+
+        reqData.adGroup.autoTargetGroup = list;
+      } else if (putMathod === 'manual' || putMathod === 'classProduct') {
+        // 手动 | sd模式下的分类/商品
         const manualType = groupData.manualType;// 先查看当前选中的是哪一个分类下
+        
         // 手动 关键词模式
         if ( manualType === 'keyword') { 
           if (keywords.length === 0) {
@@ -196,10 +206,10 @@ const CampaignAdd = () => {
           reqData.adGroup.keywords = keywords;
         } else {
           // 手动 商品/分类
-          if (classifys.length === 0) {
-            message.error('分类列表不能为空，请添加分类！');
-            return;
-          }
+          // if (classifys.length === 0) {
+          //   message.error('分类列表不能为空，请添加分类！');
+          //   return;
+          // }
 
           reqData.adGroup.targets = {
             categories: classifys,
@@ -369,15 +379,13 @@ const CampaignAdd = () => {
             },
           }}
         >
-          {
-            stepIndex === 3 ? <Group 
-              autoGroupBidType={autoGroupBidType} 
-              putMathod={putMathod} 
-              form={groupForm}
-              getTimingData={getTimingData}
-              campaignType={campaignType}
-              stepIndex={stepIndex}/> : ''
-          }
+          <Group 
+            autoGroupBidType={autoGroupBidType} 
+            putMathod={putMathod} 
+            form={groupForm}
+            getTimingData={getTimingData}
+            campaignType={campaignType}
+            stepIndex={stepIndex}/>
           
         </Form>
       </div>

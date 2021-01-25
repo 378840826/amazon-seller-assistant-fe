@@ -8,7 +8,7 @@ declare namespace CreateGroup {
   interface ICampaignList {
     name: string;
     campaignId: string;
-    campaignType: string;
+    campaignType: CreateCampaign.ICampaignType;
     targetingType: 'auto'|'manual';	
   }
 }

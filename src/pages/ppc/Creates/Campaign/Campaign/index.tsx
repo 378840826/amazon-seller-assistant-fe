@@ -148,7 +148,7 @@ const Campaign: React.FC<IProps> = props => {
         styles.putMathod,
         campaignType === 'sponsoredProducts' ? '' : 'none'
       )}>
-        <Radio.Group onChange={v => console.log(v.target.value, 'xxx')}>
+        <Radio.Group>
           <Radio value="auto" className={styles.putMathodAuto}>自动</Radio>
           <Radio value="manual">手动</Radio>
         </Radio.Group>

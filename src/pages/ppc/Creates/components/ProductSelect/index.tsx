@@ -55,7 +55,6 @@ const ProductSelect: React.FC<IProps> = props => {
 
   // 请求数据
   useEffect(() => {
-    // return;
     if (id === '-1' || asin === 'notRequest') {
       setLoading(false);
       return;

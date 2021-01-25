@@ -216,7 +216,7 @@ export default [
     component: '../layouts/BasicLayout',
     routes: [
       { title: '广告系列', path: '/ppc/campaign', component: './UncompletedPage' },
-      { title: '创建广告系列', path: ppcCampaignAddRouter, component: './ppc/Creates/Campaign' },
+      { title: '创建广告活动', path: ppcCampaignAddRouter, component: './ppc/Creates/Campaign' },
       { title: '广告组', path: '/ppc/group', component: './UncompletedPage' },
       { title: '创建广告组', path: ppcGroupAddRouter, component: './ppc/Creates/Group' },
       { title: '广告', path: '/ppc/product', component: './UncompletedPage' },

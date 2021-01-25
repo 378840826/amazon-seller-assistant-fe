@@ -108,13 +108,13 @@ const SPManual: React.FC<IProps> = props => {
   // 所有已添加的关键词
   const [addKeyword, setAddKeyword] = useState<IKeywordsType[]>([
     // { 
-    //   id: createUUID(), 
-    //   keyword: '', 
-    //   bid: 1, 
-    //   match: 'broad', 
-    //   exact: false, 
-    //   phrase: false, 
-    //   broad: true,
+    //   id: createUUID(), // id
+    //   keyword: '', //关键词
+    //   bid: 1,  // 竞价
+    //   match: 'broad', // 当前匹配方式
+    //   exact: false, // 精准关键词是中已选中
+    //   phrase: false, // 词组关键词是否已选中
+    //   broad: true, // 广泛关键词是否已选中
     // },
   ]);
 
@@ -242,6 +242,7 @@ const SPManual: React.FC<IProps> = props => {
   const addKeywordfn = (keyword: string) => {
     const defaultBid = form.getFieldValue('defaultBid');
     let itemId = ''; // 左边建议关键词的，用原来的id，其它用新id
+    let exact = false, phrase = false, broad = false;
 
     if ([undefined, null, ''].includes(defaultBid)) {
       message.error('关键词竞价不能为空，请填写默认竞价');
@@ -256,8 +257,13 @@ const SPManual: React.FC<IProps> = props => {
     let flag = false; // 是否添加了
     for (let i = 0; i < addKeyword.length; i++) {
       const item = addKeyword[i];
-      if (item.keyword === keyword && item[match]) {
-        flag = true;
+      if (item.keyword === keyword ) {
+        // 是否添加了, 如果添加了，右边的数据也要改一下
+        flag = item[match];
+        flag ? '' : item[match] = true; // 如果未添加，修改
+        exact = item.exact;
+        phrase = item.phrase;
+        broad = item.broad;
         break;
       }
     }
@@ -278,15 +284,15 @@ const SPManual: React.FC<IProps> = props => {
       keyword, 
       bid: Number(defaultBid), 
       match,
-      exact: false, 
-      phrase: false, 
-      broad: false,
+      exact, 
+      phrase, 
+      broad,
     };
     data[match] = true;
     addKeyword.unshift(data);
   };
 
-  // 修改左边建议关键词按钮的状态
+  // 修改左边建议关键词按钮的状态(取消选中)
   const updateKeywordDataState = (keyword: string, match: string) => {
     for (let i = 0; i < keywordDada.length; i++) {
       const item = keywordDada[i];
@@ -295,6 +301,34 @@ const SPManual: React.FC<IProps> = props => {
         break;
       }
     }
+  };
+  
+  // 修改左边建议关键词的按钮状态（取消选中一个同时选中另一个、用于右边修改匹配方式）
+  const seteKeywordState = (keyword: string, newMatch: string, historyMatch: string): boolean => {
+    let flag = true;
+    for (let i = 0; i < keywordDada.length; i++) {
+      const item = keywordDada[i];
+      if (item.keyword === keyword) {
+        item[newMatch] = true;
+        item[historyMatch] = false;
+        break;
+      }
+    }
+
+    for (let i = 0; i < addKeyword.length; i++) {
+      const item = addKeyword[i];
+      if (item.keyword === keyword) {
+        if (item[newMatch]) {
+          flag = false;
+        } else {
+          item.match = newMatch;
+          item[newMatch] = true;
+          item[historyMatch] = false;
+        }
+        
+      }
+    }
+    return flag;
   };
   
   // 删除单个关键词
@@ -312,20 +346,13 @@ const SPManual: React.FC<IProps> = props => {
   };
 
   // 修改右边关键词表格的匹配方式
-  const matchSelectCallback = (match: string, keyword: string) => {
-    let flag = true;
-
-    for (let i = 0; i < addKeyword.length; i++) {
-      const item = addKeyword[i];
-      
-      if (item.keyword === keyword && item[match]) {
-        flag = false;
-        break;
-      }
-    }
-
+  const matchSelectCallback = (match: string, keyword: string, historyMatch: string) => {
+    // 修改左边的关键词选中状态
+    const flag = seteKeywordState(keyword, match, historyMatch);
+    setKeywordData([...keywordDada]);
+    setAddKeyword([...addKeyword]);
     !flag && message.warn(`关键词 {${keyword}} 在 {${matchTransition(match)}} 中已存在！`);
-
+    
     return Promise.resolve(flag);
   };
 
@@ -355,7 +382,7 @@ const SPManual: React.FC<IProps> = props => {
     }
 
     addKeywordfn(keyword);
-
+    
     setAddKeyword([...addKeyword]);
     setKeywordData([...keywordDada]);
   };
@@ -456,32 +483,19 @@ const SPManual: React.FC<IProps> = props => {
   };
 
   // 批量修改关键词的匹配方式
-  const batchMatchSetCallback = (type: string) => {
+  const batchMatchSetCallback = (newMatch: string) => {
     if (selectedRowKeys.length === 0) {
       message.warn(`当前选中关键词为${selectedRowKeys.length}个`);
       return;
     }
     message.destroy();
 
-    console.log(type, 'type');
-    
     addKeyword.forEach(item => {
       if (selectedRowKeys.indexOf(item.id) > -1) {
-        console.log(item, 'item');
-        
-        item.match = type;
-        
-        for (let i = 0; i < keywordDada.length; i++) {
-          const cItem = keywordDada[i];
-          console.log(cItem, 'cItem');
-          
-          if (item.id === cItem.id) {
-            console.log(cItem, '左边的');
-            break;
-          }
-        }
+        seteKeywordState(item.keyword, newMatch, item.match);
       }
     });
+    setKeywordData([...keywordDada]);
     setAddKeyword([...addKeyword]);
     setMatchingVisible(false);
   };
@@ -489,7 +503,7 @@ const SPManual: React.FC<IProps> = props => {
   // 右边的关键词表格
   const addTableConfig = {
     pagination: false as false,
-    rowKey: (record: {id: string}) => record.id,
+    rowKey: (record: {id: string; match: string}) => record.id + record.match,
     rowSelection: {
       type: 'checkbox',
       columnWidth: 70,
@@ -517,7 +531,7 @@ const SPManual: React.FC<IProps> = props => {
         render(value: string, record: { keyword: string}) {
           return <MatchSelect 
             value={value} keyword={record.keyword} 
-            changeCallback={matchSelectCallback} 
+            changeCallback={(match, keyword) => matchSelectCallback(match, keyword, value)} 
           />;
         },
       },

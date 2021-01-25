@@ -116,8 +116,8 @@ const Thining: React.FC<IProps> = (props) => {
     let flag = true;
     const data = form.getFieldsValue();
     
-    const priceMin = data.thining.priceMin;
-    const priceMax = data.thining.priceMax;
+    const priceMin = data.thining ? data.thining.priceMin : '';
+    const priceMax = data.thining ? data.thining.priceMax : '';
     if (
       scores[0] !== 0 
       || scores[1] !== 5

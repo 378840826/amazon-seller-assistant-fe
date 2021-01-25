@@ -211,7 +211,6 @@ const ClassProduct: React.FC<IProps> = props => {
       const tbodyTable = el.querySelector('.ant-table-body>table') as HTMLElement;
       const tableHeight = Number(getComputedStyle(tbodyTable, null).height.slice(0, -2));
       const bodyHeight = Number(getComputedStyle(tbody, null).height.slice(0, -2));
-      console.log(bodyHeight, tableHeight);
       
       tableHeight >= bodyHeight ? setisHaveScroll(true) : setisHaveScroll(false);
     }
@@ -458,11 +457,9 @@ const ClassProduct: React.FC<IProps> = props => {
       // 点击复选框时
       onChange: (selectRecord: React.Key[], record: {id: string}[]) => {
         const temArr: string[] = [];
-        console.log(record);
           
         record.forEach(item => {
           temArr.push(item.id);
-          console.log(item.id, 'id');
         });
         // setSelectedRowKeys([...temArr]);
         selectedRowKeys = temArr;
@@ -534,7 +531,7 @@ const ClassProduct: React.FC<IProps> = props => {
         },
       },
       {
-        title: '分类竞价',
+        title: '商品竞价',
         dataIndex: 'bid',
         align: 'right',
         width: 95,
@@ -565,7 +562,7 @@ const ClassProduct: React.FC<IProps> = props => {
     ] as any, // eslint-disable-line
     dataSource: products,
     locale: {
-      emptyText: <span className="secondaryText">请选择分类词</span>,
+      emptyText: <span className="secondaryText">请选择商品</span>,
     },
     scroll: {
       y: 226,
@@ -644,9 +641,6 @@ const ClassProduct: React.FC<IProps> = props => {
                           <ShowData value={record.reviewStars} fillNumber={1}/>
                           <span>（{ record.reviewNum ? moneyFormat(record.reviewNum, 0, ',', '.', false ) : <ShowData value={null} />}）</span>
                         </div>
-                        <span className={styles.stockpile}>
-                          库存：{ record.sellable ? moneyFormat(record.sellable, 0, ',', '.', false ) : <ShowData value={null} />}
-                        </span>
                         <span className={styles.price}>
                           <ShowData value={record.price} isCurrency/>
                         </span>

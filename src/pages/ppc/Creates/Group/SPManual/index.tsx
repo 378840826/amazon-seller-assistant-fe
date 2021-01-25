@@ -17,11 +17,13 @@ interface IProps {
   currency: string;
   marketplace: string;
   storeId: string|number;
+  campaignType: CreateCampaign.ICampaignType;
+  putMathod: CreateCampaign.putMathod;
 }
 
 const { Item } = Form;
 const SPManual: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId } = props;
+  const { form, currency, marketplace, storeId, campaignType, putMathod } = props;
 
   const [nav, setNav] = useState<'keyword'|'classify'>('keyword');
   const [batchSetBidVisible, setBatchSetBidVisible] = useState<boolean>(false); // 批量设置建议竞价显隐
@@ -30,10 +32,11 @@ const SPManual: React.FC<IProps> = props => {
   useEffect(() => {
     form.setFieldsValue({
       other: {
-        manualType: nav,
+        manualType: campaignType === 'sd' ? 'classify' : nav,
       },
     });
-  }, [form, nav]);
+    campaignType === 'sd' && setNav('classify'); // SD没有建议关键词
+  }, [form, nav, campaignType]);
 
 
   // 其它地方隐藏
@@ -74,7 +77,10 @@ const SPManual: React.FC<IProps> = props => {
     </Item>
 
     <div className={styles.box}>
-      <nav className={styles.headNav}>
+      <nav className={classnames(
+        styles.headNav,
+        campaignType === 'sd' ? 'none' : ''
+      )}>
         <span 
           className={classnames(nav === 'keyword' ? styles.active : '')}
           onClick={() => setNav('keyword')}
@@ -100,6 +106,7 @@ const SPManual: React.FC<IProps> = props => {
         currency={currency as API.Site}
         marketplace={marketplace}
         storeId ={storeId}
+        putMathod={putMathod}
       />}
     </div>
   </div>;

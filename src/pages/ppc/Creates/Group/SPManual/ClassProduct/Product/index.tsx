@@ -38,6 +38,7 @@ interface IProps {
   currency: API.Site;
   marketplace: string;
   storeId: string|number;
+  putMathod: CreateCampaign.putMathod;
 }
 
 interface ISuggestedProduct extends CreateCampaign.IProductAwaitType {
@@ -50,7 +51,7 @@ interface IPage extends ConnectProps {
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId } = props;
+  const { form, currency, marketplace, storeId, putMathod } = props;
   const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   const dispatch = useDispatch();
   
@@ -62,6 +63,7 @@ const ClassProduct: React.FC<IProps> = props => {
   const [isSelectAllSuggestProduct, setIsSelectAllSuggestProduct] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [importAsin, setImportAsin] = useState<string[]>([]); // 输入商品内容
+  const [hint, setHint] = useState<string>('请先添加商品'); // 左边表格无数据的提示
   
   // 左边的建议商品列表
   const [suggestProduct, setSuggestProduct] = useState<CreateCampaign.IProductAwaitType[]>([
@@ -121,6 +123,11 @@ const ClassProduct: React.FC<IProps> = props => {
   useEffect(() => {
     const asins: string[] = [];
     selectProducts.forEach(item => asins.push(item.asin));
+
+    if (putMathod && putMathod === 'classProduct') {
+      setHint('SD展示广告暂无推荐商品');
+      return;
+    }
 
     if (asins.length === 0) {
       setProducts([...[]]);
@@ -184,7 +191,7 @@ const ClassProduct: React.FC<IProps> = props => {
       }
       message.error(msg);
     });
-  }, [storeId, dispatch, selectProducts]);
+  }, [storeId, dispatch, selectProducts]); // eslint-disable-line
 
   // 收集数据
   useEffect(() => {
@@ -204,7 +211,6 @@ const ClassProduct: React.FC<IProps> = props => {
       const tbodyTable = el.querySelector('.ant-table-body>table') as HTMLElement;
       const tableHeight = Number(getComputedStyle(tbodyTable, null).height.slice(0, -2));
       const bodyHeight = Number(getComputedStyle(tbody, null).height.slice(0, -2));
-      console.log(bodyHeight, tableHeight);
       
       tableHeight >= bodyHeight ? setisHaveScroll(true) : setisHaveScroll(false);
     }
@@ -451,11 +457,9 @@ const ClassProduct: React.FC<IProps> = props => {
       // 点击复选框时
       onChange: (selectRecord: React.Key[], record: {id: string}[]) => {
         const temArr: string[] = [];
-        console.log(record);
           
         record.forEach(item => {
           temArr.push(item.id);
-          console.log(item.id, 'id');
         });
         // setSelectedRowKeys([...temArr]);
         selectedRowKeys = temArr;
@@ -527,7 +531,7 @@ const ClassProduct: React.FC<IProps> = props => {
         },
       },
       {
-        title: '分类竞价',
+        title: '商品竞价',
         dataIndex: 'bid',
         align: 'right',
         width: 95,
@@ -558,7 +562,7 @@ const ClassProduct: React.FC<IProps> = props => {
     ] as any, // eslint-disable-line
     dataSource: products,
     locale: {
-      emptyText: <span className="secondaryText">请选择分类词</span>,
+      emptyText: <span className="secondaryText">请选择商品</span>,
     },
     scroll: {
       y: 226,
@@ -637,9 +641,6 @@ const ClassProduct: React.FC<IProps> = props => {
                           <ShowData value={record.reviewStars} fillNumber={1}/>
                           <span>（{ record.reviewNum ? moneyFormat(record.reviewNum, 0, ',', '.', false ) : <ShowData value={null} />}）</span>
                         </div>
-                        <span className={styles.stockpile}>
-                          库存：{ record.sellable ? moneyFormat(record.sellable, 0, ',', '.', false ) : <ShowData value={null} />}
-                        </span>
                         <span className={styles.price}>
                           <ShowData value={record.price} isCurrency/>
                         </span>
@@ -668,7 +669,7 @@ const ClassProduct: React.FC<IProps> = props => {
               y: 226,
             }}
             locale={{
-              emptyText: <span className="secondaryText">请先添加商品</span>,
+              emptyText: <span className="secondaryText">{hint}</span>,
             }}
             dataSource={suggestProduct}
           />
