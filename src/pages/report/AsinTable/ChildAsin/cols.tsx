@@ -28,18 +28,6 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
   } = props;
 
 
-  let currentAsin = '';
-  const callback = (val: string) => {
-    return new Promise(resolve => {
-      if (val === currentAsin || currentAsin === '') {
-        resolve(true);
-      } else {
-        resolve(false);
-      }
-      currentAsin = val;
-    });
-  };
-
   // const two = 80; // 2个字的列宽度
   const three = 95; // 3个字的列宽度、Spend、Clicks
   const four = 90; // 4个字的列宽度
@@ -444,7 +432,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
           }}>
             <Rate value={associateSalesRingRatio} decimals={2} showArrow={false} ></Rate>
           </p>
-          <RelatedSales callback={callback} asin={asin} />
+          {val && <RelatedSales asin={asin} />}
         </div>;
       },
     },
