@@ -311,7 +311,10 @@ const BiBoard: React.FC = () => {
     buyboxPercentageKanban: {
       title: '购物车占比',
       titleExplain: buyboxPercentageKanban.lastTime ? `更新至${buyboxPercentageKanban.lastTime}` : '',
-      link: '/',
+      link: buyboxPercentageKanban.reportId
+        // eslint-disable-next-line max-len
+        ? `/report/details?date=${buyboxPercentageKanban.lastTime}&reportId=${buyboxPercentageKanban.reportId}`
+        : '',
       linkText: '更多',
       content: (
         <div className={styles.buyboxPercentageContent}>
