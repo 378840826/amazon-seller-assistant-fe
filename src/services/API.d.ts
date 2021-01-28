@@ -223,6 +223,7 @@ declare namespace API {
   interface IBuyboxPercentageKanban {
     buyboxPercentage: IBuyboxPercentage[];
     lastTime: string;
+    reportId: string;
   }
 
   interface IMailKanban {
