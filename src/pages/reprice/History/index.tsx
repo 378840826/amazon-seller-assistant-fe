@@ -203,7 +203,7 @@ const History: React.FC = () => {
       width: 150,
       render(val: string) {
         return <>
-          <p>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</p>
+          <p>{val}</p>
           <p className={styles.secondaryText}>({timeText})</p>
         </>;
       },
