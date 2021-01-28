@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import {
@@ -6,9 +6,10 @@ import {
   Spin,
   Tooltip,
 } from 'antd';
-import { useSelector, useDispatch } from 'umi';
+import { useSelector, useDispatch, Link } from 'umi';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import { storageKeys } from '@/utils/huang';
+import { asinPandectBaseRouter } from '@/utils/routes';
 import { storage } from '@/utils/utils';
 import GoodsImg from '@/pages/components/GoodsImg';
 import { getCalendarFields } from '../config';
@@ -23,6 +24,7 @@ const Demo: React.FC<IProps> = (props) => {
     asin,
   } = props;
   const dispatch = useDispatch();
+  const listBoxRef = useRef(null) as any; // eslint-disable-line
  
   const {
     id: StoreId,
@@ -62,14 +64,26 @@ const Demo: React.FC<IProps> = (props) => {
           records: AsinTable.IChildRsType[];
         };
       };
-      setData(records);
+      new Promise((resolve) => {
+        const el = document.querySelector('.ant-popover-inner-content') as HTMLElement;
+        const size = records.length;
+        if (size === 1) {
+          el.style.height = '140px';
+          listBoxRef.current ? listBoxRef.current.style.height = '125px' : '';
+        } else {
+          el.style.height = '270px';
+        }
+        resolve('');
+      }).then(() => {
+        setData(records);
+      });
     });
   };
 
   const content = function() {
     return <div className={styles.contentBox}>
       <Spin spinning={loading} className={styles.loading}></Spin>
-      <div className={styles.listBox}>
+      <div className={styles.listBox} ref={listBoxRef}>
         {
           data.map((item, i) => {
             return <div key={i} className={styles.item}>
@@ -84,10 +98,10 @@ const Demo: React.FC<IProps> = (props) => {
                   {item.title}
                 </a>
                 <p className={styles.p}>
-                  <a href={getAmazonAsinUrl(asin, marketplace)} 
+                  <Link to={`${asinPandectBaseRouter}?asin=${asin}`} 
                     className={styles.asin}
                     target="_blank" rel="noreferrer"
-                  >{item.asin}</a>
+                  >{item.asin}</Link>
                   <span className={styles.price}>{item.price ? currency + item.price : ''}</span>
                 </p>
                 <p className={styles.p}>
@@ -121,6 +135,9 @@ const Demo: React.FC<IProps> = (props) => {
       overlayClassName={styles.relatedSalesBox}
       autoAdjustOverflow
       visible={visible}
+      destroyTooltipOnHide={{
+        keepParent: false,
+      }}
       onVisibleChange={v => setVisible(v)}
     >
       <span className={classnames(
