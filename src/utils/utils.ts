@@ -6,7 +6,7 @@ import { createFromIconfontCN } from '@ant-design/icons';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_1799129_1j9lkw4s02q.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_oo2x8u58u7o.js',
 });
 
 // 获取亚马逊站点基本链接
@@ -359,4 +359,15 @@ export const toThousands = (nStr: any) => {
   return nStr;
 };
 
+//将参数转化为url上带的字符
+export const toUrl = (query: API.IParams) => {
+  let url = ``;
+ 
+  if (query){
+    url += `?`;
+    Object.keys(query).forEach(item => url += `${item}=${query[item]}&`);
+    url = url.substr(0, url.length - 1);
+  }
+  return url;
+};
 

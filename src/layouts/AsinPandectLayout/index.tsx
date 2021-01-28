@@ -12,6 +12,8 @@ import munus from './routes';
 import BasicLoyout from '../BasicLayout';
 import { Iconfont } from '@/utils/utils';
 import MySearch from '@/components/Search';
+import { IConnectState } from '@/models/connect';
+import classnames from 'classnames';
 import TableNotData from '@/components/TableNotData';
 import GoodsImg from '@/pages/components/GoodsImg';
 import zhCN from 'antd/es/locale/zh_CN';
@@ -69,6 +71,7 @@ const AsinBase: React.FC = (props) => {
   }) => state.asinGlobal.asin);
 
   const getSiblingsAsin = useCallback((value = '') => {
+    console.log('value:', value);
     new Promise((resolve, reject) => {
       const payload = {
         headersParams: {
@@ -108,6 +111,7 @@ const AsinBase: React.FC = (props) => {
    * flag 为true时 ,请求兄弟ASIN
    */
   const verifyAsin = useCallback((flag = false, value = urlAsin) => {
+    console.log('flag,verifyAsin:', flag, value);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'asinGlobal/getAsin',
@@ -133,10 +137,6 @@ const AsinBase: React.FC = (props) => {
           asin: string;
         };
       };
-
-      console.log(data.asin, 'data.asin');
-      
-      
       // 判断是否从商品列表页面过来
       if (flag || (query?.page && query.page === 'plist')) {
         setAsinListVisible(true);
@@ -152,7 +152,8 @@ const AsinBase: React.FC = (props) => {
   }, [dispatch, StoreId, location]); // eslint-disable-line
 
   useEffect(() => {
-    if (Number(current.id) > -1) {
+    if (Number(current.id) !== -1) { //id有可能为0
+      console.log('location:', location);
       const { query, pathname } = location as {
         query?: {
           page: string;
@@ -162,10 +163,9 @@ const AsinBase: React.FC = (props) => {
       };
 
       setCurrentModule(pathname);
-
+      
       if (query) {
         // 获取ASIN
-
         if (query.page && query.page === 'plist') {
           localPage = query.page;
         }
@@ -216,14 +216,29 @@ const AsinBase: React.FC = (props) => {
     verifyAsin(true);
   };
 
+  const LeftAdd = () => {
+    
+    const surplus = useSelector(({ user }: IConnectState) => {
+      return user.currentUser.memberFunctionalSurplus;
+    });
+
+    const leftCount = surplus.find(item => item.functionName === '竞品监控')?.frequency;
+    return (
+      <div className={styles.__left}>剩余可添加竞品：<span>{leftCount}</span></div>
+    );
+  };
+
   if (isAsin) {
     return (
       <div>
         <BasicLoyout></BasicLoyout>
-        <nav className={styles.head }>
-          <span className={styles.classify}>ASIN总览</span>
-          <Iconfont type="icon-zhankai" className={styles.arrow}></Iconfont>
-          <span className={styles.asin}>{searchAsin}</span>
+        <nav className={classnames(styles.head, { [styles.__left_header]: currentModule === '/asin/com-pro' }) }>
+          <div>
+            <span className={styles.classify}>ASIN总览</span>
+            <Iconfont type="icon-zhankai" className={styles.arrow}></Iconfont>
+            <span className={styles.asin}>{searchAsin}</span>
+          </div>
+          {currentModule === '/asin/com-pro' && <LeftAdd/>}
         </nav>
         <header className={styles.head_nav}>
           <div className={styles.navs}>

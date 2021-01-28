@@ -1,0 +1,94 @@
+.__filter {
+  background-color: @simple-table-header-bg;
+  padding: 14px 20px;
+
+  .__form {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .common_width {
+      width: 350px;
+      margin-bottom: 20px;
+
+      &.delivery_checkbox {
+        :global {
+          .ant-radio-wrapper {
+            margin-right: 0;
+          }
+        }
+      }
+
+      .__radio_group {
+        display: flex;
+        width: 100%;
+
+        :global {
+          label {
+            flex: 1;
+          }
+        }
+      }
+
+      :global {
+        .ant-form-item-control-input-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .ant-form-item-label {
+          text-align: left;
+        }
+
+        .ant-picker-range {
+          width: 279px;
+        }
+      }
+
+      .bar {
+        width: 10px;
+        height: 1px;
+        display: inline-block;
+        background-color: @border-color-base;
+      }
+    }
+
+    .reset_btn {
+      :global {
+        .ant-form-item-control-input-content {
+          justify-content: flex-end !important;
+        }
+      }
+    }
+
+    .short_width {
+      width: 128px;
+
+      :global {
+        input {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1499px) {
+  .reset_btn,
+  .ac_radioBox,
+  .variant_bottom {
+    margin-bottom: 0 !important;
+  }
+
+  .reset_btn {
+    width: 100% !important;
+    text-align: right;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .variant_bottom {
+    margin-bottom: 0 !important;
+  }
+}

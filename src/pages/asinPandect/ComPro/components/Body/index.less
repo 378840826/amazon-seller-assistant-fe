@@ -1,0 +1,119 @@
+.table_container {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  .color888 {
+    color: @text-color-secondary;
+  }
+
+  .__table_my {
+    border: 1px solid @divider-line-color;
+
+    .__no_data {
+      height: 44px;
+      line-height: 44px;
+    }
+  }
+
+  .__table_all {
+    :global {
+      .ant-table-container {
+        border: 1px solid @divider-line-color;
+      }
+    }
+  }
+
+  :global {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      padding: 0;
+    }
+
+    .ant-table-thead > tr > th {
+      height: 44px !important;
+    }
+
+    .ant-table-column-has-sorters {
+      .ant-table-column-sorters {
+        padding: 0;
+      }
+    }
+
+    .ant-table-cell {
+      .null_bar {
+        vertical-align: middle;
+      }
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: none;
+    }
+  }
+
+  .__switch {
+    transform: scale(0.818);
+  }
+
+  .price_container {
+    display: flex;
+
+    .right {
+      width: 27px;
+    }
+
+    .left {
+      width: calc(100% - 27px);
+    }
+  }
+
+  .darkRow {
+    background-color: #fafafa;
+
+    :global {
+      td {
+        background-color: #fafafa;
+      }
+    }
+  }
+
+  .column_my {
+    background-color: #f3f3f3;
+  }
+
+  .__price {
+    padding-right: 12px !important;
+  }
+
+  .__rank {
+    padding-left: 12px !important;
+  }
+
+  .rank_container {
+    .first_floor {
+      .orange {
+        color: #ff9200;
+      }
+
+      .text {
+        margin-left: 4px;
+      }
+    }
+
+    .second_floor {
+      .red {
+        color: #ff5958;
+      }
+
+      .change {
+        margin-left: 4px;
+      }
+    }
+
+    :global {
+      .null_bar + .null_bar {
+        margin-left: 4px;
+      }
+    }
+  }
+}

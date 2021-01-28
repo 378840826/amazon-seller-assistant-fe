@@ -15,7 +15,7 @@ import {
 import { message } from 'antd';
 
  
-interface IAsinGlobalType {
+export interface IAsinGlobalType {
   namespace: 'asinGlobal';
   state: {
     asin: string;

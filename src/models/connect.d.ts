@@ -9,6 +9,8 @@ import { DefaultSettings as SettingModelState } from '../../config/defaultSettin
 import { IUserModelState } from './user';
 import { ISubModelState } from './sub';
 import { IMailModelState } from './mail';
+import { IComProState } from '@/pages/asinPandect/models/comPro';
+import { IAsinGlobalType } from '@/pages/asinPandect/models/global';
 import { StateType } from './login';
 import { Effect, ImmerReducer, Subscription, Dispatch } from 'umi';
 
@@ -51,6 +53,8 @@ export interface IConnectState {
   login: StateType;
   sub: ISubModelState;
   mail: IMailModelState;
+  comPro: IComProState;
+  asinGlobal: IAsinGlobalType['state'];
 }
 
 export interface IRoute extends MenuDataItem {

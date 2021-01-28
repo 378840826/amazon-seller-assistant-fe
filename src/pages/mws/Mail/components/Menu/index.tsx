@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import { IMailModelState } from '@/models/mail';
 import { IGlobalModelState } from '@/models/global';
 import { IConnectState, IConnectProps } from '@/models/connect';
-const { Content, Sider, Header } = Layout;
+const { Content, Sider } = Layout;
 
 interface IMailConnectProps extends IConnectProps{
   global: IGlobalModelState;

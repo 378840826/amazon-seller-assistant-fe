@@ -17,13 +17,13 @@ const Faq = () => {
             <div className={styles.q2}>
               <div className={styles.head}>支持哪些站点？</div>
               <div className={styles.body}>
-            目前安知支持Amazon美国站，未来还会支持Amazon的更多站点。
+            目前安知支持Amazon美国、加拿大、英国、法国、德国、意大利、西班牙、日本等8个站点，未来还会支持Amazon的更多站点。
               </div>
             </div>
             <div className={styles.q3}>
               <div className={styles.head}>收费方式是怎样的？</div>
               <div className={styles.body}>
-            安知采取按使用量计费的模式，用多少付多少，公测期间全部功能免费开放！
+            安知采取多等级VIP会员模式，用户可以按需去选择，普通会员免费试用14天。
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@ const Faq = () => {
             <div className={styles.q5}>
               <div className={styles.head}>使用会造成账号的关联吗？</div>
               <div className={styles.body}>
-            不会的。使用安知无需绑定亚马逊卖家账号，也就不存在账号关联的问题了。
+            不会的。安知通过Amazon官方提供MWS接口获取数据和管理店铺，不存在账号关联的问题。
               </div>
             </div>
             <div className={styles.q6}>
