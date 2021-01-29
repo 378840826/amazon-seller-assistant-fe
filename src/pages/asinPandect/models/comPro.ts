@@ -130,6 +130,7 @@ const ComPro: IComProType = {
     *getEcharts({ payload, category, callback }, { call }){
       console.log('callback', callback);
       const response = yield call(getEcharts, payload, category);
+      nTs(response);
       callback(response);
     },
     *updateStatus({ payload, callback }, { call }){
