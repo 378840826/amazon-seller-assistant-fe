@@ -16,8 +16,9 @@ interface IAddLeft extends IConnectProps{
     allData: ISingleItem[];
     selectedList: ISingleItem[];
 }
+const filterReg = /^B0[A-Z0-9]{8}$/;
 const AddLeft: React.FC<IAddLeft> = ({ 
-  dispatch, 
+  dispatch,  
   filterData,
   selectedList,
   allData,
@@ -29,12 +30,29 @@ const AddLeft: React.FC<IAddLeft> = ({
   const onSelectText = () => {
     if (refTextarea.current){
       const list = refTextarea.current.state.value.split(/\n/ig).map( (item: string) => item.trim())
-        .filter((item1: string) => item1 !== ''); 
-      
-      
-      const selected = allData.filter((item) => list.includes(item.asin.toString()));
+        .filter((item1: string) => filterReg.test(item1)); 
+        // .filter((item1: string) => item1 !== ''); 
+     
+      const allAsin = allData.map(item => item.asin);
+      const selected: ISingleItem[] = [];
+      list.forEach( (item: string) => {
+        if (allAsin.includes(item)){
+          const list = allData.find((itemObj) => itemObj.asin === item );
+          list ? selected.push(list) : '';
+        } else {
+          selected.push({
+            asin: item,
+            image: '',
+            price: '',
+            ranking: '',
+            reviewAvgStar: '',
+            title: '',
+            titleLink: '',
+            reviewCount: '',
+          });
+        }
+      });
       const newSet = new Set([...selectedList, ...selected]);
-
       dispatch({
         type: 'comPro/updateSelected',
         payload: [...newSet],
@@ -55,7 +73,7 @@ const AddLeft: React.FC<IAddLeft> = ({
     value = value.trim();
     if (value){
       const filterData = allData.filter((item: ISingleItem) => {
-        return (item.asin.toString() === value || item.title.includes(value));
+        return (item.asin.includes(value) || item.title.includes(value));
       });
 
       dispatch({

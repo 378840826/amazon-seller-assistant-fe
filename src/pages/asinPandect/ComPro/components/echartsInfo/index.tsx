@@ -37,6 +37,13 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
     title: {
       text: '',
     },
+    grid: {
+      left: 0,
+      right: 0,
+      bottom: 0,
+      top: 20,
+      containLabel: true,
+    },
     color: ['#49B5FF'],
     tooltip: { //展示数据
       trigger: 'axis',

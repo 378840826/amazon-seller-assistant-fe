@@ -35,5 +35,5 @@ const RCKeyword: React.FC<IRCKeyword> = ({ text, searchTerms }) => {
   );
 };
 export default connect(({ comPro }: IConnectState) => ({
-  searchTerms: comPro.send.data.searchTerms,
+  searchTerms: comPro.send.searchTerms,
 }))(RCKeyword);

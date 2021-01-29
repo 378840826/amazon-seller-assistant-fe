@@ -5,11 +5,12 @@ import TableVirtual from '../TableVirtual';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import AddLeft from '../AddLeft';
 import styles from './index.less';
+import { initial } from '../../../models/comPro';
 interface IAddFilter extends IConnectProps{
     StoreId: string;
     asin: string;
+    send: API.IParams;
     toggleEvent: () => void;
-    callFetchList: () => void;
 }
 
 export interface ISingleItem{
@@ -26,8 +27,8 @@ const AddFilter: React.FC<IAddFilter> = ({
   dispatch, 
   StoreId,
   asin,
-  toggleEvent,
-  callFetchList }) => {
+  send,
+  toggleEvent }) => {
   useEffect(() => {
     dispatch({
       type: 'comPro/suggestAsin',
@@ -57,10 +58,8 @@ const AddFilter: React.FC<IAddFilter> = ({
       callback: () => {
         toggleEvent();
         dispatch({
-          type: 'comPro/updateSelected',
-          payload: [],
+          type: 'comPro/updateSend',
         });
-        callFetchList();
       },
     });
   };
@@ -88,7 +87,8 @@ const AddFilter: React.FC<IAddFilter> = ({
     </div>
   );
 };
-export default connect(({ global, asinGlobal }: IConnectState) => ({
+export default connect(({ global, asinGlobal, comPro }: IConnectState) => ({
   StoreId: global.shop.current.id,
   asin: asinGlobal.asin,
+  send: comPro.send,
 }))(AddFilter);

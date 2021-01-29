@@ -43,14 +43,34 @@ const ComPro: React.FC<IComPro> = ({
       type: 'comPro/cpMsList',
       payload: {
         data: { 
-          ...send.data, 
           asin, 
           headersParams: {
             StoreId,
           },
+          searchTerms: send.searchTerms,
+          switchStatus: send.switchStatus,
+          acKeywordStatus: send.acKeywordStatus,
+          deliveryMethod: send.deliveryMethod,
+          dateStart: send.dateStart,
+          dateEnd: send.dateEnd,
+          scopeMin: send.scopeMin,
+          scopeMax: send.scopeMax,
+          reviewsCountMin: send.reviewsCountMin,
+          reviewsCountMax: send.reviewsCountMax,
+          priceMin: send.priceMin,
+          priceMax: send.priceMax,
+          sellerNumMin: send.sellerNumMin,
+          sellerNumMax: send.sellerNumMax,
+          variantNumMin: send.variantNumMin,
+          variantNumMax: send.variantNumMax,
+          rankingMin: send.rankingMin,
+          rankingMax: send.rankingMax,
         },
         params: {
-          ...send.query,
+          size: send.size,
+          current: send.current,
+          order: send.order,
+          asc: send.asc,
         },
       },
       callback: (res: {code: number; data: API.IParams}) => {
@@ -75,7 +95,7 @@ const ComPro: React.FC<IComPro> = ({
         }
       },
     });
-  }, [StoreId, asin, dispatch, send.data, send.query]);
+  }, [StoreId, asin, dispatch, send]);
   useEffect(() => {
     fetchList();
   }, [fetchList]);
@@ -83,7 +103,6 @@ const ComPro: React.FC<IComPro> = ({
     <div className={styles.main}>
       <div className={styles.container}>
         <Header 
-          callFetchList={fetchList}
           tableLoading={state.tableLoading}/>
         <Body 
           myData={state.myProductData} 

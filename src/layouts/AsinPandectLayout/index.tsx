@@ -105,7 +105,6 @@ const AsinBase: React.FC = (props) => {
    * flag 为true时 ,请求兄弟ASIN
    */
   const verifyAsin = useCallback((flag = false, value = urlAsin) => {
-    console.log('flag,verifyAsin:', flag, value);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'asinGlobal/getAsin',
@@ -147,7 +146,6 @@ const AsinBase: React.FC = (props) => {
 
   useEffect(() => {
     if (Number(current.id) !== -1) { //id有可能为0
-      console.log('location:', location);
       const { query, pathname } = location as {
         query?: {
           page: string;
@@ -218,7 +216,7 @@ const AsinBase: React.FC = (props) => {
 
     const leftCount = surplus.find(item => item.functionName === '竞品监控')?.frequency || 0;
     return (
-      <div className={styles.__left}>剩余可添加竞品：<span>{leftCount}</span></div>
+      <div className={styles.__left}>剩余可添加竞品：<span>{leftCount}个</span></div>
     );
   };
 

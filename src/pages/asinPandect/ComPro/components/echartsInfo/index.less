@@ -1,3 +1,9 @@
+.arrow {
+  &:hover {
+    color: #09c2a6;
+  }
+}
+
 .modalWrapper {
   :global {
     .ant-modal-close-x {
@@ -5,12 +11,17 @@
         color: @error-color;
       }
     }
+
+    .ant-modal-body {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
   }
 }
 
 .title_checkbox {
   padding-left: 30px;
-  padding-right: 30px;
+  padding-top: 28px;
 
   .__ul_select {
     display: flex;
@@ -25,7 +36,7 @@
       color: @text-color;
       position: relative;
       height: 30px;
-      line-height: 30px;
+      vertical-align: top;
       cursor: pointer;
 
       &::after {

@@ -13,7 +13,6 @@ interface IColumnOrderProps{
   className?: string;
 }
 const ColumnOrderInfo: React.FC<IColumnOrderProps> = ({ item, className }) => {   
-  console.log('item:', item);
   return (
     <div className={classnames({ [styles.single_orderInfo]: true }, 
       { [`${className}`]: className !== undefined })}>
