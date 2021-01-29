@@ -222,7 +222,7 @@ const AsinBase: React.FC = (props) => {
       return user.currentUser.memberFunctionalSurplus;
     });
 
-    const leftCount = surplus.find(item => item.functionName === '竞品监控')?.frequency;
+    const leftCount = surplus.find(item => item.functionName === '竞品监控')?.frequency || 0;
     return (
       <div className={styles.__left}>剩余可添加竞品：<span>{leftCount}</span></div>
     );

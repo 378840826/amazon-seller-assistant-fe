@@ -49,6 +49,9 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
         let html = `<span style="margin-right:15px;">${date}</span>${day.getWeek(time)}<br/>`;
         if (param instanceof Array){
           param.forEach((item) => {
+            if (item.data[1] === '') {
+              return; 
+            }
             html += `${item.marker}<span>${categoryObj[item.seriesName as string]}:</span>`;
             if ('price'.includes(item.seriesName as string)){
               html += `${currency}${item.data[1]}<br/>`;
@@ -190,7 +193,8 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
         footer={null}
         width={1016}
         onCancel={handleCancel}
-        wrapClassName={styles.modalWrapper}
+        className={styles.modalWrapper}
+        // wrapClassName={styles.modalWrapper}
       >
         <div className={styles.title_checkbox}>
           

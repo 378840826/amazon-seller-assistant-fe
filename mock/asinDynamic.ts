@@ -311,7 +311,7 @@ const proxy = {
   //价格折线图
   'POST /api/mws/competitive-products/monitoring-settings/price-data': Mock.mock({
     code: 200,
-    data: [['2020-01-01', 15], ['2020-01-02', 0], ['2020-01-03', 15], ['2020-01-04', 0], ['2020-01-05', 6]],
+    data: [['2020-01-01', 15], ['2020-01-02', ''], ['2020-01-03', ''], ['2020-01-04', 0], ['2020-01-05', 6]],
   }),
   //排名曲线图
   'POST /api/mws/competitive-products/monitoring-settings/ranking-data': Mock.mock({
