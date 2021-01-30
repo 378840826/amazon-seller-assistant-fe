@@ -1,0 +1,89 @@
+.container {
+  min-height: 100%;
+  min-width: 100%;
+
+  .containerWrap {
+    width: 1218px;
+    margin: 0 auto;
+
+    .logoContainer {
+      padding-top: 30px;
+    }
+
+    .mainContainer_wrap {
+      height: calc(100vh - 180px);
+      display: flex;
+      align-items: center;
+
+      .mainContainer {
+        width: 460px;
+        background-color: #fff;
+        margin: 0 auto;
+        position: relative;
+
+        .account_info {
+          .title {
+            color: @heading-color;
+            text-align: center;
+            font-size: 20px;
+            height: 80px;
+            font-weight: 500;
+            line-height: 80px;
+            border-bottom: 1px solid @divider-line-color;
+          }
+
+          .__form {
+            padding: 30px 80px;
+
+            .__button {
+              width: 100%;
+            }
+
+            .tips {
+              color: @text-color-secondary;
+              font-size: 12px;
+              text-align: center;
+            }
+          }
+        }
+
+        .__active {
+          width: 460px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: #fff;
+
+          & > div + div {
+            padding-top: 104px !important;
+          }
+
+          :global {
+            .__info {
+              justify-content: center;
+
+              & + div {
+                margin-top: 114px;
+              }
+            }
+          }
+
+          .icon_close_wrapper {
+            text-align: right;
+            padding-right: 30px;
+            margin-top: 30px;
+
+            .icon_close {
+              font-size: 14px;
+              cursor: pointer;
+
+              &:hover {
+                color: @error-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
