@@ -92,8 +92,8 @@ const OrderList: React.FC = () => {
 
   // 首次 请求表格信息
   useEffect(() => {
-    requestFn();
-  }, [dispatch, requestFn]);
+    requestFn({ current: 1, size: 20 });
+  }, [requestFn]);
 
   // 字段变化
   const fieldChange = (changedValues: any) => { // eslint-disable-line

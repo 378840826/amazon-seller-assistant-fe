@@ -63,6 +63,7 @@ const History: React.FC = () => {
       },
       startTime: start3,
       endTime: end3,
+      current,
       size: pageSize,
     };
 
@@ -177,7 +178,7 @@ const History: React.FC = () => {
     if (StoreId === '-1') {
       return;
     }
-    getList();
+    getList({ current: 1, size: 20 });
   }, [getList, StoreId]);
 
   useEffect(() => {
@@ -378,6 +379,7 @@ const History: React.FC = () => {
       pageSize,
       current,
       showQuickJumper: true, // 快速跳转到某一页
+      showSizeChanger: true,
       showTotal: (total: number) => `共 ${total} 条记录`,
       onChange(current: number, size: number | undefined){
         setCurrent(current);
@@ -406,7 +408,7 @@ const History: React.FC = () => {
     allowClear: false,
   };
 
-  const onValuesChange = (val: {}, allFields: { [key: string]: string }) => { // eslint-disable-line
+  const onValuesChange = (val: { code?: string }, allFields: { [key: string]: string }) => { // eslint-disable-line
     if (allFields.rangepicker.length > 0) {
       const [start, end] = allFields.rangepicker;
       allFields.startTime = moment(start).format('YYYY-MM-DD');
@@ -414,7 +416,32 @@ const History: React.FC = () => {
     }
   
     delete allFields.rangepicker;
+    
+    if ('code' in val) {
+      return;
+    }
+    
     getList(allFields);
+  };
+
+  // 搜索
+  const search = function(code: string, event: any) { // eslint-disable-line
+    const data = form.getFieldsValue();
+
+    const [start, end] = data.rangepicker;
+    data.startTime = moment(start).format('YYYY-MM-DD');
+    data.endTime = moment(end).format('YYYY-MM-DD');
+  
+    delete data.rangepicker;
+
+    if (code === '' && 'button' in event && event.target.className === 'ant-input') {
+      // console.log('点击删除图标不筛选');
+      return;
+    }
+
+    console.log(data);
+    
+    getList(data);
   };
   
   return <div className={styles.historyBox}>
@@ -426,6 +453,7 @@ const History: React.FC = () => {
           enterButton={<Iconfont type="icon-sousuo" />} 
           className="h-search"
           allowClear
+          onSearch={search}
         />
       </Item>
       <div className={styles.method}>
