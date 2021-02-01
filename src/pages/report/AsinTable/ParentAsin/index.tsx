@@ -184,7 +184,7 @@ const ChildAsin: React.FC<IProps> = props => {
 
   useEffect(() => {
     if (tabValue === 'parent') {
-      requestFn();
+      requestFn({ current: 1, size: 20 });
       getParentPreference();
     }
   }, [tabValue, requestFn, getParentPreference]);
@@ -196,7 +196,11 @@ const ChildAsin: React.FC<IProps> = props => {
   }, [visibleCustom]);
 
   // 搜索框
-  const changeSearch = (val: string) => {
+  const changeSearch = (val: string, event: any) => { // eslint-disable-line
+    if (val === '' && 'button' in event && event.target.className === 'ant-input') {
+      // console.log('点击删除图标不筛选');
+      return;
+    }
     requestFn({ search: val, size: pageSize });
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Iconfont } from '@/utils/utils';
 import moment from 'moment';
 import {
@@ -48,13 +48,19 @@ const Monitor: React.FC = () => {
   const [frequencyState, setFrequencyState] = useState<boolean>(false);
   const [flag, setFlag] = useState<boolean>(false); // 重新渲染的state
 
-
-  // 初始化参数
-  useEffect(() => {
+  const request = useCallback((params = { current: 1, size: 20 }) => {
     if (Number(currentShop.id) === -1) {
       return;
     }
     setDataSource([]);
+
+    let payload = {
+      headersParams: {
+        StoreId: currentShop.id,
+      },
+    };
+
+    payload = Object.assign({}, payload, params);
 
     setLoading(true);
     new Promise((resolve, reject) => {
@@ -62,13 +68,7 @@ const Monitor: React.FC = () => {
         type: 'tomMonitor/getMonitorList',
         resolve,
         reject,
-        payload: {
-          headersParams: {
-            StoreId: currentShop.id,
-          },
-          current,
-          size,
-        },
+        payload,
       });
     }).then(datas => {
       setLoading(false);
@@ -94,12 +94,14 @@ const Monitor: React.FC = () => {
         setTotal(0);
       }
     });
-  }, [currentShop, dispatch, current, size, flag]);
+  }, [dispatch, currentShop]);
 
-  // 搜索框回调
-  const searchCallback = () => {
-    setFlag(!flag);
-  };
+
+  // 初始化参数
+  useEffect(() => {
+    request();
+  }, [request, flag]);
+
 
   const columns = [
     {
@@ -209,8 +211,7 @@ const Monitor: React.FC = () => {
     showQuickJumper: true, // 快速跳转到某一页
     showTotal: (total: number) => `共 ${total} 个`,
     onChange(current: number, size: number | undefined){
-      setCurrent(current);
-      setSize(size as number);
+      request({ current, size });
     },
     onShowSizeChange(current: number, size: number | undefined){
       setCurrent(current);
@@ -250,7 +251,7 @@ const Monitor: React.FC = () => {
       <PageTitleRightInfo functionName="跟卖监控"/>
       <header className={styles.head}>
         <PageTitleRightInfo functionName="跟卖监控"/>
-        <AutoComplete successCallback={searchCallback}/>
+        <AutoComplete successCallback={() => setFlag(!flag)}/>
 
         <div className={styles.btns}>
           <Remind flag={remindState} cb={handleFrequency} />

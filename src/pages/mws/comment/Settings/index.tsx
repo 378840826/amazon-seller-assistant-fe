@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
 import { DownOutlined } from '@ant-design/icons';
 import { Link, useDispatch, useSelector } from 'umi';
-import { Iconfont, storage } from '@/utils/utils';
+import { Iconfont } from '@/utils/utils';
 import Complete from './components/Complete';
 import TableNotData from '@/components/TableNotData';
 import MySwitch from './components/MySwitch';
@@ -33,7 +33,6 @@ const Settings: React.FC = () => {
   const [pageCurrent, setPageCurrent] = useState<number>(1); // 分页当前页
   const [pageSize, setPageSize] = useState<number>(20); // 分页默认大小
   const [tableLoadingStatus, setTableLoadingStatus] = useState<boolean>(true); // 表格是否显示loading
-  const [currentShop, setCurrentShop] = useState<CommectMonitor.ICurrentShopType>(storage.get('currentShop')); // 当前选中店铺
   const [oneStar, setOneStar] = useState<boolean>(true); // 提醒星级设置1星
   const [twoStar, setTwoStar] = useState<boolean>(true); // 提醒星级设置2星
   const [threeStar, setThreeStar] = useState<boolean>(false); // 提醒星级设置3星
@@ -47,26 +46,29 @@ const Settings: React.FC = () => {
     setStartIsVisible(flag);
   };
 
-  useEffect(() => {
+  const request = useCallback((params = { current: 1, size: 20 }) => {
     if (current.id === '-1') {
       return;
     }
-    setTableLoadingStatus(true);
-    setCurrentShop(current as CommectMonitor.ICurrentShopType);
-    const headersParams = {
-      StoreId: current.id,
+    let payload = {
+      headersParams: {
+        StoreId: current.id,
+      },
     };
+
+    payload = Object.assign({}, payload, params);
+    setTableLoadingStatus(true);
     dispatch({
       type: 'commectSettings/getCommectMonitorSetList',
-      payload: {
-        data: {
-          current: pageCurrent,
-          size: pageSize,
-          headersParams,
-        },
-      },
+      payload,
     });
-  }, [dispatch, pageCurrent, pageSize, current]);
+  }, [dispatch, current]);
+
+  useEffect(() => {
+    request();
+    console.log('?????');
+    
+  }, [request]);
 
   // 获取星级提醒
   useEffect(() => {
@@ -387,11 +389,7 @@ const Settings: React.FC = () => {
     showSizeChanger: true,
     showTotal: (total: number) => `共 ${total} 个`,
     onChange(current: number, size: number | undefined){
-      setPageCurrent(current);
-      setPageSize(size as number);
-    },
-    onShowSizeChange(current: number, size: number | undefined){
-      console.log(current, size,);
+      request({ current, size });
     },
     className: 'h-page-small',
   };

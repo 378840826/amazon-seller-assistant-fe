@@ -42,7 +42,7 @@ const statusList = [
   },
 ];
 
-let shopCount = 0; // 店铺切换的条件
+const shopCount = 0; // 店铺切换的条件
 // 给父组件的数据
 const fields = {} as CommectMonitor.IMonitorToolBarFieldsType; 
 const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
@@ -92,28 +92,28 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     gather({ stars: list });
   };
 
-  // 店铺切换时、回到初始状态
-  useEffect(() => {
-    if (shopCount > 1) {
-      const list = [
-        options[0].value, 
-        options[1].value,
-        options[2].value,
-      ];
-      setRadioStar(list);
-      setAsin('');
-      setScopeMin('');
-      setScopeMax('');
-      setDatepickerValue([
-        moment().subtract(29, 'days'),
-        moment(),
-      ]);
-      setReviewsNumMin('');
-      setReviewsNumMax('');
-    } else {
-      shopCount++;
-    }
-  }, [current]);
+  // // 店铺切换时、回到初始状态
+  // useEffect(() => {
+  //   if (shopCount > 1) {
+  //     const list = [
+  //       options[0].value, 
+  //       options[1].value,
+  //       options[2].value,
+  //     ];
+  //     setRadioStar(list);
+  //     setAsin('');
+  //     setScopeMin('');
+  //     setScopeMax('');
+  //     setDatepickerValue([
+  //       moment().subtract(29, 'days'),
+  //       moment(),
+  //     ]);
+  //     setReviewsNumMin('');
+  //     setReviewsNumMax('');
+  //   } else {
+  //     shopCount++;
+  //   }
+  // }, [current]);
 
   // asin输入框
   const changeAsin = (e: React.ChangeEvent<HTMLInputElement>): void => {
