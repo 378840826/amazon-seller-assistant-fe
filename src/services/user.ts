@@ -122,3 +122,9 @@ export function resentEmail(params: IResentEmail){
     data: params,
   });
 }
+export function unbindWechart(params: API.IParams){
+  return request('/api/system/user/unbind-wechat', {
+    method: 'POST',
+    ...params,
+  });
+}

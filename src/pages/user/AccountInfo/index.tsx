@@ -27,7 +27,7 @@ const AccountInfo = () => {
   const dispatch = useDispatch();
   const [state, setState] = useState({
     loading: false, //提交按钮是否处于loading状态
-    active: true, //是否处于激活状态
+    active: false, //是否处于激活状态
   });
 
   const onResentEmail = () => {
@@ -77,8 +77,9 @@ const AccountInfo = () => {
             }));
             return;
           }
+        } else {
+          message.error(res.message);
         }
-        message.error(res.message);
         setState((state) => ({
           ...state,
           loading: false,

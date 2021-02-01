@@ -25,7 +25,8 @@ const WeChat: React.FC<IConnectProps> = () => {
         appid: 'wxea22122e145d648c', 
         scope: 'snsapi_login', 
         // eslint-disable-next-line @typescript-eslint/camelcase
-        redirect_uri: 'http://dev.workics.cn/api/system/user/wechat-login',
+        redirect_uri: `${location.origin}/api/system/user/wechat-login`,
+        // redirect_uri: `http://dev.workics.cn/api/system/user/wechat-login`,
         state: `${ (new Date()).getTime()}`,
         style: 'black',
         href: hrefStyle,
