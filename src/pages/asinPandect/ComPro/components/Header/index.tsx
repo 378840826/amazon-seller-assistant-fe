@@ -1,10 +1,11 @@
-import React, { useState, useEffect, ReactText } from 'react';
+import React, { useState, useEffect, ReactText, useRef } from 'react';
 import styles from './index.less';
 import { connect } from 'umi';
 import { toUrl } from '@/utils/utils';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import CustomList from '../CustomList';
 import AddFilter from '../AddFilter';
+import { initial } from '../../../models/comPro';
 import SeniorFilter from '../SeniorFilter';
 import { Input,
   Button, 
@@ -31,8 +32,8 @@ interface IHeader extends IConnectProps{
   send: API.IParams;
   selectedRows: ReactText[];
   asin: string;
-  callFetchList: () => void;
 }
+// const ForwardChild = forwardRef(SeniorFilter);
 
 const Header: React.FC<IHeader> = ({ 
   dispatch, 
@@ -40,12 +41,13 @@ const Header: React.FC<IHeader> = ({
   tableLoading,
   send,
   selectedRows,
-  callFetchList,
   asin }) => {
-  const searchTerms = send.data.searchTerms;
-  const switchStatus = send.data.switchStatus;
+  const searchTerms = send.searchTerms;
+  const switchStatus = send.switchStatus;
   const { id: StoreId, storeName, marketplace } = currentShop;
   const [form] = Form.useForm();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const childRef = useRef<any>(null);
   const [state, setState] = useState({
     filterOpen: false, //高级筛选是否打开
     addOpen: false, //添加竞品是否打开
@@ -85,6 +87,7 @@ const Header: React.FC<IHeader> = ({
   }, [dispatch, StoreId]);
 
   const toggleEvent = (key: string) => {
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const calc = (state: any) => {
       const obj = { ...state, [key]: !state[key] };
@@ -92,6 +95,12 @@ const Header: React.FC<IHeader> = ({
         Object.assign(obj, { 'addOpen': false });
       }
       if (key === 'addOpen') {
+        if (obj[key] === false){
+          dispatch({
+            type: 'comPro/updateSelected',
+            payload: [],
+          });
+        }
         Object.assign(obj, { 'filterOpen': false });
       }
       return obj;
@@ -128,34 +137,13 @@ const Header: React.FC<IHeader> = ({
     if (value === searchTerms) {
       return; 
     }
-    setState((state) => ({
-      ...state,
-      filterOpen: false,
-      addOpen: false,
-    }));
+    childRef.current?.clear();
     dispatch({
       type: 'comPro/updateSend',
       payload: {
-        query: { ...send.query },
-        data: {
-          ...send.data,
-          searchTerms: value,
-          acKeywordStatus: 'all',
-          deliveryMethod: 'all',
-          dateStart: '',
-          dateEnd: '',
-          scopeMin: '',
-          scopeMax: '',
-          reviewsCountMin: '',
-          reviewsCountMax: '',
-          priceMin: '',
-          priceMax: '',
-          sellerNumMin: '',
-          sellerNumMax: '',
-          variantNumMin: '',
-          variantNumMax: '',
-          rankingMin: '',
-        },
+        ...initial,
+        searchTerms: value,
+        switchStatus: send.switchStatus,
       },
     });
 
@@ -167,8 +155,7 @@ const Header: React.FC<IHeader> = ({
     dispatch({
       type: 'comPro/updateSend',
       payload: {
-        query: { ...send.query },
-        data: { ...send.data, switchStatus: value },
+        switchStatus: value, 
       },
     });
   };
@@ -179,14 +166,36 @@ const Header: React.FC<IHeader> = ({
       downLoading: true,
     }));
     
-    fetch(`/api/mws/competitive-products/monitoring-settings/export${toUrl(send.query)}`, {
+    fetch(`/api/mws/competitive-products/monitoring-settings/export${toUrl({
+      size: send.size,
+      current: send.current,
+      order: send.order,
+      asc: send.asc,
+    })}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'StoreId': StoreId,
       },
       body: JSON.stringify({
-        ...send.data,
+        searchTerms: send.searchTerms, 
+        switchStatus: send.switchStatus,
+        acKeywordStatus: send.acKeywordStatus,
+        deliveryMethod: send.deliveryMethod,
+        dateStart: send.dateStart,
+        dateEnd: send.dateEnd,
+        scopeMin: send.scopeMin,
+        scopeMax: send.scopeMax,
+        reviewsCountMin: send.reviewsCountMin,
+        reviewsCountMax: send.reviewsCountMax,
+        priceMin: send.priceMin,
+        priceMax: send.priceMax,
+        sellerNumMin: send.sellerNumMin,
+        sellerNumMax: send.sellerNumMax,
+        variantNumMin: send.variantNumMin,
+        variantNumMax: send.variantNumMax,
+        rankingMin: send.rankingMin,
+        rankingMax: send.rankingMax,
         asin,
         ids: selectedRows,
       }),
@@ -221,10 +230,10 @@ const Header: React.FC<IHeader> = ({
           }}
         >
           <Form.Item name="frequency">
-            <Radio.Group>
+            <Radio.Group className={styles.__radio_group}>
               <Radio value={1}>每天1次</Radio>
               <Radio value={3}>每3天1次</Radio>
-              <Radio value={7}>每7天1次</Radio>
+              <Radio className={styles.__radio7} value={7}>每7天1次</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item>
@@ -240,10 +249,7 @@ const Header: React.FC<IHeader> = ({
         </Form>
       </div> : ''}
     </>
-    
-    
   );
-  
   return (
     <div className={styles.header_container}>
       <div className={styles.header_container_first}>
@@ -266,7 +272,7 @@ const Header: React.FC<IHeader> = ({
                     required={false}
                   >
                     <Search 
-                      size="middle" 
+                      size="middle"
                       allowClear
                       className="__search_input"
                       placeholder="输入标题、ASIN、品牌或卖家名称" 
@@ -333,9 +339,12 @@ const Header: React.FC<IHeader> = ({
           </Row>
         </Form>
       </div>
-      {state.filterOpen ? <SeniorFilter tableLoading={tableLoading}/> : ''}
+      <SeniorFilter
+        ref ={childRef} 
+        open={state.filterOpen} 
+        tableLoading={tableLoading}
+        toggleEvent={() => toggleEvent('filterOpen')}/>
       {state.addOpen ? <AddFilter 
-        callFetchList = {() => callFetchList()}
         toggleEvent={() => toggleEvent('addOpen')}/> : ''}
       
     </div>

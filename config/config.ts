@@ -23,11 +23,12 @@ const config =  {
   ignoreMomentLocale: true,
   favicon: '/favicon.ico',
   title: '安知助手',
-  // mock: false,
+  mock: false,
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',
       'changeOrigin': true,
+        secure: false,   
       // 'pathRewrite': { '^/api' : '' },
     },
     // 竞品设定的

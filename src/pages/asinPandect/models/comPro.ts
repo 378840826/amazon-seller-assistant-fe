@@ -38,6 +38,31 @@ export interface IComProState{
   errorMsg: string;//表格请求错误时返回的错误信息- 添加竞品
 }
 
+export const initial = {
+  size: 20,
+  current: 1,
+  order: '',
+  asc: false,
+  searchTerms: '',
+  // asin: '', //asin自己传入
+  switchStatus: 'all',
+  acKeywordStatus: 'all',
+  deliveryMethod: 'all',
+  dateStart: '',
+  dateEnd: '',
+  scopeMin: '',
+  scopeMax: '',
+  reviewsCountMin: '',
+  reviewsCountMax: '',
+  priceMin: '',
+  priceMax: '',
+  sellerNumMin: '',
+  sellerNumMax: '',
+  variantNumMin: '',
+  variantNumMax: '',
+  rankingMin: '',
+  rankingMax: '',
+};
 
 const ComPro: IComProType = {
   namespace: 'comPro',
@@ -61,34 +86,7 @@ const ComPro: IComProType = {
       'acKeyword',
       'relatedKeywords',
     ],
-    send: {
-      query: {
-        size: 20,
-        current: 1,
-        order: '',
-        asc: false,
-      },
-      data: {
-        searchTerms: '',
-        // asin: '', //asin自己传入
-        switchStatus: 'all',
-        acKeywordStatus: 'all',
-        deliveryMethod: 'all',
-        dateStart: '',
-        dateEnd: '',
-        scopeMin: '',
-        scopeMax: '',
-        reviewsCountMin: '',
-        reviewsCountMax: '',
-        priceMin: '',
-        priceMax: '',
-        sellerNumMin: '',
-        sellerNumMax: '',
-        variantNumMin: '',
-        variantNumMax: '',
-        rankingMin: '',
-      },
-    },
+    send: initial,
     selectedRows: [],
     selectedList: [],
     allData: [],
@@ -193,10 +191,11 @@ const ComPro: IComProType = {
     updateRows(state, { payload }){
       state.selectedRows = payload;
     },
-    updateSend(state, { payload }){
-      if (payload.query && payload.query.asc){
-        payload.query.asc = payload.query.asc === 'ascend' ? true : false;
+    updateSend(state, { payload = {} }){
+      if (payload.asc){
+        payload.asc = payload.asc === 'ascend' ? true : false;
       }
+      console.log(JSON.stringify(state.send), JSON.stringify(payload));
       state.send = { ...state.send, ...payload };
     },
     modifyLoading(state, { payload }){

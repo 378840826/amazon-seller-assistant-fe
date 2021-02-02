@@ -17,6 +17,20 @@
             margin-right: 0;
           }
         }
+
+        .__delivery_group {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+
+          label {
+            &:nth-last-child(1) {
+              span + span {
+                padding-right: 0;
+              }
+            }
+          }
+        }
       }
 
       .__radio_group {
@@ -59,6 +73,10 @@
         .ant-form-item-control-input-content {
           justify-content: flex-end !important;
         }
+      }
+
+      .__cancel {
+        margin-right: 15px;
       }
     }
 

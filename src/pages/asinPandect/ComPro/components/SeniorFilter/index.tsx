@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
 import { Form, Radio, Input, Button, DatePicker } from 'antd';
+import { useDispatch } from 'umi';
 import styles from './index.less';
 import moment from 'moment';
-import { connect } from 'umi';
 import {
   strToMoneyStr,
   strToNaturalNumStr,
   strToReviewScoreStr,
 } from '@/utils/utils';
-import { IConnectState, IConnectProps } from '@/models/connect';
 import classnames from 'classnames';
 const deliveryList = [
   { name: '不限', value: 'all' },
@@ -48,6 +47,9 @@ const rangeList = {
     moment().endOf('day'),
   ],
 };
+const RangePickerProps: API.IParams = {
+  ranges: rangeList,
+};
 const ItemLayout = {
   labelCol: { span: 5, offset: 0 },
   wrapperCol: { span: 19, offset: 0 },
@@ -58,16 +60,28 @@ const acLayout = {
 };
 const { RangePicker } = DatePicker;
 
-interface ISeniorFilter extends IConnectProps{
+interface ISeniorFilter{
   tableLoading: boolean;
-  send: API.IParams;
+  open: boolean;
+  toggleEvent: () => void;
 }
-const SeniorFilter: React.FC<ISeniorFilter> = ({ tableLoading, dispatch, send }) => {
-  const [form] = Form.useForm();
-  const RangePickerProps: API.IParams = {
-    ranges: rangeList,
-  };
 
+//ForwardRefRenderFunction<ISeniorFilter>
+const SeniorFilter = (props: ISeniorFilter,
+  ref: ((instance: unknown) => void) | React.RefObject<unknown> | null | undefined) => {
+  const { 
+    tableLoading, 
+    open,
+    toggleEvent,
+  } = props;
+  
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  
+  //取消按钮点击
+  const onCancelFilter = () => {
+    toggleEvent();
+  };
   const filterFinish = (value: API.IParams) => {
     const sendFilter: API.IParams = {};
     Object.keys(value).map( item => {
@@ -82,16 +96,11 @@ const SeniorFilter: React.FC<ISeniorFilter> = ({ tableLoading, dispatch, send })
       } else {
         sendFilter[item] = value[item] === undefined ? '' : value[item];
       }
-      
     });
-    const data = {
-      ...send.data,
-      ...sendFilter,
-    };
     dispatch({
       type: 'comPro/updateSend',
       payload: {
-        data,
+        ...sendFilter,
       },
     });
   };
@@ -100,6 +109,13 @@ const SeniorFilter: React.FC<ISeniorFilter> = ({ tableLoading, dispatch, send })
   const onClear = () => {
     form.resetFields();
   };
+
+  //父组件调用子组件的方法
+  useImperativeHandle(ref, () => ({
+    clear: () => {
+      onClear();
+    },
+  }));
 
   // 限定输入框的值
   const defineType = (value: string, type: AsinTable.IDefineType): string => {
@@ -117,7 +133,7 @@ const SeniorFilter: React.FC<ISeniorFilter> = ({ tableLoading, dispatch, send })
 
 
   return (
-    <div className={styles.__filter}>
+    <div className={styles.__filter} style={{ display: open ? 'block' : 'none' }}>
       <Form 
         className={styles.__form}
         name="form"
@@ -134,7 +150,7 @@ const SeniorFilter: React.FC<ISeniorFilter> = ({ tableLoading, dispatch, send })
           {...ItemLayout}
           className={classnames(styles.common_width, styles.delivery_checkbox)}
         >
-          <Radio.Group>
+          <Radio.Group className={styles.__delivery_group}>
             {
               deliveryList.map((item, index) => {
                 return (
@@ -263,17 +279,20 @@ const SeniorFilter: React.FC<ISeniorFilter> = ({ tableLoading, dispatch, send })
           </Radio.Group>
         </Form.Item>
         <Form.Item className={classnames(styles.common_width, styles.reset_btn)}>
-          <Button type="link" onClick={onClear}>清空</Button>
+          <Button 
+            className={styles.__cancel}
+            onClick = {onCancelFilter}
+          >取消</Button>
           <Button 
             type="primary" 
             htmlType="submit"
             loading={tableLoading}
           >筛选</Button>
+          <Button type="link" onClick={onClear}>清空</Button>
         </Form.Item>
       </Form>
     </div>
   );
 };
-export default connect(({ comPro }: IConnectState) => ({
-  send: comPro.send,
-}))(SeniorFilter) ;
+
+export default React.forwardRef(SeniorFilter);

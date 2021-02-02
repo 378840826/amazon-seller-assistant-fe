@@ -5,19 +5,21 @@
 
   :global {
     .ReactVirtualized__Table__headerRow {
-      background-color: @table-header-bg;
+      background-color: #f3f3f3;
+      border-left: 1px solid #e5e5e5;
     }
 
     .ReactVirtualized__Table__Grid {
       outline: none;
-      border-left: 1px solid #e5e5e5;
-      border-right: 1px solid #e5e5e5;
-      border-bottom: 1px solid #e5e5e5;
     }
 
     .ReactVirtualized__Table__row {
       &:hover {
-        background-color: @table-header-bg;
+        background-color: @simple-table-header-bg;
+      }
+
+      & + .ReactVirtualized__Table__row {
+        border-top: 1px solid @simple-table-header-bg;
       }
     }
   }

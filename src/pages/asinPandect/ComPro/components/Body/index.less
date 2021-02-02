@@ -1,5 +1,5 @@
 .table_container {
-  padding-top: 20px;
+  padding-top: 14px;
   padding-left: 20px;
   padding-right: 20px;
 
@@ -16,11 +16,36 @@
     }
   }
 
+  .__brand {
+    padding-left: 10px !important;
+  }
+
   .__table_all {
     :global {
       .ant-table-container {
         border: 1px solid @divider-line-color;
+
+        .ant-table-thead {
+          tr:nth-child(1) {
+            th {
+              text-align: center;
+              color: @text-color;
+            }
+          }
+        }
       }
+    }
+  }
+
+  .__text_left {
+    text-align: left;
+  }
+
+  .__myOwn {
+    background-color: #f3f3f3;
+
+    .__switch_own {
+      color: @heading-color;
     }
   }
 
@@ -57,13 +82,14 @@
 
   .price_container {
     display: flex;
+    text-align: right;
 
     .right {
-      width: 27px;
+      width: 19px;
     }
 
     .left {
-      width: calc(100% - 27px);
+      width: calc(100% - 19px);
     }
   }
 
@@ -82,21 +108,24 @@
   }
 
   .__price {
-    padding-right: 12px !important;
+    padding-right: 19px !important;
+    text-align: right;
   }
 
   .__rank {
-    padding-left: 12px !important;
+    padding-left: 19px !important;
   }
 
   .rank_container {
+    text-align: left;
+
     .first_floor {
       .orange {
         color: #ff9200;
       }
 
       .text {
-        margin-left: 4px;
+        margin-left: 8px;
       }
     }
 
@@ -106,13 +135,13 @@
       }
 
       .change {
-        margin-left: 4px;
+        margin-left: 8px;
       }
     }
 
     :global {
       .null_bar + .null_bar {
-        margin-left: 4px;
+        margin-left: 8px;
       }
     }
   }

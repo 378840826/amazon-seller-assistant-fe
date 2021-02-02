@@ -21,6 +21,27 @@ interface ISingleItem{
     reviewCount: string;
     ranking: string;
   }
+  // interface IGetHeight {
+  //   dataLength: number;
+  //   headerHeight: number;
+  //   rowHeight: number;
+  //   maxHeight: number;
+  // }
+const getHeight = ({ dataLength = 0, 
+  headerHeight = 0, 
+  rowHeight = 0,
+  maxHeight = 0 }) => {
+  if (dataLength > 0){
+    const height = headerHeight + rowHeight * dataLength;
+    if (height > maxHeight) {
+      return maxHeight;
+    }
+    return height;
+    
+  }
+  return headerHeight * 2;
+  
+};
 const TableVirtual: React.FC<ITableVirtual> = ({
   typeDelete = false,
   filterData,
@@ -47,11 +68,19 @@ const TableVirtual: React.FC<ITableVirtual> = ({
   };
 
   const tableConfig = typeDelete ? {
-    height: selectedData.length === 0 ? 88 : 220,
+    height: getHeight({
+      dataLength: selectedData.length,
+      headerHeight: 44,
+      rowHeight: 46,
+      maxHeight: 257 }),
     rowCount: selectedData.length,
     rowGetter: ({ index }: {index: number}) => selectedData[index],
   } : {
-    height: filterData.length === 0 ? 88 : 220,
+    height: getHeight({
+      dataLength: filterData.length,
+      headerHeight: 44,
+      rowHeight: 46,
+      maxHeight: 257 }),
     rowCount: filterData.length,
     rowGetter: ({ index }: {index: number}) => filterData[index],
   };
