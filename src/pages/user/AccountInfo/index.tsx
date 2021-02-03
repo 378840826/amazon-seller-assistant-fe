@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Input, message } from 'antd'; 
 import logo from '@/assets/logo.png';
 import styles from './index.less';
+import { getUrlParam } from '@/utils/utils';
 import GlobalFooter from '@/components/GlobalFooter';
 import { validate } from '@/utils/utils';
 import { useDispatch } from 'umi';
@@ -29,7 +30,9 @@ const AccountInfo = () => {
     loading: false, //提交按钮是否处于loading状态
     active: false, //是否处于激活状态
   });
+  const openId = getUrlParam('openId');
 
+  
   const onResentEmail = () => {
     dispatch({
       type: 'user/resentEmail',
@@ -48,11 +51,17 @@ const AccountInfo = () => {
 
   const onFinish = (value: {email: string; password: string}) => {
     Object.assign(status, { ...value });
+    
+    setState((state) => ({
+      ...state,
+      loading: true,
+    }));
     dispatch({
       type: 'user/login',
       payload: {
         email: value.email,
         password: value.password,
+        openId,
         rememberMe: false,
       },
       callback: (res: {code: number; data: {action: string};message: string }) => {
