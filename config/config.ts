@@ -24,6 +24,9 @@ const config =  {
   favicon: '/favicon.ico',
   title: '安知助手',
   mock: false,
+  devServer:{
+    host:'localhost.charlesproxy.com'
+  },
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',

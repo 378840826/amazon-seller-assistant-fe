@@ -2,7 +2,9 @@ import { message } from 'antd';
 import { IModelType } from './connect';
 import { queryCurrent, modifyUsername, modifyPwd, 
   emailExist, sendForgetEmail, activeEmail, 
-  resetPwd, userNameExist, preLogin, login, logout, resentEmail } from '@/services/user';
+  resetPwd, userNameExist, preLogin, login, 
+  logout, resentEmail,
+  unbindWechart } from '@/services/user';
 
 export interface IUserModelState {
   currentUser: API.ICurrentUser;
@@ -19,6 +21,7 @@ const UserModel: IUserModelType = {
   state: {
     currentUser: {
       id: -1,
+      openId: '',
       username: '',
       email: '',
       phone: '',
@@ -121,8 +124,15 @@ const UserModel: IUserModelType = {
         message.error(response.message);
       }
     },
+    *unbindWechart({ payload, callback }, { call, put }){
+      const response = yield call(unbindWechart, payload);
+      callback && callback(response);
+      yield put({
+        type: 'modifyOpenId',
+        payload: '',
+      });
+    },
   },
-
   reducers: {
     saveCurrentUser(state, { payload, callback }) {
       state.currentUser = payload.data || {};
@@ -143,6 +153,10 @@ const UserModel: IUserModelType = {
           return;
         }
       }
+    },
+    //修改状态
+    modifyOpenId(state, { payload }){
+      state.currentUser.openId = payload;
     },
   },
 };

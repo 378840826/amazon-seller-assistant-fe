@@ -86,10 +86,10 @@ export default {
   'POST /api/system/user/login': (_: Request, res: Response) => {
     setTimeout(() => {
       res.send({
-        code: 200,
+        code: 500,
         message: '错误的其他',
         data: {
-          action: 'login',
+          action: 'register',
           user: {
             id: 1,
             username: 'kfjdkf',

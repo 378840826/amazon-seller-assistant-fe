@@ -23,6 +23,7 @@ export default [
       { path: '/users/password/forgot', component: './user/ResetPwd', title: '设置新密码' },
       { path: '/users/send-email', component: './user/SendEmail', title: '密码重置' },
       { path: '/users/active', component: './user/Active', title: '激活' },
+      { path: '/users/account-info', component: './user/AccountInfo', title: '填写账号信息' },
     ],
   },
 

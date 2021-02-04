@@ -23,7 +23,6 @@ const RegSuc: React.FC<IRegConnectProps> = ({ emailSite, onResentEmail }) => {
           return number;
         }
         return number - 1;
-
       });
     }, 1000);
   };
@@ -31,7 +30,7 @@ const RegSuc: React.FC<IRegConnectProps> = ({ emailSite, onResentEmail }) => {
   
   return (
     <div className={styles.regSuccess}>
-      <div className={styles.info}>
+      <div className={[styles.info, '__info'].join(' ')}>
         <img src={activeEmail} alt="激活"/>
         <div className={styles.emailInfo}>
           注册成功，请<a href={emailSite} rel="noopener noreferrer" target="_blank">前往邮箱</a>进行激活  
@@ -42,7 +41,6 @@ const RegSuc: React.FC<IRegConnectProps> = ({ emailSite, onResentEmail }) => {
         {!countDown && 
           <span className={styles.resent} onClick={onResent}>重新发送</span>
         }
-
         {countDown && 
         <span className={styles.countDown}> {number}秒后重新发送 </span>
         }
