@@ -183,6 +183,37 @@ const ComPro: IComProType = {
         message.error(response.message);
       }
     },
+    *addSelectText({ payload }, { select, put }){
+      console.log('payload:', payload);
+      /* 
+      1. asin在all中的就全部找出来，并记录obj[asin] = true,剩下的就push进去
+      */
+      const state = yield select( (all: IConnectState) => all.comPro);
+      const selectedAsin = state.selectedList.map((item: ISingleItem) => item.asin);
+      const allAsin = state.allData.map( (item: ISingleItem) => item.asin);
+      const leftAndAdd = [...new Set([...selectedAsin, ...payload])];
+      //不包含在allAsin中的asin
+      const leftAsin = leftAndAdd.filter((item: string) => !allAsin.includes(item));
+      
+      const includeArray = state.allData.filter( (item: ISingleItem) => 
+        leftAndAdd.includes(item.asin));
+      
+      leftAsin.forEach((item: string) => includeArray.push({
+        asin: item,
+        image: '',
+        price: '',
+        ranking: '',
+        reviewAvgStar: '',
+        title: '',
+        titleLink: '',
+        reviewCount: '',
+      }));
+      console.log('includeArray:', includeArray);
+      yield put({
+        type: 'updateSelected',
+        payload: includeArray,
+      });
+    },
   },
   reducers: {
     customSelectedUpdate(state, { payload }){
@@ -195,7 +226,6 @@ const ComPro: IComProType = {
       if (payload.asc){
         payload.asc = payload.asc === 'ascend' ? true : false;
       }
-      console.log(JSON.stringify(state.send), JSON.stringify(payload));
       state.send = { ...state.send, ...payload };
     },
     modifyLoading(state, { payload }){
@@ -210,6 +240,7 @@ const ComPro: IComProType = {
     updateFilter(state, { payload }){
       state.filterData = payload;
     },
+    
   },
 };
 export default ComPro;

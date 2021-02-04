@@ -32,7 +32,7 @@ const ColumnOrderInfo: React.FC<IColumnOrderProps> = ({ item }) => {
         <div className={styles.asin_sku}>
           <span className={styles.asin}>{item.asin}</span>
           <div className={styles.price_method}>
-            {item.fulfillmentChannel === '' ? 
+            {item.deliveryMethod === '' ? 
               <div className="null_bar"></div> : 
               <div className={styles[item.deliveryMethod]}>
                 {item.deliveryMethod}

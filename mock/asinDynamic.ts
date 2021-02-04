@@ -257,7 +257,7 @@ const proxy = {
       }],
     }],
   }),
-  'GET /api/mws/search-ranking/monitoring-settings/search-keyword': Mock.mock({
+  'POST /api/mws/search-ranking/monitoring-settings/search-keyword': Mock.mock({
     code: 200,
     data: {
       keywordList: ['asin', 'fdskfjdkfjdsf', 'fjdksfjdslkfjds', 'fjkdsfjkdsjf'],

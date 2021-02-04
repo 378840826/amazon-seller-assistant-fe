@@ -1,12 +1,13 @@
 import React, { useRef } from 'react';
-import { Tabs, Input, Spin, Button } from 'antd';
+import { Tabs, Input, Spin, Button, Form, Row, Col } from 'antd';
 import { connect } from 'umi';
+import BraftEditor, { EditorState } from 'braft-editor';
+import 'braft-editor/dist/index.css';
 import TableVirtual from '../TableVirtual';
 import { ISingleItem } from '../AddFilter';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { Iconfont } from '@/utils/utils';
 import classnames from 'classnames';
-import 'react-virtualized/styles.css';
 import styles from './index.less';
 const { TabPane } = Tabs;
 const { Search, TextArea } = Input;
@@ -25,39 +26,18 @@ const AddLeft: React.FC<IAddLeft> = ({
   tableLoading,
 }) => {
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const refTextarea = useRef<any>(null);
-  const onSelectText = () => {
-    if (refTextarea.current){
-      const list = refTextarea.current.state.value.split(/\n/ig).map( (item: string) => item.trim())
-        .filter((item1: string) => filterReg.test(item1)); 
-        // .filter((item1: string) => item1 !== ''); 
-     
-      const allAsin = allData.map(item => item.asin);
-      const selected: ISingleItem[] = [];
-      list.forEach( (item: string) => {
-        if (allAsin.includes(item)){
-          const list = allData.find((itemObj) => itemObj.asin === item );
-          list ? selected.push(list) : '';
-        } else {
-          selected.push({
-            asin: item,
-            image: '',
-            price: '',
-            ranking: '',
-            reviewAvgStar: '',
-            title: '',
-            titleLink: '',
-            reviewCount: '',
-          });
-        }
-      });
-      const newSet = new Set([...selectedList, ...selected]);
-      dispatch({
-        type: 'comPro/updateSelected',
-        payload: [...newSet],
-      });
-    }
+  const onSelectText = (value: {content: EditorState}) => {
+  
+    const content = value.content;
+    const contentHTML = content ? `${content.toHTML()}` : '<p></p>';
+    const htmlList = contentHTML.split(/<\/?p[^>]*>/gi);
+    const list = htmlList.map((item: string) => item.trim()).filter((item: string) => item !== '')
+      .filter((item1: string) => filterReg.test(item1));
+    console.log('list:', list);
+    dispatch({
+      type: 'comPro/addSelectText',
+      payload: [...new Set(list)],
+    });    
   };
 
   //全选
@@ -98,8 +78,6 @@ const AddLeft: React.FC<IAddLeft> = ({
                 allowClear
                 className={styles.search_input}
                 placeholder="输入标题、ASIN" 
-                //   value={state.keyword}
-                //   onChange={value => onKeywordChange(value)}
                 onSearch={(value, event) => {
                   if (!event?.['__proto__']?.type){
                     onSearch(value);
@@ -122,8 +100,19 @@ const AddLeft: React.FC<IAddLeft> = ({
         </TabPane>
         <TabPane tab="输入竞品" key="2">
           <div className={styles.select_keywords}>
-            <TextArea ref={refTextarea} placeholder="输入ASIN，每行一个" className={styles.select_textarea}/>
-            <div className={styles.__select}><Button onClick={ onSelectText}>选择</Button></div>
+            <Form onFinish={onSelectText}>
+              <Form.Item
+                name="content">
+                <BraftEditor
+                  controls={[]}
+                  contentClassName={styles.__textarea}
+                  placeholder="输入ASIN，每行一个"
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button className={styles.__submit} htmlType="submit" type="link">选择</Button>
+              </Form.Item>
+            </Form>
           </div>
         </TabPane>
       </Tabs>

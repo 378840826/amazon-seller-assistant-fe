@@ -49,7 +49,6 @@ const Body: React.FC<IBody> = ({
     title = '',
     titleLink = '',
     asin = '',
-    fulfillmentChannel = '',
     deliveryMethod = '',
     brandName = '',
     sellerName = '',
@@ -202,7 +201,6 @@ const Body: React.FC<IBody> = ({
         title: title,
         titleLink: titleLink,
         asin: asin,
-        fulfillmentChannel: fulfillmentChannel,
         deliveryMethod: deliveryMethod,
       }}/>,
       children: [{
@@ -486,7 +484,8 @@ const Body: React.FC<IBody> = ({
       }],
     },
     'relatedKeywords': {
-      title: () => <RCKeyword text={relatedKeywords}/>,
+      title: () => <div style={{ textAlign: 'left' }}>
+        <RCKeyword text={relatedKeywords}/></div>,
       children: [{
         title: '相关关键词',
         key: 'relatedKeywords',

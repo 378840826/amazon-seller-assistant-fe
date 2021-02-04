@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
-import { Input, Table, Spin } from 'antd';
+import { Input, Spin } from 'antd';
 import { connect } from 'umi';
-import { ColumnProps } from 'antd/es/table';
 import ProductInfo from '../productInfo';
 import SkuInfo from '../skuInfo';
 import classnames from 'classnames';
+import { getHeight } from '@/pages/asinPandect/ComPro/components/TableVirtual';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { Column, Table as RTable } from 'react-virtualized';
 import 'react-virtualized/styles.css';
@@ -33,42 +33,12 @@ interface IItems{
 }
 const { Search } = Input;
 
-const commonColumn: ColumnProps<API.IParams>[] = [
-  {
-    title: '商品信息',
-    align: 'center',
-    width: 340,
-    render: (record) => {
-      return (
-        <ProductInfo item={record} className={styles.__product_info}/>
-      );
-    },
-  }, {
-    title: 'SKU',
-    width: 210,
-    dataIndex: 'skuInfo',
-    key: 'skuInfo',
-    align: 'left',
-    render: (text) => {
-      return (
-        text === '' ?
-          <div className="null_bar"></div>
-          :
-          <SkuInfo item={text}/>
-      );
-    },
-  },
-];
-
 const ContainerLeft: React.FC<IContainerLeft> = ({
   StoreId,
   dispatch,
   asinChange,
 }) => {
-  const tableRef = useRef(null);
-  if (tableRef.current){
-    console.log('tableRef:', tableRef.current, tableRef.current.state.scrollbarWidth);
-  }
+
   const [state, setState] = useState<IState>({
     loading: false,
     searchTerms: '',
@@ -168,19 +138,6 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
     asinChange(asinList);
   };
 
-
-  //选中的columns
-  const checkedColumns: ColumnProps<API.IParams>[] = commonColumn.concat({
-    title: '操作',
-    align: 'center',
-    width: 50,
-    render: (record) => {
-      return (
-        <span onClick={() => onRemoveList(record)} className={styles.select_no}>删除</span>
-      );
-    },
-  });
-
   //商品信息cellRenderer
   const goodsCellRender = ({ rowData }: API.IParams) => {
     return (
@@ -204,6 +161,11 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
         <span className={styles.select_already}>已选</span>
         :
         <span className={styles.select_yes} onClick={() => onSelectList(rowData)}>选择</span>
+    );
+  };
+  const deleteCellRender = ({ rowData }: API.IParams) => {
+    return (
+      <span onClick={() => onRemoveList(rowData)} className={styles.select_no}>删除</span>
     );
   };
 
@@ -240,15 +202,19 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
           <Spin spinning={state.loading}>
             <RTable
               width={624}
-              height={ state.notSelectedList.length === 0 ? 88 : 220}
+              height={getHeight({
+                dataLength: state.notSelectedList.length,
+                headerHeight: 44,
+                rowHeight: 46,
+                maxHeight: 200,
+              })}
               headerHeight={44}
               rowHeight={46}
-              ref={tableRef}
               className={styles.__virtual_table}
               rowCount={state.notSelectedList.length}
               noRowsRenderer={noRowsRenderer}
-              rowGetter={({ index }) => state.notSelectedList[index]}
-              rowClassName={( { index }) => index % 2 === 1 ? 'darkRow' : '' }
+              rowGetter={({ index }: {index: number}) => state.notSelectedList[index]}
+              rowClassName={( { index }: {index: number}) => index % 2 === 1 ? 'darkRow' : '' }
             >
               <Column 
                 label="商品信息"
@@ -283,17 +249,45 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
               className={classnames(styles.remove_button, styles.all_button)}>删除全部</span>
           </div>
           
-          <Table
-            pagination={false}
-            rowKey="asin"
-            className={styles.table_selected}
-            dataSource={state.selectedList}
-            columns={checkedColumns}
-            scroll = {{ y: '220px' }}
-            locale={{ emptyText: 'Oops! 没有更多选中的数据啦！' }}
-            // eslint-disable-next-line react/jsx-no-duplicate-props
-            rowClassName={(_, index) => index % 2 === 1 ? 'darkRow' : ''}
-          />
+          <RTable
+            width={624}
+            height={getHeight({
+              dataLength: state.selectedList.length,
+              headerHeight: 44,
+              rowHeight: 46,
+              maxHeight: 200,
+            })}
+            headerHeight={44}
+            rowHeight={46}
+            className={styles.__virtual_table}
+            rowCount={state.selectedList.length}
+            noRowsRenderer={noRowsRenderer}
+            rowGetter={({ index }: {index: number}) => state.selectedList[index]}
+            rowClassName={( { index }: {index: number}) => index % 2 === 1 ? 'darkRow' : '' }
+          >
+            <Column 
+              label="商品信息"
+              width={346}
+              headerClassName={styles.__goods_column}
+              className={styles.__goods_body}
+              cellRenderer={goodsCellRender}
+              dataKey="asin"
+            />
+            <Column  
+              label="SKU"
+              width={213}
+              headerClassName={styles.__sku_column}
+              className={styles.__sku_body}
+              cellRenderer={skuCellRender}
+              dataKey="asin"/>
+            <Column  
+              label="操作"
+              width={50}
+              headerClassName={styles.__operator_column}
+              className={styles.__operator_body}
+              cellRenderer={deleteCellRender}
+              dataKey="asin"/>
+          </RTable>
         </div>
       </div>
     </div>
