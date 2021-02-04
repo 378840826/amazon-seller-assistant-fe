@@ -28,6 +28,7 @@ const config =  {
     '/api': {
       'target': 'http://dev.workics.cn',
       'changeOrigin': true,
+        secure: false,   
       // 'pathRewrite': { '^/api' : '' },
     },
     // 竞品设定的

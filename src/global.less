@@ -27,7 +27,17 @@ body {
   min-width: @screen-xl;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: -apple-system, BlinkMacSystemFont, arial, PingFang SC, pingFangSC-Regular, pingFangSC-Medium Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    arial,
+    PingFang SC,
+    pingFangSC-Regular,
+    pingFangSC-Medium Microsoft YaHei,
+    Source Han Sans SC,
+    Noto Sans CJK SC,
+    WenQuanYi Micro Hei,
+    sans-serif;
   // font-family: Microsoft YaHei;
   // font-family: pingFangSC-Regular, pingFangSC-Medium;
   // font-family: "pingFangSC-Regular" "pingFangSC-Medium";
@@ -332,7 +342,7 @@ a:hover {
     top: 2px;
   }
 
-  &[aria-checked=true] .ant-switch-handle {
+  &[aria-checked="true"] .ant-switch-handle {
     left: calc(100% - 18px) !important;
   }
 }
@@ -355,19 +365,22 @@ div.ant-typography {
 .h-scroll {
   overflow-y: auto;
 
-  &::-webkit-scrollbar { /* 滚动条整体样式 */
-    width: 10px;    /* 高宽分别对应横竖滚动条的尺寸 */
+  &::-webkit-scrollbar {
+    /* 滚动条整体样式 */
+    width: 10px; /* 高宽分别对应横竖滚动条的尺寸 */
     height: 10px;
   }
 
-  &::-webkit-scrollbar-thumb {/* 滚动条里面小方块 */
+  &::-webkit-scrollbar-thumb {
+    /* 滚动条里面小方块 */
     width: 10px;
     height: 30px;
     background: #c1c1c1;
     border-radius: 15px;
   }
 
-  &::-webkit-scrollbar-track { /* 滚动条里面轨道 */
+  &::-webkit-scrollbar-track {
+    /* 滚动条里面轨道 */
     background: #f1f1f1;
   }
 }
@@ -383,7 +396,7 @@ div.ant-typography {
 .null_bar {
   width: 12px;
   height: 1px;
-  background-color: #666;
+  background-color: @text-color-secondary;
   display: inline-block;
 }
 

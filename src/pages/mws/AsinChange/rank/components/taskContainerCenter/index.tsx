@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import BraftEditor, { EditorState } from 'braft-editor';
+import 'braft-editor/dist/index.css';
 import { connect } from 'umi';
 import { Iconfont } from '@/utils/utils';
 import { ColumnProps } from 'antd/es/table';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Table, Tabs, Input } from 'antd';
+import { Table, Tabs, Input, Form, Button, Row, Col } from 'antd';
 import { IConnectState, IConnectProps } from '@/models/connect';
 
 interface IContainerCenter extends IConnectProps{
@@ -22,7 +24,8 @@ interface IState{
   keyword: string;
 }
 const { TabPane } = Tabs;
-const { Search, TextArea } = Input;
+const { Search } = Input;
+
 const commonColumns: ColumnProps<API.IParams>[] = [{
   title: () => { 
     return (<div className={styles.__keyword_title}>关键词</div>) ; 
@@ -41,8 +44,6 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
   asinList,
   keywordChange,
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const refTextarea = useRef<any>(null);
   const [state, setState] = useState<IState>({
     loading: false, //建议关键词搜索loading
     searchKeyword: '',
@@ -152,6 +153,7 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
     }
   };
 
+  //建议关键词输入框内容变化
   const onKeywordChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.persist();
     setState((state) => ({
@@ -159,15 +161,17 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
       keyword: e.target.value,
     }));
   };
-  //=> 选中textarea
-  const onSelectText = () => {
-    if (refTextarea.current){
-      const list = refTextarea.current.state.value.split(/\n/ig).map( (item: string) => item.trim())
-        .filter((item1: string) => item1 !== ''); 
-      const formatList: API.IParams[] = [];
-      list.map( (item: string) => formatList.push({ title: item }));
-      selectAllMethod(formatList);
-    }
+  
+  //多行文本框输入内容变化
+  const onSelectKeywords = (value: {content: EditorState}) => {
+    const content = value.content;
+    const contentHTML = content ? `${content.toHTML()}` : '<p></p>';
+    const htmlList = contentHTML.split(/<\/?p[^>]*>/gi);
+    const filterList = htmlList.map((item: string) => item.trim()).filter((item: string) => item !== '');
+    console.log('filterList:', filterList);
+    const formatList: API.IParams[] = [];
+    filterList.map((item: string) => formatList.push({ title: item }));
+    selectAllMethod(formatList);
   };
   const unCheckedColumns: ColumnProps<API.IParams>[] = commonColumns.concat({
     title: '操作',
@@ -233,8 +237,28 @@ const ContainerCenter: React.FC<IContainerCenter> = ({
         </TabPane>
         <TabPane tab="输入关键词" key="2">
           <div className={styles.select_keywords}>
-            <TextArea ref={refTextarea} className={styles.select_textarea}/>
-            <div><span onClick={ onSelectText}>选择</span></div>
+            <Form 
+              name="select_form"
+              onFinish={onSelectKeywords}
+            >
+              <Row>
+                <Col flex={'400px'}>
+                  <Form.Item
+                    name="content">
+                    <BraftEditor
+                      controls={[]}
+                      contentClassName={styles.__textarea}
+                      placeholder="请输入关键词"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col flex={'67px'}>
+                  <Form.Item className={styles.__button_select_container}>
+                    <Button className={styles.__submit} htmlType="submit" type="link">选择</Button>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>    
           </div>
         </TabPane>
       </Tabs>

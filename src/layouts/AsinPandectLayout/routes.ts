@@ -13,6 +13,7 @@ import {
   asinPandectPpcRouter,
   asinPandectTerritoryRouter,
   asinPandectReturnRouter,
+  asinPandectComPro,
 } from '@/utils/routes';
 
 export default [
@@ -43,5 +44,9 @@ export default [
   {
     path: asinPandectReturnRouter,
     text: '退货分析',
+  },
+  {
+    path: asinPandectComPro,
+    text: '竞品监控',
   },
 ];

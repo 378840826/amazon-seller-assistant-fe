@@ -145,3 +145,86 @@ export function msMonitorAdd(params: API.IParams){
     ...params,
   });
 }
+
+//竞品监控列表
+export function cpMsList(params: API.IParams){
+  return request('/api/mws/competitive-products/monitoring-settings/list', {
+    method: 'POST',
+    ...params,
+  });
+}
+
+//监控设定频率按钮
+export function cpMsFrequency(params: API.IParams){
+  return request('/api/mws/competitive-products/monitoring-settings/frequency', {
+    method: 'GET',
+    ...params,
+  });
+}
+
+//监控频率修改
+export function cpMsFreUpdate(params: API.IParams){
+  return request('/api/mws/competitive-products/monitoring-settings/frequency-update', {
+    method: 'GET',
+    ...params,
+  });
+}
+//
+export function getACList(params: API.IParams){
+  return request('/api/mws/competitive-products/monitoring-settings/ac-data', {
+    method: 'POST',
+    ...params,
+  });
+}
+//获取各条折线图
+export function getEcharts(params: API.IParams, category: string){
+  return request(`/api/mws/competitive-products/monitoring-settings/${category}-data`, {
+    method: 'POST',
+    ...params,
+  });
+}
+//修改任务状态
+export function updateStatus(params: API.IParams){
+  return request(`/api/mws/competitive-products/monitoring-settings/update-status`, {
+    method: 'POST',
+    ...params,
+  });
+}
+//建议竞品
+export function suggestAsin(params: API.IParams){
+  return request(`/api/mws/competitive-products/monitoring-settings/suggest-asin`, {
+    method: 'POST',
+    ...params,
+  });
+}
+
+//添加asin
+export function cpAsin(params: API.IParams){
+  return request(`/api/mws/competitive-products/monitoring-settings/add-asin`, {
+    method: 'POST',
+    ...params,
+  });
+}
+//导出
+export function exportForm(params: API.IParams){
+  //?size=20&current=1&order=&asc=false
+  const query = params.params;
+  let url = ``;
+
+  if (query){
+    url += `?`;
+    Object.keys(query).forEach(item => url += `${item}=${query[item]}&`);
+    url = url.substr(0, url.length - 1);
+  }
+  
+  fetch(`/api/mws/competitive-products/monitoring-settings/export${url}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'StoreId': params.StoreId,
+    },
+    body: JSON.stringify(params.data),
+  }).then((response) => {
+    return response;
+  });
+}

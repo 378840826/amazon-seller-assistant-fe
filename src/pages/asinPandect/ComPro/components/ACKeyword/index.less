@@ -1,0 +1,42 @@
+.__clock {
+  color: @text-color-secondary;
+  margin-left: 10px;
+
+  &:hover {
+    color: @primary-color;
+  }
+}
+
+.__popOver {
+  :global {
+    .ant-popover-inner-content {
+      padding-bottom: 14px !important;
+      padding-top: 14px !important;
+    }
+  }
+
+  .__content {
+    max-height: 370px;
+    overflow: auto;
+    padding-top: 8px;
+
+    :global {
+      .ant-timeline-item-last > .ant-timeline-item-content {
+        min-height: 0 !important;
+      }
+
+      .ant-timeline-item-last {
+        padding-bottom: 0;
+      }
+    }
+
+    .__time {
+      color: @text-color-secondary;
+      font-size: @font-size-base;
+
+      & + span {
+        margin-left: 20px;
+      }
+    }
+  }
+}

@@ -1,0 +1,149 @@
+.table_container {
+  padding-top: 14px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  .color888 {
+    color: @text-color-secondary;
+  }
+
+  .__table_my {
+    border: 1px solid @divider-line-color;
+
+    .__no_data {
+      height: 44px;
+      line-height: 44px;
+    }
+  }
+
+  .__brand {
+    padding-left: 10px !important;
+  }
+
+  .__table_all {
+    :global {
+      .ant-table-container {
+        border: 1px solid @divider-line-color;
+
+        .ant-table-thead {
+          tr:nth-child(1) {
+            th {
+              text-align: center;
+              color: @text-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .__text_left {
+    text-align: left;
+  }
+
+  .__myOwn {
+    background-color: #f3f3f3;
+
+    .__switch_own {
+      color: @heading-color;
+    }
+  }
+
+  :global {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      padding: 0;
+    }
+
+    .ant-table-thead > tr > th {
+      height: 44px !important;
+    }
+
+    .ant-table-column-has-sorters {
+      .ant-table-column-sorters {
+        padding: 0;
+      }
+    }
+
+    .ant-table-cell {
+      .null_bar {
+        vertical-align: middle;
+      }
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: none;
+      height: 44px;
+    }
+  }
+
+  .__switch {
+    transform: scale(0.818);
+  }
+
+  .price_container {
+    display: flex;
+    text-align: right;
+
+    .right {
+      width: 19px;
+    }
+
+    .left {
+      width: calc(100% - 19px);
+    }
+  }
+
+  .darkRow {
+    background-color: #fafafa;
+
+    :global {
+      td {
+        background-color: #fafafa;
+      }
+    }
+  }
+
+  .column_my {
+    background-color: #f3f3f3;
+  }
+
+  .__price {
+    padding-right: 19px !important;
+    text-align: right;
+  }
+
+  .__rank {
+    padding-left: 19px !important;
+  }
+
+  .rank_container {
+    text-align: left;
+
+    .first_floor {
+      .orange {
+        color: #ff9200;
+      }
+
+      .text {
+        margin-left: 8px;
+      }
+    }
+
+    .second_floor {
+      .red {
+        color: #ff5958;
+      }
+
+      .change {
+        margin-left: 8px;
+      }
+    }
+
+    :global {
+      .null_bar + .null_bar {
+        margin-left: 8px;
+      }
+    }
+  }
+}

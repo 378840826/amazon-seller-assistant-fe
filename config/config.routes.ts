@@ -110,6 +110,7 @@ export default [
     routes: [
       { title: 'ASIN总览', path: '/asin/base', component: './asinPandect/Base' },
       { title: 'ASIN总览', path: '/asin/dt', component: './asinPandect/Dynamic' },
+      { title: 'ASIN总览', path: '/asin/com-pro', component: './asinPandect/ComPro' },
       { title: 'ASIN总览', path: '/asin/order', component: './asinPandect/Order' },
       { title: 'ASIN总览', path: '/asin/b2b', component: './asinPandect/B2B' },
       { title: 'ASIN总览', path: '/asin/ar', component: './asinPandect/Ad' },

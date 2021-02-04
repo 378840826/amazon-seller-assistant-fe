@@ -1,0 +1,97 @@
+//虚拟表格
+.__virtual_table {
+  background-color: #fff;
+  font-size: 12px;
+
+  :global {
+    .ReactVirtualized__Table__headerRow {
+      background-color: #f3f3f3;
+      border-left: 1px solid #e5e5e5;
+    }
+
+    .ReactVirtualized__Table__Grid {
+      outline: none;
+    }
+
+    .ReactVirtualized__Table__row {
+      &:hover {
+        background-color: @simple-table-header-bg;
+      }
+
+      & + .ReactVirtualized__Table__row {
+        border-top: 1px solid @simple-table-header-bg;
+      }
+    }
+  }
+
+  .__no_data {
+    color: @text-color-disabled;
+    text-align: center;
+    line-height: 44px;
+  }
+
+  .__goods_column {
+    text-align: center;
+    font-weight: normal;
+    color: @heading-color;
+    margin: 0;
+  }
+
+  .__goods_body {
+    text-align: left;
+    margin: 0;
+  }
+
+  .__sku_body {
+    text-align: center;
+  }
+
+  .__operator_body {
+    text-align: center;
+    margin-right: 0;
+  }
+
+  .__sku_column {
+    text-align: center;
+    font-weight: normal;
+    color: @heading-color;
+  }
+
+  .__operator_column {
+    text-align: center;
+    font-weight: normal;
+    color: @heading-color;
+    margin: 0;
+  }
+
+  .remove_button {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+
+  .select_yes {
+    color: @btn-text-color;
+    cursor: pointer;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  .select_already {
+    color: #bbb;
+  }
+
+  .select_no {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+}

@@ -1,0 +1,79 @@
+.header_container {
+  border-bottom: 1px solid @divider-line-color;
+
+  .header_container_first {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 14px;
+
+    .rule_form {
+      .search_container {
+        width: 305px;
+
+        .icon_sousuo {
+          font-size: 20px;
+          margin-top: 5px;
+        }
+
+        :global {
+          .__search_input {
+            .ant-btn {
+              min-width: 40px !important;
+              width: 40px;
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .button_three {
+      text-align: right;
+
+      .export {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.menu {
+  background-color: #fff;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+  width: 344px;
+  text-align: center;
+  padding-top: 16px;
+  border-radius: 4px;
+
+  .__radio_group {
+    display: flex;
+    justify-content: space-between;
+    width: 290px;
+    margin: 0 auto;
+
+    .__radio7 {
+      margin-right: 0;
+
+      span + span {
+        padding-right: 0;
+      }
+    }
+  }
+
+  .two_btn {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .save_btn {
+      margin-left: 14px;
+    }
+  }
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+}

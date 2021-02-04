@@ -16,7 +16,7 @@ const GlobalFooter: React.FC<IGlobalFooter> = (props) => {
         </p>
         <p className={styles.second}>技术支持： support@amzics.com</p>
         <p className={styles.third}>
-          Copyright 2017 - 2018 All Rights Reserved | Powered by amzics.com
+          Copyright 2017 - 2021 All Rights Reserved | Powered by amzics.com
         </p>
       </div>
     </>
