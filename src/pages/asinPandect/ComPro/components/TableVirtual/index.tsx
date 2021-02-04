@@ -21,13 +21,8 @@ interface ISingleItem{
     reviewCount: string;
     ranking: string;
   }
-  // interface IGetHeight {
-  //   dataLength: number;
-  //   headerHeight: number;
-  //   rowHeight: number;
-  //   maxHeight: number;
-  // }
-const getHeight = ({ dataLength = 0, 
+ 
+export const getHeight = ({ dataLength = 0, 
   headerHeight = 0, 
   rowHeight = 0,
   maxHeight = 0 }) => {

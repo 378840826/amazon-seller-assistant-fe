@@ -49,7 +49,7 @@ const RightFeedback: React.FC<IRightFeedback> = ({ mailContent, onAdd, StoreId,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
     const content = values.content;
-    const contentHTML = `${content.toHTML()}`;
+    const contentHTML = content ? `${content.toHTML()}` : '<p></p>';
 
     let files: UploadFile['originFileObj'][] = [];
     if (content === undefined || contentHTML === '<p></p>'){

@@ -5,7 +5,6 @@ import TableVirtual from '../TableVirtual';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import AddLeft from '../AddLeft';
 import styles from './index.less';
-import { initial } from '../../../models/comPro';
 interface IAddFilter extends IConnectProps{
     StoreId: string;
     asin: string;
@@ -27,7 +26,6 @@ const AddFilter: React.FC<IAddFilter> = ({
   dispatch, 
   StoreId,
   asin,
-  send,
   toggleEvent }) => {
   useEffect(() => {
     dispatch({
@@ -87,8 +85,7 @@ const AddFilter: React.FC<IAddFilter> = ({
     </div>
   );
 };
-export default connect(({ global, asinGlobal, comPro }: IConnectState) => ({
+export default connect(({ global, asinGlobal }: IConnectState) => ({
   StoreId: global.shop.current.id,
   asin: asinGlobal.asin,
-  send: comPro.send,
 }))(AddFilter);

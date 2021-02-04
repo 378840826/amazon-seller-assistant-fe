@@ -95,12 +95,6 @@ const Header: React.FC<IHeader> = ({
         Object.assign(obj, { 'addOpen': false });
       }
       if (key === 'addOpen') {
-        if (obj[key] === false){
-          dispatch({
-            type: 'comPro/updateSelected',
-            payload: [],
-          });
-        }
         Object.assign(obj, { 'filterOpen': false });
       }
       return obj;
@@ -108,8 +102,14 @@ const Header: React.FC<IHeader> = ({
     setState((state) => ({
       ...(calc(state)),
     }));
-   
   };
+
+  useEffect(() => {
+    dispatch({
+      type: 'comPro/updateSelected',
+      payload: [],
+    });
+  }, [state.addOpen, dispatch]);
  
   const onMenuFinish = (value: {frequency: number}) => {
     dispatch({
@@ -149,13 +149,16 @@ const Header: React.FC<IHeader> = ({
 
   };
  
-  //单选框开关切花
+  //单选框开关切换
   const changeCheckbox = (e: RadioChangeEvent) => {
     const value = e.target.value;
+    childRef.current?.clear();
     dispatch({
       type: 'comPro/updateSend',
       payload: {
-        switchStatus: value, 
+        ...initial,
+        searchTerms: send.searchTerms,
+        switchStatus: value,
       },
     });
   };
