@@ -149,7 +149,8 @@ const Body: React.FC<IBody> = ({
       }],
     },
     'currentRanking': {
-      title: () => <UpAndDown rise={rise} value={ rise ? currentRanking : -currentRanking}/>,
+      title: () => rise === '' ? <ShowData value={currentRanking} fillNumber={0}/> :
+        <UpAndDown value={rise ? currentRanking : -currentRanking}/>,
       children: [
         {
           title: () => (
@@ -163,7 +164,8 @@ const Body: React.FC<IBody> = ({
           dataIndex: 'currentRanking',
           width: 93,
           render: (text: number, record: API.IParams) => 
-            <UpAndDown rise={rise} value={ record.rise ? text : -text}/>,
+            record.rise === '' ? <ShowData value={text} fillNumber={0}/> :
+              <UpAndDown value={record.rise ? text : -text}/>,
         },
       ],
     },
@@ -181,7 +183,7 @@ const Body: React.FC<IBody> = ({
         dataIndex: 'lastRanking',
         key: 'lastRanking',
         render: (text: number, record: API.IParams) => 
-          <ShowData fillNumber={0} value={record.rise}/>,
+          <ShowData fillNumber={0} value={record.lastRanking}/>,
       }],
     },
     'monitoringNumber': {
