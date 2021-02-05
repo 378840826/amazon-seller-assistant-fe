@@ -13,7 +13,7 @@ const WeChat: React.FC<IConnectProps> = () => {
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = false;
-    script.src = 'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js';
+    script.src = 'https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js';
     document.head.appendChild(script);
 
     setTimeout(function(){
