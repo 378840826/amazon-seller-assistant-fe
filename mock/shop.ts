@@ -14,7 +14,7 @@ export default {
               sellerId: 'sellerId-1',
               token: 'amzn.mws.ecb25605-138b-62fb-56e6-83652c2b0d35',
               autoPrice: false,
-              timezone: 'America/ Los_Angeles',
+              timezone: 'America/Los_Angeles',
               currency: '$',
               tokenInvalid: false,
             }, {
@@ -24,7 +24,7 @@ export default {
               sellerId: 'sellerId-2',
               token: 'amzn.mws.ecb25605-138b-62fb-56e6-83652c2b0d35-2',
               autoPrice: true,
-              timezone: 'America/ Los_Angeles',
+              timezone: 'America/Los_Angeles',
               currency: '£',
               tokenInvalid: true,
             }, {
@@ -34,7 +34,7 @@ export default {
               sellerId: 'sellerId-3',
               token: 'amzn.mws.ecb25605-138b-62fb-56e6-83652c2b0d35-3',
               autoPrice: true,
-              timezone: 'America/ Los_Angeles',
+              timezone: 'America/Los_Angeles',
               currency: '￥',
               tokenInvalid: false,
             },
@@ -57,7 +57,7 @@ export default {
               sellerId: 'sellerId-1',
               token: 'token-1',
               autoPrice: false,
-              timezone: 'America/ Los_Angeles',
+              timezone: 'America/Los_Angeles',
               currency: '$',
               tokenInvalid: false,
             }, {
@@ -67,7 +67,7 @@ export default {
               sellerId: 'sellerId-20',
               token: 'token-2',
               autoPrice: true,
-              timezone: 'America/ Los_Angeles',
+              timezone: 'America/Los_Angeles',
               currency: '£',
               tokenInvalid: true,
             }, {
@@ -77,7 +77,7 @@ export default {
               sellerId: 'sellerId-30',
               token: 'token-3',
               autoPrice: true,
-              timezone: 'America/ Los_Angeles',
+              timezone: 'America/Los_Angeles',
               currency: '￥',
               tokenInvalid: false,
             },

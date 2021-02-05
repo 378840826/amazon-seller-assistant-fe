@@ -1,34 +1,3 @@
-.cell {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  .cellValue {
-    flex: 1;
-  }
-
-  .editableBtn {
-    float: right;
-    margin-left: 5px;
-    color: @text-color-secondary;
-  }
-
-  .ghostEditBtn {
-    display: none;
-  }
-
-  &:hover {
-    .editableBtn {
-      color: @primary-color;
-    }
-
-    .ghostEditBtn {
-      display: initial;
-    }
-  }
-}
-
 .editableContainer {
   position: relative;
 
@@ -109,6 +78,31 @@
       &::after {
         border-top: 1px solid @error-color;
       }
+    }
+  }
+}
+
+.cellValue {
+  flex: 1;
+}
+
+.editableBtn {
+  color: @text-color-secondary;
+}
+
+.editCell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  word-break: break-all;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 1px 0 #d9d9d9;
+
+    .editableBtn {
+      color: @primary-color;
     }
   }
 }

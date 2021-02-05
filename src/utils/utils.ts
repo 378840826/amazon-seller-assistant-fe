@@ -242,6 +242,21 @@ export const strToReviewScoreStr = function (value: string) {
   return newValue;
 };
 
+// 格式化区分日本站点的金额
+export const getShowPrice = function(
+  price: number | null | string, marketplace?: string, currency?: string
+) {
+  let result = '';
+  if (price !== null && price !== '' && price !== undefined) {
+    if (marketplace === 'JP') {
+      result = String(price);
+    } else {
+      result = Number(price).toFixed(2);
+    }
+  }
+  return `${currency || ''}${result}`;
+};
+
 // 复制文字
 export const copyText = function (text: string, successMsg?: string): void {
   const input = document.createElement('input');
@@ -302,6 +317,34 @@ export const storage = {
     window.localStorage.removeItem(key);
   },
 };
+
+// localstorage 方法
+export const _sessionStorage = {
+  set(key: string, value: unknown) {
+    if (typeof value === 'string') {
+      window.sessionStorage[key] = value;
+    } else {
+      window.sessionStorage[key] = JSON.stringify(value);
+    }
+  },
+
+  get(key: string) {
+    const data = window.sessionStorage[key];
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        return data;
+      }
+    }
+    return '';
+  },
+
+  remove(key: string) {
+    window.sessionStorage.removeItem(key);
+  },
+};
+
 //用户名，邮箱，密码正则
 export const validate = {
   email: /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/, //

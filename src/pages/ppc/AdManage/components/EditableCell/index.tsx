@@ -1,3 +1,7 @@
+/**
+ * 用于广告管理列表中的 广告活动 和 广告组 的显示和修改
+ * 点击名称跳转，点击编辑图标修改
+ */
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from 'antd';
 import { Iconfont } from '@/utils/utils';
@@ -5,24 +9,18 @@ import classnames from 'classnames';
 import styles from './index.less';
 
 interface IProps {
+  // 是否可编辑（归档的不能编辑）
+  unchangeable?: boolean;
   inputValue: string;
-  // 前缀和后缀
-  prefix?: React.ReactNode | string;
-  suffix?: React.ReactNode | string;
-  // 输入框输入内容约束
-  formatValueFun?: (value: string) => string;
   maxLength: number;
+  href: string;
   confirmCallback: {
     (value: string): void;
   };
-  // 编辑按钮是否默认隐藏 hover 时候再显示
-  ghostEditBtn?: boolean;
 }
 
 const EditableCell: React.FC<IProps> = (props) => {
-  const { 
-    inputValue, prefix, suffix, confirmCallback, maxLength, formatValueFun, ghostEditBtn,
-  } = props;
+  const { unchangeable, inputValue, href, confirmCallback, maxLength } = props;
   const [value, setValue] = useState<string>(inputValue);
   const [editable, setEditable] = useState<boolean>(false);
   const inputEl = useRef<Input>(null);
@@ -38,34 +36,31 @@ const EditableCell: React.FC<IProps> = (props) => {
     setValue(inputValue);
   }, [inputValue]);
 
-  const handelClickEdit = () => {
+  function handelClickEdit() {
     setEditable(true); 
-  };
+  }
 
-  const handelClickCancel = () => {
+  function handelClickCancel() {
     setEditable(false);
-  };
+  }
 
-  const handelInput = (event: { target: { value: string } }) => {
+  function handelInput(event: { target: { value: string } }) {
     const { target: { value } } = event;
-    const newValue = formatValueFun ? formatValueFun(value) : value;
-    setValue(newValue);
-  };
+    setValue(value);
+  }
 
-  const handelConfirm = () => {
+  function handelConfirm() {
     if (value !== inputValue) {
       confirmCallback(value);
     }
     setEditable(false);
-  };
+  }
 
   return (
     editable
       ? 
       <div className={styles.editableContainer}>
         <Input
-          prefix={prefix}
-          suffix={suffix}
           ref={inputEl}
           maxLength={maxLength}
           className={styles.Input}
@@ -96,15 +91,23 @@ const EditableCell: React.FC<IProps> = (props) => {
           ></button>
         </div>
       </div>
-      : 
-      <div className={styles.cell} onClick={handelClickEdit} title="点击修改">
+      :
+      <div className={styles.cell}>
         <div className={styles.cellValue}>
-          {prefix}{inputValue}{suffix}
+          <a target="_blank" rel="noreferrer" href={href}>{inputValue}</a>
         </div>
-        <Iconfont
-          className={classnames(styles.editableBtn, ghostEditBtn ? styles.ghostEditBtn : '')}
-          type="icon-xiugai"
-        />
+        {
+          unchangeable
+            ? null
+            :
+            <Iconfont
+              className={styles.editableBtn}
+              type="icon-xiugai"
+              title="点击修改"
+              onClick={handelClickEdit}
+            />
+        }
+
       </div>
   );
 };

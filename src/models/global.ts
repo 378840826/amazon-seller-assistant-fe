@@ -95,7 +95,7 @@ const GlobalModel: IGlobalModelType = {
         type: 'saveShopList',
         payload: {
           mws: mws.data.records,
-          ppc: ppc.data.records,
+          ppc: mws.data.records,
           type,
         },
       });
@@ -254,12 +254,12 @@ const GlobalModel: IGlobalModelType = {
           '/message',
           '/sub-account',
         ];
-        const isExclude = exclude.some(url => pathname.includes(url));
-        if (!isExclude) {
-          // message.destroy();
-          const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-          !pathname.includes('/shop/') && history.push(url);
-        }
+        // const isExclude = exclude.some(url => pathname.includes(url));
+        // if (!isExclude) {
+        //   // message.destroy();
+        //   const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
+        //   !pathname.includes('/shop/') && history.push(url);
+        // }
       }
     },
 
@@ -446,6 +446,7 @@ const GlobalModel: IGlobalModelType = {
         const unshownPageTitleUrl = [
           '/product/error-report',
           '/shop/bind',
+          '/ppc/manage',
           // 因 bs导入 页面标题需要特殊的样式
           '/report/import',
           '/competitor/list',

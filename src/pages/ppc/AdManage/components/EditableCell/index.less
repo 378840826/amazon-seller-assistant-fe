@@ -4,27 +4,29 @@
   justify-content: center;
   cursor: pointer;
 
+  &:hover {
+    .editableBtn {
+      display: initial;
+    }
+  }
+
   .cellValue {
     flex: 1;
+    word-break: break-all;
+
+    &:hover {
+      text-decoration-line: underline;
+    }
   }
 
   .editableBtn {
     float: right;
     margin-left: 5px;
-    color: @text-color-secondary;
-  }
-
-  .ghostEditBtn {
     display: none;
-  }
+    color: @text-color-secondary;
 
-  &:hover {
-    .editableBtn {
+    &:hover {
       color: @primary-color;
-    }
-
-    .ghostEditBtn {
-      display: initial;
     }
   }
 }
@@ -41,9 +43,7 @@
   }
 
   .btns {
-    position: absolute;
-    right: 0;
-    z-index: 1;
+    float: right;
   }
 
   .btn {

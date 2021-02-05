@@ -1,0 +1,126 @@
+.container {
+  padding: 0 20px;
+  font-size: @font-size-sm;
+
+  :global {
+    // 表头样式
+    .ant-table.ant-table-middle .ant-table-thead {
+      // 两行表头的第一行
+      tr:first-child {
+        // 表头的复选框 th
+        th:first-child {
+          padding: 0;
+        }
+      }
+
+      // 表头的复选框特殊处理（因为合计的存在）
+      .ant-table-selection {
+        &::after {
+          content: '';
+          display: block;
+          width: 100%;
+          height: 18px;
+          background: #fff;
+        }
+
+        label {
+          padding: 11px 0;
+        }
+      }
+
+      // 合计行（第二行表头）
+      tr:last-child {
+        th {
+          background: #fff;
+          padding: 0 8px;
+          height: 18px;
+          line-height: 18px;
+        }
+      }
+    }
+
+    // 因为表头合计行的存在导致固定在右边的操作列出现色块，用白色伪元素覆盖掉
+    .ant-table-cell.ant-table-cell-fix-right.ant-table-cell-scrollbar {
+      &::after {
+        position: absolute;
+        display: block;
+        content: '';
+        width: 100%;
+        height: 18px;
+        left: 0;
+        bottom: 0;
+        background: #fff;
+      }
+    }
+
+    // 复选框缩小
+    .ant-checkbox {
+      transform: scale(0.875);
+    }
+
+    .ant-table-container {
+      // 表格外边框
+      border: 1px solid @divider-line-color;
+
+      // 表格中的下拉框样式覆盖
+      .ant-select {
+        display: flex;
+        align-items: center;
+        min-width: 100%;
+        max-width: 100px;
+        font-size: @font-size-sm;
+
+        .ant-select-arrow {
+          position: relative;
+          margin: 0;
+        }
+
+        .ant-select-selection-item {
+          padding-right: 7px;
+        }
+
+        .ant-select-selector {
+          width: auto !important;
+          max-width: 100%;
+          padding: 0 7px !important;
+
+          .ant-select-selection-item {
+            padding-right: 6px !important;
+          }
+        }
+
+        .ant-select-item-option-content {
+          text-align: center;
+        }
+      }
+    }
+
+    // 需要向右偏移的表头
+    ._selectColTh {
+      padding-left: 7px;
+    }
+  }
+}
+
+:global {
+  // 下拉框的下拉菜单
+  .ant-select-dropdown {
+    max-width: 170px;
+
+    * {
+      font-size: @font-size-sm;
+    }
+
+    .ant-select-item-option-content {
+      white-space: normal;
+      word-break: break-all;
+    }
+  }
+}
+
+// 表格行 hover 时，显示编辑图标
+.tableTr:hover {
+  :global(.anticon) {
+    display: initial;
+  }
+}

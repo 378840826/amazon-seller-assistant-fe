@@ -1,0 +1,57 @@
+// Portfolio 下拉框中的新建 Portfolio
+.tableAddPortfolio {
+  padding: 6px 12px;
+  height: 100px;
+  margin-top: 16px;
+
+  input {
+    border: none;
+    padding: 0 2px;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  :global {
+    .ant-input-search {
+      margin: 10px 0;
+      border-bottom: 1px solid @border-color-base;
+    }
+
+    .ant-input-group-addon {
+      position: absolute;
+      top: 32px;
+      left: 0;
+
+      button {
+        border-radius: 4px !important;
+        color: @primary-color;
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+.tableAddPortfolioTitle {
+  text-align: left;
+  color: @heading-color;
+  margin: 0 2px;
+}
+
+// 下拉框
+.selectContainer {
+  .portfoliosSelect {
+    width: 230px;
+
+    :global {
+      .ant-select-selector {
+        border-radius: @border-radius-base 0 0 @border-radius-base;
+      }
+    }
+  }
+
+  .targetingTypeSelect {
+    width: 110px;
+  }
+}

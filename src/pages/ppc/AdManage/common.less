@@ -1,0 +1,142 @@
+// 广告管理下的公共样式
+
+.adManageContainer {
+  // 表格操作栏的按钮
+  .tableOperationBtn {
+    color: @btn-text-color;
+    font-size: @font-size-sm;
+    min-width: 30px;
+    padding: 3px;
+
+    &:hover {
+      color: @link-color;
+    }
+
+    &[disabled] {
+      color: rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+// 头部工具栏（搜索、高级筛选等）
+.head {
+  display: flex;
+  margin-bottom: 14px;
+  padding: 0 20px;
+
+  & > *:not(:last-child) {
+    margin-right: 30px;
+  }
+}
+
+// 头部工具栏下拉框
+.headSelectDropdown * {
+  font-size: @font-size-base;
+}
+
+// 高级筛选按钮
+.btnFiltrate {
+  :global(.anticon) {
+    font-size: @font-size-sm;
+  }
+}
+
+// 表格操作工具栏（表格上方的批量操作、自定义列等）
+.tableToolBar {
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 20px;
+
+  & > div {
+    display: flex;
+
+    & > *:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}
+
+// 展开图标
+.iconZhankai {
+  transform: rotate(-90deg);
+  font-size: 11px;
+  vertical-align: baseline;
+}
+
+// 批量设置状态
+.batchState {
+  display: inline-flex;
+  align-items: center;
+
+  button {
+    margin-right: 6px;
+  }
+
+  & > div {
+    margin-left: 24px;
+
+    button {
+      margin-right: 14px;
+    }
+  }
+
+  &.disabled button {
+    pointer-events: none;
+    color: @text-color-disabled;
+  }
+}
+
+// 表头疑问图标
+.iconQuestion {
+  cursor: help;
+  margin-left: 4px;
+  color: @text-color-secondary;
+
+  &:hover {
+    color: @warning-color;
+  }
+}
+
+// 二次确认弹窗
+.modalConfirm {
+  :global {
+    .ant-modal-confirm-btns button + button {
+      margin-left: 20px;
+    }
+  }
+
+  .warnIcon {
+    margin-right: 10px;
+    color: @text-color-warning;
+  }
+}
+
+// break-all 换行
+.breakAll {
+  word-break: break-all;
+}
+
+// 颜色
+.green {
+  color: @success-color;
+}
+
+.red {
+  color: @error-color;
+}
+
+// 关键词和targeting建议竞价
+.suggested button {
+  margin-left: 8px;
+  padding: 0;
+  width: 40px;
+  height: 20px;
+  min-width: 40px;
+  line-height: 20px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.selectDropdown * {
+  font-size: @font-size-base;
+}

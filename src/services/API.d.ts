@@ -117,6 +117,130 @@ declare namespace API {
     groupName: string;
   }
 
+  // 广告管理-广告活动
+  interface IAdCampaign {
+    id: string;
+    name: string;
+    state: string;
+    portfolioId: number;
+    portfolioName: string;
+    groupCount?: number;
+    type: string;
+    targetingType: string;
+    dailyBudget: number;
+    negativeTargetCount?: number;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+    biddingStrategy: string;
+    biddingPlacementTop: number;
+    biddingPlacementProductPage: number;
+    createdTime: string;
+    startTime: string;
+    endTime: string;
+  }
+
+  // 广告管理-广告活动分组
+  interface IPortfolio {
+    id: string;
+    name: string;
+  }
+
+  // 广告管理-广告组
+  interface IAdGroup {
+    id: string;
+    name: string;
+    camId: string;
+    camName: string;
+    state: string;
+    negativeTargetCount?: number;
+    targetCount: number;
+    productCount: number;
+    defaultBid: number;
+    budgetLimit: number;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+    createdTime: string;
+    startTime: string;
+    endTime: string;
+  }
+
+  // 广告管理-广告
+  interface IAd {
+    id: string;
+    name: string;
+    camId: string;
+    camName: string;
+    groupId: string;
+    groupName: string;
+    state: string;
+    qualification: string;
+    qualificationMessage: string;
+    asin: string;
+    sku: string;
+    title: string;
+    img: string;
+    addTime: string;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+  }
+
+  // 广告管理-Targeting/关键词
+  interface IAdTargeting {
+    id: string;
+    name: string;
+    camId: string;
+    camName: string;
+    groupId: string;
+    groupName: string;
+    state: string;
+    target: string;
+    expression?: string;
+    matchType: string;
+    suggested: number;
+    suggestedMin: number;
+    suggestedMax: number;
+    bid: number;
+    addTime: string;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+  }
+
   interface IInventoryReplenishmentLabels {
     id: string;
     labelName: string;
