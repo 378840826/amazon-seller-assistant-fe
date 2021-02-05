@@ -21,6 +21,7 @@ declare namespace API {
     username: string;
     email: string;
     phone: string;
+    openId: string;
     topAccount: boolean;
     memberExpirationDate: string;
     memberExpired: boolean;

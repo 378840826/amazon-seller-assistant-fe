@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, message } from 'antd';
 import { validate } from '@/utils/utils';
 import styles from './index.less';
 import { IConnectState, IConnectProps } from '@/models/connect';
@@ -19,14 +19,18 @@ const tailLayout = {
   wrapperCol: { offset: 0, span: 24 },
 };
 
+const redirectURI = `${location.origin}/api/system/user/bind-wechat`;
+// const redirectURI = `http://dev.workics.cn/api/system/user/bind-wechat`;
+
 const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
-  const curUsername = user.currentUser.username;
-  const email = user.currentUser.email;
+  const { id, username: curUsername, email, openId } = user.currentUser;
+  console.log('openid:', openId);
 
   const [reUserName, setReUserName] = useState(false);
   const [rePwd, setRePwd] = useState(false);
 
   const [loadings, setLoadings] = useState([false, false]);
+
   //用户名修改点击
   const onEditUserName = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -126,6 +130,25 @@ const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
   const buttonLoading1 = classnames({
     'buttonLoading': loadings[1],
   });
+
+  //微信解绑
+  const onRelease = () => {
+    dispatch({
+      type: 'user/unbindWechart',
+      payload: {
+        data: {
+          openId: openId,
+        },
+      },
+      callback: (res: {code: number; message: string}) => {
+        if (res.code === 200){
+          message.success(res.message);
+        } else {
+          message.error(res.message);
+        }
+      },
+    });
+  };
   
   return (
    
@@ -266,7 +289,6 @@ const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
                   </Form>
                 </div>
                 }
-
               </div>
             </div>
           </div>
@@ -274,16 +296,27 @@ const Center: React.FC<ICenterConnectProps> = ({ user, dispatch }) => {
             <div className={styles.left}>账号绑定</div>
             <div className={styles.right}>
               <div className={styles.rightContainer}>
-                <input value="QQ账号未绑定" readOnly className={styles.inputNoBorder} />
-                <div className={styles.editUserName}>修改</div>
+                { openId ? 
+                  <>
+                    <input value="微信：已绑定" readOnly className={styles.inputNoBorder} />
+                    <a href={`javascript:;`} onClick={() => onRelease()} 
+                      className={styles.editUserName}>解绑</a>
+                  </>
+                  :
+                  <>
+                    <input value="微信：未绑定" readOnly className={styles.inputNoBorder} />
+                    <a 
+                      rel="noreferrer"
+                      href={`https://open.weixin.qq.com/connect/qrconnect?appid=wxea22122e145d648c&redirect_uri=${redirectURI}&response_type=code&scope=snsapi_login&state=${id}#wechat_redirect`}
+                      target="_blank" 
+                      className={styles.editUserName}>绑定</a>
+                  </>}
               </div>
-
             </div>
           </div>
         </div>
       </div>
     </div>
-   
   );
 };
 

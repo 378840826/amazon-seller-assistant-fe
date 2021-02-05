@@ -20,7 +20,7 @@ const status = {
   code: '',
 };
 let emailSite = '';
-const regEmail = /@(\w)+((\.\w+)+)$/;
+export const regEmail = /@(\w)+((\.\w+)+)$/;
 const tabBarStyle = {
   fontSize: '16px',
 };
