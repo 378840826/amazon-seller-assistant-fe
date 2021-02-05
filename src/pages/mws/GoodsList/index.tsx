@@ -106,6 +106,7 @@ const GoodsList: React.FC = () => {
         payload: {
           headersParams: { StoreId: currentShopId },
           filtrateParams: queryParams,
+          searchParams: { current: 1 },
         },
         callback: requestErrorFeedback,
       });
