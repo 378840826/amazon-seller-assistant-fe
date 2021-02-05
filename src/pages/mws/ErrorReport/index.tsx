@@ -22,6 +22,7 @@ const ErrorReport: React.FC = () => {
         type: 'goodsList/fetchErrorReport',
         payload: {
           headersParams: { StoreId: currentShopId },
+          current: 1,
         },
         callback: requestErrorFeedback,
       });
