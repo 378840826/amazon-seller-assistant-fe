@@ -124,7 +124,7 @@ const TableVirtual: React.FC<ITableVirtual> = ({
   return (
     <RTable
       {...tableConfig}
-      width={501}
+      width={499}
       headerHeight={44}
       rowHeight={46}
       className={styles.__virtual_table}

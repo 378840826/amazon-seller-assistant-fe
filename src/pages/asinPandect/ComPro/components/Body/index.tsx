@@ -115,10 +115,12 @@ const Body: React.FC<IBody> = ({
   const commonObj = {
     monitoringSwitch: {
       title: '本商品',
+      fixed: true,
       children: [{
         title: '监控开关',
         width: 62,
         align: 'center',
+        fixed: true,
         dataIndex: 'monitoringSwitch',
         key: 'monitoringSwitch',
         render: (status: boolean, record: API.IParams) => {
@@ -139,8 +141,10 @@ const Body: React.FC<IBody> = ({
     },
     updateTime: {
       title: () => <div>{updateTime}</div>,
+      fixed: true,
       children: [{
         title: '更新时间',
+        fixed: true,
         dataIndex: 'updateTime',
         key: 'updateTime',
         align: 'center',
@@ -151,6 +155,7 @@ const Body: React.FC<IBody> = ({
     'currentRanking': {
       title: () => rise === '' ? <ShowData value={currentRanking} fillNumber={0}/> :
         <UpAndDown value={rise ? currentRanking : -currentRanking}/>,
+      fixed: true,
       children: [
         {
           title: () => (
@@ -160,6 +165,7 @@ const Body: React.FC<IBody> = ({
             </div>
           ),
           align: 'center',
+          fixed: true,
           key: 'currentRanking',
           dataIndex: 'currentRanking',
           width: 93,
@@ -171,6 +177,7 @@ const Body: React.FC<IBody> = ({
     },
     'lastRanking': {
       title: () => <ShowData fillNumber={0} value={lastRanking}/>,
+      fixed: true,
       children: [{
         title: () => (
           <div>
@@ -178,6 +185,7 @@ const Body: React.FC<IBody> = ({
             <div className={styles.color888}>({lastPullTime ? lastPullTime : <div className="null_bar"></div>})</div>
           </div>
         ),
+        fixed: true,
         align: 'center',
         width: 94,
         dataIndex: 'lastRanking',
@@ -188,8 +196,10 @@ const Body: React.FC<IBody> = ({
     },
     'monitoringNumber': {
       title: () => <ShowData fillNumber={0} value={monitoringNumber}/>,
+      fixed: true,
       children: [{
         title: '监控次数',
+        fixed: true,
         align: 'center',
         width: 57,
         dataIndex: 'monitoringNumber',
@@ -205,8 +215,10 @@ const Body: React.FC<IBody> = ({
         asin: asin,
         deliveryMethod: deliveryMethod,
       }}/>,
+      fixed: true,
       children: [{
         title: '商品信息',
+        fixed: true,
         align: 'center',
         key: 'productInfo',
         width: 302,
@@ -537,7 +549,7 @@ const Body: React.FC<IBody> = ({
     <div className={styles.table_container}>
       <Table
         className={styles.__table_all}
-        scroll = {records.length > 0 ? { x: 2109, y: 'calc(100vh - 389px)' } : { x: 1969 }}
+        scroll = {records.length > 0 ? { x: 'max-content', y: 'calc(100vh - 389px)' } : { x: 'max-content' }}
         rowKey="id"
         rowSelection={{
           type: 'checkbox',

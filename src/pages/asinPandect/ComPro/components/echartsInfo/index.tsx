@@ -120,7 +120,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
   };
 
   const sendAjax = (chart: echarts.ECharts, cycle: number, category: string) => {
-    dispatch({
+    id && dispatch({
       type: 'comPro/getEcharts',
       payload: {
         data: {
@@ -201,7 +201,6 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
         width={1016}
         onCancel={handleCancel}
         className={styles.modalWrapper}
-        // wrapClassName={styles.modalWrapper}
       >
         <div className={styles.title_checkbox}>
           
