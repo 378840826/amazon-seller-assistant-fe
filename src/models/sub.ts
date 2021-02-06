@@ -1,11 +1,23 @@
 import { message } from 'antd';
 import { IModelType } from './connect';
 import { nTs } from '@/utils/utils';
-import { getStoreList, getUserList, addUser, deleteUser, modifySUsername, modifySEmail, modifySPassword, modifyStores } from '@/services/sub';
+import { 
+  getStoreList, 
+  getUserList, 
+  addUser, 
+  deleteUser, 
+  modifySUsername,
+  modifySEmail, 
+  modifySPassword,
+  modifyStores,
+  getRoleList,
+  updateRole,
+  updateState } from '@/services/sub';
 
 export interface ISubModelState{
   storeList: Array<API.IStoreList>;
   userList: Array<API.IUserList>;
+  roleList: Array<API.IParams>;
 }
 
 interface ISubModelType extends IModelType{
@@ -16,10 +28,30 @@ interface ISubModelType extends IModelType{
 const SubModel: ISubModelType = {
   namespace: 'sub',
   state: {
-    storeList: [],
-    userList: [],
+    storeList: [], //可分配店铺列表
+    userList: [], //表格中列表
+    roleList: [], //角色列表
   },
   effects: {
+    *getThreeList(_, { call, put, all }){
+      const [storeList, userList, roleList] = yield all([
+        call(getStoreList),
+        call(getUserList), 
+        call(getRoleList),
+      ]);
+      yield put({
+        type: 'saveStoreList',
+        payload: storeList,
+      });
+      yield put({
+        type: 'saveUserList',
+        payload: userList,
+      });
+      yield put({
+        type: 'saveRoleList',
+        payload: roleList.data,
+      });
+    },
     *getStoreList({ callback }, { call, put }){
       const response = yield call(getStoreList);
       if (response.code === 200 ){
@@ -29,7 +61,6 @@ const SubModel: ISubModelType = {
         });
         callback();
       }
-      
     },    
     *addUser({ payload, callback }, { call, put }){
       const response = yield call(addUser, payload);
@@ -95,7 +126,36 @@ const SubModel: ISubModelType = {
       } else {
         message.error(response.message);
       }
-      
+    },
+    *getRoleList(_, { call, put }){
+      const response = yield call(getRoleList);
+      if (response.code === 200){
+        yield put({
+          type: 'saveRoleList',
+          payload: response.data,
+        });
+      } else {
+        message.error(response.message);
+      }
+    },
+    *updateRole({ payload, callback }, { call }){
+      const response = yield call(updateRole, payload);
+      if (response.code === 200){
+        callback && callback();
+      } else {
+        message.error(response.message);
+      }
+    },
+    *updateState({ payload }, { call, put }){
+      const response = yield call(updateState, payload);
+      if (response.code === 200){
+        yield put({
+          type: 'changeSwitch',
+          payload,
+        });
+      } else {
+        message.error(response.message);
+      }
     },
   },
   reducers: {
@@ -122,6 +182,14 @@ const SubModel: ISubModelType = {
       const newUserList = state.userList;
       newUserList.forEach((item: API.IUserList, index: number) => item.id === id ? (newUserList[index].email = email) : '');
       state.userList = newUserList;
+    },
+    saveRoleList: (state, { payload }) => {
+      state.roleList = payload;
+    },
+    changeSwitch: (state, { payload }) => {
+      const { id, checked } = payload;
+      const index = state.userList.findIndex( (item: API.IUserList) => item.id === id);
+      state.userList[index].state = checked;
     },
     
   }, 

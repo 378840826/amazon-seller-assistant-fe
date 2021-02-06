@@ -78,7 +78,11 @@ class AvatarDropdown extends React.Component<IGlobalHeaderRightProps> {
               { munuIcon('icon-guanlizhongxin') }
               <span className={styles.menuName}>子账号管理</span>
             </MenuItem>
-        }        
+        }
+        <MenuItem key="/auth/index" className={styles.menuItem}>
+          { munuIcon('icon-fuwushouquan') }
+          <span className={styles.menuName}>角色权限</span>
+        </MenuItem>        
         <MenuItem key="/logout" className={styles.menuItem}>
           { munuIcon('icon-tuichu') }
           <span className={styles.menuName}>

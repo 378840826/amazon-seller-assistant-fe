@@ -12,15 +12,8 @@ const SubAccount: React.FC<ICenterConnectProps> = function({ user, dispatch }){
   const topAccount = user.currentUser.topAccount;
   useEffect(() => {
     dispatch({
-      type: 'sub/getStoreList',
-      callback: () => {
-        dispatch({
-          type: 'sub/getUserList',
-        });
-      },
+      type: 'sub/getThreeList',
     });
-   
-
   }, [dispatch]);
   return (
     <div className={styles.home}>

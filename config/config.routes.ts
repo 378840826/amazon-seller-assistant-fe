@@ -64,6 +64,13 @@ export default [
     routes: [{ path: '/sub-account', component: './sub/Account', title: '子账号' }]
   },
 
+  //角色权限
+  {
+    path: '/auth',
+    component: '../layouts/BasicLayout',
+    routes: [{ path: '/auth/index', component: './auth/Index', title: '角色权限管理' }]
+  },
+
   // 店铺管理
   {
     path: '/shop',

@@ -85,3 +85,23 @@ export function modifyStores(params: Array<IStore>){
     data: params,
   });
 }
+
+export function getRoleList(){
+  return request('/api/system/sam/sam/user/role-list', {
+    method: 'GET',
+  });
+}
+
+export function updateRole(params: API.IParams){
+  return request('/api/system/sam/sam/user/update-role', {
+    method: 'POST',
+    ...params,
+  });
+}
+export function updateState(params: API.IParams){
+  return request('/api/system/sam/sam/user/update-state', {
+    method: 'POST',
+    data: params,
+  });
+}
+
