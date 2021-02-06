@@ -109,7 +109,6 @@ const ComPro: IComProType = {
       }
     },
     *cpMsFreUpdate({ payload, callback }, { call }){
-      console.log('payload:', payload);
       const response = yield call(cpMsFreUpdate, payload);
       if (response.code !== 200){
         message.error(response.message);
@@ -126,7 +125,6 @@ const ComPro: IComProType = {
       }
     },
     *getEcharts({ payload, category, callback }, { call }){
-      console.log('callback', callback);
       const response = yield call(getEcharts, payload, category);
       nTs(response);
       callback(response);
@@ -157,7 +155,7 @@ const ComPro: IComProType = {
         yield put({
           type: 'updateData',
           payload: {
-            allData: response.message,
+            allData: [],
             filterData: [],
             selectedList: [],
             tableLoading: false,
@@ -184,11 +182,11 @@ const ComPro: IComProType = {
       }
     },
     *addSelectText({ payload }, { select, put }){
-      console.log('payload:', payload);
       /* 
       1. asin在all中的就全部找出来，并记录obj[asin] = true,剩下的就push进去
       */
       const state = yield select( (all: IConnectState) => all.comPro);
+      console.log('state:', state);
       const selectedAsin = state.selectedList.map((item: ISingleItem) => item.asin);
       const allAsin = state.allData.map( (item: ISingleItem) => item.asin);
       const leftAndAdd = [...new Set([...selectedAsin, ...payload])];
@@ -240,7 +238,6 @@ const ComPro: IComProType = {
     updateFilter(state, { payload }){
       state.filterData = payload;
     },
-    
   },
 };
 export default ComPro;

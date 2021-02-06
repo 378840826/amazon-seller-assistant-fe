@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Tabs, Input, Spin, Button, Form, Row, Col } from 'antd';
+import React from 'react';
+import { Tabs, Input, Spin, Button, Form, message } from 'antd';
 import { connect } from 'umi';
 import BraftEditor, { EditorState } from 'braft-editor';
 import 'braft-editor/dist/index.css';
@@ -10,7 +10,7 @@ import { Iconfont } from '@/utils/utils';
 import classnames from 'classnames';
 import styles from './index.less';
 const { TabPane } = Tabs;
-const { Search, TextArea } = Input;
+const { Search } = Input;
 interface IAddLeft extends IConnectProps{
     tableLoading: boolean;
     filterData: ISingleItem[];
@@ -31,13 +31,17 @@ const AddLeft: React.FC<IAddLeft> = ({
     const content = value.content;
     const contentHTML = content ? `${content.toHTML()}` : '<p></p>';
     const htmlList = contentHTML.split(/<\/?p[^>]*>/gi);
-    const list = htmlList.map((item: string) => item.trim()).filter((item: string) => item !== '')
-      .filter((item1: string) => filterReg.test(item1));
-    console.log('list:', list);
+    const notEmptyList = htmlList.map((item: string) => item.trim()).filter((item: string) => item !== '');
+    const list = notEmptyList.filter((item1: string) => filterReg.test(item1));
+    
+    
     dispatch({
       type: 'comPro/addSelectText',
       payload: [...new Set(list)],
-    });    
+    }); 
+    if (notEmptyList.length !== list.length){
+      message.error('ASIN格式有误');
+    }   
   };
 
   //全选
