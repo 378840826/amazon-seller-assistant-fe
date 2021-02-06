@@ -110,6 +110,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
     visible: false,
     cycle: 3, //默认选中3天
     category, //当前点钟的分类
+    showLoading: false, //echarts loading与否
   });
 
   const handleCancel = () => {
@@ -121,35 +122,45 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
 
   const sendAjax = (chart: echarts.ECharts, cycle: number, category: string) => {
     if (!id) {
-      chart.hideLoading();
-      return;
-    }
-    dispatch({
-      type: 'comPro/getEcharts',
-      payload: {
-        data: {
-          headersParams: {
-            StoreId,
+      setState((state) => ({
+        ...state,
+        showLoading: false,
+      }));
+    } else {
+      setState((state) => ({
+        ...state,
+        showLoading: true,
+      }));
+      dispatch({
+        type: 'comPro/getEcharts',
+        payload: {
+          data: {
+            headersParams: {
+              StoreId,
+            },
+            cycle,
+            id,
           },
-          cycle,
-          id,
         },
-      },
-      category,
-      callback: (res: {code: number;data: API.IParams[]}) => {
-        const options: echarts.EChartOption = {};
-        if (res.code === 200){
-          const series = {
-            name: category,
-            type: 'line',
-            data: res.data,
-          };
-          Object.assign(options, option, { series: series });
-        }
-        chart.setOption(options);
-        chart.hideLoading();
-      },
-    });
+        category,
+        callback: (res: {code: number;data: API.IParams[]}) => {
+          const options: echarts.EChartOption = {};
+          if (res.code === 200){
+            const series = {
+              name: category,
+              type: 'line',
+              data: res.data,
+            };
+            Object.assign(options, option, { series: series });
+          }
+          chart.setOption(options);
+          setState((state) => ({
+            ...state,
+            showLoading: false,
+          }));
+        },
+      });
+    }
   };
 
   const onCycleChange = (value: number) => {
@@ -205,7 +216,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
         footer={null}
         width={1016}
         onCancel={handleCancel}
-        destroyOnClose={true}
+        // destroyOnClose={true}
         className={styles.modalWrapper}
       >
         <div className={styles.title_checkbox}>
@@ -236,7 +247,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
           option={getOption()}
           onChartReady={onChartReady}
           loadingOption={loadingOption()}
-          showLoading={true}
+          showLoading={state.showLoading}
           ref={(e) => { 
             echartsReact = e; 
           }}
