@@ -232,6 +232,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
         visible={state.visible}
         width={1034}
         footer={null}
+        destroyOnClose={true}
         onCancel={handleCancel}
         wrapClassName={styles.modalWrapper}
       >

@@ -120,7 +120,11 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
   };
 
   const sendAjax = (chart: echarts.ECharts, cycle: number, category: string) => {
-    id && dispatch({
+    if (!id) {
+      chart.hideLoading();
+      return;
+    }
+    dispatch({
       type: 'comPro/getEcharts',
       payload: {
         data: {
@@ -159,6 +163,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
 
   //打开折线图
   const onOpenCharts = () => {
+    console.log('dakai');
     setState((state) => ({
       ...state,
       visible: true,
@@ -200,6 +205,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
         footer={null}
         width={1016}
         onCancel={handleCancel}
+        destroyOnClose={true}
         className={styles.modalWrapper}
       >
         <div className={styles.title_checkbox}>
