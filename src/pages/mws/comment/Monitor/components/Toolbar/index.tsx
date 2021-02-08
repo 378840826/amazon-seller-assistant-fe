@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './index.less';
 import zhCN from 'antd/es/locale/zh_CN';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { RadioChangeEvent } from 'antd/lib/radio';
-import moment from 'moment';
 import { Moment } from 'moment/moment';
-import { useSelector } from 'umi';
 import { getRangeDate } from '@/utils/huang';
 
 import {
@@ -42,7 +40,6 @@ const statusList = [
   },
 ];
 
-let shopCount = 0; // 店铺切换的条件
 // 给父组件的数据
 const fields = {} as CommectMonitor.IMonitorToolBarFieldsType; 
 const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
@@ -58,7 +55,6 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
   const [reviewerName, setReviewerName] = useState<string>(''); // 笔名
   const [reviewsNumMin, setReviewsNumMin] = useState<string>(''); // reviews起始值
   const [reviewsNumMax, setReviewsNumMax] = useState<string>(''); // reviews结束值
-  const current = useSelector((state: CommectMonitor.IGlobalType) => state.global.shop.current);
   const { start, end } = getRangeDate(30);
   const [datepickerValue, setDatepickerValue] = useState<Moment[]>([start, end]);
   const [reply, setReply] = useState<string>('all'); // 回复
@@ -92,28 +88,28 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
     gather({ stars: list });
   };
 
-  // 店铺切换时、回到初始状态
-  useEffect(() => {
-    if (shopCount > 1) {
-      const list = [
-        options[0].value, 
-        options[1].value,
-        options[2].value,
-      ];
-      setRadioStar(list);
-      setAsin('');
-      setScopeMin('');
-      setScopeMax('');
-      setDatepickerValue([
-        moment().subtract(29, 'days'),
-        moment(),
-      ]);
-      setReviewsNumMin('');
-      setReviewsNumMax('');
-    } else {
-      shopCount++;
-    }
-  }, [current]);
+  // // 店铺切换时、回到初始状态
+  // useEffect(() => {
+  //   if (shopCount > 1) {
+  //     const list = [
+  //       options[0].value, 
+  //       options[1].value,
+  //       options[2].value,
+  //     ];
+  //     setRadioStar(list);
+  //     setAsin('');
+  //     setScopeMin('');
+  //     setScopeMax('');
+  //     setDatepickerValue([
+  //       moment().subtract(29, 'days'),
+  //       moment(),
+  //     ]);
+  //     setReviewsNumMin('');
+  //     setReviewsNumMax('');
+  //   } else {
+  //     shopCount++;
+  //   }
+  // }, [current]);
 
   // asin输入框
   const changeAsin = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -240,7 +236,7 @@ const ToolBar: React.FC<CommectMonitor.IMonitorToolProps> = (props) => {
       setDatepickerValue(dates);
       dateStart = dates[0].format('YYYY-MM-DD');
       dateEnd = dates[1].format('YYYY-MM-DD');
-      gather({ dateStart, dateEnd });
+      gather({ dateStart, dateEnd, current: 1 });
     },
   };
 

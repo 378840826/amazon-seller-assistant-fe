@@ -3,7 +3,7 @@
  * @Email: 1089109@qq.com
  * @Date: 2020-06-05 15:04:27
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 11:00:29
+ * @LastEditTime: 2021-02-01 16:13:06
  * @FilePath: \amzics-react\src\pages\mws\comment\Settings\model.ts
  */ 
 import { Effect, Reducer } from 'umi';
@@ -96,7 +96,7 @@ const Model: ICommentSettings = {
 
     // 获取监控评论设定列表
     *getCommectMonitorSetList({ payload }, { call, put }): Generator {
-      const response = yield call(commentMonitorSettingsList, payload.data);
+      const response = yield call(commentMonitorSettingsList, payload);
       yield put({
         type: 'getTableList',
         payload: response as {},

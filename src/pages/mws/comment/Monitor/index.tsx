@@ -162,7 +162,7 @@ const Monitor: ConnectRC<CommectMonitor.IPageProps> = ({ commentTableData }) => 
       StoreId: current.id,
     };
 
-    requestBody({ headersParams });
+    requestBody({ headersParams, current: 1, size: 20 });
   }, [current, requestBody]);
 
   // 分页变化、其它筛选时 antd的scrollToFirstRowOnChange无效、手动更改
