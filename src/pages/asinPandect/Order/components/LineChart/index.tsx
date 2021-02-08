@@ -99,6 +99,8 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
           },
           backgroundColor: 'transparent',
           formatter(params: AsinOrder.ILineChartsTooltip[]) {
+            console.log(params);
+            
             return handleLineCahrtTooltip({
               param: params,
               lastYearXData: datas.firstHalf.polylineX,
@@ -261,6 +263,8 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
       if (skus.length > 0) {
         const { skuThisPeriods } = datas;
         if (Array.isArray(skuThisPeriods) && skuThisPeriods.length > 0) {
+          console.log(skuThisPeriods, 'skuThisPeriods');
+          
           skuThisPeriods.forEach(item => {
             skuIndexs.push({
               sku: item.sku,
@@ -287,10 +291,14 @@ const LineChart: React.FC<AsinOrder.ILineChartProps> = (props) => {
           });
         }
       } else {
+        console.log('没有选中的sku');
         skuIndexs.forEach( item => {
           option.series[item.index].data = [];
         });
       }
+
+      console.log(skuIndexs, '渲染完有没有？');
+      
 
       myChart.on('legendselectchanged', (params: {name: string; selected: {}} ) => {
         const label = handleChiese(params.name, true);

@@ -279,9 +279,6 @@ const Order: React.FC = () => {
       };
       setLineChartData(data);
       judgeWeekMonth();
-    }).catch(err => {
-      console.error(err);
-      setLcLoading(false);
     });
   };
 
