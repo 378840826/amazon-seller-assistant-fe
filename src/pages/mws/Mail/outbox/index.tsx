@@ -44,6 +44,14 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
   }, [dispatch, pathname]);
 
   useEffect(() => {
+    setRequest((request) => ({
+      ...request,
+      size: 20,
+      current: 1,
+    }));
+  }, [StoreId]);
+
+  useEffect(() => {
     dispatch({
       type: 'mail/getSendList',
       payload: {
@@ -63,7 +71,8 @@ const OutBox: React.FC<IInbox> = ({ state, StoreId, dispatch }) => {
         },
       },
     });
-  }, [StoreId, dispatch, request]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, request]);
 
 
   //头部搜索，邮件来源，日历的点击请求,表格页脚点击

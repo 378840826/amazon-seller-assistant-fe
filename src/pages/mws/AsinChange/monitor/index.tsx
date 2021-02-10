@@ -49,6 +49,13 @@ const Monitor: React.FC<IMonitorProps> = ({ StoreId, dispatch, currentUser }) =>
       ...params,
     }));
   };
+  //切换店铺的时候，将发送的分页参数重置
+  useEffect(() => {
+    setParams(() => ({
+      size: 20,
+      current: 1,
+    }));
+  }, [StoreId]);
 
   const fetchCallback = useCallback( () => {
     setState((state) => ({
@@ -86,12 +93,13 @@ const Monitor: React.FC<IMonitorProps> = ({ StoreId, dispatch, currentUser }) =>
         }
       },
     });
-  }, [StoreId, dispatch, params]); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, params]); 
  
 
   useEffect(() => {
     fetchCallback();
-  }, [dispatch, StoreId, params, fetchCallback]);
+  }, [fetchCallback]);
   return (
     <div className={styles.container} style={{ marginTop: '20px' }}>
       <div className={styles.header_left}>

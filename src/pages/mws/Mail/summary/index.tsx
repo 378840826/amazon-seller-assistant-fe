@@ -5,7 +5,6 @@ import { IConnectState, IConnectProps } from '@/models/connect';
 import { Table, Typography } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import TableNotData from '@/components/TableNotData';
-import classnames from 'classnames';
 
 interface ISummaryConnectProps extends IConnectProps{
   StoreId: string;
@@ -58,7 +57,6 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
             msg: res.message,
           }));
         }
-        
       },
     });
   }, [StoreId, dispatch]);
@@ -76,7 +74,7 @@ const Summary: React.FC<ISummaryConnectProps> = ({ StoreId, dispatch }) => {
   };
   useEffect(() => {
     requestTable();
-  }, [dispatch, requestTable]);
+  }, [requestTable]);
 
   const columns: ColumnProps<API.IParams>[] = [
     {

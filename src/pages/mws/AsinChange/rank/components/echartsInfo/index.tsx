@@ -38,6 +38,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
   const [state, setState] = useState({
     visible: false,
     cycle: 3, //默认选中3天
+    showLoading: false, //是否显示echarts loading
   });
 
   //共同的echarts配置
@@ -129,45 +130,60 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
 
 
   const sendAjax = (chart: echarts.ECharts, cycle: number) => {
-    dispatch({
-      type: type === 'natural' ? 'dynamic/msGetNaturalData' : 'dynamic/msGetAd',
-      payload: {
-        data: {
-          headersParams: {
-            StoreId,
-          },
-          cycle: cycle,
-          id,
-        },
-      },
-      callback: (res: {code: number; data: API.IParams[]; scatter: API.IParams[]}) => {
-        const options: echarts.EChartOption = {};
-        if (res.code === 200){
-          const series1 = {
-            name: '搜索结果排名',
-            type: 'line',
-            data: res.data,
-          };
-          const series2 = {
-            type: 'scatter',
-            symbolSize: 50,
-            symbol: 'pin',
-            data: res.scatter === undefined ? [] : res.scatter,
-            label: {
-              normal: myLabel,
-              emphasis: myLabel,
+    if (!id){
+      setState(state => ({
+        ...state,
+        showLoading: false,
+      }));
+    } else {
+      setState(state => ({
+        ...state,
+        showLoading: true,
+      }));
+    
+      dispatch({
+        type: type === 'natural' ? 'dynamic/msGetNaturalData' : 'dynamic/msGetAd',
+        payload: {
+          data: {
+            headersParams: {
+              StoreId,
             },
-            animation: false,
-          };
-          type === 'natural' ? Object.assign(options, option, { series: [series1, series2] })
-            :
-            Object.assign(options, option, { series: [series1] });
+            cycle: cycle,
+            id,
+          },
+        },
+        callback: (res: {code: number; data: API.IParams[]; scatter: API.IParams[]}) => {
+          const options: echarts.EChartOption = {};
+          if (res.code === 200){
+            const series1 = {
+              name: '搜索结果排名',
+              type: 'line',
+              data: res.data,
+            };
+            const series2 = {
+              type: 'scatter',
+              symbolSize: 50,
+              symbol: 'pin',
+              data: res.scatter === undefined ? [] : res.scatter,
+              label: {
+                normal: myLabel,
+                emphasis: myLabel,
+              },
+              animation: false,
+            };
+            type === 'natural' ? Object.assign(options, option, { series: [series1, series2] })
+              :
+              Object.assign(options, option, { series: [series1] });
  
-        }
-        chart.setOption(options);
-        chart.hideLoading();
-      },
-    });
+          }
+          chart.setOption(options);
+          setState(state => ({
+            ...state,
+            showLoading: false,
+          }));
+        },
+      });
+    }
   };
   const onChartReady = (chart: echarts.ECharts) => {
     sendAjax(chart, state.cycle);
@@ -253,7 +269,7 @@ const EchartsInfo: React.FC<IEchartsInfo> = ({
             option={getOption()}
             onChartReady={onChartReady}
             loadingOption={loadingOption()}
-            showLoading={true}
+            showLoading={state.showLoading}
             ref={(e) => { 
               echartsReact = e; 
             }}

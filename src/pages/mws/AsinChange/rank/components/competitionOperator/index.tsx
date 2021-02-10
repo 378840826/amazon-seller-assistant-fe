@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BraftEditor, { EditorState } from 'braft-editor';
+import 'braft-editor/dist/index.css';
 import { Popconfirm, Spin } from 'antd';
 import classnames from 'classnames';
 import styles from './index.less';
