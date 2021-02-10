@@ -48,17 +48,24 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch, currentUs
     switchStatus: 'all', //默认全部，可选close,open
     isAc: 'all', //默认全部，no否，yes是
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onTableChange = (pagination: any, _: any, sorter: any) => {
+ 
+  const onTableChange = (
+    pagination: {current: number; pageSize: number},
+    _: API.IParams,
+    sorter: {order: string; field: string},
+    // eslint-disable-next-line max-params
+    extra: {action: string}) => {
     const { order, field } = sorter;
     const { current, pageSize } = pagination;
+    const { action } = extra;
+
     setParams((params) => ({
       ...params,
       size: pageSize,
-      current,
+      current: action === 'sort' ? 1 : current,
       order: field,
       asc: order,
-    }));
+    })); 
   };
 
   //1. 已选的复选框
@@ -115,6 +122,15 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch, currentUs
     
 
   };
+  useEffect(() => {
+    setParams((params) => ({
+      ...params,
+      size: 20,
+      current: 1,
+      order: '',
+      asc: '',
+    })); 
+  }, [StoreId]);
 
   const fetchList = useCallback(() => {
     setState((state) => ({
@@ -159,7 +175,8 @@ const RankMonitor: React.FC<IRankMonitorProps> = ({ StoreId, dispatch, currentUs
         }
       },
     });
-  }, [params, StoreId, dispatch]); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params, dispatch]); 
   useEffect(() => {
     fetchList();
   }, [fetchList]);

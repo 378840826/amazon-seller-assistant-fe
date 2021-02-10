@@ -95,10 +95,24 @@ const ComPro: React.FC<IComPro> = ({
         }
       },
     });
-  }, [StoreId, asin, dispatch, send]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asin, dispatch, send]);
+
   useEffect(() => {
     fetchList();
   }, [fetchList]);
+
+  useEffect(() => {
+    dispatch({
+      type: 'ComPro/updateSend',
+      payload: {
+        current: 1,
+        size: 20,
+        order: '',
+        asc: false,
+      },
+    });
+  }, [StoreId, dispatch]);
   return (
     <div className={styles.main}>
       <div className={styles.container}>

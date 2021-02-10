@@ -1,10 +1,11 @@
 import { IConnectProps } from '@/models/connect';
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import BraftEditor, { EditorState } from 'braft-editor';
+import 'braft-editor/dist/index.css';
 import styles from './index.less';
 import TaskLeft from '../taskContainerLeft';
 import TaskCenter from '../taskContainerCenter';
-import { Input, Button, message } from 'antd';
-const { TextArea } = Input;
+import { Button, message } from 'antd';
 interface ITaskContainer{
   StoreId: string;
   dispatch: IConnectProps['dispatch'];
@@ -17,7 +18,9 @@ interface IState{
   loading: boolean;
   leftLoading: boolean;
   centerLoading: boolean;
+  editorState: EditorState;
 }
+const filterReg = /^B0[A-Z0-9]{8}$/;
 const TaskContainer: React.FC<ITaskContainer> = ({ 
   StoreId, 
   dispatch, 
@@ -30,9 +33,9 @@ const TaskContainer: React.FC<ITaskContainer> = ({
     leftLoading: false,
     centerLoading: false,
     loading: false, //确认按钮的loading状态
+    editorState: BraftEditor.createEditorState(null), //一开始没有数据
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const refText = useRef<any>(null);
+
   const asinChange = (list: string[]) => {
     setState((state) => ({
       ...state,
@@ -46,18 +49,22 @@ const TaskContainer: React.FC<ITaskContainer> = ({
     }));
   };
 
+  //braftEditor内容改变
+  const handleEditorChange = (editorState: EditorState) => {
+    setState((state) => ({
+      ...state,
+      editorState,
+    }));
+  };
+
   const onSave = () => {
-    let list = [];
-    if (refText.current){
-      const content = refText.current.state.value;
-      if (content === '' || content === undefined){
-        list = [];
-      } else {
-        list = content.split(/\n/ig).map( (item: string) => item.trim())
-          .filter((item1: string) => item1 !== '');
-      }
-    }
-  
+    const htmlList = state.editorState.toHTML().split(/<\/?p[^>]*>/gi);
+    console.log('htmlList:', htmlList);
+    const filterList = htmlList.map((item: string) => item.trim())
+      .filter((item: string) => item !== '')
+      .filter((item: string) => filterReg.test(item));
+    console.log('filterList:', filterList);
+
     if (state.asinList.length > 0 && state.keywordList.length > 0 ){
       setState((state) => ({
         ...state,
@@ -70,7 +77,7 @@ const TaskContainer: React.FC<ITaskContainer> = ({
             headersParams: { StoreId },
             asinList: state.asinList,
             keywordList: state.keywordList,
-            competitiveAsinList: list,
+            competitiveAsinList: [...new Set(filterList)],
           },
         },
         callback: () => {
@@ -105,9 +112,12 @@ const TaskContainer: React.FC<ITaskContainer> = ({
         </div>
         <div className={styles.right}>
           <div className={styles.title}>竞品ASIN</div>
-          <TextArea className={styles.text_area} 
-            ref={refText}
+          <BraftEditor
+            controls={[]}
             placeholder="输入竞品ASIN，一行一个，输入越多，分析结果越准确"
+            value={state.editorState}
+            contentClassName={styles.__textarea}
+            onChange={handleEditorChange}
           />
           <div className={styles.footer}>注：若选择多个ASIN和关键词，则ASIN和关键词会两两组合添加到任务列表；
 若ASIN和关键词组合已存在，则不会重复添加；输入竞品ASIN，系统可自动计
