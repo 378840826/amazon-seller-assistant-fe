@@ -46,6 +46,14 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
       asin: value.trim(),
     }));
   };
+  //切换店铺 修改分页相关信息
+  useEffect(() => {
+    setSendState((sendState) => ({
+      ...sendState,
+      size: 20,
+      current: 1,
+    }));
+  }, [StoreId] );
   useEffect(() => {
     setState((state) => ({
       ...state,
@@ -87,7 +95,8 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
         }
       },
     });
-  }, [dispatch, sendState, StoreId]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, sendState]);
 
   
   return (

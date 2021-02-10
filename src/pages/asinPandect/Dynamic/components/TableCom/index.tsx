@@ -191,7 +191,7 @@ const TableCom: React.FC<ITableCom> = ({
       },
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, StoreId, dateStart, dateEnd, size, current, asin, JSON.stringify(changeType)]);
+  }, [dispatch, dateStart, dateEnd, size, current, asin, JSON.stringify(changeType)]);
   return (
     <div className={styles.__table_com}>
       <Table

@@ -97,6 +97,11 @@ const DynamicAsin: React.FC = () => {
       ...params,
     }));
   };
+
+  //店铺切换时 修改分页
+  useEffect(() => {
+    modifySendState({ size: 20, current: 1 });
+  }, [StoreId]);
   const memoModifySendState = useCallback((param) => modifySendState(param), []);
   return (
     <div className={styles.container}>

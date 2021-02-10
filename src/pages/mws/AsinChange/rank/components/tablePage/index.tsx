@@ -16,8 +16,10 @@ interface ITablePage{
   fetchList: () => void;
   selectedRows: ReactText[];
   selectedRowKeysChange: (_: ReactText[]) => void;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onTableChange: (_: any, __: any, sorter: any) => void;
+  onTableChange: (pagination: {current: number; pageSize: number},
+    _: API.IParams,
+    sorter: {order: string; field: string},
+    extra: {action: string}) => void;
   toggleChange: (status: boolean, ids: ReactText[]) => void;
 }
 

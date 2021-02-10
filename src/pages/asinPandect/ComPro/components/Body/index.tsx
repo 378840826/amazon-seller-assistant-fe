@@ -520,14 +520,20 @@ const Body: React.FC<IBody> = ({
   });
 
   //表格点击
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onTableChange = (pagination: any, _: any, sorter: any) => {
+  const onTableChange = (
+    pagination: {current: number; pageSize: number},
+    _: API.IParams,
+    sorter: {order: string; columnKey: string},
+    extra: {action: string}
+  // eslint-disable-next-line max-params
+  ) => {
     const { current, pageSize } = pagination;
     const { columnKey, order } = sorter;
+    const { action } = extra;
     dispatch({
       type: 'comPro/updateSend',
       payload: {
-        current,
+        current: action === 'sort' ? 1 : current,
         size: pageSize,
         order: order ? columnKey : '', 
         asc: order,
