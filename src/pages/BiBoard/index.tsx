@@ -93,7 +93,10 @@ const BiBoard: React.FC = () => {
   const handleAddMonitor = (asin: string) => {
     dispatch({
       type: 'biBoard/addCompetitorMonitor',
-      payload: { asin },
+      payload: {
+        asin,
+        headersParams: { StoreId: currentShopId },
+      },
       callback: requestFeedback,
     });
   };
