@@ -126,7 +126,7 @@ const TablePage: React.FC<ITablePage> = ({
       },
     },
     {
-      title: 'SKU',
+      title: 'MSKU',
       dataIndex: 'skuInfo',
       key: 'skuInfo',
       align: 'left',
