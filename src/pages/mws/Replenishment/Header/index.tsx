@@ -6,35 +6,34 @@ import { useDispatch, useSelector } from 'umi';
 import { Input, Dropdown, Button, Radio, message, Modal } from 'antd';
 import { RadioChangeEvent } from 'antd/es/radio';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
-import { requestErrorFeedback, requestFeedback, Iconfont, objToQueryString, day } from '@/utils/utils';
+import { requestErrorFeedback, requestFeedback, Iconfont } from '@/utils/utils';
 import { IConnectState } from '@/models/connect';
-import CustomCols from '../CustomCols';
 import BatchSetting from '../BatchSetting';
-import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import styles from './index.less';
 
-const { Search } = Input;
+const { Search, TextArea } = Input;
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const replenishment = useSelector((state: IConnectState) => state.replenishment);
   const {
-    customCols,
     compareType,
     searchParams,
     checked,
     labels,
     batchSettingVisible,
-    updateTime,
   } = replenishment;
   
-  const { replenishmentExists, skuStatus, inputContent, sort } = searchParams;
+  const { replenishmentExists, skuStatus, sort } = searchParams;
   const currentShop = useSelector((state: IConnectState) => state.global.shop.current);
-  const { id: currentShopId, marketplace, storeName } = currentShop;
+  const { id: currentShopId } = currentShop;
   const headersParams = { StoreId: currentShopId };
   const [createTagVisible, setCreateTagVisible] = useState(false);
   // 搜索的 value
   const [searchText, setSearchText] = useState<string>('');
+  // 批量搜索的
+  const [batchText, setBatchText] = useState<string>('');
+  const [batchVisible, setBatchVisible] = useState(false);
   // 批量设置按钮是否禁用
   let batchSetBtnDisabled = true;
   if (checked.dataRange === 2 || (checked.currentPageSkus && checked.currentPageSkus.length)) {
@@ -42,8 +41,6 @@ const Header: React.FC = () => {
   }
   const loadingEffects = useSelector((state: IConnectState) => state.loading.effects);
   const addLabelLoading = loadingEffects['replenishment/fetchSettingRecord'];
-  // 导出按钮 loading
-  const [exportBtnLoading, setExportBtnLoading] = useState<boolean>(false);
 
   // 执行搜索
   const handleSearch = () => {
@@ -53,6 +50,7 @@ const Header: React.FC = () => {
         headersParams,
         searchParams: {
           inputContent: searchText,
+          code: batchText,
           current: 1,
           order: null,
         },
@@ -65,6 +63,7 @@ const Header: React.FC = () => {
   const handleSearchTextChange = (event: { target: { value: string } }) => {
     const { target: { value } } = event;
     setSearchText(value);
+    setBatchText('');
   };
 
   // 单选框 change
@@ -186,67 +185,38 @@ const Header: React.FC = () => {
     </div>
   );
 
-  // 导出链接
-  const getExportFileUrl = () => {
-    const qs = objToQueryString({ inputContent, skuStatus, replenishmentExists });
-    return `/api/mws/fis/download?${qs}`;
+  // 批量搜索输入框 change
+  const handleTextAreaChange = (event: { target: { value: string } }) => {
+    let { target: { value } } = event;
+    let valueArr = value.split(/\r\n|\r|\n/);
+    // 超过 20 行
+    if (valueArr.length > 20) {
+      valueArr = valueArr.slice(0, 20);
+      value = valueArr.join('\n');
+    }
+    setBatchText(value);
+    setSearchText('');
   };
 
-  // 模拟 a 标签实现下载
-  const download = (blobUrl: string) => {
-    const a = document.createElement('a');
-    // 文件名
-    const date = day.getNowFormatTime('YYYYMMDD');
-    a.download = `${date}_${marketplace}_${storeName}_补货建议.xlsx`;
-    a.href = blobUrl;
-    a.click();
-  };
+  // 批量查询框
+  const searchDropdownDom = (
+    <div className={styles.batchSearchDropdown}>
+      <TextArea
+        className={styles.TextArea}
+        autoSize={{ minRows: 20, maxRows: 20 }}
+        placeholder="支持ASIN、SKU混合批量查询，最多20个商品，换行间隔"
+        onChange={handleTextAreaChange}
+        value={batchText}
+      />
+      <div className={styles.btns}>
+        <Button onClick={() => setBatchVisible(false)}>取消</Button>
+        <Button type="primary" onClick={handleSearch}>确定</Button>
+      </div>
+    </div>
+  );
 
-  // 导出
-  const handleDownload = () => {
-    Modal.confirm({
-      title: '本次导出将消耗1次导出次数',
-      icon: null,
-      okText: '确定',
-      cancelText: '取消',
-      centered: true,
-      onOk() {
-        setExportBtnLoading(true);
-        const url = getExportFileUrl();
-        fetch(url, {
-          method: 'GET',
-          headers: new Headers({
-            StoreId: currentShopId,
-          }),
-        })
-          .catch(err => {
-            message.error('导出失败，请稍后再试！');
-            return err;
-          })
-          .then(res => res.blob())
-          .then(data => {
-            const blobUrl = window.URL.createObjectURL(data);
-            download(blobUrl);
-            setExportBtnLoading(false);
-            // 减少一次导出次数
-            dispatch({
-              type: 'user/updateMemberFunctionalSurplus',
-              payload: {
-                functionName: '补货计划导出',
-              },
-            });
-          })
-          .catch(err => {
-            console.error('导出发生错误', err);
-            setExportBtnLoading(false);
-          });
-      },
-    });
-  };
-  
   return (
     <div className={styles.Header}>
-      <PageTitleRightInfo functionName={'补货计划导出'} updateTime={updateTime} />
       <span className={styles.SearchContainer}>
         <Search
           className={styles.Search}
@@ -271,6 +241,17 @@ const Header: React.FC = () => {
         }
       </span>
       <Dropdown
+        className={styles.batchSearch}
+        overlay={searchDropdownDom}
+        trigger={['click']}
+        visible={batchVisible}
+        onVisibleChange={flag => setBatchVisible(flag)}
+      >
+        <Button type="primary">
+          批量查询 {batchVisible ? <UpOutlined /> : <DownOutlined />}
+        </Button>
+      </Dropdown>
+      <Dropdown
         disabled={batchSetBtnDisabled}
         overlay={<BatchSetting />}
         visible={batchSettingVisible}
@@ -294,7 +275,7 @@ const Header: React.FC = () => {
           创建标签 {createTagVisible ? <UpOutlined /> : <DownOutlined />}
         </Button>
       </Dropdown>
-      <span>
+      <span className={styles.radioGroup}>
         <span>环比：</span>
         <Radio.Group
           options={[
@@ -307,7 +288,7 @@ const Header: React.FC = () => {
           onChange={e => handleCompareTypeChange(e)}
         />
       </span>
-      <span>
+      <span className={styles.radioGroup}>
         <span>建议补货：</span>
         <Radio.Group
           options={[
@@ -319,7 +300,7 @@ const Header: React.FC = () => {
           onChange={e => handleRadioChange(e, 'replenishmentExists')}
         />
       </span>
-      <span className={styles.leftLast}>
+      <span>
         <span>停发：</span>
         <Radio.Group
           options={[
@@ -330,12 +311,6 @@ const Header: React.FC = () => {
           value={ skuStatus || '' }
           onChange={e => handleRadioChange(e, 'skuStatus')}
         />
-      </span>
-      <span className={styles.right}>
-        <CustomCols colsItems={customCols} />
-        <Button className={styles.export} onClick={handleDownload} loading={exportBtnLoading}>
-          导出
-        </Button>
       </span>
     </div>
   );

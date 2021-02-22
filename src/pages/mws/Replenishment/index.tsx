@@ -1,11 +1,12 @@
-import React, { ReactText, useEffect } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
 import { IConnectState } from '@/models/connect';
-import { Table, Checkbox } from 'antd';
-import { requestErrorFeedback } from '@/utils/utils';
+import { Table, Checkbox, Button, Modal, message } from 'antd';
+import { requestErrorFeedback, objToQueryString, day } from '@/utils/utils';
 import Header from './Header';
 import { getFullColumns } from './cols';
 import TableNotData from '@/components/TableNotData';
+import CustomCols from './CustomCols';
 import styles from './index.less';
 
 const Replenishment: React.FC = () => {
@@ -24,12 +25,23 @@ const Replenishment: React.FC = () => {
     checked,
     setting,
   } = page;
-  const { sort, order, current, size } = searchParams;
+  const {
+    sort,
+    order,
+    current,
+    size,
+    inputContent,
+    code,
+    skuStatus,
+    replenishmentExists,
+  } = searchParams;
   const { total, records: goodsList } = goodsData;
   // 店铺
   const currentShop = useSelector((state: IConnectState) => state.global.shop.current);
-  const { id: currentShopId } = currentShop;
+  const { id: currentShopId, marketplace, storeName } = currentShop;
   const headersParams = { StoreId: currentShopId };
+  // 导出按钮 loading
+  const [exportBtnLoading, setExportBtnLoading] = useState<boolean>(false);
   
   // 切换店铺后重新加载表格
   useEffect(() => {
@@ -41,6 +53,7 @@ const Replenishment: React.FC = () => {
           headersParams: { StoreId: currentShopId },
           searchParams: {
             inputContent: '',
+            code: '',
             current: 1,
             order: null,
             replenishmentExists: null,
@@ -228,25 +241,92 @@ const Replenishment: React.FC = () => {
     return isShow;
   };
 
+  // 导出链接
+  const getExportFileUrl = () => {
+    const qs = objToQueryString({ inputContent, code, skuStatus, replenishmentExists });
+    return `/api/mws/fis/download?${qs}`;
+  };
+
+  // 模拟 a 标签实现下载
+  const download = (blobUrl: string) => {
+    const a = document.createElement('a');
+    // 文件名
+    const date = day.getNowFormatTime('YYYYMMDD');
+    a.download = `${date}_${marketplace}_${storeName}_补货建议.xlsx`;
+    a.href = blobUrl;
+    a.click();
+  };
+
+  // 导出
+  const handleDownload = () => {
+    Modal.confirm({
+      title: '本次导出将消耗1次导出次数',
+      icon: null,
+      okText: '确定',
+      cancelText: '取消',
+      centered: true,
+      onOk() {
+        setExportBtnLoading(true);
+        const url = getExportFileUrl();
+        fetch(url, {
+          method: 'GET',
+          headers: new Headers({
+            StoreId: currentShopId,
+          }),
+        })
+          .catch(err => {
+            message.error('导出失败，请稍后再试！');
+            return err;
+          })
+          .then(res => res.blob())
+          .then(data => {
+            const blobUrl = window.URL.createObjectURL(data);
+            download(blobUrl);
+            setExportBtnLoading(false);
+            // 减少一次导出次数
+            dispatch({
+              type: 'user/updateMemberFunctionalSurplus',
+              payload: {
+                functionName: '补货建议导出',
+              },
+            });
+          })
+          .catch(err => {
+            console.error('导出发生错误', err);
+            setExportBtnLoading(false);
+          });
+      },
+    });
+  };
+
   return (
     <div className={styles.page}>
       <Header />
-      <div className={styles.checkedAllContainer}>
-        <Checkbox
-          onChange={handleCheckPageChange}
-          indeterminate={isIndeterminate()}
-          checked={checked.currentPageSkus.length !== 0}
-        >选择本页</Checkbox>
-        <Checkbox
-          onChange={handleCheckAllChange}
-          checked={checked.dataRange === 2}
-          className={isShowCheckAll() ? '' : styles.hide}
-        >选择全部</Checkbox>
+      <div className={styles.toolBar}>
+        <div className={styles.checkedAllContainer}>
+          <Checkbox
+            onChange={handleCheckPageChange}
+            indeterminate={isIndeterminate()}
+            checked={checked.currentPageSkus.length !== 0}
+          >选择本页</Checkbox>
+          <Checkbox
+            onChange={handleCheckAllChange}
+            checked={checked.dataRange === 2}
+            className={isShowCheckAll() ? '' : styles.hide}
+          >选择全部</Checkbox>
+        </div>
+        <div>
+          <CustomCols colsItems={customCols} />
+          <Button onClick={handleDownload} loading={exportBtnLoading}>
+            导出
+          </Button>
+        </div>
       </div>
       <Table
+        className={styles.Table}
         size="middle"
         rowSelection={{ ...rowSelection }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 286px)', scrollToFirstRowOnChange: true }}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 316px)', scrollToFirstRowOnChange: true }}
         loading={loading}
         columns={columns}
         rowKey="sku"

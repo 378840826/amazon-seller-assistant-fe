@@ -149,6 +149,9 @@ const GoodsListModel: IReplenishmentModelType = {
       if (newParams.inputContent) {
         newParams.inputContent = newParams.inputContent.replace(/(^\s*)|(\s*$)/g, '');
       }  
+      if (newParams.code) {
+        newParams.code = newParams.code.replace(/(^\s*)|(\s*$)/g, '');
+      }
       const res = yield call(queryGoodsList, { ...newParams, headersParams });
       if (res.code === 200) {
         const { data: goods } = res;
