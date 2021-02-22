@@ -24,7 +24,7 @@ const ParentCustomCol: React.FC = () => {
   // asin SKU
   const asinOrSku = [
     // { label: '子ASIN', value: parentsprs[0] },
-    { label: 'SKU', value: parentsprs[1] },
+    { label: 'MSKU', value: parentsprs[1] },
   ];
 
   // 总体销售表现
