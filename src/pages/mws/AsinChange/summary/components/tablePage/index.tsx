@@ -61,7 +61,7 @@ const TablePage: React.FC<ITablePage> = (
       },
     },
     {
-      title: 'SKU',
+      title: 'MSKU',
       dataIndex: 'skuList',
       width: 115,
       align: 'left',

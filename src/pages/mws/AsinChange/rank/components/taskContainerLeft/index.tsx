@@ -225,7 +225,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
                 dataKey="asin"
               />
               <Column  
-                label="SKU"
+                label="MSKU"
                 width={213}
                 headerClassName={styles.__sku_column}
                 className={styles.__sku_body}
@@ -274,7 +274,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
               dataKey="asin"
             />
             <Column  
-              label="SKU"
+              label="MSKU"
               width={213}
               headerClassName={styles.__sku_column}
               className={styles.__sku_body}
