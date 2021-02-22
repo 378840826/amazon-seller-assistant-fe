@@ -494,8 +494,8 @@ const GlobalModel: IGlobalModelType = {
     // 监听店铺是否已切换（多开标签页时切换店铺、另一标签页提示）
     watchShop({ dispatch, history: umiHistory }) {
       // 异步的、放在里面比较安全
-      umiHistory.listen(() => {
-        const pathname = umiHistory.location.pathname;
+      umiHistory.listen(async ( { pathname }) => {
+        // const pathname = umiHistory.location.pathname;
         if (notTagShopHint.indexOf(pathname) > -1) {
           return;
         }

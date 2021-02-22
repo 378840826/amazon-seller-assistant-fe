@@ -60,7 +60,7 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
   // sku
   const skuCol = {
     width: colsWidth.sku,
-    title: <span className={styles.text}>SKU</span>,
+    title: <span className={styles.text}>MSKU</span>,
     align: 'center',
     dataIndex: 'sku',
     className: styles.skuCol,
