@@ -39,7 +39,7 @@ export default {
               functionName: '自动邮件',
               frequency: 9,
             }, {
-              functionName: '补货计划导出',
+              functionName: '补货建议导出',
               frequency: 10,
             }, {
               functionName: 'PPC托管',
