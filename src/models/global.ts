@@ -192,7 +192,7 @@ const GlobalModel: IGlobalModelType = {
         return;
       }
       const res = yield call(bindShop, { sellerId, storeName, token, marketplaces });
-      console.log(res, 'res');
+
       if (res.code === 200) {
         // 接口没有返回绑定成功的店铺，重新获取店铺列表
         yield put({
@@ -493,36 +493,48 @@ const GlobalModel: IGlobalModelType = {
 
     // 监听店铺是否已切换（多开标签页时切换店铺、另一标签页提示）
     watchShop({ dispatch, history: umiHistory }) {
-      // 异步的、放在里面比较安全
+      const bindFunction = function(e: StorageEvent) {
+        const key = e.key;
+        if (key === 'currentShop') {
+          const box = document.querySelector('.g-shop-current-box');
+          const site = box?.querySelector('.g-shop-current-site')?.innerHTML;
+          const shopName = box?.querySelector('.g-shop-current-shopName')?.innerHTML;
+          const current = JSON.parse(e.newValue as string);
+
+          Modal.destroyAll();
+
+          // 判断当前页面的店铺是否和最新的店铺是否相同
+          if (current.storeName === shopName && current.marketplace === site) {
+            // 经常N次切换店铺后，又回到了最初切换店铺时，弹窗去掉
+            return;
+          }
+
+          confirm({
+            title: `店铺已切换！`,
+            okText: `刷新查看新店铺`,
+            cancelText: '继续浏览原店铺',
+            centered: true,
+            icon: null,
+            className: 'g-watch-shop-modal',
+            zIndex: 99999,
+            onOk() {
+              history.go();
+            },
+            onCancel() {
+              dispatch({
+                type: 'saveHistoryShop',
+              });
+            },
+          });
+        }
+      };
+
       umiHistory.listen(async ( { pathname }) => {
-        // const pathname = umiHistory.location.pathname;
         if (notTagShopHint.indexOf(pathname) > -1) {
+          window.removeEventListener('storage', bindFunction);
           return;
         }
-        
-        window.addEventListener('storage', e => {
-          const key = e.key;
-          if (key === 'currentShop') {
-            Modal.destroyAll();
-            confirm({
-              title: `店铺已切换！`,
-              okText: `刷新查看新店铺`,
-              cancelText: '继续浏览原店铺',
-              centered: true,
-              icon: null,
-              className: 'g-watch-shop-modal',
-              zIndex: 99999,
-              onOk() {
-                history.go();
-              },
-              onCancel() {
-                dispatch({
-                  type: 'saveHistoryShop',
-                });
-              },
-            });
-          }
-        });
+        window.addEventListener('storage', bindFunction);
       });
     },
   },
