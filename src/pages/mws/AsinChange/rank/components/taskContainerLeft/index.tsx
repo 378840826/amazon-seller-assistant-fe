@@ -182,7 +182,7 @@ const ContainerLeft: React.FC<IContainerLeft> = ({
           size="middle" 
           allowClear
           className={styles.search_input}
-          placeholder="输入标题、ASIN或SKU" 
+          placeholder="输入标题、ASIN或MSKU" 
           onSearch={(value, event) => {
             if (!event?.['__proto__']?.type){
               onSearch(value);
