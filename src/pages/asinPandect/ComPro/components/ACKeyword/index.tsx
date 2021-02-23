@@ -40,27 +40,29 @@ const ACKeyword: React.FC<IACKeyword> = ({ value, StoreId, dispatch, id }) => {
   };
 
   const onOpenClock = () => {
-    setState((state) => ({
-      ...state,
-      visible: true,
-      loading: true,
-    }));
-    dispatch({
-      type: 'comPro/getACList',
-      payload: {
-        data: {
-          headersParams: { StoreId },
-          id,
+    if (id){
+      setState((state) => ({
+        ...state,
+        visible: true,
+        loading: true,
+      }));
+      dispatch({
+        type: 'comPro/getACList',
+        payload: {
+          data: {
+            headersParams: { StoreId },
+            id,
+          },
         },
-      },
-      callback: (data: IState['data']) => {
-        setState((state) => ({
-          ...state,
-          data,
-          loading: false,
-        }));
-      },
-    }); 
+        callback: (data: IState['data']) => {
+          setState((state) => ({
+            ...state,
+            data,
+            loading: false,
+          }));
+        },
+      });
+    }
   };
   const handleVisibleChange = (visible: boolean) => {
     setState((state) => ({
