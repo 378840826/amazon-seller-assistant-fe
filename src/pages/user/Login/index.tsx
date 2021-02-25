@@ -78,11 +78,6 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
               callback: () => {
                 // history.push('/');
                 // 如果是登录失效后再次登录，需要请求前面因登录失效没有拿到的店铺列表等数据
-                const redirectUrl = getUrlParam('redirect');
-                if (redirectUrl){
-                  window.location.href = redirectUrl === location.origin + location.pathname ? '/' : redirectUrl;
-                  return;
-                }
                 window.location.href = '/';
               },
             });
