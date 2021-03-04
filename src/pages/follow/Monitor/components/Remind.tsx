@@ -137,7 +137,7 @@ const Remind: React.FC<IProps> = (props) => {
   }, [remind]); // eslint-disable-line
 
   const onFieldsChange = () => {
-    console.log(form.getFieldsValue());
+    // console.log(form.getFieldsValue());
   };
 
   const remindMenu = (

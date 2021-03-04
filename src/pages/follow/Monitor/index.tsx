@@ -20,7 +20,8 @@ import Showdata from '@/components/ShowData';
 import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import {
   Table,
-  message,
+  Select,
+  Form,
 } from 'antd';
 
 // 私
@@ -34,6 +35,7 @@ import { competitorHistoryRouter } from '@/utils/routes';
 
 const Monitor: React.FC = () => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
   // store
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -47,6 +49,7 @@ const Monitor: React.FC = () => {
   const [remindState, setRemindState] = useState<boolean>(false); // Remind组件
   const [frequencyState, setFrequencyState] = useState<boolean>(false);
   const [flag, setFlag] = useState<boolean>(false); // 重新渲染的state
+  const [hint, setHint] = useState<string>('左上角添加需要监控的ASIN'); // 表格提示语
 
   const request = useCallback((params = { current: 1, size: 20 }) => {
     if (Number(currentShop.id) === -1) {
@@ -89,12 +92,19 @@ const Monitor: React.FC = () => {
           setSize(data.size);
           setTotal(data.total);
         }
-      } else {
-        message.error(msg);
-        setTotal(0);
+        return;
       }
+      // 判断是否有筛选条件，就改变表格的提示语
+      const fData = form.getFieldsValue();
+      const flag = fData.monitorSwitch || fData.currentBuybox || fData.currentFollow;
+      if (flag) {
+        setHint('没有找到相关商品，请重新查询');
+      } else {
+        setHint(msg);
+      }
+      setTotal(0);
     });
-  }, [dispatch, currentShop]);
+  }, [dispatch, currentShop, form]);
 
 
   // 初始化参数
@@ -232,7 +242,7 @@ const Monitor: React.FC = () => {
       y: 'calc(100vh - 265px)',
     },
     locale: {
-      emptyText: <TableNotData hint="左上角添加需要监控的ASIN"/>,
+      emptyText: <TableNotData hint={hint}/>,
     },
     pagination: pageConfig,
   };
@@ -246,12 +256,51 @@ const Monitor: React.FC = () => {
     setFrequencyState(!frequencyState);
   };
 
+  // 筛选
+  const valuesChange = function() {
+    const data = form.getFieldsValue();
+    const params: {
+      monitorSwitch?: boolean;
+      currentBuybox?: boolean;
+      currentFollow?: boolean;
+      current: number;
+      size: number;
+    } = { current: 1, size: 20 };
+    data.monitorSwitch ? params.monitorSwitch = data.monitorSwitch === 'true' : '';
+    data.currentBuybox ? params.currentBuybox = data.currentBuybox === 'true' : '';
+    data.currentFollow ? params.currentFollow = data.currentFollow === 'true' : '';
+    
+    request(params);
+  };
+
   return (
     <div className={styles.monitor}>
       <PageTitleRightInfo functionName="跟卖监控"/>
       <header className={styles.head}>
-        <PageTitleRightInfo functionName="跟卖监控"/>
-        <AutoComplete successCallback={() => setFlag(!flag)}/>
+        <div className={styles.leftLayout}>
+          <PageTitleRightInfo functionName="跟卖监控"/>
+          <AutoComplete successCallback={() => setFlag(!flag)}/>
+          <Form layout="inline" onValuesChange={valuesChange} form={form}>
+            <Form.Item name="monitorSwitch" className={styles.select}>
+              <Select allowClear placeholder="监控开关">
+                <Select.Option value={'true'}>已开启</Select.Option>
+                <Select.Option value={'false'}>已暂停</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item name="currentBuybox" className={styles.select}>
+              <Select allowClear placeholder="当前Buybox">
+                <Select.Option value={'true'}>是Buybox</Select.Option>
+                <Select.Option value={'false'}>非Buybox</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item name="currentFollow" className={styles.select}>
+              <Select allowClear placeholder="当前被跟卖">
+                <Select.Option value={'true'}>有跟卖</Select.Option>
+                <Select.Option value={'false'}>无跟卖</Select.Option>
+              </Select>
+            </Form.Item>
+          </Form>
+        </div>
 
         <div className={styles.btns}>
           <Remind flag={remindState} cb={handleFrequency} />
