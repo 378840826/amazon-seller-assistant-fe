@@ -2,20 +2,16 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2020-08-14 11:08:49
- * @LastEditors: Huang Chao Yi
  * @FilePath: \amzics-react\src\services\follow.ts
  */
 
 import request from '@/utils/request';
 
 // 跟卖监控 - 列表
-export async function getMonitorList(data: { current: number; size: number}) {
+export async function getMonitorList(params: API.IParams) {
   return request('/api/mws/follow/monitor/list', {
-    data,
-    params: {
-      current: data.current,
-      size: data.size,
-    },
+    params,
+    data: params,
   });
 }
 
