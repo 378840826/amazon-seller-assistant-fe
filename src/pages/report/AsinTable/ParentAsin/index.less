@@ -3,10 +3,6 @@
 .childAsin {
   width: 100%;
 
-  :global(.ant-table-body) {
-    overflow-y: auto !important;
-  }
-
   div:global(.ant-table) {
     margin: 0 !important;
   }
@@ -99,6 +95,10 @@
   }
 
   // 表头
+  th.parentAsinCol::after {
+    box-shadow: none !important;
+  }
+
   .headTable {
     tbody {
       display: none;

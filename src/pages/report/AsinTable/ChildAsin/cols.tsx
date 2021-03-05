@@ -1273,13 +1273,13 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 75,
       fixed: 'right',
       className: styles.handleCol,
-      render() {
+      render(val: string, { asin }: AsinTable.IChildResocds) {
         return <Link
           target="_blank"
           className={styles.handleLink}
           to={{
             pathname: '/asin/base',
-            search: '?asin=B00GIGAUA0',
+            search: `?asin=${asin}`,
           }}>数据分析</Link>;
       },
     },
