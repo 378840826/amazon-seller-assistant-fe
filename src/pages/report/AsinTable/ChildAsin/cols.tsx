@@ -82,7 +82,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     },
     {
       dataIndex: 'skuInfo',
-      title: 'SKU',
+      title: 'MSKU',
       align: 'center',
       width: 200,
       fixed: 'left',
@@ -584,7 +584,6 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
         callback={sortCallback}
         order={order}
         visible={ratio}
-        width={100}
       />,
       align: 'center',
       width: outer8,

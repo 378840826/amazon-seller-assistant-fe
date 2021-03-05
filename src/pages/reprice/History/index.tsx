@@ -237,7 +237,7 @@ const History: React.FC = () => {
       },
     },
     {
-      title: 'SKU',
+      title: 'MSKU',
       dataIndex: 'sku',
       align: 'left',
       width: 100,
@@ -449,7 +449,7 @@ const History: React.FC = () => {
       <Item name="code" className={styles.search}>
         <Search
           autoComplete="off"
-          placeholder="输入标题、ASIN或SKU" 
+          placeholder="输入标题、ASIN或MSKU" 
           enterButton={<Iconfont type="icon-sousuo" />} 
           className="h-search"
           allowClear
