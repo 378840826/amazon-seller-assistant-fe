@@ -1,0 +1,45 @@
+.__menu {
+  color: #444;
+  border: 1px solid @border-color-base;
+  background-color: #fff;
+  border-radius: 4px;
+  padding-left: 20px;
+  padding-top: 17px;
+  padding-bottom: 13px;
+
+  :global {
+    .ant-row {
+      padding-top: 3px;
+      padding-bottom: 3px;
+    }
+  }
+
+  .__checkbox_list {
+    max-height: 336px;
+    overflow: auto;
+  }
+}
+
+.__dropDown_wrap {
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid @border-color-base;
+  border-radius: 4px;
+  padding-left: 9px;
+  padding-right: 25px;
+  position: relative;
+  width: 290px;
+  cursor: pointer;
+
+  .__ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .__icon {
+    position: absolute;
+    right: 13px;
+    top: 0;
+  }
+}

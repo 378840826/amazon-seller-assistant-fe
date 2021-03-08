@@ -1,0 +1,68 @@
+.__table {
+  :global {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      height: 44px;
+      padding: 0;
+    }
+  }
+
+  .__switch {
+    transform: scale(0.818);
+  }
+
+  .__operator {
+    width: 60px;
+    display: flex;
+    justify-content: space-between;
+    font-size: @font-size-sm;
+    margin: 0 auto;
+
+    .edit {
+      color: @btn-text-color;
+      cursor: pointer;
+
+      &:hover {
+        color: @link-color;
+      }
+    }
+
+    .delete {
+      color: @error-color;
+      cursor: pointer;
+
+      &:hover {
+        color: #ff000d;
+      }
+    }
+  }
+
+  .darkRow {
+    background-color: @simple-table-header-bg;
+  }
+}
+
+.__deleteRule {
+  :global {
+    .ant-modal-content {
+      padding-bottom: 20px;
+
+      .ant-modal-body {
+        font-size: 16px;
+        color: #222;
+        padding-bottom: 15px;
+      }
+
+      .ant-modal-footer {
+        text-align: center !important;
+        border-top: none;
+
+        button {
+          & + button {
+            margin-left: 14px;
+          }
+        }
+      }
+    }
+  }
+}

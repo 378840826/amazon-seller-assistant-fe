@@ -326,5 +326,7 @@ declare namespace API {
     username: string;
     email: string;
     stores: Array<IStore>;
+    roleList: Array<string>;
+    state: boolean;
   }
 }

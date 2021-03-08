@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import { IModelType } from './connect.d';
 import { nTs } from '@/utils/utils';
 import {
@@ -22,6 +22,18 @@ import {
   msSearchKeyword,
   msMonitorAdd,
 } from '@/services/dynamic';
+
+import {
+  getSamList,
+  getRolePermission,
+  updateStatus,
+  deleteRole,
+  addRole,
+  updateRole,
+  updateSam,
+  getPermissionList,
+
+} from '@/services/rolePermission';
 export interface IDynamicModelType extends IModelType{
   namespace: 'dynamic';
 }
@@ -47,6 +59,7 @@ const DynamicModel: IDynamicModelType = {
       
     },
     *getMonitoringSettingsList({ payload, callback }, { call }){
+      console.log('payload:', JSON.stringify(payload));
       const response = yield call(getMonitoringSettingsList, payload);
       nTs(response);
       if (response.code === 200){
@@ -177,6 +190,59 @@ const DynamicModel: IDynamicModelType = {
         callback && callback();
       } else {
         message.error(response.message);
+      }
+    },
+    *getSamList({ payload, callback }, { call }){
+      const response = yield call(getSamList, payload);
+      callback && callback(response);
+      
+    },
+    *getRolePermission({ callback }, { call }){
+      const response = yield call(getRolePermission);
+      callback && callback(response);
+    },
+    *updateStatus({ payload, callback }, { call }){
+      const response = yield call(updateStatus, payload);
+      if (response.code === 200){
+        callback && callback();
+      } else {
+        message.error(response.message);
+      }
+    },
+    *deleteRole({ payload, callback }, { call }){
+      const response = yield call(deleteRole, payload);
+      callback && callback(response);
+    },
+    *addRole({ payload, callback }, { call }){
+      const response = yield call(addRole, payload);
+      if (response.code === 200){
+        callback && callback(response);
+      } else {
+        Modal.error({ content: response.message });
+      }
+    },
+    *updateRole({ payload, callback }, { call }){
+      const response = yield call(updateRole, payload);
+      if (response.code === 200){
+        callback && callback(response);
+      } else {
+        Modal.error({ content: response.message });
+      }
+    },
+    *updateSam({ payload, callback }, { call }){
+      const response = yield call(updateSam, payload);
+      if (response.code === 200){
+        callback && callback();
+      } else {
+        message.error(response.message);
+      }
+    },
+    *getPermissionList({ callback }, { call }){
+      const response = yield call(getPermissionList);
+      if (response.code === 200){
+        callback && callback(response.data);
+      } else {
+        callback && callback([]);
       }
     },
   },
