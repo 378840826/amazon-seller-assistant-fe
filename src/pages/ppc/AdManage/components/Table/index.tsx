@@ -16,7 +16,7 @@ import styles from './index.less';
 interface IProps<T> {
   dataSource: Array<T>;
   // 自定义列数据
-  customCols: {
+  customCols?: {
     [key: string]: boolean;
   };
   columns: ColumnProps<T>[];
@@ -24,8 +24,6 @@ interface IProps<T> {
   total: number;
   current: number;
   size: number;
-  sort: string;
-  order: Order;
   // 勾选的数据
   checkedIds: string[];
   // 表格数据的 dispatch type
@@ -94,6 +92,8 @@ const AdManageTable: React.FC<IProps<any>> = function(props) {
   const {
     id: currentShopId,
   } = useSelector((state: IConnectState) => state.global.shop.current);
+  const treeSelectedInfo = useSelector((state: IConnectState) => state.adManage.treeSelectedInfo);
+  const isShowBreadcrumb = treeSelectedInfo.key.split('-').length > 2;
 
   // 分页器配置
   const paginationProps = {
@@ -125,7 +125,7 @@ const AdManageTable: React.FC<IProps<any>> = function(props) {
     const showCols: any = [];
     columns.forEach(col => {
       !col.key && showCols.push(col);
-      if (customCols[col.key || '']) {
+      if (customCols && customCols[col.key || '']) {
         showCols.push(col);
       }
     });
@@ -139,8 +139,6 @@ const AdManageTable: React.FC<IProps<any>> = function(props) {
     pagination: any, __: any, sorter: any, action: any) {
     const { current, pageSize: size } = pagination;
     const { field: sort, order } = sorter;
-    console.log(sort, order);
-    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let params: { [key: string]: any } = {};
     const actionType = action.action;
@@ -161,6 +159,13 @@ const AdManageTable: React.FC<IProps<any>> = function(props) {
     });
   }
 
+  // isShowBreadcrumb
+  const tableScroll = {
+    x: 'max-content',
+    y: isShowBreadcrumb ? 'calc(100vh - 354px)' : 'calc(100vh - 324px)',
+    scrollToFirstRowOnChange: true,
+  };
+
   return (
     <div className={styles.container}>
       <Table
@@ -168,7 +173,7 @@ const AdManageTable: React.FC<IProps<any>> = function(props) {
         sortDirections={['descend', 'ascend']}
         showSorterTooltip={false}
         rowSelection={{ ...rowSelection }}
-        scroll={{ x: 'max-content', y: 'calc(100vh - 334px)', scrollToFirstRowOnChange: true }}
+        scroll={{ ...tableScroll }}
         loading={loading}
         columns={getShowCols()}
         rowKey="id"

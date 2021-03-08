@@ -6,6 +6,11 @@
 // 商品信息
 .goodsInfoContainer {
   display: flex;
+  align-items: center;
+
+  & > * {
+    line-height: 14px;
+  }
 }
 
 .goodsInfoContent {
@@ -19,13 +24,4 @@
   &:hover > span {
     color: @link-color;
   }
-}
-
-.goodsInfoRow {
-  display: flex;
-  margin-left: 12px;
-}
-
-.asin {
-  min-width: 100px;
 }

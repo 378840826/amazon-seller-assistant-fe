@@ -278,7 +278,7 @@ export const isRepeatArray = function (array: Array<string | number>): boolean {
 };
 
 // 获取解析后的 queryString 参数
-export const getPageQuery = () => parse(window.location.href.split('?')[1]);
+export const getPageQuery = () => parse(window.location.search.split('?')[1]);
 
 // obj 转 queryString
 export const objToQueryString = (obj: { [key: string]: string | number | boolean}) => {

@@ -17,7 +17,7 @@ import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
 import StateSelect, { stateOptions } from '../components/StateSelect';
-import { isArchived } from '../utils';
+import { isArchived, getAssignUrl } from '../utils';
 import editable from '@/pages/components/EditableCell';
 import { getShowPrice, strToMoneyStr } from '@/utils/utils';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -39,6 +39,7 @@ const Group: React.FC = function() {
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     groupTab: { list, searchParams, filtrateParams, customCols, checkedIds },
+    treeSelectedInfo,
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
@@ -50,16 +51,21 @@ const Group: React.FC = function() {
   useEffect(() => {
     if (currentShopId !== '-1') {
       // 广告组列表
+      // 菜单树附带的筛选参数，格式为 "类型-广告活动状态-广告活动ID"
+      const paramsArr = treeSelectedInfo.key.split('-');
       dispatch({
         type: 'adManage/fetchGroupList',
         payload: {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
+          filtrateParams: {
+            campaignId: paramsArr[2],
+          },
         },
         callback: requestErrorFeedback,
       });
     }
-  }, [dispatch, currentShopId]);
+  }, [dispatch, currentShopId, treeSelectedInfo]);
 
   // 修改广告组数据(状态、名称、默认竞价、预算控制、时间范围)
   function modifyGroup(params: {[key: string]: string | number}) {
@@ -210,7 +216,6 @@ const Group: React.FC = function() {
 
   // 复制分组
   function handleCopyGroup() {
-    console.log('copy', copyGroupState);
     dispatch({
       type: 'adManage/copyGroup',
       payload: {
@@ -244,7 +249,7 @@ const Group: React.FC = function() {
           align: 'left',
           width: 50,
           fixed: 'left',
-          render: (state: string, record: API.IAdCampaign) => (
+          render: (state: string, record: API.IAdGroup) => (
             <>{
               <Select
                 size="small"
@@ -275,7 +280,16 @@ const Group: React.FC = function() {
           fixed: 'left',
           render: (_: string, record: API.IAdGroup) => (
             <span className={commonStyles.breakAll}>
-              <a href="/" target="_blank" rel="noreferrer">{record.camName}</a>
+              <a
+                href={
+                  getAssignUrl({
+                    campaignType: record.camType,
+                    campaignState: record.camState,
+                    campaignId: record.camId,
+                    campaignName: record.camName,
+                  })
+                }
+              >{record.camName}</a>
             </span>
           ),
         },
@@ -288,12 +302,20 @@ const Group: React.FC = function() {
           align: 'left',
           width: 200,
           fixed: 'left',
-          render: (_: string, record: API.IAdCampaign) => (
+          render: (_: string, record: API.IAdGroup) => (
             <>{
               nameEditable({
                 unchangeable: isArchived(record.state),
                 inputValue: record.name,
-                href: '/',
+                href: getAssignUrl({
+                  campaignType: record.camType,
+                  campaignState: record.camState,
+                  campaignId: record.camId,
+                  campaignName: record.camName,
+                  groupId: record.id,
+                  groupName: record.name,
+                  groupType: record.groupType,
+                }),
                 maxLength: 128,
                 confirmCallback: value => {
                   modifyGroup({ name: value, id: record.id });
@@ -323,7 +345,7 @@ const Group: React.FC = function() {
           dataIndex: 'defaultBid',
           align: 'right',
           width: 100,
-          render: (value: number, record: API.IAdCampaign) => (
+          render: (value: number, record: API.IAdGroup) => (
             <>{
               editable({
                 inputValue: getShowPrice(value),
@@ -348,7 +370,19 @@ const Group: React.FC = function() {
           dataIndex: 'productCount',
           align: 'center',
           width: 100,
-          render: (value: number) => <a href="/">{value}</a>,
+          render: (value: number, record: API.IAdGroup) => (
+            <a
+              href={getAssignUrl({
+                campaignType: record.camType,
+                campaignState: record.camState,
+                campaignId: record.camId,
+                campaignName: record.camName,
+                groupId: record.id,
+                groupName: record.name,
+                groupType: record.groupType,
+              })}
+            >{value}</a>
+          ),
         },
       ] as any,
     }, {
@@ -360,7 +394,20 @@ const Group: React.FC = function() {
           dataIndex: 'targetCount',
           align: 'center',
           width: 100,
-          render: (value: number) => <a href="/">{value}</a>,
+          render: (value: number, record: API.IAdGroup) => (
+            <a
+              href={getAssignUrl({
+                campaignType: record.camType,
+                campaignState: record.camState,
+                campaignId: record.camId,
+                campaignName: record.camName,
+                groupId: record.id,
+                groupName: record.name,
+                groupType: record.groupType,
+                tab: record.groupType,
+              })}
+            >{value}</a>
+          ),
         },
       ] as any,
     }, {
@@ -372,7 +419,20 @@ const Group: React.FC = function() {
           dataIndex: 'negativeTargetCount',
           align: 'center',
           width: 100,
-          render: (value: number) => <a href="/">{value}</a>,
+          render: (value: number, record: API.IAdGroup) => (
+            <a
+              href={getAssignUrl({
+                campaignType: record.camType,
+                campaignState: record.camState,
+                campaignId: record.camId,
+                campaignName: record.camName,
+                groupId: record.id,
+                groupName: record.name,
+                groupType: record.groupType,
+                tab: 'negativeTargeting',
+              })}
+            >{value}</a>
+          ),
         },
       ] as any,
     }, {
@@ -450,6 +510,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: '销售额',
+      dataIndex: 'sales',
       key: 'sales',
       align: 'right',
       sorter: true,
@@ -465,6 +526,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: '订单量',
+      dataIndex: 'orderNum',
       key: 'orderNum',
       align: 'center',
       sorter: true,
@@ -479,6 +541,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: 'CPC',
+      dataIndex: 'cpc',
       key: 'cpc',
       align: 'center',
       sorter: true,
@@ -493,6 +556,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: 'CPA',
+      dataIndex: 'cpa',
       key: 'cpa',
       align: 'center',
       sorter: true,
@@ -507,6 +571,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: 'Spend',
+      dataIndex: 'spend',
       key: 'spend',
       align: 'center',
       sorter: true,
@@ -521,6 +586,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: 'ACoS',
+      dataIndex: 'acos',
       key: 'acos',
       align: 'center',
       sorter: true,
@@ -535,6 +601,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: 'RoAS',
+      dataIndex: 'roas',
       key: 'roas',
       align: 'center',
       sorter: true,
@@ -549,6 +616,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: 'Impressions',
+      dataIndex: 'impressions',
       key: 'impressions',
       align: 'center',
       sorter: true,
@@ -563,6 +631,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: 'Clicks',
+      dataIndex: 'clicks',
       key: 'clicks',
       align: 'center',
       sorter: true,
@@ -578,6 +647,7 @@ const Group: React.FC = function() {
       
     }, {
       title: 'CTR',
+      dataIndex: 'ctr',
       key: 'ctr',
       align: 'center',
       sorter: true,
@@ -592,6 +662,7 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: '转化率',
+      dataIndex: 'conversionsRate',
       key: 'conversionsRate',
       align: 'center',
       sorter: true,
@@ -642,8 +713,6 @@ const Group: React.FC = function() {
     total,
     current,
     size,
-    sort,
-    order,
     checkedIds,
     fetchListActionType: 'adManage/fetchGroupList',
     checkedChangeActionType: 'adManage/updateGroupChecked',

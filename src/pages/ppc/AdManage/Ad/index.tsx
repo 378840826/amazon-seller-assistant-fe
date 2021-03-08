@@ -16,7 +16,7 @@ import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
 import StateSelect, { stateOptions } from '../components/StateSelect';
-import { isArchived } from '../utils';
+import { isArchived, getAssignUrl } from '../utils';
 import { getShowPrice } from '@/utils/utils';
 import GoodsImg from '@/pages/components/GoodsImg';
 import GoodsIcon from '@/pages/components/GoodsIcon';
@@ -40,6 +40,7 @@ const Ad: React.FC = function() {
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     adTab: { list, searchParams, filtrateParams, customCols, checkedIds },
+    treeSelectedInfo,
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
@@ -49,16 +50,24 @@ const Ad: React.FC = function() {
   useEffect(() => {
     if (currentShopId !== '-1') {
       // 广告列表
+      // 菜单树附带的筛选参数，格式为 "类型-广告活动状态-广告活动ID-广告组ID"
+      const paramsArr = treeSelectedInfo.key.split('-');
       dispatch({
         type: 'adManage/fetchAdList',
         payload: {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
+          filtrateParams: {
+            // adType: paramsArr[0],
+            // camState: paramsArr[1],
+            campaignId: paramsArr[2],
+            groupId: paramsArr[3],
+          },
         },
         callback: requestErrorFeedback,
       });
     }
-  }, [dispatch, currentShopId]);
+  }, [dispatch, currentShopId, treeSelectedInfo]);
 
   // 修改广告数据(状态)
   function modifyAd(params: {[key: string]: string | number}) {
@@ -250,7 +259,16 @@ const Ad: React.FC = function() {
           fixed: 'left',
           render: (_: string, record: API.IAd) => (
             <span className={commonStyles.breakAll}>
-              <a href="/" target="_blank" rel="noreferrer">{record.camName}</a>
+              <a
+                href={
+                  getAssignUrl({
+                    campaignType: record.camType,
+                    campaignState: record.camState,
+                    campaignId: record.camId,
+                    campaignName: record.camName,
+                  })
+                }
+              >{record.camName}</a>
             </span>
           ),
         },
@@ -264,7 +282,19 @@ const Ad: React.FC = function() {
           fixed: 'left',
           render: (_: string, record: API.IAd) => (
             <span className={commonStyles.breakAll}>
-              <a href="/" target="_blank" rel="noreferrer">{record.groupName}</a>
+              <a
+                href={
+                  getAssignUrl({
+                    campaignType: record.camType,
+                    campaignState: record.camState,
+                    campaignId: record.camId,
+                    campaignName: record.camName,
+                    groupId: record.groupId,
+                    groupName: record.groupName,
+                    groupType: record.groupType,
+                  })
+                }
+              >{record.groupName}</a>
             </span>
           ),
         },
@@ -275,25 +305,23 @@ const Ad: React.FC = function() {
         {
           title: '合计',
           dataIndex: 'id',
-          width: 300,
+          width: 260,
           align: 'left',
           fixed: 'left',
           render: (_: string, record: API.IAd) => (
             <div className={styles.goodsInfoContainer}>
-              <GoodsImg src={record.img} alt="商品" width={36} />
+              <GoodsImg src={record.img} alt="商品" width={40} />
               <div className={styles.goodsInfoContent}>
                 <Paragraph ellipsis className={styles.goodsTitle}>
                   { GoodsIcon.link() }
                   <a title={record.title} href={getAmazonAsinUrl(record.asin, marketplace)} target="_blank" rel="noopener noreferrer">{record.title}</a>
                 </Paragraph>
-                <div className={styles.goodsInfoRow}>
-                  <div className={styles.asin}>
-                    <Link to={`/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
-                  </div>
-                  <Paragraph ellipsis>
-                    <Text title={record.sku}>{record.sku}</Text>
-                  </Paragraph>
+                <div>
+                  <Link to={`/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
                 </div>
+                <Paragraph ellipsis>
+                  <Text title={record.sku}>{record.sku}</Text>
+                </Paragraph>
               </div>
             </div>
           ),
@@ -336,6 +364,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: '销售额',
+      dataIndex: 'sales',
       key: 'sales',
       align: 'right',
       sorter: true,
@@ -351,6 +380,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: '订单量',
+      dataIndex: 'orderNum',
       key: 'orderNum',
       align: 'center',
       sorter: true,
@@ -365,6 +395,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: 'CPC',
+      dataIndex: 'cpc',
       key: 'cpc',
       align: 'center',
       sorter: true,
@@ -379,6 +410,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: 'CPA',
+      dataIndex: 'cpa',
       key: 'cpa',
       align: 'center',
       sorter: true,
@@ -393,6 +425,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: 'Spend',
+      dataIndex: 'spend',
       key: 'spend',
       align: 'center',
       sorter: true,
@@ -407,6 +440,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: 'ACoS',
+      dataIndex: 'acos',
       key: 'acos',
       align: 'center',
       sorter: true,
@@ -421,6 +455,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: 'RoAS',
+      dataIndex: 'roas',
       key: 'roas',
       align: 'center',
       sorter: true,
@@ -435,6 +470,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: 'Impressions',
+      dataIndex: 'impressions',
       key: 'impressions',
       align: 'center',
       sorter: true,
@@ -449,6 +485,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: 'Clicks',
+      dataIndex: 'clicks',
       key: 'clicks',
       align: 'center',
       sorter: true,
@@ -464,6 +501,7 @@ const Ad: React.FC = function() {
       
     }, {
       title: 'CTR',
+      dataIndex: 'ctr',
       key: 'ctr',
       align: 'center',
       sorter: true,
@@ -478,6 +516,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: '转化率',
+      dataIndex: 'conversionsRate',
       key: 'conversionsRate',
       align: 'center',
       sorter: true,
@@ -519,8 +558,6 @@ const Ad: React.FC = function() {
     total,
     current,
     size,
-    sort,
-    order,
     checkedIds,
     fetchListActionType: 'adManage/fetchAdList',
     checkedChangeActionType: 'adManage/updateAdChecked',

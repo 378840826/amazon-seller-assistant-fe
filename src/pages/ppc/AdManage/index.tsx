@@ -1,22 +1,33 @@
-import React, { ReactText, useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import { Tree, Tabs, Layout } from 'antd';
 import { IConnectState } from '@/models/connect';
 import { ITreeDataNode } from '@/models/adManage';
 import { useSelector, useDispatch } from 'umi';
-import { Iconfont, requestErrorFeedback } from '@/utils/utils';
+import { Iconfont, requestErrorFeedback, getPageQuery } from '@/utils/utils';
 import { PlayCircleOutlined, PauseCircleOutlined, FolderFilled } from '@ant-design/icons';
-import { DataNode } from 'antd/es/tree';
 import Campaign from './Campaign';
 import Group from './Group';
 import Ad from './Ad';
 import Keyword from './Keyword';
 import Targeting from './Targeting';
+import NegativeTargeting from './NegativeTargeting';
 import classnames from 'classnames';
 import commonStyles from './common.less';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
 const { Sider } = Layout;
+
+// 当前选中的广告活动和广告组信息
+export interface ITreeSelectedInfo {
+  key: string;
+  campaignId?: string;
+  campaignName?: ReactNode;
+  groupId?: string;
+  groupName?: ReactNode;
+}
+
+type TabsState = 'default' | 'campaign' | 'keywordGroup' | 'targetingGroup'
 
 // 菜单树默认不变的前两级
 export const initTreeData: ITreeDataNode[] = [
@@ -56,7 +67,7 @@ const allTab = {
   ad: { tab: '广告', countKey: 'adCount', tabPane: <Ad /> },
   keyword: { tab: '关键词', countKey: 'keywordCount', tabPane: <Keyword /> },
   targeting: { tab: '分类/商品投放', countKey: 'targetCount', tabPane: <Targeting /> },
-  negativeTargeting: { tab: '否定Targeting', countKey: 'neTargetCount' },
+  negativeTargeting: { tab: '否定Targeting', countKey: 'neTargetCount', tabPane: <NegativeTargeting /> },
   searchTerm: { tab: 'Search Term报表' },
   history: { tab: '操作记录' },
 };
@@ -65,20 +76,10 @@ const allTab = {
 const tabsStateDict = {
   default: ['campaign', 'group', 'ad', 'keyword', 'targeting', 'searchTerm', 'history'],
   campaign: ['group', 'ad', 'keyword', 'targeting', 'negativeTargeting', 'searchTerm', 'history'],
-  group: ['ad', 'keyword', 'negativeTargeting', 'searchTerm', 'history'],
+  // group: ['ad', 'keyword', 'negativeTargeting', 'searchTerm', 'history'],
+  keywordGroup: ['ad', 'keyword', 'negativeTargeting', 'searchTerm', 'history'],
+  targetingGroup: ['ad', 'targeting', 'negativeTargeting', 'searchTerm', 'history'],
 };
-
-// // 设置竞价的调价类型下拉框
-// export const setBidOptions = [
-//   { key: 'value', name: '固定值' },
-//   { key: 'suggested', name: '建议竞价基础上' },
-//   { key: 'suggestedMax', name: '最高建议竞价' },
-//   { key: 'suggestedMin', name: '最低建议竞价' },
-// ].map(item => (
-//   <Option key={item.key} value={item.key}>
-//     <span className={commonStyles[item.key]}>{item.name}</span>
-//   </Option>
-// ));
 
 // 状态图标字典
 export const stateIconDict = {
@@ -98,19 +99,19 @@ const Manage: React.FC = function() {
   const dispatch = useDispatch();
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const { 
-    treeData, tabsCellCount, updateTime,
+    treeData, tabsCellCount, updateTime, treeSelectedInfo, treeExpandedKeys,
   } = adManage;
-  // 店铺 ID
-  const { id: currentShopId } = useSelector((state: IConnectState) => state.global.shop.current);
-  // 菜单树的选中
-  const [selectedKeys, setSelectedKeys] = useState<ReactText[] | undefined>();
+  // 店铺
+  const {
+    id: currentShopId, storeName,
+  } = useSelector((state: IConnectState) => state.global.shop.current);
   // 标签页的类型
   const [tabsState, setTabsState] = useState<string>('default');
-  // 选中的标签
-  const [activeKey, setActiveKey] = useState<string>(tabsStateDict[tabsState][3]);
-  // 菜单树是否收起
-  const [collapsed, setCollapsed] = useState<boolean>(true);
-
+  // 选中的标签(默认选中第一个)
+  const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
+  // 菜单树侧边栏是否收起
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  
   useEffect(() => {
     if (currentShopId !== '-1') {
       // 店铺更新时间
@@ -129,12 +130,88 @@ const Manage: React.FC = function() {
         },
         callback: requestErrorFeedback,
       });
+      // 获取 url qs 参数
+      const qsParams = getPageQuery();
+      window.history.replaceState(null, '', '/ppc/manage');
+      const { 
+        campaignType, campaignState, campaignId, campaignName, groupId, groupName, tab, groupType,
+      } = qsParams as { [key: string]: string };
+      // 设置标签类型状态
+      let qsTabsState = 'default';
+      if (groupId) {
+        qsTabsState = `${groupType}Group`;
+        setActiveTabKey(tab || 'ad');
+      } else if (campaignId) {
+        qsTabsState = 'campaign';
+        setActiveTabKey(tab || 'group');
+      }
+      setTabsState(qsTabsState);
+      if (qsParams.campaignId !== undefined) {
+        // 加载菜单树的广告活动/广告组数据
+        const stateKey = `${campaignType}-${campaignState}`;
+        const campaignKey = `${stateKey}-${campaignId}`;
+        let key = campaignKey;
+        // 跳转到广告组的情况
+        if (groupId !== undefined) {
+          key = `${campaignKey}-${groupId}`;
+          // 先请求广告活动
+          dispatch({
+            type: 'adManage/fetchTreeNode',
+            payload: {
+              key: stateKey,
+              headersParams: { StoreId: currentShopId },
+            },
+            callback: (code: number, msg: string) => {
+              requestErrorFeedback(code, msg);
+              // 广告活动加载完成再加载广告组
+              dispatch({
+                type: 'adManage/fetchTreeNode',
+                payload: {
+                  key: campaignKey,
+                  parentCampaignName: campaignName,
+                  headersParams: { StoreId: currentShopId },
+                },
+                callback: requestErrorFeedback,
+              });
+            },
+          });
+        } else {
+          // 跳转到广告活动的情况
+          dispatch({
+            type: 'adManage/fetchTreeNode',
+            payload: {
+              key: stateKey,
+              headersParams: { StoreId: currentShopId },
+            },
+            callback: requestErrorFeedback,
+          });
+        }
+        // 修改菜单树选中的 key 和广告信息
+        dispatch({
+          type: 'adManage/saveTreeSelectedInfo',
+          payload: { key, campaignId, campaignName, groupId, groupName },
+        });
+        return () => {
+          setActiveTabKey(tabsStateDict[tabsState][0]);
+          // 收起菜单树
+          dispatch({
+            type: 'adManage/changeTreeExpandedKeys',
+            payload: { keys: [] },
+          });
+          // 修改菜单树选中的 key 和广告信息为空
+          dispatch({
+            type: 'adManage/saveTreeSelectedInfo',
+            payload: { key: '' },
+          });
+        };
+      }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, currentShopId]);
 
   // 异步加载菜单树数据
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function onLoadData({ key, children }: any) {
+  function onLoadData({ key, children, title }: any) {
     return new Promise<void>(resolve => {
       if (children) {
         resolve();
@@ -144,7 +221,9 @@ const Manage: React.FC = function() {
         type: 'adManage/fetchTreeNode',
         payload: {
           key,
-          headersParams: { adStoreId: '00000' },
+          // 用于获取广告组的父节点广告活动的名称
+          parentCampaignName: title,
+          headersParams: { StoreId: currentShopId },
         },
         callback: requestErrorFeedback,
         complete: resolve,
@@ -152,45 +231,112 @@ const Manage: React.FC = function() {
     });
   }
 
-  // 选中节点
-  function handleSelect(
-    keys: React.Key[], e: { selected: boolean; selectedNodes: DataNode[] }
+  // 切换选中的广告活动或广告组
+  function changeSelected(
+    params: { tabsState: TabsState; selectedInfo: ITreeSelectedInfo }
   ) {
-    console.log('handleSelect', keys, e.selectedNodes);
-    // 不能取消选中
-    if (keys.length) {
-      setSelectedKeys(keys);
-    }
-    // 切分 key
-    const params = String(keys[0]).split('-');
+    const { tabsState, selectedInfo } = params;
     // 根据节点重新加载标签页
-    let state = 'default';
-    if (params.length === 3) {
-      state = 'campaign';
-    } else if (params.length === 4) {
-      state = 'group';
-    }
-    setTabsState(state);
+    setTabsState(tabsState);
     // 切换到第一个标签
-    setActiveKey(tabsStateDict[state][0]);
-    // 如果选中的是广告活动或广告组，重新请求标签数量
-    if (params.length > 2) {
-      // 请求各标签显示的数量
+    setActiveTabKey(tabsStateDict[tabsState][0]);
+    // 请求各标签显示的数量（只有切换广告活动或广告组时才请求）
+    // 对比上一个 treeSelectedInfo 和下一个 treeSelectedInfo(也就是selectedInfo) 是否完全一样，一样则不请求标签页数量
+    if (
+      treeSelectedInfo.campaignId !== selectedInfo.campaignId ||
+      treeSelectedInfo.groupId !== selectedInfo.groupId
+    ) {
       dispatch({
         type: 'adManage/fetchTabsCellCount',
         payload: {
           headersParams: { StoreId: currentShopId },
-          campaignId: params[2],
-          groupId: params[3],
+          campaignId: selectedInfo.campaignId,
+          groupId: selectedInfo.groupId,
         },
         callback: requestErrorFeedback,
       });
-    }    
+    }
+    // 修改菜单树选中的 key 和广告信息
+    dispatch({
+      type: 'adManage/saveTreeSelectedInfo',
+      payload: selectedInfo,
+    });
+  }
+
+  // 菜单树选中节点
+  function handleSelect(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    keys: React.Key[], e: { selected: boolean; selectedNodes: any[] }
+  ) {
+    // 不能取消选中
+    if (keys.length === 0) {
+      return;
+    }
+    const selectedNode = e.selectedNodes[0];
+    // 切分 key 为 ”广告类型-状态-广告活动ID-广告组ID“
+    const paramsArr = String(keys[0]).split('-');
+    let tabsState: TabsState = 'default';
+    // 用于面包屑导航的广告活动和广告组名称
+    const selectedInfo: ITreeSelectedInfo = {
+      key: String(keys[0]),
+      campaignId: paramsArr[2],
+      campaignName: '',
+      groupId: paramsArr[3],
+      groupName: '',
+    };
+    switch (paramsArr.length) {
+    case 3:
+      tabsState = 'campaign';
+      selectedInfo.campaignName = selectedNode.title;
+      break;
+    case 4:
+      tabsState = `${selectedNode.groupType}Group` as TabsState;
+      selectedInfo.campaignName = selectedNode.parentCampaignName;
+      selectedInfo.groupName = selectedNode.title;
+      break;
+    default:
+      break;
+    }
+    // 修改菜单树选中的节点和面包屑等数据
+    changeSelected({
+      tabsState,
+      selectedInfo,
+    });    
+  }
+
+  // 面包屑导航点击
+  function handleBreadcrumbClick(type: 'shop' | 'campaign') {
+    let selectedInfo: ITreeSelectedInfo = {
+      key: '',
+      campaignId: '',
+      campaignName: '',
+    };
+    let tabsState: TabsState = 'default';
+    if (type === 'shop') {
+      // 收起菜单树
+      dispatch({
+        type: 'adManage/changeTreeExpandedKeys',
+        payload: { keys: [] },
+      });
+    } else if (type === 'campaign') {
+      const paramsArr = treeSelectedInfo.key.split('-');
+      selectedInfo = {
+        key: `${paramsArr[0]}-${paramsArr[1]}-${paramsArr[2]}`,
+        campaignId: treeSelectedInfo.campaignId,
+        campaignName: treeSelectedInfo.campaignName,
+      };
+      tabsState = 'campaign';
+    }
+    // 修改菜单树选中的节点和面包屑等数据
+    changeSelected({
+      tabsState,
+      selectedInfo,
+    });
   }
 
   // 标签页切换
   function handleTabChange(key: string) {
-    setActiveKey(key);
+    setActiveTabKey(key);
   }
 
   return (
@@ -209,16 +355,52 @@ const Manage: React.FC = function() {
             showIcon
             loadData={onLoadData}
             treeData={treeData}
-            selectedKeys={selectedKeys}
+            expandedKeys={treeExpandedKeys}
+            selectedKeys={[treeSelectedInfo.key]}
             switcherIcon={<Iconfont type="icon-xiangyoujiantou" className={styles.switcherIcon} />}
             className={classnames(styles.Tree, collapsed ? styles.hide : '')}
             onSelect={handleSelect}
+            onExpand={(keys) => {
+              dispatch({
+                type: 'adManage/changeTreeExpandedKeys',
+                payload: { keys },
+              });
+            }}
           />
         </Sider>
       </Layout>
       <div className={styles.tabsContainer}>
+        {
+          treeSelectedInfo.campaignName && 
+            <div className={styles.breadcrumb}>
+              <span
+                className={styles.breadcrumbBtn}
+                title={storeName}
+                onClick={() => handleBreadcrumbClick('shop')}
+              >
+                {storeName}
+              </span>
+              <Iconfont type="icon-zhankai" className={styles.breadcrumbSeparator} />
+              <span
+                className={styles.breadcrumbBtn}
+                title={`${treeSelectedInfo.campaignName}`}
+                onClick={ treeSelectedInfo.groupId ? () => handleBreadcrumbClick('campaign') : undefined}
+              >
+                { treeSelectedInfo.campaignName }
+              </span>
+              {
+                treeSelectedInfo.groupName &&
+                <>
+                  <Iconfont type="icon-zhankai" className={styles.breadcrumbSeparator} />
+                  <span className={styles.breadcrumbBtn} title={`${treeSelectedInfo.groupName}`}>
+                    { treeSelectedInfo.groupName }
+                  </span>
+                </>
+              }
+            </div>
+        }
         <Tabs
-          activeKey={activeKey}
+          activeKey={activeTabKey}
           onChange={handleTabChange}
           tabBarExtraContent={
             <div className={styles.updateTime}>更新时间：{updateTime}</div>

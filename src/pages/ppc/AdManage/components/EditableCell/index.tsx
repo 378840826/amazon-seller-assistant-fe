@@ -94,7 +94,7 @@ const EditableCell: React.FC<IProps> = (props) => {
       :
       <div className={styles.cell}>
         <div className={styles.cellValue}>
-          <a target="_blank" rel="noreferrer" href={href}>{inputValue}</a>
+          <a href={href}>{inputValue}</a>
         </div>
         {
           unchangeable

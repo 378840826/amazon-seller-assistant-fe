@@ -19,7 +19,7 @@ import BatchSetBid, { IComputedBidParams } from '../components/BatchSetBid';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import { matchTypeDict } from '@/pages/ppc/AdManage';
 import editable from '@/pages/components/EditableCell';
-import { isArchived } from '../utils';
+import { isArchived, getAssignUrl } from '../utils';
 import { getShowPrice, strToMoneyStr } from '@/utils/utils';
 import { add, minus, times, divide } from '@/utils/precisionNumber';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -131,7 +131,7 @@ const Keyword: React.FC = function() {
         centered: true,
         onOk() {
           dispatch({
-            type: 'adManage/batchAd',
+            type: 'adManage/batchKeyword',
             payload: {
               headersParams: { StoreId: currentShopId },
               adIds: checkedIds,
@@ -144,7 +144,7 @@ const Keyword: React.FC = function() {
       return;
     }
     dispatch({
-      type: 'adManage/batchAd',
+      type: 'adManage/batchKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
         adIds: checkedIds,
@@ -350,7 +350,16 @@ const Keyword: React.FC = function() {
           fixed: 'left',
           render: (_: string, record: API.IAdTargeting) => (
             <span className={commonStyles.breakAll}>
-              <a href="/" target="_blank" rel="noreferrer">{record.camName}</a>
+              <a
+                href={
+                  getAssignUrl({
+                    campaignType: record.camType,
+                    campaignState: record.camState,
+                    campaignId: record.camId,
+                    campaignName: record.camName,
+                  })
+                }
+              >{record.camName}</a>
             </span>
           ),
         },
@@ -364,7 +373,19 @@ const Keyword: React.FC = function() {
           fixed: 'left',
           render: (_: string, record: API.IAdTargeting) => (
             <span className={commonStyles.breakAll}>
-              <a href="/" target="_blank" rel="noreferrer">{record.groupName}</a>
+              <a
+                href={
+                  getAssignUrl({
+                    campaignType: record.camType,
+                    campaignState: record.camState,
+                    campaignId: record.camId,
+                    campaignName: record.camName,
+                    groupId: record.groupId,
+                    groupName: record.groupName,
+                    groupType: record.groupType,
+                  })
+                }
+              >{record.groupName}</a>
             </span>
           ),
         },
@@ -466,6 +487,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: '销售额',
+      dataIndex: 'sales',
       key: 'sales',
       align: 'right',
       sorter: true,
@@ -481,6 +503,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: '订单量',
+      dataIndex: 'orderNum',
       key: 'orderNum',
       align: 'center',
       sorter: true,
@@ -495,6 +518,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: 'CPC',
+      dataIndex: 'cpc',
       key: 'cpc',
       align: 'center',
       sorter: true,
@@ -509,6 +533,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: 'CPA',
+      dataIndex: 'cpa',
       key: 'cpa',
       align: 'center',
       sorter: true,
@@ -523,6 +548,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: 'Spend',
+      dataIndex: 'spend',
       key: 'spend',
       align: 'center',
       sorter: true,
@@ -537,6 +563,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: 'ACoS',
+      dataIndex: 'acos',
       key: 'acos',
       align: 'center',
       sorter: true,
@@ -551,6 +578,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: 'RoAS',
+      dataIndex: 'roas',
       key: 'roas',
       align: 'center',
       sorter: true,
@@ -565,6 +593,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: 'Impressions',
+      dataIndex: 'impressions',
       key: 'impressions',
       align: 'center',
       sorter: true,
@@ -579,6 +608,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: 'Clicks',
+      dataIndex: 'clicks',
       key: 'clicks',
       align: 'center',
       sorter: true,
@@ -594,6 +624,7 @@ const Keyword: React.FC = function() {
       
     }, {
       title: 'CTR',
+      dataIndex: 'ctr',
       key: 'ctr',
       align: 'center',
       sorter: true,
@@ -608,6 +639,7 @@ const Keyword: React.FC = function() {
       ] as any,
     }, {
       title: '转化率',
+      dataIndex: 'conversionsRate',
       key: 'conversionsRate',
       align: 'center',
       sorter: true,
@@ -649,8 +681,6 @@ const Keyword: React.FC = function() {
     total,
     current,
     size,
-    sort,
-    order,
     checkedIds,
     fetchListActionType: 'adManage/fetchKeywordList',
     checkedChangeActionType: 'adManage/updateKeywordChecked',

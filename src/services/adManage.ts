@@ -225,3 +225,32 @@ export async function batchTargeting(params: API.IParams) {
     params,
   });
 }
+
+// 否定Targeting
+// 否定Targeting-列表
+export async function queryNegativeTargetingList(params: API.IParams) {
+  return request('/api/gd/management/negativeTarget/list', {
+    method: 'POST',
+    data: params,
+    params: {
+      current: params.current,
+      size: params.size,
+    },
+  });
+}
+
+// 否定Targeting-批量归档
+export async function batchNegativeTargetingArchive(params: API.IParams) {
+  return request('/api/gd/management/negativeTarget/archive', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 否定Targeting-添加
+export async function createNegativeTargeting(params: API.IParams) {
+  return request('/api/gd/management/negativeTarget/create', {
+    method: 'POST',
+    data: params,
+  });
+}

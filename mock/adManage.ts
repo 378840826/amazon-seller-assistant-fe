@@ -18,10 +18,10 @@ export default {
       name: '广告活动-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
       state: 'enabled',
     }];
-    for (let i = 1; i < 200; i++) {
+    for (let i = 1; i < 10; i++) {
       records.push({
         id: i,
-        name: '广告活动-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
+        name: `广告活动-${i}-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H`,
         state: 'enabled',
       });
     }
@@ -107,7 +107,7 @@ export default {
           // ],
         },
       });
-    }, 0);
+    }, 1000);
   },
 
   // 菜单树-广告组
@@ -118,19 +118,25 @@ export default {
         data: {
           records: [
             {
-              id: String(Math.random()),
+              // id: String(Math.random()),
+              id: '0',
               name: '广告组-530091_12_B07T7LYSBV_190620_hoseclamps',
               state: 'enabled',
+              groupType: 'keyword',
             },
             {
-              id: String(Math.random()),
+              // id: String(Math.random()),
+              id: '1',
               name: '广告组-2',
               state: 'paused',
+              groupType: 'targeting',
             },
             {
-              id: String(Math.random()),
+              // id: String(Math.random()),
+              id: '2',
               name: '广告组-3',
               state: 'archived',
+              groupType: 'keyword',
             },
           ],
         },
@@ -147,12 +153,12 @@ export default {
           campaignCount: Math.floor(Math.random() * 100),
           groupCount: Math.floor(Math.random() * 1000),
           adCount: Math.floor(Math.random() * 10000),
-          keywordCount: 333,
-          targetCount: 3333,
-          neTargetCount: 33,
+          keywordCount: Math.floor(Math.random() * 10000),
+          targetCount: Math.floor(Math.random() * 10000),
+          neTargetCount: Math.floor(Math.random() * 100),
         },
       });
-    }, 500);
+    }, 100);
   },
   
   // 广告活动
@@ -167,7 +173,7 @@ export default {
         portfolioId: index % 2 + 1,
         portfolioName: '分组-1',
         groupCount: 10,
-        type: 'SP',
+        adType: 'sp',
         targetingType: 'manual',
         dailyBudget: 99999,
         negativeTargetCount: 12,
@@ -295,6 +301,9 @@ export default {
         name: `广告组${index}-Headline_530032_530028_530031_530029`,
         camId: String(index),
         camName: `${index}-Headline_530032_530028_530031_530029_手套`,
+        camState: 'enabled',
+        camType: 'sp',
+        groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         state: 'enabled',
         negativeTargetCount: 12,
         impressions: 10010,
@@ -392,8 +401,11 @@ export default {
         name: `广告${index}-530032`,
         camId: String(index),
         camName: `广告活动-${index}-Headline_530032_530028_530031_530029_手套`,
+        camState: 'enabled',
+        camType: 'sp',
         groupId: String(index),
         groupName: `广告组-${index}-Headline_530032_530028_530031_530029_手套`,
+        groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         state: 'enabled',
         qualification: 'Ineligible',
         qualificationMessage: 'message',
@@ -469,8 +481,11 @@ export default {
         name: `广告${index}-530032`,
         camId: String(index),
         camName: `广告活动-${index}-Headline_530032_530028_530031_530029_手套`,
+        camState: 'enabled',
+        camType: 'sp',
         groupId: String(index),
         groupName: `广告组-${index}-Headline_530032_530028_530031_530029_手套`,
+        groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         state: 'enabled',
         target: `关键词-${index}`,
         matchType: 'exact',
@@ -560,8 +575,11 @@ export default {
         name: `广告${index}-530032`,
         camId: String(index),
         camName: `广告活动-${index}-Headline_530032_530028_530031_530029_手套`,
+        camState: 'enabled',
+        camType: 'sp',
         groupId: String(index),
         groupName: `广告组-${index}-Headline_530032_530028_530031_530029_手套`,
+        groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         state: 'enabled',
         target: `Targeting-${index}`,
         expression: '品牌="APPLE“,价格="5-18.99",评分="4-5"',
@@ -638,6 +656,42 @@ export default {
           records,
         },
         message: '修改成功',
+      });
+    }, 500);
+  },
+
+  // 否定Targeting
+  // 否定Targeting-列表
+  'POST /api/gd/management/negativeTarget/list': (_: Request, res: Response) => {
+    const records: API.IAdNegativeTarget[] = [];
+    for (let index = 0; index < 20; index++) {
+      records.push({
+        id: String(index),
+        targeting: `targeting-${index}`,
+        addTime: '2020-01-02 12:13:56',
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          page: {
+            total: 111,
+            size: 20,
+            current: 3,
+            records,
+          },
+        },
+      });
+    }, 500);
+  },
+
+  // 否定Targeting-批量归档
+  'POST /api/gd/management/negativeTarget/archive': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '成功',
       });
     }, 500);
   },

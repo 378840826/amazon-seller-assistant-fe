@@ -44,6 +44,35 @@
     }
   }
 
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    padding: 0 20px;
+
+    .breadcrumbBtn {
+      font-size: 12px;
+      color: @link-color;
+      cursor: pointer;
+      max-width: 300px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &:last-child {
+        color: @text-color;
+        cursor: auto;
+      }
+    }
+
+    .breadcrumbSeparator {
+      font-size: 10px;
+      color: #ccc;
+      transform: rotate(-90deg);
+      margin: 0 6px;
+    }
+  }
+
   :global {
     // 标签样式覆盖
     .ant-tabs > .ant-tabs-nav {

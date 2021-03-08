@@ -16,7 +16,7 @@ import Filtrate from '../components/Filtrate';
 import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
-import { isArchived, targetingTypeDict } from '../utils';
+import { isArchived, targetingTypeDict, getAssignUrl } from '../utils';
 import { stateOptions } from '../components/StateSelect';
 import PortfoliosManage from './PortfoliosManage';
 import editable from '@/pages/components/EditableCell';
@@ -42,6 +42,7 @@ const Campaign: React.FC = function() {
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     campaignTab: { list, searchParams, filtrateParams, portfolioList, customCols, checkedIds },
+    treeSelectedInfo,
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
@@ -59,16 +60,22 @@ const Campaign: React.FC = function() {
         callback: requestErrorFeedback,
       });
       // 广告活动列表
+      // 菜单树附带的广告活动筛选参数，格式为 "类型-广告活动状态"
+      const paramsArr = treeSelectedInfo.key.split('-');
       dispatch({
         type: 'adManage/fetchCampaignList',
         payload: {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
+          filtrateParams: {
+            adType: paramsArr[0],
+            state: paramsArr[1],
+          },
         },
         callback: requestErrorFeedback,
       });
     }
-  }, [dispatch, currentShopId]);
+  }, [dispatch, currentShopId, treeSelectedInfo]);
 
   // 修改广告活动数据(状态、portfolio、名称、竞价策略 、Top of Search、Product page、日限额	、时间范围)
   function modifyCampaign(params: {[key: string]: string | number}) {
@@ -335,7 +342,12 @@ const Campaign: React.FC = function() {
               nameEditable({
                 unchangeable: isArchived(record.state),
                 inputValue: record.name,
-                href: '/',
+                href: getAssignUrl({
+                  campaignType: record.adType,
+                  campaignState: record.state,
+                  campaignId: record.id,
+                  campaignName: record.name,
+                }),
                 maxLength: 128,
                 confirmCallback: value => {
                   modifyCampaign({ name: value, id: record.id });
@@ -386,7 +398,16 @@ const Campaign: React.FC = function() {
           dataIndex: 'groupCount',
           align: 'center',
           width: 90,
-          render: (groupCount: number) => <a href="/" target="_blank" rel="noreferrer">{groupCount}</a>,
+          render: (groupCount: number, record: API.IAdCampaign) => (
+            <a
+              href={getAssignUrl({
+                campaignType: record.adType,
+                campaignState: record.state,
+                campaignId: record.id,
+                campaignName: record.name,
+              })}
+            >{groupCount}</a>
+          ),
         },
       ] as any,
     }, {
@@ -508,7 +529,17 @@ const Campaign: React.FC = function() {
           dataIndex: 'negativeTargetCount',
           align: 'center',
           width: 100,
-          render: (value: number) => <a href="/">{value}</a>,
+          render: (value: number, record: API.IAdCampaign) => (
+            <a
+              href={getAssignUrl({
+                campaignType: record.adType,
+                campaignState: record.state,
+                campaignId: record.id,
+                campaignName: record.name,
+                tab: 'negativeTargeting',
+              })}
+            >{value}</a>
+          ),
         },
       ] as any,
     }, {
@@ -559,6 +590,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: '销售额',
+      dataIndex: 'sales',
       key: 'sales',
       align: 'right',
       sorter: true,
@@ -574,6 +606,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: '订单量',
+      dataIndex: 'orderNum',
       key: 'orderNum',
       align: 'center',
       sorter: true,
@@ -588,6 +621,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: 'CPC',
+      dataIndex: 'cpc',
       key: 'cpc',
       align: 'center',
       sorter: true,
@@ -602,6 +636,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: 'CPA',
+      dataIndex: 'cpa',
       key: 'cpa',
       align: 'center',
       sorter: true,
@@ -616,6 +651,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: 'Spend',
+      dataIndex: 'spend',
       key: 'spend',
       align: 'center',
       sorter: true,
@@ -630,6 +666,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: 'ACoS',
+      dataIndex: 'acos',
       key: 'acos',
       align: 'center',
       sorter: true,
@@ -644,6 +681,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: 'RoAS',
+      dataIndex: 'roas',
       key: 'roas',
       align: 'center',
       sorter: true,
@@ -658,6 +696,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: 'Impressions',
+      dataIndex: 'impressions',
       key: 'impressions',
       align: 'center',
       sorter: true,
@@ -672,6 +711,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: 'Clicks',
+      dataIndex: 'clicks',
       key: 'clicks',
       align: 'center',
       sorter: true,
@@ -687,6 +727,7 @@ const Campaign: React.FC = function() {
       
     }, {
       title: 'CTR',
+      dataIndex: 'ctr',
       key: 'ctr',
       align: 'center',
       sorter: true,
@@ -701,6 +742,7 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: '转化率',
+      dataIndex: 'conversionsRate',
       key: 'conversionsRate',
       align: 'center',
       sorter: true,
@@ -742,8 +784,6 @@ const Campaign: React.FC = function() {
     total,
     current,
     size,
-    sort,
-    order,
     checkedIds,
     fetchListActionType: 'adManage/fetchCampaignList',
     checkedChangeActionType: 'adManage/updateCampaignChecked',

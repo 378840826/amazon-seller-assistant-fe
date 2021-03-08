@@ -31,13 +31,19 @@ import {
   queryTargetingList,
   batchTargeting,
   queryTargetingSuggestedBid,
+  // 否定Targeting
+  queryNegativeTargetingList,
+  batchNegativeTargetingArchive,
+  createNegativeTargeting,
 } from '@/services/adManage';
 import { storage } from '@/utils/utils';
-import { stateIconDict, initTreeData } from '@/pages/ppc/AdManage';
+import { stateIconDict, initTreeData, ITreeSelectedInfo } from '@/pages/ppc/AdManage';
 
 export interface IAdManage {
   updateTime: string;
   treeData: ITreeDataNode[];
+  treeSelectedInfo: ITreeSelectedInfo;
+  treeExpandedKeys: string[];
   tabsCellCount: {
     [key: string]: number;
   };
@@ -162,6 +168,17 @@ export interface IAdManage {
       [key: string]: boolean;
     };
   };
+  negativeTargetingTab: {
+    list: {
+      total: number;
+      records: API.IAdNegativeTarget[];
+    };
+    searchParams: {
+      size: number;
+      current: number;
+    };
+    checkedIds: string[];
+  };
 }
 
 interface IAdManageModelType extends IModelType {
@@ -184,19 +201,38 @@ export interface INode {
   id: string;
   name: string;
   state: string;
+  // 广告组的节点需要保存广告组的类型，用于判定选中广告组时要显示什么标签
+  groupType?: API.GroupType;
 }
 
 // 排序
 export type Order = 'descend' | 'ascend' | null | undefined;
 
 // 按 Tree 的要求格式化数据, params key 是父节点的 key
-export const formattingRecords = (list: INode[], parentKey: string) => {
+export const formattingRecords = (
+  list: INode[], parentKey: string, isLeaf: boolean, parentCampaignName: string,
+// eslint-disable-next-line max-params
+) => {
   return list.map((item: INode) => {
-    return {
+    const result: {
+      title: string;
+      key: string;
+      icon: Element;
+      isLeaf: boolean;
+      parentCampaignName?: string;
+      groupType?: API.GroupType;
+    } = {
       title: item.name,
       key: `${parentKey}-${item.id}`,
       icon: stateIconDict[item.state],
+      isLeaf,
     };
+    // 广告组设置 parentCampaignName 用于面包屑展示
+    if (parentKey.split('-').length > 2) {
+      result.parentCampaignName = parentCampaignName;
+      result.groupType = item.groupType;
+    }
+    return result;
   });
 };
 
@@ -261,6 +297,9 @@ const AdManageModel: IAdManageModelType = {
   state: {
     updateTime: '正在查询...',
     treeData: initTreeData,
+    // 在菜单树选中广告活动或广告组时，保存的广告活动和广告组信息
+    treeSelectedInfo: { key: '' },
+    treeExpandedKeys: [],
     // 标签下的数量
     tabsCellCount: {
       campaignCount: 0,
@@ -465,6 +504,19 @@ const AdManageModel: IAdManageModelType = {
         conversionsRate: false,
       },
     },
+    // 否定Targeting
+    negativeTargetingTab: {
+      list: {
+        total: 0,
+        records: [],
+      },
+      searchParams: {
+        current: 1,
+        size: 20,
+      },
+      // 勾选的id
+      checkedIds: [],
+    },
   },
 
   effects: {
@@ -482,11 +534,14 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // 获取菜单树节点（广告活动和广告组）
-    *fetchTreeNode({ payload, callback, complete }, { call, put }) {
-      // key 的组成： 类型-状态-广告活动ID-广告组ID
-      const { key } = payload;
+    *fetchTreeNode({ payload, callback, complete }, { call, put, select }) {
+      // key 的组成： 类型-广告活动状态-广告活动ID-广告组ID
+      // parentCampaignName 主要用于获取广告活动的名称展示在面包屑
+      const { key, parentCampaignName } = payload;
       const paramsArr = key.split('-');
       let service = queryCampaignSimpleList;
+      // 广告组是叶子节点
+      let isLeaf = false;
       const params: {
         adType: string;
         state: string;
@@ -499,16 +554,26 @@ const AdManageModel: IAdManageModelType = {
       if (paramsArr.length > 2) {
         service = queryGroupSimpleList;
         params.camId = paramsArr[2];
+        isLeaf = true;
       }
       const res = yield call(service, params);
       if (res.code === 200) {
         const { data: { records } } = res;
         yield put({
           type: 'saveTreeNode',
-          payload: { records, key },
+          payload: { records, key, isLeaf, parentCampaignName },
+        });
+        // 设置菜单树展开的节点（通过url跳转到指定广告活动/广告组时，获取菜单树后立即展开）
+        const currentKeys = yield select((state: IConnectState) => state.adManage.treeExpandedKeys);
+        const typeKey = params.adType;
+        const stateKey = `${typeKey}-${params.state}`;
+        yield put({
+          type: 'changeTreeExpandedKeys',
+          // 去重
+          payload: { keys: Array.from(new Set([...currentKeys, typeKey, stateKey, key])) },
         });
       }
-      complete();
+      complete && complete();
       callback && callback(res.code, res.message);
     },
 
@@ -876,7 +941,7 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // Targeting
-    // 关键词-获取列表
+    // Targeting-获取列表
     *fetchTargetingList({ payload, callback }, { call, put, select }) {
       const { searchParams, filtrateParams, headersParams } = payload;
       // 旧的查询+筛选参数
@@ -921,7 +986,7 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 关键词-获取建议竞价
+    // Targeting-获取建议竞价
     *fetchTargetingSuggestedBid({ payload, callback }, { call, put }) {
       const res = yield call(queryTargetingSuggestedBid, payload);
       if (res.code === 200) {
@@ -934,7 +999,7 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 关键词-批量修改
+    // Targeting-批量修改
     *batchTargeting({ payload, callback }, { call, put }) {
       const res = yield call(batchTargeting, payload);
       if (res.code === 200) {
@@ -947,7 +1012,7 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 关键词-修改关键词数据
+    // Targeting-修改关键词数据
     *modifyTargeting({ payload, callback }, { call, put }) {
       const res = yield call(updateGroup, payload);
       if (res.code === 200) {
@@ -955,6 +1020,58 @@ const AdManageModel: IAdManageModelType = {
         yield put({
           type: 'updateTargetingList',
           payload: { records: [data] },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 否定Targeting
+    // 否定Targeting-获取列表
+    *fetchNegativeTargetingList({ payload, callback }, { call, put }) {
+      const { searchParams, headersParams } = payload;
+      const res = yield call(queryNegativeTargetingList, { ...searchParams, headersParams });
+      if (res.code === 200) {
+        const { data: { page, total } } = res;
+        // 保存列表数据
+        yield put({
+          type: 'saveNegativeTargetingList',
+          payload: { page, dataTotal: total },
+        });
+        // 保存查询和筛选参数
+        yield put({
+          type: 'saveNegativeTargetingParams',
+          payload: { searchParams },
+        });
+        // 取消选中
+        yield put({
+          type: 'updateNegativeTargetingChecked',
+          payload: [],
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 否定Targeting-批量归档
+    *batchNegativeTargetingArchive({ payload, callback }, { call, put }) {
+      const res = yield call(batchNegativeTargetingArchive, payload);
+      if (res.code === 200) {
+        // 刷新列表
+        yield put({
+          type: 'fetchNegativeTargetingList',
+          payload: { headersParams: payload.headersParams },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 否定Targeting-添加
+    *addNegativeTargeting({ payload, callback }, { call, put }) {
+      const res = yield call(createNegativeTargeting, payload);
+      if (res.code === 200) {
+        // 刷新列表
+        yield put({
+          type: 'fetchNegativeTargetingList',
+          payload: { headersParams: payload.headersParams },
         });
       }
       callback && callback(res.code, res.message);
@@ -969,11 +1086,22 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // 菜单树-保存菜单树
-    saveTreeNode(state, { payload }) {
-      const { records, key } = payload;
-      const formatRecords = formattingRecords(records, key);
+    saveTreeNode(state, { payload }) {      
+      const { records, key, isLeaf, parentCampaignName } = payload;
+      const formatRecords = formattingRecords(records, key, isLeaf, parentCampaignName);
       const node = updateTreeData(state.treeData, key, formatRecords);
       state.treeData = node;
+    },
+
+    // 菜单树-保存菜单树选中的key 和 广告活动或广告组信息
+    saveTreeSelectedInfo(state, { payload }) {
+      state.treeSelectedInfo = payload;
+    },
+
+    // 菜单树-菜单树展开的 key
+    changeTreeExpandedKeys(state, { payload }) {
+      const { keys } = payload;
+      state.treeExpandedKeys = keys;
     },
 
     // 标签页-保存各标签显示的数量
@@ -1216,6 +1344,26 @@ const AdManageModel: IAdManageModelType = {
           }
         });
       }
+    },
+
+    // 否定Targeting
+    // 否定Targeting-保存列表
+    saveNegativeTargetingList(state, { payload }) {
+      const { page, dataTotal } = payload;
+      state.negativeTargetingTab.list = { ...page, dataTotal };
+    },
+
+    // 否定Targeting-更新查询参数
+    saveNegativeTargetingParams(state, { payload }) {
+      const { searchParams } = payload;
+      state.negativeTargetingTab.searchParams = Object.assign(
+        state.negativeTargetingTab.searchParams, searchParams
+      );
+    },
+
+    // 否定Targeting-勾选
+    updateNegativeTargetingChecked(state, { payload }) {
+      state.negativeTargetingTab.checkedIds = payload;
     },
   },
 };

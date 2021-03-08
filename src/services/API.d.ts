@@ -117,15 +117,19 @@ declare namespace API {
     groupName: string;
   }
 
+  // 广告管理
+  type AdState = 'enabled' | 'paused' | 'archived';
+  type GroupType = 'keyword' | 'targeting';
+  type CamType = 'sb' | 'sp' | 'sd';
   // 广告管理-广告活动
   interface IAdCampaign {
     id: string;
     name: string;
-    state: string;
+    state: AdState;
     portfolioId: number;
     portfolioName: string;
     groupCount?: number;
-    type: string;
+    adType: CamType;
     targetingType: string;
     dailyBudget: number;
     negativeTargetCount?: number;
@@ -160,7 +164,10 @@ declare namespace API {
     name: string;
     camId: string;
     camName: string;
-    state: string;
+    camState: AdState;
+    camType: CamType;
+    groupType: GroupType;
+    state: AdState;
     negativeTargetCount?: number;
     targetCount: number;
     productCount: number;
@@ -188,8 +195,11 @@ declare namespace API {
     name: string;
     camId: string;
     camName: string;
+    camState: AdState;
+    camType: CamType;
     groupId: string;
     groupName: string;
+    groupType: GroupType;
     state: string;
     qualification: string;
     qualificationMessage: string;
@@ -217,8 +227,11 @@ declare namespace API {
     name: string;
     camId: string;
     camName: string;
+    camState: AdState;
+    camType: CamType;
     groupId: string;
     groupName: string;
+    groupType: GroupType;
     state: string;
     target: string;
     expression?: string;
@@ -239,6 +252,13 @@ declare namespace API {
     sales: number;
     orderNum: number;
     conversionsRate: number;
+  }
+
+  // 
+  interface IAdNegativeTarget {
+    id: string;
+    targeting: string;
+    addTime: string;
   }
 
   interface IInventoryReplenishmentLabels {
