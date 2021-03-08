@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Modal, Button, Form, Input, message } from 'antd';
+import { 
+  Modal, 
+  Button, 
+  Form, 
+  Input, 
+  message, 
+  Checkbox,
+  Row,
+  Col } from 'antd';
+import { Iconfont } from '@/utils/utils';
+import { Link } from 'umi';
 import { validate } from '@/utils/utils';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import { ISubModelState } from '@/models/sub';
@@ -17,6 +27,10 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 4, span: 15 },
 };
+const formItemLayout = {
+  labelCol: { span: 5 },
+  wrapperCol: { span: 18 },
+};
 interface IStatus {
   width: number;
   closable: boolean;
@@ -32,8 +46,10 @@ interface IStoreListConnectProps extends IConnectProps{
 }
 const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, currentUser, dispatch }){
   const surplus = currentUser.memberFunctionalSurplus.filter(item => item.functionName === '子账号');
+  
   const leftNum = surplus.length > 0 ? surplus[0].frequency : 0;
   const storeList = sub.storeList;  
+  const roleList = sub.roleList;
   const [status, setStatus] = useState<IStatus>({ 
     width: 532,
     closable: false, //dialog的头部关闭图案消失
@@ -59,9 +75,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, currentUser
     if (leftNum <= 0){
       message.error('当前会员等级剩余可添加子账号:0个');
       return;
-    }
-    console.log('当前剩余的：', JSON.stringify(status));
-    
+    }  
     setStatus( (status) => {
       return {
         ...status,
@@ -80,6 +94,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, currentUser
       };
     });
   };
+
   const onFinish = (values: Store) => {
     const checkedList = storeList.filter((item, index) => {
       return status.checkedIndexList.indexOf(index) > -1;
@@ -91,6 +106,7 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, currentUser
       username: values.username,
       email: values.email.trim(),
       password: values.password,
+      roleList: values.roleList,
       stores: checkedList,
     };
     setStatus((state) => {
@@ -227,6 +243,45 @@ const AddAccount: React.FC<IStoreListConnectProps> = function({ sub, currentUser
               <StoreList checkedList={status.checkedIndexList} 
                 checkboxChange={checkboxChange}/>       
             </Form.Item>
+            <Row>
+              <Col span={19}>
+                <Form.Item 
+                  className={styles.__role_item} 
+                  {...formItemLayout}
+                  label="角色："
+                  name="roleList" 
+                  required={true}
+                  rules={[
+                    () => ({
+                      validator: (rule, value = []) => new Promise((resolve, reject) => {
+                        if (!value.length){
+                          reject('角色不能为空');
+                          return;
+                        }
+                        resolve();
+                      }),
+                    }),
+                  ]}
+                >
+                  <Checkbox.Group className={styles.__group}>
+                    <Row>
+                      {roleList.map( (item, index) => 
+                        <Col key={index}>
+                          <Checkbox  
+                            value={item.id} 
+                          >
+                            {item.roleName}
+                          </Checkbox>
+                        </Col>
+                      )}
+                    </Row>
+                  </Checkbox.Group>
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+                <Link className={styles.__link} to="/auth/index">添加角色<Iconfont className={styles.__add_icon} type="icon-zhankai"/></Link>
+              </Col>
+            </Row>
             <Form.Item {...tailLayout}>
               <Button htmlType="button" disabled={status.confirmLoading} onClick={handleCancel} className="__cancel">取消</Button>
               <Button type="primary" htmlType="submit" loading={status.confirmLoading} className="__save">保存</Button>

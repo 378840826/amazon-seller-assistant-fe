@@ -1,0 +1,63 @@
+.title {
+  color: @heading-color;
+  font-size: @font-size-base;
+  text-align: left;
+  font-weight: bold;
+  padding-top: 17px;
+}
+
+.__form {
+  :global {
+    .ant-form-item-explain.ant-form-item-explain-error {
+      text-align: left;
+    }
+
+    .ant-form-item-label {
+      padding: 0;
+    }
+  }
+
+  .__tree_wrap {
+    position: relative;
+
+    .__tree {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .__item_label {
+    height: 30px;
+
+    ._icon {
+      font-size: 24px;
+      height: 30px;
+      vertical-align: middle;
+      color: @error-color;
+    }
+  }
+
+  .__textarea {
+    height: 110px !important;
+  }
+
+  .__groups {
+    max-height: 275px;
+    overflow: auto;
+    text-align: left;
+    width: 100%;
+  }
+
+  .__radioGroup {
+    text-align: left;
+  }
+
+  .__cancel_btn {
+    margin: 0 auto;
+
+    .__button {
+      margin-right: 15px;
+    }
+  }
+}

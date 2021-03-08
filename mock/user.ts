@@ -22,7 +22,7 @@ export default {
           memberFunctionalSurplus: [
             { functionName: '绑定店铺', frequency: 0 },
             { functionName: '广告授权店铺', frequency: 0 },
-            { functionName: '子账号', frequency: 0 },
+            { functionName: '子账号', frequency: 10 },
             { functionName: '智能调价', frequency: 0 },
             { functionName: 'ASIN报表导出', frequency: 0 },
             { functionName: 'ASIN动态监控', frequency: 0 },

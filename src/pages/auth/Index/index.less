@@ -1,0 +1,22 @@
+.container {
+  background-color: #fff;
+  padding: 20px;
+
+  .__add_btn {
+    margin-bottom: 14px;
+  }
+}
+
+.__modal {
+  :global {
+    .ant-modal-body {
+      padding: 0 30px 20px 30px;
+    }
+
+    .ant-modal-close-x {
+      &:hover {
+        color: @error-color;
+      }
+    }
+  }
+}
