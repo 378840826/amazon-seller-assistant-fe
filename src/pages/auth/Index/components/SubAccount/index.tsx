@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from './index.less';
 import { useDispatch } from 'umi';
 import { Dropdown, Checkbox, Row, Col } from 'antd';
@@ -7,32 +7,20 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 
 interface ISubAccount{
-    id: string;
+    id: number;
     data: CheckboxValueType[];//选中的子账号id
     samList: API.IParams[];//所有子账号
-    changeItem: (id: string, obj: API.IParams) => void;
+    changeItem: (id: number, obj: API.IParams) => void;
 }
 const CheckboxGroup = Checkbox.Group;
 const SubAccount: React.FC<ISubAccount> = ({ id, data, samList, changeItem }) => {
+  console.log('data,samList:', data, samList);
   const dispatch = useDispatch();
   const [state, setState] = useState({
-    indeterminate: !!data.length && data.length < samList.length,
-    checkedList: data,
-    checkAll: data.length === samList.length,
     visible: false, //菜单是否显示
   });
 
-  //全选框
-  const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    setState((state) => ({
-      ...state,
-      indeterminate: false,
-      checkedList: e.target.checked ? samList.map(item => item.id) : [],
-      checkAll: e.target.checked,
-    }));
-  };
-  //单选框
-  const onChange = (checked: CheckboxValueType[]) => {
+  const updateSam = useCallback((checked) => {
     dispatch({
       type: 'dynamic/updateSam',
       payload: {
@@ -42,16 +30,18 @@ const SubAccount: React.FC<ISubAccount> = ({ id, data, samList, changeItem }) =>
         },
       },
       callback: () => {
-        setState((state) => ({
-          ...state,
-          checkedList: checked,
-          checkAll: checked.length === samList.length,
-          indeterminate: !!checked.length && checked.length < samList.length,
-        }));
         changeItem(id, { samList: checked } ) ;
       },
     });
-    
+  }, [changeItem, dispatch, id]);
+  //全选框
+  const onCheckAllChange = (e: CheckboxChangeEvent) => {
+    const checked = e.target.checked ? samList.map(item => item.id) : [];
+    updateSam(checked);
+  };
+  //单选框
+  const onChange = (checked: CheckboxValueType[]) => {
+    updateSam(checked);
   };
   //属性的变化
   const onVisibleChange = (visible: boolean) => {
@@ -61,7 +51,7 @@ const SubAccount: React.FC<ISubAccount> = ({ id, data, samList, changeItem }) =>
     }));
   };
   const showNameList = () => {
-    const filterAry = samList.filter( item => state.checkedList.includes(item.id))
+    const filterAry = samList.filter( item => data.includes(item.id))
       .map(item => item.username);
     return filterAry.join('，');
   };
@@ -70,15 +60,15 @@ const SubAccount: React.FC<ISubAccount> = ({ id, data, samList, changeItem }) =>
       <div className={styles.__menu}>
         <div>
           <Checkbox 
-            indeterminate={state.indeterminate} 
+            indeterminate={!!data.length && data.length < samList.length} 
             onChange={onCheckAllChange} 
-            checked={state.checkAll}>
+            checked={data.length === samList.length}>
         全选
           </Checkbox>
         </div>
         <div className={styles.__checkbox_list}>
           <CheckboxGroup 
-            value={state.checkedList}
+            value={data}
             onChange={onChange} >
             {samList.map( (item: API.IParams, index: number) => {
               return (
@@ -104,7 +94,7 @@ const SubAccount: React.FC<ISubAccount> = ({ id, data, samList, changeItem }) =>
     >
       <div className={styles.__dropDown_wrap}>
         <div className={styles.__ellipsis}>{showNameList()}</div>
-        <i className={styles.__icon}>{ state.visible ? <DownOutlined/> : <UpOutlined/>}</i>
+        <i className={styles.__icon}>{ state.visible ? <UpOutlined/> : <DownOutlined/> }</i>
       </div>
     </Dropdown>
   );

@@ -22,13 +22,14 @@
 
 .__dropDown_wrap {
   height: 30px;
+  background-color: #fff;
   line-height: 30px;
   border: 1px solid @border-color-base;
   border-radius: 4px;
   padding-left: 9px;
   padding-right: 25px;
   position: relative;
-  width: 480px;
+  margin: 0 auto;
   cursor: pointer;
 
   .__ellipsis {
@@ -40,6 +41,13 @@
   .__icon {
     position: absolute;
     right: 13px;
+    color: #bfbfbf;
     top: 0;
+  }
+}
+
+@media screen and (min-width: 1900px) {
+  .__dropDown_wrap {
+    width: 480px;
   }
 }
