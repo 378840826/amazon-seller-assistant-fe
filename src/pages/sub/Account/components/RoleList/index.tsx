@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import styles from './index.less';
 import { useDispatch } from 'umi';
 import { Dropdown, Checkbox, Row, Col } from 'antd';
@@ -21,17 +21,7 @@ const SubAccount: React.FC<ISubAccount> = ({ id, data, samList }) => {
     visible: false, //菜单是否显示
   });
 
-  //全选框
-  const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    setState((state) => ({
-      ...state,
-      indeterminate: false,
-      checkedList: e.target.checked ? samList.map(item => item.id) : [],
-      checkAll: e.target.checked,
-    }));
-  };
-  //单选框
-  const onChange = (checked: CheckboxValueType[]) => {
+  const updateRole = useCallback((checked) => {
     dispatch({
       type: 'sub/updateRole',
       payload: {
@@ -49,6 +39,15 @@ const SubAccount: React.FC<ISubAccount> = ({ id, data, samList }) => {
         }));
       },
     });
+  }, [dispatch, id, samList.length]);
+  //全选框
+  const onCheckAllChange = (e: CheckboxChangeEvent) => {
+    const checked = e.target.checked ? samList.map(item => item.id) : [];
+    updateRole(checked);
+  };
+  //单选框
+  const onChange = (checked: CheckboxValueType[]) => {
+    updateRole(checked);
     
   };
   //属性的变化

@@ -110,7 +110,7 @@ const TableCom: React.FC<ITableCom> = ({
  
   const columns: ColumnProps<API.IParams>[] = [{
     title: '状态',
-    width: 95,
+    width: 80,
     align: 'center',
     dataIndex: 'roleState',
     key: 'roleState',
@@ -120,21 +120,22 @@ const TableCom: React.FC<ITableCom> = ({
       checked={status}/>,
   }, {
     title: '角色名称',
-    width: 80,
+    width: 94,
     align: 'center',
     dataIndex: 'roleName',
     key: 'roleName',
     render: (text) => text ? text : <div className="null_bar"></div>,
   }, {
     title: '角色描述',
-    width: 320,
+    width: 200,
     align: 'left',
     dataIndex: 'roleDescription',
     key: 'roleDescription',
     render: (text) => text ? text : <div className="null_bar"></div>,
   }, {
     title: '关联子账号',
-    width: 485,
+    width: 300,
+    align: 'center',
     dataIndex: 'samList',
     key: 'samList',
     render: (data, record) => 
@@ -146,23 +147,23 @@ const TableCom: React.FC<ITableCom> = ({
       />,
   }, {
     title: '创建时间',
-    width: 120,
+    width: 100,
     align: 'center',
     dataIndex: 'gmtCreate',
     key: 'gmtCreate',
-    render: (text) => text ? text : <div className="null_bar"></div>,
+    render: (text) => text ? <div className={styles.__text_time}>{text}</div> : <div className="null_bar"></div>,
   },
   {
     title: '更新时间',
-    width: 120,
+    width: 100,
     align: 'center',
     dataIndex: 'updateTime',
     key: 'updateTime',
-    render: (text) => text ? text : <div className="null_bar"></div>,
+    render: (text) => text ? <div className={styles.__text_time}>{text}</div> : <div className="null_bar"></div>,
   },
   {
     title: '操作',
-    width: 120,
+    width: 90,
     align: 'center',
     render: (record) => {
       return (
@@ -187,7 +188,7 @@ const TableCom: React.FC<ITableCom> = ({
         onOk={(e) => onDelete(e)}
         onCancel={(e) => onCancelDelete(e)}
       >
-        <div>确定删除此条信息？</div>
+        <div>确定删除此角色？</div>
 
       </Modal>
       <Table
@@ -197,6 +198,7 @@ const TableCom: React.FC<ITableCom> = ({
         loading={tableLoading}
         className={styles.__table}
         rowKey="id"
+        scroll={{ x: 'max-content', y: 'calc(100vh - 222px)' }}
         locale={{ emptyText: errMsg === '' ? 
           <TableNotData hint="没找到相关数据"/> : 
           <TableNotData hint={errMsg}/> }}

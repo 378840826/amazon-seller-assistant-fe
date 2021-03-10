@@ -254,8 +254,10 @@ const GlobalModel: IGlobalModelType = {
           '/center',
           '/message',
           '/sub-account',
+          '/auth/index',
         ];
         const isExclude = exclude.some(url => pathname.includes(url));
+        console.log('isExclude:', isExclude);
         if (!isExclude) {
           // message.destroy();
           const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
@@ -432,6 +434,7 @@ const GlobalModel: IGlobalModelType = {
           '/ppc/auth',
           '/center',
           '/sub-account',
+          '/auth/index',
         ];
         const disabledShopSelectorUrl = [
           '/ppc/campaign/add',
