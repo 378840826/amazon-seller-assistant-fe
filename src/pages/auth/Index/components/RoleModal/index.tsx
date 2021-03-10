@@ -48,6 +48,11 @@ const tailLayout = {
   labelCol: { span: 24 },
 };
 
+const statusLayout = {
+  wrapperCol: { flex: 1 },
+  labelCol: { flex: '42px' },
+};
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatRoleList = (arr: any[]): TreeProps['treeData'] => {
@@ -199,6 +204,7 @@ const RoleModal: React.FC<IRoleModal> = ({
             <Form.Item
               label="状态："
               name="roleState"
+              {...statusLayout}
               className={styles.__radioGroup}>
               <Radio.Group name="radioGroup">
                 <Radio value={true}>启用</Radio>

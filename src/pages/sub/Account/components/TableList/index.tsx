@@ -46,7 +46,7 @@ const TableList: React.FC<ITableListConnectProps> = function({
   const confirmUname = (value: string, id: string) => {
     value = value.trim();
     if (!validate.username.test(value)){
-      message.error('长度4~16，支持字母、数字、下划线，不允许为纯数字');
+      message.error('长度4~16，支持字母、中文、数字、下划线，不允许为纯数字');
       return;
     }
     dispatch({

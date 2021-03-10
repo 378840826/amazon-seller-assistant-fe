@@ -112,7 +112,7 @@ const Reset: React.FC<IResetConnectProps> = function ({ dispatch, type, showMsg,
     new Promise((resolve, reject) => {
       if (type === 'username'){
         if (!validate.username.test(inputVal)){
-          return reject('长度4~16，支持字母、数字、下划线，不允许为纯数字');
+          return reject('长度4~16，支持字母、中文、数字、下划线，不允许为纯数字');
         }
         dispatch({
           type: 'user/existUsername',

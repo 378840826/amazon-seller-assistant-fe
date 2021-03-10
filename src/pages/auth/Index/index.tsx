@@ -108,7 +108,10 @@ const Auth = () => {
   };
   return (
     <div className={styles.container}>
-      <Button className={styles.__add_btn} onClick={() => onToggleModal(true, -1)}>添加角色</Button>
+      <Button 
+        type="primary"
+        className={styles.__add_btn} 
+        onClick={() => onToggleModal(true, -1)}>添加角色</Button>
       <Modal 
         className={styles.__modal}
         footer={null}
