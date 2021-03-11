@@ -69,6 +69,7 @@ export default [
   {
     path: '/auth',
     component: '../layouts/BasicLayout',
+    wrappers:['@/wrappers/subAuth'],
     routes: [{ path: '/auth/index', component: './auth/Index', title: '角色权限管理' }]
   },
 

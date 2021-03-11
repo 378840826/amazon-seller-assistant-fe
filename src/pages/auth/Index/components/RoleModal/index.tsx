@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'umi';
 import styles from './index.less';
+import classnames from 'classnames';
 import { 
   Form, 
   Row, 
@@ -20,10 +21,7 @@ interface IRoleModal{
     records: API.IParams[];
     getRecordsList: () => void;
 }
-interface IOptions{
-    label: string;
-    value: string;
-}
+
 const defaultState = {
   roleName: '',
   roleDescription: '',
@@ -142,7 +140,7 @@ const RoleModal: React.FC<IRoleModal> = ({
 
   useEffect(() => {
     const height = refObj.current;
-    height ? setHeight(height.clientHeight - 46) : 0;
+    height ? setHeight(height.clientHeight - 26) : 0;
   }, []);
 
 
@@ -165,8 +163,8 @@ const RoleModal: React.FC<IRoleModal> = ({
               required={false}
               validateTrigger={['onBlur', 'onFocus']}
               rules={[
-                { required: true, message: '用户名不能为空', validateTrigger: 'onBlur' },
-                { type: 'string', max: 10, message: '用户名不能超过10个字符', validateTrigger: 'onBlur' },
+                { required: true, message: '角色名称不能为空', validateTrigger: 'onBlur' },
+                { type: 'string', max: 10, message: '角色名称不能超过10个字符', validateTrigger: 'onBlur' },
                 { message: '', validateTrigger: 'onFocus' },
               ]}
             >
@@ -175,11 +173,13 @@ const RoleModal: React.FC<IRoleModal> = ({
             <Form.Item
               {...tailLayout}
               label="角色描述："
+              className={styles.__role_description}
               name="roleDescription"
             >
               <TextArea className={styles.__textarea}/>
             </Form.Item>
             <Form.Item
+              className={styles.__common_item}
               {...tailLayout}
               label="关联子账号："
               name="samList">
@@ -205,7 +205,7 @@ const RoleModal: React.FC<IRoleModal> = ({
               label="状态："
               name="roleState"
               {...statusLayout}
-              className={styles.__radioGroup}>
+              className={classnames(styles.__radioGroup, styles.__common_item)}>
               <Radio.Group name="radioGroup">
                 <Radio value={true}>启用</Radio>
                 <Radio value={false}>停用</Radio> 
