@@ -38,12 +38,21 @@
     }
   }
 
+  .__role_description {
+    margin-top: -8px;
+    margin-bottom: 4px !important;
+  }
+
+  .__common_item {
+    margin-bottom: 4px !important;
+  }
+
   .__textarea {
     height: 110px !important;
   }
 
   .__groups {
-    max-height: 275px;
+    max-height: 298px;
     overflow: auto;
     text-align: left;
     width: 100%;
@@ -51,6 +60,14 @@
 
   .__radioGroup {
     text-align: left;
+    margin-bottom: 0 !important;
+
+    :global {
+      .ant-form-item-control-input,
+      .ant-form-item-label > label {
+        align-items: flex-end !important;
+      }
+    }
   }
 
   .__cancel_btn {

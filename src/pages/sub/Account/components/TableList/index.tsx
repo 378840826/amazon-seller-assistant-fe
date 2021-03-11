@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 // import Reset from '../Reset';
-import { Popconfirm, message, Switch } from 'antd';
+import { Popconfirm, message, Switch, Spin } from 'antd';
 import { validate } from '@/utils/utils';
 import styles from './index.less';
 import { IConnectState, IConnectProps } from '@/models/connect';
@@ -25,9 +25,8 @@ const TableList: React.FC<ITableListConnectProps> = function({
   sub, 
   dispatch,
 }){
-  const userList = sub.userList; 
-  const storeList = sub.storeList;
-  const roleList = sub.roleList;
+
+  const { userList, storeList, roleList, tableLoading } = sub;
 
   const popConfirm = (id: string) => {
     dispatch({
@@ -46,7 +45,7 @@ const TableList: React.FC<ITableListConnectProps> = function({
   const confirmUname = (value: string, id: string) => {
     value = value.trim();
     if (!validate.username.test(value)){
-      message.error('长度4~16，支持字母、中文、数字、下划线，不允许为纯数字');
+      message.error('长度2~16，支持字母、中文、数字、下划线，不允许为纯数字');
       return;
     }
     dispatch({
@@ -123,109 +122,112 @@ const TableList: React.FC<ITableListConnectProps> = function({
     });
   };
   return (
+   
     <div className={styles.table}>
-      <table>
-        <thead>
-          <tr>
-            <th className={styles.username}>
-              <div>状态</div>
-            </th>
-            <th className={styles.switch}>
-              <div>用户名</div>
-            </th>
-            <th className={styles.email}>
-              <div>邮箱</div>
-            </th>
-            <th className={styles.password}>
-              <div>密码</div>
-            </th>
-            <th className={styles.operaShop}>
-              <div>管理店铺</div>
-            </th>
-            <th className={styles.roleList}>
-              <div>角色</div>
-            </th>
-            <th className={styles.operaDelete}>
-              <div>操作</div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {userList.length > 0 && userList.map((item) => (
-            <tr key={item.id}>
-              <td>
-                <div className={styles.__center}>
-                  <Switch 
-                    onChange={(checked) => changeSwitch(checked, item.id)}
-                    className={styles.__switch} 
-                    checked={!item.state}
-
-                  />
-                </div>
-              </td>
-              <td>
-                <div className={styles.__center}>
-                  <EditableCell 
-                    inputValue={item.username}
-                    maxLength={16}
-                    confirmCallback={(value) => confirmUname( value, item.id)}
-                  />
-                </div>
-              </td>
-              <td>
-                <div className={styles.__center}>
-                  <EditableCell 
-                    inputValue={item.email}
-                    maxLength={100}
-                    confirmCallback={(value) => confirmEmail(value, item.id)}
-                  />
-                </div>
-              </td>
-              <td>
-                <div className={styles.__center}>
-                  <EditableCell 
-                    inputValue={'********'}
-                    maxLength={16}
-                    confirmCallback={(value) => confirmPass(value, item.id)}
-                  />
-                </div>
-              </td>
-              <td>
-                <div>
-                  <OperaShop stores={item.stores} id={item.id} storeList={storeList}/>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <RoleList id={item.id} samList={roleList} data={item.roleList}/>
-                </div>
-              </td>
-              <td>
-                <div className={styles.delete}>
-                  <Popconfirm overlayClassName="__sub_pop" title="确定要删除该子账号吗？" 
-                    okText="确定" 
-                    cancelText="取消" 
-                    icon={null}
-                    onConfirm={() => popConfirm(item.id)}
-                    okButtonProps={okButtonProps}
-                    cancelButtonProps = {cancelButtonProps}
-                  >
-                    <a href="#">删除</a>
-                  </Popconfirm>
-                </div>
-              </td>
+      <Spin spinning={tableLoading}>
+        <table>
+          <thead>
+            <tr>
+              <th className={styles.username}>
+                <div>状态</div>
+              </th>
+              <th className={styles.switch}>
+                <div>用户名</div>
+              </th>
+              <th className={styles.email}>
+                <div>邮箱</div>
+              </th>
+              <th className={styles.password}>
+                <div>密码</div>
+              </th>
+              <th className={styles.operaShop}>
+                <div>管理店铺</div>
+              </th>
+              <th className={styles.roleList}>
+                <div>角色</div>
+              </th>
+              <th className={styles.operaDelete}>
+                <div>操作</div>
+              </th>
             </tr>
-          )  
-          )}
-          {!userList.length && 
+          </thead>
+          <tbody>
+            {userList.length > 0 && userList.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <div className={styles.__center}>
+                    <Switch 
+                      onChange={(checked) => changeSwitch(checked, item.id)}
+                      className={styles.__switch} 
+                      checked={!item.state}
+
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div className={styles.__center}>
+                    <EditableCell 
+                      inputValue={item.username}
+                      maxLength={16}
+                      confirmCallback={(value) => confirmUname( value, item.id)}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div className={styles.__center}>
+                    <EditableCell 
+                      inputValue={item.email}
+                      maxLength={100}
+                      confirmCallback={(value) => confirmEmail(value, item.id)}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div className={styles.__center}>
+                    <EditableCell 
+                      inputValue={'********'}
+                      maxLength={16}
+                      confirmCallback={(value) => confirmPass(value, item.id)}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <OperaShop stores={item.stores} id={item.id} storeList={storeList}/>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <RoleList id={item.id} samList={roleList} data={item.roleList}/>
+                  </div>
+                </td>
+                <td>
+                  <div className={styles.delete}>
+                    <Popconfirm overlayClassName="__sub_pop" title="确定要删除该子账号吗？" 
+                      okText="确定" 
+                      cancelText="取消" 
+                      icon={null}
+                      onConfirm={() => popConfirm(item.id)}
+                      okButtonProps={okButtonProps}
+                      cancelButtonProps = {cancelButtonProps}
+                    >
+                      <a href="#">删除</a>
+                    </Popconfirm>
+                  </div>
+                </td>
+              </tr>
+            )  
+            )}
+            {!userList.length && 
             <tr>
               <td colSpan={7}>
-                <div>可添加子账号分管店铺，最多可添加10个子账号</div>
+                <div className={styles.__max_7}>可添加子账号分管店铺，最多可添加10个子账号</div>
               </td>
             </tr>
-          }
-        </tbody>
-      </table>
+            } 
+          </tbody>
+        </table>
+      </Spin>
     </div>
   );
 };
