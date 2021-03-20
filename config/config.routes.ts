@@ -206,7 +206,7 @@ export default [
     component: '../layouts/BasicLayout',
     wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
-      { title: '补货计划', path: '/replenishment', component: './mws/Replenishment' },
+      { title: '补货建议', path: '/replenishment', component: './mws/Replenishment' },
     ],
   },
 
