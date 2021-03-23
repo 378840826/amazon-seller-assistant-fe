@@ -22,7 +22,7 @@ import { Store } from 'antd/lib/form/interface';
 
 const layout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 19 },
+  wrapperCol: { span: 20 },
 };
 const tailLayout = {
   wrapperCol: { offset: 4, span: 15 },
