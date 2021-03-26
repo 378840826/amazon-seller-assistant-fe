@@ -17,7 +17,7 @@ export { IGlobalModelState, SettingModelState, IUserModelState };
 
 export interface IModelType {
   effects?: {
-    [key: string]: Effect | [Effect, { type: string; delay: number }];
+    [key: string]: Effect | [Effect, { type: string; delay?: number; ms?: number }];
   };
   reducers?: {
     [key: string]: ImmerReducer;

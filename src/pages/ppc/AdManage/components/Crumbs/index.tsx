@@ -34,6 +34,10 @@ const Crumbs: React.FC<IProps> = props => {
     roas: 'RoAS',
     cpc: 'CPC',
     cpa: 'CPA',
+    // search term 报表的查询
+    keywordText: '投放词',
+    queryKeyword: '搜索词',
+    asinKeyword: 'ASIN',
   };
 
   // 生成单个面包屑

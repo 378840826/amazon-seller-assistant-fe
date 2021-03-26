@@ -277,6 +277,22 @@ export const isRepeatArray = function (array: Array<string | number>): boolean {
   return false;
 };
 
+// 获取后端所需的时间周期对应的数字（由 src/components/DefinedCalendar 组件的 itemKey 映射）
+export function getDateCycleParam(type: string): string {
+  // dict 的 key 对应 src/components/DefinedCalendar 组件中的 itemKey
+  const dict = {
+    '7': '6',
+    '30': '7',
+    '60': '8',
+    '90': '9',
+    '180': '10',
+    '365': '11',
+    'year': '12',
+    'lastYear': '13',
+  };
+  return dict[type] || '';
+}
+
 // 获取解析后的 queryString 参数
 export const getPageQuery = () => parse(window.location.search.split('?')[1]);
 

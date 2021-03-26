@@ -121,6 +121,7 @@ declare namespace API {
   type AdState = 'enabled' | 'paused' | 'archived';
   type GroupType = 'keyword' | 'targeting';
   type CamType = 'sb' | 'sp' | 'sd';
+  type AdKeywordMatchType = 'exact' | 'phrase' | 'broad';
   // 广告管理-广告活动
   interface IAdCampaign {
     id: string;
@@ -235,7 +236,7 @@ declare namespace API {
     state: string;
     target: string;
     expression?: string;
-    matchType: string;
+    matchType: AdKeywordMatchType;
     suggested: number;
     suggestedMin: number;
     suggestedMax: number;
@@ -259,6 +260,44 @@ declare namespace API {
     id: string;
     targeting: string;
     addTime: string;
+  }
+
+  // 广告管理-SearchTerm
+  interface IAdSearchTerm {
+    id: string;
+    camId: string;
+    camName: string;
+    camState: AdState;
+    camType: CamType;
+    campaignTargetType: 'manual' | 'auto';
+    groupId: string;
+    groupName: string;
+    groupType: GroupType;
+    groupBid: number;
+    /** searchTerm 类型 true: asin false: 关键词 */
+    queryKeywordType: boolean;
+    matchType: AdKeywordMatchType;
+    keywordText: string;
+    keywordId: string;
+    deliveryStatus: 'alreadyLive' | 'noAlready';
+    queryKeyword: string;
+    existQueryKeyword?: {
+      keyword: string;
+      exist: boolean;
+    }[];
+    // 搜索词的竞价
+    queryKeywordBid: number;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
   }
 
   interface IInventoryReplenishmentLabels {

@@ -1,3 +1,5 @@
+import { ColumnProps } from 'antd/es/table';
+
 // 判断是否归档状态
 export const isArchived: (state: string) => boolean = (state: string) => state === 'archived';
 
@@ -33,4 +35,31 @@ export function getAssignUrl(params: {
     url = `${url}&tab=${tab}`;
   }
   return url;
+}
+
+// 判断是否有效的关键词竞价，并返回最低竞价（日本站>=10，其他>=0.02）
+export function isValidKeywordBid(bid: number, marketplace: API.Site) {
+  let minBid = 0.02;
+  if (marketplace === 'JP') {
+    minBid = 10;
+  }
+  return [bid >= minBid, minBid];
+}
+
+// 获取列配置(判断是否需要广告活动或广告组列)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getTableColumns(allColumns: ColumnProps<any>[], cam: boolean, group: boolean) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result: ColumnProps<any>[] = [];
+  allColumns.forEach(item => {
+    let flag = true;
+    if (!cam && item.title === '广告活动') {
+      flag = false;
+    }
+    if (!group && item.title === '广告组') {
+      flag = false;
+    }
+    flag && result.push(item);
+  });
+  return result;
 }

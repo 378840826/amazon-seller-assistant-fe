@@ -13,8 +13,8 @@ interface IProps {
   colsItems: {
     [key: string]: boolean;
   };
-  // 类型: 广告活动 广告组 广告 关键词 Targeting
-  listType: 'campaign' | 'group' |'ad' | 'keyword' | 'targeting';
+  // 类型: 广告活动 广告组 广告 关键词 Targeting searchTerm报表
+  listType: 'campaign' | 'group' |'ad' | 'keyword' | 'targeting' | 'searchTerm';
 }
 
 // 全部的字段（包括广告活动，广告组，广告，关键词等）
@@ -57,6 +57,9 @@ const allItem = {
   // targeting
   // targetingType和广告活动的冲突，所以用 targetingItemType
   targetingItemType: 'Targeting类型',
+  // searchTerm
+  deliveryStatus: '投放状态',
+  keywordText: '投放词',
 };
 
 // 各个列表对应的数据
@@ -80,6 +83,10 @@ const listTypeDict = {
   targeting: {
     localStorageKey: 'adTargetingCustomCols',
     dispatchType: 'adManage/updateTargetingCustomCols',
+  },
+  searchTerm: {
+    localStorageKey: 'adSearchTermCustomCols',
+    dispatchType: 'adManage/updateSearchTermCustomCols',
   },
 };
 

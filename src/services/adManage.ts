@@ -254,3 +254,75 @@ export async function createNegativeTargeting(params: API.IParams) {
     data: params,
   });
 }
+
+// SearchTerm报表
+// SearchTerm报表-列表
+export async function querySearchTermList(params: API.IParams) {
+  return request('/api/gd/management/st/list', {
+    method: 'POST',
+    data: params,
+    params: {
+      current: params.current,
+      size: params.size,
+      // 后端接口要求
+      order: params.sort,
+      asc: params.order === 'ascend' ? 'true' : 'false',
+    },
+  });
+}
+
+// SearchTerm报表-获取建议竞价
+export async function queryQueryKeywordSuggestedBid(params: API.IParams) {
+  return request('/api/gd/management/st/suggested', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// SearchTerm报表-投放或否定搜索词时，获取可供选择的广告活动
+export async function queryUsableCampaignList(params: API.IParams) {
+  return request('/api/gd/management/st/cam', {
+    data: params,
+    params,
+  });
+}
+
+// SearchTerm报表-投放搜索词时，获取可供选择的广告组
+export async function queryUsablePutGroupList(params: API.IParams) {
+  return request('/api/gd/management/st/group/simple-list', {
+    data: params,
+    params,
+  });
+}
+
+// SearchTerm报表-否定搜索词时，获取可供选择的广告组
+export async function queryUsableNegateGroupList(params: API.IParams) {
+  return request('/api/gd/management/st/group/simple-list', {
+    data: params,
+    params,
+  });
+}
+
+// SearchTerm报表-投放搜索词为关键词
+export async function createKeywords(params: API.IParams) {
+  return request('/api/gd/management/st/add/keyword', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// SearchTerm报表-投放搜索词为否定关键词(或否定asin)
+export async function createNegateKeywords(params: API.IParams) {
+  return request('/api/gd/management/st/add/ne-keyword', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// SearchTerm报表-投放词联想
+export async function getKeywordTextAssociate(params: API.IParams) {
+  return request('/api/gd/management/st/like/keyword-text', {
+    data: params,
+    params,
+  });
+}

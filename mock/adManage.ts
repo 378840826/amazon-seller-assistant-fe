@@ -1,4 +1,5 @@
 import { Response, Request } from 'express';
+import { IPutKeyword, INegateKeyword } from '@/pages/ppc/AdManage/SearchTerm';
 
 export default {
   // 更新时间
@@ -692,6 +693,209 @@ export default {
       res.send({
         code: 200,
         message: '成功',
+      });
+    }, 500);
+  },
+
+  // SearchTerm报表
+  // SearchTerm报表-列表
+  'POST /api/gd/management/st/list': (_: Request, res: Response) => {
+    const records: API.IAdSearchTerm[] = [];
+    for (let index = 1; index < 21; index++) {
+      records.push({
+        id: String(index),
+        camId: String(index),
+        camName: `广告活动-${index}-Headline_530032_530028_530031_530029_手套`,
+        camState: 'enabled',
+        camType: 'sp',
+        campaignTargetType: index % 2 === 0 ? 'auto' : 'manual',
+        groupId: String(index * 10),
+        groupName: `广告组-${index * 10}-Headline_530032_530028_530031_530029_手套`,
+        groupType: index % 2 === 0 ? 'keyword' : 'targeting',
+        groupBid: index + 0.22,
+        matchType: 'exact',
+        keywordText: `投放词-${index}`,
+        keywordId: `${index}`,
+        deliveryStatus: 'alreadyLive',
+        queryKeyword: index % 3 === 0 ? 'B000000000' : `搜索词-${index}`,
+        queryKeywordType: index % 3 === 0 ? true : false,
+        existQueryKeyword: index % 3 === 0 ? undefined : [
+          {
+            keyword: 'apple',
+            exist: false,
+          },
+          {
+            keyword: 'pencil',
+            exist: true,
+          },
+          {
+            keyword: 'box',
+            exist: false,
+          },
+        ],
+        impressions: 10010,
+        clicks: 10010,
+        spend: 10010,
+        acos: 10010,
+        roas: 10010,
+        ctr: 10010,
+        cpc: 10010,
+        cpa: 10010,
+        sales: 10010,
+        orderNum: 10010,
+        conversionsRate: 10010,
+        queryKeywordBid: 2.22,
+        // queryKeywordSuggested: 2,
+        // queryKeywordSuggestedMin: 1,
+        // queryKeywordSuggestedMax: 3,
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          page: {
+            total: 122,
+            size: 20,
+            current: 3,
+            records,
+          },
+          total: {
+            impressions: 899999,
+            clicks: 899999,
+            spend: 999999,
+            acos: 999999,
+            roas: 999999,
+            ctr: 999999,
+            cpc: 999999,
+            cpa: 999999,
+            sales: 999999,
+            orderNum: 999999,
+            conversionsRate: 999999,
+          },
+        },
+      });
+    }, 500);
+  },
+
+  // SearchTerm报表-获取建议竞价
+  'POST /api/gd/management/st/suggested': (req: Request, res: Response) => {
+    const { body: { keywords } } = req;
+    setTimeout(() => {
+      const records = keywords.map((keywordInfo: API.IAdSearchTerm) => ({
+        keywordText: keywordInfo.keywordText,
+        suggested: Math.floor(Math.random() * 100),
+        rangeStart: 0.33, 
+        rangeEnd: 3.33,
+        camId: keywordInfo.camId,
+        groupId: keywordInfo.groupId,
+        keywordId: keywordInfo.id,
+        matchType: keywordInfo.matchType,
+      }));
+      res.send({
+        code: 200,
+        data: {
+          records,
+        },
+      });
+    }, 1000);
+  },
+
+  // SearchTerm报表-投放搜索词时，获取可供选择的广告活动
+  'GET /api/gd/management/st/cam': (req: Request, res: Response) => {
+    const records = [{
+      id: '100',
+      name: '广告活动-100-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
+      state: 'enabled',
+    }];
+    const { query: { camType } } = req;
+    const n = camType ? 105 : 103;
+    for (let i = 101; i < n; i++) {
+      records.push({
+        id: `${i}`,
+        name: `广告活动-${i}-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H`,
+        state: 'enabled',
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          records,
+        },
+      });
+    }, 500);
+  },
+
+  // SearchTerm报表-投放搜索词时，获取可供选择的广告组
+  'GET /api/gd/management/st/group/simple-list': (_: Request, res: Response) => {
+    const records = [{
+      id: '200',
+      name: '广告组-100-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
+      defaultBid: 200,
+    }];
+    for (let i = 201; i < 205; i++) {
+      records.push({
+        id: `${i}`,
+        name: `广告组-${i}-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H`,
+        defaultBid: i + 22,
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          records,
+        },
+      });
+    }, 500);
+  },
+  
+  // SearchTerm报表-投放搜索词为关键词
+  'POST /api/gd/management/st/add/keyword': (req: Request, res: Response) => {
+    const { body: { keywordTexts } } = req;
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: keywordTexts.map((item: IPutKeyword) => {
+          return {
+            ...item,
+            state: Math.random() > 0.5 ? 'fail' : 'success',
+            failMsg: item.groupId ? '关键词已存在！' : '广告组不能为空!',
+          };
+        }),
+      });
+    }, 500);
+  },
+
+  // SearchTerm报表-投放搜索词为否定关键词
+  'POST /api/gd/management/st/add/ne-keyword': (req: Request, res: Response) => {
+    const { body: { neKeywords } } = req;
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: neKeywords.map((item: INegateKeyword) => {
+          return {
+            ...item,
+            state: Math.random() > 0.5 ? 'fail' : 'success',
+            failMsg: item.groupId ? '否定关键词已存在！' : '广告组不能为空!',
+          };
+        }),
+      });
+    }, 500);
+  },
+
+  // SearchTerm报表-投放词联想
+  'GET /api/gd/management/st/like/keyword-text': (req: Request, res: Response) => {
+    const { query: { keywordText } } = req;
+    const data = ['联想词'];
+    for (let i = 1; i <= 10; i++) {
+      data.push(`${keywordText}-${i}`);      
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data,
       });
     }, 500);
   },

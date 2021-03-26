@@ -35,9 +35,24 @@ import {
   queryNegativeTargetingList,
   batchNegativeTargetingArchive,
   createNegativeTargeting,
+  // SearchTerm报表
+  querySearchTermList,
+  queryQueryKeywordSuggestedBid,
+  queryUsableCampaignList,
+  queryUsablePutGroupList,
+  createKeywords,
+  queryUsableNegateGroupList,
+  createNegateKeywords,
+  getKeywordTextAssociate,
 } from '@/services/adManage';
 import { storage } from '@/utils/utils';
 import { stateIconDict, initTreeData, ITreeSelectedInfo } from '@/pages/ppc/AdManage';
+import { IPutKeyword, INegateKeyword } from '@/pages/ppc/AdManage/SearchTerm';
+
+// 用于广告活动+广告组的级联选择
+interface ICampaignAndGroup extends API.IAdCampaign {
+  groupList: API.IAdGroup[];
+}
 
 export interface IAdManage {
   updateTime: string;
@@ -179,6 +194,34 @@ export interface IAdManage {
     };
     checkedIds: string[];
   };
+  searchTermTab: {
+    list: {
+      total: number;
+      records: API.IAdSearchTerm[];
+      dataTotal: { [key: string]: number };
+    };
+    searchParams: {
+      order: Order;
+      size: number;
+      current: number;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [key: string]: any;
+    };
+    filtrateParams: {
+      startDate: string;
+      endDate: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [key: string]: any;
+    };
+    checkedIds: string[];
+    putKeywords: IPutKeyword[];
+    negateKeywords: INegateKeyword[];
+    usablePutCampaignList: ICampaignAndGroup[];
+    usableNegateCampaignList: ICampaignAndGroup[];
+    customCols: {
+      [key: string]: boolean;
+    };
+  };
 }
 
 interface IAdManageModelType extends IModelType {
@@ -239,13 +282,13 @@ export const formattingRecords = (
 // 默认的筛选参数(主要用于查询后清空条件)(广告活动，广告组，广告等通用)
 export const defaultFiltrateParams = {
   search: undefined,
-  state: undefined,
+  state: '',
   startDate: '',
   endDate: '',
-  qualification: undefined,
+  qualification: '',
   portfolioId: undefined,
-  targetingType: undefined,
-  matchType: undefined,
+  targetingType: '',
+  matchType: '',
   salesMin: undefined,
   salesMax: undefined,
   orderNumMin: undefined,
@@ -268,6 +311,11 @@ export const defaultFiltrateParams = {
   acosMax: undefined,
   ctrMin: undefined,
   ctrMax: undefined,
+  // search term 报表的查询
+  deliveryStatus: '',
+  keywordText: '',
+  queryKeyword: '',
+  asinKeyword: '',
 };
 
 // 更新树数据
@@ -517,6 +565,48 @@ const AdManageModel: IAdManageModelType = {
       // 勾选的id
       checkedIds: [],
     },
+    // searchTerm 报表
+    searchTermTab: {
+      list: {
+        total: 0,
+        records: [],
+        // 合计数据
+        dataTotal: {},
+      },
+      // 查询参数
+      searchParams: {
+        order: null,
+        current: 1,
+        size: 20,
+      },
+      // 筛选参数
+      filtrateParams: { ...defaultFiltrateParams },
+      // 勾选的id
+      checkedIds: [],
+      // 用于批量投放，批量否定
+      putKeywords: [],
+      negateKeywords: [],
+      // 快捷投放或否定时，可供选择的广告活动
+      usablePutCampaignList: [],
+      usableNegateCampaignList: [],
+      // 自定义列
+      customCols: storage.get('adSearchTermCustomCols') || {
+        deliveryStatus: true,
+        keywordText: true,
+        matchType: true,
+        sales: false,
+        orderNum: false,
+        cpc: false,
+        cpa: false,
+        spend: false,
+        acos: false,
+        roas: false,
+        impressions: false,
+        clicks: false,
+        ctr: false,
+        conversionsRate: false,
+      },
+    },
   },
 
   effects: {
@@ -667,7 +757,7 @@ const AdManageModel: IAdManageModelType = {
       const newParams = Object.assign(oldParams, searchParams, filtrateParams);
       // 去掉搜索框的头尾空格
       if (newParams.search) {
-        newParams.search = newParams.search.replace(/(^\s*)|(\s*$)/g, '');
+        newParams.search = newParams.search.trim();
       }
       const res = yield call(queryCampaignList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -733,7 +823,7 @@ const AdManageModel: IAdManageModelType = {
       const newParams = Object.assign(oldParams, searchParams, filtrateParams);
       // 去掉搜索框的头尾空格
       if (newParams.search) {
-        newParams.search = newParams.search.replace(/(^\s*)|(\s*$)/g, '');
+        newParams.search = newParams.search.trim();
       }
       const res = yield call(queryGroupList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -805,7 +895,7 @@ const AdManageModel: IAdManageModelType = {
       const newParams = Object.assign(oldParams, searchParams, filtrateParams);
       // 去掉搜索框的头尾空格
       if (newParams.search) {
-        newParams.search = newParams.search.replace(/(^\s*)|(\s*$)/g, '');
+        newParams.search = newParams.search.trim();
       }
       const res = yield call(queryAdList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -871,7 +961,7 @@ const AdManageModel: IAdManageModelType = {
       const newParams = Object.assign(oldParams, searchParams, filtrateParams);
       // 去掉搜索框的头尾空格
       if (newParams.search) {
-        newParams.search = newParams.search.replace(/(^\s*)|(\s*$)/g, '');
+        newParams.search = newParams.search.trim();
       }
       const res = yield call(queryKeywordList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -956,7 +1046,7 @@ const AdManageModel: IAdManageModelType = {
       const newParams = Object.assign(oldParams, searchParams, filtrateParams);
       // 去掉搜索框的头尾空格
       if (newParams.search) {
-        newParams.search = newParams.search.replace(/(^\s*)|(\s*$)/g, '');
+        newParams.search = newParams.search.trim();
       }
       const res = yield call(queryTargetingList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -1076,6 +1166,218 @@ const AdManageModel: IAdManageModelType = {
       }
       callback && callback(res.code, res.message);
     },
+
+    // SearchTerm报表
+    // SearchTerm报表-获取列表
+    *fetchSearchTermList({ payload, callback }, { call, put, select }) {
+      const { searchParams, filtrateParams, headersParams } = payload;
+      // 旧的查询+筛选参数
+      const oldParams = yield select((state: IConnectState) => {
+        return Object.assign(
+          {},
+          state.adManage.searchTermTab.searchParams,
+          state.adManage.searchTermTab.filtrateParams,
+        );
+      });
+      // 本次查询的查询+筛选参数
+      const newParams = Object.assign(oldParams, searchParams, filtrateParams);
+      // 去掉搜索框的头尾空格
+      if (newParams.keywordText) {
+        newParams.keywordText = newParams.keywordText.trim();
+      }
+      if (newParams.queryKeyword) {
+        newParams.queryKeyword = newParams.queryKeyword.trim();
+      }
+      if (newParams.asinKeyword) {
+        newParams.asinKeyword = newParams.asinKeyword.trim();
+      }
+      const res = yield call(querySearchTermList, { ...newParams, headersParams });
+      if (res.code === 200) {
+        const { data: { page, total } } = res;
+        // 保存列表数据
+        yield put({
+          type: 'saveSearchTermList',
+          payload: { page, dataTotal: total },
+        });
+        // 保存查询和筛选参数
+        yield put({
+          type: 'saveSearchTermParams',
+          payload: { searchParams, filtrateParams },
+        });
+        // 取消选中
+        yield put({
+          type: 'updateSearchTermChecked',
+          payload: [],
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // SearchTerm报表-获取搜索词建议竞价
+    *fetchQueryKeywordSuggestedBid({ payload, callback }, { call, put }) {
+      const res = yield call(queryQueryKeywordSuggestedBid, payload);
+      if (res.code === 200) {
+        const { data: { records } } = res;
+        yield put({
+          type: 'saveSearchTermPutKeywordSuggestedBid',
+          payload: { records },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // SearchTerm报表-投放搜索词时，获取可供选择的广告活动
+    *fetchUsablePutCampaignList({ payload, callback }, { call, put }) {
+      const res = yield call(queryUsableCampaignList, { ...payload, camType: 'manual' });
+      if (res.code === 200) {
+        const { data: { records } } = res;
+        yield put({
+          type: 'saveUsablePutCampaignList',
+          payload: records,
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // SearchTerm报表-否定搜索词时，获取可供选择的广告活动
+    *fetchUsableNegateCampaignList({ payload, callback }, { call, put }) {
+      const res = yield call(queryUsableCampaignList, payload);
+      if (res.code === 200) {
+        const { data: { records } } = res;
+        yield put({
+          type: 'saveUsableNegateCampaignList',
+          payload: records,
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // SearchTerm报表-投放搜索词时，获取可供选择的广告组
+    *fetchUsablePutGroupList({ payload, callback }, { call, put }) {
+      const res = yield call(queryUsablePutGroupList, payload);
+      if (res.code === 200) {
+        const { data: { records } } = res;
+        yield put({
+          type: 'saveUsablePutGroupList',
+          payload: { records, camId: payload.camId },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // SearchTerm报表-否定搜索词时，获取可供选择的广告组
+    *fetchUsableNegateGroupList({ payload, callback }, { call, put }) {
+      const res = yield call(queryUsableNegateGroupList, payload);
+      if (res.code === 200) {
+        const { data: { records } } = res;
+        yield put({
+          type: 'saveUsableNegateGroupList',
+          payload: { records, camId: payload.camId },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // SearchTerm报表-投放关键词(关键词为 SearchTerm 的搜索词)
+    *putQueryKeywords({ payload, callback }, { call, put }) {
+      const res = yield call(createKeywords, payload);
+      let code = res.code;
+      let message = res.message;
+      if (res.code === 200) {
+        const { keywordTexts } = payload;
+        const { data: resData } = res;
+        const newPutKeywords: IPutKeyword[] = [];
+        keywordTexts.forEach((payloadItem: IPutKeyword) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          resData.forEach((resItem: any) => {
+            if (
+              resItem.groupId === payloadItem.groupId &&
+              resItem.keywordText === payloadItem.keywordText &&
+              resItem.matchType === payloadItem.matchType
+            ) {
+              // 投放成功的，从已选中列表中删除，失败的增加错误提示
+              if (resItem.state === 'fail') {
+                // 投放失败的，增加错误提示
+                newPutKeywords.push({ ...payloadItem, errorMsg: resItem.failMsg });
+              }
+            }
+          });
+        });
+        if (newPutKeywords.length === 0) {
+          code = 200;
+          message = '投放成功';
+        } else if (newPutKeywords.length === payload.keywordTexts.length) {
+          code = 400;
+          message = '投放失败';
+        } else {
+          code = 200;
+          message = '部分关键词投放成功';
+        }
+        // 更新投放词列表
+        yield put({
+          type: 'saveSearchTermPutKeywords',
+          payload: newPutKeywords,
+        });
+      }
+      callback && callback(code, message);
+    },
+
+    // SearchTerm报表-否定搜索词投放
+    *putNegateQueryKeywords({ payload, callback }, { call, put }) {
+      const res = yield call(createNegateKeywords, payload);
+      let code = res.code;
+      let message = res.message;
+      if (res.code === 200) {
+        const { neKeywords } = payload;
+        const { data: resData } = res;
+        const newPutKeywords: IPutKeyword[] = [];
+        neKeywords.forEach((payloadItem: IPutKeyword) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          resData.forEach((resItem: any) => {
+            if (
+              resItem.groupId === payloadItem.groupId &&
+              resItem.keywordText === payloadItem.keywordText &&
+              resItem.matchType === payloadItem.matchType
+            ) {
+              // 投放成功的，从已选中列表中删除，失败的增加错误提示
+              if (resItem.state === 'fail') {
+                // 投放失败的，增加错误提示
+                newPutKeywords.push({ ...payloadItem, errorMsg: resItem.failMsg });
+              }
+            }
+          });
+        });
+        if (newPutKeywords.length === 0) {
+          code = 200;
+          message = '投放成功';
+        } else if (newPutKeywords.length === payload.neKeywords.length) {
+          code = 400;
+          message = '投放失败';
+        } else {
+          code = 200;
+          message = '部分关键词投放成功';
+        }
+        // 更新投放词列表
+        yield put({
+          type: 'saveSearchTermNegateKeywords',
+          payload: newPutKeywords,
+        });
+      }
+      callback && callback(code, message);
+    },
+
+    // SearchTerm报表-获取搜索投放词的联想词 (节流)
+    fetchKeywordAssociate: [
+      function* ({ payload, callback }, { call }) {
+        const res = yield call(getKeywordTextAssociate, payload);
+        if (res.code === 200) {
+          callback && callback(res.code, res.message, res.data);
+        } else {
+          callback && callback(res.code, res.message);
+        }
+      },
+      { type: 'throttle', ms: 500 },
+    ],
   },
 
   reducers: {
@@ -1364,6 +1666,153 @@ const AdManageModel: IAdManageModelType = {
     // 否定Targeting-勾选
     updateNegativeTargetingChecked(state, { payload }) {
       state.negativeTargetingTab.checkedIds = payload;
+    },
+
+    // SearchTerm报表
+    // SearchTerm报表-保存列表
+    saveSearchTermList(state, { payload }) {
+      const { page, dataTotal } = payload;
+      state.searchTermTab.list = { ...page, dataTotal };
+    },
+
+    // SearchTerm报表-更新查询参数
+    saveSearchTermParams(state, { payload }) {
+      const { searchParams, filtrateParams } = payload;
+      state.searchTermTab.searchParams = Object.assign(
+        state.searchTermTab.searchParams, searchParams
+      );
+      state.searchTermTab.filtrateParams = Object.assign(
+        state.searchTermTab.filtrateParams,
+        filtrateParams,
+      );
+    },
+    
+    // SearchTerm报表-勾选
+    updateSearchTermChecked(state, { payload }) {
+      state.searchTermTab.checkedIds = payload;
+      const checkedKeywords = payload.map((id: string) => {
+        return state.searchTermTab.list.records.find(
+          (item: API.IAdSearchTerm) => item.id === id
+        );
+      });
+      const putKeywordList: IPutKeyword[] = [];
+      const negateKeywordList: INegateKeyword[] = [];
+      checkedKeywords.forEach((item: API.IAdSearchTerm) => {
+        // 投放词排除 targeting，只保留关键词（ queryKeywordType 为 true 时 searchTerm 类型是 asin ）
+        item.queryKeywordType ? null : putKeywordList.push({
+          id: item.id,
+          campaignTargetType: item.campaignTargetType,
+          // 自动广告活动下不支持添加关键词
+          camId: item.campaignTargetType === 'manual' ? item.camId : '',
+          groupId: item.campaignTargetType === 'manual' ? item.groupId : '',
+          groupName: item.groupName,
+          queryKeywordType: item.queryKeywordType,
+          matchType: item.matchType,
+          // 投放列表的关键词等于 searchTerm 列表的搜索词
+          keywordText: item.queryKeyword,
+          // 关键词的建议竞价和建议竞价范围
+          suggested: 0,
+          suggestedRangeStart: 0,
+          suggestedRangeEnd: 0,
+          bid: item.groupBid,
+        });
+        negateKeywordList.push({
+          id: item.id,
+          camId: item.camId,
+          groupId: item.groupId,
+          groupName: item.groupName,
+          matchType: 'negativeExact',
+          /** 否定列表的关键词等于 searchTerm 列表的搜索词 */
+          keywordText: item.queryKeyword,
+        });
+      });
+      state.searchTermTab.putKeywords = putKeywordList;
+      state.searchTermTab.negateKeywords = negateKeywordList;
+    },
+
+    // SearchTerm报表-保存投放关键词的建议竞价
+    saveSearchTermPutKeywordSuggestedBid(state: IAdManage, { payload }) {
+      const { records } = payload;
+      const array = state.searchTermTab.putKeywords;
+      for (let i = 0; i < array.length; i++) {
+        const keywordItem = array[i];
+        for (let j = 0; j < records.length; j++) {
+          const payloadItem = records[j];
+          if (keywordItem.keywordText === payloadItem.keywordText) {
+            keywordItem.suggested = payloadItem.suggested;
+            keywordItem.suggestedRangeStart = payloadItem.rangeStart;
+            keywordItem.suggestedRangeEnd = payloadItem.rangeEnd;
+            records.splice(j, 1);
+            j--;
+            break;
+          }
+        }
+      }
+    },
+
+    // SearchTerm报表-保存投放词的信息 putKeywords
+    saveSearchTermPutKeywords(state, { payload }) {
+      state.searchTermTab.putKeywords = payload;
+    },
+
+    // SearchTerm报表-保存否定词的信息 negateKeywords
+    saveSearchTermNegateKeywords(state, { payload }) {
+      state.searchTermTab.negateKeywords = payload;
+    },
+
+    // SearchTerm报表-更新投放词的信息（竞价、广告组、广告活动、匹配方式）
+    updateSearchTermPutKeywords(state, { payload }) {
+      const list = state.searchTermTab.putKeywords;
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].id === payload.id) {
+          list[i] = { ...list[i], ...payload };
+        }
+      }
+    },
+
+    // SearchTerm报表-更新否定词的信息（广告组、广告活动、匹配方式）
+    updateSearchTermNegateInfo(state, { payload }) {
+      const list = state.searchTermTab.negateKeywords;
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].id === payload.id) {
+          list[i] = { ...list[i], ...payload };
+        }
+      }
+    },
+
+    // SearchTerm报表-更新自定义列
+    updateSearchTermCustomCols(state, { payload }) {
+      state.searchTermTab.customCols = Object.assign(state.searchTermTab.customCols, payload);
+    },
+
+    // SearchTerm报表-保存投放关键词时，可供选择的广告活动
+    saveUsablePutCampaignList(state, { payload }) {
+      state.searchTermTab.usablePutCampaignList = payload;
+    },
+
+    // SearchTerm报表-保存否定关键词时，可供选择的广告活动
+    saveUsableNegateCampaignList(state, { payload }) {
+      state.searchTermTab.usableNegateCampaignList = payload;
+    },
+
+    // SearchTerm报表-保存投放关键词时，可供选择的广告组
+    saveUsablePutGroupList(state, { payload }) {
+      const { records, camId } = payload;
+      state.searchTermTab.usablePutCampaignList.forEach((item: ICampaignAndGroup) => {
+        if (item.id === camId) {
+          item.groupList = records;
+        }
+      });
+    },
+
+    // SearchTerm报表-保存否定关键词时，可供选择的广告组
+    saveUsableNegateGroupList(state, { payload }) {
+      const { records, camId } = payload;
+      state.searchTermTab.usableNegateCampaignList.forEach((item: ICampaignAndGroup) => {
+        if (item.id === camId) {
+          item.groupList = records;
+        }
+      });
     },
   },
 };

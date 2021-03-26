@@ -11,6 +11,7 @@ import Ad from './Ad';
 import Keyword from './Keyword';
 import Targeting from './Targeting';
 import NegativeTargeting from './NegativeTargeting';
+import SearchTerm from './SearchTerm';
 import classnames from 'classnames';
 import commonStyles from './common.less';
 import styles from './index.less';
@@ -68,7 +69,7 @@ const allTab = {
   keyword: { tab: '关键词', countKey: 'keywordCount', tabPane: <Keyword /> },
   targeting: { tab: '分类/商品投放', countKey: 'targetCount', tabPane: <Targeting /> },
   negativeTargeting: { tab: '否定Targeting', countKey: 'neTargetCount', tabPane: <NegativeTargeting /> },
-  searchTerm: { tab: 'Search Term报表' },
+  searchTerm: { tab: 'Search Term报表', tabPane: <SearchTerm /> },
   history: { tab: '操作记录' },
 };
 
@@ -108,7 +109,8 @@ const Manage: React.FC = function() {
   // 标签页的类型
   const [tabsState, setTabsState] = useState<string>('default');
   // 选中的标签(默认选中第一个)
-  const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
+  // const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
+  const [activeTabKey, setActiveTabKey] = useState<string>('searchTerm');
   // 菜单树侧边栏是否收起
   const [collapsed, setCollapsed] = useState<boolean>(false);
   
