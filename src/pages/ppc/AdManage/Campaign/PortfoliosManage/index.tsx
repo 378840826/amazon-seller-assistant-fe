@@ -104,4 +104,4 @@ const PortfoliosManage: React.FC = () => {
   );
 };
 
-export default PortfoliosManage;
+export default React.memo(PortfoliosManage);

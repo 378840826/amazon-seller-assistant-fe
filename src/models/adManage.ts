@@ -44,6 +44,8 @@ import {
   queryUsableNegateGroupList,
   createNegateKeywords,
   getKeywordTextAssociate,
+  // 操作记录
+  queryOperationRecords,
 } from '@/services/adManage';
 import { storage } from '@/utils/utils';
 import { stateIconDict, initTreeData, ITreeSelectedInfo } from '@/pages/ppc/AdManage';
@@ -76,8 +78,8 @@ export interface IAdManage {
       [key: string]: any;
     };
     filtrateParams: {
-      startDate: string;
-      endDate: string;
+      startTime: string;
+      endTime: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     };
@@ -101,8 +103,8 @@ export interface IAdManage {
       [key: string]: any;
     };
     filtrateParams: {
-      startDate: string;
-      endDate: string;
+      startTime: string;
+      endTime: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     };
@@ -125,8 +127,8 @@ export interface IAdManage {
       [key: string]: any;
     };
     filtrateParams: {
-      startDate: string;
-      endDate: string;
+      startTime: string;
+      endTime: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     };
@@ -149,8 +151,8 @@ export interface IAdManage {
       [key: string]: any;
     };
     filtrateParams: {
-      startDate: string;
-      endDate: string;
+      startTime: string;
+      endTime: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     };
@@ -173,8 +175,8 @@ export interface IAdManage {
       [key: string]: any;
     };
     filtrateParams: {
-      startDate: string;
-      endDate: string;
+      startTime: string;
+      endTime: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     };
@@ -208,8 +210,8 @@ export interface IAdManage {
       [key: string]: any;
     };
     filtrateParams: {
-      startDate: string;
-      endDate: string;
+      startTime: string;
+      endTime: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     };
@@ -220,6 +222,20 @@ export interface IAdManage {
     usableNegateCampaignList: ICampaignAndGroup[];
     customCols: {
       [key: string]: boolean;
+    };
+  };
+  operationRecordTab: {
+    list: {
+      total: number;
+      records: API.IAdOperationRecord[];
+    };
+    searchParams: {
+      size: number;
+      current: number;
+      startTime: string;
+      endTime: string;
+      campaignId?: string;
+      groupId?: string;
     };
   };
 }
@@ -283,8 +299,8 @@ export const formattingRecords = (
 export const defaultFiltrateParams = {
   search: undefined,
   state: '',
-  startDate: '',
-  endDate: '',
+  startTime: '',
+  endTime: '',
   qualification: '',
   portfolioId: undefined,
   targetingType: '',
@@ -605,6 +621,20 @@ const AdManageModel: IAdManageModelType = {
         clicks: false,
         ctr: false,
         conversionsRate: false,
+      },
+    },
+    // 操作记录
+    operationRecordTab: {
+      list: {
+        total: 0,
+        records: [],
+      },
+      // 查询参数
+      searchParams: {
+        current: 1,
+        size: 20,
+        startTime: '',
+        endTime: '',
       },
     },
   },
@@ -1378,6 +1408,34 @@ const AdManageModel: IAdManageModelType = {
       },
       { type: 'throttle', ms: 500 },
     ],
+
+    // 操作记录-获取列表
+    *fetchOperationRecords({ payload, callback }, { call, put, select }) {
+      const { searchParams, headersParams } = payload;
+      // 旧的查询参数
+      const oldParams = yield select((state: IConnectState) => {
+        return Object.assign(
+          {},
+          state.adManage.operationRecordTab.searchParams,
+        );
+      });
+      // 本次查询的查询参数
+      const newParams = Object.assign(oldParams, searchParams);
+      const res = yield call(queryOperationRecords, { ...newParams, headersParams });
+      if (res.code === 200) {
+        const { data } = res;
+        yield put({
+          type: 'saveOperationRecords',
+          payload: data,
+        });
+        // 保存查询参数
+        yield put({
+          type: 'saveOperationRecordParams',
+          payload: { searchParams },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
   },
 
   reducers: {
@@ -1813,6 +1871,19 @@ const AdManageModel: IAdManageModelType = {
           item.groupList = records;
         }
       });
+    },
+
+    // 操作记录-保存列表
+    saveOperationRecords(state, { payload }) {
+      state.operationRecordTab.list = payload;
+    },
+
+    // 操作记录-保存查询参数
+    saveOperationRecordParams(state, { payload }) {
+      const { searchParams } = payload;
+      state.operationRecordTab.searchParams = Object.assign(
+        state.operationRecordTab.searchParams, searchParams
+      );
     },
   },
 };

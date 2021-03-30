@@ -899,4 +899,41 @@ export default {
       });
     }, 500);
   },
+
+  // 操作记录-获取列表
+  'GET /api/gd/management/history/list': (req: Request, res: Response) => {
+    const { query: { current } } = req;
+    const records: API.IAdOperationRecord[] = [{
+      id: '0',
+      behaviorDate: '2021-03-03 22:22:22',
+      objectType: '广告组',
+      objectInfo: 'campaign2>ad group2',
+      behaviorInfo: '日预算',
+      oldValue: '$10.00',
+      newValue: '$12.00',
+      behaviorExecutor: '子账号：123456789@outlook.com',
+    }];
+    for (let i = 1; i <= 50; i++) {
+      records.push({
+        id: `${i}`,
+        behaviorDate: '2021-03-03 11:11:11',
+        objectType: '否定Targeting',
+        objectInfo: '广告活动Headline_530032_530028_530031_530029_手套 > 广告组Headline_530032_530028_530031_530029 > B000000000',
+        behaviorInfo: '日预算',
+        oldValue: `$${Math.random().toFixed(2)}`,
+        newValue: '$12.00',
+        behaviorExecutor: '子账号：123456789@outlook.com',
+      });      
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          total: 51,
+          current: Number(current),
+          records,
+        },
+      });
+    }, 1000);
+  },
 };

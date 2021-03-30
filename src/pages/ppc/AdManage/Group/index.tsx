@@ -2,14 +2,13 @@
 /**
  *  广告组
  */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch, Link } from 'umi';
 import { Select, DatePicker, Button, Modal, Input } from 'antd';
+import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
-import { ColumnProps } from 'antd/es/table';
-import { useSelector, useDispatch, Link } from 'umi';
 import AdManageTable from '../components/Table';
-import { Iconfont, requestErrorFeedback, requestFeedback } from '@/utils/utils';
 import nameEditable from '../components/EditableCell';
 import MySearch from '../components/Search';
 import Filtrate from '../components/Filtrate';
@@ -17,14 +16,22 @@ import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
 import StateSelect, { stateOptions } from '../components/StateSelect';
-import { isArchived, getAssignUrl } from '../utils';
 import editable from '@/pages/components/EditableCell';
-import { getShowPrice, strToMoneyStr } from '@/utils/utils';
-import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { isArchived, getAssignUrl } from '../utils';
+import {
+  getShowPrice,
+  strToMoneyStr,
+  Iconfont,
+  requestErrorFeedback,
+  requestFeedback,
+  storage,
+} from '@/utils/utils';
+import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import moment from 'moment';
+import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
-import styles from './index.less';
 import commonStyles from '../common.less';
+import styles from './index.less';
 
 const Group: React.FC = function() {  
   const dispatch = useDispatch();
@@ -43,7 +50,7 @@ const Group: React.FC = function() {
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
-  const { startDate, endDate, state } = filtrateParams;
+  const { startTime, endTime, state } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
   const [visibleCopyGroup, setVisibleCopyGroup] = useState<boolean>(false);
   const [copyGroupState, setCopyGroupState] = useState({ id: '', name: '' });
@@ -53,6 +60,7 @@ const Group: React.FC = function() {
       // 广告组列表
       // 菜单树附带的筛选参数，格式为 "类型-广告活动状态-广告活动ID"
       const paramsArr = treeSelectedInfo.key.split('-');
+      const { start, end } = storage.get('adManageDateRange') || getTimezoneDateRange(7, false);
       dispatch({
         type: 'adManage/fetchGroupList',
         payload: {
@@ -60,6 +68,8 @@ const Group: React.FC = function() {
           searchParams: { current: 1 },
           filtrateParams: {
             campaignId: paramsArr[2],
+            startTime: start,
+            endTime: end,
           },
         },
         callback: requestErrorFeedback,
@@ -160,21 +170,18 @@ const Group: React.FC = function() {
   }
 
   // 筛选日期范围
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleDateRangeChange(rangePickerDates: any) {
+  const handleDateRangeChange = useCallback((rangePickerDates: string[]) => {
+    const [startTime, endTime] = rangePickerDates;
     dispatch({
       type: 'adManage/fetchGroupList',
       payload: {
         headersParams: { StoreId: currentShopId },
         searchParams: { current: 1 },
-        filtrateParams: {
-          startDate: rangePickerDates[0],
-          endDate: rangePickerDates[1],
-        },
+        filtrateParams: { startTime, endTime },
       },
       callback: requestErrorFeedback,
     });
-  }
+  }, [currentShopId, dispatch]);
 
   // 执行搜索
   function handleSearch(value: string) {
@@ -787,8 +794,8 @@ const Group: React.FC = function() {
         </div>
         <div>
           <DateRangePicker
-            startDate={startDate}
-            endDate={endDate}
+            startDate={startTime}
+            endDate={endTime}
             callback={handleDateRangeChange}
           />
           <CustomCols colsItems={customCols} listType="group" />

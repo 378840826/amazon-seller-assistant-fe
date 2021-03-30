@@ -4,7 +4,7 @@
 import React from 'react';
 import { DatePicker } from 'antd';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
-import { _sessionStorage } from '@/utils/utils';
+import { storage } from '@/utils/utils';
 import moment, { Moment } from 'moment';
 
 const { RangePicker } = DatePicker;
@@ -21,7 +21,7 @@ const DateRangePicker: React.FC<IProps> = (props) => {
   const { disabled, wrapClassName, callback } = props;
   let { startDate, endDate } = props;
   if (!startDate || !endDate) {
-    const dateRange = _sessionStorage.get('adManageDateRange') || getTimezoneDateRange(7, false);
+    const dateRange = storage.get('adManageDateRange') || getTimezoneDateRange(7, false);
     startDate = dateRange.start;
     endDate = dateRange.end;
   }
@@ -43,7 +43,7 @@ const DateRangePicker: React.FC<IProps> = (props) => {
   const { start: startLastYear, end: endLastYear } = getTimezoneDateRange('lastYear');
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const RangePickerConfig: any = {
+  const config: any = {
     ranges: {
       '本周': [startWeek, endWeek],
       '本月': [startMonth, endMonth],
@@ -74,17 +74,17 @@ const DateRangePicker: React.FC<IProps> = (props) => {
         return;
       }
       callback([formatStart, formatEnd]);
-      // 临时保存到本地
-      _sessionStorage.set('adManageDateRange', { start: formatStart, end: formatEnd });
+      // 保存到本地
+      storage.set('adManageDateRange', { start: formatStart, end: formatEnd });
     },
     disabled,
   };
 
   return (
     <div className={wrapClassName}>
-      <RangePicker {...RangePickerConfig} />
+      <RangePicker {...config} />
     </div>
   );
 };
 
-export default DateRangePicker;
+export default React.memo(DateRangePicker);

@@ -326,3 +326,11 @@ export async function getKeywordTextAssociate(params: API.IParams) {
     params,
   });
 }
+
+// 操作记录-获取列表
+export async function queryOperationRecords(params: API.IParams) {
+  return request('/api/gd/management/history/list', {
+    data: params,
+    params,
+  });
+}

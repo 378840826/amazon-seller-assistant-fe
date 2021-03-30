@@ -1,4 +1,5 @@
 import { ColumnProps } from 'antd/es/table';
+import { getDateCycleParam } from '@/utils/utils';
 
 // 判断是否归档状态
 export const isArchived: (state: string) => boolean = (state: string) => state === 'archived';
@@ -62,4 +63,33 @@ export function getTableColumns(allColumns: ColumnProps<any>[], cam: boolean, gr
     flag && result.push(item);
   });
   return result;
+}
+
+// 从日期固定周期选择器的参数生成请求所需的 filtrateParams
+export function getDefinedCalendarFiltrateParams(dates: DefinedCalendar.IChangeParams) {
+  const { dateStart, dateEnd, selectItemKey } = dates;
+  const timeMethodDict = {
+    week: 'WEEK',
+    month: 'MONTH',
+    quarter: 'SEASON',
+  };
+  let filtrateParams;
+  // 按周月季周期
+  if (['week', 'month', 'quarter'].includes(selectItemKey)) {
+    filtrateParams = {
+      startTime: dateStart,
+      endTime: dateEnd,
+      cycle: '',
+      timeMethod: timeMethodDict[selectItemKey],
+    };
+  } else {
+    // 按最近X天
+    filtrateParams = {
+      startTime: '',
+      endTime: '',
+      cycle: getDateCycleParam(selectItemKey),
+      timeMethod: '',
+    };
+  }
+  return filtrateParams;
 }

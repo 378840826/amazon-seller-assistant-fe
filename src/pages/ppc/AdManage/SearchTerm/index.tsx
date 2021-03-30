@@ -3,11 +3,19 @@
  *  Search Term 报表
  */
 import React, { useEffect, useState, useMemo } from 'react';
+import { useSelector, useDispatch } from 'umi';
 import { Button, Modal, Table, Input, Select, Spin, message, AutoComplete } from 'antd';
+import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
-import { ColumnProps } from 'antd/es/table';
-import { useSelector, useDispatch } from 'umi';
+import AdManageTable from '../components/Table';
+import Filtrate from '../components/Filtrate';
+import Crumbs from '../components/Crumbs';
+import CustomCols from '../components/CustomCols';
+import ContainTitleSelect from '../components/ContainTitleSelect';
+import editable from '@/pages/components/EditableCell';
+import DefinedCalendar from '@/components/DefinedCalendar';
+import { matchTypeDict } from '@/pages/ppc/AdManage';
 import {
   Iconfont,
   requestErrorFeedback,
@@ -18,16 +26,13 @@ import {
   storage,
   getDateCycleParam,
 } from '@/utils/utils';
+import {
+  getAssignUrl,
+  getTableColumns,
+  isValidKeywordBid,
+  getDefinedCalendarFiltrateParams,
+} from '../utils';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
-import { matchTypeDict } from '@/pages/ppc/AdManage';
-import { getAssignUrl, getTableColumns, isValidKeywordBid } from '../utils';
-import AdManageTable from '../components/Table';
-import Filtrate from '../components/Filtrate';
-import Crumbs from '../components/Crumbs';
-import CustomCols from '../components/CustomCols';
-import ContainTitleSelect from '../components/ContainTitleSelect';
-import editable from '@/pages/components/EditableCell';
-import DefinedCalendar from '@/components/DefinedCalendar';
 import classnames from 'classnames';
 import commonStyles from '../common.less';
 import styles from './index.less';
@@ -115,7 +120,7 @@ const SearchTerm: React.FC = function() {
   // 日期选择器
   const calendarStorageBaseKey = 'adSearchTermCalendar';
   const [calendarDefaultKey, setCalendarDefaultKey] = useState<string>(
-    storage.get(`${calendarStorageBaseKey}_dc_itemKey`) || '7'
+    storage.get(`${calendarStorageBaseKey}_dc_itemKey`) || '30'
   );
   
   useEffect(() => {
@@ -126,9 +131,9 @@ const SearchTerm: React.FC = function() {
       if (cycle) {
         params = { ...defaultFiltrateParams, cycle };
       } else {
-        const { startDate, endDate } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
+        const { startTime, endTime } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
         const timeMethod = storage.get(`${calendarStorageBaseKey}_dc_itemKey`);
-        params = { ...defaultFiltrateParams, startDate, endDate, timeMethod };
+        params = { ...defaultFiltrateParams, startTime, endTime, timeMethod };
       }
       dispatch({
         type: 'adManage/fetchSearchTermList',
@@ -311,34 +316,19 @@ const SearchTerm: React.FC = function() {
   }
 
   // 日期 change
-  const handleRangeChange = (dates: DefinedCalendar.IChangeParams) => {
-    let filtrateParams;
-    if (['week', 'month', 'quarter'].includes(calendarDefaultKey)) {
-      filtrateParams = {
-        startDate: dates.dateStart,
-        endDate: dates.dateEnd,
-        cycle: '',
-        timeMethod: calendarDefaultKey === 'quarter' ? 'SEASON' : calendarDefaultKey,
-      };
-    } else {
-      filtrateParams = {
-        startDate: '',
-        endDate: '',
-        cycle: getDateCycleParam(calendarDefaultKey),
-        timeMethod: '',
-      };
-    }
-    setCalendarDefaultKey(dates.selectItemKey);
+  function handleRangeChange(dates: DefinedCalendar.IChangeParams) {
+    const { selectItemKey } = dates;
+    setCalendarDefaultKey(selectItemKey);
     dispatch({
       type: 'adManage/fetchSearchTermList',
       payload: {
         headersParams: { StoreId: currentShopId },
         searchParams: { current: 1 },
-        filtrateParams,
+        filtrateParams: getDefinedCalendarFiltrateParams(dates),
       },
       callback: requestErrorFeedback,
     });
-  };
+  }
 
   // 投放弹窗点击展开选择广告活动时 获取可供选择的广告活动
   function getUsablePutCampaignList() {
@@ -1310,7 +1300,7 @@ const SearchTerm: React.FC = function() {
             storageKey={calendarStorageBaseKey}
             index={1}
             change={handleRangeChange}
-            className={styles.DefinedCalendar}
+            className={commonStyles.DefinedCalendar}
           />
           <CustomCols colsItems={customCols} listType="searchTerm" />
         </div>

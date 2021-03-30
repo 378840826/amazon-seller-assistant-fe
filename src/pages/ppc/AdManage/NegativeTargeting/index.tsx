@@ -2,17 +2,17 @@
  *  否定Targeting（否定品牌/ASIN）
  */
 import React, { useEffect, ReactText, useState } from 'react';
+import { useSelector, useDispatch } from 'umi';
 import { Button, Modal, Table, Tabs, Input, message } from 'antd';
+import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
-import { ColumnProps } from 'antd/es/table';
-import { useSelector, useDispatch } from 'umi';
 import { Iconfont, requestErrorFeedback, requestFeedback } from '@/utils/utils';
 import MySearch from '../components/Search';
 import TableNotData from '@/components/TableNotData';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import styles from './index.less';
 import commonStyles from '../common.less';
+import styles from './index.less';
 
 const { TabPane } = Tabs;
 const { TextArea } = Input;

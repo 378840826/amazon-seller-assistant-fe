@@ -300,6 +300,18 @@ declare namespace API {
     conversionsRate: number;
   }
 
+  // 广告管理-操作记录
+  interface IAdOperationRecord {
+    id: string;
+    behaviorDate: string;
+    objectType: string;
+    objectInfo: string;
+    behaviorInfo: string;
+    oldValue: string;
+    newValue: string;
+    behaviorExecutor: string;
+  }
+
   interface IInventoryReplenishmentLabels {
     id: string;
     labelName: string;

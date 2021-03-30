@@ -2,30 +2,37 @@
 /**
  *  广告活动
  */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch, Link } from 'umi';
 import { Select, message, DatePicker, Input, Button, Modal } from 'antd';
+import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
-import { ColumnProps } from 'antd/es/table';
-import { useSelector, useDispatch, Link } from 'umi';
 import AdManageTable from '../components/Table';
-import { Iconfont, requestErrorFeedback, requestFeedback } from '@/utils/utils';
 import nameEditable from '../components/EditableCell';
 import MySearch from '../components/Search';
 import Filtrate from '../components/Filtrate';
 import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
-import { isArchived, targetingTypeDict, getAssignUrl } from '../utils';
 import { stateOptions } from '../components/StateSelect';
 import PortfoliosManage from './PortfoliosManage';
 import editable from '@/pages/components/EditableCell';
-import { getShowPrice, strToMoneyStr } from '@/utils/utils';
-import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+  Iconfont,
+  requestErrorFeedback,
+  requestFeedback,
+  storage,
+  getShowPrice,
+  strToMoneyStr,
+} from '@/utils/utils';
+import { isArchived, targetingTypeDict, getAssignUrl } from '../utils';
+import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import moment from 'moment';
+import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
-import styles from './index.less';
 import commonStyles from '../common.less';
+import styles from './index.less';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -46,11 +53,12 @@ const Campaign: React.FC = function() {
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
-  const { startDate, endDate, portfolioId, targetingType } = filtrateParams;
+  const { startTime, endTime, portfolioId, targetingType } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
 
   useEffect(() => {
     if (currentShopId !== '-1') {
+      const { start, end } = storage.get('adManageDateRange') || getTimezoneDateRange(7, false);
       // Portfolios
       dispatch({
         type: 'adManage/fetchPortfolioList',
@@ -70,6 +78,8 @@ const Campaign: React.FC = function() {
           filtrateParams: {
             adType: paramsArr[0],
             state: paramsArr[1],
+            startTime: start,
+            endTime: end,
           },
         },
         callback: requestErrorFeedback,
@@ -182,21 +192,18 @@ const Campaign: React.FC = function() {
   }
 
   // 筛选日期范围
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleDateRangeChange(rangePickerDates: any) {
+  const handleDateRangeChange = useCallback((rangePickerDates: string[]) => {
+    const [startTime, endTime] = rangePickerDates;
     dispatch({
       type: 'adManage/fetchCampaignList',
       payload: {
         headersParams: { StoreId: currentShopId },
         searchParams: { current: 1 },
-        filtrateParams: {
-          startDate: rangePickerDates[0],
-          endDate: rangePickerDates[1],
-        },
+        filtrateParams: { startTime, endTime },
       },
       callback: requestErrorFeedback,
     });
-  }
+  }, [currentShopId, dispatch]);
 
   // 执行搜索
   function handleSearch(value: string) {
@@ -896,8 +903,8 @@ const Campaign: React.FC = function() {
         </div>
         <div>
           <DateRangePicker
-            startDate={startDate}
-            endDate={endDate}
+            startDate={startTime}
+            endDate={endTime}
             callback={handleDateRangeChange}
           />
           <CustomCols colsItems={customCols} listType="campaign" />

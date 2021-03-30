@@ -3,29 +3,36 @@
  *  Keyword
  */
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch, Link } from 'umi';
 import { Select, Button, Modal, message, Spin } from 'antd';
+import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
-import { ColumnProps } from 'antd/es/table';
-import { useSelector, useDispatch, Link } from 'umi';
 import AdManageTable from '../components/Table';
-import { Iconfont, requestErrorFeedback, requestFeedback } from '@/utils/utils';
 import MySearch from '../components/Search';
 import Filtrate from '../components/Filtrate';
-import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
 import BatchSetBid, { IComputedBidParams } from '../components/BatchSetBid';
 import StateSelect, { stateOptions } from '../components/StateSelect';
-import { matchTypeDict } from '@/pages/ppc/AdManage';
 import editable from '@/pages/components/EditableCell';
-import { isArchived, getAssignUrl } from '../utils';
-import { getShowPrice, strToMoneyStr } from '@/utils/utils';
+import DefinedCalendar from '@/components/DefinedCalendar';
+import { matchTypeDict } from '@/pages/ppc/AdManage';
+import {
+  Iconfont,
+  requestErrorFeedback,
+  requestFeedback,
+  storage,
+  getShowPrice,
+  strToMoneyStr,
+  getDateCycleParam,
+} from '@/utils/utils';
+import { isArchived, getAssignUrl, getDefinedCalendarFiltrateParams } from '../utils';
 import { add, minus, times, divide } from '@/utils/precisionNumber';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
-import styles from './index.less';
 import commonStyles from '../common.less';
+import styles from './index.less';
 
 const { Option } = Select;
 
@@ -45,21 +52,37 @@ const Keyword: React.FC = function() {
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
-  const { startDate, endDate, state, matchType } = filtrateParams;
+  const { state, matchType } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
+  // 日期
+  const calendarStorageBaseKey = 'adKeywordCalendar';
+  const [calendarDefaultKey, setCalendarDefaultKey] = useState<string>(
+    storage.get(`${calendarStorageBaseKey}_dc_itemKey`) || '7'
+  );
 
   useEffect(() => {
     if (currentShopId !== '-1') {
       // 列表
+      const cycle = getDateCycleParam(calendarDefaultKey);
+      let params;
+      if (cycle) {
+        params = { ...defaultFiltrateParams, cycle };
+      } else {
+        const { startTime, endTime } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
+        const timeMethod = storage.get(`${calendarStorageBaseKey}_dc_itemKey`);
+        params = { ...defaultFiltrateParams, startTime, endTime, timeMethod };
+      }
       dispatch({
         type: 'adManage/fetchKeywordList',
         payload: {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
+          filtrateParams: params,
         },
         callback: requestErrorFeedback,
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, currentShopId]);
 
   // 修改数据
@@ -154,18 +177,16 @@ const Keyword: React.FC = function() {
     });
   }
 
-  // 筛选日期范围
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleDateRangeChange(rangePickerDates: any) {
+  // 日期 change
+  function handleRangeChange(dates: DefinedCalendar.IChangeParams) {
+    const { selectItemKey } = dates;
+    setCalendarDefaultKey(selectItemKey);
     dispatch({
       type: 'adManage/fetchKeywordList',
       payload: {
         headersParams: { StoreId: currentShopId },
         searchParams: { current: 1 },
-        filtrateParams: {
-          startDate: rangePickerDates[0],
-          endDate: rangePickerDates[1],
-        },
+        filtrateParams: getDefinedCalendarFiltrateParams(dates),
       },
       callback: requestErrorFeedback,
     });
@@ -777,10 +798,12 @@ const Keyword: React.FC = function() {
           </div>
         </div>
         <div>
-          <DateRangePicker
-            startDate={startDate}
-            endDate={endDate}
-            callback={handleDateRangeChange}
+          <DefinedCalendar 
+            itemKey={calendarDefaultKey}
+            storageKey={calendarStorageBaseKey}
+            index={1}
+            change={handleRangeChange}
+            className={commonStyles.DefinedCalendar}
           />
           <CustomCols colsItems={customCols} listType="keyword" />
         </div>
