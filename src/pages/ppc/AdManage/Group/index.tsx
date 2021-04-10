@@ -15,6 +15,7 @@ import Filtrate from '../components/Filtrate';
 import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
+import DataChartModal from '../components/DataChartModal';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import editable from '@/pages/components/EditableCell';
 import { isArchived, getAssignUrl } from '../utils';
@@ -54,6 +55,14 @@ const Group: React.FC = function() {
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
   const [visibleCopyGroup, setVisibleCopyGroup] = useState<boolean>(false);
   const [copyGroupState, setCopyGroupState] = useState({ id: '', name: '' });
+  // 数据分析
+  const [chartsState, setChartsState] = useState({
+    visible: false,
+    campaignId: '',
+    campaignName: '',
+    groupId: '',
+    groupName: '',
+  });
 
   useEffect(() => {
     if (currentShopId !== '-1') {
@@ -701,7 +710,17 @@ const Group: React.FC = function() {
               >
                 复制
               </Button>
-              <Button type="link" className={commonStyles.tableOperationBtn}>
+              <Button
+                type="link"
+                className={commonStyles.tableOperationBtn}
+                onClick={() => setChartsState({
+                  visible: true,
+                  campaignId: record.camId,
+                  campaignName: record.camName,
+                  groupId: record.id,
+                  groupName: record.name,
+                })}
+              >
                 分析
               </Button>
             </>
@@ -834,6 +853,15 @@ const Group: React.FC = function() {
           </div>
         </>
       </Modal>
+      <DataChartModal
+        type="group"
+        visible={chartsState.visible}
+        onCancel={() => setChartsState({ ...chartsState, visible: false })}
+        campaignId={chartsState.campaignId}
+        campaignName={chartsState.campaignName}
+        groupId={chartsState.groupId}
+        groupName={chartsState.groupName}
+      />
     </div>
   );
 };

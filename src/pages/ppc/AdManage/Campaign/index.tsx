@@ -16,6 +16,7 @@ import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
 import { stateOptions } from '../components/StateSelect';
+import DataChartModal from '../components/DataChartModal';
 import PortfoliosManage from './PortfoliosManage';
 import editable from '@/pages/components/EditableCell';
 import {
@@ -55,6 +56,12 @@ const Campaign: React.FC = function() {
   const { current, size, sort, order } = searchParams;
   const { startTime, endTime, portfolioId, targetingType } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
+  // 数据分析
+  const [chartsState, setChartsState] = useState({
+    visible: false,
+    campaignId: '',
+    campaignName: '',
+  });
 
   useEffect(() => {
     if (currentShopId !== '-1') {
@@ -770,9 +777,15 @@ const Campaign: React.FC = function() {
           width: 40,
           align: 'center',
           fixed: 'right',
-          render: () => (
+          render: (_: any, record: API.IAdCampaign) => (
             <>
-              <Button type="link" className={commonStyles.tableOperationBtn}>
+              <Button
+                type="link"
+                className={commonStyles.tableOperationBtn}
+                onClick={() => setChartsState({
+                  visible: true, campaignName: record.name, campaignId: record.id,
+                })}
+              >
                 分析
               </Button>
             </>
@@ -911,6 +924,13 @@ const Campaign: React.FC = function() {
         </div>
       </div>
       <AdManageTable { ...tableProps } />
+      <DataChartModal
+        type="campaign"
+        visible={chartsState.visible}
+        onCancel={() => setChartsState({ ...chartsState, visible: false })}
+        campaignId={chartsState.campaignId}
+        campaignName={chartsState.campaignName}
+      />
     </div>
   );
 };

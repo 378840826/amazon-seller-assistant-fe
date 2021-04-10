@@ -399,7 +399,6 @@ export default {
     for (let index = 0; index < 20; index++) {
       records.push({
         id: String(index),
-        name: `广告${index}-530032`,
         camId: String(index),
         camName: `广告活动-${index}-Headline_530032_530028_530031_530029_手套`,
         camState: 'enabled',
@@ -479,7 +478,7 @@ export default {
     for (let index = 0; index < 20; index++) {
       records.push({
         id: String(index),
-        name: `广告${index}-530032`,
+        keywordName: `关键词${index}`,
         camId: String(index),
         camName: `广告活动-${index}-Headline_530032_530028_530031_530029_手套`,
         camState: 'enabled',
@@ -488,7 +487,7 @@ export default {
         groupName: `广告组-${index}-Headline_530032_530028_530031_530029_手套`,
         groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         state: 'enabled',
-        target: `关键词-${index}`,
+        targeting: `关键词-${index}`,
         matchType: 'exact',
         suggested: 0,
         suggestedMin: 0,
@@ -573,7 +572,7 @@ export default {
     for (let index = 0; index < 20; index++) {
       records.push({
         id: String(index),
-        name: `广告${index}-530032`,
+        keywordName: `关键词${index}`,
         camId: String(index),
         camName: `广告活动-${index}-Headline_530032_530028_530031_530029_手套`,
         camState: 'enabled',
@@ -582,7 +581,7 @@ export default {
         groupName: `广告组-${index}-Headline_530032_530028_530031_530029_手套`,
         groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         state: 'enabled',
-        target: `Targeting-${index}`,
+        targeting: `Targeting-${index}`,
         expression: '品牌="APPLE“,价格="5-18.99",评分="4-5"',
         matchType: 'exact',
         suggested: 0,
@@ -935,5 +934,224 @@ export default {
         },
       });
     }, 1000);
+  },
+
+  // 数据分析
+  // 数据分析-广告活动-统计数据（左侧菜单数据）
+  'GET /api/gd/management/campaign-analysis/tofu': (_: Request, res: Response) => {
+    const getRandom = () => Math.floor(Math.random() * 100);
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          impressions: getRandom() * 100,
+          firstHalfImpressions: getRandom() * 100,
+          impressionsRatio: -getRandom(),
+          clicks: getRandom(),
+          firstHalfClicks: getRandom(),
+          clicksRatio: getRandom(),
+          spend: getRandom(),
+          firstHalfSpend: getRandom(),
+          spendRatio: getRandom(),
+          acos: getRandom(),
+          firstHalfAcos: getRandom(),
+          acosRatio: -getRandom(),
+          roas: getRandom(),
+          firstHalfRoas: getRandom(),
+          roasRatio: getRandom(),
+          ctr: getRandom(),
+          firstHalfCtr: getRandom(),
+          ctrRatio: getRandom(),
+          cpc: getRandom(),
+          firstHalfCpc: getRandom(),
+          cpcRatio: -getRandom(),
+          cpa: getRandom(),
+          firstHalfCpa: getRandom(),
+          cpaRatio: getRandom(),
+          sales: getRandom() * 10000000 + 0.99,
+          firstHalfSales: getRandom() * 10000000 + 0.99,
+          salesRatio: getRandom(),
+          orderNum: getRandom(),
+          firstHalfOrderNum: getRandom(),
+          orderNumRatio: getRandom(),
+          conversionsRate: getRandom(),
+          firstHalfConversionsRate: getRandom(),
+          conversionsRateRatio: getRandom(),
+        },
+      });
+    }, 500);
+  },
+
+  // 数据分析-广告活动-折线图
+  'GET /api/gd/management/campaign-analysis/polyline': (req: Request, res: Response) => {
+    const { query: { dispAttribute } } = req;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const arr: any[] = Array.isArray(dispAttribute) ? dispAttribute : [dispAttribute];
+    const getRandom = () => Math.floor(Math.random() * 1000000);
+    const getRandom1 = () => Math.floor(Math.random() * 1000000);
+    const list: {value: number; time: string}[] = [];
+    const list1: {value: number; time: string}[] = [];
+    const length = Math.floor(Math.random() * 100);
+    for (let i = 0; i < length; i++) {
+      list.push({
+        value: getRandom(),
+        time: `2021-01-${i}`,
+      });
+      list1.push({
+        value: getRandom1(),
+        time: `2021-01-${i}`,
+      });
+    }
+    const result = {};
+    result[arr[0]] = list;
+    arr[1] && (result[arr[1]] = list1);
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: result,
+      });
+    }, 500);
+  },
+
+  // 数据分析-广告活动-表格
+  'GET /api/gd/management/campaign-analysis/list': (req: Request, res: Response) => {
+    const { query: { size } } = req;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const records: any = [];
+    for (let index = 0; index < 20; index++) {
+      records.push({
+        statisticTime: `2020-01-${index}`,
+        impressions: 10010,
+        clicks: 10010,
+        spend: 10010,
+        acos: 100,
+        roas: 10010,
+        ctr: 99.99,
+        cpc: 10010,
+        cpa: 10010,
+        sales: 10010,
+        orderNum: 10010,
+        conversionsRate: 99.99,
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          total: 10010,
+          size,
+          records,
+        },
+      });
+    }, 500);
+  },
+
+  // 数据分析-广告组-统计数据（左侧菜单数据）
+  'GET /api/gd/management/group-analysis/tofu': (_: Request, res: Response) => {
+    const getRandom = () => Math.floor(Math.random() * 100);
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          impressions: getRandom() * 100,
+          firstHalfImpressions: getRandom() * 100,
+          impressionsRatio: -getRandom(),
+          clicks: getRandom(),
+          firstHalfClicks: getRandom(),
+          clicksRatio: getRandom(),
+          spend: getRandom(),
+          firstHalfSpend: getRandom(),
+          spendRatio: getRandom(),
+          acos: getRandom(),
+          firstHalfAcos: getRandom(),
+          acosRatio: -getRandom(),
+          roas: getRandom(),
+          firstHalfRoas: getRandom(),
+          roasRatio: getRandom(),
+          ctr: getRandom(),
+          firstHalfCtr: getRandom(),
+          ctrRatio: getRandom(),
+          cpc: getRandom(),
+          firstHalfCpc: getRandom(),
+          cpcRatio: -getRandom(),
+          cpa: getRandom(),
+          firstHalfCpa: getRandom(),
+          cpaRatio: getRandom(),
+          sales: getRandom() * 10000000 + 0.99,
+          firstHalfSales: getRandom() * 10000000 + 0.99,
+          salesRatio: getRandom(),
+          orderNum: getRandom(),
+          firstHalfOrderNum: getRandom(),
+          orderNumRatio: getRandom(),
+          conversionsRate: getRandom(),
+          firstHalfConversionsRate: getRandom(),
+          conversionsRateRatio: getRandom(),
+        },
+      });
+    }, 500);
+  },
+
+  // 数据分析-广告组-折线图
+  'GET /api/gd/management/group-analysis/polyline': (req: Request, res: Response) => {
+    const { query: { dispAttribute } } = req;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const arr: any[] = Array.isArray(dispAttribute) ? dispAttribute : [dispAttribute];
+    const getRandom = () => Math.floor(Math.random() * 1000000);
+    const getRandom1 = () => Math.floor(Math.random() * 1000000);
+    const list: {value: number; time: string}[] = [];
+    const list1: {value: number; time: string}[] = [];
+    const length = Math.floor(Math.random() * 100);
+    for (let i = 0; i < length; i++) {
+      list.push({
+        value: getRandom(),
+        time: `2021-01-${i}`,
+      });
+      list1.push({
+        value: getRandom1(),
+        time: `2021-01-${i}`,
+      });
+    }
+    const result = {};
+    result[arr[0]] = list;
+    arr[1] && (result[arr[1]] = list1);
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: result,
+      });
+    }, 500);
+  },
+
+  // 数据分析-广告组-表格
+  'GET /api/gd/management/group-analysis/list': (req: Request, res: Response) => {
+    const { query: { size } } = req;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const records: any = [];
+    for (let index = 0; index < 20; index++) {
+      records.push({
+        statisticTime: `2020-01-${index}`,
+        impressions: 10010,
+        clicks: 10010,
+        spend: 10010,
+        acos: 100,
+        roas: 10010,
+        ctr: 99.99,
+        cpc: 10010,
+        cpa: 10010,
+        sales: 10010,
+        orderNum: 10010,
+        conversionsRate: 99.99,
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          total: 10010,
+          size,
+          records,
+        },
+      });
+    }, 500);
   },
 };

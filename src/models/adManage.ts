@@ -46,6 +46,10 @@ import {
   getKeywordTextAssociate,
   // 操作记录
   queryOperationRecords,
+  // 数据分析
+  queryAnalysisStatistic,
+  queryAnalysisPolyline,
+  queryAnalysisTable,
 } from '@/services/adManage';
 import { storage } from '@/utils/utils';
 import { stateIconDict, initTreeData, ITreeSelectedInfo } from '@/pages/ppc/AdManage';
@@ -1435,6 +1439,25 @@ const AdManageModel: IAdManageModelType = {
         });
       }
       callback && callback(res.code, res.message);
+    },
+
+    // 数据分析 type 是 group、ad 等
+    // 数据分析-获取统计分析数据（左侧菜单数据）
+    *fetchAnalysisStatistic({ targetType, payload, callback }, { call }) {
+      const res = yield call(queryAnalysisStatistic, { ...payload, targetType });
+      callback && callback(res.code, res.message, res.data);
+    },
+    
+    // 数据分析-获取折线图数据
+    *fetchAnalysisPolyline({ targetType, payload, callback }, { call }) {
+      const res = yield call(queryAnalysisPolyline, { ...payload, targetType });
+      callback && callback(res.code, res.message, res.data);
+    },
+
+    // 数据分析-获取数据分析表格数据
+    *fetchAnalysisTable({ targetType, payload, callback }, { call }) {
+      const res = yield call(queryAnalysisTable, { ...payload, targetType });
+      callback && callback(res.code, res.message, res.data);
     },
   },
 

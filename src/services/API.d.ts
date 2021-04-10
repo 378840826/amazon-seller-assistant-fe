@@ -193,7 +193,7 @@ declare namespace API {
   // 广告管理-广告
   interface IAd {
     id: string;
-    name: string;
+    // name: string;
     camId: string;
     camName: string;
     camState: AdState;
@@ -225,7 +225,7 @@ declare namespace API {
   // 广告管理-Targeting/关键词
   interface IAdTargeting {
     id: string;
-    name: string;
+    keywordName: string;
     camId: string;
     camName: string;
     camState: AdState;
@@ -234,7 +234,7 @@ declare namespace API {
     groupName: string;
     groupType: GroupType;
     state: string;
-    target: string;
+    targeting: string;
     expression?: string;
     matchType: AdKeywordMatchType;
     suggested: number;
@@ -310,6 +310,26 @@ declare namespace API {
     oldValue: string;
     newValue: string;
     behaviorExecutor: string;
+  }
+
+  // 广告管理-数据分析-折线图
+  interface IAdChartsPolylineCell {
+    value: number;
+    time: string;
+  }
+
+  interface IAdChartsPolyline {
+    impressions?: IAdChartsPolylineCell[];
+    clicks?: IAdChartsPolylineCell[];
+    spend?: IAdChartsPolylineCell[];
+    acos?: IAdChartsPolylineCell[];
+    roas?: IAdChartsPolylineCell[];
+    ctr?: IAdChartsPolylineCell[];
+    cpc?: IAdChartsPolylineCell[];
+    cpa?: IAdChartsPolylineCell[];
+    sales?: IAdChartsPolylineCell[];
+    orderNum?: IAdChartsPolylineCell[];
+    conversionsRate?: IAdChartsPolylineCell[];
   }
 
   interface IInventoryReplenishmentLabels {

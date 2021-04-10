@@ -15,6 +15,7 @@ import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
 import BatchSetBid, { IComputedBidParams } from '../components/BatchSetBid';
 import StateSelect, { stateOptions } from '../components/StateSelect';
+import DataChartModal from '../components/DataChartModal';
 import editable from '@/pages/components/EditableCell';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import { matchTypeDict } from '@/pages/ppc/AdManage';
@@ -59,6 +60,16 @@ const Targeting: React.FC = function() {
   const [calendarDefaultKey, setCalendarDefaultKey] = useState<string>(
     storage.get(`${calendarStorageBaseKey}_dc_itemKey`) || '7'
   );
+  // 数据分析
+  const [chartsState, setChartsState] = useState({
+    visible: false,
+    campaignId: '',
+    campaignName: '',
+    groupId: '',
+    groupName: '',
+    targetId: '',
+    targetName: '',
+  });
 
   useEffect(() => {
     if (currentShopId !== '-1') {
@@ -413,7 +424,7 @@ const Targeting: React.FC = function() {
       children: [
         {
           title: '合计',
-          dataIndex: 'target',
+          dataIndex: 'targeting',
           width: 200,
           align: 'left',
           fixed: 'left',
@@ -678,12 +689,22 @@ const Targeting: React.FC = function() {
           width: 40,
           align: 'center',
           fixed: 'right',
-          render: () => (
-            <>
-              <Button type="link" className={commonStyles.tableOperationBtn}>
-                分析
-              </Button>
-            </>
+          render: (_: string, record: API.IAdTargeting) => (
+            <Button
+              type="link"
+              className={commonStyles.tableOperationBtn}
+              onClick={() => setChartsState({
+                visible: true,
+                campaignId: record.camId,
+                campaignName: record.camName,
+                groupId: record.groupId,
+                groupName: record.groupName,
+                targetId: record.id,
+                targetName: record.targeting,
+              })}
+            >
+              分析
+            </Button>
           ),
         },
       ] as any,
@@ -806,6 +827,17 @@ const Targeting: React.FC = function() {
         </div>
       </div>
       <AdManageTable { ...tableProps } />
+      <DataChartModal
+        type="targeting"
+        visible={chartsState.visible}
+        onCancel={() => setChartsState({ ...chartsState, visible: false })}
+        campaignId={chartsState.campaignId}
+        campaignName={chartsState.campaignName}
+        groupId={chartsState.groupId}
+        groupName={chartsState.groupName}
+        targetId={chartsState.targetId}
+        targetName={chartsState.targetName}
+      />
     </div>
   );
 };

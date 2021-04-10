@@ -14,6 +14,7 @@ import Filtrate from '../components/Filtrate';
 import DateRangePicker from '../components/DateRangePicker';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
+import DataChartModal from '../components/DataChartModal';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import GoodsImg from '@/pages/components/GoodsImg';
 import GoodsIcon from '@/pages/components/GoodsIcon';
@@ -53,6 +54,16 @@ const Ad: React.FC = function() {
   const { current, size, sort, order } = searchParams;
   const { startTime, endTime, state, qualification } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
+  // 数据分析
+  const [chartsState, setChartsState] = useState({
+    visible: false,
+    campaignId: '',
+    campaignName: '',
+    groupId: '',
+    groupName: '',
+    adId: '',
+    adName: '',
+  });
 
   useEffect(() => {
     if (currentShopId !== '-1') {
@@ -542,12 +553,22 @@ const Ad: React.FC = function() {
           width: 40,
           align: 'center',
           fixed: 'right',
-          render: () => (
-            <>
-              <Button type="link" className={commonStyles.tableOperationBtn}>
-                分析
-              </Button>
-            </>
+          render: (_: string, record: API.IAd) => (
+            <Button
+              type="link"
+              className={commonStyles.tableOperationBtn}
+              onClick={() => setChartsState({
+                visible: true,
+                campaignId: record.camId,
+                campaignName: record.camName,
+                groupId: record.groupId,
+                groupName: record.groupName,
+                adId: record.id,
+                adName: record.asin,
+              })}
+            >
+              分析
+            </Button>
           ),
         },
       ],
@@ -660,6 +681,17 @@ const Ad: React.FC = function() {
         </div>
       </div>
       <AdManageTable { ...tableProps } />
+      <DataChartModal
+        type="ad"
+        visible={chartsState.visible}
+        onCancel={() => setChartsState({ ...chartsState, visible: false })}
+        campaignId={chartsState.campaignId}
+        campaignName={chartsState.campaignName}
+        groupId={chartsState.groupId}
+        groupName={chartsState.groupName}
+        adId={chartsState.adId}
+        adName={chartsState.adName}
+      />
     </div>
   );
 };

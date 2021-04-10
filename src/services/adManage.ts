@@ -334,3 +334,52 @@ export async function queryOperationRecords(params: API.IParams) {
     params,
   });
 }
+
+
+// 数据分析-统计数据
+export async function queryAnalysisStatistic(params: API.IParams) {
+  const { targetType } = params;
+  const urlDict = {
+    campaign: '/api/gd/management/campaign-analysis/tofu',
+    group: '/api/gd/management/group-analysis/tofu',
+    ad: '/api/gd/management/product-analysis/tofu',
+    keyword: '/api/gd/management/keyword-analysis/tofu',
+    targeting: '/api/gd/management/target-analysis/tofu',
+  };
+  return request(urlDict[targetType], {
+    data: params,
+    params,
+  });
+}
+
+// 数据分析-折线图
+export async function queryAnalysisPolyline(params: API.IParams) {
+  const { targetType } = params;
+  const urlDict = {
+    campaign: '/api/gd/management/campaign-analysis/polyline',
+    group: '/api/gd/management/group-analysis/polyline',
+    ad: '/api/gd/management/product-analysis/polyline',
+    keyword: '/api/gd/management/keyword-analysis/polyline',
+    targeting: '/api/gd/management/target-analysis/polyline',
+  };
+  return request(urlDict[targetType], {
+    data: params,
+    params,
+  });
+}
+
+// 数据分析-表格数据
+export async function queryAnalysisTable(params: API.IParams) {
+  const { targetType } = params;
+  const urlDict = {
+    campaign: '/api/gd/management/campaign-analysis/list',
+    group: '/api/gd/management/group-analysis/list',
+    ad: '/api/gd/management/product-analysis/list',
+    keyword: '/api/gd/management/keyword-analysis/list',
+    targeting: '/api/gd/management/target-analysis/list',
+  };
+  return request(urlDict[targetType], {
+    data: params,
+    params,
+  });
+}
