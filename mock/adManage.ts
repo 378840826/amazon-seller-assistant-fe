@@ -12,6 +12,52 @@ export default {
     }, 500);
   },
 
+  // 广告活动简表
+  'GET /api/gd/ad/campaign/simpleList': (_: Request, res: Response) => {
+    const records = [{
+      name: '广告活动-B073DY9671 B073DXX8PS B073CGP25H',
+      campaignId: '0',
+      campaignType: 'sp',
+      targetingType: 'auto',
+    }];
+    for (let i = 1; i < 10; i++) {
+      records.push({
+        campaignId: String(i),
+        name: `广告活动-${i}-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H`,
+        campaignType: 'sp',
+        targetingType: 'auto',
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: records,
+      });
+    }, 1000);
+  },
+
+  // 广告组简表
+  'GET /api/gd/ad/group/simpleList': (_: Request, res: Response) => {
+    const records = [{
+      name: '广告组-B073DY9671 B073DXX8PS B073CGP25H',
+      id: '10',
+      defaultBid: 1,
+    }];
+    for (let i = 11; i < 20; i++) {
+      records.push({
+        id: String(i),
+        name: `广告组-${i}-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H`,
+        defaultBid: Math.floor(Math.random() * 100),
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: records,
+      });
+    }, 0);
+  },
+
   // 菜单树-广告活动
   'GET /api/gd/management/campaign/simple-list': (_: Request, res: Response) => {
     const records = [{
@@ -471,6 +517,120 @@ export default {
     }, 500);
   },
 
+  // 广告-查询商品
+  'POST /api/gd/management/product/search-goods': (_: Request, res: Response) => {
+    setTimeout(() => {
+      const goodsCell = {
+        title: 'ier Reading manyReadingReading pos ier Reading many pos ier Reading many posReading',
+        id: '1',
+        sku: 'sku-1',
+        asin: 'B000000000',
+        url: 'https://www.baidu.com',
+        fulfillmentChannel: 'FBA',
+        sellable: 100,
+        price: 999.99,
+        postage: 3.99,
+        competingCount: 20,
+        reviewScore: 4.5,
+        reviewCount: 770,
+        commission: 1.88,
+        fbaFee: 2.77,
+        cost: 222.22,
+        freight: 2.56,
+        minPrice: null,
+        maxPrice: 1099.99,
+        dayOrder7Count: 70,
+        dayOrder7Ratio: 777.77,
+        dayOrder30Count: 3000,
+        dayOrder30Ratio: -8.88,
+        ruleId: '10',
+        ruleName: '调价规则-1',
+        adjustSwitch: true,
+        acKeyword: 'keywordxx',
+        acUrl: 'https://www.baidu.com',
+        groupId: '1',
+        groupName: '商品分组-1',
+        ranking: [
+          {
+            categoryId: '11',
+            categoryName: '分类名称11',
+            categoryRanking: 55,
+            isTopCategory: false,
+          }, {
+            categoryId: '1',
+            categoryName: '分类名称1',
+            categoryRanking: 955,
+            isTopCategory: true,
+          },
+        ],
+        listingStatus: 'Active',
+        profitMargin: 33.33,
+        profit: 101.58,
+        openDate: '2020-06-06',
+        sellableDays: 999,
+        inbound: 500,
+        imgUrl: 'https://images-na.ssl-images-amazon.com/images/I/512lGnVReaL.jpg',
+        idAdd: true,
+        isAc: false,
+        isBs: true,
+        isNr: false,
+        isPrime: true,
+        isPromotion: false,
+        isCoupon: true,
+        usedNewSellNum: 66,
+        isBuyBox: true,
+        addOnItem: 'addOnItemxx',
+        bsCategory: 'bsCategoryxx',
+        specialOffersProductPromotions: '促销说明xx',
+        coupon: '-50%xx',
+        sellerName: 'buybox卖家名称xx',
+        nrCategory: 'nrCategoryxx',
+      };
+      const records = [];
+      for (let index = 1; index < 21; index++) {
+        const cell = { ...goodsCell, asin: `B00000000${index}` };
+        if (index % 2 > 0) {
+          cell.sku = `150919USFBA${index}`;
+          cell.listingStatus = 'Remove';
+          cell.fulfillmentChannel = 'FBM';
+          cell.adjustSwitch = false;
+          cell.idAdd = !cell.idAdd;
+          cell.isAc = !cell.isAc;
+          cell.isPrime = !cell.isPrime;
+        } else {
+          cell.sku = `070323_5x_150919USFBA${index}`;
+          cell.sellableDays = 0;
+          cell.dayOrder7Ratio = 0 - cell.dayOrder7Ratio;
+          cell.isBuyBox = false;
+          cell.usedNewSellNum = 0;
+          cell.ranking = [];
+        }
+        cell.id = `${index * 2}`;
+        records.push(cell);
+      }
+      res.send({
+        code: 200,
+        data: {
+          total: 1234,
+          size: 20,
+          current: 1,
+          pages: 62,
+          records,
+        },
+      });
+    }, 300);
+  },
+
+  // 广告-添加广告
+  'POST /api/gd/management/product/add': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '添加成功',
+      });
+    }, 500);
+  },
+
   // 关键词
   // 关键词-列表
   'POST /api/gd/management/keyword/list': (_: Request, res: Response) => {
@@ -537,10 +697,16 @@ export default {
   
   // 关键词-获取建议竞价
   'POST /api/gd/management/keyword/suggested': (req: Request, res: Response) => {
-    const { body: { ids } } = req;
+    const { body: { keywords } } = req;
     setTimeout(() => {
-      const records = ids.map((id: string) => ({
-        id, suggested: 2.2, suggestedMin: 0.33, suggestedMax: 3.33,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const records = keywords.map((kw: any) => ({
+        id: kw.id,
+        suggested: Math.floor(Math.random() * 10),
+        suggestedMin: 0.33,
+        suggestedMax: 3.33,
+        keywordText: kw.keywordText,
+        matchType: kw.matchType,
       }));
       res.send({
         code: 200,
@@ -548,7 +714,7 @@ export default {
           records,
         },
       });
-    }, 5000);
+    }, 1000);
   },
 
   // 关键词-批量修改
@@ -563,6 +729,20 @@ export default {
         message: '修改成功',
       });
     }, 500);
+  },
+
+  // 关键词-建议关键词
+  'GET /ad/keyword/suggestedKeywordsByGroup': (_: Request, res: Response) => {
+    const data = ['suggestedKeyword'];
+    for (let index = 1; index < 20; index++) {
+      data.push(`suggestedKeyword-${index}`);      
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data,
+      });
+    }, 0);
   },
 
   // Targeting

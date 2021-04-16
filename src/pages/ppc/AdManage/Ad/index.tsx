@@ -4,7 +4,7 @@
  */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch, Link } from 'umi';
-import { Select, Button, Modal, Typography } from 'antd';
+import { Select, Button, Modal, Typography, Table, message } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
@@ -44,16 +44,36 @@ const Ad: React.FC = function() {
   } = useSelector((state: IConnectState) => state.global.shop.current);
   // loading
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
-  const loading = loadingEffect['adManage/fetchAdList'];
+  const loading = {
+    table: loadingEffect['adManage/fetchAdList'],
+    searchGoods: loadingEffect['adManage/fetchGoodsList'],
+    addAd: loadingEffect['adManage/addAd'],
+    fetchGroupList: loadingEffect['adManage/fetchSimpleGroupList'],
+  };
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     adTab: { list, searchParams, filtrateParams, customCols, checkedIds },
     treeSelectedInfo,
+    campaignSimpleList,
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
   const { startTime, endTime, state, qualification } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
+  // 添加广告
+  const [addState, setAddState] = useState({
+    visible: false,
+    campaignId: '',
+    campaignName: '',
+    groupId: '',
+    groupName: '',
+  });
+  // 添加广告时，提供选择的广告组
+  const [groupSimpleList, setGroupSimpleList] = useState<{id: string; name: string}[]>([]);
+  // 商品的搜索结果
+  const [goodsList, setGoodsList] = useState<API.IGoods[]>([]);
+  // 已选商品
+  const [selectedGoodsList, setSelectedGoodsList] = useState<API.IGoods[]>([]);
   // 数据分析
   const [chartsState, setChartsState] = useState({
     visible: false,
@@ -87,6 +107,51 @@ const Ad: React.FC = function() {
       });
     }
   }, [dispatch, currentShopId, treeSelectedInfo]);
+  
+  useEffect(() => {
+    // 获取简单广告活动列表或广告组简单列表
+    if (currentShopId !== '-1') {
+      // 判断菜单树是否选中广告活动或广告组
+      const { campaignId, groupId } = treeSelectedInfo;
+      // 没有选中任何菜单树的情况，获取广告活动列表
+      if (!campaignId) {
+        dispatch({
+          type: 'adManage/fetchSimpleCampaignList',
+          payload: {
+            headersParams: { StoreId: currentShopId },
+          },
+          callback: requestErrorFeedback,
+        });
+      } else {
+        // 选中广告活动且没选中广告组的情况，获取选中广告活动下的广告组
+        if (!groupId) {
+          dispatch({
+            type: 'adManage/fetchSimpleGroupList',
+            payload: {
+              headersParams: { StoreId: currentShopId },
+              campaignId,
+            },
+            callback: (code: number, msg: string, data: {id: string; name: string}[]) => {
+              requestErrorFeedback(code, msg);
+              setGroupSimpleList(data);
+            },
+          });
+        }
+      }
+      // 如果已选中广告活动或广告组，设置 addState 
+      setAddState({
+        ...addState,
+        campaignId: campaignId || '',
+        groupId: groupId || '',
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, currentShopId, treeSelectedInfo]);
+
+  // 切换广告组后清空已选产品
+  useEffect(() => {
+    setSelectedGoodsList([]);
+  }, [addState.groupId]);
 
   // 修改广告数据(状态)
   function modifyAd(params: {[key: string]: string | number}) {
@@ -131,7 +196,6 @@ const Ad: React.FC = function() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleFiltrate(values: { [key: string]: any }) {
     setVisibleFiltrate(false);
-    console.log('handleFiltrate', values);
     dispatch({
       type: 'adManage/fetchAdList',
       payload: {
@@ -223,6 +287,221 @@ const Ad: React.FC = function() {
     });
     return params;
   }
+
+  // 选择广告活动(添加广告时)
+  function handleCampaignChange(id: string) {
+    setAddState({
+      ...addState,
+      campaignId: id,
+      groupId: '',
+    });
+    setGroupSimpleList([]);
+    dispatch({
+      type: 'adManage/fetchSimpleGroupList',
+      payload: {
+        headersParams: { StoreId: currentShopId },
+        campaignId: id,
+      },
+      callback: (code: number, msg: string, data: {id: string; name: string}[]) => {
+        requestErrorFeedback(code, msg);
+        setGroupSimpleList(data);
+      },
+    });
+  }
+
+  // 搜索 asin/sku
+  function handleAddSearch(value: string) {
+    const val = value.trim();
+    if (val === '') {
+      return;
+    }
+    dispatch({
+      type: 'adManage/fetchGoodsList',
+      payload: {
+        headersParams: { StoreId: currentShopId },
+        code: value,
+      },
+      callback: (code: number, msg: string, data: API.IGoods[]) => {
+        requestErrorFeedback(code, msg);
+        setGoodsList(data);
+      },
+    });
+  }
+
+  // 添加广告时的广告活动选择器
+  function renderCampaignSelect() {
+    return !treeSelectedInfo.campaignId && (
+      <Select
+        showSearch
+        // 空字符串时，placeholder不会显示
+        value={addState.campaignId || undefined}
+        className={commonStyles.addSelect}
+        placeholder="选择广告活动"
+        onChange={handleCampaignChange}
+        filterOption={(input, option) => {
+          return option?.children.toLowerCase().includes(input.toLowerCase());
+        }}
+      >
+        {
+          campaignSimpleList.map(item => (
+            item.campaignType !== 'sb' && 
+            <Option key={item.campaignId} value={item.campaignId}>{ item.name }</Option>)
+          )
+        }
+      </Select>
+    );
+  }
+
+  // 添加广告时的广告组选择器
+  function renderGroupSelect() {
+    // 已选中广告活动并且没选中广告组的情况才显示
+    return addState.campaignId && !treeSelectedInfo.groupId && (
+      <Select
+        showSearch
+        // 空字符串时，placeholder不会显示
+        value={addState.groupId || undefined}
+        className={commonStyles.addSelect}
+        loading={loading.fetchGroupList}
+        placeholder="选择广告组"
+        onChange={value => setAddState({
+          ...addState,
+          groupId: value,
+        })}
+        filterOption={(input, option) => {
+          return option?.children.toLowerCase().includes(input.toLowerCase());
+        }}
+      >
+        {
+          groupSimpleList.map(item => (
+            <Option key={item.id} value={item.id}>{ item.name }</Option>)
+          )
+        }
+      </Select>
+    );
+  }
+
+  // 删除已选的商品
+  function handleDeleteGoods(sku: string) {
+    const newList = selectedGoodsList.filter(item => item.sku !== sku);
+    setSelectedGoodsList(newList);
+  }
+
+  // 添加广告
+  function handleAdd() {
+    if (!addState.campaignId || !addState.groupId) {
+      message.error('请选择广告活动和广告组！');
+      return;
+    }
+    setAddState({
+      ...addState,
+      visible: false,
+    });
+    dispatch({
+      type: 'adManage/addAd',
+      payload: {
+        headersParams: { StoreId: currentShopId },
+        adList: selectedGoodsList,
+        camId: addState.campaignId,
+        groupId: addState.groupId,
+      },
+      callback: (code: number, msg: string) => {
+        requestFeedback(code, msg);
+        if (code === 200) {
+          setTimeout(() => {
+            window.location.replace('./manage?tab=ad');
+          }, 1000);
+        }
+      },
+    });
+  }
+
+  // 商品表格基础列（添加弹窗，不含操作栏）
+  const goodsTableColumns: ColumnProps<API.IGoods>[] = [
+    {
+      title: '商品信息',
+      dataIndex: 'sku',
+      align: 'center',
+      width: 320,
+      render: (sku, record) => (
+        <div className={styles.goodsInfoContainer}>
+          <GoodsImg src={record.imgUrl} alt="商品" width={46} />
+          <div className={styles.goodsInfoContent}>
+            <Paragraph ellipsis className={styles.goodsTitle}>
+              { GoodsIcon.link() }
+              <a title={record.title} href={record.url} target="_blank" rel="noopener noreferrer">{record.title}</a>
+            </Paragraph>
+            <div className={styles.goodsInfoLine}>
+              <span className={styles.asin}>{record.asin}</span>
+              <span className={styles.review}>
+                <span className={styles.reviewScore}>{record.reviewScore}</span>
+                <span className={styles.reviewCount}>({`${record.reviewCount}` || '-'})</span>
+              </span>
+              <span className={styles.price}>
+                { getShowPrice(record.price, marketplace, currency) }
+              </span>
+            </div>
+            <div>{sku}</div>
+          </div>
+        </div>
+      ),
+    }, {
+      title: '库存',
+      dataIndex: 'sellable',
+      align: 'center',
+      width: 40,
+    }, {
+      title: '排名',
+      dataIndex: 'ranking',
+      align: 'center',
+      width: 40,
+      render: (ranking, record) => record.dayOrder7Count,
+    },
+  ];
+
+  // 待选商品列
+  const candidateGoodsTableColumns: ColumnProps<API.IGoods>[] = goodsTableColumns.concat({
+    title: '操作',
+    dataIndex: '',
+    align: 'center',
+    width: 40,
+    render: (_, record) => {
+      const isSelected = selectedGoodsList.find(item => item.sku === record.sku);
+      if (isSelected) {
+        return <Button type="link" disabled>已选</Button>;
+      }
+      return (
+        <Button
+          type="link"
+          className={commonStyles.selectBtn}
+          onClick={() => {
+            if (selectedGoodsList.length > 999) {
+              message.error('一次最多添加1000个产品');
+              return;
+            }
+            setSelectedGoodsList([
+              record,
+              ...selectedGoodsList,
+            ]);
+          }}
+        >选择</Button>
+      );
+    },
+  });
+
+  // 已选商品列
+  const selectedGoodsTableColumns: ColumnProps<API.IGoods>[] = goodsTableColumns.concat({
+    title: '操作',
+    dataIndex: '',
+    align: 'center',
+    width: 40,
+    render: (_, record) => (
+      <Button
+        type="link"
+        className={commonStyles.deleteBtn}
+        onClick={() => handleDeleteGoods(record.sku)}
+      >删除</Button>
+    ),
+  });
 
   // 投放资格下拉框
   const qualificationOptions = (
@@ -580,7 +859,7 @@ const Ad: React.FC = function() {
     dataSource: records,
     customCols,
     columns,
-    loading,
+    loading: loading.table,
     total,
     current,
     size,
@@ -659,11 +938,9 @@ const Ad: React.FC = function() {
       { visibleFiltrate ? <Filtrate { ...filtrateProps } /> : <Crumbs { ...crumbsProps } /> }
       <div className={commonStyles.tableToolBar}>
         <div>
-          <Link to="/">
-            <Button type="primary">
-              添加广告<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
-            </Button>
-          </Link>
+          <Button type="primary" onClick={() => setAddState({ ...addState, visible: true })}>
+            添加广告<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
+          </Button>
           <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
@@ -692,6 +969,55 @@ const Ad: React.FC = function() {
         adId={chartsState.adId}
         adName={chartsState.adName}
       />
+      <Modal
+        visible={addState.visible}
+        width={1160}
+        keyboard={false}
+        footer={false}
+        maskClosable={false}
+        className={classnames(styles.Modal, commonStyles.addModal)}
+        onCancel={() => setAddState({ ...addState, visible: false })}
+      >
+        <div className={styles.modalContainer}>
+          <div className={commonStyles.addModalTitle}>添加广告</div>
+          <div className={commonStyles.addModalContent}>
+            <div className={commonStyles.addSelectContainer}>
+              { renderCampaignSelect() }
+              { renderGroupSelect() }
+            </div>
+            <div className={commonStyles.addTableContainer}>
+              <div className={styles.tableContent}>
+                <MySearch placeholder="请输入ASIN或SKU" defaultValue="" handleSearch={handleAddSearch} />
+                <Table
+                  loading={loading.searchGoods}
+                  columns={candidateGoodsTableColumns}
+                  scroll={{ x: 'max-content', y: '450px' }}
+                  rowKey="id"
+                  dataSource={goodsList}
+                  locale={{ emptyText: '请输入本店铺的ASIN、SKU进行查询' }}
+                  pagination={false}
+                />
+              </div>
+              <div className={styles.tableContent}>
+                <div className={styles.title}>已选产品</div>
+                <Table
+                  loading={loading.addAd}
+                  columns={selectedGoodsTableColumns}
+                  scroll={{ x: 'max-content', y: '450px' }}
+                  rowKey="id"
+                  dataSource={selectedGoodsList}
+                  locale={{ emptyText: '请从左侧表格选择产品' }}
+                  pagination={false}
+                />
+              </div>
+            </div>
+            <div className={commonStyles.addModalfooter}>
+              <Button onClick={() => setAddState({ ...addState, visible: false })}>取消</Button>
+              <Button type="primary" disabled={!selectedGoodsList.length} onClick={handleAdd}>确定</Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -92,9 +92,9 @@ export const stateIconDict = {
 
 // 匹配方式
 export const matchTypeDict = {
-  exact: '精准',
-  phrase: '词组',
   broad: '广泛',
+  phrase: '词组',
+  exact: '精准',
 };
 
 const Manage: React.FC = function() {
@@ -110,8 +110,8 @@ const Manage: React.FC = function() {
   // 标签页的类型
   const [tabsState, setTabsState] = useState<string>('default');
   // 选中的标签(默认选中第一个)
-  const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
-  // const [activeTabKey, setActiveTabKey] = useState<string>('history');
+  // const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
+  const [activeTabKey, setActiveTabKey] = useState<string>('keyword');
   // 菜单树侧边栏是否收起
   const [collapsed, setCollapsed] = useState<boolean>(false);
   
@@ -147,6 +147,8 @@ const Manage: React.FC = function() {
       } else if (campaignId) {
         qsTabsState = 'campaign';
         setActiveTabKey(tab || 'group');
+      } else if (tab) {
+        setActiveTabKey(tab);
       }
       setTabsState(qsTabsState);
       if (qsParams.campaignId !== undefined) {

@@ -8,6 +8,22 @@ export async function queryUpdateTime(params: API.IParams) {
   });
 }
 
+// 广告活动简表
+export async function querySimpleCampaignList(params: API.IParams) {
+  return request('/api/gd/ad/campaign/simpleList', {
+    data: params,
+    params,
+  });
+}
+
+// 广告组简表
+export async function querySimpleGroupList(params: API.IParams) {
+  return request('/api/gd/ad/group/simpleList', {
+    data: params,
+    params,
+  });
+}
+
 // 菜单树-广告活动
 export async function queryCampaignSimpleList(params: API.IParams) {
   return request('/api/gd/management/campaign/simple-list', {
@@ -149,12 +165,30 @@ export async function queryAdList(params: API.IParams) {
   });
 }
 
-// 广告组-批量修改状态
+// 广告-批量修改状态
 export async function batchAdState(params: API.IParams) {
   return request('/api/gd/management/product/batchSetting', {
     method: 'POST',
     data: params,
     params,
+  });
+}
+
+// 广告-添加广告时搜索商品
+export async function queryGoodsList(params: API.IParams) {
+  return request('/api/gd/management/product/search-goods', {
+    method: 'POST',
+    data: params,
+    params,
+  });
+}
+
+// 广告-添加广告
+export async function addAd(params: API.IParams) {
+  return request('/api/gd/management/product/add', {
+    method: 'POST',
+    data: params,
+    // params,
   });
 }
 
@@ -179,7 +213,7 @@ export async function queryKeywordSuggestedBid(params: API.IParams) {
   return request('/api/gd/management/keyword/suggested', {
     method: 'POST',
     data: params,
-    params,
+    // params,
   });
 }
 
@@ -189,6 +223,32 @@ export async function batchKeyword(params: API.IParams) {
     method: 'POST',
     data: params,
     params,
+  });
+}
+
+// 关键词-获取建议关键词
+export async function querySuggestedKeywords(params: API.IParams) {
+  return request('/ad/keyword/suggestedKeywordsByGroup', {
+    data: params,
+    params,
+  });
+}
+
+
+// // 关键词-获取建议关键词的建议竞价
+// export async function queryKeywordSuggestedSuggestedBid(params: API.IParams) {
+//   return request('/api/gd/management/keyword/suggested-1', {
+//     method: 'POST',
+//     data: params,
+//     // params,
+//   });
+// }
+
+// 关键词-添加关键词
+export async function addKeyword(params: API.IParams) {
+  return request('/api/gd/management/product/add', {
+    method: 'POST',
+    data: params,
   });
 }
 

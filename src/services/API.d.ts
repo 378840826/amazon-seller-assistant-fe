@@ -122,6 +122,7 @@ declare namespace API {
   type GroupType = 'keyword' | 'targeting';
   type CamType = 'sb' | 'sp' | 'sd';
   type AdKeywordMatchType = 'exact' | 'phrase' | 'broad';
+  type CamTargetType = 'manual' | 'auto';
   // 广告管理-广告活动
   interface IAdCampaign {
     id: string;
@@ -269,7 +270,7 @@ declare namespace API {
     camName: string;
     camState: AdState;
     camType: CamType;
-    campaignTargetType: 'manual' | 'auto';
+    campaignTargetType: CamTargetType;
     groupId: string;
     groupName: string;
     groupType: GroupType;

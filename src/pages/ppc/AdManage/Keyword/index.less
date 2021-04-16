@@ -1,4 +1,69 @@
+.disabled {
+  pointer-events: none;
+  color: @text-color-disabled;
+}
+
 // 下拉框
 .matchTypeSelect {
   width: 90px;
+}
+
+// 添加弹窗
+.Modal {
+  .suggestedKeywordTable {
+    width: 420px;
+    height: 405px;
+  }
+
+  .addTextArea {
+    margin: 10px 0;
+    width: 420px;
+    height: 355px;
+    resize: none;
+  }
+
+  .textAreaBtnContainer {
+    text-align: center;
+  }
+
+  .selectedKeywordTable {
+    width: 650px;
+  }
+
+  .addToolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .batchToolbar {
+    & > * {
+      margin-right: 10px;
+    }
+
+    &.disabled button {
+      pointer-events: none;
+      color: @text-color-disabled;
+    }
+  }
+
+  .selectAllBtn {
+    width: 46px;
+    min-width: 46px;
+    margin: 0 8px;
+    text-align: center;
+    font-size: @font-size-sm;
+    cursor: pointer;
+  }
+
+  .tableContent:last-child {
+    margin-top: 54px;
+  }
+
+  .keywordSelectItem {
+    margin: 0;
+    padding: 0;
+    height: 22px;
+    line-height: 22px;
+  }
 }

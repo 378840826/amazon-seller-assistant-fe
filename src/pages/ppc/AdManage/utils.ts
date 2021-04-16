@@ -39,7 +39,7 @@ export function getAssignUrl(params: {
 }
 
 // 判断是否有效的关键词竞价，并返回最低竞价（日本站>=10，其他>=0.02）
-export function isValidKeywordBid(bid: number, marketplace: API.Site) {
+export function isValidKeywordBid(bid: number, marketplace: API.Site): [boolean, number] {
   let minBid = 0.02;
   if (marketplace === 'JP') {
     minBid = 10;

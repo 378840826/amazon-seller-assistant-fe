@@ -244,7 +244,7 @@ export const strToReviewScoreStr = function (value: string) {
 
 // 格式化区分日本站点的金额
 export const getShowPrice = function(
-  price: number | null | string, marketplace?: string, currency?: string
+  price?: number | null | string, marketplace?: string, currency?: string
 ) {
   let result = '';
   if (price !== null && price !== '' && price !== undefined) {

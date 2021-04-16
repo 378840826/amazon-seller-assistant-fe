@@ -3,6 +3,7 @@
  */
 import React, { useState } from 'react';
 import { Dropdown, Form, Select, Button, Input, message } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import { strToMoneyStr } from '@/utils/utils';
 import styles from './index.less';
 
@@ -119,7 +120,7 @@ const BatchSetBid: React.FC<IProps> = props => {
         </div>
       }
     >
-      <Button>设置竞价</Button>
+      <Button>设置竞价 <DownOutlined /></Button>
     </Dropdown>
   );
 };

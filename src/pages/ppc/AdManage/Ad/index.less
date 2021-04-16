@@ -7,6 +7,7 @@
 .goodsInfoContainer {
   display: flex;
   align-items: center;
+  text-align: left;
 
   & > * {
     line-height: 14px;
@@ -23,5 +24,54 @@
 .goodsTitle {
   &:hover > span {
     color: @link-color;
+  }
+}
+
+.Modal {
+  .searchLine {
+    display: flex;
+
+    & > * {
+      width: 540px;
+    }
+  }
+
+  .tableContent {
+    width: 540px;
+
+    .title {
+      font-size: @font-size-base;
+      color: @heading-color;
+      line-height: @height-base;
+    }
+  }
+
+  .goodsInfoLine {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 0;
+
+    .asin {
+      width: 90px;
+      color: @btn-text-color;
+    }
+
+    .review {
+      width: 80px;
+    }
+
+    .reviewScore {
+      color: #ff9200;
+    }
+
+    .reviewCount {
+      color: @text-color-secondary;
+    }
+
+    .price {
+      display: inline-block;
+      color: @error-color;
+      text-align: right;
+    }
   }
 }

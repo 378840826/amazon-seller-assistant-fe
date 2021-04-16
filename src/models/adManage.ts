@@ -8,6 +8,8 @@ import {
   queryTabsCellCount,
   queryCampaignSimpleList,
   queryGroupSimpleList,
+  querySimpleCampaignList,
+  querySimpleGroupList,
   // 广告活动
   queryCampaignList,
   queryPortfolioList,
@@ -23,10 +25,15 @@ import {
   // 广告
   queryAdList,
   batchAdState,
+  queryGoodsList,
+  addAd,
   // 关键词
   queryKeywordList,
   batchKeyword,
   queryKeywordSuggestedBid,
+  querySuggestedKeywords,
+  // queryKeywordSuggestedSuggestedBid,
+  addKeyword,
   // Targeting
   queryTargetingList,
   batchTargeting,
@@ -63,6 +70,12 @@ interface ICampaignAndGroup extends API.IAdCampaign {
 export interface IAdManage {
   updateTime: string;
   treeData: ITreeDataNode[];
+  campaignSimpleList: {
+    name: string;
+    campaignId: string;
+    campaignType: API.CamType;
+    targetingType: API.CamTargetType;
+  }[];
   treeSelectedInfo: ITreeSelectedInfo;
   treeExpandedKeys: string[];
   tabsCellCount: {
@@ -365,6 +378,7 @@ const AdManageModel: IAdManageModelType = {
   state: {
     updateTime: '正在查询...',
     treeData: initTreeData,
+    campaignSimpleList: [],
     // 在菜单树选中广告活动或广告组时，保存的广告活动和广告组信息
     treeSelectedInfo: { key: '' },
     treeExpandedKeys: [],
@@ -714,6 +728,25 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
+    // 获取全部广告活动简单列表
+    *fetchSimpleCampaignList({ payload, callback }, { call, put }) {
+      const res = yield call(querySimpleCampaignList, payload);
+      if (res.code === 200) {
+        const { data } = res;
+        yield put({
+          type: 'saveSimpleCampaignList',
+          payload: { data },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 获取广告活动下的广告组简单列表
+    *fetchSimpleGroupList({ payload, callback }, { call }) {
+      const res = yield call(querySimpleGroupList, { ...payload });
+      callback && callback(res.code, res.message, res.data);
+    },
+
     // 广告活动
     // 广告活动-获取 Portfolios
     *fetchPortfolioList({ payload, callback }, { call, put }) {
@@ -979,6 +1012,18 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
+    // 广告-添加广告时搜索商品
+    *fetchGoodsList({ payload, callback }, { call }) {
+      const res = yield call(queryGoodsList, { ...payload });
+      callback && callback(res.code, res.message, res.data.records);
+    },
+
+    // 广告-添加广告
+    *addAd({ payload, callback }, { call }) {
+      const res = yield call(addAd, { ...payload });
+      callback && callback(res.code, res.message);
+    },
+
     // 关键词
     // 关键词-获取列表
     *fetchKeywordList({ payload, callback }, { call, put, select }) {
@@ -1001,10 +1046,10 @@ const AdManageModel: IAdManageModelType = {
       if (res.code === 200) {
         const { data: { page, total } } = res;
         // 获取建议竞价
-        const ids = page.records.map((item: API.IAdTargeting) => item.id);
+        // const ids = page.records.map((item: API.IAdTargeting) => item.id);
         yield put({
           type: 'fetchKeywordSuggestedBid',
-          payload: { headersParams, ids },
+          payload: { headersParams, keywords: page.records },
         });
         // 保存列表数据
         yield put({
@@ -1061,6 +1106,24 @@ const AdManageModel: IAdManageModelType = {
           payload: { records: [data] },
         });
       }
+      callback && callback(res.code, res.message);
+    },
+
+    // 关键词-获取建议关键词
+    *fetchSuggestedKeywords({ payload, callback }, { call }) {
+      const res = yield call(querySuggestedKeywords, payload);
+      callback && callback(res.code, res.message, res.data);
+    },
+
+    // 关键词-获取建议或输入关键词的建议竞价（添加关键词时）
+    *fetchSuggestedKeywordSuggestedBid({ payload, callback }, { call }) {
+      const res = yield call(queryKeywordSuggestedBid, payload);
+      callback && callback(res.code, res.message, res.data.records);
+    },
+
+    // 关键词-添加关键词
+    *addKeyword({ payload, callback }, { call }) {
+      const res = yield call(addKeyword, { ...payload });
       callback && callback(res.code, res.message);
     },
 
@@ -1466,6 +1529,12 @@ const AdManageModel: IAdManageModelType = {
     saveUpdateTime(state, { payload }) {
       const { data } = payload;
       state.updateTime = data;
+    },
+
+    // 菜单树-保存菜单树
+    saveSimpleCampaignList(state, { payload }) {      
+      const { data } = payload;
+      state.campaignSimpleList = data;
     },
 
     // 菜单树-保存菜单树
