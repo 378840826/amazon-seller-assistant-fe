@@ -50,10 +50,6 @@ declare namespace CreateCampaign {
     priceGreaterThan: string;
     reviewRatingLessThan: number;
     reviewRatingGreaterThan: number;
-    originalBrands: {
-      brandId: number;
-      brandName: string;
-    }[];
   }
 
   interface IKeywords {

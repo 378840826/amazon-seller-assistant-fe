@@ -7,11 +7,9 @@ import {
   Input,
   Slider,
   Button,
-  Checkbox,
   message,
-  Spin,
+  Select,
 } from 'antd';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { useDispatch } from 'umi';
 import { strToMoneyStr } from '@/utils/utils';
 
@@ -23,22 +21,20 @@ interface IProps {
   onConfirm: (data: CreateCampaign.IThiningConfirmCallback) => Promise<boolean>;
 }
 
-const { Item } = Form;
-let originalBrands: {
-  brandId: number;
+interface IBrandType {
+  brandId: string;
   brandName: string;
-}[] = []; // 原始的后端数据
-const protectBrands: string[] = []; // 数据库得到的品牌列表
+}
+
+const { Item } = Form;
 const Thining: React.FC<IProps> = (props) => {
   const { currency, onConfirm, classText, classId, storeId } = props;
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string|null>(null);
-  const [brands, setBrands] = useState<string[]>([]); // 用来渲染品牌的（含搜索后的）
-  const [checkedValues, setCheckedValues] = useState<CheckboxValueType[]>([]);// 选中的品牌
+  const [loading, setLoading] = useState<boolean>(true);
+  const [brands, setBrands] = useState<IBrandType[]>([]); // 用来渲染品牌的（含搜索后的）
   const [scores, setScores] = useState<[number, number]>([0, 5]);// 选中的评分
   
   
@@ -47,10 +43,13 @@ const Thining: React.FC<IProps> = (props) => {
       return;
     }
 
+    // 其它行的品牌细化也会记录选中的品牌
+    form.setFieldsValue({ brandName: undefined });
+
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
-        type: 'createCampagin/getThiningBrands',
+        type: 'createGroup/getThiningBrands',
         resolve,
         reject,
         payload: {
@@ -70,46 +69,17 @@ const Thining: React.FC<IProps> = (props) => {
         code: number;
         message: string;
         data: {
-          vos: {
-            brandId: number;
-          brandName: string;
-          }[];
+          vos: IBrandType[];
         };
       };
-      const temArray: string[] = [];
 
       if (code !== 200) {
         message.error(msg);
         return;
       }
-      
-      originalBrands = data.vos;
-      data.vos.forEach(item => {
-        temArray.push(item.brandName);
-        protectBrands.push(item.brandName);
-      });
-      setBrands([...temArray]);
+      setBrands([...data.vos]);
     });
-  }, [dispatch, classId, visible]); // eslint-disable-line
-
-
-  useEffect(() => {
-    const pattern = new RegExp(`.*${inputValue}.*`, 'igm');
-    const temArray: string[] = [];
-
-    if (['', null, undefined].includes(inputValue)) {
-      setBrands([...protectBrands]);
-      return;
-    }
-
-    protectBrands.forEach(item => {
-      if (item.search(pattern) > -1) {
-        temArray.push(item);
-        
-      } 
-    });
-    setBrands([...temArray]);
-  }, [inputValue]); // eslint-disable-line
+  }, [dispatch, classId, visible, form, brands, storeId]);
 
   // 确定
   const confirm = () => {
@@ -118,10 +88,12 @@ const Thining: React.FC<IProps> = (props) => {
     
     const priceMin = data.thining ? data.thining.priceMin : '';
     const priceMax = data.thining ? data.thining.priceMax : '';
+    console.log(data.brandName, 'data.brandName');
+    
     if (
       scores[0] !== 0 
       || scores[1] !== 5
-      || checkedValues.length !== 0
+      || (data.brandName && data.brandName.length !== 0)
       || ![undefined, '', null, '0.'].includes(priceMin)
       || ![undefined, '', null, '0.'].includes(priceMax)
     ) {
@@ -132,7 +104,7 @@ const Thining: React.FC<IProps> = (props) => {
       return;
     }
 
-    if (checkedValues.length > 50) {
+    if (data.brandName && data.brandName.length > 50) {
       message.error('最多选择50个品牌');
       return;
     }
@@ -145,12 +117,11 @@ const Thining: React.FC<IProps> = (props) => {
     onConfirm({
       classText,
       classId,
-      checkedBrands: checkedValues,
+      checkedBrands: data.brandName || [],
       priceLessThan: priceMin,
       priceGreaterThan: priceMax,
       reviewRatingLessThan: scores[0],
       reviewRatingGreaterThan: scores[1],
-      originalBrands, // 将后端的数据传上去，要查找品牌ID
     }).then(isSuccess => {
       isSuccess && setVisible(false);
     });
@@ -165,74 +136,66 @@ const Thining: React.FC<IProps> = (props) => {
       onVisibleChange={(visible) => setVisible(visible)}
       overlayClassName={styles.thiningBox}
       content={
-        <div>
-          <Form form={form} colon={false}> 
-            <div className={styles.brandList}>
-              <Item label="品牌：" name="brandName" className={styles.brandInput}>
-                <Input 
-                  placeholder="选择或输入品牌"
-                  autoComplete="off"
-                  onChange={e => setInputValue(e.target.value)}
-                  allowClear/>
-              </Item>
-              <div className={styles.list}>
-                <Checkbox.Group 
-                  options={brands}
-                  className={classnames( loading ? 'none' : '',)}
-                  defaultValue={checkedValues}
-                  onChange={values => setCheckedValues(values)} />
-                <p className={classnames(
-                  styles.notHint,
-                  brands.length === 0 ? '' : 'none',
-                  loading ? 'none' : '',
-                )}>搜索结果不存在或分类关键字无品牌</p>
-                
-                <Spin spinning={loading} className={styles.loading} />
-              </div>
-            </div>
-            <div className={styles.priceRange}>
-              <span className={styles.text}>
-                价格区间<span className={styles.subtitle}>（{currency}）</span>：
-              </span>
-              <Item 
-                name={['thining', 'priceMin']} 
-                normalize={val => strToMoneyStr(val)}
+        <Form form={form}>
+          <div className={styles.brandList}>
+            <Item label="品牌：" name="brandName" className={styles.brandInput}>
+              <Select 
+                mode="multiple"
+                allowClear
+                placeholder="选择或输入品牌"
+                loading={loading}
+                maxTagCount={2}
               >
-                <Input autoComplete="off"/>
-              </Item>
-              <span className={styles.line}>—</span>
-              <Item 
-                name={['thining', 'priceMax']} 
-                normalize={val => strToMoneyStr(val)}
-              >
-                <Input autoComplete="off"/>
-              </Item>
-            </div>
-            <div className={styles.slider}>
-              <span className={styles.title}>Review区间：</span>
-              <Slider
-                range defaultValue={scores}
-                min={0}
-                max={5}
-                onChange={val => setScores(val)}
-                marks={{
-                  0: '0',
-                  1: '1',
-                  2: '2',
-                  3: '3',
-                  4: '4',
-                  5: '5',
-                }}
-                disabled={false} 
-              />
-              <span className={styles.descript}>0-5星</span>
-            </div>
-            <footer>
-              <Button onClick={() => setVisible(false)}>取消</Button>
-              <Button type="primary" onClick={confirm}>确定</Button>
-            </footer>
-          </Form>
-        </div>
+                {brands.map((item, index) => {
+                  return <Select.Option key={index} value={item.brandId}>
+                    {item.brandName}
+                  </Select.Option>;
+                })}  
+              </Select>
+            </Item>
+          </div>
+          <div className={styles.priceRange}>
+            <span className={styles.text}>
+              价格区间<span className={styles.subtitle}>（{currency}）</span>：
+            </span>
+            <Item 
+              name={['thining', 'priceMin']} 
+              normalize={val => strToMoneyStr(val)}
+            >
+              <Input autoComplete="off"/>
+            </Item>
+            <span className={styles.line}>—</span>
+            <Item 
+              name={['thining', 'priceMax']} 
+              normalize={val => strToMoneyStr(val)}
+            >
+              <Input autoComplete="off"/>
+            </Item>
+          </div>
+          <div className={styles.slider}>
+            <span className={styles.title}>Review区间：</span>
+            <Slider
+              range defaultValue={scores}
+              min={0}
+              max={5}
+              onChange={val => setScores(val)}
+              marks={{
+                0: '0',
+                1: '1',
+                2: '2',
+                3: '3',
+                4: '4',
+                5: '5',
+              }}
+              disabled={false} 
+            />
+            <span className={styles.descript}>0-5星</span>
+          </div>
+          <footer>
+            <Button onClick={() => setVisible(false)}>取消</Button>
+            <Button type="primary" onClick={confirm}>确定</Button>
+          </footer>
+        </Form>
       }
     >
       <span 

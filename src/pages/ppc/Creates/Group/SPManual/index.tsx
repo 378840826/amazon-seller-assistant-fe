@@ -25,7 +25,7 @@ const { Item } = Form;
 const SPManual: React.FC<IProps> = props => {
   const { form, currency, marketplace, storeId, campaignType, putMathod } = props;
 
-  const [nav, setNav] = useState<'keyword'|'classify'>('keyword');
+  const [nav, setNav] = useState<'keyword'|'classify'>('classify');
   const [batchSetBidVisible, setBatchSetBidVisible] = useState<boolean>(false); // 批量设置建议竞价显隐
   const [matchingVisible, setMatchingVisible] = useState<boolean>(false); // 批量修改匹配方式显隐
 
@@ -62,6 +62,7 @@ const SPManual: React.FC<IProps> = props => {
         }
         return strToMoneyStr(val);
       }}
+      initialValue={5}
       rules={[{
         required: true,
         validator(rule, value) {

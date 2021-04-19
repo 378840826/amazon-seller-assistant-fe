@@ -48,7 +48,7 @@ interface IAddRecord {
 
 
 interface IPage extends ConnectProps {
-  createCampagin: ICreateGampaignState;
+  createGroup: ICreateGampaignState;
 }
 
 
@@ -56,14 +56,14 @@ let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
   const { form, currency, marketplace, storeId, putMathod } = props;
   const dispatch = useDispatch();
-  const selectProducts = useSelector((state: IPage) => state.createCampagin.selectProduct);
+  const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   
   const [nav, setNav] = useState<'suggestClass' |'searchClass'>('suggestClass'); // 
   const [batchSetBidVisible, setBatchSetBidVisible] = useState<boolean>(false); // 批量设置建议竞价显隐
   // 是否全选建议分类
   const [isSelectAllSuggestClass, setIsSelectAllSuggestClass] = useState<boolean>(false);
   const [isHaveScroll, setisHaveScroll] = useState<boolean>(false); // 左边建议分类表格是格有滚动条
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false); 
   const [hint, setHint] = useState<string>('请先添加商品'); // 左边表格无数据的提示
 
   // 左边的建议分类列表
@@ -95,6 +95,7 @@ const ClassProduct: React.FC<IProps> = props => {
   useEffect(() => {
     const asins: string[] = [];
     selectProducts.forEach(item => asins.push(item.asin));
+
     if (putMathod && putMathod === 'classProduct') {
       setHint('SD展示广告暂无建议分类');
       return;
@@ -108,7 +109,7 @@ const ClassProduct: React.FC<IProps> = props => {
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
-        type: 'createCampagin/getClassifys',
+        type: 'createGroup/getClassifys',
         resolve,
         reject,
         payload: {
@@ -160,7 +161,7 @@ const ClassProduct: React.FC<IProps> = props => {
     const jsonString = JSON.stringify(suggestedClass);
     const newArray: CreateCampaign.ISuggestedClassType = JSON.parse(jsonString);
     dispatch({
-      type: 'createCampagin/setClassifys',
+      type: 'createGroup/setClassifys',
       payload: newArray,
     });
   }, [dispatch, suggestedClass]);
@@ -188,8 +189,8 @@ const ClassProduct: React.FC<IProps> = props => {
     setIsSelectAllSuggestClass(isAllSelct);
   }, [suggestClass]);
 
-  
-  // 修改左边建议分类按钮的状态(取消选中)
+
+  // 修改左边建议分类按钮的状态（取消选中）
   const setKeywordDataState = (classText: string) => {
     for (let i = 0; i < suggestClass.length; i++) {
       const item = suggestClass[i];
@@ -232,7 +233,7 @@ const ClassProduct: React.FC<IProps> = props => {
     const defaultBid = form.getFieldValue('defaultBid');
 
     if ([undefined, null, ''].includes(defaultBid)) {
-      message.error('默认价不能为空，请填写默认竞价');
+      message.error('默认竞价不能为空，请填写默认竞价');
       return;
     } 
 
@@ -265,7 +266,7 @@ const ClassProduct: React.FC<IProps> = props => {
   const thiningCallback = (data: CreateCampaign.IThiningConfirmCallback) => {
     const defaultBid = form.getFieldValue('defaultBid');
     let flag = false;
-    const checkedBrands = data.checkedBrands;
+    const checkedBrands = data.checkedBrands || [];
     const priceMin = data.priceLessThan;
     const priceMax = data.priceGreaterThan;
     const scoreMin = data.reviewRatingLessThan;
@@ -320,21 +321,13 @@ const ClassProduct: React.FC<IProps> = props => {
     if (checkedBrands.length) {
       // 多个品牌
       checkedBrands.forEach(item => {
-        let brandId = -1;
-        for (let i = 0; i < data.originalBrands.length; i++) {
-          const childItem = data.originalBrands[i];
-          if (childItem.brandName === item) {
-            brandId = childItem.brandId;
-            break;
-          }
-        }
         const obj: any = { // eslint-disable-line
           categoryId: data.classId,
           categoryName: data.classText,
           isChecked: false,
           id: createUUID(),
           bid: defaultBid,
-          brandId,
+          brandId: item.brandId,
           brandName: item,
           priceLessThan: priceMin,
           priceGreaterThan: priceMax,

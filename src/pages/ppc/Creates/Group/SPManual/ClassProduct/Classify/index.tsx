@@ -266,7 +266,7 @@ const ClassProduct: React.FC<IProps> = props => {
   const thiningCallback = (data: CreateCampaign.IThiningConfirmCallback) => {
     const defaultBid = form.getFieldValue('defaultBid');
     let flag = false;
-    const checkedBrands = data.checkedBrands;
+    const checkedBrands = data.checkedBrands || [];
     const priceMin = data.priceLessThan;
     const priceMax = data.priceGreaterThan;
     const scoreMin = data.reviewRatingLessThan;
@@ -321,21 +321,13 @@ const ClassProduct: React.FC<IProps> = props => {
     if (checkedBrands.length) {
       // 多个品牌
       checkedBrands.forEach(item => {
-        let brandId = -1;
-        for (let i = 0; i < data.originalBrands.length; i++) {
-          const childItem = data.originalBrands[i];
-          if (childItem.brandName === item) {
-            brandId = childItem.brandId;
-            break;
-          }
-        }
         const obj: any = { // eslint-disable-line
           categoryId: data.classId,
           categoryName: data.classText,
           isChecked: false,
           id: createUUID(),
           bid: defaultBid,
-          brandId,
+          brandId: item.brandId,
           brandName: item,
           priceLessThan: priceMin,
           priceGreaterThan: priceMax,
