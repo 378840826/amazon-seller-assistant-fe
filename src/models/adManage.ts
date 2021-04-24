@@ -38,6 +38,12 @@ import {
   queryTargetingList,
   batchTargeting,
   queryTargetingSuggestedBid,
+  querySuggestedCategory,
+  querySuggestedGoods,
+  querySuggestedBrands,
+  queryCategorySuggestedBid,
+  queryGoodsSuggestedBid,
+  addTargeting,
   // 否定Targeting
   queryNegativeTargetingList,
   batchNegativeTargetingArchive,
@@ -1209,6 +1215,42 @@ const AdManageModel: IAdManageModelType = {
           payload: { records: [data] },
         });
       }
+      callback && callback(res.code, res.message);
+    },
+    
+    // Targeting-获取建议分类
+    *fetchSuggestedCategory({ payload, callback }, { call }) {
+      const res = yield call(querySuggestedCategory, payload);
+      callback && callback(res.code, res.message, res.data);
+    },
+
+    // Targeting-获取建议品牌
+    *fetchSuggestedBrands({ payload, callback }, { call }) {
+      const res = yield call(querySuggestedBrands, payload);
+      callback && callback(res.code, res.message, res.data.records);
+    },
+    
+    // Targeting-获取建议商品
+    *fetchSuggestedGoods({ payload, callback }, { call }) {
+      const res = yield call(querySuggestedGoods, payload);
+      callback && callback(res.code, res.message, res.data);
+    },
+
+    // Targeting-获取建议竞价-分类
+    *fetchSuggestedCategorySuggestedBid({ payload, callback }, { call }) {
+      const res = yield call(queryCategorySuggestedBid, payload);
+      callback && callback(res.code, res.message, res.data.records);
+    },
+
+    // Targeting-获取建议竞价-商品
+    *fetchSuggestedGoodsSuggestedBid({ payload, callback }, { call }) {
+      const res = yield call(queryGoodsSuggestedBid, payload);
+      callback && callback(res.code, res.message, res.data.records);
+    },
+
+    // Targeting-添加Targeting
+    *addTargeting({ payload, callback }, { call }) {
+      const res = yield call(addTargeting, { ...payload });
       callback && callback(res.code, res.message);
     },
 

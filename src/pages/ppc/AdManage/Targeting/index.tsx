@@ -3,7 +3,7 @@
  *  Targeting（分类/商品投放）
  */
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch, Link } from 'umi';
+import { useSelector, useDispatch } from 'umi';
 import { Select, Button, Modal, message, Spin } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
@@ -18,6 +18,7 @@ import StateSelect, { stateOptions } from '../components/StateSelect';
 import DataChartModal from '../components/DataChartModal';
 import editable from '@/pages/components/EditableCell';
 import DefinedCalendar from '@/components/DefinedCalendar';
+import AddModal from './AddModal';
 import { matchTypeDict } from '@/pages/ppc/AdManage';
 import {
   Iconfont,
@@ -55,6 +56,7 @@ const Targeting: React.FC = function() {
   const { current, size, sort, order } = searchParams;
   const { state, targetingType } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
+  const [visibleAdd, setVisibleAdd] = useState<boolean>(false);
   // 日期
   const calendarStorageBaseKey = 'adTargetingCalendar';
   const [calendarDefaultKey, setCalendarDefaultKey] = useState<string>(
@@ -795,11 +797,11 @@ const Targeting: React.FC = function() {
       { visibleFiltrate ? <Filtrate { ...filtrateProps } /> : <Crumbs { ...crumbsProps } /> }
       <div className={commonStyles.tableToolBar}>
         <div>
-          <Link to="/">
-            <Button type="primary">
-              添加关键词<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
+          <span>
+            <Button type="primary" onClick={() => setVisibleAdd(true)}>
+              添加Targeting<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
-          </Link>
+          </span>
           <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
@@ -838,6 +840,7 @@ const Targeting: React.FC = function() {
         targetId={chartsState.targetId}
         targetName={chartsState.targetName}
       />
+      <AddModal visible={visibleAdd} setVisible={setVisibleAdd} />
     </div>
   );
 };

@@ -32,10 +32,12 @@ import {
   isArchived,
   getAssignUrl,
   getDefinedCalendarFiltrateParams,
-  isValidKeywordBid,
+  isValidTargetingBid,
+  getBidExprVlaue,
+  createIdKeyword,
 } from '../utils';
-import { add, minus, times, divide } from '@/utils/precisionNumber';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { IKeyword } from '../index.d';
 import classnames from 'classnames';
 import commonStyles from '../common.less';
 import styles from './index.less';
@@ -43,15 +45,6 @@ import styles from './index.less';
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
-
-interface IKeyword {
-  keywordText: string;
-  matchType?: API.AdKeywordMatchType;
-  suggested?: number;
-  suggestedMin?: number;
-  suggestedMax?: number;
-  bid?: number;
-}
 
 interface ISimpleGroup {
   id: string;
@@ -96,9 +89,7 @@ const Keyword: React.FC = function() {
   const [addState, setAddState] = useState({
     visible: false,
     campaignId: '',
-    campaignName: '',
     groupId: '',
-    groupName: '',
     groupDefaultBid: 0,
   });
   // 添加关键词时，提供选择的广告组
@@ -252,7 +243,6 @@ const Keyword: React.FC = function() {
   }
 
   // 执行筛选
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleFiltrate(values: { [key: string]: any }) {
     setVisibleFiltrate(false);
     dispatch({
@@ -348,69 +338,15 @@ const Keyword: React.FC = function() {
     return params;
   }
 
-  // 按公式计算竞价
-  function getComputedBid(params: IComputedBidParams, record: API.IAdTargeting) {
-    let result = 0;
-    const { type, unit, operator, exprValue } = params;
-    const opDict = {
-      '+': add,
-      '-': minus,
-    };
-    // 建议竞价/最高/最低建议竞价
-    const baseValue = record[type];
-    if (unit === 'percent') {
-      result = opDict[operator](baseValue, times(baseValue, divide(exprValue, 100)));
-    } else if (unit === 'currency') {
-      result = opDict[operator](baseValue, exprValue);
-    }
-    return result;
-  }
-
-  // 获取批量竞价按公式修改的实际结果
-  function getBidExprVlaue(exprParams: IComputedBidParams, checkedIds: string[], records: any) {
-    const { type, unit, operator, exprValue, price } = exprParams;
-    const data = [];
-    const minValue = marketplace === 'JP' ? 2 : 0.02;
-    // 值类型
-    if (type === 'value' && price) {
-      if (price < minValue) {
-        message.error(`竞价不能低于${minValue}`);
-        return;
-      }
-      for (let index = 0; index < checkedIds.length; index++) {
-        data.push({
-          id: checkedIds[index],
-          bid: getShowPrice(price),
-        });
-      }
-    } else {
-      // 计算类型
-      for (let index = 0; index < checkedIds.length; index++) {
-        const id = checkedIds[index];
-        const record = records.find((item: any) => item.id === id);
-        const bid = getComputedBid({
-          type,
-          operator,
-          unit,
-          exprValue,
-        }, record);
-        if (bid < minValue) {
-          message.error(`竞价不能低于${minValue}`);
-          return;
-        }
-        data.push({
-          id,
-          bid: getShowPrice(bid),
-        });
-      }
-    }
-    return data;
-  }
-
   // 批量设置竞价
-  function setBatchBid (values: IComputedBidParams) {
+  function setBatchBid (exprParams: IComputedBidParams) {
     // 计算后的
-    const data = getBidExprVlaue(values, checkedIds, records);
+    const data = getBidExprVlaue({
+      marketplace,
+      exprParams,
+      checkedIds,
+      records,
+    });
     if (data) {
       dispatch({
         type: 'adManage/batchKeyword',
@@ -595,11 +531,11 @@ const Keyword: React.FC = function() {
     const keywordList: IKeyword[] = [];
     stringList.forEach((kw: string | IKeyword) => {
       // 按匹配方式逐个生成
-      const ks = types.map(matchType => ({
+      const ks = types.map(matchType => (createIdKeyword({
         keywordText: typeof kw === 'string' ? kw : kw.keywordText,
         matchType,
         bid,
-      }));
+      })));
       keywordList.push(...ks);
     });
     return keywordList;
@@ -622,15 +558,15 @@ const Keyword: React.FC = function() {
   function handleSelectKeyword(record: IKeyword) {
     const newList = [
       // 加在前面是为了显示在表格第一行
-      {
+      createIdKeyword({
         keywordText: record.keywordText,
         matchType: record.matchType,
         bid: addState.groupDefaultBid,
-      },
+      }),
       ...selectedKeywordsList,
     ];
     if (newList.length > keywordsMaxLimit) {
-      message.error('一次最多添加1000个关键词');
+      message.error('最多添加1000个关键词');
       return;
     }
     setSelectedKeywordsList(newList);
@@ -640,43 +576,41 @@ const Keyword: React.FC = function() {
   // 全选关键词
   function handleSelectAllKeyword() {
     // 按已选匹配方式生成关键词列表
-    const allKwList = createKeywords(
+    const all = createKeywords(
       suggestedKeywords, candidateMatchTypes, addState.groupDefaultBid
     );
-    allKwList.push(...selectedKeywordsList);
     // 去重
-    const newList = getUniqueKeywordList(allKwList);
+    const newList = getUniqueKeywordList([...all, ...selectedKeywordsList]);
     if (newList.length > keywordsMaxLimit) {
-      message.error('一次最多添加1000个关键词');
+      message.error('最多添加1000个关键词');
       return;
     }
     setSelectedKeywordsList(newList);
-    getSelectedKeywordsSuggestedBid(newList, newList);
+    getSelectedKeywordsSuggestedBid(all, newList);
   }
 
-  // 删除已选的商品
-  function handleDeleteGoods(keyword: string, matchType?: API.AdKeywordMatchType) {
+  // 删除已选的关键词
+  function handleDeleteKeyword(record: IKeyword) {
     const newList = selectedKeywordsList.filter(item => {
       // 关键词和匹配方式只要有一个不匹配就不是删除的目标
-      return item.keywordText !== keyword || item.matchType !== matchType;
+      return item.id !== record.id;
     });
     setSelectedKeywordsList(newList);
     // 更新勾选
-    const newChecked = checkedSelectedKeywords.filter(key => key !== `${keyword}-${matchType}`);
+    const newChecked = checkedSelectedKeywords.filter(key => key !== record.id);
     setCheckedSelectedKeywords(newChecked);
   }
 
   // 批量操作已选关键词（删除、应用建议竞价）
   function handleBatchSetSelectedKeywords(type: 'delete' | 'applyBid') {
-    // console.log('批量操作', type, checkedSelectedKeywords);
     let newList: IKeyword[] = [];
     switch (type) {
     case 'delete':
-      newList = [...selectedKeywordsList].filter(item => {
+      newList = selectedKeywordsList.filter(item => {
         let result = true;
         for (let i = 0; i < checkedSelectedKeywords.length; i++) {
           const key = checkedSelectedKeywords[i];
-          if (`${item.keywordText}-${item.matchType}` === key) {
+          if (item.id === key) {
             result = false;
             break;
           }
@@ -690,7 +624,7 @@ const Keyword: React.FC = function() {
       newList = selectedKeywordsList.map(item => {
         let kw = item;
         checkedSelectedKeywords.forEach(key => {
-          if (`${item.keywordText}-${item.matchType}` === key) {
+          if (item.id === key) {
             kw = { ...item, bid: item.suggested };
           }
         });
@@ -705,19 +639,20 @@ const Keyword: React.FC = function() {
   }
 
   // 批量操作已选关键词（批量设置竞价）
-  function handleBatchSetSelectedKeywordsBid (values: IComputedBidParams) {
+  function handleBatchSetSelectedKeywordsBid (exprParams: IComputedBidParams) {
     // 获取计算后的值和id
-    // selectedKeywordsList 需要添加一个 id（和 checkedSelectedKeywords 对应）
-    const records = selectedKeywordsList.map(item => (
-      { ...item, id: `${item.keywordText}-${item.matchType}` }
-    ));
-    const data = getBidExprVlaue(values, checkedSelectedKeywords, records);
+    const data = getBidExprVlaue({
+      marketplace,
+      exprParams,
+      checkedIds: checkedSelectedKeywords,
+      records: selectedKeywordsList,
+    });
     if (data) {
       const newList = [...selectedKeywordsList];
       for (let i = 0; i < data.length; i++) {
         const computationItem = data[i];
         newList.forEach(newItem => {
-          if (computationItem.id === `${newItem.keywordText}-${newItem.matchType}`) {
+          if (computationItem.id === newItem.id) {
             newItem.bid = Number(computationItem.bid);
           }
         });
@@ -747,16 +682,15 @@ const Keyword: React.FC = function() {
       kw !== '' && keywordTextArr.push(kw);
     }
     // 按选中的匹配方式生成已选关键词
-    const allKwList = createKeywords(keywordTextArr, candidateMatchTypes, addState.groupDefaultBid);
-    allKwList.push(...selectedKeywordsList);
+    const all = createKeywords(keywordTextArr, candidateMatchTypes, addState.groupDefaultBid);
     // 去重
-    const newList = getUniqueKeywordList(allKwList);
+    const newList = getUniqueKeywordList([...all, ...selectedKeywordsList]);
     if (newList.length > keywordsMaxLimit) {
-      message.error('一次最多添加1000个关键词');
+      message.error('最多添加1000个关键词');
       return;
     }
     setSelectedKeywordsList(newList);
-    getSelectedKeywordsSuggestedBid(newList, newList);
+    getSelectedKeywordsSuggestedBid(all, newList);
   }
 
   // 添加关键词
@@ -885,7 +819,7 @@ const Keyword: React.FC = function() {
           prefix: currency,
           ghostEditBtn: true,
           confirmCallback: newBid => {
-            const [isValid, minBid] = isValidKeywordBid(Number(newBid), marketplace);
+            const [isValid, minBid] = isValidTargetingBid(Number(newBid), marketplace);
             if (isValid) {
               const newList = [...selectedKeywordsList];
               const index = newList.findIndex(item => (
@@ -908,7 +842,7 @@ const Keyword: React.FC = function() {
         <Button
           type="link"
           className={commonStyles.deleteBtn}
-          onClick={() => handleDeleteGoods(record.keywordText, record.matchType)}
+          onClick={() => handleDeleteKeyword(record)}
         >删除</Button>
       ),
     },
@@ -1378,9 +1312,11 @@ const Keyword: React.FC = function() {
       { visibleFiltrate ? <Filtrate { ...filtrateProps } /> : <Crumbs { ...crumbsProps } /> }
       <div className={commonStyles.tableToolBar}>
         <div>
-          <Button type="primary" onClick={() => setAddState({ ...addState, visible: true })}>
-            添加关键词<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
-          </Button>
+          <span>
+            <Button type="primary" onClick={() => setAddState({ ...addState, visible: true })}>
+              添加关键词<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
+            </Button>
+          </span>
           <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
@@ -1516,7 +1452,7 @@ const Keyword: React.FC = function() {
                   className={styles.selectedKeywordTable}
                   columns={selectedKeywordsColumns}
                   scroll={{ x: 'max-content', y: '350px' }}
-                  rowKey={record => `${record.keywordText}-${record.matchType}`}
+                  rowKey={record => createIdKeyword(record).id as string}
                   dataSource={selectedKeywordsList}
                   locale={{ emptyText: '请选择建议关键词或手动输入关键词添加' }}
                   pagination={false}

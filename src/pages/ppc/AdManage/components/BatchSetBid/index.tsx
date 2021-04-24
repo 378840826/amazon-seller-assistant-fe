@@ -13,7 +13,7 @@ const { Item: FormItem } = Form;
 interface IProps {
   currency: string;
   marketplace: API.Site;
-  callback: (values: IComputedBidParams) => boolean | undefined;
+  callback: (exprParams: IComputedBidParams) => boolean | undefined;
 }
 
 export interface IComputedBidParams {

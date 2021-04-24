@@ -840,6 +840,122 @@ export default {
     }, 500);
   },
 
+  // Targeting-建议分类
+  'GET /api/gd/management/target/suggested-categories': (_: Request, res: Response) => {
+    const data = [{
+      categoryId: '0',
+      categoryName: '分类-0',
+      path: '路径',
+    }];
+    for (let index = 1; index < 3; index++) {
+      data.push({
+        categoryId: String(index),
+        categoryName: `分类-${index}`,
+        path: '路径路径路径路径路径路径>路径路径路径路径路径路径路径路径路径路径路径路径路径路径路径路径>路径路径',
+      });      
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data,
+      });
+    }, 0);
+  },
+
+  // Targeting-建议品牌
+  'GET /api/gd/management/target/suggested-brands': (_: Request, res: Response) => {
+    const records = [{
+      brandId: '0',
+      brandName: '品牌0',
+    }];
+    for (let index = 1; index < 20; index++) {
+      records.push({
+        brandId: String(index),
+        brandName: `品牌品牌品牌${index}`,
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: { records },
+      });
+    }, 0);
+  },
+
+  // Targeting-建议商品
+  'GET /api/gd/management/target/suggested-goods': (_: Request, res: Response) => {
+    const data = [{
+      asin: 'B000000000',
+      title: '商品名称-0',
+      imgUrl: null,
+      price: 1.1,
+      reviewScore: 4.5,
+      reviewCount: 2333,
+    }];
+    for (let index = 1; index < 4; index++) {
+      data.push({
+        asin: `B000000000${index}`,
+        title: `商品名称-${index}`,
+        imgUrl: null,
+        price: index,
+        reviewScore: 4.5,
+        reviewCount: 2333,
+      });      
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data,
+      });
+    }, 0);
+  },
+
+  
+  // Targeting-获取建议竞价-分类
+  'POST /api/gd/management/target/category/bid-recommendations': (req: Request, res: Response) => {
+    const { body: { categories } } = req;
+    setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const records = categories.map((item: any) => ({
+        suggested: Math.floor(Math.random() * 10),
+        rangeStart: 0.33,
+        rangeEnd: 3.33,
+        categoryId: item.categoryId,
+        brandId: item.brandId,
+        priceLessThan: item.priceLessThan,
+        priceGreaterThan: item.priceGreaterThan,
+        reviewRatingLessThan: item.reviewRatingLessThan,
+        reviewRatingGreaterThan: item.reviewRatingGreaterThan,
+      }));
+      res.send({
+        code: 200,
+        data: {
+          records,
+        },
+      });
+    }, 500);
+  },
+
+  // Targeting-获取建议竞价-商品
+  'POST /api/gd/management/target/product/bid-recommendations': (req: Request, res: Response) => {
+    const { body: { asins } } = req;
+    setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const records = asins.map((item: any) => ({
+        suggested: Math.floor(Math.random() * 10),
+        rangeStart: 0.33,
+        rangeEnd: 3.33,
+        asin: item,
+      }));
+      res.send({
+        code: 200,
+        data: {
+          records,
+        },
+      });
+    }, 500);
+  },
+
   // 否定Targeting
   // 否定Targeting-列表
   'POST /api/gd/management/negativeTarget/list': (_: Request, res: Response) => {

@@ -1,5 +1,8 @@
 import { ColumnProps } from 'antd/es/table';
-import { getDateCycleParam } from '@/utils/utils';
+import { message } from 'antd';
+import { getDateCycleParam, getShowPrice } from '@/utils/utils';
+import { add, divide, minus, times } from '@/utils/precisionNumber';
+import { ICategoryTargeting, IComputedBidParams, IGoodsTargeting, IKeyword } from './index.d';
 
 // 判断是否归档状态
 export const isArchived: (state: string) => boolean = (state: string) => state === 'archived';
@@ -38,11 +41,11 @@ export function getAssignUrl(params: {
   return url;
 }
 
-// 判断是否有效的关键词竞价，并返回最低竞价（日本站>=10，其他>=0.02）
-export function isValidKeywordBid(bid: number, marketplace: API.Site): [boolean, number] {
+// 判断是否有效的关键词/targeting竞价，并返回最低竞价（日本站>=2，其他>=0.02）
+export function isValidTargetingBid(bid: number, marketplace: API.Site): [boolean, number] {
   let minBid = 0.02;
   if (marketplace === 'JP') {
-    minBid = 10;
+    minBid = 2;
   }
   return [bid >= minBid, minBid];
 }
@@ -92,4 +95,106 @@ export function getDefinedCalendarFiltrateParams(dates: DefinedCalendar.IChangeP
     };
   }
   return filtrateParams;
+}
+
+// 生成包含的临时 id 的 关键词
+export function createIdKeyword(keyword: IKeyword): IKeyword {
+  const { keywordText, matchType } = keyword;
+  return ({
+    ...keyword,
+    id: `${keywordText}-${matchType}`,
+  });
+}
+
+// 生成包含的临时 id 的 targeting
+export function createIdTargeting(targeting: ICategoryTargeting): ICategoryTargeting;
+export function createIdTargeting(targeting: IGoodsTargeting): IGoodsTargeting;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createIdTargeting(targeting: any): any {
+  const {
+    categoryId,
+    brandId,
+    asin,
+    priceGreaterThan,
+    priceLessThan,
+    reviewRatingGreaterThan,
+    reviewRatingLessThan,
+  } = targeting;
+  return ({
+    ...targeting,
+    // eslint-disable-next-line max-len
+    id: `${categoryId}-${brandId}-${asin}-${priceGreaterThan}-${priceLessThan}-${reviewRatingGreaterThan}-${reviewRatingLessThan}`,
+  });
+}
+
+// 按公式计算竞价
+function getComputedBid(params: IComputedBidParams, record: API.IAdTargeting) {
+  let result = 0;
+  const { type, unit, operator, exprValue } = params;
+  const opDict = {
+    '+': add,
+    '-': minus,
+  };
+  // 建议竞价/最高/最低建议竞价
+  const baseValue = record[type];
+  if (unit === 'percent') {
+    result = opDict[operator](baseValue, times(baseValue, divide(exprValue, 100)));
+  } else if (unit === 'currency') {
+    result = opDict[operator](baseValue, exprValue);
+  }
+  return result;
+}
+
+// 获取 关键词/targeting 批量设置竞价按公式修改的结果,并返回修改后的全部关键词/targeting
+export function getBidExprVlaue(
+  params: {
+    marketplace: API.Site;
+    /**计算公式表达式的参数 （可由 BatchSetBid 组件的的 callback 返回） */
+    exprParams: IComputedBidParams;
+    /**已选的 关键词/targeting的 id 集合 */
+    checkedIds: string[];
+    /**所有的 关键词/targeting 数组 */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    records: any;
+  }
+) {
+  const { marketplace, exprParams, checkedIds, records } = params;
+  const { type, unit, operator, exprValue, price } = exprParams;
+  const data = [];
+  const minValue = marketplace === 'JP' ? 2 : 0.02;
+  // 值类型
+  if (type === 'value' && price) {
+    if (price < minValue) {
+      message.error(`竞价不能低于${minValue}`);
+      return;
+    }
+    for (let index = 0; index < checkedIds.length; index++) {
+      data.push({
+        id: checkedIds[index],
+        bid: getShowPrice(price),
+      });
+    }
+  } else {
+    // 计算类型
+    for (let index = 0; index < checkedIds.length; index++) {
+      const id = checkedIds[index];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const record = records.find((item: any) => item.id === id);
+      const bid = getComputedBid({
+        type,
+        operator,
+        unit,
+        exprValue,
+      }, record);
+      if (bid < minValue) {
+        message.error(`竞价不能低于${minValue}`);
+        return;
+      }
+      data.push({
+        id,
+        bid: getShowPrice(bid),
+      });
+    }
+  }
+  return data;
 }

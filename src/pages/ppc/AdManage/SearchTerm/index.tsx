@@ -29,7 +29,7 @@ import {
 import {
   getAssignUrl,
   getTableColumns,
-  isValidKeywordBid,
+  isValidTargetingBid,
   getDefinedCalendarFiltrateParams,
 } from '../utils';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
@@ -1017,7 +1017,7 @@ const SearchTerm: React.FC = function() {
           prefix: currency,
           ghostEditBtn: true,
           confirmCallback: value => {
-            const [isValid, minBid] = isValidKeywordBid(Number(value), marketplace);
+            const [isValid, minBid] = isValidTargetingBid(Number(value), marketplace);
             if (isValid) {
               modifyPutKeywordInfo({ id: record.id, bid: value });
             } else {

@@ -234,16 +234,6 @@ export async function querySuggestedKeywords(params: API.IParams) {
   });
 }
 
-
-// // 关键词-获取建议关键词的建议竞价
-// export async function queryKeywordSuggestedSuggestedBid(params: API.IParams) {
-//   return request('/api/gd/management/keyword/suggested-1', {
-//     method: 'POST',
-//     data: params,
-//     // params,
-//   });
-// }
-
 // 关键词-添加关键词
 export async function addKeyword(params: API.IParams) {
   return request('/api/gd/management/product/add', {
@@ -283,6 +273,54 @@ export async function batchTargeting(params: API.IParams) {
     method: 'POST',
     data: params,
     params,
+  });
+}
+
+// Targeting-获取建议分类
+export async function querySuggestedCategory(params: API.IParams) {
+  return request('/api/gd/management/target/suggested-categories', {
+    data: params,
+    params,
+  });
+}
+
+// Targeting-获取建议品牌
+export async function querySuggestedBrands(params: API.IParams) {
+  return request('/api/gd/management/target/suggested-brands', {
+    data: params,
+    params,
+  });
+}
+
+// Targeting-获取建议商品
+export async function querySuggestedGoods(params: API.IParams) {
+  return request('/api/gd/management/target/suggested-goods', {
+    data: params,
+    params,
+  });
+}
+
+// Targeting-获取建议竞价-分类
+export async function queryCategorySuggestedBid(params: API.IParams) {
+  return request('/api/gd/management/target/category/bid-recommendations', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// Targeting-获取建议竞价-商品
+export async function queryGoodsSuggestedBid(params: API.IParams) {
+  return request('/api/gd/management/target/product/bid-recommendations', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// Targeting-添加Targeting
+export async function addTargeting(params: API.IParams) {
+  return request('/api/gd/management/product/add', {
+    method: 'POST',
+    data: params,
   });
 }
 
