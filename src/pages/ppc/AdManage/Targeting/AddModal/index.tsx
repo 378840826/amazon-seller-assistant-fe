@@ -22,7 +22,13 @@ import DetailSetDropdown from './DetailSetDropdown';
 import editable from '@/pages/components/EditableCell';
 import GoodsImg from '@/pages/components/GoodsImg';
 import GoodsIcon from '@/pages/components/GoodsIcon';
-import { requestErrorFeedback, requestFeedback, getShowPrice, strToMoneyStr } from '@/utils/utils';
+import {
+  requestErrorFeedback,
+  requestFeedback,
+  getShowPrice,
+  strToMoneyStr,
+  objToQueryString,
+} from '@/utils/utils';
 import { createIdTargeting, getBidExprVlaue, isValidTargetingBid } from '../../utils';
 import { IBrand, ICategoryTargeting, IGoodsTargeting } from '../../index.d';
 import classnames from 'classnames';
@@ -76,7 +82,7 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
   // 已选 Targeting 的临时 id 集合
   const [selectedTemporarIdList, setSelectedTemporarIdList] = useState<string[]>([]);
   // 已选 Targeting 的勾选，格式为临时 id, 和 Table 的 rowKey 一致
-  const [checkedSelectedTargeting, setCheckedSelectedTargeting] = useState<string[]>([]);
+  const [checkedSelectedTargetingIds, setCheckedSelectedTargetingIds] = useState<string[]>([]);
 
   // 获取广告活动或广告组
   useEffect(() => {
@@ -233,7 +239,7 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
             }
           }
         }
-        setSelectedTargetingList(newList);
+        // setSelectedTargetingList(newList);
       },
     });
   }
@@ -314,9 +320,9 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
       return;
     }
     const asinArr = asinTextArea.split((/[\n+|\s+|\\,+]/)).filter(Boolean);
-    const isNotAsin = asinArr.some(asin => asin.length !== 10 || asin[0].toUpperCase() !== 'B');
-    if (isNotAsin) {
-      message.error('部分ASIN输入格式有误，请重新输入');
+    const notAsin = asinArr.find(asin => asin.length !== 10 || asin[0].toUpperCase() !== 'B');
+    if (notAsin) {
+      message.error(`ASIN: ${notAsin} 的格式有误，请重新输入`);
       return;
     }
     // 创建商品 targeting
@@ -349,7 +355,7 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
     const data = getBidExprVlaue({
       marketplace,
       exprParams,
-      checkedIds: checkedSelectedTargeting,
+      checkedIds: checkedSelectedTargetingIds,
       records: selectedTargetingList,
     });
     if (data) {
@@ -375,9 +381,9 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
     case 'delete':
       newList = selectedTargetingList.filter((item: any) => {
         let result = true;
-        for (let i = 0; i < checkedSelectedTargeting.length; i++) {
-          const key = checkedSelectedTargeting[i];
-          if (item.id === key) {
+        for (let i = 0; i < checkedSelectedTargetingIds.length; i++) {
+          const id = checkedSelectedTargetingIds[i];
+          if (item.id === id) {
             result = false;
             break;
           }
@@ -385,13 +391,13 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
         return result;
       });
       // 更新勾选
-      setCheckedSelectedTargeting([]);
+      setCheckedSelectedTargetingIds([]);
       break;
     case 'applyBid':
       newList = selectedTargetingList.map((item: any) => {
         let kw = item;
-        checkedSelectedTargeting.forEach(key => {
-          if (item.id === key) {
+        checkedSelectedTargetingIds.forEach(id => {
+          if (item.id === id) {
             kw = { ...item, bid: item.suggested };
           }
         });
@@ -412,8 +418,8 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
     });
     setSelectedTargetingList(newList);
     // 更新勾选
-    const newChecked = checkedSelectedTargeting.filter(key => key !== record.id);
-    setCheckedSelectedTargeting(newChecked);
+    const newChecked = checkedSelectedTargetingIds.filter(id => id !== record.id);
+    setCheckedSelectedTargetingIds(newChecked);
   }
 
   // 选择广告活动
@@ -525,7 +531,11 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
         requestFeedback(code, msg);
         if (code === 200) {
           setTimeout(() => {
-            window.location.replace('./manage?tab=targeting');
+            const params = {
+              ...treeSelectedInfo,
+              tab: 'targeting',
+            };
+            window.location.replace(`./manage?${objToQueryString(params)}`);
           }, 1000);
         }
       },
@@ -607,10 +617,10 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
   // 已选表格的勾选配置
   const selectedTargetingRowSelection = {
     fixed: true,
-    selectedRowKeys: checkedSelectedTargeting,
+    selectedRowKeys: checkedSelectedTargetingIds,
     columnWidth: 36,
     onChange: (selectedRowKeys: any[]) => {
-      setCheckedSelectedTargeting(selectedRowKeys);
+      setCheckedSelectedTargetingIds(selectedRowKeys);
     },
   };
 
@@ -871,7 +881,7 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
               </Tabs>
             </div>
             <div className={styles.tableContent}>
-              <div className={classnames(styles.batchToolbar, !checkedSelectedTargeting.length ? styles.disabled : '')}>
+              <div className={classnames(styles.batchToolbar, !checkedSelectedTargetingIds.length ? styles.disabled : '')}>
                 <Button onClick={() => handleBatchSetSelectedTargeting('delete')}>批量删除</Button>
                 <Button onClick={() => handleBatchSetSelectedTargeting('applyBid')}>应用建议竞价</Button>
                 <BatchSetBid

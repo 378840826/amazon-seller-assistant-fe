@@ -1,0 +1,117 @@
+.page {
+  width: 860px;
+  margin: 0 auto;
+}
+
+// 工具栏
+.head {
+  display: flex;
+  margin-bottom: 14px;
+  justify-content: space-between;
+  align-items: center;
+
+  :global {
+    label:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.tableContainer {
+  :global {
+    .ant-table-container {
+      border: 1px solid #eee;
+    }
+
+    .ant-table-tbody tr td.ant-table-selection-column {
+      padding: 0 40px;
+    }
+  }
+}
+
+.modalTitle {
+  color: @heading-color;
+  font-size: @font-size-lg;
+  text-align: left;
+}
+
+.asinAddButton {
+  margin-top: 20px;
+}
+
+.keywordText {
+  word-break: break-all;
+}
+
+// 添加弹窗
+.Modal {
+  .suggestedKeywordTable {
+    width: 510px;
+    height: 405px;
+  }
+
+  .addTextArea {
+    display: block;
+    margin: 10px auto;
+    width: 420px;
+    height: 355px;
+    resize: none;
+  }
+
+  .inputNegativeKeywordMatchType {
+    display: block;
+    text-align: center;
+  }
+
+  .textAreaBtnContainer {
+    text-align: center;
+  }
+
+  .suggestedTables {
+    display: flex;
+
+    .addTableContainer:first-child {
+      margin-right: 30px;
+    }
+  }
+
+  .addToolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .batchToolbar {
+    display: flex;
+
+    & > * {
+      margin-right: 10px;
+      width: 106px;
+    }
+
+    &.disabled * {
+      pointer-events: none;
+      color: @text-color-disabled;
+    }
+  }
+
+  .selectAllBtn {
+    width: 46px;
+    min-width: 46px;
+    margin: 0 8px;
+    text-align: center;
+    font-size: @font-size-sm;
+    cursor: pointer;
+  }
+
+  .tableContent:last-child {
+    margin-top: 54px;
+  }
+
+  .keywordSelectItem {
+    margin: 0;
+    padding: 0;
+    height: 22px;
+    line-height: 22px;
+  }
+}

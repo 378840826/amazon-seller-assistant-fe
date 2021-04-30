@@ -327,7 +327,7 @@ export async function addTargeting(params: API.IParams) {
 // 否定Targeting
 // 否定Targeting-列表
 export async function queryNegativeTargetingList(params: API.IParams) {
-  return request('/api/gd/management/negativeTarget/list', {
+  return request('/api/gd/management/group/ne-target/list', {
     method: 'POST',
     data: params,
     params: {
@@ -339,7 +339,7 @@ export async function queryNegativeTargetingList(params: API.IParams) {
 
 // 否定Targeting-批量归档
 export async function batchNegativeTargetingArchive(params: API.IParams) {
-  return request('/api/gd/management/negativeTarget/archive', {
+  return request('/api/gd/management/group/ne-target/archive', {
     method: 'POST',
     data: params,
   });
@@ -347,7 +347,68 @@ export async function batchNegativeTargetingArchive(params: API.IParams) {
 
 // 否定Targeting-添加
 export async function createNegativeTargeting(params: API.IParams) {
-  return request('/api/gd/management/negativeTarget/create', {
+  return request('/api/gd/management/gruop/netarget/add', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 否定关键词
+// 否定关键词-列表
+export async function queryNegativeKeywordList(params: API.IParams) {
+  // 区分广告活动的否定关键词和关键词广告组的否定关键词
+  let url = '';
+  if (params.type === 'campaign') {
+    url = '/api/gd/management/campaign/ne-keyword/list';
+  } else if (params.type === 'group') {
+    url = '/api/gd/management/group/ne-keyword/list';
+  }
+  return request(url, {
+    data: params,
+    params,
+  });
+}
+
+// 否定关键词-批量归档
+export async function batchNegativeKeywordArchive(params: API.IParams) {
+  // 区分广告活动的否定关键词和关键词广告组的否定关键词
+  let url = '';
+  if (params.type === 'campaign') {
+    url = '/api/gd/management/campaign/ne-keyword/archive';
+  } else if (params.type === 'group') {
+    url = '/api/gd/management/group/ne-keyword/archive';
+  }
+  return request(url, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 否定关键词-获取建议否定关键词
+export async function querySuggestedNegativeKeywords(params: API.IParams) {
+  // 区分广告活动的否定关键词和关键词广告组的否定关键词
+  let url = '';
+  if (params.type === 'campaign') {
+    url = '/api/gd/management/campaign/suggested-negativeKeyword/list';
+  } else if (params.type === 'group') {
+    url = '/api/gd/management/group/suggested-negativeKeyword/list';
+  }
+  return request(url, {
+    data: params,
+    params,
+  });
+}
+
+// 否定关键词-添加
+export async function createNegativeKeyword(params: API.IParams) {
+  // 区分广告活动的否定关键词和关键词广告组的否定关键词
+  let url = '';
+  if (params.type === 'campaign') {
+    url = '/api/gd/management/campaign/ne-keyword/add';
+  } else if (params.type === 'group') {
+    url = '/api/gd/management/group/ne-keyword/add';
+  }
+  return request(url, {
     method: 'POST',
     data: params,
   });

@@ -297,11 +297,11 @@ export function getDateCycleParam(type: string): string {
 export const getPageQuery = () => parse(window.location.search.split('?')[1]);
 
 // obj 转 queryString
-export const objToQueryString = (obj: { [key: string]: string | number | boolean}) => {
+export const objToQueryString = (obj: { [key: string]: string | number | boolean | undefined}) => {
   let queryString = '';
   Object.keys(obj).forEach(key => {
     if (obj[key] !== '' && obj[key] !== undefined && obj[key] !== null) {
-      queryString += `${key}=${encodeURIComponent(obj[key])}&`;
+      queryString += `${key}=${encodeURIComponent(obj[key] || '')}&`;
     }
   });
   return queryString.slice(0, queryString.length - 1);

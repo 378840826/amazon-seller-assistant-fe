@@ -75,16 +75,14 @@ const Campaign: React.FC = function() {
         callback: requestErrorFeedback,
       });
       // 广告活动列表
-      // 菜单树附带的广告活动筛选参数，格式为 "类型-广告活动状态"
-      const paramsArr = treeSelectedInfo.key.split('-');
       dispatch({
         type: 'adManage/fetchCampaignList',
         payload: {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
           filtrateParams: {
-            adType: paramsArr[0],
-            state: paramsArr[1],
+            adType: treeSelectedInfo.campaignType,
+            state: treeSelectedInfo.campaignState,
             startTime: start,
             endTime: end,
           },

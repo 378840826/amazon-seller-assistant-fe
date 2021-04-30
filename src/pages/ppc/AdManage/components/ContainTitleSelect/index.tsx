@@ -28,7 +28,7 @@ const ContainTitleSelect: React.FC<IProps> = (props) => {
   const { value, options, width, title, changeCallback, selectProps } = props;
   
   return (
-    <span
+    <div
       className={value === '' ? styles.hideClearIcon : null}
       style={{ width: width || 106 }}
     >
@@ -54,7 +54,7 @@ const ContainTitleSelect: React.FC<IProps> = (props) => {
           )
         }
       </Select>
-    </span>
+    </div>
   );
 };
 

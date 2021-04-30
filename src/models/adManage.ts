@@ -48,6 +48,11 @@ import {
   queryNegativeTargetingList,
   batchNegativeTargetingArchive,
   createNegativeTargeting,
+  // 否定关键词
+  queryNegativeKeywordList,
+  batchNegativeKeywordArchive,
+  querySuggestedNegativeKeywords,
+  createNegativeKeyword,
   // SearchTerm报表
   querySearchTermList,
   queryQueryKeywordSuggestedBid,
@@ -211,11 +216,25 @@ export interface IAdManage {
   negativeTargetingTab: {
     list: {
       total: number;
-      records: API.IAdNegativeTarget[];
+      records: API.IAdNegativeTargeting[];
     };
     searchParams: {
       size: number;
       current: number;
+    };
+    checkedIds: string[];
+  };
+  negativeKeywordTab: {
+    type?: ITreeSelectedInfo['groupType'];
+    list: {
+      total: number;
+      records: API.IAdNegativeKeyword[];
+    };
+    searchParams: {
+      size: number;
+      current: number;
+      matchType?: API.AdNegativeKeywordMatchType;
+      code?: string;
     };
     checkedIds: string[];
   };
@@ -386,8 +405,8 @@ const AdManageModel: IAdManageModelType = {
     treeData: initTreeData,
     campaignSimpleList: [],
     // 在菜单树选中广告活动或广告组时，保存的广告活动和广告组信息
-    treeSelectedInfo: { key: '' },
-    treeExpandedKeys: [],
+    treeSelectedInfo: { key: '', groupType: '' },
+    treeExpandedKeys: ['sp-enabled'],
     // 标签下的数量
     tabsCellCount: {
       campaignCount: 0,
@@ -594,6 +613,19 @@ const AdManageModel: IAdManageModelType = {
     },
     // 否定Targeting
     negativeTargetingTab: {
+      list: {
+        total: 0,
+        records: [],
+      },
+      searchParams: {
+        current: 1,
+        size: 20,
+      },
+      // 勾选的id
+      checkedIds: [],
+    },
+    // 否定关键词
+    negativeKeywordTab: {
       list: {
         total: 0,
         records: [],
@@ -1306,6 +1338,67 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
+    // 否定关键词
+    // 否定关键词-获取列表
+    *fetchNegativeKeywordList({ payload, callback }, { call, put, select }) {
+      // type 区分是广告活动还是广告组
+      const { searchParams, headersParams, type } = payload;
+      // 旧的查询参数和type
+      const negativeKeywordTab = yield select((state: IConnectState) => (
+        state.adManage.negativeKeywordTab
+      ));
+      const { searchParams: oldParams, type: oldType } = negativeKeywordTab;
+      // 本次查询的查询参数
+      const newParams = Object.assign({}, oldParams, searchParams);
+      const res = yield call(queryNegativeKeywordList, {
+        ...newParams, headersParams, type: type || oldType,
+      });
+      if (res.code === 200) {
+        const { data: { page, total } } = res;
+        // 保存列表数据
+        yield put({
+          type: 'saveNegativeKeywordList',
+          payload: { page, dataTotal: total },
+        });
+        // 保存查询参数和 type
+        yield put({
+          type: 'saveNegativeKeywordParams',
+          payload: { searchParams: newParams, type },
+        });
+        // 取消选中
+        yield put({
+          type: 'updateNegativeKeywordChecked',
+          payload: [],
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 否定关键词-批量归档
+    *batchNegativeKeywordArchive({ payload, callback }, { call, put }) {
+      const res = yield call(batchNegativeKeywordArchive, payload);
+      if (res.code === 200) {
+        // 刷新列表
+        yield put({
+          type: 'fetchNegativeKeywordList',
+          payload: { headersParams: payload.headersParams },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    // 否定关键词-获取建议否定关键词
+    *fetchSuggestedNegativeKeywords({ payload, callback }, { call }) {
+      const res = yield call(querySuggestedNegativeKeywords, payload);
+      callback && callback(res.code, res.message, res.data);
+    },
+
+    // 否定关键词-添加
+    *addNegativeKeyword({ payload, callback }, { call }) {
+      const res = yield call(createNegativeKeyword, payload);
+      callback && callback(res.code, res.message);
+    },
+
     // SearchTerm报表
     // SearchTerm报表-获取列表
     *fetchSearchTermList({ payload, callback }, { call, put, select }) {
@@ -1858,6 +1951,27 @@ const AdManageModel: IAdManageModelType = {
     // 否定Targeting-勾选
     updateNegativeTargetingChecked(state, { payload }) {
       state.negativeTargetingTab.checkedIds = payload;
+    },
+
+    // 否定关键词
+    // 否定关键词-保存列表
+    saveNegativeKeywordList(state, { payload }) {
+      const { page, dataTotal } = payload;
+      state.negativeKeywordTab.list = { ...page, dataTotal };
+    },
+
+    // 否定关键词-更新查询参数
+    saveNegativeKeywordParams(state, { payload }) {
+      const { searchParams, type } = payload;
+      state.negativeKeywordTab.searchParams = Object.assign(
+        state.negativeKeywordTab.searchParams, searchParams
+      );
+      state.negativeKeywordTab.type = type;
+    },
+
+    // 否定关键词-勾选
+    updateNegativeKeywordChecked(state, { payload }) {
+      state.negativeKeywordTab.checkedIds = payload;
     },
 
     // SearchTerm报表

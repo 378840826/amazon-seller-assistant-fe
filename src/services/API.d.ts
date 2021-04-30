@@ -122,6 +122,7 @@ declare namespace API {
   type GroupType = 'keyword' | 'targeting';
   type CamType = 'sb' | 'sp' | 'sd';
   type AdKeywordMatchType = 'exact' | 'phrase' | 'broad';
+  type AdNegativeKeywordMatchType = 'negativeExact' | 'negativePhrase';
   type CamTargetType = 'manual' | 'auto';
   // 广告管理-广告活动
   interface IAdCampaign {
@@ -256,10 +257,18 @@ declare namespace API {
     conversionsRate: number;
   }
 
-  // 
-  interface IAdNegativeTarget {
-    id: string;
-    targeting: string;
+  // 否定Targeting
+  interface IAdNegativeTargeting {
+    neTargetId: string;
+    targetText: string;
+    addTime: string;
+  }
+
+  // 否定关键词
+  interface IAdNegativeKeyword {
+    neKeywordId: string;
+    keywordText: string;
+    matchType: AdNegativeKeywordMatchType;
     addTime: string;
   }
 

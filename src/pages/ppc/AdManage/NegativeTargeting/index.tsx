@@ -1,12 +1,11 @@
 /**
- *  否定Targeting（否定品牌/ASIN）
+ *  否定Targeting（否定品牌/ASIN，targeting广告组独有）
  */
 import React, { useEffect, ReactText, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
 import { Button, Modal, Table, Tabs, Input, message } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
-import { defaultFiltrateParams } from '@/models/adManage';
 import { Iconfont, requestErrorFeedback, requestFeedback } from '@/utils/utils';
 import MySearch from '../components/Search';
 import TableNotData from '@/components/TableNotData';
@@ -29,13 +28,14 @@ const NegativeTargeting: React.FC = function() {
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     negativeTargetingTab: { list, searchParams, checkedIds },
+    treeSelectedInfo,
   } = adManage;
   const { total, records } = list;
   const { current, size } = searchParams;
   // 添加否定 targeting
   const [visible, setVisible] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>('asin');
-  const [asinInputText, setAsinInputText] = useState<string>('');
+  const [asinInputText, setAsinInputText] = useState<string>('');  
 
   useEffect(() => {
     if (currentShopId !== '-1') {
@@ -44,12 +44,16 @@ const NegativeTargeting: React.FC = function() {
         type: 'adManage/fetchNegativeTargetingList',
         payload: {
           headersParams: { StoreId: currentShopId },
-          searchParams: { current: 1 },
+          searchParams: {
+            groupId: treeSelectedInfo.groupId,
+            current: 1,
+            code: '',
+          },
         },
         callback: requestErrorFeedback,
       });
     }
-  }, [dispatch, currentShopId]);
+  }, [dispatch, currentShopId, treeSelectedInfo.groupId]);
 
   // 批量归档
   function handleBatchArchive() {
@@ -68,7 +72,8 @@ const NegativeTargeting: React.FC = function() {
           type: 'adManage/batchNegativeTargetingArchive',
           payload: {
             headersParams: { StoreId: currentShopId },
-            ids: checkedIds,
+            groupId: treeSelectedInfo.groupId,
+            neTargetIds: checkedIds,
           },
           callback: requestFeedback,
         });
@@ -82,10 +87,9 @@ const NegativeTargeting: React.FC = function() {
       type: 'adManage/fetchNegativeTargetingList',
       payload: {
         headersParams: { StoreId: currentShopId },
-        filtrateParams: {
-          // 重置筛选参数
-          ...defaultFiltrateParams,
-          search: value,
+        searchParams: {
+          code: value,
+          current: 1,
         },
       },
       callback: requestErrorFeedback,
@@ -93,12 +97,12 @@ const NegativeTargeting: React.FC = function() {
   }
 
   // 全部表格列
-  const columns: ColumnProps<API.IAdNegativeTarget>[] = [
+  const columns: ColumnProps<API.IAdNegativeTargeting>[] = [
     {
       title: '否定品牌或ASIN',
-      dataIndex: 'targeting',
-      key: 'targeting',
+      dataIndex: 'neTargetId',
       width: 360,
+      render: (_, record) => record.targetText,
     }, {
       title: <>添加时间<Iconfont className={commonStyles.iconQuestion} type="icon-yiwen" title="北京时间" /></>,
       dataIndex: 'addTime',
@@ -156,19 +160,26 @@ const NegativeTargeting: React.FC = function() {
 
   // 添加 asin
   function handleAddAsin() {
-    const asin = asinInputText.replace(/(^\s*)|(\s*$)/g, '');
-    if (asin === '') {
+    const asinArr = asinInputText.split((/[\n+|\s+|\\,+]/)).filter(Boolean);
+    if (!asinArr.length) {
       message.error('请输入ASIN');
+      return;
+    }
+    const notAsin = asinArr.find(asin => asin.length !== 10 || asin[0].toUpperCase() !== 'B');
+    if (notAsin) {
+      message.error(`ASIN: ${notAsin} 的格式有误，请重新输入`);
       return;
     }
     dispatch({
       type: 'adManage/addNegativeTargeting',
       payload: {
         headersParams: { StoreId: currentShopId },
-        asin,
+        groupId: treeSelectedInfo.groupId,
+        expressValues: asinArr,
       },
       callback: requestFeedback,
     });
+    setVisible(false);
   }
 
   // 分页器配置
@@ -189,17 +200,17 @@ const NegativeTargeting: React.FC = function() {
           添加否定Targeting
         </Button>
         <Button disabled={!checkedIds.length} onClick={() => handleBatchArchive()}>归档</Button>
-        <MySearch placeholder="输入广告活动、广告组、ASIN/SKU或关键词" defaultValue="" handleSearch={handleSearch} />
+        <MySearch placeholder="输入广品牌或ASIN" defaultValue="" handleSearch={handleSearch} />
       </div>
       <div className={styles.tableContainer}>
         <Table
           size="middle"
           showSorterTooltip={false}
           rowSelection={{ ...rowSelection }}
-          scroll={{ x: 'max-content', y: 'calc(100vh - 266px)', scrollToFirstRowOnChange: true }}
+          scroll={{ x: 'max-content', y: 'calc(100vh - 296px)', scrollToFirstRowOnChange: true }}
           loading={loadingTable}
           columns={columns}
-          rowKey="id"
+          rowKey="neTargetId"
           dataSource={records}
           locale={{ emptyText: <TableNotData style={{ padding: 50 }} hint="没有找到相关数据" /> }}
           pagination={{ ...paginationProps, size: 'default' }}
@@ -232,7 +243,9 @@ const NegativeTargeting: React.FC = function() {
               </div>
             </TabPane>
             <TabPane tab="品牌" key="brand">
-              Content of Tab Pane 2
+              <div style={{ textAlign: 'center', height: 278, paddingTop: 50 }}>
+                功能开发中...
+              </div>
             </TabPane>
           </Tabs>
         </div>

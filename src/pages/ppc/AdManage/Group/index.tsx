@@ -67,8 +67,6 @@ const Group: React.FC = function() {
   useEffect(() => {
     if (currentShopId !== '-1') {
       // 广告组列表
-      // 菜单树附带的筛选参数，格式为 "类型-广告活动状态-广告活动ID"
-      const paramsArr = treeSelectedInfo.key.split('-');
       const { start, end } = storage.get('adManageDateRange') || getTimezoneDateRange(7, false);
       dispatch({
         type: 'adManage/fetchGroupList',
@@ -76,7 +74,7 @@ const Group: React.FC = function() {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
           filtrateParams: {
-            campaignId: paramsArr[2],
+            campaignId: treeSelectedInfo.campaignId,
             startTime: start,
             endTime: end,
           },

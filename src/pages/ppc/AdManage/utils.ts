@@ -2,7 +2,7 @@ import { ColumnProps } from 'antd/es/table';
 import { message } from 'antd';
 import { getDateCycleParam, getShowPrice } from '@/utils/utils';
 import { add, divide, minus, times } from '@/utils/precisionNumber';
-import { ICategoryTargeting, IComputedBidParams, IGoodsTargeting, IKeyword } from './index.d';
+import { ICategoryTargeting, IComputedBidParams, IGoodsTargeting, IKeyword, INegativeKeyword } from './index.d';
 
 // 判断是否归档状态
 export const isArchived: (state: string) => boolean = (state: string) => state === 'archived';
@@ -98,7 +98,10 @@ export function getDefinedCalendarFiltrateParams(dates: DefinedCalendar.IChangeP
 }
 
 // 生成包含的临时 id 的 关键词
-export function createIdKeyword(keyword: IKeyword): IKeyword {
+export function createIdKeyword(keyword: INegativeKeyword): INegativeKeyword;
+export function createIdKeyword(keyword: IKeyword): IKeyword;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createIdKeyword(keyword: any): any {
   const { keywordText, matchType } = keyword;
   return ({
     ...keyword,

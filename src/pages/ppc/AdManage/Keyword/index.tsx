@@ -27,6 +27,7 @@ import {
   getShowPrice,
   strToMoneyStr,
   getDateCycleParam,
+  objToQueryString,
 } from '@/utils/utils';
 import {
   isArchived,
@@ -101,7 +102,7 @@ const Keyword: React.FC = function() {
   // 已选关键词
   const [selectedKeywordsList, setSelectedKeywordsList] = useState<IKeyword[]>([]);
   // 已选关键词的勾选，形式为 keywordText-matchType，和 Table 的 rowKey 一致
-  const [checkedSelectedKeywords, setCheckedSelectedKeywords] = useState<string[]>([]);
+  const [checkedSelectedIds, setCheckedSelectedIds] = useState<string[]>([]);
   // 待选关键词的匹配方式,默认全选
   const [candidateMatchTypes, setCandidateMatchType] = useState<API.AdKeywordMatchType[]>([
     'broad', 'phrase', 'exact', 
@@ -504,7 +505,9 @@ const Keyword: React.FC = function() {
             }
           }
         }
-        setSelectedKeywordsList(newList);
+        console.log('newList', newList);
+        
+        // setSelectedKeywordsList(newList);
       },
     });
   }
@@ -597,8 +600,8 @@ const Keyword: React.FC = function() {
     });
     setSelectedKeywordsList(newList);
     // 更新勾选
-    const newChecked = checkedSelectedKeywords.filter(key => key !== record.id);
-    setCheckedSelectedKeywords(newChecked);
+    const newChecked = checkedSelectedIds.filter(id => id !== record.id);
+    setCheckedSelectedIds(newChecked);
   }
 
   // 批量操作已选关键词（删除、应用建议竞价）
@@ -608,9 +611,9 @@ const Keyword: React.FC = function() {
     case 'delete':
       newList = selectedKeywordsList.filter(item => {
         let result = true;
-        for (let i = 0; i < checkedSelectedKeywords.length; i++) {
-          const key = checkedSelectedKeywords[i];
-          if (item.id === key) {
+        for (let i = 0; i < checkedSelectedIds.length; i++) {
+          const id = checkedSelectedIds[i];
+          if (item.id === id) {
             result = false;
             break;
           }
@@ -618,13 +621,13 @@ const Keyword: React.FC = function() {
         return result;
       });
       // 更新勾选
-      setCheckedSelectedKeywords([]);
+      setCheckedSelectedIds([]);
       break;
     case 'applyBid':
       newList = selectedKeywordsList.map(item => {
         let kw = item;
-        checkedSelectedKeywords.forEach(key => {
-          if (item.id === key) {
+        checkedSelectedIds.forEach(id => {
+          if (item.id === id) {
             kw = { ...item, bid: item.suggested };
           }
         });
@@ -644,7 +647,7 @@ const Keyword: React.FC = function() {
     const data = getBidExprVlaue({
       marketplace,
       exprParams,
-      checkedIds: checkedSelectedKeywords,
+      checkedIds: checkedSelectedIds,
       records: selectedKeywordsList,
     });
     if (data) {
@@ -681,6 +684,10 @@ const Keyword: React.FC = function() {
       }
       kw !== '' && keywordTextArr.push(kw);
     }
+    if (keywordTextArr.length === 0) {
+      message.error('请输入关键词');
+      return;
+    }
     // 按选中的匹配方式生成已选关键词
     const all = createKeywords(keywordTextArr, candidateMatchTypes, addState.groupDefaultBid);
     // 去重
@@ -711,7 +718,11 @@ const Keyword: React.FC = function() {
         requestFeedback(code, msg);
         if (code === 200) {
           setTimeout(() => {
-            window.location.replace('./manage?tab=keyword');
+            const params = {
+              ...treeSelectedInfo,
+              tab: 'keyword',
+            };
+            window.location.replace(`./manage?${objToQueryString(params)}`);
           }, 1000);
         }
       },
@@ -1221,10 +1232,10 @@ const Keyword: React.FC = function() {
   // 已选关键词表格的勾选配置
   const selectedKeywordsRowSelection = {
     fixed: true,
-    selectedRowKeys: checkedSelectedKeywords,
+    selectedRowKeys: checkedSelectedIds,
     columnWidth: 36,
     onChange: (selectedRowKeys: any[]) => {
-      setCheckedSelectedKeywords(selectedRowKeys);
+      setCheckedSelectedIds(selectedRowKeys);
     },
   };
 
@@ -1438,7 +1449,7 @@ const Keyword: React.FC = function() {
                 </Tabs>                
               </div>
               <div className={styles.tableContent}>
-                <div className={classnames(styles.batchToolbar, !checkedSelectedKeywords.length ? styles.disabled : '')}>
+                <div className={classnames(styles.batchToolbar, !checkedSelectedIds.length ? styles.disabled : '')}>
                   <Button onClick={() => handleBatchSetSelectedKeywords('delete')}>批量删除</Button>
                   <Button onClick={() => handleBatchSetSelectedKeywords('applyBid')}>应用建议竞价</Button>
                   <BatchSetBid

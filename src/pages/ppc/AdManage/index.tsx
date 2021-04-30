@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tree, Tabs, Layout } from 'antd';
 import { IConnectState } from '@/models/connect';
 import { ITreeDataNode } from '@/models/adManage';
@@ -11,6 +11,7 @@ import Ad from './Ad';
 import Keyword from './Keyword';
 import Targeting from './Targeting';
 import NegativeTargeting from './NegativeTargeting';
+import NegativeKeyword from './NegativeKeyword';
 import SearchTerm from './SearchTerm';
 import OperationRecord from './OperationRecord';
 import classnames from 'classnames';
@@ -22,11 +23,15 @@ const { Sider } = Layout;
 
 // 当前选中的广告活动和广告组信息
 export interface ITreeSelectedInfo {
+  /** 菜单树选中的 key，格式定义为 广告活动类型-广告活动开启状态-广告活动id-广告组id */
   key: string;
+  campaignType?: API.CamType;
+  campaignState?: API.AdState;
   campaignId?: string;
-  campaignName?: ReactNode;
+  campaignName?: string;
   groupId?: string;
-  groupName?: ReactNode;
+  groupName?: string;
+  groupType: 'keyword' | 'target' | '';
 }
 
 type TabsState = 'default' | 'campaign' | 'keywordGroup' | 'targetingGroup'
@@ -70,6 +75,7 @@ const allTab = {
   keyword: { tab: '关键词', countKey: 'keywordCount', tabPane: <Keyword /> },
   targeting: { tab: '分类/商品投放', countKey: 'targetCount', tabPane: <Targeting /> },
   negativeTargeting: { tab: '否定Targeting', countKey: 'neTargetCount', tabPane: <NegativeTargeting /> },
+  negativeKeyword: { tab: '否定关键词', countKey: 'neTargetCount', tabPane: <NegativeKeyword /> },
   searchTerm: { tab: 'Search Term报表', tabPane: <SearchTerm /> },
   history: { tab: '操作记录', tabPane: <OperationRecord /> },
 };
@@ -77,9 +83,8 @@ const allTab = {
 // 标签的三个状态
 const tabsStateDict = {
   default: ['campaign', 'group', 'ad', 'keyword', 'targeting', 'searchTerm', 'history'],
-  campaign: ['group', 'ad', 'keyword', 'targeting', 'negativeTargeting', 'searchTerm', 'history'],
-  // group: ['ad', 'keyword', 'negativeTargeting', 'searchTerm', 'history'],
-  keywordGroup: ['ad', 'keyword', 'negativeTargeting', 'searchTerm', 'history'],
+  campaign: ['group', 'ad', 'keyword', 'targeting', 'negativeKeyword', 'searchTerm', 'history'],
+  keywordGroup: ['ad', 'keyword', 'negativeKeyword', 'searchTerm', 'history'],
   targetingGroup: ['ad', 'targeting', 'negativeTargeting', 'searchTerm', 'history'],
 };
 
@@ -91,10 +96,16 @@ export const stateIconDict = {
 };
 
 // 匹配方式
-export const matchTypeDict = {
+export const matchTypeDict: {[key in API.AdKeywordMatchType]: string} = {
   broad: '广泛',
   phrase: '词组',
   exact: '精准',
+};
+
+// 否定方式
+export const negativeMatchTypeDict: {[key in API.AdNegativeKeywordMatchType]: string} = {
+  negativeExact: '精准否定',
+  negativePhrase: '词组否定',
 };
 
 const Manage: React.FC = function() {
@@ -110,8 +121,8 @@ const Manage: React.FC = function() {
   // 标签页的类型
   const [tabsState, setTabsState] = useState<string>('default');
   // 选中的标签(默认选中第一个)
-  // const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
-  const [activeTabKey, setActiveTabKey] = useState<string>('keyword');
+  const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
+  // const [activeTabKey, setActiveTabKey] = useState<string>('keyword');
   // 菜单树侧边栏是否收起
   const [collapsed, setCollapsed] = useState<boolean>(false);
   
@@ -194,7 +205,16 @@ const Manage: React.FC = function() {
         // 修改菜单树选中的 key 和广告信息
         dispatch({
           type: 'adManage/saveTreeSelectedInfo',
-          payload: { key, campaignId, campaignName, groupId, groupName },
+          payload: {
+            key,
+            campaignType,
+            campaignState,
+            campaignId,
+            campaignName,
+            groupId,
+            groupName,
+            groupType,
+          },
         });
         return () => {
           setActiveTabKey(tabsStateDict[tabsState][0]);
@@ -284,10 +304,13 @@ const Manage: React.FC = function() {
     // 用于面包屑导航的广告活动和广告组名称
     const selectedInfo: ITreeSelectedInfo = {
       key: String(keys[0]),
+      campaignType: paramsArr[0] as API.CamType,
+      campaignState: paramsArr[1] as API.AdState,
       campaignId: paramsArr[2],
       campaignName: '',
       groupId: paramsArr[3],
       groupName: '',
+      groupType: selectedNode.groupType,
     };
     switch (paramsArr.length) {
     case 3:
@@ -315,6 +338,7 @@ const Manage: React.FC = function() {
       key: '',
       campaignId: '',
       campaignName: '',
+      groupType: '',
     };
     let tabsState: TabsState = 'default';
     if (type === 'shop') {
@@ -327,8 +351,11 @@ const Manage: React.FC = function() {
       const paramsArr = treeSelectedInfo.key.split('-');
       selectedInfo = {
         key: `${paramsArr[0]}-${paramsArr[1]}-${paramsArr[2]}`,
+        campaignType: paramsArr[0] as API.CamType,
+        campaignState: paramsArr[1] as API.AdState,
         campaignId: treeSelectedInfo.campaignId,
         campaignName: treeSelectedInfo.campaignName,
+        groupType: '',
       };
       tabsState = 'campaign';
     }

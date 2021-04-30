@@ -33,7 +33,7 @@ export default {
         code: 200,
         data: records,
       });
-    }, 1000);
+    }, 100);
   },
 
   // 广告组简表
@@ -154,7 +154,7 @@ export default {
           // ],
         },
       });
-    }, 1000);
+    }, 100);
   },
 
   // 菜单树-广告组
@@ -268,7 +268,7 @@ export default {
           },
         },
       });
-    }, 500);
+    }, 100);
   },
 
   // 广告活动-portfolios
@@ -398,7 +398,7 @@ export default {
           },
         },
       });
-    }, 500);
+    }, 100);
   },
 
   // 广告组-修改
@@ -499,7 +499,7 @@ export default {
           },
         },
       });
-    }, 500);
+    }, 100);
   },
 
   // 广告-批量修改状态
@@ -692,7 +692,7 @@ export default {
           },
         },
       });
-    }, 500);
+    }, 100);
   },
   
   // 关键词-获取建议竞价
@@ -807,7 +807,7 @@ export default {
           },
         },
       });
-    }, 500);
+    }, 100);
   },
 
   // Targeting-获取建议竞价
@@ -958,12 +958,12 @@ export default {
 
   // 否定Targeting
   // 否定Targeting-列表
-  'POST /api/gd/management/negativeTarget/list': (_: Request, res: Response) => {
-    const records: API.IAdNegativeTarget[] = [];
+  'POST /api/gd/management/group/ne-target/list': (_: Request, res: Response) => {
+    const records: API.IAdNegativeTargeting[] = [];
     for (let index = 0; index < 20; index++) {
       records.push({
-        id: String(index),
-        targeting: `targeting-${index}`,
+        neTargetId: String(index),
+        targetText: `否定targeting-${index}`,
         addTime: '2020-01-02 12:13:56',
       });
     }
@@ -979,11 +979,178 @@ export default {
           },
         },
       });
-    }, 500);
+    }, 100);
   },
 
   // 否定Targeting-批量归档
-  'POST /api/gd/management/negativeTarget/archive': (_: Request, res: Response) => {
+  'POST /api/gd/management/group/ne-target/archive': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '成功',
+      });
+    }, 500);
+  },
+
+  // 否定Targeting-添加
+  'POST /api/gd/management/gruop/netarget/add': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '成功',
+      });
+    }, 500);
+  },
+
+  // 否定关键词
+  // 否定关键词-广告活动的-列表
+  'GET /api/gd/management/campaign/ne-keyword/list': (_: Request, res: Response) => {
+    const records: API.IAdNegativeKeyword[] = [];
+    for (let index = 0; index < 20; index++) {
+      records.push({
+        neKeywordId: String(index),
+        keywordText: `活动-keyword-${index}`,
+        matchType: 'negativeExact',
+        addTime: '2020-01-02 12:13:56',
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          page: {
+            total: 111,
+            size: 20,
+            current: 3,
+            records,
+          },
+        },
+      });
+    }, 100);
+  },
+
+  // 否定关键词-广告活动的-批量归档
+  'POST /api/gd/management/campaign/ne-keyword/archive': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '成功',
+      });
+    }, 500);
+  },
+
+  // 否定关键词-广告活动的-添加
+  'POST /api/gd/management/campaign/ne-keyword/add': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '成功',
+      });
+    }, 500);
+  },
+
+  // 否定关键词-广告活动的-建议关键词
+  'GET /api/gd/management/campaign/suggested-negativeKeyword/list': (_: Request, res: Response) => {
+    const data = [{
+      keywordText: '活动建议关键词-0',
+      matchType: 'phrase',
+      clicks: '100',
+      orders: '10',
+      conversionsRate: '1',
+    }];
+    for (let index = 1; index < 20; index++) {
+      data.push({
+        keywordText: `活动建议关键词-${index}`,
+        matchType: 'phrase',
+        clicks: String(Math.floor(Math.random() * 1000)),
+        orders: String(Math.floor(Math.random() * 100)),
+        conversionsRate: String(Math.floor(Math.random() * 10)),
+      }, {
+        keywordText: `活动建议关键词-${index}`,
+        matchType: 'exact',
+        clicks: String(Math.floor(Math.random() * 1000)),
+        orders: String(Math.floor(Math.random() * 100)),
+        conversionsRate: String(Math.floor(Math.random() * 10)),
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data,
+      });
+    }, 0);
+  },
+
+  // 否定关键词-广告组的-列表
+  'GET /api/gd/management/group/ne-keyword/list': (_: Request, res: Response) => {
+    const records: API.IAdNegativeKeyword[] = [];
+    for (let index = 0; index < 20; index++) {
+      records.push({
+        neKeywordId: String(index),
+        keywordText: `组-keyword-${index}`,
+        matchType: 'negativeExact',
+        addTime: '2020-01-02 12:13:56',
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          page: {
+            total: 111,
+            size: 20,
+            current: 3,
+            records,
+          },
+        },
+      });
+    }, 100);
+  },
+
+  // 否定关键词-广告组的-批量归档
+  'POST /api/gd/management/group/ne-keyword/archive': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '成功',
+      });
+    }, 500);
+  },
+
+  // 否定关键词-广告组的-建议关键词
+  'GET /api/gd/management/group/suggested-negativeKeyword/list': (_: Request, res: Response) => {
+    const data = [{
+      keywordText: '组建议关键词-0',
+      matchType: 'phrase',
+      clicks: '100',
+      orders: '10',
+      conversionsRate: '1',
+    }];
+    for (let index = 1; index < 20; index++) {
+      data.push({
+        keywordText: `组建议关键词-${index}`,
+        matchType: 'phrase',
+        clicks: String(Math.floor(Math.random() * 1000)),
+        orders: String(Math.floor(Math.random() * 100)),
+        conversionsRate: String(Math.floor(Math.random() * 10)),
+      }, {
+        keywordText: `组建议关键词-${index}`,
+        matchType: 'exact',
+        clicks: String(Math.floor(Math.random() * 1000)),
+        orders: String(Math.floor(Math.random() * 100)),
+        conversionsRate: String(Math.floor(Math.random() * 10)),
+      });
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data,
+      });
+    }, 0);
+  },
+
+  // 否定关键词-广告组的-添加
+  'POST /api/gd/management/group/ne-keyword/add': (_: Request, res: Response) => {
     setTimeout(() => {
       res.send({
         code: 200,
