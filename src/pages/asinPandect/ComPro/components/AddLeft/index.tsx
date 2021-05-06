@@ -1,8 +1,6 @@
 import React from 'react';
 import { Tabs, Input, Spin, Button, Form, message } from 'antd';
 import { connect } from 'umi';
-import BraftEditor, { EditorState } from 'braft-editor';
-import 'braft-editor/dist/index.css';
 import TableVirtual from '../TableVirtual';
 import { ISingleItem } from '../AddFilter';
 import { IConnectState, IConnectProps } from '@/models/connect';
@@ -17,7 +15,7 @@ interface IAddLeft extends IConnectProps{
     allData: ISingleItem[];
     selectedList: ISingleItem[];
 }
-const filterReg = /^B0[A-Z0-9]{8}$/;
+const filterReg = /^B0[A-Z0-9]{8}$/i;
 const AddLeft: React.FC<IAddLeft> = ({ 
   dispatch,  
   filterData,
@@ -26,12 +24,13 @@ const AddLeft: React.FC<IAddLeft> = ({
   tableLoading,
 }) => {
 
-  const onSelectText = (value: {content: EditorState}) => {
-  
+  const onSelectText = (value: {content?: string}) => {
+    /*
     const content = value.content;
     const contentHTML = content ? `${content.toHTML()}` : '<p></p>';
     const htmlList = contentHTML.split(/<\/?p[^>]*>/gi);
-    const notEmptyList = htmlList.map((item: string) => item.trim()).filter((item: string) => item !== '');
+    const notEmptyList = 
+      htmlList.map((item: string) => item.trim()).filter((item: string) => item !== '');
     const list = notEmptyList.filter((item1: string) => filterReg.test(item1));
     
     
@@ -41,7 +40,26 @@ const AddLeft: React.FC<IAddLeft> = ({
     }); 
     if (notEmptyList.length !== list.length){
       message.error('ASIN格式有误');
-    }   
+    }
+    */
+
+    if (value.content) {
+      let asinList = value.content.split(/\n/ig);
+      asinList = asinList.map((item: string) => item.trim()).filter((item: string) => item !== '');
+      let list = asinList.filter((item: string) => filterReg.test(item) && item.toUpperCase());
+      list = asinList.map((item: string) => item.toUpperCase()); // 转换成大写显示
+
+      dispatch({
+        type: 'comPro/addSelectText',
+        payload: [...new Set(list)],
+      }); 
+      if (asinList.length !== list.length){
+        message.error('ASIN格式有误');
+      }
+      return;
+    }
+
+    message.error('请输入ASIN');
   };
 
   //全选
@@ -107,10 +125,14 @@ const AddLeft: React.FC<IAddLeft> = ({
             <Form onFinish={onSelectText}>
               <Form.Item
                 name="content">
-                <BraftEditor
+                {/* <BraftEditor
                   controls={[]}
                   contentClassName={styles.__textarea}
                   placeholder="输入ASIN，每行一个"
+                /> */}
+                <Input.TextArea 
+                  placeholder="输入ASIN，每行一个" 
+                  className={styles.__textarea}
                 />
               </Form.Item>
               <Form.Item>
