@@ -62,11 +62,11 @@ const ShopSelector: React.FC = () => {
               if (shop.storeName.toLowerCase().includes(filterText.toLowerCase())) {
                 return (
                   <Option key={shop.id} value={shop.id}>
-                    <div className={styles.SelectItem}>
+                    <div className={classnames(styles.SelectItem, 'g-shop-current-box')}>
                       <i className={classnames(styles.flag, styles[`flag-${shop.marketplace}`])}>
                       </i>
-                      <span className={styles.site}>{shop.marketplace}</span>
-                      <span className={styles.shopName}>{shop.storeName}</span>
+                      <span className={classnames(styles.site, 'g-shop-current-site')}>{shop.marketplace}</span>
+                      <span className={classnames(styles.shopName, 'g-shop-current-shopName')}>{shop.storeName}</span>
                     </div>
                   </Option>
                 );

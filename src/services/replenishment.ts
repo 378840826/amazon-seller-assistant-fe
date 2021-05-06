@@ -2,17 +2,19 @@ import request from '@/utils/request';
 
 // 查询补货商品
 export async function queryGoodsList(params: API.IParams) {
-  const { current, size, sort, order, skuStatus, inputContent, replenishmentExists } = params;
+  const { current, size, sort, order, skuStatus, inputContent, code, replenishmentExists } = params;
   const qs = {
     skuStatus,
-    inputContent,
+    inputContent: inputContent || undefined,
+    code: code || undefined,
     replenishmentExists,
     current,
     size,
     order: sort,
     asc: order === 'ascend' ? 'true' : 'false',
   };
-  return request('/api/mws/fis/page', {
+  const url = code ? '/api/mws/fis/batch/page' : '/api/mws/fis/page';
+  return request(url, {
     data: params,
     params: qs,
   });

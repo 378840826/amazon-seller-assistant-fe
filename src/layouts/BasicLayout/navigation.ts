@@ -80,7 +80,7 @@ const navigation: INavigation[] = [
   {
     title: '补货',
     menu: [
-      { title: '补货计划', path: '/replenishment' },
+      { title: '补货建议', path: '/replenishment' },
     ],
   },
   // {

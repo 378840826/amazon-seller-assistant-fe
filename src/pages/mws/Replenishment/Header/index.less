@@ -36,11 +36,43 @@
   }
 }
 
+.batchSearchDropdown {
+  background-color: #fff;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+  border-radius: 4px;
+  width: 308px;
+  padding: 20px;
+  text-align: center;
+
+  .TextArea {
+    width: 268px;
+    line-height: 1.5;
+    padding: 14px;
+  }
+
+  button {
+    margin: 20px 10px 0 10px;
+  }
+}
+
 .Header {
   display: flex;
   align-items: center;
+  padding: 20px 20px 14px 20px;
   background-color: #fff;
   font-size: @font-size-base;
+
+  & > * {
+    margin-right: 20px;
+
+    &.radioGroup {
+      margin-right: 30px;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 
   :global {
     .ant-btn {
@@ -60,39 +92,9 @@
     }
   }
 
-  & > * {
-    margin-right: 20px;
-  }
-
-  // 小屏幕下，每一个菜单减少间隔
-  @media (max-width: 1440px) {
-    & > * {
-      margin-right: 10px;
-    }
-
-    .right .export {
-      margin-left: 10px;
-    }
-  }
-
   .sousouIcon {
     font-size: 19px;
     padding-top: 2px;
-  }
-}
-
-.leftLast {
-  margin-right: 0;
-}
-
-.right {
-  flex: 1;
-  text-align: right;
-  margin-right: 0;
-
-  .export {
-    min-width: 60px;
-    margin-left: 20px;
   }
 }
 

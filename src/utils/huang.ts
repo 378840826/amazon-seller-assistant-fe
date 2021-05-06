@@ -220,7 +220,7 @@ export function moneyFormat(
   const prec = !isFinite(+decimals) ? 0 : Math.abs(decimals);
   const toFixedFix = function(n: string, prec: number) {
     const pow = Math.pow(10, prec);
-    return `${Math.ceil(Number(n) * pow) / pow}`;
+    return `${Math.floor(Number(n) * pow) / pow}`;
   };
 
   const s = String((prec ? toFixedFix(String(n), prec) : Math.round(n))).split('.');
