@@ -2,12 +2,12 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2021-04-10 14:29:04
- * @LastEditTime: 2021-04-12 10:33:58
+ * @LastEditTime: 2021-05-07 17:39:47
  */
 declare namespace ProfitTable {
   interface IShopProfitRecord {
     salesVolume: number;
-    compensate: number;
+    compensateValue: number;
     orderFee: number;
     returnRefund: number;
     fbaStorage: number;
@@ -22,9 +22,9 @@ declare namespace ProfitTable {
     internationalLogistics: number;
     operatingCosts: number;
     domesticWarehouseCost: number;
-    profit: number;
+    profitValue: number;
     profitMargin: number;
-    roi: number;
+    roiValue: number;
     compensationForWarehouseDamage: number;
     distributionDamageCompensation: number;
     compensationForLossOfWarehouse: number;
