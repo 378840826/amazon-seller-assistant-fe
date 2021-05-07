@@ -17,6 +17,7 @@ import {
   ruleAddSalesRouter,
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
+  report,
 } from '@/utils/routes';
 import { notTagShopHint } from './config/array';
 
@@ -266,6 +267,8 @@ const GlobalModel: IGlobalModelType = {
 
     // 切换店铺
     setCurrentShop(state, { payload }) {
+      console.log(payload, '/');
+      
       const shopList = state.shop.type === 'mws'
         ? state.shop.mws
         : state.shop.ppc;
@@ -432,6 +435,7 @@ const GlobalModel: IGlobalModelType = {
           '/ppc/auth',
           '/center',
           '/sub-account',
+          report.profit,
         ];
         const disabledShopSelectorUrl = [
           '/ppc/campaign/add',

@@ -1,0 +1,40 @@
+.box {
+  background-color: #fff;
+
+  :global {
+    .ant-tabs-nav {
+      padding-left: 20px;
+    }
+
+    .ant-tabs-ink-bar {
+      background-color: @link-color;
+    }
+
+    .ant-tabs-tab-btn[aria-selected=true] {
+      color: @link-color;
+    }
+
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.secondaryText {
+  color: @text-color-secondary;
+}
+
+.linkText {
+  color: @link-color;
+}
+
+.btnText {
+  color: @btn-text-color;
+}
+
+// 费用中的费用
+.otherFreeBox {
+  .value {
+    color: @heading-color;
+  }
+}
