@@ -1,0 +1,82 @@
+.box {
+  margin: 0 20px;
+}
+
+.secondaryText {
+  color: @text-color-secondary;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+
+  .leftLayout,
+  .rightLayout {
+    display: flex;
+  }
+
+  .site {
+    width: 110px;
+    margin-right: 20px;
+  }
+
+  .shopName {
+    width: 280px;
+    margin-right: 20px;
+  }
+
+  .export {
+    margin-left: 20px;
+  }
+}
+
+.table {
+  thead {
+    td {
+      padding-left: 8px !important;
+      height: 44px;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    tr:first-child :global(.ant-table-column-sorters) {
+      padding-right: 0 !important;
+    }
+
+    tr:last-child th {
+      background-color: #fff !important;
+    }
+
+    tr:last-child th:first-child {
+      border-left: 1px solid @divider-line-color;
+    }
+  }
+
+  tbody {
+    td {
+      padding-left: 8px !important;
+    }
+
+    tr:nth-child(odd) td {
+      background-color: @simple-table-header-bg;
+    }
+
+    .pd8 {
+      padding-right: 8px !important;
+    }
+  }
+
+  :global(.ant-table-body) {
+    border: 1px solid @divider-line-color;
+    border-top: 0;
+  }
+}
+
+.notData {
+  :global {
+    .ant-table-thead tr:last-child {
+      display: none;
+    }
+  }
+}

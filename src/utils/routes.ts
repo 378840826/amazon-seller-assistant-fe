@@ -18,6 +18,11 @@ export const ruleAddCompetitorRouter = '/reprice/rules/competitor'; // 根据竞
 // 调价记录
 export const ruleHistoryRouter = '/reprice/history'; // 调价记录列表
 
+// 报表
+export const report = {
+  profit: '/report/profit', // 利润表
+};
+
 
 // 跟卖监控
 export const competitorMonitorRouter = '/competitor/monitor'; // 跟卖监控列表
