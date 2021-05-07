@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2021-04-06 14:36:15
- * @LastEditTime: 2021-05-07 15:43:45
+ * @LastEditTime: 2021-05-07 17:56:51
  * 
  * 店铺层级
  */
@@ -346,16 +346,16 @@ const Shop: React.FC<IProps> = props => {
     { 
       title: '调整补偿', 
       align: 'right',
-      dataIndex: 'compensate',
-      key: 'compensate',
+      dataIndex: 'compensateValue',
+      key: 'compensateValue',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'compensate' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === 'compensateValue' ? sortedInfo.order : null,
       showSorterTooltip: false,
       children: [
         {
           title: getValue(totalData?.compensate),
           align: 'right',
-          dataIndex: 'compensate',
+          dataIndex: 'compensateValue',
           width: 130,
           render: (val: number, record: ProfitTable.IShopProfitRecord ) => <OtherFree 
             freeList={[
@@ -679,16 +679,16 @@ const Shop: React.FC<IProps> = props => {
       title: 
       '利润', 
       align: 'right',
-      dataIndex: 'profit',
-      key: 'profit',
+      dataIndex: 'profitValue',
+      key: 'profitValue',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'profit' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === 'profitValue' ? sortedInfo.order : null,
       showSorterTooltip: false,
       children: [
         {
           title: getValue(totalData?.profit),
           align: 'right',
-          dataIndex: 'profit',
+          dataIndex: 'profitValue',
           width: 130,
           render: (val: number) => val === null ? <Empty /> : val,
         },
@@ -715,16 +715,16 @@ const Shop: React.FC<IProps> = props => {
     { 
       title: <>ROI <Iconfont type="icon-yiwen" className={styles.secondaryText} title="销售额/（成本+物流+运营+国内仓成本）"/></>, 
       align: 'right',
-      dataIndex: 'roi',
-      key: 'roi',
+      dataIndex: 'roiValue',
+      key: 'roiValue',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'roi' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === 'roiValue' ? sortedInfo.order : null,
       showSorterTooltip: false,
       children: [
         {
           title: totalData === null || totalData?.roi === null ? <span className={styles.secondaryText}>—</span> : moneyFormat(totalData.roi, 2, ',', '.', true),
           align: 'right',
-          dataIndex: 'roi',
+          dataIndex: 'roiValue',
           width: 130,
           render: (val: number) => val === null ? <span className={styles.secondaryText}>—</span> : `${moneyFormat(val, 2, ',', '.', true)}`,
         },
