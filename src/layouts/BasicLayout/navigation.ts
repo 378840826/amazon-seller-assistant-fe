@@ -8,6 +8,7 @@ import {
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
   ruleHistoryRouter,
+  report,
 } from '@/utils/routes';
 export interface IMenu {
   title: string;
@@ -75,6 +76,7 @@ const navigation: INavigation[] = [
     menu: [
       { title: 'ASIN报表', path: '/report/asin-overview' },
       { title: 'Business Report导入', path: '/report/import' },
+      { title: '利润表', path: report.profit },
     ],
   },
   {

@@ -12,6 +12,7 @@ import {
   setCompetingGoodsRouter,
   ppcCampaignAddRouter,
   ppcGroupAddRouter,
+  report
 } from '../src/utils/routes';
 
 export default [
@@ -207,6 +208,7 @@ export default [
       { title: 'ASIN报表', path: '/report/asin-overview', component: './report/AsinTable' },
       { title: 'Business Rport导入', path: '/report/import', component: './businessRport/Import' },
       { title: 'Business Rport详情', path: '/report/details', component: './businessRport/Details' },
+      { title: '利润表', path: report.profit, component: './report/Profit' },
     ],
   },
 

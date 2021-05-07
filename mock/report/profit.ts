@@ -1,0 +1,92 @@
+/*
+ * @Author: Huang Chao Yi
+ * @Email: 1089109@qq.com
+ * @Date: 2021-04-10 14:11:56
+ * @LastEditTime: 2021-04-12 10:36:32
+ */
+import Mock from 'mockjs';
+
+const random = Mock.Random;
+export default {
+  'POST /api/mws/profit/store/list': Mock.mock({
+    code: 200,
+    data: {
+      'page': {
+        'total|1-999999': 1,
+        'current|1-5': 1,
+        'size|1': [20, 50, 100],
+        'pages|1-100000': 1,
+        'order|1': ['salesVolume', 'returnRefund', 'internationalLogistics', 'earlyReviewer'],
+        'asc|1': true,
+        'records|20': [
+          {
+            'marketplace': 'US',
+            storeName: random.cname(),
+            'salesVolume|1-99999': 1, 
+            'compensate|1-99998': 1, 
+            'orderFee|1-99997': 1, 
+            'returnRefund|1-99996': 1, 
+            'fbaStorage|1-99995': 1, 
+            'promotionExpenses|1-99994': 1, 
+            'advertisingCosts|1-99993': 1, 
+            'evaluationFee|1-99992': 1, 
+            'earlyReviewer|1-99991': 1, 
+            'otherServiceCharges|1-99990': 1, 
+            'purchasingCost|1-99989': 1, 
+            'purchasingLogistics|1-99988': 1, 
+            'packagingConsumables|1-99987': 1, 
+            'internationalLogistics|1-99986': 1, 
+            'operatingCosts|1-99985': 1, 
+            'domesticWarehouseCost|1-99984': 1, 
+            'profit|1-99983': 1, 
+            'profitMargin|0-100': 1, 
+            'compensationForWarehouseDamage|1-99983': 1, 
+            'distributionDamageCompensation|1-99983': 1, 
+            'compensationForLossOfWarehouse|1-99983': 1, 
+            'freeReplacementRefund|1-99983': 1, 
+            'costAdjustment|1-99983': 1, 
+            'platformChargeBack|1-99983': 1, 
+            'commission|1-99983': 1, 
+            'fbaFee|1-99983': 1, 
+            'refundFee|1-99983': 1, 
+            'orderCommission|1-99983': 1, 
+            'extraDeliveryFee|1-99983': 1, 
+            'extraReturnFee|1-99983': 1, 
+            'returnOfPromotionFee|1-99983': 1, 
+            'returnServiceCharge|1-99983': 1, 
+            'monthlyStorageFee|1-99983': 1, 
+            'longTermStorageFee|1-99983': 1, 
+            'coupon|1-99983': 1, 
+            'couponServiceCharge|1-99983': 1, 
+            'promotion|1-99983': 1, 
+            'lightningDealFee|1-99983': 1, 
+            'fbaRemovalFee|1-99983': 1, 
+            'subscriptionFee|1-99983': 1, 
+            'inventoryUpdate|1-99983': 1, 
+            'buyerRecharge|-99991-99983': 1, 
+          },
+        ],
+      },
+      'totalData': {
+        'salesVolume|1-99999': 1, 
+        'compensate|1-99998': 1, 
+        'orderFee|1-99997': 1, 
+        'returnRefund|1-99996': 1, 
+        'fbaStorage|1-99995': 1, 
+        'promotionExpenses|1-99994': 1, 
+        'advertisingCosts|1-99993': 1, 
+        'evaluationFee|1-99992': 1, 
+        'earlyReviewer|1-99991': 1, 
+        'otherServiceCharges|1-99990': 1, 
+        'purchasingCost|1-99989': 1, 
+        'purchasingLogistics|1-99988': 1, 
+        'packagingConsumables|1-99987': 1, 
+        'internationalLogistics|1-99986': 1, 
+        'operatingCosts|1-99985': 1, 
+        'domesticWarehouseCost|1-99984': 1, 
+        'profit|1-99983': 1, 
+        'profitMargin|0-100': 1, 
+      }, 
+    },
+  }),
+};
