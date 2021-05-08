@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2021-04-06 14:36:15
- * @LastEditTime: 2021-05-07 17:56:51
+ * @LastEditTime: 2021-05-08 16:59:18
  * 
  * 店铺层级
  */
@@ -17,6 +17,7 @@ import { Iconfont } from '@/utils/utils';
 import { asinPandectBaseRouter } from '@/utils/routes';
 import OtherFree from '../OtherFree';
 import GoodsImg from '@/pages/components/GoodsImg';
+import TableNotData from '@/components/TableNotData';
 
 interface IProps {
   nav: string;
@@ -198,7 +199,7 @@ const Shop: React.FC<IProps> = props => {
     sortedInfo.columnKey !== '' && (payload.order = sortedInfo.columnKey, payload.asc = sortedInfo.order === 'ascend');
     const promise = new Promise((resolve, reject) => {
       dispatch({
-        type: 'profitTable/storeExport',
+        type: 'profitTable/asinExport',
         payload,
         resolve,
         reject,
@@ -214,7 +215,7 @@ const Shop: React.FC<IProps> = props => {
           type: 'application/octet-stream;charset=utf-8',
         });
     
-        const fileName = `店铺利润报表.xlsx`;
+        const fileName = `ASIN利润报表.xlsx`;
         if ('download' in document.createElement('a')) { // 非IE下载
           const elink = document.createElement('a');
           elink.download = fileName;
@@ -324,6 +325,19 @@ const Shop: React.FC<IProps> = props => {
         align: 'center',
         className: styles.pd8,
       }],
+    },
+    {
+      title: '店铺名称',
+      fixed: 'center',
+      children: [
+        {
+          title: '合计',
+          align: 'center',
+          dataIndex: 'storeName',
+          fixed: 'left', 
+          width: 90,
+        },
+      ],
     },
     { 
       title: '销售额', 
@@ -797,10 +811,17 @@ const Shop: React.FC<IProps> = props => {
       setLoading(true);
       request(data);
     },
+    locale: {
+      emptyText: <TableNotData hint={'没有找到相关数据，请重新选择查询条件'}/>,
+    },
   };
 
   // 头部筛选框改变时
   const fieldChange = function(values: any) { // eslint-disable-line
+    if (Reflect.has(values, 'searchTerm')) {
+      return;
+    }
+
     if (
       Reflect.has(values, 'marketplace')
       || Reflect.has(values, 'storeName')
@@ -830,7 +851,7 @@ const Shop: React.FC<IProps> = props => {
       }}
     >
       <div className={styles.leftLayout}>
-        <Item name="region">
+        <Item name="searchTerm">
           <Input.Search
             allowClear
             className={classnames('h-search', styles.search)}

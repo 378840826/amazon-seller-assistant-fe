@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2021-04-06 14:36:15
- * @LastEditTime: 2021-05-06 17:31:15
+ * @LastEditTime: 2021-05-08 17:06:57
  * 
  * 店铺层级
  */
@@ -15,6 +15,7 @@ import { Link, useDispatch } from 'umi';
 import { moneyFormat, getRangeDate } from '@/utils/huang';
 import OtherFree from '../OtherFree';
 import { Iconfont } from '@/utils/utils';
+import TableNotData from '@/components/TableNotData';
 interface IProps {
   nav: string;
 }
@@ -126,7 +127,6 @@ const Shop: React.FC<IProps> = props => {
         setTotal(total);
         return;
       }
-      
       message.error(msg || '请求列表异常！');
     });
   }, [dispatch, getParams]);
@@ -321,8 +321,7 @@ const Shop: React.FC<IProps> = props => {
       ],
     },
     { 
-      title: 
-      '订单费用', 
+      title: '订单费用', 
       align: 'right',
       dataIndex: 'orderFee',
       key: 'orderFee',
@@ -358,7 +357,7 @@ const Shop: React.FC<IProps> = props => {
           title: getValue(totalData?.returnRefund),
           align: 'right',
           dataIndex: 'returnRefund',
-          width: 100,
+          width: 115,
           render: (val: number, record: ProfitTable.IShopProfitRecord ) => <OtherFree 
             freeList={[
               { label: '退货退款', value: record.returnRefund },
@@ -747,6 +746,9 @@ const Shop: React.FC<IProps> = props => {
       const data = Object.assign({}, getParams(), objs);
       setLoading(true);
       request(data);
+    },
+    locale: {
+      emptyText: <TableNotData hint={'没有找到相关数据，请重新选择查询条件'}/>,
     },
   };
 
