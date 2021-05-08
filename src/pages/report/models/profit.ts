@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2021-04-10 14:42:50
- * @LastEditTime: 2021-05-06 11:36:50
+ * @LastEditTime: 2021-05-08 16:48:12
  * 
  * 利润表
  */
@@ -14,6 +14,7 @@ import {
   getChildAsinList,
   getShopDownList,
   getAsinList,
+  asinExport,
 } from '@/services/report/profit';
 
 // export interface IProfitTableModelState {
@@ -30,6 +31,7 @@ interface IProfitTableModelType{
     getChildAsinList: Effect;
     getShopDownList: Effect;
     getAsinList: Effect;
+    asinExport: Effect;
   };
 }
 
@@ -52,6 +54,16 @@ const profitTable: IProfitTableModelType = {
     *storeExport({ payload, resolve, reject }, { call }) {
       try {
         const res = yield call(storeExport, payload);
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    },
+
+    // ASIN报表导出
+    *asinExport({ payload, resolve, reject }, { call }) {
+      try {
+        const res = yield call(asinExport, payload);
         resolve(res);
       } catch (err) {
         reject(err);
