@@ -87,6 +87,7 @@ const DefinedCalendar: React.FC<IProps> = props => {
     default: 
       setStartDate(start); // 页面开始日期
       setEndDate(end); // 页面结束日期
+      setSelectItemKey(String(key)); // 记录选中的下拉列表
       change ? change({
         dateStart: start,
         dateEnd: end,
