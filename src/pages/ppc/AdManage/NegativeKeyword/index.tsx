@@ -152,8 +152,10 @@ const NegativeKeyword: React.FC = function() {
           type: 'adManage/batchNegativeKeywordArchive',
           payload: {
             headersParams: { StoreId: currentShopId },
-            ids: checkedIds,
+            neKeywordIds: checkedIds,
             type,
+            groupId: treeSelectedInfo.groupId,
+            camId: treeSelectedInfo.campaignId,
           },
           callback: requestFeedback,
         });
@@ -242,28 +244,15 @@ const NegativeKeyword: React.FC = function() {
     setCheckedSelectedIds(newChecked);
   }
 
-  // 表格参数变化（翻页和排序变化）
-  // eslint-disable-next-line max-params
-  function handleTableChange (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    pagination: any, __: any, sorter: any, action: any) {
+  // 表格参数变化
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleTableChange (pagination: any) {
     const { current, pageSize: size } = pagination;
-    const { field: sort, order } = sorter;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let params: { [key: string]: any } = {};
-    const actionType = action.action;
-    if (actionType === 'paginate') {
-      // 由翻页触发的, 只传分页参数，model 中会获取旧的排序参数
-      params = { current, size };
-    } else if (actionType === 'sort') {
-      // 由排序触发的， 重置页码为 1
-      params = { current: 1, size, sort, order };
-    }
     dispatch({
       type: 'adManage/fetchNegativeKeywordList',
       payload: {
         headersParams: { StoreId: currentShopId },
-        searchParams: params,
+        searchParams: { current, size },
         type,
       },
       callback: requestErrorFeedback,
@@ -370,10 +359,10 @@ const NegativeKeyword: React.FC = function() {
       type: 'adManage/addNegativeKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
-        keywordList: selectedKeywordsList.map(
+        negativeKeywords: selectedKeywordsList.map(
           kw => ({ ...kw, matchType: negativeMatchTypeMap[kw.matchType as string] })
         ),
-        camId: addState.campaignId,
+        campaignId: addState.campaignId,
         groupId: addState.groupId,
         type,
       },
@@ -417,7 +406,7 @@ const NegativeKeyword: React.FC = function() {
       payload: {
         headersParams: { StoreId: currentShopId },
         negativeKeywords: keywordArr,
-        camId: addState.campaignId,
+        campaignId: addState.campaignId,
         groupId: addState.groupId,
         type,
       },

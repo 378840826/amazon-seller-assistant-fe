@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Dropdown, Form, Select, Button, Input, message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { strToMoneyStr } from '@/utils/utils';
+import { IComputedBidParams } from '../../index.d';
 import styles from './index.less';
 
 const { Option } = Select;
@@ -16,20 +17,12 @@ interface IProps {
   callback: (exprParams: IComputedBidParams) => boolean | undefined;
 }
 
-export interface IComputedBidParams {
-  type: 'value' | 'suggest' | 'suggestMax' | 'suggestMin';
-  unit: 'currency' | 'percent';
-  operator: '+' | '-';
-  exprValue: number;
-  price?: number;
-}
-
 // 设置竞价的调价类型下拉框
 const setBidOptions = [
   { key: 'value', name: '固定值' },
   { key: 'suggested', name: '建议竞价基础上' },
-  { key: 'suggestedMax', name: '最高建议竞价' },
-  { key: 'suggestedMin', name: '最低建议竞价' },
+  { key: 'rangeEnd', name: '最高建议竞价' },
+  { key: 'rangeStart', name: '最低建议竞价' },
 ].map(item => <Option key={item.key} value={item.key}>{item.name}</Option>);
 
 const BatchSetBid: React.FC<IProps> = props => {

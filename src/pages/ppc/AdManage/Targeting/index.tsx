@@ -13,9 +13,10 @@ import MySearch from '../components/Search';
 import Filtrate from '../components/Filtrate';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
-import BatchSetBid, { IComputedBidParams } from '../components/BatchSetBid';
+import BatchSetBid from '../components/BatchSetBid';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import DataChartModal from '../components/DataChartModal';
+import Rate from '@/components/Rate';
 import editable from '@/pages/components/EditableCell';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import AddModal from './AddModal';
@@ -32,6 +33,7 @@ import {
 import { isArchived, getAssignUrl, getDefinedCalendarFiltrateParams } from '../utils';
 import { add, minus, times, divide } from '@/utils/precisionNumber';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { IComputedBidParams } from '../index.d';
 import classnames from 'classnames';
 import commonStyles from '../common.less';
 import styles from './index.less';
@@ -46,15 +48,22 @@ const Targeting: React.FC = function() {
   } = useSelector((state: IConnectState) => state.global.shop.current);
   // loading
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
-  const loadingTable = loadingEffect['adManage/fetchTargetingList'];
-  const loadingSuggestedBid = loadingEffect['adManage/fetchTargetingSuggestedBid'];
+  const loading = {
+    table: loadingEffect['adManage/fetchTargetingList'],
+    suggestedBid: loadingEffect['adManage/fetchTargetingSuggestedBid'],
+    batchSet: loadingEffect['adManage/batchTargeting'],
+  };
+  // const loadingTable = loadingEffect['adManage/fetchTargetingList'];
+  // const loadingSuggestedBid = loadingEffect['adManage/fetchTargetingSuggestedBid'];
+  // const loadingBatchSet = loadingEffect['adManage/batchTargeting'];
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     targetingTab: { list, searchParams, filtrateParams, customCols, checkedIds },
+    treeSelectedInfo,
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
-  const { state, targetingType } = filtrateParams;
+  const { state, targetingType, startTime, endTime } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
   const [visibleAdd, setVisibleAdd] = useState<boolean>(false);
   // 日期
@@ -81,7 +90,10 @@ const Targeting: React.FC = function() {
       if (cycle) {
         params = { ...defaultFiltrateParams, cycle };
       } else {
-        const { startTime, endTime } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
+        const {
+          startDate: startTime,
+          endDate: endTime,
+        } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
         const timeMethod = storage.get(`${calendarStorageBaseKey}_dc_itemKey`);
         params = { ...defaultFiltrateParams, startTime, endTime, timeMethod };
       }
@@ -90,7 +102,11 @@ const Targeting: React.FC = function() {
         payload: {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
-          filtrateParams: params,
+          filtrateParams: {
+            ...params,
+            campaignId: treeSelectedInfo.campaignId,
+            groupId: treeSelectedInfo.groupId,
+          },
         },
         callback: requestErrorFeedback,
       });
@@ -104,7 +120,7 @@ const Targeting: React.FC = function() {
       type: 'adManage/modifyTargeting',
       payload: {
         headersParams: { StoreId: currentShopId },
-        record: params,
+        ...params,
       },
       callback: requestFeedback,
     });
@@ -140,6 +156,10 @@ const Targeting: React.FC = function() {
   // 执行筛选
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleFiltrate(values: { [key: string]: any }) {
+    // targeting类型的key targetingType 后端要求为 deliveryMethod
+    if (values.targetingType) {
+      values.deliveryMethod = values.targetingType;
+    }
     setVisibleFiltrate(false);
     dispatch({
       type: 'adManage/fetchTargetingList',
@@ -170,8 +190,7 @@ const Targeting: React.FC = function() {
             type: 'adManage/batchTargeting',
             payload: {
               headersParams: { StoreId: currentShopId },
-              adIds: checkedIds,
-              state,
+              targes: checkedIds.map(id => ({ id, state })),
             },
             callback: requestFeedback,
           });
@@ -183,8 +202,7 @@ const Targeting: React.FC = function() {
       type: 'adManage/batchTargeting',
       payload: {
         headersParams: { StoreId: currentShopId },
-        adIds: checkedIds,
-        state,
+        targets: checkedIds.map(id => ({ id, state })),
       },
       callback: requestFeedback,
     });
@@ -215,6 +233,8 @@ const Targeting: React.FC = function() {
         filtrateParams: {
           // 重置筛选参数
           ...defaultFiltrateParams,
+          startTime,
+          endTime,
           search: value,
         },
       },
@@ -302,7 +322,7 @@ const Targeting: React.FC = function() {
         type: 'adManage/batchTargeting',
         payload: {
           headersParams: { StoreId: currentShopId },
-          records: data,
+          targets: data,
         },
         callback: requestFeedback,
       });
@@ -329,7 +349,7 @@ const Targeting: React.FC = function() {
       type: 'adManage/batchTargeting',
       payload: {
         headersParams: { StoreId: currentShopId },
-        records: data,
+        targets: data,
       },
       callback: requestFeedback,
     });
@@ -338,7 +358,7 @@ const Targeting: React.FC = function() {
   // targeting 类型下拉框
   const targetingTypeOptions = (
     <>
-      <Option key="classify" value="classify">分类</Option>
+      <Option key="category" value="category">分类</Option>
       <Option key="product" value="product">商品</Option>
     </>
   );
@@ -460,7 +480,7 @@ const Targeting: React.FC = function() {
           width: 100,
           align: 'center',
           render: (value: string, record: API.IAdTargeting) => (
-            <Spin spinning={loadingSuggestedBid} size="small">
+            <Spin spinning={loading.suggestedBid} size="small">
               <div className={commonStyles.suggested}>
                 {getShowPrice(value, marketplace, currency)}
                 <Button
@@ -469,9 +489,9 @@ const Targeting: React.FC = function() {
                 >应用</Button>
               </div>
               <div>
-                ({getShowPrice(record.suggestedMin, marketplace, currency)}
+                ({getShowPrice(record.rangeStart, marketplace, currency)}
                 -
-                {getShowPrice(record.suggestedMax, marketplace, currency)})
+                {getShowPrice(record.rangeEnd, marketplace, currency)})
               </div>
             </Spin>
           ),
@@ -529,7 +549,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'sales',
           width: 100,
           align: 'right',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.salesRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -545,6 +570,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'orderNum',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.orderNumRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -560,6 +591,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'cpc',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.cpcRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -575,6 +612,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'cpa',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.cpaRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -590,6 +633,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'spend',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.spendRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -605,6 +654,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'acos',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.acosRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -620,6 +675,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'roas',
           align: 'center',
           width: 80,
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.roasRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -635,6 +696,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'impressions',
           align: 'center',
           width: 100,
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.impressionsRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -650,6 +717,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'clicks',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.clicksRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
       
@@ -666,6 +739,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'ctr',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.ctrRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -681,6 +760,12 @@ const Targeting: React.FC = function() {
           dataIndex: 'conversionsRate',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.conversionsRateRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -718,7 +803,7 @@ const Targeting: React.FC = function() {
     dataSource: records,
     customCols,
     columns,
-    loading: loadingTable,
+    loading: loading.table,
     total,
     current,
     size,
@@ -802,7 +887,8 @@ const Targeting: React.FC = function() {
               添加Targeting<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
           </span>
-          <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
+          <div className={classnames(commonStyles.batchState,
+            !checkedIds.length || loading.batchSet ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
             <Button onClick={() => handleBatchState('paused')}>暂停</Button>

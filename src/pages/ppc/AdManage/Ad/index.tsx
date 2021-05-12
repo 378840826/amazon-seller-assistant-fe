@@ -25,6 +25,7 @@ import {
   getAmazonAsinUrl,
   storage,
   getShowPrice,
+  objToQueryString,
 } from '@/utils/utils';
 import { isArchived, getAssignUrl } from '../utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
@@ -49,6 +50,7 @@ const Ad: React.FC = function() {
     searchGoods: loadingEffect['adManage/fetchGoodsList'],
     addAd: loadingEffect['adManage/addAd'],
     fetchGroupList: loadingEffect['adManage/fetchSimpleGroupList'],
+    batchSet: loadingEffect['adManage/batchAd'],
   };
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
@@ -158,7 +160,7 @@ const Ad: React.FC = function() {
       type: 'adManage/modifyAd',
       payload: {
         headersParams: { StoreId: currentShopId },
-        record: params,
+        ...params,
       },
       callback: requestFeedback,
     });
@@ -224,7 +226,7 @@ const Ad: React.FC = function() {
             type: 'adManage/batchAd',
             payload: {
               headersParams: { StoreId: currentShopId },
-              adIds: checkedIds,
+              ids: checkedIds,
               state,
             },
             callback: requestFeedback,
@@ -237,7 +239,7 @@ const Ad: React.FC = function() {
       type: 'adManage/batchAd',
       payload: {
         headersParams: { StoreId: currentShopId },
-        adIds: checkedIds,
+        ids: checkedIds,
         state,
       },
       callback: requestFeedback,
@@ -268,6 +270,8 @@ const Ad: React.FC = function() {
         filtrateParams: {
           // 重置筛选参数
           ...defaultFiltrateParams,
+          startTime,
+          endTime,
           search: value,
         },
       },
@@ -344,7 +348,7 @@ const Ad: React.FC = function() {
         {
           campaignSimpleList.map(item => (
             item.campaignType !== 'sb' && 
-            <Option key={item.campaignId} value={item.campaignId}>{ item.name }</Option>)
+            <Option key={item.id} value={item.id}>{ item.name }</Option>)
           )
         }
       </Select>
@@ -399,15 +403,19 @@ const Ad: React.FC = function() {
       type: 'adManage/addAd',
       payload: {
         headersParams: { StoreId: currentShopId },
-        adList: selectedGoodsList,
-        camId: addState.campaignId,
+        products: selectedGoodsList.map(goods => ({ asin: goods.asin, sku: goods.sku })),
+        campaignId: addState.campaignId,
         groupId: addState.groupId,
       },
       callback: (code: number, msg: string) => {
         requestFeedback(code, msg);
         if (code === 200) {
           setTimeout(() => {
-            window.location.replace('./manage?tab=ad');
+            const params = {
+              ...treeSelectedInfo,
+              tab: 'ad',
+            };
+            window.location.replace(`./manage?${objToQueryString(params)}`);
           }, 1000);
         }
       },
@@ -940,7 +948,8 @@ const Ad: React.FC = function() {
           <Button type="primary" onClick={() => setAddState({ ...addState, visible: true })}>
             添加广告<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
           </Button>
-          <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
+          <div className={classnames(commonStyles.batchState,
+            !checkedIds.length || loading.batchSet ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
             <Button onClick={() => handleBatchState('paused')}>暂停</Button>

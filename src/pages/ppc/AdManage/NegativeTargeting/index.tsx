@@ -113,27 +113,14 @@ const NegativeTargeting: React.FC = function() {
   ];
 
   // 表格参数变化（翻页和排序变化）
-  // eslint-disable-next-line max-params
-  function handleTableChange (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    pagination: any, __: any, sorter: any, action: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleTableChange (pagination: any) {
     const { current, pageSize: size } = pagination;
-    const { field: sort, order } = sorter;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let params: { [key: string]: any } = {};
-    const actionType = action.action;
-    if (actionType === 'paginate') {
-      // 由翻页触发的, 只传分页参数，model 中会获取旧的排序参数
-      params = { current, size };
-    } else if (actionType === 'sort') {
-      // 由排序触发的， 重置页码为 1
-      params = { current: 1, size, sort, order };
-    }
     dispatch({
       type: 'adManage/fetchNegativeTargetingList',
       payload: {
         headersParams: { StoreId: currentShopId },
-        searchParams: params,
+        searchParams: { current, size },
       },
       callback: requestErrorFeedback,
     });

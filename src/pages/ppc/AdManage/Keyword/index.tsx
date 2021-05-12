@@ -13,11 +13,12 @@ import MySearch from '../components/Search';
 import Filtrate from '../components/Filtrate';
 import CustomCols from '../components/CustomCols';
 import Crumbs from '../components/Crumbs';
-import BatchSetBid, { IComputedBidParams } from '../components/BatchSetBid';
+import BatchSetBid from '../components/BatchSetBid';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import DataChartModal from '../components/DataChartModal';
 import editable from '@/pages/components/EditableCell';
 import DefinedCalendar from '@/components/DefinedCalendar';
+import Rate from '@/components/Rate';
 import { matchTypeDict } from '@/pages/ppc/AdManage';
 import {
   Iconfont,
@@ -28,6 +29,7 @@ import {
   strToMoneyStr,
   getDateCycleParam,
   objToQueryString,
+  getPageQuery,
 } from '@/utils/utils';
 import {
   isArchived,
@@ -38,7 +40,7 @@ import {
   createIdKeyword,
 } from '../utils';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { IKeyword } from '../index.d';
+import { IKeyword, ISimpleGroup, IComputedBidParams } from '../index.d';
 import classnames from 'classnames';
 import commonStyles from '../common.less';
 import styles from './index.less';
@@ -46,12 +48,6 @@ import styles from './index.less';
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
-
-interface ISimpleGroup {
-  id: string;
-  name: string;
-  defaultBid: number;
-}
 
 // 一次最多添加的关键词数量
 const keywordsMaxLimit = 1000;
@@ -70,6 +66,7 @@ const Keyword: React.FC = function() {
     suggestedKeyword: loadingEffect['adManage/fetchSuggestedKeywords'],
     addKeyword: loadingEffect['adManage/addKeyword'],
     fetchGroupList: loadingEffect['adManage/fetchSimpleGroupList'],
+    batchSet: loadingEffect['adManage/batchKeyword'],
   };
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
@@ -79,7 +76,7 @@ const Keyword: React.FC = function() {
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
-  const { state, matchType } = filtrateParams;
+  const { state, matchType, startTime, endTime } = filtrateParams;
   const [visibleFiltrate, setVisibleFiltrate] = useState<boolean>(false);
   // 日期
   const calendarStorageBaseKey = 'adKeywordCalendar';
@@ -126,16 +123,41 @@ const Keyword: React.FC = function() {
       if (cycle) {
         params = { ...defaultFiltrateParams, cycle };
       } else {
-        const { startTime, endTime } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
+        const {
+          startDate: startTime,
+          endDate: endTime,
+        } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
         const timeMethod = storage.get(`${calendarStorageBaseKey}_dc_itemKey`);
         params = { ...defaultFiltrateParams, startTime, endTime, timeMethod };
+      }
+      // 获取 url qs 参数， 是否需要查询关键词，此做法待优化
+      const qsParams = getPageQuery();
+      const { 
+        campaignId, campaignName, groupId, groupName, keywordId, search,
+      } = qsParams as { [key: string]: string };
+      if (search) {
+        window.history.replaceState(null, '', '/ppc/manage');
+        setChartsState({
+          visible: true,
+          campaignId,
+          campaignName,
+          groupId,
+          groupName,
+          keywordId,
+          keywordName: search,
+        });
       }
       dispatch({
         type: 'adManage/fetchKeywordList',
         payload: {
           headersParams: { StoreId: currentShopId },
           searchParams: { current: 1 },
-          filtrateParams: params,
+          filtrateParams: {
+            ...params,
+            campaignId: treeSelectedInfo.campaignId,
+            groupId: treeSelectedInfo.groupId,
+            search: qsParams.search,
+          },
         },
         callback: requestErrorFeedback,
       });
@@ -275,8 +297,7 @@ const Keyword: React.FC = function() {
             type: 'adManage/batchKeyword',
             payload: {
               headersParams: { StoreId: currentShopId },
-              adIds: checkedIds,
-              state,
+              keywords: checkedIds.map(id => ({ id, state })),
             },
             callback: requestFeedback,
           });
@@ -288,8 +309,7 @@ const Keyword: React.FC = function() {
       type: 'adManage/batchKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
-        adIds: checkedIds,
-        state,
+        keywords: checkedIds.map(id => ({ id, state })),
       },
       callback: requestFeedback,
     });
@@ -320,6 +340,8 @@ const Keyword: React.FC = function() {
         filtrateParams: {
           // 重置筛选参数
           ...defaultFiltrateParams,
+          startTime,
+          endTime,
           search: value,
         },
       },
@@ -353,7 +375,7 @@ const Keyword: React.FC = function() {
         type: 'adManage/batchKeyword',
         payload: {
           headersParams: { StoreId: currentShopId },
-          records: data,
+          keywords: data,
         },
         callback: requestFeedback,
       });
@@ -380,7 +402,7 @@ const Keyword: React.FC = function() {
       type: 'adManage/batchKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
-        records: data,
+        keywords: data,
       },
       callback: requestFeedback,
     });
@@ -436,7 +458,7 @@ const Keyword: React.FC = function() {
         {
           campaignSimpleList.map(item => (
             item.campaignType !== 'sb' && 
-            <Option key={item.campaignId} value={item.campaignId}>{ item.name }</Option>)
+            <Option key={item.id} value={item.id}>{ item.name }</Option>)
           )
         }
       </Select>
@@ -497,8 +519,8 @@ const Keyword: React.FC = function() {
               keywordItem.matchType === resItem.matchType
             ) {
               keywordItem.suggested = resItem.suggested;
-              keywordItem.suggestedMin = resItem.suggestedMin;
-              keywordItem.suggestedMax = resItem.suggestedMax;
+              keywordItem.rangeStart = resItem.rangeStart;
+              keywordItem.rangeEnd = resItem.rangeEnd;
               records.splice(j, 1);
               j--;
               break;
@@ -811,9 +833,9 @@ const Keyword: React.FC = function() {
             >应用</Button>
           </div>
           <div>
-            ({getShowPrice(record.suggestedMin, marketplace, currency)}
+            ({getShowPrice(record.rangeStart, marketplace, currency)}
             -
-            {getShowPrice(record.suggestedMax, marketplace, currency)})
+            {getShowPrice(record.rangeEnd, marketplace, currency)})
           </div>
         </>
       ),
@@ -942,7 +964,7 @@ const Keyword: React.FC = function() {
       children: [
         {
           title: '合计',
-          dataIndex: 'target',
+          dataIndex: 'targeting',
           width: 200,
           align: 'left',
           fixed: 'left',
@@ -985,9 +1007,9 @@ const Keyword: React.FC = function() {
                 >应用</Button>
               </div>
               <div>
-                ({getShowPrice(record.suggestedMin, marketplace, currency)}
+                ({getShowPrice(record.rangeStart, marketplace, currency)}
                 -
-                {getShowPrice(record.suggestedMax, marketplace, currency)})
+                {getShowPrice(record.rangeEnd, marketplace, currency)})
               </div>
             </Spin>
           ),
@@ -1045,7 +1067,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'sales',
           width: 100,
           align: 'right',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.salesRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1061,6 +1088,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'orderNum',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.orderNumRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1076,6 +1109,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'cpc',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.cpcRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1091,6 +1130,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'cpa',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.cpaRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1106,6 +1151,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'spend',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.spendRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1121,6 +1172,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'acos',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.acosRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1136,6 +1193,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'roas',
           align: 'center',
           width: 80,
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.roasRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1151,6 +1214,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'impressions',
           align: 'center',
           width: 100,
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.impressionsRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1166,6 +1235,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'clicks',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.clicksRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
       
@@ -1182,6 +1257,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'ctr',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.ctrRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1197,6 +1278,12 @@ const Keyword: React.FC = function() {
           dataIndex: 'conversionsRate',
           width: 80,
           align: 'center',
+          render: (value: number, record: API.IAdTargeting) => (
+            <>
+              { getShowPrice(value, marketplace, currency) }
+              <div><Rate value={record.conversionsRateRatio} decimals={2} /></div>
+            </>
+          ),
         },
       ] as any,
     }, {
@@ -1328,7 +1415,8 @@ const Keyword: React.FC = function() {
               添加关键词<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
           </span>
-          <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
+          <div className={classnames(commonStyles.batchState,
+            !checkedIds.length || loading.batchSet ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
             <Button onClick={() => handleBatchState('paused')}>暂停</Button>

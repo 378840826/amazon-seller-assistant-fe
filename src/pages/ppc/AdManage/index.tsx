@@ -14,25 +14,13 @@ import NegativeTargeting from './NegativeTargeting';
 import NegativeKeyword from './NegativeKeyword';
 import SearchTerm from './SearchTerm';
 import OperationRecord from './OperationRecord';
+import { ITreeSelectedInfo } from './index.d';
 import classnames from 'classnames';
 import commonStyles from './common.less';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
 const { Sider } = Layout;
-
-// 当前选中的广告活动和广告组信息
-export interface ITreeSelectedInfo {
-  /** 菜单树选中的 key，格式定义为 广告活动类型-广告活动开启状态-广告活动id-广告组id */
-  key: string;
-  campaignType?: API.CamType;
-  campaignState?: API.AdState;
-  campaignId?: string;
-  campaignName?: string;
-  groupId?: string;
-  groupName?: string;
-  groupType: 'keyword' | 'target' | '';
-}
 
 type TabsState = 'default' | 'campaign' | 'keywordGroup' | 'targetingGroup'
 
@@ -146,7 +134,10 @@ const Manage: React.FC = function() {
       });
       // 获取 url qs 参数
       const qsParams = getPageQuery();
-      window.history.replaceState(null, '', '/ppc/manage');
+      // 有页面要用到的搜索参数时，不清空url参数，此做法待优化
+      if (!qsParams.search) {
+        window.history.replaceState(null, '', '/ppc/manage');
+      }
       const { 
         campaignType, campaignState, campaignId, campaignName, groupId, groupName, tab, groupType,
       } = qsParams as { [key: string]: string };

@@ -24,6 +24,7 @@ import {
   copyGroup,
   // 广告
   queryAdList,
+  updateAd,
   batchAdState,
   queryGoodsList,
   addAd,
@@ -36,6 +37,7 @@ import {
   addKeyword,
   // Targeting
   queryTargetingList,
+  updateTargeting,
   batchTargeting,
   queryTargetingSuggestedBid,
   querySuggestedCategory,
@@ -62,6 +64,7 @@ import {
   queryUsableNegateGroupList,
   createNegateKeywords,
   getKeywordTextAssociate,
+  getQueryKeywordAssociate,
   // 操作记录
   queryOperationRecords,
   // 数据分析
@@ -70,8 +73,9 @@ import {
   queryAnalysisTable,
 } from '@/services/adManage';
 import { storage } from '@/utils/utils';
-import { stateIconDict, initTreeData, ITreeSelectedInfo } from '@/pages/ppc/AdManage';
+import { stateIconDict, initTreeData } from '@/pages/ppc/AdManage';
 import { IPutKeyword, INegateKeyword } from '@/pages/ppc/AdManage/SearchTerm';
+import { ITreeSelectedInfo } from '@/pages/ppc/AdManage/index.d';
 
 // 用于广告活动+广告组的级联选择
 interface ICampaignAndGroup extends API.IAdCampaign {
@@ -83,7 +87,7 @@ export interface IAdManage {
   treeData: ITreeDataNode[];
   campaignSimpleList: {
     name: string;
-    campaignId: string;
+    id: string;
     campaignType: API.CamType;
     targetingType: API.CamTargetType;
   }[];
@@ -344,7 +348,7 @@ export const defaultFiltrateParams = {
   startTime: '',
   endTime: '',
   qualification: '',
-  portfolioId: undefined,
+  portfolioId: '',
   targetingType: '',
   matchType: '',
   salesMin: undefined,
@@ -406,7 +410,7 @@ const AdManageModel: IAdManageModelType = {
     campaignSimpleList: [],
     // 在菜单树选中广告活动或广告组时，保存的广告活动和广告组信息
     treeSelectedInfo: { key: '', groupType: '' },
-    treeExpandedKeys: ['sp-enabled'],
+    treeExpandedKeys: [],
     // 标签下的数量
     tabsCellCount: {
       campaignCount: 0,
@@ -732,7 +736,7 @@ const AdManageModel: IAdManageModelType = {
         params.camId = paramsArr[2];
         isLeaf = true;
       }
-      const res = yield call(service, params);
+      const res = yield call(service, { ...params, headersParams: payload.headersParams });
       if (res.code === 200) {
         const { data: { records } } = res;
         yield put({
@@ -890,10 +894,10 @@ const AdManageModel: IAdManageModelType = {
     *batchCampaign({ payload, callback }, { call, put }) {
       const res = yield call(batchCampaignState, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data } = res;
         yield put({
           type: 'updateCampaignList',
-          payload: { records },
+          payload: { records: data },
         });
       }
       callback && callback(res.code, res.message);
@@ -969,10 +973,10 @@ const AdManageModel: IAdManageModelType = {
     *batchGroup({ payload, callback }, { call, put }) {
       const res = yield call(batchGroupState, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data } = res;
         yield put({
           type: 'updateGroupList',
-          payload: { records },
+          payload: { records: data },
         });
       }
       callback && callback(res.code, res.message);
@@ -1024,9 +1028,9 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 广告-修改广告数据(只要状态能修改)
+    // 广告-修改广告数据(目前只能状态能修改)
     *modifyAd({ payload, callback }, { call, put }) {
-      const res = yield call(updateGroup, payload);
+      const res = yield call(updateAd, payload);
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -1041,10 +1045,10 @@ const AdManageModel: IAdManageModelType = {
     *batchAd({ payload, callback }, { call, put }) {
       const res = yield call(batchAdState, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data } = res;
         yield put({
           type: 'updateAdList',
-          payload: { records },
+          payload: { records: data },
         });
       }
       callback && callback(res.code, res.message);
@@ -1125,7 +1129,7 @@ const AdManageModel: IAdManageModelType = {
     *batchKeyword({ payload, callback }, { call, put }) {
       const res = yield call(batchKeyword, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data: records } = res;
         yield put({
           type: 'updateKeywordList',
           payload: { records },
@@ -1215,10 +1219,10 @@ const AdManageModel: IAdManageModelType = {
     *fetchTargetingSuggestedBid({ payload, callback }, { call, put }) {
       const res = yield call(queryTargetingSuggestedBid, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data } = res;
         yield put({
           type: 'updateTargetingList',
-          payload: { records },
+          payload: { records: data },
         });
       }
       callback && callback(res.code, res.message);
@@ -1228,10 +1232,10 @@ const AdManageModel: IAdManageModelType = {
     *batchTargeting({ payload, callback }, { call, put }) {
       const res = yield call(batchTargeting, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data } = res;
         yield put({
           type: 'updateTargetingList',
-          payload: { records },
+          payload: { records: data },
         });
       }
       callback && callback(res.code, res.message);
@@ -1239,7 +1243,7 @@ const AdManageModel: IAdManageModelType = {
 
     // Targeting-修改关键词数据
     *modifyTargeting({ payload, callback }, { call, put }) {
-      const res = yield call(updateGroup, payload);
+      const res = yield call(updateTargeting, payload);
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -1288,9 +1292,15 @@ const AdManageModel: IAdManageModelType = {
 
     // 否定Targeting
     // 否定Targeting-获取列表
-    *fetchNegativeTargetingList({ payload, callback }, { call, put }) {
+    *fetchNegativeTargetingList({ payload, callback }, { call, put, select }) {
       const { searchParams, headersParams } = payload;
-      const res = yield call(queryNegativeTargetingList, { ...searchParams, headersParams });
+      // 旧的查询参数
+      const { searchParams: oldParams } = yield select((state: IConnectState) => (
+        state.adManage.negativeTargetingTab
+      ));
+      // 本次查询参数
+      const newParams = Object.assign({}, oldParams, searchParams);
+      const res = yield call(queryNegativeTargetingList, { ...newParams, headersParams });
       if (res.code === 200) {
         const { data: { page, total } } = res;
         // 保存列表数据
@@ -1354,11 +1364,11 @@ const AdManageModel: IAdManageModelType = {
         ...newParams, headersParams, type: type || oldType,
       });
       if (res.code === 200) {
-        const { data: { page, total } } = res;
+        const { data } = res;
         // 保存列表数据
         yield put({
           type: 'saveNegativeKeywordList',
-          payload: { page, dataTotal: total },
+          payload: { data },
         });
         // 保存查询参数和 type
         yield put({
@@ -1462,7 +1472,7 @@ const AdManageModel: IAdManageModelType = {
     *fetchUsablePutCampaignList({ payload, callback }, { call, put }) {
       const res = yield call(queryUsableCampaignList, { ...payload, camType: 'manual' });
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data: records } = res;
         yield put({
           type: 'saveUsablePutCampaignList',
           payload: records,
@@ -1471,11 +1481,11 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // SearchTerm报表-否定搜索词时，获取可供选择的广告活动
+    // SearchTerm报表-否定搜索词时，获取可供选择的广告活动,(区别于 fetchUsablePutCampaignList 的是 camType)
     *fetchUsableNegateCampaignList({ payload, callback }, { call, put }) {
       const res = yield call(queryUsableCampaignList, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data: records } = res;
         yield put({
           type: 'saveUsableNegateCampaignList',
           payload: records,
@@ -1488,7 +1498,7 @@ const AdManageModel: IAdManageModelType = {
     *fetchUsablePutGroupList({ payload, callback }, { call, put }) {
       const res = yield call(queryUsablePutGroupList, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data: records } = res;
         yield put({
           type: 'saveUsablePutGroupList',
           payload: { records, camId: payload.camId },
@@ -1501,7 +1511,7 @@ const AdManageModel: IAdManageModelType = {
     *fetchUsableNegateGroupList({ payload, callback }, { call, put }) {
       const res = yield call(queryUsableNegateGroupList, payload);
       if (res.code === 200) {
-        const { data: { records } } = res;
+        const { data: records } = res;
         yield put({
           type: 'saveUsableNegateGroupList',
           payload: { records, camId: payload.camId },
@@ -1598,10 +1608,23 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(code, message);
     },
 
-    // SearchTerm报表-获取搜索投放词的联想词 (节流)
-    fetchKeywordAssociate: [
+    // SearchTerm报表-获取搜索词的联想词 (节流)
+    fetchKeywordTextAssociate: [
       function* ({ payload, callback }, { call }) {
         const res = yield call(getKeywordTextAssociate, payload);
+        if (res.code === 200) {
+          callback && callback(res.code, res.message, res.data);
+        } else {
+          callback && callback(res.code, res.message);
+        }
+      },
+      { type: 'throttle', ms: 500 },
+    ],
+
+    // SearchTerm报表-获取投放词的联想词 (节流)
+    fetchQueryKeywordAssociate: [
+      function* ({ payload, callback }, { call }) {
+        const res = yield call(getQueryKeywordAssociate, payload);
         if (res.code === 200) {
           callback && callback(res.code, res.message, res.data);
         } else {
@@ -1956,8 +1979,8 @@ const AdManageModel: IAdManageModelType = {
     // 否定关键词
     // 否定关键词-保存列表
     saveNegativeKeywordList(state, { payload }) {
-      const { page, dataTotal } = payload;
-      state.negativeKeywordTab.list = { ...page, dataTotal };
+      const { data } = payload;
+      state.negativeKeywordTab.list = data;
     },
 
     // 否定关键词-更新查询参数

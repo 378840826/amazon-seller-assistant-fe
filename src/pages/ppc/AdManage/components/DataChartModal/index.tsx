@@ -97,7 +97,7 @@ const DataChartModal: React.FC<IProps> = function(props) {
       targetType: type,
       payload: {
         headersParams: { StoreId: currentShopId },
-        campaignId,
+        camId: campaignId,
         cycle: cycle || defaultSelectedKey,
       },
       callback: (code: number, msg: string, data: { [key: string]: number}) => {

@@ -17,7 +17,7 @@ import {
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { ISimpleGroup } from '../../index.d';
-import BatchSetBid, { IComputedBidParams } from '../../components/BatchSetBid';
+import BatchSetBid from '../../components/BatchSetBid';
 import DetailSetDropdown from './DetailSetDropdown';
 import editable from '@/pages/components/EditableCell';
 import GoodsImg from '@/pages/components/GoodsImg';
@@ -30,7 +30,7 @@ import {
   objToQueryString,
 } from '@/utils/utils';
 import { createIdTargeting, getBidExprVlaue, isValidTargetingBid } from '../../utils';
-import { IBrand, ICategoryTargeting, IGoodsTargeting } from '../../index.d';
+import { IBrand, ICategoryTargeting, IGoodsTargeting, IComputedBidParams } from '../../index.d';
 import classnames from 'classnames';
 import commonStyles from '../../common.less';
 import styles from './index.less';
@@ -472,7 +472,7 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
         {
           campaignSimpleList.map(item => (
             item.campaignType !== 'sb' && 
-            <Option key={item.campaignId} value={item.campaignId}>{ item.name }</Option>)
+            <Option key={item.id} value={item.id}>{ item.name }</Option>)
           )
         }
       </Select>

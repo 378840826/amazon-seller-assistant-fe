@@ -42,8 +42,14 @@ const Group: React.FC = function() {
   } = useSelector((state: IConnectState) => state.global.shop.current);
   // loading
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
-  const loading = loadingEffect['adManage/fetchGroupList'];
-  const copyGroupLoading = loadingEffect['adManage/copyGroup'];
+  // const loading = loadingEffect['adManage/fetchGroupList'];
+  // const copyGroupLoading = loadingEffect['adManage/copyGroup'];
+  // const loadingBatchSet = loadingEffect['adManage/batchGroup'];
+  const loading = {
+    table: loadingEffect['adManage/fetchGroupList'],
+    copyGroup: loadingEffect['adManage/copyGroup'],
+    batchSet: loadingEffect['adManage/batchGroup'],
+  };
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     groupTab: { list, searchParams, filtrateParams, customCols, checkedIds },
@@ -90,7 +96,7 @@ const Group: React.FC = function() {
       type: 'adManage/modifyGroup',
       payload: {
         headersParams: { StoreId: currentShopId },
-        record: params,
+        ...params,
       },
       callback: requestFeedback,
     });
@@ -156,7 +162,7 @@ const Group: React.FC = function() {
             type: 'adManage/batchGroup',
             payload: {
               headersParams: { StoreId: currentShopId },
-              groupIds: checkedIds,
+              ids: checkedIds,
               state,
             },
             callback: requestFeedback,
@@ -169,7 +175,7 @@ const Group: React.FC = function() {
       type: 'adManage/batchGroup',
       payload: {
         headersParams: { StoreId: currentShopId },
-        groupIds: checkedIds,
+        ids: checkedIds,
         state,
       },
       callback: requestFeedback,
@@ -200,6 +206,8 @@ const Group: React.FC = function() {
         filtrateParams: {
           // 重置筛选参数
           ...defaultFiltrateParams,
+          startTime,
+          endTime,
           search: value,
         },
       },
@@ -443,7 +451,7 @@ const Group: React.FC = function() {
                 groupId: record.id,
                 groupName: record.name,
                 groupType: record.groupType,
-                tab: 'negativeTargeting',
+                tab: record.groupType === 'targeting' ? 'negativeTargeting' : 'negativeKeyword',
               })}
             >{value}</a>
           ),
@@ -733,7 +741,7 @@ const Group: React.FC = function() {
     dataSource: records,
     customCols,
     columns,
-    loading,
+    loading: loading.table,
     total,
     current,
     size,
@@ -802,7 +810,8 @@ const Group: React.FC = function() {
               创建广告组<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
           </Link>
-          <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
+          <div className={classnames(commonStyles.batchState,
+            !checkedIds.length || loading.batchSet ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
             <Button onClick={() => handleBatchState('paused')}>暂停</Button>
@@ -846,7 +855,7 @@ const Group: React.FC = function() {
               type="primary"
               className={styles.btnConfirm}
               onClick={handleCopyGroup}
-              loading={copyGroupLoading}
+              loading={loading.copyGroup}
             >确定</Button>
           </div>
         </>

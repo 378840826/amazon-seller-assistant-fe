@@ -23,7 +23,7 @@ export function getAssignUrl(params: {
   campaignName: string;
   groupId?: string;
   groupName?: string;
-  tab?: 'campaign' | 'group' | 'ad' | 'keyword' | 'targeting' | 'negativeTargeting' | 'searchTerm' | 'history';
+  tab?: 'campaign' | 'group' | 'ad' | 'keyword' | 'targeting'| 'negativeKeyword' | 'negativeTargeting' | 'searchTerm' | 'history';
   // 跳转广告组时，区分关键词广告组和商品/分类广告组，以此来确定 targeting 标签是“关键词”还是“分类/商品投放”(否定targeting同理)
   groupType?: API.GroupType;
 }) {

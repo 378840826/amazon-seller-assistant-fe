@@ -1,3 +1,16 @@
+/* 当前选中的广告活动和广告组信息 */
+export interface ITreeSelectedInfo {
+  /** 菜单树选中的 key，格式定义为 广告活动类型-广告活动开启状态-广告活动id-广告组id */
+  key: string;
+  campaignType?: API.CamType;
+  campaignState?: API.AdState;
+  campaignId?: string;
+  campaignName?: string;
+  groupId?: string;
+  groupName?: string;
+  groupType: 'keyword' | 'target' | '';
+}
+
 /** 广告组简要信息 */
 export interface ISimpleGroup {
   id: string;
@@ -57,8 +70,8 @@ export interface IKeyword {
   keywordText: string;
   matchType?: API.AdKeywordMatchType;
   suggested?: number;
-  suggestedMin?: number;
-  suggestedMax?: number;
+  rangeStart?: number;
+  rangeEnd?: number;
   bid?: number;
   /** 临时的 id ，用于判断唯一性 */
   id?: string;
@@ -72,8 +85,8 @@ export interface INegativeKeyword {
   conversionsRate?: string;
   matchType?: API.AdKeywordMatchType;
   suggested?: number;
-  suggestedMin?: number;
-  suggestedMax?: number;
+  rangeStart?: number;
+  rangeEnd?: number;
   bid?: number;
   /** 临时的 id ，用于判断唯一性 */
   id?: string;

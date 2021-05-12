@@ -13,16 +13,16 @@ export default {
   },
 
   // 广告活动简表
-  'GET /api/gd/ad/campaign/simpleList': (_: Request, res: Response) => {
+  'GET /api/gd/management/cam/store/list': (_: Request, res: Response) => {
     const records = [{
       name: '广告活动-B073DY9671 B073DXX8PS B073CGP25H',
-      campaignId: '0',
+      id: '0',
       campaignType: 'sp',
       targetingType: 'auto',
     }];
     for (let i = 1; i < 10; i++) {
       records.push({
-        campaignId: String(i),
+        id: String(i),
         name: `广告活动-${i}-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H`,
         campaignType: 'sp',
         targetingType: 'auto',
@@ -37,7 +37,7 @@ export default {
   },
 
   // 广告组简表
-  'GET /api/gd/ad/group/simpleList': (_: Request, res: Response) => {
+  'GET /api/gd/management/group/simple-list': (_: Request, res: Response) => {
     const records = [{
       name: '广告组-B073DY9671 B073DXX8PS B073CGP25H',
       id: '10',
@@ -61,13 +61,13 @@ export default {
   // 菜单树-广告活动
   'GET /api/gd/management/campaign/simple-list': (_: Request, res: Response) => {
     const records = [{
-      id: 0,
+      id: '0',
       name: '广告活动-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
       state: 'enabled',
     }];
     for (let i = 1; i < 10; i++) {
       records.push({
-        id: i,
+        id: `${i}`,
         name: `广告活动-${i}-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H`,
         state: 'enabled',
       });
@@ -77,81 +77,6 @@ export default {
         code: 200,
         data: {
           records,
-          // records: [
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
-          //     state: 'enabled',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动-Headline_530032_530028_530031_530029_手套',
-          //     state: 'paused',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动3',
-          //     state: 'archived',
-          //   }, {
-          //     id: String(Math.random()),
-          //     name: '广告活动-530035-530039-530037-530036',
-          //     state: 'archived',
-          //   }, {
-          //     id: String(Math.random()),
-          //     name: '广告活动-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
-          //     state: 'enabled',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动-Headline_530032_530028_530031_530029_手套',
-          //     state: 'paused',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动3',
-          //     state: 'archived',
-          //   }, {
-          //     id: String(Math.random()),
-          //     name: '广告活动-530035-530039-530037-530036',
-          //     state: 'archived',
-          //   }, {
-          //     id: String(Math.random()),
-          //     name: '广告活动-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
-          //     state: 'enabled',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动-Headline_530032_530028_530031_530029_手套',
-          //     state: 'paused',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动3',
-          //     state: 'archived',
-          //   }, {
-          //     id: String(Math.random()),
-          //     name: '广告活动-530035-530039-530037-530036',
-          //     state: 'archived',
-          //   }, {
-          //     id: String(Math.random()),
-          //     name: '广告活动-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
-          //     state: 'enabled',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动-Headline_530032_530028_530031_530029_手套',
-          //     state: 'paused',
-          //   },
-          //   {
-          //     id: String(Math.random()),
-          //     name: '广告活动3',
-          //     state: 'archived',
-          //   }, {
-          //     id: String(Math.random()),
-          //     name: '广告活动-530035-530039-530037-530036',
-          //     state: 'archived',
-          //   },
-          // ],
         },
       });
     }, 100);
@@ -289,14 +214,12 @@ export default {
 
   // 广告活动-批量修改状态
   'POST /api/gd/management/campaign/batchSetting': (req: Request, res: Response) => {
-    const { body: { camIds, state } } = req;
+    const { body: { ids, state } } = req;
     setTimeout(() => {
-      const records = camIds.map((id: string) => ({ id, state }));
+      const records = ids.map((id: string) => ({ id, state }));
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        data: records,
         message: '修改成功',
       });
     }, 500);
@@ -328,12 +251,12 @@ export default {
 
   // 广告活动-修改
   'POST /api/gd/management/campaign/update': (req: Request, res: Response) => {
-    const { body: { record } } = req;
+    const { body } = req;
     setTimeout(() => {
       res.send({
         code: 200,
         message: '修改成功',
-        data: record,
+        data: body,
       });
     }, 500);
   },
@@ -403,26 +326,24 @@ export default {
 
   // 广告组-修改
   'POST /api/gd/management/group/update': (req: Request, res: Response) => {
-    const { body: { record } } = req;
+    const { body } = req;
     setTimeout(() => {
       res.send({
         code: 200,
         message: '修改成功',
-        data: record,
+        data: body,
       });
     }, 500);
   },
 
   // 广告组-批量修改状态
   'POST /api/gd/management/group/batchSetting': (req: Request, res: Response) => {
-    const { body: { groupIds, state } } = req;
+    const { body: { ids, state } } = req;
     setTimeout(() => {
-      const records = groupIds.map((id: string) => ({ id, state }));
+      const records = ids.map((id: string) => ({ id, state }));
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        data: records,
         message: '修改成功',
       });
     }, 500);
@@ -502,23 +423,33 @@ export default {
     }, 100);
   },
 
-  // 广告-批量修改状态
-  'POST /api/gd/management/product/batchSetting': (req: Request, res: Response) => {
-    const { body: { adIds, state } } = req;
+  // 广告-修改
+  'POST /api/gd/management/product/update': (req: Request, res: Response) => {
+    const { body } = req;
     setTimeout(() => {
-      const records = adIds.map((id: string) => ({ id, state }));
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        message: '修改成功',
+        data: body,
+      });
+    }, 500);
+  },
+
+  // 广告-批量修改状态
+  'POST /api/gd/management/product/batchSetting': (req: Request, res: Response) => {
+    const { body: { ids, state } } = req;
+    setTimeout(() => {
+      const records = ids.map((id: string) => ({ id, state }));
+      res.send({
+        code: 200,
+        data: records,
         message: '修改成功',
       });
     }, 500);
   },
 
   // 广告-查询商品
-  'POST /api/gd/management/product/search-goods': (_: Request, res: Response) => {
+  'GET /api/gd/management/product/asin-list': (_: Request, res: Response) => {
     setTimeout(() => {
       const goodsCell = {
         title: 'ier Reading manyReadingReading pos ier Reading many pos ier Reading many posReading',
@@ -611,10 +542,6 @@ export default {
       res.send({
         code: 200,
         data: {
-          total: 1234,
-          size: 20,
-          current: 1,
-          pages: 62,
           records,
         },
       });
@@ -650,8 +577,8 @@ export default {
         targeting: `关键词-${index}`,
         matchType: 'exact',
         suggested: 0,
-        suggestedMin: 0,
-        suggestedMax: 0,
+        rangeStart: 0,
+        rangeEnd: 0,
         bid: 1.11,
         impressions: 10010,
         clicks: 10010,
@@ -665,6 +592,17 @@ export default {
         orderNum: 10010,
         conversionsRate: 10010,
         addTime: '2020-01-02 12:13:56',
+        impressionsRatio: 10.11,
+        clicksRatio: 11,
+        spendRatio: -12.11,
+        acosRatio: 130,
+        roasRatio: 14.01,
+        ctrRatio: 15,
+        cpcRatio: 16,
+        cpaRatio: 17,
+        salesRatio: 18,
+        orderNumRatio: 99,
+        conversionsRateRatio: 100,
       });
     }
     setTimeout(() => {
@@ -696,15 +634,15 @@ export default {
   },
   
   // 关键词-获取建议竞价
-  'POST /api/gd/management/keyword/suggested': (req: Request, res: Response) => {
+  'POST /api/gd/management/keyword/bid-recommendation': (req: Request, res: Response) => {
     const { body: { keywords } } = req;
     setTimeout(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const records = keywords.map((kw: any) => ({
         id: kw.id,
         suggested: Math.floor(Math.random() * 10),
-        suggestedMin: 0.33,
-        suggestedMax: 3.33,
+        rangeStart: 0.33,
+        rangeEnd: 3.33,
         keywordText: kw.keywordText,
         matchType: kw.matchType,
       }));
@@ -718,21 +656,19 @@ export default {
   },
 
   // 关键词-批量修改
-  'POST /api/gd/management/keyword/batchSetting': (req: Request, res: Response) => {
-    const { body: { records } } = req;
+  'POST /api/gd/management/keyword/batch-setting': (req: Request, res: Response) => {
+    const { body: { keywords } } = req;
     setTimeout(() => {
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        data: keywords,
         message: '修改成功',
       });
     }, 500);
   },
 
   // 关键词-建议关键词
-  'GET /ad/keyword/suggestedKeywordsByGroup': (_: Request, res: Response) => {
+  'GET /api/gd/management/keyword/suggested-keyword': (_: Request, res: Response) => {
     const data = ['suggestedKeyword'];
     for (let index = 1; index < 20; index++) {
       data.push(`suggestedKeyword-${index}`);      
@@ -747,7 +683,7 @@ export default {
 
   // Targeting
   // Targeting-列表
-  'POST /api/gd/management/targeting/list': (_: Request, res: Response) => {
+  'POST /api/gd/management/target/list': (_: Request, res: Response) => {
     const records: API.IAdTargeting[] = [];
     for (let index = 0; index < 20; index++) {
       records.push({
@@ -765,8 +701,8 @@ export default {
         expression: '品牌="APPLE“,价格="5-18.99",评分="4-5"',
         matchType: 'exact',
         suggested: 0,
-        suggestedMin: 0,
-        suggestedMax: 0,
+        rangeStart: 0,
+        rangeEnd: 0,
         bid: 1.11,
         impressions: 10010,
         clicks: 10010,
@@ -780,6 +716,17 @@ export default {
         orderNum: 10010,
         conversionsRate: 10010,
         addTime: '2020-01-02 12:13:56',
+        impressionsRatio: 10.1,
+        clicksRatio: 11,
+        spendRatio: -12.11,
+        acosRatio: 130,
+        roasRatio: 14.01,
+        ctrRatio: 15,
+        cpcRatio: 16,
+        cpaRatio: 17,
+        salesRatio: 18,
+        orderNumRatio: 99,
+        conversionsRateRatio: 100,
       });
     }
     setTimeout(() => {
@@ -811,30 +758,38 @@ export default {
   },
 
   // Targeting-获取建议竞价
-  'POST /api/gd/management/targeting/suggested': (req: Request, res: Response) => {
+  'POST /api/gd/management/target/bid-recommendation': (req: Request, res: Response) => {
     const { body: { ids } } = req;
     setTimeout(() => {
       const records = ids.map((id: string) => ({
-        id, suggested: 2.11, suggestedMin: 0.11, suggestedMax: 3.11,
+        id, suggested: 2.11, rangeStart: 0.11, rangeEnd: 3.11,
       }));
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        data: records,
       });
     }, 3000);
   },
 
-  // Targeting-批量修改
-  'POST /api/gd/management/targeting/batchSetting': (req: Request, res: Response) => {
-    const { body: { records } } = req;
+  // Targeting-修改
+  'POST /api/gd/management/target/update': (req: Request, res: Response) => {
+    const { body } = req;
     setTimeout(() => {
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        message: '修改成功',
+        data: body,
+      });
+    }, 500);
+  },
+
+  // Targeting-批量修改
+  'POST /api/gd/management/target/batch-setting': (req: Request, res: Response) => {
+    const { body: { targets } } = req;
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: targets,
         message: '修改成功',
       });
     }, 500);
@@ -910,7 +865,6 @@ export default {
     }, 0);
   },
 
-  
   // Targeting-获取建议竞价-分类
   'POST /api/gd/management/target/category/bid-recommendations': (req: Request, res: Response) => {
     const { body: { categories } } = req;
@@ -956,9 +910,19 @@ export default {
     }, 500);
   },
 
+  // Targeting-添加targeting
+  'POST /api/gd/management/target/add': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '添加成功',
+      });
+    }, 500);
+  },
+
   // 否定Targeting
   // 否定Targeting-列表
-  'POST /api/gd/management/group/ne-target/list': (_: Request, res: Response) => {
+  'GET /api/gd/management/group/ne-target/list': (_: Request, res: Response) => {
     const records: API.IAdNegativeTargeting[] = [];
     for (let index = 0; index < 20; index++) {
       records.push({
@@ -1018,12 +982,10 @@ export default {
       res.send({
         code: 200,
         data: {
-          page: {
-            total: 111,
-            size: 20,
-            current: 3,
-            records,
-          },
+          total: 111,
+          size: 20,
+          current: 3,
+          records,
         },
       });
     }, 100);
@@ -1096,12 +1058,10 @@ export default {
       res.send({
         code: 200,
         data: {
-          page: {
-            total: 111,
-            size: 20,
-            current: 3,
-            records,
-          },
+          total: 111,
+          size: 20,
+          current: 3,
+          records,
         },
       });
     }, 100);
@@ -1171,7 +1131,7 @@ export default {
         camState: 'enabled',
         camType: 'sp',
         campaignTargetType: index % 2 === 0 ? 'auto' : 'manual',
-        groupId: String(index * 10),
+        groupId: String(index),
         groupName: `广告组-${index * 10}-Headline_530032_530028_530031_530029_手套`,
         groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         groupBid: index + 0.22,
@@ -1282,15 +1242,13 @@ export default {
     setTimeout(() => {
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        data: records,
       });
     }, 500);
   },
 
   // SearchTerm报表-投放搜索词时，获取可供选择的广告组
-  'GET /api/gd/management/st/group/simple-list': (_: Request, res: Response) => {
+  'GET /api/gd/management/st/group': (_: Request, res: Response) => {
     const records = [{
       id: '200',
       name: '广告组-100-B073DY9671 B073DXH4ZD B073DXX8PS B073CGP25H',
@@ -1306,9 +1264,7 @@ export default {
     setTimeout(() => {
       res.send({
         code: 200,
-        data: {
-          records,
-        },
+        data: records,
       });
     }, 500);
   },
@@ -1362,8 +1318,23 @@ export default {
     }, 500);
   },
 
+  // SearchTerm报表-搜索词联想
+  'GET /api/gd/management/st/like/keyword-query': (req: Request, res: Response) => {
+    const { query: { queryKeyword } } = req;
+    const data = ['联想搜索词'];
+    for (let i = 1; i <= 10; i++) {
+      data.push(`${queryKeyword}-${i}`);      
+    }
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data,
+      });
+    }, 500);
+  },
+
   // 操作记录-获取列表
-  'GET /api/gd/management/history/list': (req: Request, res: Response) => {
+  'GET /api/gd/management/behavior/list': (req: Request, res: Response) => {
     const { query: { current } } = req;
     const records: API.IAdOperationRecord[] = [{
       id: '0',

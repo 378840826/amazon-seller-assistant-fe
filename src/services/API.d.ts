@@ -240,8 +240,8 @@ declare namespace API {
     expression?: string;
     matchType: AdKeywordMatchType;
     suggested: number;
-    suggestedMin: number;
-    suggestedMax: number;
+    rangeStart: number;
+    rangeEnd: number;
     bid: number;
     addTime: string;
     impressions: number;
@@ -255,6 +255,18 @@ declare namespace API {
     sales: number;
     orderNum: number;
     conversionsRate: number;
+    // 涨跌幅比例
+    impressionsRatio: number;
+    clicksRatio: number;
+    spendRatio: number;
+    acosRatio: number;
+    roasRatio: number;
+    ctrRatio: number;
+    cpcRatio: number;
+    cpaRatio: number;
+    salesRatio: number;
+    orderNumRatio: number;
+    conversionsRateRatio: number;
   }
 
   // 否定Targeting

@@ -47,6 +47,7 @@ const Campaign: React.FC = function() {
   // loading
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
   const loading = loadingEffect['adManage/fetchCampaignList'];
+  const loadingBatchSet = loadingEffect['adManage/batchCampaign'];
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     campaignTab: { list, searchParams, filtrateParams, portfolioList, customCols, checkedIds },
@@ -98,7 +99,7 @@ const Campaign: React.FC = function() {
       type: 'adManage/modifyCampaign',
       payload: {
         headersParams: { StoreId: currentShopId },
-        record: params,
+        ...params,
       },
       callback: requestFeedback,
     });
@@ -176,7 +177,7 @@ const Campaign: React.FC = function() {
             type: 'adManage/batchCampaign',
             payload: {
               headersParams: { StoreId: currentShopId },
-              camIds: checkedIds,
+              ids: checkedIds,
               state,
             },
             callback: requestFeedback,
@@ -189,7 +190,7 @@ const Campaign: React.FC = function() {
       type: 'adManage/batchCampaign',
       payload: {
         headersParams: { StoreId: currentShopId },
-        camIds: checkedIds,
+        ids: checkedIds,
         state,
       },
       callback: requestFeedback,
@@ -220,6 +221,8 @@ const Campaign: React.FC = function() {
         filtrateParams: {
           // 重置筛选参数
           ...defaultFiltrateParams,
+          startTime,
+          endTime,
           search: value,
         },
       },
@@ -374,9 +377,10 @@ const Campaign: React.FC = function() {
       key: 'adType',
       children: [
         {
-          dataIndex: 'type',
+          dataIndex: 'adType',
           align: 'center',
           width: 80,
+          render: (value: string) => value.toUpperCase(),
         },
       ] as any,
     }, {
@@ -548,7 +552,7 @@ const Campaign: React.FC = function() {
                 campaignState: record.state,
                 campaignId: record.id,
                 campaignName: record.name,
-                tab: 'negativeTargeting',
+                tab: 'negativeKeyword',
               })}
             >{value}</a>
           ),
@@ -831,6 +835,7 @@ const Campaign: React.FC = function() {
     },
     handleDelete: (key: string) => {
       const newFiltrateParams = { ...filtrateParams };
+      newFiltrateParams[key] = undefined;
       newFiltrateParams[`${key}Min`] = undefined;
       newFiltrateParams[`${key}Max`] = undefined;
       dispatch({
@@ -905,7 +910,8 @@ const Campaign: React.FC = function() {
               创建广告活动<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
           </Link>
-          <div className={classnames(commonStyles.batchState, !checkedIds.length ? commonStyles.disabled : '')}>
+          <div className={classnames(commonStyles.batchState,
+            !checkedIds.length || loadingBatchSet ? commonStyles.disabled : '')}>
             批量操作：
             <Button onClick={() => handleBatchState('enabled')}>启动</Button>
             <Button onClick={() => handleBatchState('paused')}>暂停</Button>

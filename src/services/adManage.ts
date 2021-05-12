@@ -10,7 +10,7 @@ export async function queryUpdateTime(params: API.IParams) {
 
 // 广告活动简表
 export async function querySimpleCampaignList(params: API.IParams) {
-  return request('/api/gd/ad/campaign/simpleList', {
+  return request('/api/gd/management/cam/store/list', {
     data: params,
     params,
   });
@@ -18,7 +18,7 @@ export async function querySimpleCampaignList(params: API.IParams) {
 
 // 广告组简表
 export async function querySimpleGroupList(params: API.IParams) {
-  return request('/api/gd/ad/group/simpleList', {
+  return request('/api/gd/management/group/simple-list', {
     data: params,
     params,
   });
@@ -76,7 +76,6 @@ export async function createPortfolio (params: API.IParams) {
   return request('/api/gd/management/campaign/portfolio/add', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
@@ -85,7 +84,6 @@ export async function updatePortfolioName (params: API.IParams) {
   return request('/api/gd/management/campaign/portfolio/update', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
@@ -94,7 +92,6 @@ export async function batchCampaignState(params: API.IParams) {
   return request('/api/gd/management/campaign/batchSetting', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
@@ -103,7 +100,6 @@ export async function updateCampaign(params: API.IParams) {
   return request('/api/gd/management/campaign/update', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
@@ -128,7 +124,6 @@ export async function updateGroup(params: API.IParams) {
   return request('/api/gd/management/group/update', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
@@ -137,7 +132,6 @@ export async function batchGroupState(params: API.IParams) {
   return request('/api/gd/management/group/batchSetting', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
@@ -165,19 +159,25 @@ export async function queryAdList(params: API.IParams) {
   });
 }
 
+// 广告-修改数据
+export async function updateAd(params: API.IParams) {
+  return request('/api/gd/management/product/update', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 广告-批量修改状态
 export async function batchAdState(params: API.IParams) {
   return request('/api/gd/management/product/batchSetting', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
 // 广告-添加广告时搜索商品
 export async function queryGoodsList(params: API.IParams) {
-  return request('/api/gd/management/product/search-goods', {
-    method: 'POST',
+  return request('/api/gd/management/product/asin-list', {
     data: params,
     params,
   });
@@ -188,7 +188,6 @@ export async function addAd(params: API.IParams) {
   return request('/api/gd/management/product/add', {
     method: 'POST',
     data: params,
-    // params,
   });
 }
 
@@ -210,25 +209,23 @@ export async function queryKeywordList(params: API.IParams) {
 
 // 关键词-获取建议竞价
 export async function queryKeywordSuggestedBid(params: API.IParams) {
-  return request('/api/gd/management/keyword/suggested', {
+  return request('/api/gd/management/keyword/bid-recommendation', {
     method: 'POST',
     data: params,
-    // params,
   });
 }
 
 // 关键词-批量修改
 export async function batchKeyword(params: API.IParams) {
-  return request('/api/gd/management/keyword/batchSetting', {
+  return request('/api/gd/management/keyword/batch-setting', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
 // 关键词-获取建议关键词
 export async function querySuggestedKeywords(params: API.IParams) {
-  return request('/ad/keyword/suggestedKeywordsByGroup', {
+  return request('/api/gd/management/keyword/suggested-keyword', {
     data: params,
     params,
   });
@@ -245,7 +242,7 @@ export async function addKeyword(params: API.IParams) {
 // Targeting
 // Targeting-列表
 export async function queryTargetingList(params: API.IParams) {
-  return request('/api/gd/management/targeting/list', {
+  return request('/api/gd/management/target/list', {
     method: 'POST',
     data: params,
     params: {
@@ -260,19 +257,25 @@ export async function queryTargetingList(params: API.IParams) {
 
 // Targeting-获取建议竞价
 export async function queryTargetingSuggestedBid(params: API.IParams) {
-  return request('/api/gd/management/targeting/suggested', {
+  return request('/api/gd/management/target/bid-recommendation', {
     method: 'POST',
     data: params,
-    params,
+  });
+}
+
+// Targeting-修改
+export async function updateTargeting(params: API.IParams) {
+  return request('/api/gd/management/target/update', {
+    method: 'POST',
+    data: params,
   });
 }
 
 // Targeting-批量修改
 export async function batchTargeting(params: API.IParams) {
-  return request('/api/gd/management/targeting/batchSetting', {
+  return request('/api/gd/management/target/batch-setting', {
     method: 'POST',
     data: params,
-    params,
   });
 }
 
@@ -318,7 +321,7 @@ export async function queryGoodsSuggestedBid(params: API.IParams) {
 
 // Targeting-添加Targeting
 export async function addTargeting(params: API.IParams) {
-  return request('/api/gd/management/product/add', {
+  return request('/api/gd/management/target/add', {
     method: 'POST',
     data: params,
   });
@@ -328,12 +331,8 @@ export async function addTargeting(params: API.IParams) {
 // 否定Targeting-列表
 export async function queryNegativeTargetingList(params: API.IParams) {
   return request('/api/gd/management/group/ne-target/list', {
-    method: 'POST',
     data: params,
-    params: {
-      current: params.current,
-      size: params.size,
-    },
+    params,
   });
 }
 
@@ -448,7 +447,7 @@ export async function queryUsableCampaignList(params: API.IParams) {
 
 // SearchTerm报表-投放搜索词时，获取可供选择的广告组
 export async function queryUsablePutGroupList(params: API.IParams) {
-  return request('/api/gd/management/st/group/simple-list', {
+  return request('/api/gd/management/st/group', {
     data: params,
     params,
   });
@@ -456,7 +455,7 @@ export async function queryUsablePutGroupList(params: API.IParams) {
 
 // SearchTerm报表-否定搜索词时，获取可供选择的广告组
 export async function queryUsableNegateGroupList(params: API.IParams) {
-  return request('/api/gd/management/st/group/simple-list', {
+  return request('/api/gd/management/st/group', {
     data: params,
     params,
   });
@@ -486,9 +485,17 @@ export async function getKeywordTextAssociate(params: API.IParams) {
   });
 }
 
+// SearchTerm报表-搜索词联想
+export async function getQueryKeywordAssociate(params: API.IParams) {
+  return request('/api/gd/management/st/like/keyword-query', {
+    data: params,
+    params,
+  });
+}
+
 // 操作记录-获取列表
 export async function queryOperationRecords(params: API.IParams) {
-  return request('/api/gd/management/history/list', {
+  return request('/api/gd/management/behavior/list', {
     data: params,
     params,
   });
@@ -502,7 +509,8 @@ export async function queryAnalysisStatistic(params: API.IParams) {
     campaign: '/api/gd/management/campaign-analysis/tofu',
     group: '/api/gd/management/group-analysis/tofu',
     ad: '/api/gd/management/product-analysis/tofu',
-    keyword: '/api/gd/management/keyword-analysis/tofu',
+    // keyword: '/api/gd/management/keyword-analysis/tofu',
+    keyword: '/api/gd/management/campaign-analysis/tofu',
     targeting: '/api/gd/management/target-analysis/tofu',
   };
   return request(urlDict[targetType], {
@@ -518,7 +526,8 @@ export async function queryAnalysisPolyline(params: API.IParams) {
     campaign: '/api/gd/management/campaign-analysis/polyline',
     group: '/api/gd/management/group-analysis/polyline',
     ad: '/api/gd/management/product-analysis/polyline',
-    keyword: '/api/gd/management/keyword-analysis/polyline',
+    // keyword: '/api/gd/management/keyword-analysis/polyline',
+    keyword: '/api/gd/management/campaign-analysis/polyline',
     targeting: '/api/gd/management/target-analysis/polyline',
   };
   return request(urlDict[targetType], {
@@ -534,7 +543,8 @@ export async function queryAnalysisTable(params: API.IParams) {
     campaign: '/api/gd/management/campaign-analysis/list',
     group: '/api/gd/management/group-analysis/list',
     ad: '/api/gd/management/product-analysis/list',
-    keyword: '/api/gd/management/keyword-analysis/list',
+    // keyword: '/api/gd/management/keyword-analysis/list',
+    keyword: '/api/gd/management/campaign-analysis/list',
     targeting: '/api/gd/management/target-analysis/list',
   };
   return request(urlDict[targetType], {

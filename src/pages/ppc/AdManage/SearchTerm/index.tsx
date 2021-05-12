@@ -105,6 +105,7 @@ const SearchTerm: React.FC = function() {
   } = adManage;
   const { total, records, dataTotal } = list;
   const { current, size, sort, order } = searchParams;
+  const { startTime, endTime } = filtrateParams;
   // 投放词和搜索词输入框
   const [keywordTextValue, setKeywordTextValue] = useState<string>('');
   const [queryKeywordValue, setQueryKeywordValue] = useState<string>('');
@@ -131,7 +132,10 @@ const SearchTerm: React.FC = function() {
       if (cycle) {
         params = { ...defaultFiltrateParams, cycle };
       } else {
-        const { startTime, endTime } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
+        const {
+          startDate: startTime,
+          endDate: endTime,
+        } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
         const timeMethod = storage.get(`${calendarStorageBaseKey}_dc_itemKey`);
         params = { ...defaultFiltrateParams, startTime, endTime, timeMethod };
       }
@@ -217,6 +221,8 @@ const SearchTerm: React.FC = function() {
           keywordText,
           queryKeyword,
           asinKeyword,
+          startTime,
+          endTime,
         },
       },
       callback: requestErrorFeedback,
@@ -262,21 +268,34 @@ const SearchTerm: React.FC = function() {
     });
   }
 
-  // 获取联想词
-  function getKeywordAssociate(value: string, type: 'keywordText' | 'queryKeyword') {
+  // 获取投放词联想词
+  function getKeywordTextAssociate(value: string) {
     value.trim() && dispatch({
-      type: 'adManage/fetchKeywordAssociate',
+      type: 'adManage/fetchKeywordTextAssociate',
       payload: {
         headersParams: { StoreId: currentShopId },
         keywordText: value,
       },
       callback: (code: number, msg: string, data?: string[]) => {
         requestErrorFeedback(code, msg);
-        const setStateDict = {
-          keywordText: setKeywordTextOptions,
-          queryKeyword: setQueryKeywordOptions,
-        };
-        data && setStateDict[type](data.map(item => {
+        data && setKeywordTextOptions(data.map(item => {
+          return { value: item };
+        }));
+      },
+    });
+  }
+
+  // 获取搜索词联想词
+  function getQueryKeywordAssociate(value: string) {
+    value.trim() && dispatch({
+      type: 'adManage/fetchQueryKeywordAssociate',
+      payload: {
+        headersParams: { StoreId: currentShopId },
+        queryKeyword: value,
+      },
+      callback: (code: number, msg: string, data?: string[]) => {
+        requestErrorFeedback(code, msg);
+        data && setQueryKeywordOptions(data.map(item => {
           return { value: item };
         }));
       },
@@ -601,7 +620,22 @@ const SearchTerm: React.FC = function() {
           dataIndex: 'keywordText',
           key: 'keywordText',
           width: 260,
-          render: (value: string) => value ? <a target="_blank">{value}</a> : '——',
+          render: (value: string, record: API.IAdSearchTerm) => (
+            value
+              ? <a target="_blank" rel="noreferrer" href={
+                `${getAssignUrl({
+                  campaignType: record.camType,
+                  campaignState: record.camState,
+                  campaignId: record.camId,
+                  campaignName: record.camName,
+                  groupId: record.groupId,
+                  groupName: record.groupName,
+                  groupType: 'keyword',
+                  tab: 'keyword',
+                })}&search=${value}&keywordId=${record.id}`
+              }>{value}</a>
+              : '——'
+          ),
         },
       ] as any,
     },
@@ -1238,7 +1272,7 @@ const SearchTerm: React.FC = function() {
           value={keywordTextValue}
           options={keywordTextOptions}
           placeholder="搜索投放词"
-          onSearch={value => getKeywordAssociate(value, 'keywordText')}
+          onSearch={value => getKeywordTextAssociate(value)}
           onSelect={handleKeywordTextInputChange}
           onChange={handleKeywordTextInputChange}
         />
@@ -1246,7 +1280,7 @@ const SearchTerm: React.FC = function() {
           className={styles.Search}
           value={queryKeywordValue}
           options={queryKeywordOptions}
-          onSearch={value => getKeywordAssociate(value, 'queryKeyword')}
+          onSearch={value => getQueryKeywordAssociate(value)}
           onSelect={handleQueryKeywordInputChange}
           onChange={handleQueryKeywordInputChange}
         >
