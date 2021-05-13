@@ -143,6 +143,22 @@ export async function copyGroup(params: API.IParams) {
   });
 }
 
+// 广告组-自动广告组的target设置列表
+export async function queryAutoGroupTargetList(params: API.IParams) {
+  return request('/api/gd/management/group/target/list', {
+    data: params,
+    params,
+  });
+}
+
+// 广告组-修改自动广告组的target设置
+export async function updateAutoGroupTarget(params: API.IParams) {
+  return request('/api/gd/management/group/target/update', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 广告
 // 广告-获取广告列表
 export async function queryAdList(params: API.IParams) {
@@ -405,7 +421,7 @@ export async function createNegativeKeyword(params: API.IParams) {
   if (params.type === 'campaign') {
     url = '/api/gd/management/campaign/ne-keyword/add';
   } else if (params.type === 'group') {
-    url = '/api/gd/management/group/ne-keyword/add';
+    url = '/api/gd/management/st/add/ne-keyword';
   }
   return request(url, {
     method: 'POST',

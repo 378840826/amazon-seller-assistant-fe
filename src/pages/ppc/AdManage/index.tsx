@@ -109,8 +109,8 @@ const Manage: React.FC = function() {
   // 标签页的类型
   const [tabsState, setTabsState] = useState<string>('default');
   // 选中的标签(默认选中第一个)
-  const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
-  // const [activeTabKey, setActiveTabKey] = useState<string>('keyword');
+  // const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
+  const [activeTabKey, setActiveTabKey] = useState<string>('group');
   // 菜单树侧边栏是否收起
   const [collapsed, setCollapsed] = useState<boolean>(false);
   

@@ -22,6 +22,8 @@ import {
   updateGroup,
   batchGroupState,
   copyGroup,
+  queryAutoGroupTargetList,
+  updateAutoGroupTarget,
   // 广告
   queryAdList,
   updateAd,
@@ -985,6 +987,18 @@ const AdManageModel: IAdManageModelType = {
     // 广告组-复制广告组
     *copyGroup({ payload, callback }, { call }) {
       const res = yield call(copyGroup, payload);
+      callback && callback(res.code, res.message);
+    },
+
+    // 广告组-获取某个自动广告组的target设置列表
+    *fetchAutoGroupTargetList({ payload, callback }, { call }) {
+      const res = yield call(queryAutoGroupTargetList, payload);
+      callback && callback(res.code, res.message, res.data.records);
+    },
+
+    // 广告组-修改获取某个自动广告组的target设置
+    *updateAutoGroupTarget({ payload, callback }, { call }) {
+      const res = yield call(updateAutoGroupTarget, payload);
       callback && callback(res.code, res.message);
     },
 

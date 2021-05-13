@@ -273,6 +273,7 @@ export default {
         camName: `${index}-Headline_530032_530028_530031_530029_手套`,
         camState: 'enabled',
         camType: 'sp',
+        campaignTargetType: index % 2 === 0 ? 'auto' : 'manual',
         groupType: index % 2 === 0 ? 'keyword' : 'targeting',
         state: 'enabled',
         negativeTargetCount: 12,
@@ -357,6 +358,79 @@ export default {
         message: '复制成功',
       });
     }, 500);
+  },
+
+  // 广告组-自动广告组target设置列表
+  'GET /api/gd/management/group/target/list': (_: Request, res: Response) => {
+    const d = {
+      impressions: 10010,
+      clicks: 10010,
+      spend: 10010,
+      acos: 10010,
+      roas: 10010,
+      ctr: 10010,
+      cpc: 10010,
+      cpa: 10010,
+      sales: 10010,
+      orderNum: 10010,
+      conversionsRate: 10010,
+    };
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          records: [
+            {
+              id: '1',
+              state: 'enabled',
+              bid: 5.5,
+              recommendBid: 1.11,
+              recommendBidStart: 0.11,
+              recommendBidEnd: 11.1,
+              target: 'queryHighRelMatches',
+              ...d,
+            }, {
+              id: '2',
+              state: 'paused',
+              bid: 6.5,
+              recommendBid: 12.11,
+              recommendBidStart: 2.11,
+              recommendBidEnd: 11.1,
+              target: 'queryBroadRelMatches',
+              ...d,
+            }, {
+              id: '3',
+              state: 'archived',
+              bid: 7.5,
+              recommendBid: 13.11,
+              recommendBidStart: 0.11,
+              recommendBidEnd: 11.1,
+              target: 'asinSubstituteRelated',
+              ...d,
+            }, {
+              id: '4',
+              state: 'enabled',
+              bid: 8.5,
+              recommendBid: 14.11,
+              recommendBidStart: 0.11,
+              recommendBidEnd: 11.1,
+              target: 'asinAccessoryRelated',
+              ...d,
+            },
+          ],
+        },
+      });
+    }, 100);
+  },
+
+  // 广告组-修改自动广告组target设置
+  'POST /api/gd/management/group/target/update': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '成功',
+      });
+    }, 200);
   },
 
   // 广告
@@ -1109,15 +1183,15 @@ export default {
     }, 0);
   },
 
-  // 否定关键词-广告组的-添加
-  'POST /api/gd/management/group/ne-keyword/add': (_: Request, res: Response) => {
-    setTimeout(() => {
-      res.send({
-        code: 200,
-        message: '成功',
-      });
-    }, 500);
-  },
+  // // 否定关键词-广告组的-添加 （用SearchTerm报表的添加）
+  // 'POST /api/gd/management/group/ne-keyword/add': (_: Request, res: Response) => {
+  //   setTimeout(() => {
+  //     res.send({
+  //       code: 200,
+  //       message: '成功',
+  //     });
+  //   }, 500);
+  // },
 
   // SearchTerm报表
   // SearchTerm报表-列表

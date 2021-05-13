@@ -169,6 +169,7 @@ declare namespace API {
     camName: string;
     camState: AdState;
     camType: CamType;
+    campaignTargetType: CamTargetType;
     groupType: GroupType;
     state: AdState;
     negativeTargetCount?: number;
@@ -190,6 +191,28 @@ declare namespace API {
     createdTime: string;
     startTime: string;
     endTime: string;
+  }
+
+  // 广告管理-广告组-自动广告组target
+  interface IAdAutoGroupTarget {
+    id: string;
+    state: AdState;
+    bid: number;
+    recommendBid: number;
+    recommendBidStart: number;
+    recommendBidEnd: number;
+    target: string;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
   }
 
   // 广告管理-广告

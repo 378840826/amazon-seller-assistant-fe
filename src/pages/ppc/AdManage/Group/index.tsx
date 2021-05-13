@@ -729,6 +729,23 @@ const Group: React.FC = function() {
               >
                 分析
               </Button>
+              <Button
+                type="link"
+                className={commonStyles.tableOperationBtn}
+                disabled={record.campaignTargetType !== 'auto'}
+              >
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`/ppc/manage/group/target?
+                  groupId=${record.id}
+                  &groupName=${record.name}
+                  &campaignId=${record.camId}
+                  &campaignName=${record.camName}
+                  &campaignType=${record.camType}
+                  &campaignState=${record.camState}`}
+                >target设置</a>
+              </Button>
             </>
           ),
         },

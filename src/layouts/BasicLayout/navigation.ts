@@ -87,6 +87,7 @@ const navigation: INavigation[] = [
     title: '广告',
     menu: [
       { title: '广告管理', path: '/ppc/manage' },
+      { title: '广告管理', path: '/ppc/manage/group/target', hide: true },
       { title: '广告组', path: '/ppc/group' },
       { title: '广告', path: '/ppc/product' },
       { title: 'Targeting', path: '/ppc/targeting' },
