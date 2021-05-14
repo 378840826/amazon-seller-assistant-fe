@@ -18,6 +18,7 @@ import {
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
   report,
+  ppcCampaignAddRouter,
 } from '@/utils/routes';
 import { notTagShopHint } from './config/array';
 
@@ -261,8 +262,8 @@ const GlobalModel: IGlobalModelType = {
         console.log('isExclude:', isExclude);
         if (!isExclude) {
           // message.destroy();
-          const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-          !pathname.includes('/shop/') && history.push(url);
+          // const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
+          // !pathname.includes('/shop/') && history.push(url);
         }
       }
     },
@@ -441,7 +442,7 @@ const GlobalModel: IGlobalModelType = {
           report.profit,
         ];
         const disabledShopSelectorUrl = [
-          '/ppc/campaign/add',
+          ppcCampaignAddRouter,
           '/ppc/group/add',
           '/competitor/history',
           '/competitor/list',

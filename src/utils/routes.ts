@@ -48,3 +48,10 @@ export const setCompetingGoodsRouter = '/product/cp'; // 商品ID
 
 // 商品列表
 export const productListRouter = '/product/list';
+
+
+// 广告系统
+export const ppcCampaignAddRouter = '/ppc/campaign/add'; // 创建广告活动
+export const ppcGroupAddRouter = '/ppc/group/add'; // 创建广告组
+export const ppcCampaginListRouter = '/ppc/campaign'; // 广告活动列表
+export const ppcGroupListRouter = '/ppc/group'; // 广告组列表

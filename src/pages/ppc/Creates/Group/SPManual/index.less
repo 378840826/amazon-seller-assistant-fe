@@ -1,0 +1,55 @@
+.secondary {
+  color: @text-color-secondary;
+}
+
+.defaultBid {
+  margin: 20px 0;
+
+  :global(.ant-form-item-control) {
+    flex-direction: row;
+    margin-bottom: 0;
+    align-items: center;
+  }
+
+  :global(.ant-form-item-explain-error) {
+    margin-left: 14px;
+  }
+
+  input {
+    width: 400px;
+  }
+}
+
+.box {
+  margin-left: 125px;
+
+  .headNav {
+    display: flex;
+
+    span {
+      padding: 5px 12px;
+      cursor: default;
+    }
+
+    span.active {
+      color: @heading-color;
+      background-color: @simple-table-header-bg;
+    }
+  }
+}
+
+.matching {
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+  text-align: center;
+  border-radius: @border-radius-base;
+
+  footer {
+    margin: 20px 0 0;
+  }
+
+  button {
+    margin: 0 5px;
+  }
+}

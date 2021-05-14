@@ -1,0 +1,209 @@
+.keywordMain {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fafafa;
+  padding: 0 15px 15px;
+
+  :global(.ant-table-body) {
+    overflow-y: auto !important;
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+  }
+
+  :global(.ant-table-row-selected) td {
+    background-color: transparent !important;
+  }
+
+  tr:global(.ant-table-row-selected:hover) > td,
+  tr:hover td {
+    background-color: #fafafa !important;
+  }
+
+  th {
+    background-color: #f3f3f3 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-bottom: 0 !important;
+    height: 44px !important;
+    line-height: 44px !important;
+  }
+
+  .leftLayout {
+    width: 454px;
+    flex: 0 0 auto;
+
+    th {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+
+    td {
+      border-bottom-color: @divider-line-color;
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+
+    :global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    :global(.ant-form-item-label) {
+      min-width: 75px;
+      color: @text-color;
+    }
+
+    :global(.ant-tabs-nav) {
+      margin-bottom: 10px;
+
+      &::before {
+        border-bottom: 1px solid #dfdfdf;
+      }
+    }
+
+    :global(.ant-tabs-tab) {
+      padding: 10px 0;
+    }
+
+    :global(.ant-tabs-tab-btn[aria-selected=true]) {
+      color: @link-color;
+    }
+
+    .twoLayoutRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .allBtn {
+      color: @btn-text-color;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        color: @link-color;
+      }
+    }
+
+    .allBtn.active {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+
+    .suggessCol {
+      padding-right: 10px;
+    }
+
+    .handleCol {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .btnItem {
+        color: @btn-text-color;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &:hover {
+          color: @link-color;
+        }
+      }
+
+      .btnItem.active {
+        color: #bbb;
+        cursor: not-allowed;
+      }
+    }
+
+    .import {
+      text-align: center;
+    }
+
+    .textarea {
+      height: 226px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .rightLayout {
+    width: 623px;
+
+    th:first-child,
+    td:first-child {
+      padding: 0 !important;
+    }
+
+    tr:hover :global(.h-default-icon) {
+      opacity: 1 !important;
+    }
+
+    td {
+      border-bottom: 1px solid @divider-line-color;
+    }
+
+    header {
+      display: flex;
+      margin: 45px 0 10px;
+
+      button {
+        width: 106px;
+        min-width: 106px;
+        margin-right: 10px;
+        padding: 3px 10px;
+      }
+    }
+
+    .handleCol {
+      color: @error-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: #ff000d;
+      }
+    }
+
+    .keywordBidCol {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 30px;
+    }
+
+    td.thKeywordCol {
+      padding-right: 0;
+    }
+
+    .suggestBidCol {
+      .oneRow {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 5px;
+
+        > span {
+          margin-right: 5px;
+        }
+
+        button {
+          min-width: 40px;
+          border-radius: 10px;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
+
+.matching {
+  width: 265px;
+  height: 114px;
+  padding: 23px 0 20px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: @border-radius-base;
+  box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+
+  button {
+    margin: 17px 5px 0;
+  }
+}

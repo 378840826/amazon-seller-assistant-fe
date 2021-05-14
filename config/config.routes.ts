@@ -10,7 +10,9 @@ import {
   ruleAddCompetitorRouter,
   ruleHistoryRouter,
   setCompetingGoodsRouter,
-  report
+  report,
+  ppcCampaignAddRouter,
+  ppcGroupAddRouter,
 } from '../src/utils/routes';
 
 export default [
@@ -220,21 +222,23 @@ export default [
     ],
   },
 
-  // // 广告系统
-  // {
-  //   path: '/ppc',
-  //   component: '../layouts/BasicLayout',
-  //   routes: [
-  //     { title: '广告系列', path: '/ppc/campaign', component: './UncompletedPage' },
-  //     { title: '广告组', path: '/ppc/group', component: './UncompletedPage' },
-  //     { title: '广告', path: '/ppc/product', component: './UncompletedPage' },
-  //     { title: 'Targeting', path: '/ppc/targeting', component: './UncompletedPage' },
-  //     { title: 'search term 报表', path: '/ppc/search-report', component: './UncompletedPage' },
-  //     { title: '广告店铺授权', path: '/ppc/shop/list', component: './UncompletedPage' },
-  //     // 以下为重定向路由
-  //     { path: '/ppc', redirect: '/ppc/campaign' },
-  //   ],
-  // },
+  // 广告系统
+  {
+    path: '/ppc',
+    component: '../layouts/BasicLayout',
+    routes: [
+      { title: '广告系列', path: '/ppc/campaign', component: './UncompletedPage' },
+      { title: '创建广告活动', path: ppcCampaignAddRouter, component: './ppc/Creates/Campaign' },
+      { title: '广告组', path: '/ppc/group', component: './UncompletedPage' },
+      { title: '创建广告组', path: ppcGroupAddRouter, component: './ppc/Creates/Group' },
+      { title: '广告', path: '/ppc/product', component: './UncompletedPage' },
+      { title: 'Targeting', path: '/ppc/targeting', component: './UncompletedPage' },
+      { title: 'search term 报表', path: '/ppc/search-report', component: './UncompletedPage' },
+      { title: '广告店铺授权', path: '/ppc/shop/list', component: './UncompletedPage' },
+      // 以下为重定向路由
+      { path: '/ppc', redirect: '/ppc/campaign' },
+    ],
+  },
 
   // 评论
   {
