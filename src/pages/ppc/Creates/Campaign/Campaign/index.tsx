@@ -19,7 +19,7 @@ import {
   Select,
 } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-// import ProductSelect from '../../components/ProductSelect';
+import ProductSelect from '../../components/ProductSelect';
 
 interface IProps {
   currency: string;
@@ -67,7 +67,7 @@ const Campaign: React.FC<IProps> = props => {
         message: '广告活动名称长度不能为0或大于128位！',
       }]}
     >
-      <Input className={styles.input} placeholder="请输入广告系列名称" autoComplete="off" maxLength={128} />
+      <Input className={styles.input} placeholder="请输入广告活动名称" autoComplete="off" maxLength={128} />
     </Item>
     <Item
       label={<>{pattern === 'ai' ? '总' : '日'}预算<span className={styles.secondary}>（{currency}）</span>：</>}
@@ -148,18 +148,18 @@ const Campaign: React.FC<IProps> = props => {
         styles.putMathod,
         campaignType === 'sponsoredProducts' ? '' : 'none'
       )}>
-        <Radio.Group onChange={v => console.log(v.target.value, 'xxx')}>
+        <Radio.Group>
           <Radio value="auto" className={styles.putMathodAuto}>自动</Radio>
           <Radio value="manual">手动</Radio>
         </Radio.Group>
       </Item>
-      {/* SD的智能托管的投放方式 */}
-      <Item name={['outer', 'sdaiPutMathod']} label="投放方式：" initialValue="audiences" className={classnames(
+      {/* SD的投放方式 */}
+      <Item name={['outer', 'sdPutMathod']} label="投放方式：" initialValue="classProduct" className={classnames(
         styles.putMathod,
-        campaignType === 'sd' && pattern === 'ai' ? '' : 'none'
+        campaignType === 'sd' ? '' : 'none'
       )}>
         <Radio.Group>
-          <Radio value="audiences" className={styles.putMathodAuto}>受众</Radio>
+          <Radio value="audiences" disabled className={styles.putMathodAuto}><span title="功能开发中">受众</span></Radio>
           <Radio value="classProduct">分类/商品</Radio>
         </Radio.Group>
       </Item>
@@ -189,7 +189,7 @@ const Campaign: React.FC<IProps> = props => {
       styles.spCapacity,
       campaignType === 'sponsoredProducts' && pattern === 'ai' ? '' : 'none'
     )}>
-      {/* <ProductSelect getSelectProduct={getSelectProduct}/> */}
+      {campaignType === 'sponsoredProducts' && pattern === 'ai' ? <ProductSelect getSelectProduct={data => console.log(data)}/> : ''}
     </div>
   </div>;
 };

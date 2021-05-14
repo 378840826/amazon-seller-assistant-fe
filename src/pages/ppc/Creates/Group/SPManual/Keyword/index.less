@@ -29,11 +29,18 @@
   }
 
   .leftLayout {
-    width: 425px;
+    width: 454px;
     flex: 0 0 auto;
+
+    th {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
 
     td {
       border-bottom-color: @divider-line-color;
+      padding-left: 8px !important;
+      padding-right: 8px !important;
     }
 
     :global(.ant-form-item) {
@@ -83,19 +90,29 @@
       cursor: not-allowed;
     }
 
-    .handleCol {
-      color: @btn-text-color;
-      transition: all 0.3s;
-      cursor: pointer;
-
-      &:hover {
-        color: @link-color;
-      }
+    .suggessCol {
+      padding-right: 10px;
     }
 
-    .handleCol.active {
-      color: #bbb;
-      cursor: not-allowed;
+    .handleCol {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .btnItem {
+        color: @btn-text-color;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &:hover {
+          color: @link-color;
+        }
+      }
+
+      .btnItem.active {
+        color: #bbb;
+        cursor: not-allowed;
+      }
     }
 
     .import {
@@ -109,7 +126,7 @@
   }
 
   .rightLayout {
-    width: 653px;
+    width: 623px;
 
     th:first-child,
     td:first-child {

@@ -17,23 +17,26 @@ interface IProps {
   currency: string;
   marketplace: string;
   storeId: string|number;
+  campaignType: CreateCampaign.ICampaignType;
   putMathod: CreateCampaign.putMathod;
 }
 
 const { Item } = Form;
 const SPManual: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
-  const [nav, setNav] = useState<'keyword'|'classify'>('keyword');
+  const { form, currency, marketplace, storeId, campaignType, putMathod } = props;
+
+  const [nav, setNav] = useState<'keyword'|'classify'>('classify');
   const [batchSetBidVisible, setBatchSetBidVisible] = useState<boolean>(false); // 批量设置建议竞价显隐
   const [matchingVisible, setMatchingVisible] = useState<boolean>(false); // 批量修改匹配方式显隐
 
-  // SD模式设置成这个classProduct
   useEffect(() => {
     form.setFieldsValue({
-      manualType: putMathod === 'classProduct' ? 'classify' : nav, 
+      other: {
+        manualType: campaignType === 'sd' ? 'classify' : nav,
+      },
     });
-    putMathod === 'classProduct' && setNav('classify'); // SD没有建议关键词
-  }, [form, nav, putMathod]);
+    campaignType === 'sd' && setNav('classify'); // SD没有建议关键词
+  }, [form, nav, campaignType]);
 
 
   // 其它地方隐藏
@@ -46,7 +49,7 @@ const SPManual: React.FC<IProps> = props => {
 
   return <div>
     {/* 用来收集当前是什么选中的是关键词，还是分类商品 */}
-    <Item name="manualType" hidden>
+    <Item name={['other', 'manualType']} hidden>
       <Input/>
     </Item>
     <Item 
@@ -59,6 +62,7 @@ const SPManual: React.FC<IProps> = props => {
         }
         return strToMoneyStr(val);
       }}
+      initialValue={5}
       rules={[{
         required: true,
         validator(rule, value) {
@@ -76,7 +80,7 @@ const SPManual: React.FC<IProps> = props => {
     <div className={styles.box}>
       <nav className={classnames(
         styles.headNav,
-        putMathod === 'classProduct' ? 'none' : ''
+        campaignType === 'sd' ? 'none' : ''
       )}>
         <span 
           className={classnames(nav === 'keyword' ? styles.active : '')}

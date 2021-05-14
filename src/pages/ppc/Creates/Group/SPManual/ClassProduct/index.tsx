@@ -30,7 +30,6 @@ const ClassProduct: React.FC<IProps> = props => {
   
   const [twoNav, setTwoNav] = useState<'classify' |'product'>('classify'); // 
 
-
   useEffect(() => {
     form.setFieldsValue({
       other: {

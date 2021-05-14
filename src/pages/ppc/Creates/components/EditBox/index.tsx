@@ -61,8 +61,6 @@ export default (props: IProps) => {
         setVisible(true);
       }
     });
-
-
   };
 
   return <div className={
@@ -99,7 +97,7 @@ export default (props: IProps) => {
         )}
         onChange={e => setEditValue(marketplace === 'JP' ? strToNaturalNumStr(e.target.value) : strToMoneyStr(e.target.value))}
         onPressEnter={overInput}
-        onMouseOut={overInput}
+        onBlur={overInput}
       />
     </div>
   </div>;

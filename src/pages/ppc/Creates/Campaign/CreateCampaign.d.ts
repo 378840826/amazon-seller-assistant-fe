@@ -12,6 +12,9 @@ declare namespace CreateCampaign {
   // 营销模式
   type IManagementMode = 'standard' | 'ai'; // 标准模式 智能托管
 
+  // 投放方式 auto(SP) manual(SP) classProduct(SD)
+  type putMathod = 'auto' | 'manual' | 'classProduct'
+
   interface ICallbackDataType {
     value: string;
     oneSelect: string;
@@ -47,10 +50,6 @@ declare namespace CreateCampaign {
     priceGreaterThan: string;
     reviewRatingLessThan: number;
     reviewRatingGreaterThan: number;
-    originalBrands: {
-      brandId: number;
-      brandName: string;
-    }[];
   }
 
   interface IKeywords {

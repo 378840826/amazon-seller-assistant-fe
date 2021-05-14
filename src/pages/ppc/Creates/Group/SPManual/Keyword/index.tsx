@@ -22,13 +22,13 @@ import {
   Tabs,
   message,
   Dropdown,
+  Checkbox,
 } from 'antd';
 import { useDispatch, ConnectProps, ICreateGampaignState, useSelector } from 'umi';
 import { FormInstance } from 'antd/lib/form';
 import ShowData from '@/components/ShowData';
-import EditBox from '../../../../components/EditBox';
+import EditBox from '../../../components/EditBox';
 import BatchSetBidMenu from '../BatchSetBidMenu';
-import MatchSelect from '../MatchSelect';
 
 interface IProps {
   form: FormInstance;
@@ -42,9 +42,9 @@ interface IKeywordsType {
   keyword: string;
   bid: number;
   match: string;
-  broad: boolean; // 广泛关键词是否已选
-  phrase: boolean; // 词组。。。
-  exact: boolean; // 精准 。。。。
+  // broad: boolean; // 广泛关键词是否已选
+  // phrase: boolean; // 词组。。。
+  // exact: boolean; // 精准 。。。。
 }
 
 interface IAwaitKeywordsType {
@@ -62,10 +62,14 @@ interface IMatchingProps {
 }
 
 interface IPage extends ConnectProps {
-  createCampagin: ICreateGampaignState;
+  createGroup: ICreateGampaignState;
 }
 
-
+const methods = [
+  { label: '广泛', value: 'broad' },
+  { label: '词组', value: 'phrase' },
+  { label: '精准', value: 'exact' },
+];
 const { Item } = Form;
 const { TabPane } = Tabs;
 let selectedRowKeys: string[] = [];
@@ -73,13 +77,9 @@ let selectedRowKeys: string[] = [];
 const Matching: React.FC<IMatchingProps> = props => {
   const { onCancel, onConfire } = props;
   const [value, setValue] = useState<string>('broad');
-
+ 
   return <div className={styles.matching} onClick={e => e.nativeEvent.stopImmediatePropagation()}>
-    <Radio.Group value={value} onChange={e => setValue(e.target.value)}>
-      <Radio value="broad">广泛</Radio>
-      <Radio value="phrase">词组</Radio>
-      <Radio value="exact">精准</Radio>
-    </Radio.Group>
+    <Checkbox.Group options={methods} />
     <footer>
       <Button onClick={onCancel}>取消</Button>
       <Button type="primary" onClick={() => onConfire(value)}>确定</Button>
@@ -90,7 +90,7 @@ const Matching: React.FC<IMatchingProps> = props => {
 const SPManual: React.FC<IProps> = props => {
   const { form, currency, marketplace, storeId } = props;
   const dispatch = useDispatch();
-  const selectProducts = useSelector((state: IPage) => state.createCampagin.selectProduct);
+  const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   
 
   const [keywordType, setKeyword] = useState<'suggest'|'import'>('suggest'); 
@@ -108,13 +108,13 @@ const SPManual: React.FC<IProps> = props => {
   // 所有已添加的关键词
   const [addKeyword, setAddKeyword] = useState<IKeywordsType[]>([
     // { 
-    //   id: createUUID(), 
-    //   keyword: '', 
-    //   bid: 1, 
-    //   match: 'broad', 
-    //   exact: false, 
-    //   phrase: false, 
-    //   broad: true,
+    //   id: createUUID(), // id
+    //   keyword: '', //关键词
+    //   bid: 1,  // 竞价
+    //   match: 'broad', // 当前匹配方式
+    //   exact: false, // 精准关键词是中已选中
+    //   phrase: false, // 词组关键词是否已选中
+    //   broad: true, // 广泛关键词是否已选中
     // },
   ]);
 
@@ -134,7 +134,7 @@ const SPManual: React.FC<IProps> = props => {
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
-        type: 'createCampagin/getKeywords',
+        type: 'createGroup/getKeywords',
         resolve,
         reject,
         payload: {
@@ -142,7 +142,7 @@ const SPManual: React.FC<IProps> = props => {
             StoreId: storeId,
           },
           asins,
-          matchType: match,
+          matchType: form.getFieldValue('keywords'), // 这里应该要改成数组，现在后端还没有改过来
         },
       });
     }).then(datas => {
@@ -189,7 +189,7 @@ const SPManual: React.FC<IProps> = props => {
       } 
       message.error(msg);
     });
-  }, [dispatch, selectProducts, storeId, match]); // eslint-disable-line
+  }, [dispatch, selectProducts, storeId]); // eslint-disable-line
 
 
   // 收集数据
@@ -208,7 +208,7 @@ const SPManual: React.FC<IProps> = props => {
     });
 
     dispatch({
-      type: 'createCampagin/setKeywords',
+      type: 'createGroup/setKeywords',
       payload: newArray,
     });
   }, [dispatch, addKeyword]);
@@ -238,10 +238,21 @@ const SPManual: React.FC<IProps> = props => {
   // base
   let keywordCount = 0;
 
-  // 添加关键词到右边的主函数
-  const addKeywordfn = (keyword: string) => {
+  /**
+   * 添加关键词到右边的主函数
+   * @param keyword 要添加的关键字
+   * @param match 模式
+   */
+  const addKeywordfn = (keyword: string, match: string[]) => {
     const defaultBid = form.getFieldValue('defaultBid');
-    let itemId = ''; // 左边建议关键词的，用原来的id，其它用新id
+    let isAddKeyword = false; // 判断关键词是否已添加
+
+    // 将关键字中的匹配修改成true
+    function updateKeywordItem(keywordItem: IAwaitKeywordsType, newMatch = match) {
+      newMatch.forEach(item => {
+        keywordItem[item] = true;
+      });
+    }
 
     if ([undefined, null, ''].includes(defaultBid)) {
       message.error('关键词竞价不能为空，请填写默认竞价');
@@ -253,40 +264,42 @@ const SPManual: React.FC<IProps> = props => {
       return;
     }
 
-    let flag = false; // 是否添加了
-    for (let i = 0; i < addKeyword.length; i++) {
-      const item = addKeyword[i];
-      if (item.keyword === keyword && item[match]) {
-        flag = true;
+    for (let i = 0; i < keywordDada.length; i++) {
+      const item = keywordDada[i];
+      if (item.keyword === keyword ) {
+        isAddKeyword = true;
+        match.forEach( matchItem => {
+          // 还没有添加时
+          if (!item[matchItem]) {
+            const data = {
+              id: createUUID(),
+              keyword, 
+              bid: Number(defaultBid), 
+              match: matchItem,
+            };
+            updateKeywordItem(item, [matchItem]);
+            addKeyword.unshift(data);
+          }
+        });
         break;
       }
     }
-    if (flag) {
-      return;
-    }
 
-    for (let i = 0; i < keywordDada.length; i++ ) {
-      const item = keywordDada[i];
-      if (item.keyword === keyword) {
-        itemId = item.id;
-        item[match] = true;
-      }
+    if (!isAddKeyword) {
+      match.forEach( matchItem => {
+        // 还没有添加时
+        const data = {
+          id: createUUID(),
+          keyword, 
+          bid: Number(defaultBid), 
+          match: matchItem,
+        };
+        addKeyword.unshift(data);
+      });
     }
-
-    const data = {
-      id: itemId || createUUID(),
-      keyword, 
-      bid: Number(defaultBid), 
-      match,
-      exact: false, 
-      phrase: false, 
-      broad: false,
-    };
-    data[match] = true;
-    addKeyword.unshift(data);
   };
 
-  // 修改左边建议关键词按钮的状态
+  // 修改左边建议关键词按钮的状态(取消选中)
   const updateKeywordDataState = (keyword: string, match: string) => {
     for (let i = 0; i < keywordDada.length; i++) {
       const item = keywordDada[i];
@@ -295,6 +308,33 @@ const SPManual: React.FC<IProps> = props => {
         break;
       }
     }
+  };
+  
+  // 修改左边建议关键词的按钮状态（取消选中一个同时选中另一个、用于右边修改匹配方式）
+  const seteKeywordState = (keyword: string, newMatch: string, historyMatch: string): boolean => {
+    let flag = true;
+    for (let i = 0; i < keywordDada.length; i++) {
+      const item = keywordDada[i];
+      if (item.keyword === keyword) {
+        item[newMatch] = true;
+        item[historyMatch] = false;
+        break;
+      }
+    }
+
+    for (let i = 0; i < addKeyword.length; i++) {
+      const item = addKeyword[i];
+      if (item.keyword === keyword) {
+        if (item[newMatch]) {
+          flag = false;
+        } else {
+          item.match = newMatch;
+          item[newMatch] = true;
+          item[historyMatch] = false;
+        }
+      }
+    }
+    return flag;
   };
   
   // 删除单个关键词
@@ -312,20 +352,13 @@ const SPManual: React.FC<IProps> = props => {
   };
 
   // 修改右边关键词表格的匹配方式
-  const matchSelectCallback = (match: string, keyword: string) => {
-    let flag = true;
-
-    for (let i = 0; i < addKeyword.length; i++) {
-      const item = addKeyword[i];
-      
-      if (item.keyword === keyword && item[match]) {
-        flag = false;
-        break;
-      }
-    }
-
+  const matchSelectCallback = (match: string, keyword: string, historyMatch: string) => {
+    // 修改左边的关键词选中状态
+    const flag = seteKeywordState(keyword, match, historyMatch);
+    setKeywordData([...keywordDada]);
+    setAddKeyword([...addKeyword]);
     !flag && message.warn(`关键词 {${keyword}} 在 {${matchTransition(match)}} 中已存在！`);
-
+    
     return Promise.resolve(flag);
   };
 
@@ -342,20 +375,26 @@ const SPManual: React.FC<IProps> = props => {
   // 建议关键词全部添加
   const addAllKeyword = () => {
     keywordDada.forEach(item => {
-      addKeywordfn(item.keyword);
+      addKeywordfn(item.keyword, form.getFieldValue('keywords'));
     }); 
     setKeywordData([...keywordDada]);
     setAddKeyword([...addKeyword]);
   };
 
-  // 建议关键词单个添加
-  const addOneKeyword = (keyword: string, isChecked: boolean) => {
+  /**
+   * 建议关键词单个添加
+   * @param keyword 要添加的关键词
+   * @param isChecked 是否已添加
+   * @param match  添加的匹配方式
+   * @returns 
+   */
+  const addOneKeyword = (keyword: string, isChecked: boolean, match: string) => {
     if (isChecked){
       return;
     }
 
-    addKeywordfn(keyword);
-
+    addKeywordfn(keyword, [match]);
+    
     setAddKeyword([...addKeyword]);
     setKeywordData([...keywordDada]);
   };
@@ -367,7 +406,8 @@ const SPManual: React.FC<IProps> = props => {
     }
 
     importKeyword.forEach(importItem => {
-      addKeywordfn(importItem);
+      // console.log(importItem);
+      addKeywordfn(importItem, form.getFieldValue('keywords'));
     });
     setAddKeyword([...addKeyword]);
     setKeywordData([...keywordDada]);
@@ -456,7 +496,7 @@ const SPManual: React.FC<IProps> = props => {
   };
 
   // 批量修改关键词的匹配方式
-  const batchMatchSetCallback = (type: string) => {
+  const batchMatchSetCallback = (newMatch: string) => {
     if (selectedRowKeys.length === 0) {
       message.warn(`当前选中关键词为${selectedRowKeys.length}个`);
       return;
@@ -465,25 +505,97 @@ const SPManual: React.FC<IProps> = props => {
 
     addKeyword.forEach(item => {
       if (selectedRowKeys.indexOf(item.id) > -1) {
-        item.match = type;
-        
-        for (let i = 0; i < keywordDada.length; i++) {
-          const cItem = keywordDada[i];
-          
-          if (item.id === cItem.id) {
-            break;
-          }
-        }
+        seteKeywordState(item.keyword, newMatch, item.match);
       }
     });
+    setKeywordData([...keywordDada]);
     setAddKeyword([...addKeyword]);
     setMatchingVisible(false);
+  };
+
+  // 左边的建议关键词表格
+  const leftTableCinfig = {
+    className: classnames( keywordType === 'suggest' ? '' : 'none',),
+    pagination: false as false,
+    rowKey: () => keywordCount++,
+    loading,
+    columns: [
+      { 
+        title: '关键词', 
+        key: 'keyword', 
+        dataIndex: 'keyword', 
+        width: 235,
+      },
+      {
+        title: '匹配方式',
+        width: 70,
+        align: 'center',
+        render() {
+          return <div className={styles.matchCol}>
+            <p>广泛</p>
+            <p>词组</p>
+            <p>精准</p>
+          </div>;
+        },
+      },
+      {
+        title: '建议竞价',
+        width: 70,
+        align: 'right',
+        render() {
+          return <div className={classnames(styles.suggessCol, 'secondaryText')}>
+            <p>-</p>
+            <p>-</p>
+            <p>-</p>
+          </div>;
+        },
+      },
+      { 
+        title: '操作', 
+        key: 'handle', 
+        dataIndex: 'keyword',
+        width: 52, 
+        align: 'center',
+        render: (val: string, record: IAwaitKeywordsType) => {
+          return <div className={styles.handleCol}>
+            <span 
+              className={classnames(
+                styles.btnItem, 
+                record.broad ? styles.active : '',
+              )}
+              onClick={() => addOneKeyword(val, record.broad, 'broad')}
+            >{record.broad ? '已选' : '选择'}</span>
+            <span 
+              className={classnames(
+                styles.btnItem, 
+                record.phrase ? styles.active : '',
+              )}
+              onClick={() => addOneKeyword(val, record.phrase, 'phrase')}
+            >{record.phrase ? '已选' : '选择'}</span>
+            <span 
+              className={classnames(
+                styles.btnItem, 
+                record.exact ? styles.active : '',
+              )}
+              onClick={() => addOneKeyword(val, record.exact, 'exact')}
+            >{record.exact ? '已选' : '选择'}</span>
+          </div>;
+        },
+      },
+    ],
+    scroll: {
+      y: 226,
+    },
+    locale: {
+      emptyText: <span className="secondaryText">{keywordHint}</span>,
+    },
+    dataSource: keywordDada,
   };
 
   // 右边的关键词表格
   const addTableConfig = {
     pagination: false as false,
-    rowKey: (record: {id: string}) => record.id,
+    rowKey: (record: {id: string; match: string}) => record.id + record.match,
     rowSelection: {
       type: 'checkbox',
       columnWidth: 70,
@@ -508,12 +620,12 @@ const SPManual: React.FC<IProps> = props => {
         title: '匹配方式',
         dataIndex: 'match',
         align: 'center',
-        render(value: string, record: { keyword: string}) {
-          return <MatchSelect 
-            value={value} keyword={record.keyword} 
-            changeCallback={matchSelectCallback} 
-          />;
-        },
+        render: (value: string) => methods.find(item => item.value === value)?.label,
+        //   const label = methods.find(item => item.value === value)?.label;
+        //   methods.find(item => console.log(item.value === value));
+        //   console.log(label, 'xxx', value);
+          
+        // },
       },
       {
         title: '建议竞价',
@@ -562,7 +674,7 @@ const SPManual: React.FC<IProps> = props => {
         },
       },
     ] as any, // eslint-disable-line
-    dataSource: addKeyword,
+    dataSource: addKeyword as [],
     locale: {
       emptyText: <span className="secondaryText">请选择或输入关键词</span>,
     },
@@ -588,15 +700,11 @@ const SPManual: React.FC<IProps> = props => {
             </TabPane>
           </Tabs>
           <div className={styles.twoLayoutRow}>
-            <Item name="keywords" label="匹配方式：" initialValue={match}>
-              <Radio.Group onChange={e => setMatch(e.target.value)}>
-                <Radio value="broad">广泛</Radio>
-                <Radio value="phrase">词组</Radio>
-                <Radio value="exact">精准</Radio>
-              </Radio.Group>
+            <Item name="keywords" label="匹配方式：" initialValue={[methods[0].value, methods[1].value, methods[2].value]}>
+              <Checkbox.Group options={methods} />
             </Item>
             <span style={{
-              paddingRight: (keywordDada.length > 4 ? 46 : 30),
+              paddingRight: (keywordDada.length > 4 ? 46 : 20),
             }} className={classnames(
               styles.allBtn,
               match === 'broad' && keywordAllBtnState ? styles.active : '',
@@ -608,43 +716,17 @@ const SPManual: React.FC<IProps> = props => {
             >全选</span>
           </div>
         </header>
-        <Table
-          className={classnames( keywordType === 'suggest' ? '' : 'none',)}
-          pagination={false}
-          rowKey={() => keywordCount++}
-          loading={loading}
-          columns={[
-            { title: '关键词', key: 'keyword', dataIndex: 'keyword', width: 352 - (keywordDada.length > 4 ? 16 : 0 ) },
-            { 
-              title: '操作', 
-              key: 'handle', 
-              dataIndex: 'keyword',
-              width: 70, 
-              render: (val: string, record: { }) => <span 
-                className={classnames(
-                  styles.handleCol, 
-                  record[match] ? styles.active : '',
-                )}
-                onClick={() => addOneKeyword(val, record[match])}
-              >{record[match] ? '已选' : '选择'}</span>,
-            },
-          ]}
-          scroll={{
-            y: 226,
-          }}
-          locale={{
-            emptyText: <span className="secondaryText">{keywordHint}</span>,
-          }}
-          dataSource={keywordDada}
-        />
+        <Table {...leftTableCinfig}/>
         <div className={classnames(
           styles.import,
           keywordType === 'suggest' ? 'none' : ''
         )}>
-          <Input.TextArea 
-            placeholder="请输入关键词，每行一个"
-            onChange={importChange}
-            className={styles.textarea}/>
+          <Item name="importTextarea">
+            <Input.TextArea 
+              placeholder="请输入关键词，每行一个"
+              onChange={importChange}
+              className={styles.textarea}/>
+          </Item>
           <Button
             disabled={importKeyword.length ? false : true}
             onClick={addImportKeyword}

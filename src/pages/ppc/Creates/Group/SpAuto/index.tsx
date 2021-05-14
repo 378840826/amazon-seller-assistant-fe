@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import { useDispatch } from 'umi';
 import { strToMoneyStr, strToNaturalNumStr } from '@/utils/utils';
-import EditBox from '../../../components/EditBox';
+import EditBox from '../../components/EditBox';
 
 
 export interface IRecord {
@@ -32,18 +32,19 @@ export interface IRecord {
 
 interface IProps {
   currency: string;
-  autoGroupBidType: string; // 投放方式是手动还是自动
   marketplace: string;
 }
 
 const { Item } = Form;
 const SpAuto: React.FC<IProps> = props => {
-  const { currency, autoGroupBidType, marketplace } = props;
+  const { currency, marketplace } = props;
 
   const dispatch = useDispatch();
 
   let targetingGroupTableCount = 0;
   const bid = marketplace === 'JP' ? 40 : 0.75; // 日本站默认40
+
+  const [autoGroupBidType, setautoGroupBidType] = useState<string>('auto');
   const [dataSource, setDataSource] = useState<IRecord[]>([ 
     { state: true, showType: 'Close Match', bid, type: 'queryHighRelMatches' },
     { state: true, showType: 'Loose Match', bid, type: 'queryBroadRelMatches' },
@@ -55,7 +56,7 @@ const SpAuto: React.FC<IProps> = props => {
     let tem = JSON.stringify(dataSource);
     tem = JSON.parse(tem);
     dispatch({
-      type: 'createCampagin/setAutoTargetGroupList',
+      type: 'createGroup/setAutoTargetGroupList',
       payload: tem,
     });
   }, [dataSource, dispatch]);
@@ -80,7 +81,7 @@ const SpAuto: React.FC<IProps> = props => {
 
   return <div>
     <Item name={['other', 'bidType']} className={styles.bidType}>
-      <Radio.Group>
+      <Radio.Group onChange={e => setautoGroupBidType(e.target.value)}>
         <Radio value="auto">默认竞价</Radio>
         <Radio value="manual">按Targeting Group设置竞价</Radio>
       </Radio.Group>
@@ -99,10 +100,6 @@ const SpAuto: React.FC<IProps> = props => {
           const min = marketplace === 'JP' ? 2 : 0.02;
           if (isNaN(value) || value < min) {
             return Promise.reject(`广告组默认竞价至少${currency}${min}`);
-          }
-
-          if (value > 1000000) {
-            return Promise.reject(`广告活动每日预算不能超过${currency}1000000`);
           }
           return Promise.resolve();
         },

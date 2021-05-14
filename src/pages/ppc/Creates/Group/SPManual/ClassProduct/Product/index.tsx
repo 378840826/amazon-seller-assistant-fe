@@ -28,7 +28,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Link } from 'umi';
 import BatchSetBidMenu from '../../BatchSetBidMenu';
 import ShowData from '@/components/ShowData';
-import EditBox from '../../../../../components/EditBox';
+import EditBox from '../../../../components/EditBox';
 import GoodsImg from '@/pages/components/GoodsImg';
 import { getAmazonAsinUrl, Iconfont } from '@/utils/utils';
 import { asinPandectBaseRouter } from '@/utils/routes';
@@ -46,13 +46,13 @@ interface ISuggestedProduct extends CreateCampaign.IProductAwaitType {
 }
 
 interface IPage extends ConnectProps {
-  createCampagin: ICreateGampaignState;
+  createGroup: ICreateGampaignState;
 }
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
   const { form, currency, marketplace, storeId, putMathod } = props;
-  const selectProducts = useSelector((state: IPage) => state.createCampagin.selectProduct);
+  const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   const dispatch = useDispatch();
   
 
@@ -137,7 +137,7 @@ const ClassProduct: React.FC<IProps> = props => {
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
-        type: 'createCampagin/getProductAsins',
+        type: 'createGroup/getProductAsins',
         resolve,
         reject,
         payload: {
@@ -198,7 +198,7 @@ const ClassProduct: React.FC<IProps> = props => {
     const jsonString = JSON.stringify(products);
     const newArray = JSON.parse(jsonString);
     dispatch({
-      type: 'createCampagin/setSaveProducts',
+      type: 'createGroup/setSaveProducts',
       payload: newArray,
     });
   }, [dispatch, products]);

@@ -18,7 +18,7 @@ import { FormInstance } from 'antd/lib/form';
 import { DownOutlined } from '@ant-design/icons';
 import BatchSetBidMenu from '../../BatchSetBidMenu';
 import ShowData from '@/components/ShowData';
-import EditBox from '../../../../../components/EditBox';
+import EditBox from '../../../../components/EditBox';
 import ThiningModal from './ThiningModal';
 
 interface IProps {

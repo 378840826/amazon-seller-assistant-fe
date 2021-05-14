@@ -19,14 +19,15 @@ import momentTimezone from 'moment-timezone';
 const { Item } = Form;
 interface IProps {
   autoGroupBidType: string; // 自动广告组 
-  putMathod: string; // 广告活动的投放方式 自动/手动
+  putMathod: CreateCampaign.putMathod; // 广告活动的投放方式 自动/手动
   form: FormInstance;
   stepIndex: number;
+  campaignType: CreateCampaign.ICampaignType;
   getTimingData: (values: ITimingInitValueType) => void;
 }
 
 const Group: React.FC<IProps> = props => {
-  const { autoGroupBidType, putMathod, form, stepIndex, getTimingData } = props;
+  const { autoGroupBidType, putMathod, form, stepIndex, getTimingData, campaignType } = props;
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   
   // base
@@ -68,19 +69,20 @@ const Group: React.FC<IProps> = props => {
     <div className={styles.product}>
       {stepIndex === 3 ? <ProductSelect /> : ''}
     </div>
-    <div className={classnames(putMathod === 'auto' ? '' : 'none')}>
+    <div className={classnames(campaignType === 'sponsoredProducts' && putMathod === 'auto' ? '' : 'none')}>
       <SpAuto currency={currency} autoGroupBidType={autoGroupBidType} marketplace={marketplace}/>
     </div>
     
-    <div className={classnames(putMathod !== 'auto' ? '' : 'none')}>
+    <div className={classnames(['manual', 'classProduct'].includes(putMathod) ? '' : 'none')}>
       <SPManual 
         form={form}
         currency={currency}
         marketplace={marketplace}
         storeId={id}
+        putMathod={putMathod}
       />
     </div>
-
+    
     <div className={styles.rangeDate}>
       <span className={styles.text}>日期范围：</span>
       <Item name="startDate" initialValue={moment(siteDatetime)}>

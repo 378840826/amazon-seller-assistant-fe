@@ -25,7 +25,12 @@ interface IPage extends ConnectProps {
   createCampagin: ICreateGampaignState;
 }
 
-const ProductSelect: React.FC = () => {
+interface IProps {
+  getSelectProduct?: (data: CampaignCreate.IProductSelect[]) => void;
+}
+
+const ProductSelect: React.FC<IProps> = props => {
+  const { getSelectProduct } = props;
   const dispatch = useDispatch();
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   const products = useSelector((state: IPage) => state.createCampagin.products);
@@ -90,17 +95,16 @@ const ProductSelect: React.FC = () => {
     });
   }, [id, dispatch, asin]);
 
-
   // 选中的数据放到dva中
   useEffect(() => {
-    let tem = JSON.stringify(selects);
-    tem = JSON.parse(tem);
-
+    const temString = JSON.stringify(selects);
+    const jsonArray = JSON.parse(temString);
     dispatch({
       type: 'createCampagin/setSelectProduct',
-      payload: tem,
+      payload: jsonArray,
     });
-  }, [dispatch, selects]);
+    getSelectProduct ? getSelectProduct(jsonArray as CampaignCreate.IProductSelect[]) : null;
+  }, [dispatch, selects]); // eslint-disable-line
   
   // 删除单个
   const delItemSelect = (asin: string) => {
