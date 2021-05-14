@@ -2,7 +2,7 @@
  * @Author: Huang Chao Yi
  * @Email: 1089109@qq.com
  * @Date: 2021-04-06 14:36:15
- * @LastEditTime: 2021-05-08 16:59:18
+ * @LastEditTime: 2021-05-14 09:48:43
  * 
  * 店铺层级
  */
@@ -855,7 +855,7 @@ const Shop: React.FC<IProps> = props => {
           <Input.Search
             allowClear
             className={classnames('h-search', styles.search)}
-            placeholder="输入ASIN"
+            placeholder="支持输入标题/ASIN"
             style={{
               'float': 'left',
             }}
