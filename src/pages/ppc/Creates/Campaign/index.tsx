@@ -53,7 +53,7 @@ const CampaignAdd = () => {
 
   
   const [campaignType, setCampaignType] = useState<CreateCampaign.ICampaignType>('sponsoredProducts'); // 当前选中的广告活动类型
-  const [stepIndex, setStepIndex] = useState<number>(1); // 当前步骤
+  const [stepIndex, setStepIndex] = useState<number>(0); // 当前步骤
   const [pattern, setPattern] = useState<CreateCampaign.IManagementMode>('standard'); // 营销模式
   const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 广告活动投放方式(SP SD)
   const [autoGroupBidType, setAutoGroupBidType] = useState<string>('auto'); // 自动广告组的竞价方式
