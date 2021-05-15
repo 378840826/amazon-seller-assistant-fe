@@ -520,7 +520,7 @@ const SearchTerm: React.FC = function() {
       type: 'adManage/putNegateQueryKeywords',
       payload: {
         headersParams: { StoreId: currentShopId },
-        neKeywords,
+        negativeKeywords: neKeywords,
       },
       callback: requestFeedback,
     });

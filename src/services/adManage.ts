@@ -159,6 +159,22 @@ export async function updateAutoGroupTarget(params: API.IParams) {
   });
 }
 
+// 广告组-获取定时设置
+export async function queryGroupTime(params: API.IParams) {
+  return request('/api/gd/management/group/timing', {
+    data: params,
+    params,
+  });
+}
+
+// 广告组-保存修改定时设置
+export async function updateGroupTime(params: API.IParams) {
+  return request('/api/gd/management/group/timing', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 广告
 // 广告-获取广告列表
 export async function queryAdList(params: API.IParams) {

@@ -26,6 +26,7 @@ import {
   storage,
   getShowPrice,
   strToMoneyStr,
+  numberToPercent,
 } from '@/utils/utils';
 import { isArchived, targetingTypeDict, getAssignUrl } from '../utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
@@ -380,7 +381,7 @@ const Campaign: React.FC = function() {
           dataIndex: 'adType',
           align: 'center',
           width: 80,
-          render: (value: string) => value.toUpperCase(),
+          // render: (value: string) => value.toUpperCase(),
         },
       ] as any,
     }, {
@@ -644,10 +645,11 @@ const Campaign: React.FC = function() {
       sortOrder: sort === 'cpc' ? order : null,
       children: [
         {
-          title: dataTotal.cpc,
+          title: getShowPrice(dataTotal.cpc, marketplace, currency),
           dataIndex: 'cpc',
           width: 80,
           align: 'center',
+          render: (value: number) => getShowPrice(value, marketplace, currency),
         },
       ] as any,
     }, {
@@ -659,10 +661,11 @@ const Campaign: React.FC = function() {
       sortOrder: sort === 'cpa' ? order : null,
       children: [
         {
-          title: dataTotal.cpa,
+          title: getShowPrice(dataTotal.cpa, marketplace, currency),
           dataIndex: 'cpa',
           width: 80,
           align: 'center',
+          render: (value: number) => getShowPrice(value, marketplace, currency),
         },
       ] as any,
     }, {
@@ -674,10 +677,11 @@ const Campaign: React.FC = function() {
       sortOrder: sort === 'spend' ? order : null,
       children: [
         {
-          title: dataTotal.spend,
+          title: getShowPrice(dataTotal.spend, marketplace, currency),
           dataIndex: 'spend',
           width: 80,
           align: 'center',
+          render: (value: number) => getShowPrice(value, marketplace, currency),
         },
       ] as any,
     }, {
@@ -689,10 +693,11 @@ const Campaign: React.FC = function() {
       sortOrder: sort === 'acos' ? order : null,
       children: [
         {
-          title: dataTotal.acos,
+          title: numberToPercent(dataTotal.acos),
           dataIndex: 'acos',
           width: 80,
           align: 'center',
+          render: (value: number) => numberToPercent(value),
         },
       ] as any,
     }, {
@@ -704,10 +709,11 @@ const Campaign: React.FC = function() {
       sortOrder: sort === 'roas' ? order : null,
       children: [
         {
-          title: dataTotal.roas,
+          title: dataTotal.roas ? dataTotal.roas.toFixed(2) : '—',
           dataIndex: 'roas',
           align: 'center',
           width: 80,
+          render: (value: number) => value ? value.toFixed(2) : '—',
         },
       ] as any,
     }, {
@@ -750,10 +756,11 @@ const Campaign: React.FC = function() {
       sortOrder: sort === 'ctr' ? order : null,
       children: [
         {
-          title: dataTotal.ctr,
+          title: numberToPercent(dataTotal.ctr),
           dataIndex: 'ctr',
           width: 80,
           align: 'center',
+          render: (value: number) => numberToPercent(value),
         },
       ] as any,
     }, {
@@ -765,10 +772,11 @@ const Campaign: React.FC = function() {
       sortOrder: sort === 'conversionsRate' ? order : null,
       children: [
         {
-          title: dataTotal.conversionsRate,
+          title: numberToPercent(dataTotal.conversionsRate),
           dataIndex: 'conversionsRate',
           width: 80,
           align: 'center',
+          render: (value: number) => numberToPercent(value),
         },
       ] as any,
     }, {

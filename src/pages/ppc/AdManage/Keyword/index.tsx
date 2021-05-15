@@ -30,6 +30,7 @@ import {
   getDateCycleParam,
   objToQueryString,
   getPageQuery,
+  numberToPercent,
 } from '@/utils/utils';
 import {
   isArchived,
@@ -1105,7 +1106,7 @@ const Keyword: React.FC = function() {
       sortOrder: sort === 'cpc' ? order : null,
       children: [
         {
-          title: dataTotal.cpc,
+          title: getShowPrice(dataTotal.cpc, marketplace, currency),
           dataIndex: 'cpc',
           width: 80,
           align: 'center',
@@ -1126,7 +1127,7 @@ const Keyword: React.FC = function() {
       sortOrder: sort === 'cpa' ? order : null,
       children: [
         {
-          title: dataTotal.cpa,
+          title: getShowPrice(dataTotal.cpa, marketplace, currency),
           dataIndex: 'cpa',
           width: 80,
           align: 'center',
@@ -1147,7 +1148,7 @@ const Keyword: React.FC = function() {
       sortOrder: sort === 'spend' ? order : null,
       children: [
         {
-          title: dataTotal.spend,
+          title: getShowPrice(dataTotal.spend, marketplace, currency),
           dataIndex: 'spend',
           width: 80,
           align: 'center',
@@ -1168,13 +1169,13 @@ const Keyword: React.FC = function() {
       sortOrder: sort === 'acos' ? order : null,
       children: [
         {
-          title: dataTotal.acos,
+          title: numberToPercent(dataTotal.acos),
           dataIndex: 'acos',
           width: 80,
           align: 'center',
           render: (value: number, record: API.IAdTargeting) => (
             <>
-              { getShowPrice(value, marketplace, currency) }
+              { numberToPercent(value) }
               <div><Rate value={record.acosRatio} decimals={2} /></div>
             </>
           ),
@@ -1189,13 +1190,13 @@ const Keyword: React.FC = function() {
       sortOrder: sort === 'roas' ? order : null,
       children: [
         {
-          title: dataTotal.roas,
+          title: dataTotal.roas ? dataTotal.roas.toFixed(2) : '—',
           dataIndex: 'roas',
           align: 'center',
           width: 80,
           render: (value: number, record: API.IAdTargeting) => (
             <>
-              { getShowPrice(value, marketplace, currency) }
+              { value ? value.toFixed(2) : '—' }
               <div><Rate value={record.roasRatio} decimals={2} /></div>
             </>
           ),
@@ -1216,7 +1217,7 @@ const Keyword: React.FC = function() {
           width: 100,
           render: (value: number, record: API.IAdTargeting) => (
             <>
-              { getShowPrice(value, marketplace, currency) }
+              { value }
               <div><Rate value={record.impressionsRatio} decimals={2} /></div>
             </>
           ),
@@ -1237,7 +1238,7 @@ const Keyword: React.FC = function() {
           align: 'center',
           render: (value: number, record: API.IAdTargeting) => (
             <>
-              { getShowPrice(value, marketplace, currency) }
+              { value }
               <div><Rate value={record.clicksRatio} decimals={2} /></div>
             </>
           ),
@@ -1253,13 +1254,13 @@ const Keyword: React.FC = function() {
       sortOrder: sort === 'ctr' ? order : null,
       children: [
         {
-          title: dataTotal.ctr,
+          title: numberToPercent(dataTotal.ctr),
           dataIndex: 'ctr',
           width: 80,
           align: 'center',
           render: (value: number, record: API.IAdTargeting) => (
             <>
-              { getShowPrice(value, marketplace, currency) }
+              { numberToPercent(value) }
               <div><Rate value={record.ctrRatio} decimals={2} /></div>
             </>
           ),
@@ -1274,13 +1275,13 @@ const Keyword: React.FC = function() {
       sortOrder: sort === 'conversionsRate' ? order : null,
       children: [
         {
-          title: dataTotal.conversionsRate,
+          title: numberToPercent(dataTotal.conversionsRate),
           dataIndex: 'conversionsRate',
           width: 80,
           align: 'center',
           render: (value: number, record: API.IAdTargeting) => (
             <>
-              { getShowPrice(value, marketplace, currency) }
+              { numberToPercent(value) }
               <div><Rate value={record.conversionsRateRatio} decimals={2} /></div>
             </>
           ),

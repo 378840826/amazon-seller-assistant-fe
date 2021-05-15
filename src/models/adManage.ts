@@ -24,6 +24,8 @@ import {
   copyGroup,
   queryAutoGroupTargetList,
   updateAutoGroupTarget,
+  queryGroupTime,
+  updateGroupTime,
   // 广告
   queryAdList,
   updateAd,
@@ -1002,6 +1004,18 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
+    // 广告组-获取定时设置
+    *fetchGroupTime({ payload, callback }, { call }) {
+      const res = yield call(queryGroupTime, payload);
+      callback && callback(res.code, res.message, res.data);
+    },
+
+    // 广告组-保存修改定时设置
+    *updateGroupTime({ payload, callback }, { call }) {
+      const res = yield call(updateGroupTime, payload);
+      callback && callback(res.code, res.message, res.data);
+    },
+
     // 广告
     // 广告-获取列表
     *fetchAdList({ payload, callback }, { call, put, select }) {
@@ -1357,6 +1371,14 @@ const AdManageModel: IAdManageModelType = {
         yield put({
           type: 'fetchNegativeTargetingList',
           payload: { headersParams: payload.headersParams },
+        });
+        // 刷新标签页数量
+        yield put({
+          type: 'fetchTabsCellCount',
+          payload: {
+            headersParams: payload.headersParams,
+            groupId: payload.groupId,
+          },
         });
       }
       callback && callback(res.code, res.message);

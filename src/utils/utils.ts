@@ -293,6 +293,14 @@ export function getDateCycleParam(type: string): string {
   return dict[type] || '';
 }
 
+// 把数值转为两位小数的百分数
+export function numberToPercent(type: number | null | undefined): string {
+  if (type !== null && type !== undefined) {
+    return `${type.toFixed(2)}%`;
+  }
+  return '—';
+}
+
 // 获取解析后的 queryString 参数
 export const getPageQuery = () => parse(window.location.search.split('?')[1]);
 

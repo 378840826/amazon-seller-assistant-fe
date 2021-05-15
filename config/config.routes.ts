@@ -215,6 +215,7 @@ export default [
     routes: [
       { title: '广告管理', path: '/ppc/manage', component: './ppc/AdManage' },
       { title: '广告管理', path: '/ppc/manage/group/target', component: './ppc/AdManage/AutoGroupTarget' },
+      { title: '广告管理', path: '/ppc/manage/group/time', component: './ppc/AdManage/GroupTime' },
       { title: '广告组', path: '/ppc/group', component: './UncompletedPage' },
       { title: '广告', path: '/ppc/product', component: './UncompletedPage' },
       { title: 'Targeting', path: '/ppc/targeting', component: './UncompletedPage' },

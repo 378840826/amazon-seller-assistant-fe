@@ -15,8 +15,9 @@ export const targetingTypeDict = {
   T00030: '受众',
 };
 
-// 获取跳转到指定广告活动或广告组的 url
+// 获取跳转到指定广告活动或广告组的 url （或其他url，指定baseUrl）
 export function getAssignUrl(params: {
+  baseUrl?: string;
   campaignType: 'sp' | 'sb' | 'sd';
   campaignState: API.AdState;
   campaignId: string;
@@ -28,17 +29,25 @@ export function getAssignUrl(params: {
   groupType?: API.GroupType;
 }) {
   const {
-    campaignType, campaignState, campaignId, campaignName, groupId, groupName, tab, groupType,
+    baseUrl,
+    campaignType,
+    campaignState,
+    campaignId,
+    campaignName,
+    groupId,
+    groupName,
+    tab,
+    groupType,
   } = params;
   // eslint-disable-next-line max-len
-  let url = `/ppc/manage?campaignType=${campaignType}&campaignState=${campaignState}&campaignId=${campaignId}&campaignName=${campaignName}`;
+  let url = `${baseUrl || '/ppc/manage'}?campaignType=${campaignType}&campaignState=${campaignState}&campaignId=${campaignId}&campaignName=${campaignName}`;
   if (groupId && groupName) {
-    url = `${url}&groupId=${groupId}&groupName=${groupName}&groupType=${groupType}`;
+    url = `${url}&groupId=${groupId}&groupName=${groupName}${groupType ? `&groupType=${groupType}` : '' }`;
   }
   if (tab) {
     url = `${url}&tab=${tab}`;
   }
-  return url;
+  return encodeURI(url);
 }
 
 // 判断是否有效的关键词/targeting竞价，并返回最低竞价（日本站>=2，其他>=0.02）

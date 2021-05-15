@@ -149,17 +149,17 @@ export default {
         targetingType: 'manual',
         dailyBudget: 99999,
         negativeTargetCount: 12,
-        impressions: 10010,
+        impressions: 1001010,
         clicks: 10010,
-        spend: 10010,
-        acos: 10010,
-        roas: 10010,
-        ctr: 10010,
-        cpc: 10010,
-        cpa: 10010,
+        spend: 999876,
+        acos: 200,
+        roas: 10000.1,
+        ctr: 300.01,
+        cpc: 999.9,
+        cpa: 888.8,
         sales: 10010,
-        orderNum: 10010,
-        conversionsRate: 10010,
+        orderNum: 100101,
+        conversionsRate: 99.9,
         biddingStrategy: 'autoForSales',
         biddingPlacementTop: 30,
         biddingPlacementProductPage: 31,
@@ -182,14 +182,14 @@ export default {
             impressions: 999999,
             clicks: 999999,
             spend: 999999,
-            acos: 999999,
+            acos: 300,
             roas: 999999,
-            ctr: 999999,
+            ctr: 400,
             cpc: 999999,
             cpa: 999999,
             sales: 999999,
             orderNum: 999999,
-            conversionsRate: 999999,
+            conversionsRate: 100,
           },
         },
       });
@@ -429,6 +429,50 @@ export default {
       res.send({
         code: 200,
         message: '成功',
+      });
+    }, 200);
+  },
+
+  
+  // 广告组-获取定时设置
+  'GET /api/gd/management/group/timing': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          startDate: '2021-01-01',
+          endDate: '2021-05-01',
+          switch: true,
+          timezone: 'timezone',
+          mon: [
+            { startTime: '00:00', endTime: '00:29' },
+            { startTime: '00:30', endTime: '00:59' },
+            { startTime: '10:30', endTime: '18:59' },
+            { startTime: '23:00', endTime: '23:59' },
+          ],
+          tues: [],
+          wed: [
+            { startTime: '00:00', endTime: '00:59' },
+            { startTime: '00:30', endTime: '00:59' },
+            { startTime: '11:30', endTime: '18:59' },
+            { startTime: '23:00', endTime: '23:29' },
+          ],
+          thur: [],
+          fri: [],
+          sat: [],
+          sun: [],
+        },
+        message: '成功',
+      });
+    }, 200);
+  },
+
+  // 广告组-修改定时设置
+  'POST /api/gd/management/group/timing': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '保存成功',
       });
     }, 200);
   },

@@ -26,6 +26,7 @@ import {
   requestErrorFeedback,
   requestFeedback,
   storage,
+  numberToPercent,
 } from '@/utils/utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import moment from 'moment';
@@ -570,10 +571,11 @@ const Group: React.FC = function() {
       sortOrder: sort === 'cpc' ? order : null,
       children: [
         {
-          title: dataTotal.cpc,
+          title: getShowPrice(dataTotal.cpc, marketplace, currency),
           dataIndex: 'cpc',
           width: 80,
           align: 'center',
+          render: (value: number) => getShowPrice(value, marketplace, currency),
         },
       ] as any,
     }, {
@@ -585,10 +587,11 @@ const Group: React.FC = function() {
       sortOrder: sort === 'cpa' ? order : null,
       children: [
         {
-          title: dataTotal.cpa,
+          title: getShowPrice(dataTotal.cpa, marketplace, currency),
           dataIndex: 'cpa',
           width: 80,
           align: 'center',
+          render: (value: number) => getShowPrice(value, marketplace, currency),
         },
       ] as any,
     }, {
@@ -600,10 +603,11 @@ const Group: React.FC = function() {
       sortOrder: sort === 'spend' ? order : null,
       children: [
         {
-          title: dataTotal.spend,
+          title: getShowPrice(dataTotal.spend, marketplace, currency),
           dataIndex: 'spend',
           width: 80,
           align: 'center',
+          render: (value: number) => getShowPrice(value, marketplace, currency),
         },
       ] as any,
     }, {
@@ -615,10 +619,11 @@ const Group: React.FC = function() {
       sortOrder: sort === 'acos' ? order : null,
       children: [
         {
-          title: dataTotal.acos,
+          title: numberToPercent(dataTotal.acos),
           dataIndex: 'acos',
           width: 80,
           align: 'center',
+          render: (value: number) => numberToPercent(value),
         },
       ] as any,
     }, {
@@ -630,10 +635,11 @@ const Group: React.FC = function() {
       sortOrder: sort === 'roas' ? order : null,
       children: [
         {
-          title: dataTotal.roas,
+          title: dataTotal.roas ? dataTotal.roas.toFixed(2) : '—',
           dataIndex: 'roas',
           align: 'center',
           width: 80,
+          render: (value: number) => value ? value.toFixed(2) : '—',
         },
       ] as any,
     }, {
@@ -676,10 +682,11 @@ const Group: React.FC = function() {
       sortOrder: sort === 'ctr' ? order : null,
       children: [
         {
-          title: dataTotal.ctr,
+          title: numberToPercent(dataTotal.ctr),
           dataIndex: 'ctr',
           width: 80,
           align: 'center',
+          render: (value: number) => numberToPercent(value),
         },
       ] as any,
     }, {
@@ -691,10 +698,11 @@ const Group: React.FC = function() {
       sortOrder: sort === 'conversionsRate' ? order : null,
       children: [
         {
-          title: dataTotal.conversionsRate,
+          title: numberToPercent(dataTotal.conversionsRate),
           dataIndex: 'conversionsRate',
           width: 80,
           align: 'center',
+          render: (value: number) => numberToPercent(value),
         },
       ] as any,
     }, {
@@ -707,7 +715,21 @@ const Group: React.FC = function() {
           render: (_: string, record: API.IAdGroup) => (
             <>
               <Button disabled={isArchived(record.state)} type="link" className={commonStyles.tableOperationBtn}>
-                定时
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={
+                    getAssignUrl({
+                      baseUrl: '/ppc/manage/group/time',
+                      campaignType: record.camType,
+                      campaignState: record.camState,
+                      campaignId: record.camId,
+                      campaignName: record.camName,
+                      groupId: record.id,
+                      groupName: record.name,
+                    })
+                  }
+                >定时</a>
               </Button>
               <Button
                 type="link"
@@ -737,13 +759,17 @@ const Group: React.FC = function() {
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href={`/ppc/manage/group/target?
-                  groupId=${record.id}
-                  &groupName=${record.name}
-                  &campaignId=${record.camId}
-                  &campaignName=${record.camName}
-                  &campaignType=${record.camType}
-                  &campaignState=${record.camState}`}
+                  href={
+                    getAssignUrl({
+                      baseUrl: '/ppc/manage/group/target',
+                      campaignType: record.camType,
+                      campaignState: record.camState,
+                      campaignId: record.camId,
+                      campaignName: record.camName,
+                      groupId: record.id,
+                      groupName: record.name,
+                    })
+                  }
                 >target设置</a>
               </Button>
             </>

@@ -7,7 +7,14 @@ import { Button, Table, Switch, message, Dropdown, Checkbox, Row, Col } from 'an
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import DateRangePicker from '../components/DateRangePicker';
-import { getPageQuery, getShowPrice, Iconfont, requestErrorFeedback, storage } from '@/utils/utils';
+import {
+  getPageQuery,
+  getShowPrice,
+  Iconfont,
+  numberToPercent,
+  requestErrorFeedback,
+  storage,
+} from '@/utils/utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
@@ -261,12 +268,13 @@ const AutoGroupTarget: React.FC = function() {
       dataIndex: 'acos',
       align: 'center',
       width: 50,
-      render: value => <>{value}%</>,
+      render: value => numberToPercent(value),
     }, {
       title: 'RoAS',
       dataIndex: 'roas',
       align: 'center',
       width: 60,
+      render: value => value ? value.toFixed(2) : '—',
     }, {
       title: 'Impressions',
       dataIndex: 'impressions',
@@ -282,13 +290,13 @@ const AutoGroupTarget: React.FC = function() {
       dataIndex: 'ctr',
       align: 'center',
       width: 60,
-      render: value => <>{value}%</>,
+      render: value => numberToPercent(value),
     }, {
       title: '转化率',
       dataIndex: 'conversionsRate',
       align: 'center',
       width: 60,
-      render: value => <>{value}%</>,
+      render: value => numberToPercent(value),
     },
   ];
 

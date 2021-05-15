@@ -426,6 +426,7 @@ const GlobalModel: IGlobalModelType = {
           '/competitor/history',
           '/competitor/list',
           '/ppc/manage/group/target',
+          '/ppc/manage/group/timer',
           ruleAddRouter,
           ruleAddSalesRouter,
           ruleAddCartRouter,
@@ -449,6 +450,7 @@ const GlobalModel: IGlobalModelType = {
           '/shop/bind',
           '/ppc/manage',
           '/ppc/manage/group/target',
+          '/ppc/manage/group/timer',
           // 因 bs导入 页面标题需要特殊的样式
           '/report/import',
           '/competitor/list',
