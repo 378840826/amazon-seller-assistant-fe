@@ -1,0 +1,156 @@
+.box {
+  background-color: #fff;
+
+  :global {
+    tr:hover {
+      .h-async-default-icon {
+        opacity: 1 !important;
+      }
+    }
+  }
+}
+
+.topHead {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px 20px 0;
+  border-bottom: 1px solid @divider-line-color;
+
+  :global(.ant-form-item) {
+    margin-bottom: 0 !important;
+  }
+
+  :global(.ant-select-selection-item) {
+    padding-right: 15px !important;
+  }
+}
+
+.searchBox {
+  flex: 0 0 auto;
+}
+
+.search {
+  width: auto !important;
+
+  .searchList {
+    width: 120px;
+    height: 30px;
+    margin: -3px 0 !important;
+    background-color: #fff;
+    border: 1px solid @border-color-base;
+    border-right: 0;
+    border-radius: @border-radius-base 0 0 @border-radius-base;
+
+    :global(.ant-select-selector) {
+      height: 28px !important;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .list {
+      width: 100%;
+    }
+  }
+}
+
+.site {
+  width: 100px;
+  flex: 0 0 auto;
+  margin: 0 20px !important;
+}
+
+.shopName {
+  width: 280px;
+}
+
+.state {
+  width: 165px;
+  margin: 0 20px;
+}
+
+.handle {
+  width: 104px;
+  margin: 0 20px 15px 0 !important;
+  padding-bottom: 15px;
+}
+
+.navHead {
+  display: flex;
+  margin: 15px 20px;
+
+  .addBtn {
+    margin-right: 20px;
+  }
+}
+
+.table {
+  margin: 0 20px;
+
+  :global(.ant-table-body) {
+    border: 1px solid @divider-line-color !important;
+    overflow-y: auto !important;
+  }
+
+  :global(.ant-pagination-options-size-changer) {
+    margin-right: 0 !important;
+  }
+
+  tr:last-child td {
+    border-bottom: 0 !important;
+  }
+}
+
+.queryNumberCol {
+  color: @error-color;
+}
+
+th.handleCol {
+  padding-left: 10px !important;
+}
+
+td.handleCol {
+  padding-right: 0 !important;
+  padding-left: 10px !important;
+}
+
+div.handleCol {
+  text-align: left;
+  display: flex;
+
+  span {
+    min-width: 25px;
+    color: @btn-text-color;
+    transition: all 0.3s;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  > div:nth-child(2) {
+    margin-left: 20px;
+    padding-right: 10px;
+  }
+}
+
+.cencalModal {
+  color: red;
+
+  :global(.ant-popover-message-title) {
+    color: @heading-color;
+    font-size: @font-size-lg;
+  }
+
+  :global(.ant-popover-buttons) {
+    text-align: center;
+
+    button {
+      min-width: 82px;
+      height: 30px;
+      line-height: 30px;
+      margin: 0 8px;
+    }
+  }
+}

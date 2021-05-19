@@ -1,0 +1,81 @@
+.box {
+  :global {
+    .ant-modal-header {
+      border-bottom: 0;
+      padding: 16px 20px 0;
+    }
+
+    .ant-modal-title {
+      font-weight: bold;
+    }
+
+    .ant-modal-body {
+      text-align: left;
+      padding: 20px 20px 0;
+    }
+
+    .ant-modal-footer {
+      text-align: center;
+      border-top: 0;
+      padding-bottom: 20px;
+
+      button {
+        margin: 0 8px;
+      }
+    }
+  }
+}
+
+.title {
+  color: @text-color-secondary;
+  margin-bottom: 30px;
+
+  p {
+    line-height: 24px;
+  }
+}
+
+.shops {
+  display: grid;
+  grid-template-columns: repeat(3, 230px);
+  grid-column-gap: 15px;
+  max-height: 292px;
+  overflow-y: auto;
+  grid-row-gap: 7px;
+  margin-bottom: 35px;
+
+  :global {
+    .ant-checkbox-group-item {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.form {
+  margin-top: 30px;
+
+  input {
+    width: 100px;
+    text-align: center;
+    margin: 0 10px;
+  }
+
+  :global {
+    .ant-form-item {
+      margin-right: 0;
+    }
+  }
+
+  .leftLayout {
+    width: 318px;
+  }
+
+  .oneLoneLayout,
+  .teoLineLayout {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+}

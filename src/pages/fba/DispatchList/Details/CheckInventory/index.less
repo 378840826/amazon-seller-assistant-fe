@@ -1,0 +1,95 @@
+.topHead {
+  display: flex;
+  justify-content: space-between;
+  margin: 18px 0 10px;
+  align-items: center;
+
+  strong {
+    color: #444;
+    font-size: @font-size-lg;
+  }
+}
+
+.table {
+  :global(.ant-table-column-sorters) {
+    padding: 0 !important;
+  }
+
+  :global(.ant-table-body) {
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+    overflow-y: auto !important;
+  }
+
+  tr:last-child td {
+    border-bottom: 0 !important;
+  }
+
+  tr:hover td {
+    background-color: @simple-table-header-bg !important;
+  }
+
+  th {
+    height: 44px;
+    line-height: 44px;
+    background-color: #f3f3f3 !important;
+  }
+
+  th,
+  td {
+    padding: 0 !important;
+  }
+}
+
+div.productCol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 50px 6px 0;
+  text-align: left;
+
+  .details {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title {
+    width: 255px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .linkIcon {
+    color: @text-color-secondary;
+    transition: all 0.3s;
+    padding-right: 2px;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .asin {
+    width: 85px;
+    flex: 0 0 auto;
+    color: @btn-text-color;
+  }
+
+  .sku {
+    width: 160px;
+    flex: 0 0 auto;
+    white-space: pre-wrap;
+    word-break: initial;
+    line-height: 14px;
+  }
+
+  &:hover {
+    .linkIcon {
+      color: @link-color;
+    }
+  }
+}

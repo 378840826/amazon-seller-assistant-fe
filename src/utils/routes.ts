@@ -48,3 +48,26 @@ export const setCompetingGoodsRouter = '/product/cp'; // 商品ID
 
 // 商品列表
 export const productListRouter = '/product/list';
+
+
+// 商品
+export const product = {
+  list: '/product/list', // 商品列表,
+  skuData: '/product/sku', // SKU资料管理
+};
+
+
+// FBA 
+export const fba = {
+  planList: '/fba/plan-list', // 货件计划列表
+  shipment: '/fba/shipment', // shipment
+  dispatchList: '/fba/dispatch-list', // 发货单
+};
+
+
+// 配置
+export const configuration = {
+  logistics: '/config/wuliu', // 物流方式管理
+  storageLocation: '/config/kuwei', // 库位管理
+  warehouse: '/config/warehouse', // 仓库地址管理
+};

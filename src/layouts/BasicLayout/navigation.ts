@@ -9,6 +9,9 @@ import {
   ruleAddCompetitorRouter,
   ruleHistoryRouter,
   report,
+  fba,
+  configuration,
+  product,
 } from '@/utils/routes';
 export interface IMenu {
   title: string;
@@ -44,6 +47,7 @@ const navigation: INavigation[] = [
       { title: '', path: '/asin/ppc', hide: true },
       { title: '', path: '/asin/territory', hide: true },
       { title: '', path: '/asin/return', hide: true },
+      { title: 'SKU资料管理', path: product.skuData },
     ],
   },
   {
@@ -80,9 +84,12 @@ const navigation: INavigation[] = [
     ],
   },
   {
-    title: '补货',
+    title: 'FBA',
     menu: [
-      { title: '补货建议', path: '/replenishment' },
+      { title: '补货计划', path: '/fba/replenishment' },
+      { title: '货件计划', path: fba.planList },
+      { title: 'Shipment', path: fba.shipment },
+      { title: '发货单', path: fba.dispatchList },
     ],
   },
   // {
@@ -132,6 +139,14 @@ const navigation: INavigation[] = [
     menu: [
       { title: '已绑定店铺', path: '/shop/list' },
       { title: '绑定店铺', path: '/shop/bind' },
+    ],
+  },
+  {
+    title: '配置',
+    menu: [
+      { title: '仓库地址', path: configuration.warehouse },
+      { title: '物流方式', path: configuration.logistics },
+      { title: '库位管理', path: configuration.storageLocation },
     ],
   },
 ];
