@@ -90,4 +90,6 @@ export interface INegativeKeyword {
   bid?: number;
   /** 临时的 id ，用于判断唯一性 */
   id?: string;
+  /** 添加否定关键词时，返回的错误信息 */
+  failMsg?: string;
 }

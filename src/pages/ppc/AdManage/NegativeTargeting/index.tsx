@@ -112,7 +112,7 @@ const NegativeTargeting: React.FC = function() {
     },
   ];
 
-  // 表格参数变化（翻页和排序变化）
+  // 表格参数变化
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleTableChange (pagination: any) {
     const { current, pageSize: size } = pagination;

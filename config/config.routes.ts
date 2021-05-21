@@ -216,10 +216,6 @@ export default [
       { title: '广告管理', path: '/ppc/manage', component: './ppc/AdManage' },
       { title: '广告管理', path: '/ppc/manage/group/target', component: './ppc/AdManage/AutoGroupTarget' },
       { title: '广告管理', path: '/ppc/manage/group/time', component: './ppc/AdManage/GroupTime' },
-      { title: '广告组', path: '/ppc/group', component: './UncompletedPage' },
-      { title: '广告', path: '/ppc/product', component: './UncompletedPage' },
-      { title: 'Targeting', path: '/ppc/targeting', component: './UncompletedPage' },
-      { title: 'search term 报表', path: '/ppc/search-report', component: './UncompletedPage' },
       { title: '广告店铺授权', path: '/ppc/shop/list', component: './UncompletedPage' },
       // 以下为重定向路由
       { path: '/ppc', redirect: '/ppc/manage' },

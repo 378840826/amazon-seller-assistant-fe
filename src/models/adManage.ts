@@ -58,7 +58,7 @@ import {
   queryNegativeKeywordList,
   batchNegativeKeywordArchive,
   querySuggestedNegativeKeywords,
-  createNegativeKeyword,
+  createNegativeKeywords,
   // SearchTerm报表
   querySearchTermList,
   queryQueryKeywordSuggestedBid,
@@ -66,7 +66,6 @@ import {
   queryUsablePutGroupList,
   createKeywords,
   queryUsableNegateGroupList,
-  createNegateKeywords,
   getKeywordTextAssociate,
   getQueryKeywordAssociate,
   // 操作记录
@@ -1364,7 +1363,7 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // 否定Targeting-添加
-    *addNegativeTargeting({ payload, callback }, { call, put }) {
+    *addNegativeTargeting({ payload, callback }, { call, put, select }) {
       const res = yield call(createNegativeTargeting, payload);
       if (res.code === 200) {
         // 刷新列表
@@ -1373,11 +1372,15 @@ const AdManageModel: IAdManageModelType = {
           payload: { headersParams: payload.headersParams },
         });
         // 刷新标签页数量
+        const treeSelectedInfo = yield select(
+          (state: IConnectState) => state.adManage.treeSelectedInfo
+        );
         yield put({
           type: 'fetchTabsCellCount',
           payload: {
             headersParams: payload.headersParams,
-            groupId: payload.groupId,
+            campaignId: treeSelectedInfo.campaignId,
+            groupId: treeSelectedInfo.groupId,
           },
         });
       }
@@ -1441,8 +1444,8 @@ const AdManageModel: IAdManageModelType = {
 
     // 否定关键词-添加
     *addNegativeKeyword({ payload, callback }, { call }) {
-      const res = yield call(createNegativeKeyword, payload);
-      callback && callback(res.code, res.message);
+      const res = yield call(createNegativeKeywords, payload);
+      callback && callback(res.code, res.message, res.data);
     },
 
     // SearchTerm报表
@@ -1557,7 +1560,7 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // SearchTerm报表-投放关键词(关键词为 SearchTerm 的搜索词)
-    *putQueryKeywords({ payload, callback }, { call, put }) {
+    *putQueryKeywords({ payload, callback }, { call, put, select }) {
       const res = yield call(createKeywords, payload);
       let code = res.code;
       let message = res.message;
@@ -1596,20 +1599,32 @@ const AdManageModel: IAdManageModelType = {
           type: 'saveSearchTermPutKeywords',
           payload: newPutKeywords,
         });
+        // 刷新标签页数量
+        const treeSelectedInfo = yield select(
+          (state: IConnectState) => state.adManage.treeSelectedInfo
+        );
+        yield put({
+          type: 'fetchTabsCellCount',
+          payload: {
+            headersParams: payload.headersParams,
+            campaignId: treeSelectedInfo.campaignId,
+            groupId: treeSelectedInfo.groupId,
+          },
+        });
       }
       callback && callback(code, message);
     },
 
-    // SearchTerm报表-否定搜索词投放
+    // SearchTerm报表-否定搜索词投放（同时支持广告活动和广告组，搜索词是asin的也算关键词）
     *putNegateQueryKeywords({ payload, callback }, { call, put }) {
-      const res = yield call(createNegateKeywords, payload);
+      const res = yield call(createNegativeKeywords, payload);
       let code = res.code;
       let message = res.message;
       if (res.code === 200) {
-        const { neKeywords } = payload;
+        const { negativeKeywords } = payload;
         const { data: resData } = res;
         const newPutKeywords: IPutKeyword[] = [];
-        neKeywords.forEach((payloadItem: IPutKeyword) => {
+        negativeKeywords.forEach((payloadItem: IPutKeyword) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           resData.forEach((resItem: any) => {
             if (
@@ -1628,7 +1643,7 @@ const AdManageModel: IAdManageModelType = {
         if (newPutKeywords.length === 0) {
           code = 200;
           message = '投放成功';
-        } else if (newPutKeywords.length === payload.neKeywords.length) {
+        } else if (newPutKeywords.length === payload.negativeKeywords.length) {
           code = 400;
           message = '投放失败';
         } else {
@@ -2087,6 +2102,7 @@ const AdManageModel: IAdManageModelType = {
           groupId: item.groupId,
           groupName: item.groupName,
           matchType: 'negativeExact',
+          queryKeywordType: item.queryKeywordType,
           /** 否定列表的关键词等于 searchTerm 列表的搜索词 */
           keywordText: item.queryKeyword,
         });

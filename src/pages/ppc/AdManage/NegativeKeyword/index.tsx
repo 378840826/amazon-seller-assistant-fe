@@ -359,15 +359,21 @@ const NegativeKeyword: React.FC = function() {
       type: 'adManage/addNegativeKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
-        negativeKeywords: selectedKeywordsList.map(
-          kw => ({ ...kw, matchType: negativeMatchTypeMap[kw.matchType as string] })
-        ),
-        campaignId: addState.campaignId,
-        groupId: addState.groupId,
-        type,
+        negativeKeywords: selectedKeywordsList.map(kw => ({
+          camId: addState.campaignId,
+          groupId: addState.groupId,
+          keywordText: kw.keywordText,
+          matchType: negativeMatchTypeMap[kw.matchType as string],
+        })),
       },
-      callback: (code: number, msg: string) => {
+      callback: (code: number, msg: string, data: INegativeKeyword[]) => {
+        const errKw: INegativeKeyword[] = [];
+        data.forEach(kw => kw.failMsg && errKw.push(kw));
         requestFeedback(code, msg);
+        if (errKw.length) {
+          message.warn('部分否定关键词添加失败！');
+          return;
+        }
         if (code === 200) {
           setTimeout(() => {
             const params = {

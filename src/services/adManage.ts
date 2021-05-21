@@ -430,16 +430,9 @@ export async function querySuggestedNegativeKeywords(params: API.IParams) {
   });
 }
 
-// 否定关键词-添加
-export async function createNegativeKeyword(params: API.IParams) {
-  // 区分广告活动的否定关键词和关键词广告组的否定关键词
-  let url = '';
-  if (params.type === 'campaign') {
-    url = '/api/gd/management/campaign/ne-keyword/add';
-  } else if (params.type === 'group') {
-    url = '/api/gd/management/st/add/ne-keyword';
-  }
-  return request(url, {
+// 否定关键词-添加（同时支持广告活动和广告组，st搜索词是asin的也算关键词）
+export async function createNegativeKeywords(params: API.IParams) {
+  return request('/api/gd/management/st/add/ne-keyword', {
     method: 'POST',
     data: params,
   });
@@ -496,14 +489,6 @@ export async function queryUsableNegateGroupList(params: API.IParams) {
 // SearchTerm报表-投放搜索词为关键词
 export async function createKeywords(params: API.IParams) {
   return request('/api/gd/management/st/add/keyword', {
-    method: 'POST',
-    data: params,
-  });
-}
-
-// SearchTerm报表-投放搜索词为否定关键词(或否定asin)
-export async function createNegateKeywords(params: API.IParams) {
-  return request('/api/gd/management/st/add/ne-keyword', {
     method: 'POST',
     data: params,
   });

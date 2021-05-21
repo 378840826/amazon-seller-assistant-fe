@@ -1365,6 +1365,7 @@ const Keyword: React.FC = function() {
     },
     handleDelete: (key: string) => {
       const newFiltrateParams = { ...filtrateParams };
+      newFiltrateParams[key] = undefined;
       newFiltrateParams[`${key}Min`] = undefined;
       newFiltrateParams[`${key}Max`] = undefined;
       dispatch({

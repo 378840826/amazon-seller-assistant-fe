@@ -181,12 +181,12 @@ export default {
           total: {
             impressions: 999999,
             clicks: 999999,
-            spend: 999999,
+            spend: 999,
             acos: 300,
             roas: 999999,
             ctr: 400,
-            cpc: 999999,
-            cpa: 999999,
+            cpc: 9999,
+            cpa: 999,
             sales: 999999,
             orderNum: 999999,
             conversionsRate: 100,
@@ -308,17 +308,17 @@ export default {
             records,
           },
           total: {
-            impressions: 899999,
-            clicks: 899999,
-            spend: 999999,
-            acos: 999999,
+            impressions: 999999,
+            clicks: 999999,
+            spend: 999,
+            acos: 300,
             roas: 999999,
-            ctr: 999999,
-            cpc: 999999,
-            cpa: 999999,
+            ctr: 400,
+            cpc: 9999,
+            cpa: 999,
             sales: 999999,
             orderNum: 999999,
-            conversionsRate: 999999,
+            conversionsRate: 100,
           },
         },
       });
@@ -433,7 +433,23 @@ export default {
     }, 200);
   },
 
-  
+  // 广告组-添加否定关键词
+  'POST /api/gd/management/st/add/ne-keyword': (req: Request, res: Response) => {
+    const { body: { negativeKeywords } } = req;
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: negativeKeywords.map((item: INegateKeyword) => {
+          return {
+            ...item,
+            state: Math.random() > 0.5 ? 'fail' : 'success',
+            failMsg: item.groupId ? '否定关键词已存在！' : '广告组不能为空!',
+          };
+        }),
+      });
+    }, 500);
+  },
+
   // 广告组-获取定时设置
   'GET /api/gd/management/group/timing': (_: Request, res: Response) => {
     setTimeout(() => {
@@ -524,17 +540,17 @@ export default {
             records,
           },
           total: {
-            impressions: 899999,
-            clicks: 899999,
-            spend: 999999,
-            acos: 999999,
+            impressions: 999999,
+            clicks: 999999,
+            spend: 999,
+            acos: 300,
             roas: 999999,
-            ctr: 999999,
-            cpc: 999999,
-            cpa: 999999,
+            ctr: 400,
+            cpc: 9999,
+            cpa: 999,
             sales: 999999,
             orderNum: 999999,
-            conversionsRate: 999999,
+            conversionsRate: 100,
           },
         },
       });
@@ -734,17 +750,17 @@ export default {
             records,
           },
           total: {
-            impressions: 899999,
-            clicks: 899999,
-            spend: 999999,
-            acos: 999999,
+            impressions: 999999,
+            clicks: 999999,
+            spend: 999,
+            acos: 300,
             roas: 999999,
-            ctr: 999999,
-            cpc: 999999,
-            cpa: 999999,
+            ctr: 400,
+            cpc: 9999,
+            cpa: 999,
             sales: 999999,
             orderNum: 999999,
-            conversionsRate: 999999,
+            conversionsRate: 100,
           },
         },
       });
@@ -858,17 +874,17 @@ export default {
             records,
           },
           total: {
-            impressions: 899999,
-            clicks: 899999,
-            spend: 999999,
-            acos: 999999,
+            impressions: 999999,
+            clicks: 999999,
+            spend: 999,
+            acos: 300,
             roas: 999999,
-            ctr: 999999,
-            cpc: 999999,
-            cpa: 999999,
+            ctr: 400,
+            cpc: 9999,
+            cpa: 999,
             sales: 999999,
             orderNum: 999999,
-            conversionsRate: 999999,
+            conversionsRate: 100,
           },
         },
       });
@@ -1119,15 +1135,15 @@ export default {
     }, 500);
   },
 
-  // 否定关键词-广告活动的-添加
-  'POST /api/gd/management/campaign/ne-keyword/add': (_: Request, res: Response) => {
-    setTimeout(() => {
-      res.send({
-        code: 200,
-        message: '成功',
-      });
-    }, 500);
-  },
+  // // 否定关键词-广告活动的-添加
+  // 'POST /api/gd/management/campaign/ne-keyword/add': (_: Request, res: Response) => {
+  //   setTimeout(() => {
+  //     res.send({
+  //       code: 200,
+  //       message: '成功',
+  //     });
+  //   }, 500);
+  // },
 
   // 否定关键词-广告活动的-建议关键词
   'GET /api/gd/management/campaign/suggested-negativeKeyword/list': (_: Request, res: Response) => {
@@ -1227,16 +1243,6 @@ export default {
     }, 0);
   },
 
-  // // 否定关键词-广告组的-添加 （用SearchTerm报表的添加）
-  // 'POST /api/gd/management/group/ne-keyword/add': (_: Request, res: Response) => {
-  //   setTimeout(() => {
-  //     res.send({
-  //       code: 200,
-  //       message: '成功',
-  //     });
-  //   }, 500);
-  // },
-
   // SearchTerm报表
   // SearchTerm报表-列表
   'POST /api/gd/management/st/list': (_: Request, res: Response) => {
@@ -1301,17 +1307,17 @@ export default {
             records,
           },
           total: {
-            impressions: 899999,
-            clicks: 899999,
-            spend: 999999,
-            acos: 999999,
+            impressions: 999999,
+            clicks: 999999,
+            spend: 999,
+            acos: 300,
             roas: 999999,
-            ctr: 999999,
-            cpc: 999999,
-            cpa: 999999,
+            ctr: 400,
+            cpc: 9999,
+            cpa: 999,
             sales: 999999,
             orderNum: 999999,
-            conversionsRate: 999999,
+            conversionsRate: 100,
           },
         },
       });
@@ -1398,23 +1404,6 @@ export default {
             ...item,
             state: Math.random() > 0.5 ? 'fail' : 'success',
             failMsg: item.groupId ? '关键词已存在！' : '广告组不能为空!',
-          };
-        }),
-      });
-    }, 500);
-  },
-
-  // SearchTerm报表-投放搜索词为否定关键词
-  'POST /api/gd/management/st/add/ne-keyword': (req: Request, res: Response) => {
-    const { body: { neKeywords } } = req;
-    setTimeout(() => {
-      res.send({
-        code: 200,
-        data: neKeywords.map((item: INegateKeyword) => {
-          return {
-            ...item,
-            state: Math.random() > 0.5 ? 'fail' : 'success',
-            failMsg: item.groupId ? '否定关键词已存在！' : '广告组不能为空!',
           };
         }),
       });

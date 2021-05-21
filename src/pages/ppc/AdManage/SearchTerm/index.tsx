@@ -40,7 +40,7 @@ import styles from './index.less';
 const { Search } = Input;
 const { Option } = Select;
 
-// 否定弹窗的关键词信息
+// 否定弹窗的关键词信息(可能包含 asin targeting)
 export interface INegateKeyword {
   /** 此 id 为 searchTerm 列表(IAdSearchTerm)中的 id，用于查找 */
   id: API.IAdSearchTerm['id'];
@@ -54,6 +54,8 @@ export interface INegateKeyword {
   successMsg?: string;
   /* 投放列表的关键词等于 searchTerm 列表的搜索词 */
   keywordText: API.IAdSearchTerm['queryKeyword'];
+  /** 是不是 asin targeting */
+  queryKeywordType?: boolean;
 }
 
 // 投放弹窗的关键词信息
@@ -513,14 +515,14 @@ const SearchTerm: React.FC = function() {
     });
   }
 
-  // 否定关键词
+  // 投放否定关键词，如果不传参，则投放全部已选的
   function handleNegate(keywords?: INegateKeyword[]) {
-    const neKeywords = keywords || negateKeywords;
+    const negativeKeywords = keywords || negateKeywords;
     dispatch({
       type: 'adManage/putNegateQueryKeywords',
       payload: {
         headersParams: { StoreId: currentShopId },
-        negativeKeywords: neKeywords,
+        negativeKeywords,
       },
       callback: requestFeedback,
     });
@@ -1249,6 +1251,7 @@ const SearchTerm: React.FC = function() {
     },
     handleDelete: (key: string) => {
       const newFiltrateParams = { ...filtrateParams };
+      newFiltrateParams[key] = undefined;
       newFiltrateParams[`${key}Min`] = undefined;
       newFiltrateParams[`${key}Max`] = undefined;
       dispatch({
