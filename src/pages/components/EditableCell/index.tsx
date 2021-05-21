@@ -6,7 +6,9 @@ import styles from './index.less';
 
 interface IProps {
   inputValue: string;
+  // 前缀和后缀
   prefix?: React.ReactNode | string;
+  suffix?: React.ReactNode | string;
   // 输入框输入内容约束
   formatValueFun?: (value: string) => string;
   maxLength: number;
@@ -18,7 +20,9 @@ interface IProps {
 }
 
 const EditableCell: React.FC<IProps> = (props) => {
-  const { inputValue, prefix, confirmCallback, maxLength, formatValueFun, ghostEditBtn } = props;
+  const { 
+    inputValue, prefix, suffix, confirmCallback, maxLength, formatValueFun, ghostEditBtn,
+  } = props;
   const [value, setValue] = useState<string>(inputValue);
   const [editable, setEditable] = useState<boolean>(false);
   const inputEl = useRef<Input>(null);
@@ -61,6 +65,7 @@ const EditableCell: React.FC<IProps> = (props) => {
       <div className={styles.editableContainer}>
         <Input
           prefix={prefix}
+          suffix={suffix}
           ref={inputEl}
           maxLength={maxLength}
           className={styles.Input}
@@ -94,7 +99,7 @@ const EditableCell: React.FC<IProps> = (props) => {
       : 
       <div className={styles.cell} onClick={handelClickEdit} title="点击修改">
         <div className={styles.cellValue}>
-          {prefix}{inputValue}
+          {prefix}{inputValue}{suffix}
         </div>
         <Iconfont
           className={classnames(styles.editableBtn, ghostEditBtn ? styles.ghostEditBtn : '')}

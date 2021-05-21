@@ -1,0 +1,227 @@
+.disabled {
+  pointer-events: none;
+  color: @text-color-disabled;
+}
+
+.Modal {
+  .leftContainer {
+    :global {
+      .ant-tabs {
+        position: relative;
+
+        .ant-tabs-nav {
+          margin-bottom: 0;
+        }
+
+        .ant-tabs-tab {
+          padding: 7px 0;
+        }
+
+        // 下一级的 Tabs
+        .ant-tabs {
+          .ant-tabs-nav {
+            margin-bottom: -10px;
+
+            &::before {
+              opacity: 0;
+            }
+          }
+
+          .ant-tabs-ink-bar {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .path {
+    color: @text-color-secondary;
+  }
+
+  .Dropdown {
+    margin-left: 12px;
+    height: 20px;
+  }
+
+  .btnActive {
+    color: @btn-text-color;
+  }
+
+  // 商品信息
+  .goodsInfoContainer {
+    display: flex;
+    align-items: center;
+    text-align: left;
+
+    & > * {
+      line-height: 14px;
+    }
+  }
+
+  .goodsInfoContent {
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    margin-left: 10px;
+  }
+
+  .goodsTitle {
+    &:hover > span {
+      color: @link-color;
+    }
+  }
+
+  .goodsInfoLine {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 0;
+
+    .asin {
+      width: 90px;
+      color: @btn-text-color;
+    }
+
+    .review {
+      width: 80px;
+    }
+
+    .reviewScore {
+      color: #ff9200;
+    }
+
+    .reviewCount {
+      color: @text-color-secondary;
+    }
+
+    .price {
+      display: inline-block;
+      color: @error-color;
+      text-align: right;
+    }
+  }
+
+  .suggestedTable {
+    width: 420px;
+    height: 405px;
+  }
+
+  .selectAllBtn {
+    position: absolute;
+    top: 6px;
+    right: 2px;
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+
+    &[disabled] {
+      color: rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .selectedTable {
+    width: 650px;
+  }
+
+  .addToolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .batchToolbar {
+    & > * {
+      margin-right: 10px;
+    }
+
+    &.disabled button {
+      pointer-events: none;
+      color: @text-color-disabled;
+    }
+  }
+
+  .tableContent:last-child {
+    margin-top: 54px;
+  }
+
+  .selectItemBtn {
+    margin: 0;
+    padding: 0;
+    height: 22px;
+    line-height: 22px;
+  }
+
+  .addTextArea {
+    margin: 10px 0;
+    width: 420px;
+    height: 355px;
+    resize: none;
+  }
+
+  .textAreaBtnContainer {
+    text-align: center;
+  }
+}
+
+// 细化
+.detailSetForm {
+  padding: 20px 80px 20px 20px;
+  background: #fff;
+  box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+
+  :global {
+    .ant-form-item-label {
+      width: 100px;
+    }
+
+    .ant-form-item-control {
+      width: 280px;
+    }
+  }
+
+  .detailSetSelect {
+    width: 280px;
+
+    :global(.ant-select-selector) {
+      max-height: 156px;
+      overflow: auto;
+    }
+  }
+
+  .FormRangeItem {
+    display: inline-block;
+    margin: 0;
+
+    input {
+      width: 100px;
+      text-align: center;
+    }
+  }
+
+  .rangeHyphen {
+    margin: 0 6px;
+    color: @border-color-base;
+    line-height: 30px;
+  }
+
+  .reviewScoreSelect {
+    position: relative;
+    display: block;
+
+    .reviewScoreTips {
+      position: absolute;
+      right: -50px;
+      top: 4px;
+    }
+  }
+
+  .btns {
+    text-align: center;
+
+    button {
+      margin: 0 5px;
+    }
+  }
+}

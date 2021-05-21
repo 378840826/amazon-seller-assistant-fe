@@ -1,0 +1,56 @@
+.page {
+  position: relative;
+  margin-top: 44px;
+  padding: 10px 20px 20px 20px;
+  background: #fff;
+
+  .crumbs {
+    position: absolute;
+    top: -32px;
+    left: 0;
+  }
+
+  .tableToolBar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+
+    & > *:first-child {
+      margin-right: 20px;
+    }
+  }
+
+  .separator {
+    font-size: 10px;
+    color: #ccc;
+    transform: rotate(-90deg);
+    margin: 0 6px;
+  }
+
+  .Switch {
+    transform: scale(0.818);
+  }
+
+  :global {
+    .ant-table .ant-table-tbody > tr > td {
+      padding: 12px 8px;
+    }
+
+    .ant-table-container {
+      // 表格外边框
+      border: 1px solid @divider-line-color;
+    }
+  }
+}
+
+.customColumnContainer {
+  background-color: #fff;
+  padding: 8px 20px;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+
+  :global {
+    .ant-checkbox {
+      transform: scale(0.875);
+    }
+  }
+}

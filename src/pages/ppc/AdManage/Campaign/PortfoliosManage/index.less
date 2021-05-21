@@ -1,0 +1,38 @@
+.menuDropdown {
+  width: 260px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+  border-radius: 4px;
+
+  & > div {
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  .editCellContainer {
+    margin-top: 10px;
+  }
+
+  :global {
+    .ant-btn {
+      min-width: 46px;
+      width: 46px;
+      padding: 0;
+    }
+  }
+}
+
+.active {
+  color: @primary-color;
+
+  &.btn {
+    border-color: @primary-color;
+  }
+}
+
+button.btn {
+  min-width: 52px;
+  padding: 0;
+  border-radius: 0 @border-radius-base @border-radius-base 0;
+}
