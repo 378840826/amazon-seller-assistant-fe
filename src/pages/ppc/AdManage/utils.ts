@@ -1,8 +1,13 @@
+/* eslint-disable new-cap */
 import { ColumnProps } from 'antd/es/table';
 import { message } from 'antd';
-import { getDateCycleParam, getShowPrice } from '@/utils/utils';
+import moment, { Moment } from 'moment';
+import { getDateCycleParam, getShowPrice, toThousands, numberToPercent } from '@/utils/utils';
 import { add, divide, minus, times } from '@/utils/precisionNumber';
 import { ICategoryTargeting, IComputedBidParams, IGoodsTargeting, IKeyword, INegativeKeyword } from './index.d';
+import { Order } from '@/models/adManage';
+import React from 'react';
+import Rate from '@/components/Rate';
 
 // 判断是否归档状态
 export const isArchived: (state: string) => boolean = (state: string) => state === 'archived';
@@ -27,6 +32,7 @@ export function getAssignUrl(params: {
   tab?: 'campaign' | 'group' | 'ad' | 'keyword' | 'targeting'| 'negativeKeyword' | 'negativeTargeting' | 'searchTerm' | 'history';
   // 跳转广告组时，区分关键词广告组和商品/分类广告组，以此来确定 targeting 标签是“关键词”还是“分类/商品投放”(否定targeting同理)
   groupType?: API.GroupType;
+  targetingType?: API.CamTargetType;
 }) {
   const {
     baseUrl,
@@ -38,9 +44,10 @@ export function getAssignUrl(params: {
     groupName,
     tab,
     groupType,
+    targetingType,
   } = params;
   // eslint-disable-next-line max-len
-  let url = `${baseUrl || '/ppc/manage'}?campaignType=${campaignType}&campaignState=${campaignState}&campaignId=${campaignId}&campaignName=${campaignName}`;
+  let url = `${baseUrl || '/ppc/manage'}?campaignType=${'sp' || campaignType}&campaignState=${campaignState}&campaignId=${campaignId}&campaignName=${campaignName}&targetingType=${targetingType || ''}`;
   if (groupId && groupName) {
     url = `${url}&groupId=${groupId}&groupName=${groupName}${groupType ? `&groupType=${groupType}` : '' }`;
   }
@@ -149,6 +156,9 @@ function getComputedBid(params: IComputedBidParams, record: API.IAdTargeting) {
   };
   // 建议竞价/最高/最低建议竞价
   const baseValue = record[type];
+  if (baseValue === null || baseValue === undefined || baseValue === '') {
+    return null;
+  }
   if (unit === 'percent') {
     result = opDict[operator](baseValue, times(baseValue, divide(exprValue, 100)));
   } else if (unit === 'currency') {
@@ -198,6 +208,10 @@ export function getBidExprVlaue(
         unit,
         exprValue,
       }, record);
+      if (bid === null) {
+        message.error('操作失败，建议竞价不正确！');
+        return;
+      }
       if (bid < minValue) {
         message.error(`竞价不能低于${minValue}`);
         return;
@@ -209,4 +223,322 @@ export function getBidExprVlaue(
     }
   }
   return data;
+}
+
+/**
+ * 判断广告组是否支持添加关键词/targeting
+ * @param targetingType 广告活动targeting类型，为空字符串时表示菜单树还未选中广告活动或广告组,允许添加
+ */
+export function isOperableTargetingGroup(targetingType: API.CamTargetType | '') {
+  let isOperable = false;
+  // sp手动广告 和 sd商品广告才能添加targeting，才有建议targeting
+  if (['manual', 'T00020', ''].includes(targetingType)) {
+    isOperable = true;
+  }
+  return isOperable;
+}
+
+// 广告活动和广告组结束日期选择禁用今天以前的日期
+export function disabledDate(currentDate: Moment) {
+  return currentDate < moment().subtract(1, 'days');
+}
+
+/**
+ * 获取广告表现统计数据表格列配置
+ * 广告活动、广告组、广告、关键词、targeting、searchTerm
+ * @param params.total 合计数据
+ */
+export function getStatisticsCols(
+  params: {
+    total: { [key: string]: number };
+    sort: string;
+    order: Order;
+    marketplace: API.Site;
+    currency: string;
+  }
+) {
+  const { total, sort, order, marketplace, currency } = params;
+  // 合计数据格式化
+  const formatTotal = {
+    impressions: toThousands(Number(total.impressions)),
+    clicks: toThousands(Number(total.clicks)),
+    spend: getShowPrice(total.spend, marketplace, currency),
+    acos: numberToPercent(total.acos),
+    roas: total.roas ? total.roas.toFixed(2) : '—',
+    ctr: numberToPercent(total.ctr),
+    cpc: getShowPrice(total.cpc, marketplace, currency),
+    cpa: getShowPrice(total.cpa, marketplace, currency),
+    sales: getShowPrice(total.sales, marketplace, currency, true),
+    orderNum: toThousands(Number(total.orderNum)),
+    conversionsRate: numberToPercent(total.conversionsRate),
+  };
+  return [
+    {
+      title: '销售额',
+      dataIndex: 'sales',
+      key: 'sales',
+      align: 'right',
+      sorter: true,
+      sortOrder: sort === 'sales' ? order : null,
+      children: [
+        {
+          title: formatTotal.sales,
+          dataIndex: 'sales',
+          width: 120,
+          align: 'right',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.salesRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.salesRatio, decimals: 2 }));
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+          },
+        },
+      ],
+    }, {
+      title: '订单量',
+      dataIndex: 'orderNum',
+      key: 'orderNum',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'orderNum' ? order : null,
+      children: [
+        {
+          title: formatTotal.orderNum,
+          dataIndex: 'orderNum',
+          width: 80,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.orderNumRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.orderNumRatio, decimals: 2 }));
+            return React.createElement('div', null, value, rate);
+          },
+        },
+      ],
+    }, {
+      title: 'CPC',
+      dataIndex: 'cpc',
+      key: 'cpc',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'cpc' ? order : null,
+      children: [
+        {
+          title: formatTotal.cpc,
+          dataIndex: 'cpc',
+          width: 80,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.cpcRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.cpcRatio, decimals: 2 }));
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+          },
+        },
+      ],
+    }, {
+      title: 'CPA',
+      dataIndex: 'cpa',
+      key: 'cpa',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'cpa' ? order : null,
+      children: [
+        {
+          title: formatTotal.cpa,
+          dataIndex: 'cpa',
+          width: 80,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.cpaRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.cpaRatio, decimals: 2 }));
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+          },
+        },
+      ],
+    }, {
+      title: 'Spend',
+      dataIndex: 'spend',
+      key: 'spend',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'spend' ? order : null,
+      children: [
+        {
+          title: formatTotal.spend,
+          dataIndex: 'spend',
+          width: 90,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.spendRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.spendRatio, decimals: 2 }));
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+          },
+        },
+      ],
+    }, {
+      title: 'ACoS',
+      dataIndex: 'acos',
+      key: 'acos',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'acos' ? order : null,
+      children: [
+        {
+          title: formatTotal.acos,
+          dataIndex: 'acos',
+          width: 80,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.acosRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.acosRatio, decimals: 2 }));
+            return React.createElement('div', null, numberToPercent(value), rate);
+          },
+        },
+      ],
+    }, {
+      title: 'RoAS',
+      dataIndex: 'roas',
+      key: 'roas',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'roas' ? order : null,
+      children: [
+        {
+          title: formatTotal.roas,
+          dataIndex: 'roas',
+          align: 'center',
+          width: 80,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.roasRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.roasRatio, decimals: 2 }));
+            return React.createElement('div', null, value ? value.toFixed(2) : '—', rate);
+          },
+        },
+      ],
+    }, {
+      title: 'Impressions',
+      dataIndex: 'impressions',
+      key: 'impressions',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'impressions' ? order : null,
+      children: [
+        {
+          title: formatTotal.impressions,
+          dataIndex: 'impressions',
+          align: 'center',
+          width: 100,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.impressionsRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.impressionsRatio, decimals: 2 }),
+            );
+            return React.createElement('div', null, value, rate);
+          },
+        },
+      ],
+    }, {
+      title: 'Clicks',
+      dataIndex: 'clicks',
+      key: 'clicks',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'clicks' ? order : null,
+      children: [
+        {
+          title: formatTotal.clicks,
+          dataIndex: 'clicks',
+          width: 80,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.clicksRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.clicksRatio, decimals: 2 }));
+            return React.createElement('div', null, value, rate);
+          },
+        },
+      ],
+    }, {
+      title: 'CTR',
+      dataIndex: 'ctr',
+      key: 'ctr',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'ctr' ? order : null,
+      children: [
+        {
+          title: formatTotal.ctr,
+          dataIndex: 'ctr',
+          width: 80,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.ctrRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.ctrRatio, decimals: 2 }));
+            return React.createElement('div', null, numberToPercent(value), rate);
+          },
+        },
+      ],
+    }, {
+      title: '转化率',
+      dataIndex: 'conversionsRate',
+      key: 'conversionsRate',
+      align: 'center',
+      sorter: true,
+      sortOrder: sort === 'conversionsRate' ? order : null,
+      children: [
+        {
+          title: formatTotal.conversionsRate,
+          dataIndex: 'conversionsRate',
+          width: 80,
+          align: 'center',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          render: (value: number, record: any) => {
+            const rate = record.conversionsRateRatio !== undefined && 
+            React.createElement(
+              'div',
+              null,
+              Rate({ value: record.conversionsRateRatio, decimals: 2 }));
+            return React.createElement('div', null, numberToPercent(value), rate);
+          },
+        },
+      ],
+    },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ] as any;
 }

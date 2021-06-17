@@ -3,6 +3,7 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 import { message } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
+import { moneyFormat } from '@/utils/huang';
 
 
 export const Iconfont = createFromIconfontCN({
@@ -242,9 +243,23 @@ export const strToReviewScoreStr = function (value: string) {
   return newValue;
 };
 
-// 格式化区分日本站点的金额
+/**
+ * 格式化区分日本站点的金额
+ * @param price 金额
+ * @param marketplace 站点
+ * @param currency 货币符号
+ * @param separator 分隔符配置
+ * @returns 
+ */
+// eslint-disable-next-line max-params
 export const getShowPrice = function(
-  price?: number | null | string, marketplace?: string, currency?: string
+  price?: number | null | string, marketplace?: string, currency?: string,
+  separator?: {
+    decimals?: number;
+    thousandsSep?: string;
+    decPoint?: string;
+    zeroIsSave?: boolean;
+  } | boolean,
 ) {
   let result = '';
   if (price !== null && price !== '' && price !== undefined) {
@@ -253,6 +268,17 @@ export const getShowPrice = function(
     } else {
       result = Number(price).toFixed(2);
     }
+  }
+  if (result === '') {
+    return '—';
+  }
+  // 分隔符
+  if (separator) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { decimals, thousandsSep, decPoint, zeroIsSave } = separator as any;
+    result = moneyFormat(
+      Number(result), decimals === undefined ? 2 : decimals, thousandsSep, decPoint, zeroIsSave,
+    );
   }
   return `${currency || ''}${result}`;
 };

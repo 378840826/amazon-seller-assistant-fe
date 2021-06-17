@@ -311,6 +311,8 @@ export interface INode {
   state: string;
   // 广告组的节点需要保存广告组的类型，用于判定选中广告组时要显示什么标签
   groupType?: API.GroupType;
+  // 区分手动/自动
+  targetingType: API.CamTargetType;
 }
 
 // 排序
@@ -329,11 +331,13 @@ export const formattingRecords = (
       isLeaf: boolean;
       parentCampaignName?: string;
       groupType?: API.GroupType;
+      targetingType?: API.CamTargetType;
     } = {
       title: item.name,
       key: `${parentKey}-${item.id}`,
       icon: stateIconDict[item.state],
       isLeaf,
+      targetingType: item.targetingType,
     };
     // 广告组设置 parentCampaignName 用于面包屑展示
     if (parentKey.split('-').length > 2) {
@@ -412,7 +416,7 @@ const AdManageModel: IAdManageModelType = {
     treeData: initTreeData,
     campaignSimpleList: [],
     // 在菜单树选中广告活动或广告组时，保存的广告活动和广告组信息
-    treeSelectedInfo: { key: '', groupType: '' },
+    treeSelectedInfo: { key: '', groupType: '', targetingType: '' },
     treeExpandedKeys: [],
     // 标签下的数量
     tabsCellCount: {
@@ -797,10 +801,10 @@ const AdManageModel: IAdManageModelType = {
     *fetchPortfolioList({ payload, callback }, { call, put }) {
       const res = yield call(queryPortfolioList, payload);
       if (res.code === 200) {
-        const { data } = res;
+        const { data: { records } } = res;
         yield put({
           type: 'savePortfolioList',
-          payload: { data },
+          payload: { data: records },
         });
       }
       callback && callback(res.code, res.message);
@@ -870,6 +874,10 @@ const AdManageModel: IAdManageModelType = {
       // 去掉搜索框的头尾空格
       if (newParams.search) {
         newParams.search = newParams.search.trim();
+      }
+      // 后端不支持空字符串筛选
+      if (newParams.portfolioId === '') {
+        newParams.portfolioId = undefined;
       }
       const res = yield call(queryCampaignList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -994,7 +1002,7 @@ const AdManageModel: IAdManageModelType = {
     // 广告组-获取某个自动广告组的target设置列表
     *fetchAutoGroupTargetList({ payload, callback }, { call }) {
       const res = yield call(queryAutoGroupTargetList, payload);
-      callback && callback(res.code, res.message, res.data.records);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
 
     // 广告组-修改获取某个自动广告组的target设置
@@ -1084,7 +1092,7 @@ const AdManageModel: IAdManageModelType = {
     // 广告-添加广告时搜索商品
     *fetchGoodsList({ payload, callback }, { call }) {
       const res = yield call(queryGoodsList, { ...payload });
-      callback && callback(res.code, res.message, res.data.records);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
 
     // 广告-添加广告
@@ -1167,7 +1175,7 @@ const AdManageModel: IAdManageModelType = {
 
     // 关键词-修改关键词数据
     *modifyKeyword({ payload, callback }, { call, put }) {
-      const res = yield call(updateGroup, payload);
+      const res = yield call(batchKeyword, payload);
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -1187,7 +1195,7 @@ const AdManageModel: IAdManageModelType = {
     // 关键词-获取建议或输入关键词的建议竞价（添加关键词时）
     *fetchSuggestedKeywordSuggestedBid({ payload, callback }, { call }) {
       const res = yield call(queryKeywordSuggestedBid, payload);
-      callback && callback(res.code, res.message, res.data.records);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
 
     // 关键词-添加关键词
@@ -1213,6 +1221,10 @@ const AdManageModel: IAdManageModelType = {
       // 去掉搜索框的头尾空格
       if (newParams.search) {
         newParams.search = newParams.search.trim();
+      }
+      // targeting类型的key targetingType 后端要求为 deliveryMethod
+      if (newParams.targetingType) {
+        newParams.deliveryMethod = newParams.targetingType;
       }
       const res = yield call(queryTargetingList, { ...newParams, headersParams });
       if (res.code === 200) {
@@ -1284,31 +1296,31 @@ const AdManageModel: IAdManageModelType = {
     // Targeting-获取建议分类
     *fetchSuggestedCategory({ payload, callback }, { call }) {
       const res = yield call(querySuggestedCategory, payload);
-      callback && callback(res.code, res.message, res.data);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
 
     // Targeting-获取建议品牌
     *fetchSuggestedBrands({ payload, callback }, { call }) {
       const res = yield call(querySuggestedBrands, payload);
-      callback && callback(res.code, res.message, res.data.records);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
     
     // Targeting-获取建议商品
     *fetchSuggestedGoods({ payload, callback }, { call }) {
       const res = yield call(querySuggestedGoods, payload);
-      callback && callback(res.code, res.message, res.data);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
 
     // Targeting-获取建议竞价-分类
     *fetchSuggestedCategorySuggestedBid({ payload, callback }, { call }) {
       const res = yield call(queryCategorySuggestedBid, payload);
-      callback && callback(res.code, res.message, res.data.records);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
 
     // Targeting-获取建议竞价-商品
     *fetchSuggestedGoodsSuggestedBid({ payload, callback }, { call }) {
       const res = yield call(queryGoodsSuggestedBid, payload);
-      callback && callback(res.code, res.message, res.data.records);
+      callback && callback(res.code, res.message, res.data && res.data.records);
     },
 
     // Targeting-添加Targeting
@@ -1439,7 +1451,7 @@ const AdManageModel: IAdManageModelType = {
     // 否定关键词-获取建议否定关键词
     *fetchSuggestedNegativeKeywords({ payload, callback }, { call }) {
       const res = yield call(querySuggestedNegativeKeywords, payload);
-      callback && callback(res.code, res.message, res.data);
+      callback && callback(res.code, res.message, res.data.records);
     },
 
     // 否定关键词-添加
@@ -1599,24 +1611,46 @@ const AdManageModel: IAdManageModelType = {
           type: 'saveSearchTermPutKeywords',
           payload: newPutKeywords,
         });
-        // 刷新标签页数量
-        const treeSelectedInfo = yield select(
-          (state: IConnectState) => state.adManage.treeSelectedInfo
+        // 更新标签页数量和关键词列表
+        const adManageState = yield select(
+          (state: IConnectState) => state.adManage
         );
-        yield put({
-          type: 'fetchTabsCellCount',
-          payload: {
-            headersParams: payload.headersParams,
-            campaignId: treeSelectedInfo.campaignId,
-            groupId: treeSelectedInfo.groupId,
-          },
-        });
+        const { treeSelectedInfo, keywordTab } = adManageState;
+        // 没有 groupType 说明选中广告活动或没有选，有关键词标签； groupType 是 'keyword' 时有关键词标签
+        if (!treeSelectedInfo.groupType || treeSelectedInfo.groupType === 'keyword') {
+          // 有关键词标签需要刷新标签页数量
+          yield put({
+            type: 'fetchTabsCellCount',
+            payload: {
+              headersParams: payload.headersParams,
+              campaignId: treeSelectedInfo.campaignId,
+              groupId: treeSelectedInfo.groupId,
+            },
+          });
+          // 有关键词标签，且已经加载过关键词列表时，才需要更新关键词列表，有 dataTotal 数据说明已经加载过
+          if (Object.keys(keywordTab.list.dataTotal).length) {
+            yield put({
+              type: 'fetchKeywordList',
+              payload: {
+                headersParams: payload.headersParams,
+                campaignId: treeSelectedInfo.campaignId,
+                groupId: treeSelectedInfo.groupId,
+                searchParams: { current: 1 },
+                filtrateParams: {
+                  ...defaultFiltrateParams,
+                  campaignId: treeSelectedInfo.campaignId,
+                  groupId: treeSelectedInfo.groupId,
+                },
+              },
+            });
+          }
+        }
       }
       callback && callback(code, message);
     },
 
     // SearchTerm报表-否定搜索词投放（同时支持广告活动和广告组，搜索词是asin的也算关键词）
-    *putNegateQueryKeywords({ payload, callback }, { call, put }) {
+    *putNegateQueryKeywords({ payload, callback }, { call, put, select }) {
       const res = yield call(createNegativeKeywords, payload);
       let code = res.code;
       let message = res.message;
@@ -1655,6 +1689,38 @@ const AdManageModel: IAdManageModelType = {
           type: 'saveSearchTermNegateKeywords',
           payload: newPutKeywords,
         });
+        // 更新标签页数量和否定关键词列表
+        const adManageState = yield select(
+          (state: IConnectState) => state.adManage
+        );
+        const { treeSelectedInfo, negativeKeywordTab } = adManageState;
+        // 判断是否有否定关键词标签。选中广告活动或关键词广告组时有否定关键词标签
+        if (
+          (treeSelectedInfo.campaignId && !treeSelectedInfo.groupType)
+          || treeSelectedInfo.groupType === 'keyword'
+        ) {
+          // 有否定关键词标签就更新标签页数量
+          yield put({
+            type: 'fetchTabsCellCount',
+            payload: {
+              headersParams: payload.headersParams,
+              campaignId: treeSelectedInfo.campaignId,
+              groupId: treeSelectedInfo.groupId,
+            },
+          });
+          // 有否定关键词标签，且已经加载过否定关键词列表时，才需要更新列表，有 dataTotal 数据说明已经加载过
+          if (negativeKeywordTab.list.pages !== undefined) {
+            yield put({
+              type: 'fetchNegativeKeywordList',
+              payload: {
+                headersParams: payload.headersParams,
+                campaignId: treeSelectedInfo.campaignId,
+                groupId: treeSelectedInfo.groupId,
+                searchParams: { current: 1 },
+              },
+            });
+          }
+        }
       }
       callback && callback(code, message);
     },
@@ -1740,7 +1806,7 @@ const AdManageModel: IAdManageModelType = {
       state.updateTime = data;
     },
 
-    // 菜单树-保存菜单树
+    // 保存广告活动简表
     saveSimpleCampaignList(state, { payload }) {      
       const { data } = payload;
       state.campaignSimpleList = data;

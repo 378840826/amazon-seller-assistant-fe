@@ -142,7 +142,6 @@ export function weekTransition(val: string): number {
   }
 }
 
-
 export function getAxis(event: any): { // eslint-disable-line 
   x: number;
   y: number;
@@ -160,10 +159,12 @@ export function dateTransitionTdIndex (timeItem: IDateItem) {
   const [endHour, endMinute] = endTime.split(':');
   const hours = Number(endHour) - Number(startHour);
   const minute = Number(endMinute) - Number(startmMinute);
-  // 数量
-  const count = hours * 2 + ( minute > 30 ? 2 : 1 );
-  // 起始下标
-  const startIndex = (Number(startHour) + 1) * 2;
+  // 连续格子数量，一小时2格，30分钟1格
+  const hoursToConut = hours * 2;
+  const minuteToConut = (minute + 1) / 30;
+  const count = hoursToConut + minuteToConut;
+  // 起始下标， 先加 1 是因为下标不是从 0 开始的。*2：1小时2格；
+  const startIndex = 1 + Number(startHour) * 2 + (startmMinute === '30' ? 1 : 0);
   const result = [...Array(count)].map((_, i) => startIndex + i);
   return result;
 }

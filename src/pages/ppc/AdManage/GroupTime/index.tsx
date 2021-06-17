@@ -7,7 +7,7 @@ import { Spin, DatePicker, Switch, Button } from 'antd';
 import moment, { Moment } from 'moment';
 import { IConnectState } from '@/models/connect';
 import { getPageQuery, Iconfont, requestErrorFeedback, requestFeedback } from '@/utils/utils';
-import { getAssignUrl } from '../utils';
+import { getAssignUrl, disabledDate } from '../utils';
 import TimeSelectTable, { ITimingInitValueType } from './TimeSelection';
 import styles from './index.less';
 
@@ -111,6 +111,7 @@ const GroupTime: React.FC = function() {
     dateFormat: 'YYYY-MM-DD',
     allowClear: false,
     value: [moment(date.startDate), moment(date.endDate)],
+    disabledDate,
     onChange: (_: Moment, dates: string[]) => {
       const [startDate, endDate] = dates;
       setDate({ ...date, startDate, endDate });

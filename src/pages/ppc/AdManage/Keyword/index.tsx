@@ -4,7 +4,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
-import { Select, Button, Modal, message, Spin, Table, Tabs, Input, Checkbox } from 'antd';
+import { Select, Button, Modal, message, Table, Tabs, Input, Checkbox } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
@@ -16,9 +16,9 @@ import Crumbs from '../components/Crumbs';
 import BatchSetBid from '../components/BatchSetBid';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import DataChartModal from '../components/DataChartModal';
+import SuggestedPrice from '../components/SuggestedPrice';
 import editable from '@/pages/components/EditableCell';
 import DefinedCalendar from '@/components/DefinedCalendar';
-import Rate from '@/components/Rate';
 import { matchTypeDict } from '@/pages/ppc/AdManage';
 import {
   Iconfont,
@@ -30,7 +30,6 @@ import {
   getDateCycleParam,
   objToQueryString,
   getPageQuery,
-  numberToPercent,
 } from '@/utils/utils';
 import {
   isArchived,
@@ -39,6 +38,8 @@ import {
   isValidTargetingBid,
   getBidExprVlaue,
   createIdKeyword,
+  getStatisticsCols,
+  isOperableTargetingGroup,
 } from '../utils';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { IKeyword, ISimpleGroup, IComputedBidParams } from '../index.d';
@@ -64,6 +65,7 @@ const Keyword: React.FC = function() {
   const loading = {
     table: loadingEffect['adManage/fetchKeywordList'],
     suggestedBid: loadingEffect['adManage/fetchKeywordSuggestedBid'],
+    suggestedKeywordSuggestedBid: loadingEffect['adManage/fetchSuggestedKeywordSuggestedBid'],
     suggestedKeyword: loadingEffect['adManage/fetchSuggestedKeywords'],
     addKeyword: loadingEffect['adManage/addKeyword'],
     fetchGroupList: loadingEffect['adManage/fetchSimpleGroupList'],
@@ -164,7 +166,7 @@ const Keyword: React.FC = function() {
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, currentShopId]);
+  }, [dispatch, currentShopId, treeSelectedInfo]);
 
   useEffect(() => {
     // 获取简单广告活动列表或广告组简单列表
@@ -208,7 +210,7 @@ const Keyword: React.FC = function() {
 
   // 获取建议关键词
   useEffect(() => {
-    if (currentShopId !== '-1' && addState.groupId) {
+    if (currentShopId !== '-1' && addState.groupId && isOperableTargetingGroup(treeSelectedInfo.targetingType)) {
       dispatch({
         type: 'adManage/fetchSuggestedKeywords',
         payload: {
@@ -233,7 +235,7 @@ const Keyword: React.FC = function() {
       type: 'adManage/modifyKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
-        record: params,
+        keywords: [params],
       },
       callback: requestFeedback,
     });
@@ -389,7 +391,7 @@ const Keyword: React.FC = function() {
   function applySuggestedBid(ids: string[]) {
     const data: { id: string; bid: number }[] = [];
     records.forEach(item => {
-      if (item.suggested === 0) {
+      if (!item.suggested) {
         return;
       }
       if (ids.includes(item.id)) {
@@ -399,6 +401,10 @@ const Keyword: React.FC = function() {
         });
       }
     });
+    if (data.length !== ids.length) {
+      message.error('应用失败，建议竞价不正确！');
+      return;
+    }
     dispatch({
       type: 'adManage/batchKeyword',
       payload: {
@@ -458,7 +464,7 @@ const Keyword: React.FC = function() {
       >
         {
           campaignSimpleList.map(item => (
-            item.campaignType !== 'sb' && 
+            isOperableTargetingGroup(item.targetingType) &&
             <Option key={item.id} value={item.id}>{ item.name }</Option>)
           )
         }
@@ -528,8 +534,6 @@ const Keyword: React.FC = function() {
             }
           }
         }
-        console.log('newList', newList);
-        
         // setSelectedKeywordsList(newList);
       },
     });
@@ -544,6 +548,10 @@ const Keyword: React.FC = function() {
     for (let i = 0; i < newList.length; i++) {
       const kw = newList[i];
       if ( kw.keywordText === keyword.keywordText && kw.matchType === keyword.matchType) {
+        if (!kw.suggested) {
+          message.error('应用失败，建议竞价不正确！');
+          return;
+        }
         kw.bid = kw.suggested;
       }
     }
@@ -630,6 +638,8 @@ const Keyword: React.FC = function() {
   // 批量操作已选关键词（删除、应用建议竞价）
   function handleBatchSetSelectedKeywords(type: 'delete' | 'applyBid') {
     let newList: IKeyword[] = [];
+    /** 建议竞价是否有误 */
+    let bidError = false;
     switch (type) {
     case 'delete':
       newList = selectedKeywordsList.filter(item => {
@@ -651,6 +661,9 @@ const Keyword: React.FC = function() {
         let kw = item;
         checkedSelectedIds.forEach(id => {
           if (item.id === id) {
+            if (!item.suggested) {
+              bidError = true;
+            }
             kw = { ...item, bid: item.suggested };
           }
         });
@@ -660,6 +673,10 @@ const Keyword: React.FC = function() {
     default:
       console.error('handleBatchSetSelectedKeywords 参数错误');
       break;
+    }
+    if (bidError) {
+      message.error('应用失败，建议竞价不正确！');
+      return;
     }
     setSelectedKeywordsList(newList);
   }
@@ -721,6 +738,16 @@ const Keyword: React.FC = function() {
     }
     setSelectedKeywordsList(newList);
     getSelectedKeywordsSuggestedBid(all, newList);
+  }
+
+  // 点击添加关键词按钮
+  function handleClickAddBtn() {
+    const { targetingType } = treeSelectedInfo;
+    if (!isOperableTargetingGroup(targetingType)) {
+      message.warning('此广告活动/广告组不支持添加关键词');
+      return;
+    }
+    setAddState({ ...addState, visible: true });
   }
 
   // 添加关键词
@@ -825,20 +852,15 @@ const Keyword: React.FC = function() {
       align: 'center',
       width: 100,
       render: (value, record) => (
-        <>
-          <div className={commonStyles.suggested}>
-            {getShowPrice(value, marketplace, currency)}
-            <Button
-              disabled={!value}
-              onClick={() => handleSelectedApplySuggestedBid(record)}
-            >应用</Button>
-          </div>
-          <div>
-            ({getShowPrice(record.rangeStart, marketplace, currency)}
-            -
-            {getShowPrice(record.rangeEnd, marketplace, currency)})
-          </div>
-        </>
+        <SuggestedPrice
+          loading={loading.suggestedKeywordSuggestedBid}
+          suggestedPrice={value}
+          suggestedMin={record.rangeStart}
+          suggestedMax={record.rangeEnd}
+          marketplace={marketplace}
+          currency={currency}
+          onApply={() => handleSelectedApplySuggestedBid(record)}
+        />
       ),
     }, {
       title: '竞价',
@@ -953,6 +975,7 @@ const Keyword: React.FC = function() {
                     groupId: record.groupId,
                     groupName: record.groupName,
                     groupType: record.groupType,
+                    targetingType: record.campaignTargetType,
                   })
                 }
               >{record.groupName}</a>
@@ -965,7 +988,7 @@ const Keyword: React.FC = function() {
       children: [
         {
           title: '合计',
-          dataIndex: 'targeting',
+          dataIndex: 'keywordName',
           width: 200,
           align: 'left',
           fixed: 'left',
@@ -999,20 +1022,16 @@ const Keyword: React.FC = function() {
           width: 100,
           align: 'center',
           render: (value: string, record: API.IAdTargeting) => (
-            <Spin spinning={loading.suggestedBid} size="small">
-              <div className={commonStyles.suggested}>
-                {getShowPrice(value, marketplace, currency)}
-                <Button
-                  disabled={isArchived(record.state)}
-                  onClick={() => applySuggestedBid([record.id])}
-                >应用</Button>
-              </div>
-              <div>
-                ({getShowPrice(record.rangeStart, marketplace, currency)}
-                -
-                {getShowPrice(record.rangeEnd, marketplace, currency)})
-              </div>
-            </Spin>
+            <SuggestedPrice
+              loading={loading.suggestedBid}
+              disabled={isArchived(record.state)}
+              suggestedPrice={value}
+              suggestedMin={record.rangeStart}
+              suggestedMax={record.rangeEnd}
+              marketplace={marketplace}
+              currency={currency}
+              onApply={() => applySuggestedBid([record.id])}
+            />
           ),
         },
       ] as any,
@@ -1025,7 +1044,7 @@ const Keyword: React.FC = function() {
           dataIndex: 'bid',
           width: 100,
           align: 'center',
-          render: (value: number, record: API.IAdCampaign) => (
+          render: (value: number, record: API.IAdTargeting) => (
             <>{
               isArchived(record.state)
                 ? getShowPrice(value)
@@ -1055,239 +1074,17 @@ const Keyword: React.FC = function() {
           align: 'center',
         },
       ] as any,
-    }, {
-      title: '销售额',
-      dataIndex: 'sales',
-      key: 'sales',
-      align: 'right',
-      sorter: true,
-      sortOrder: sort === 'sales' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.sales, marketplace, currency),
-          dataIndex: 'sales',
-          width: 100,
-          align: 'right',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.salesRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: '订单量',
-      dataIndex: 'orderNum',
-      key: 'orderNum',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'orderNum' ? order : null,
-      children: [
-        {
-          title: dataTotal.orderNum,
-          dataIndex: 'orderNum',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.orderNumRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'CPC',
-      dataIndex: 'cpc',
-      key: 'cpc',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpc' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpc, marketplace, currency),
-          dataIndex: 'cpc',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.cpcRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'CPA',
-      dataIndex: 'cpa',
-      key: 'cpa',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpa' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpa, marketplace, currency),
-          dataIndex: 'cpa',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.cpaRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'Spend',
-      dataIndex: 'spend',
-      key: 'spend',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'spend' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.spend, marketplace, currency),
-          dataIndex: 'spend',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.spendRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'ACoS',
-      dataIndex: 'acos',
-      key: 'acos',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'acos' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.acos),
-          dataIndex: 'acos',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { numberToPercent(value) }
-              <div><Rate value={record.acosRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'RoAS',
-      dataIndex: 'roas',
-      key: 'roas',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'roas' ? order : null,
-      children: [
-        {
-          title: dataTotal.roas ? dataTotal.roas.toFixed(2) : '—',
-          dataIndex: 'roas',
-          align: 'center',
-          width: 80,
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { value ? value.toFixed(2) : '—' }
-              <div><Rate value={record.roasRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'Impressions',
-      dataIndex: 'impressions',
-      key: 'impressions',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'impressions' ? order : null,
-      children: [
-        {
-          title: dataTotal.impressions,
-          dataIndex: 'impressions',
-          align: 'center',
-          width: 100,
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { value }
-              <div><Rate value={record.impressionsRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'Clicks',
-      dataIndex: 'clicks',
-      key: 'clicks',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'clicks' ? order : null,
-      children: [
-        {
-          title: dataTotal.clicks,
-          dataIndex: 'clicks',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { value }
-              <div><Rate value={record.clicksRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-      
-    }, {
-      title: 'CTR',
-      dataIndex: 'ctr',
-      key: 'ctr',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'ctr' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.ctr),
-          dataIndex: 'ctr',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { numberToPercent(value) }
-              <div><Rate value={record.ctrRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: '转化率',
-      dataIndex: 'conversionsRate',
-      key: 'conversionsRate',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'conversionsRate' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.conversionsRate),
-          dataIndex: 'conversionsRate',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { numberToPercent(value) }
-              <div><Rate value={record.conversionsRateRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
+    }, 
+    
+    ...getStatisticsCols({
+      total: dataTotal,
+      sort,
+      order,
+      marketplace,
+      currency,
+    }),
+    
+    {
       title: '操作',
       align: 'center',
       children: [
@@ -1383,7 +1180,12 @@ const Keyword: React.FC = function() {
   return (
     <div>
       <div className={commonStyles.head}>
-        <MySearch placeholder="输入广告活动、广告组、ASIN/SKU或关键词" defaultValue="" handleSearch={handleSearch} />
+        <MySearch
+          placeholder="广告活动/广告组/ASIN/SKU/关键词"
+          defaultValue=""
+          width="300px"
+          handleSearch={handleSearch}
+        />
         <Button
           type="primary"
           className={commonStyles.btnFiltrate}
@@ -1413,7 +1215,7 @@ const Keyword: React.FC = function() {
       <div className={commonStyles.tableToolBar}>
         <div>
           <span>
-            <Button type="primary" onClick={() => setAddState({ ...addState, visible: true })}>
+            <Button type="primary" onClick={handleClickAddBtn}>
               添加关键词<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
           </span>
@@ -1447,14 +1249,8 @@ const Keyword: React.FC = function() {
       <AdManageTable { ...tableProps } />
       <DataChartModal
         type="keyword"
-        visible={chartsState.visible}
         onCancel={() => setChartsState({ ...chartsState, visible: false })}
-        campaignId={chartsState.campaignId}
-        campaignName={chartsState.campaignName}
-        groupId={chartsState.groupId}
-        groupName={chartsState.groupName}
-        keywordId={chartsState.keywordId}
-        keywordName={chartsState.keywordName}
+        { ...chartsState }
       />
       <Modal
         visible={addState.visible}
@@ -1465,54 +1261,17 @@ const Keyword: React.FC = function() {
         className={classnames(styles.Modal, commonStyles.addModal)}
         onCancel={() => setAddState({ ...addState, visible: false })}
       >
-        <div className={styles.modalContainer}>
-          <div className={commonStyles.addModalTitle}>添加关键词</div>
-          <div className={commonStyles.addModalContent}>
-            <div className={commonStyles.addSelectContainer}>
-              { renderCampaignSelect() }
-              { renderGroupSelect() }
-            </div>
-            <div className={commonStyles.addTableContainer}>
-              <div className={styles.tableContent}>
-                <Tabs defaultActiveKey="1">
-                  <TabPane tab="建议关键词" key="1">
-                    <div className={styles.addToolbar}>
-                      <div>
-                        匹配方式：
-                        <Checkbox.Group
-                          value={candidateMatchTypes}
-                          options={
-                            Object.keys(matchTypeDict).map(key => (
-                              { label: matchTypeDict[key], value: key }
-                            ))
-                          }
-                          defaultValue={['Apple']}
-                          onChange={(values) => setCandidateMatchType(values as any)}
-                        />
-                      </div>
-                      <span
-                        className={classnames(
-                          suggestedKeywords.length ? commonStyles.selectBtn : styles.disabled,
-                          styles.selectAllBtn
-                        )}
-                        // onClick={() => handleSelectKeyword({ ...record, matchType: type })}
-                        onClick={() => handleSelectAllKeyword()}
-                      >
-                        全选
-                      </span>
-                    </div>
-                    <Table
-                      loading={loading.suggestedKeyword}
-                      className={styles.suggestedKeywordTable}
-                      columns={suggestedKeywordsColumns}
-                      scroll={{ x: 'max-content', y: '350px' }}
-                      rowKey="keywordText"
-                      dataSource={suggestedKeywords}
-                      locale={{ emptyText: '未查询到建议关键词，请重新选择广告组' }}
-                      pagination={false}
-                    />
-                  </TabPane>
-                  <TabPane tab="输入关键词" key="2">
+        <div className={commonStyles.addModalTitle}>添加关键词</div>
+        <div className={commonStyles.addModalContent}>
+          <div className={commonStyles.addSelectContainer}>
+            { renderCampaignSelect() }
+            { renderGroupSelect() }
+          </div>
+          <div className={commonStyles.addTableContainer}>
+            <div className={styles.tableContent}>
+              <Tabs defaultActiveKey="1">
+                <TabPane tab="建议关键词" key="1">
+                  <div className={styles.addToolbar}>
                     <div>
                       匹配方式：
                       <Checkbox.Group
@@ -1522,54 +1281,86 @@ const Keyword: React.FC = function() {
                             { label: matchTypeDict[key], value: key }
                           ))
                         }
-                        defaultValue={['Apple']}
                         onChange={(values) => setCandidateMatchType(values as any)}
                       />
                     </div>
-                    <TextArea
-                      placeholder="请输入关键词，每行一个"
-                      value={textAreaKeywords}
-                      className={styles.addTextArea}
-                      onChange={e => setTextAreaKeywords(e.target.value)}
-                    />
-                    <div className={styles.textAreaBtnContainer}>
-                      <Button onClick={handleSelectTextAreaKeyword}>选择</Button>
-                    </div>
-                  </TabPane>
-                </Tabs>                
-              </div>
-              <div className={styles.tableContent}>
-                <div className={classnames(styles.batchToolbar, !checkedSelectedIds.length ? styles.disabled : '')}>
-                  <Button onClick={() => handleBatchSetSelectedKeywords('delete')}>批量删除</Button>
-                  <Button onClick={() => handleBatchSetSelectedKeywords('applyBid')}>应用建议竞价</Button>
-                  <BatchSetBid
-                    currency={currency}
-                    marketplace={marketplace}
-                    callback={handleBatchSetSelectedKeywordsBid}
+                    <span
+                      className={classnames(
+                        suggestedKeywords.length ? commonStyles.selectBtn : styles.disabled,
+                        styles.selectAllBtn
+                      )}
+                      onClick={() => handleSelectAllKeyword()}
+                    >
+                      全选
+                    </span>
+                  </div>
+                  <Table
+                    loading={loading.suggestedKeyword}
+                    className={styles.suggestedKeywordTable}
+                    columns={suggestedKeywordsColumns}
+                    scroll={{ x: 'max-content', y: '350px' }}
+                    rowKey="keywordText"
+                    dataSource={suggestedKeywords}
+                    locale={{ emptyText: '未查询到建议关键词，请重新选择广告组' }}
+                    pagination={false}
                   />
-                </div>
-                <Table
-                  loading={loading.addKeyword}
-                  className={styles.selectedKeywordTable}
-                  columns={selectedKeywordsColumns}
-                  scroll={{ x: 'max-content', y: '350px' }}
-                  rowKey={record => createIdKeyword(record).id as string}
-                  dataSource={selectedKeywordsList}
-                  locale={{ emptyText: '请选择建议关键词或手动输入关键词添加' }}
-                  pagination={false}
-                  rowSelection={selectedKeywordsRowSelection}
+                </TabPane>
+                <TabPane tab="输入关键词" key="2">
+                  <div>
+                    匹配方式：
+                    <Checkbox.Group
+                      value={candidateMatchTypes}
+                      options={
+                        Object.keys(matchTypeDict).map(key => (
+                          { label: matchTypeDict[key], value: key }
+                        ))
+                      }
+                      onChange={(values) => setCandidateMatchType(values as any)}
+                    />
+                  </div>
+                  <TextArea
+                    placeholder="请输入关键词，每行一个"
+                    value={textAreaKeywords}
+                    className={styles.addTextArea}
+                    onChange={e => setTextAreaKeywords(e.target.value)}
+                  />
+                  <div className={styles.textAreaBtnContainer}>
+                    <Button onClick={handleSelectTextAreaKeyword}>选择</Button>
+                  </div>
+                </TabPane>
+              </Tabs>                
+            </div>
+            <div className={styles.tableContent}>
+              <div className={classnames(styles.batchToolbar, !checkedSelectedIds.length ? styles.disabled : '')}>
+                <Button onClick={() => handleBatchSetSelectedKeywords('delete')}>批量删除</Button>
+                <Button onClick={() => handleBatchSetSelectedKeywords('applyBid')}>应用建议竞价</Button>
+                <BatchSetBid
+                  currency={currency}
+                  marketplace={marketplace}
+                  callback={handleBatchSetSelectedKeywordsBid}
                 />
               </div>
-            </div>
-            <div className={commonStyles.addModalfooter}>
-              <Button onClick={() => setAddState({ ...addState, visible: false })}>取消</Button>
-              <Button 
-                type="primary"
-                disabled={!selectedKeywordsList.length}
+              <Table
                 loading={loading.addKeyword}
-                onClick={handleAdd}
-              >添加</Button>
+                className={styles.selectedKeywordTable}
+                columns={selectedKeywordsColumns}
+                scroll={{ x: 'max-content', y: '350px' }}
+                rowKey={record => createIdKeyword(record).id as string}
+                dataSource={selectedKeywordsList}
+                locale={{ emptyText: '请选择建议关键词或手动输入关键词添加' }}
+                pagination={false}
+                rowSelection={selectedKeywordsRowSelection}
+              />
             </div>
+          </div>
+          <div className={commonStyles.addModalfooter}>
+            <Button onClick={() => setAddState({ ...addState, visible: false })}>取消</Button>
+            <Button 
+              type="primary"
+              disabled={!selectedKeywordsList.length}
+              loading={loading.addKeyword}
+              onClick={handleAdd}
+            >添加</Button>
           </div>
         </div>
       </Modal>

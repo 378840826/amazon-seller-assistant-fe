@@ -4,7 +4,7 @@
  */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch, Link } from 'umi';
-import { Select, Button, Modal, Typography, Table, message } from 'antd';
+import { Select, Button, Modal, Typography, Table, message, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
@@ -26,9 +26,8 @@ import {
   storage,
   getShowPrice,
   objToQueryString,
-  numberToPercent,
 } from '@/utils/utils';
-import { isArchived, getAssignUrl } from '../utils';
+import { isArchived, getAssignUrl, getStatisticsCols } from '../utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
@@ -595,6 +594,7 @@ const Ad: React.FC = function() {
                     groupId: record.groupId,
                     groupName: record.groupName,
                     groupType: record.groupType,
+                    targetingType: record.campaignTargetType,
                   })
                 }
               >{record.groupName}</a>
@@ -645,7 +645,11 @@ const Ad: React.FC = function() {
                   ?
                   <>
                     { value }
-                    <div className={commonStyles.red}>{record.qualificationMessage}</div>
+                    <Tooltip title={record.qualificationMessage}>
+                      <div className={classnames(commonStyles.red, styles.qualificationMessage)}>
+                        {record.qualificationMessage}
+                      </div>
+                    </Tooltip>
                   </>
                   :
                   <div className={commonStyles.green}>{ value }</div>
@@ -665,181 +669,17 @@ const Ad: React.FC = function() {
           align: 'center',
         },
       ] as any,
-    }, {
-      title: '销售额',
-      dataIndex: 'sales',
-      key: 'sales',
-      align: 'right',
-      sorter: true,
-      sortOrder: sort === 'sales' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.sales, marketplace, currency),
-          dataIndex: 'sales',
-          width: 100,
-          align: 'right',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: '订单量',
-      dataIndex: 'orderNum',
-      key: 'orderNum',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'orderNum' ? order : null,
-      children: [
-        {
-          title: dataTotal.orderNum,
-          dataIndex: 'orderNum',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: 'CPC',
-      dataIndex: 'cpc',
-      key: 'cpc',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpc' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpc, marketplace, currency),
-          dataIndex: 'cpc',
-          width: 80,
-          align: 'center',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: 'CPA',
-      dataIndex: 'cpa',
-      key: 'cpa',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpa' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpa, marketplace, currency),
-          dataIndex: 'cpa',
-          width: 80,
-          align: 'center',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: 'Spend',
-      dataIndex: 'spend',
-      key: 'spend',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'spend' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.spend, marketplace, currency),
-          dataIndex: 'spend',
-          width: 80,
-          align: 'center',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: 'ACoS',
-      dataIndex: 'acos',
-      key: 'acos',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'acos' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.acos),
-          dataIndex: 'acos',
-          width: 80,
-          align: 'center',
-          render: (value: number) => numberToPercent(value),
-        },
-      ] as any,
-    }, {
-      title: 'RoAS',
-      dataIndex: 'roas',
-      key: 'roas',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'roas' ? order : null,
-      children: [
-        {
-          title: dataTotal.roas ? dataTotal.roas.toFixed(2) : '—',
-          dataIndex: 'roas',
-          align: 'center',
-          width: 80,
-          render: (value: number) => value ? value.toFixed(2) : '—',
-        },
-      ] as any,
-    }, {
-      title: 'Impressions',
-      dataIndex: 'impressions',
-      key: 'impressions',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'impressions' ? order : null,
-      children: [
-        {
-          title: dataTotal.impressions,
-          dataIndex: 'impressions',
-          align: 'center',
-          width: 100,
-        },
-      ] as any,
-    }, {
-      title: 'Clicks',
-      dataIndex: 'clicks',
-      key: 'clicks',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'clicks' ? order : null,
-      children: [
-        {
-          title: dataTotal.clicks,
-          dataIndex: 'clicks',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-      
-    }, {
-      title: 'CTR',
-      dataIndex: 'ctr',
-      key: 'ctr',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'ctr' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.ctr),
-          dataIndex: 'ctr',
-          width: 80,
-          align: 'center',
-          render: (value: number) => numberToPercent(value),
-        },
-      ] as any,
-    }, {
-      title: '转化率',
-      dataIndex: 'conversionsRate',
-      key: 'conversionsRate',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'conversionsRate' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.conversionsRate),
-          dataIndex: 'conversionsRate',
-          width: 80,
-          align: 'center',
-          render: (value: number) => numberToPercent(value),
-        },
-      ] as any,
-    }, {
+    }, 
+    
+    ...getStatisticsCols({
+      total: dataTotal,
+      sort,
+      order,
+      marketplace,
+      currency,
+    }),
+    
+    {
       title: '操作',
       align: 'center',
       children: [
@@ -925,7 +765,7 @@ const Ad: React.FC = function() {
   return (
     <div>
       <div className={commonStyles.head}>
-        <MySearch placeholder="输入商品名称/ASIN/SKU" defaultValue="" handleSearch={handleSearch} />
+        <MySearch placeholder="ASIN/SKU" defaultValue="" handleSearch={handleSearch} />
         <Button
           type="primary"
           className={commonStyles.btnFiltrate}
@@ -977,14 +817,8 @@ const Ad: React.FC = function() {
       <AdManageTable { ...tableProps } />
       <DataChartModal
         type="ad"
-        visible={chartsState.visible}
         onCancel={() => setChartsState({ ...chartsState, visible: false })}
-        campaignId={chartsState.campaignId}
-        campaignName={chartsState.campaignName}
-        groupId={chartsState.groupId}
-        groupName={chartsState.groupName}
-        adId={chartsState.adId}
-        adName={chartsState.adName}
+        { ...chartsState }
       />
       <Modal
         visible={addState.visible}
@@ -995,43 +829,41 @@ const Ad: React.FC = function() {
         className={classnames(styles.Modal, commonStyles.addModal)}
         onCancel={() => setAddState({ ...addState, visible: false })}
       >
-        <div className={styles.modalContainer}>
-          <div className={commonStyles.addModalTitle}>添加广告</div>
-          <div className={commonStyles.addModalContent}>
-            <div className={commonStyles.addSelectContainer}>
-              { renderCampaignSelect() }
-              { renderGroupSelect() }
+        <div className={commonStyles.addModalTitle}>添加广告</div>
+        <div className={commonStyles.addModalContent}>
+          <div className={commonStyles.addSelectContainer}>
+            { renderCampaignSelect() }
+            { renderGroupSelect() }
+          </div>
+          <div className={commonStyles.addTableContainer}>
+            <div className={styles.tableContent}>
+              <MySearch placeholder="请输入ASIN或SKU" defaultValue="" handleSearch={handleAddSearch} />
+              <Table
+                loading={loading.searchGoods}
+                columns={candidateGoodsTableColumns}
+                scroll={{ x: 'max-content', y: '450px' }}
+                rowKey="id"
+                dataSource={goodsList}
+                locale={{ emptyText: '请输入本店铺的ASIN、SKU进行查询' }}
+                pagination={false}
+              />
             </div>
-            <div className={commonStyles.addTableContainer}>
-              <div className={styles.tableContent}>
-                <MySearch placeholder="请输入ASIN或SKU" defaultValue="" handleSearch={handleAddSearch} />
-                <Table
-                  loading={loading.searchGoods}
-                  columns={candidateGoodsTableColumns}
-                  scroll={{ x: 'max-content', y: '450px' }}
-                  rowKey="id"
-                  dataSource={goodsList}
-                  locale={{ emptyText: '请输入本店铺的ASIN、SKU进行查询' }}
-                  pagination={false}
-                />
-              </div>
-              <div className={styles.tableContent}>
-                <div className={styles.title}>已选产品</div>
-                <Table
-                  loading={loading.addAd}
-                  columns={selectedGoodsTableColumns}
-                  scroll={{ x: 'max-content', y: '450px' }}
-                  rowKey="id"
-                  dataSource={selectedGoodsList}
-                  locale={{ emptyText: '请从左侧表格选择产品' }}
-                  pagination={false}
-                />
-              </div>
+            <div className={styles.tableContent}>
+              <div className={styles.title}>已选产品</div>
+              <Table
+                loading={loading.addAd}
+                columns={selectedGoodsTableColumns}
+                scroll={{ x: 'max-content', y: '450px' }}
+                rowKey="id"
+                dataSource={selectedGoodsList}
+                locale={{ emptyText: '请从左侧表格选择产品' }}
+                pagination={false}
+              />
             </div>
-            <div className={commonStyles.addModalfooter}>
-              <Button onClick={() => setAddState({ ...addState, visible: false })}>取消</Button>
-              <Button type="primary" disabled={!selectedGoodsList.length} onClick={handleAdd}>确定</Button>
-            </div>
+          </div>
+          <div className={commonStyles.addModalfooter}>
+            <Button onClick={() => setAddState({ ...addState, visible: false })}>取消</Button>
+            <Button type="primary" disabled={!selectedGoodsList.length} onClick={handleAdd}>确定</Button>
           </div>
         </div>
       </Modal>

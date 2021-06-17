@@ -18,7 +18,7 @@ import Crumbs from '../components/Crumbs';
 import DataChartModal from '../components/DataChartModal';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import editable from '@/pages/components/EditableCell';
-import { isArchived, getAssignUrl } from '../utils';
+import { isArchived, getAssignUrl, disabledDate, getStatisticsCols } from '../utils';
 import {
   getShowPrice,
   strToMoneyStr,
@@ -26,7 +26,6 @@ import {
   requestErrorFeedback,
   requestFeedback,
   storage,
-  numberToPercent,
 } from '@/utils/utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import moment from 'moment';
@@ -247,7 +246,6 @@ const Group: React.FC = function() {
         name: copyGroupState.name,
       },
       callback: (code: number, msg: string) => {
-        console.log(code, msg);
         if (code === 200) {
           setVisibleCopyGroup(false);
           handleSearch(copyGroupState.name);
@@ -310,6 +308,7 @@ const Group: React.FC = function() {
                     campaignState: record.camState,
                     campaignId: record.camId,
                     campaignName: record.camName,
+                    targetingType: record.campaignTargetType,
                   })
                 }
               >{record.camName}</a>
@@ -338,6 +337,7 @@ const Group: React.FC = function() {
                   groupId: record.id,
                   groupName: record.name,
                   groupType: record.groupType,
+                  targetingType: record.campaignTargetType,
                 }),
                 maxLength: 128,
                 confirmCallback: value => {
@@ -403,6 +403,7 @@ const Group: React.FC = function() {
                 groupId: record.id,
                 groupName: record.name,
                 groupType: record.groupType,
+                targetingType: record.campaignTargetType,
               })}
             >{value}</a>
           ),
@@ -428,6 +429,7 @@ const Group: React.FC = function() {
                 groupName: record.name,
                 groupType: record.groupType,
                 tab: record.groupType,
+                targetingType: record.campaignTargetType,
               })}
             >{value}</a>
           ),
@@ -453,6 +455,7 @@ const Group: React.FC = function() {
                 groupName: record.name,
                 groupType: record.groupType,
                 tab: record.groupType === 'targeting' ? 'negativeTargeting' : 'negativeKeyword',
+                targetingType: record.campaignTargetType,
               })}
             >{value}</a>
           ),
@@ -474,7 +477,7 @@ const Group: React.FC = function() {
                 disabled={isArchived(record.state)}
                 allowClear={false}
                 showToday={false}
-                value={moment(value)}
+                value={value ? moment(value) : null}
                 onChange={(_, date) => modifyGroup({ startTime: date, id: record.id })}
               />
             }</>
@@ -495,10 +498,10 @@ const Group: React.FC = function() {
               <DatePicker
                 size="small"
                 disabled={isArchived(record.state)}
-                allowClear={false}
                 showToday={false}
-                value={moment(value)}
+                value={value ? moment(value) : null}
                 onChange={(_, date) => modifyGroup({ endTime: date, id: record.id })}
+                disabledDate={disabledDate}
               />
             }</>
           ), 
@@ -531,181 +534,17 @@ const Group: React.FC = function() {
           ),
         },
       ] as any,
-    }, {
-      title: '销售额',
-      dataIndex: 'sales',
-      key: 'sales',
-      align: 'right',
-      sorter: true,
-      sortOrder: sort === 'sales' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.sales, marketplace, currency),
-          dataIndex: 'sales',
-          width: 100,
-          align: 'right',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: '订单量',
-      dataIndex: 'orderNum',
-      key: 'orderNum',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'orderNum' ? order : null,
-      children: [
-        {
-          title: dataTotal.orderNum,
-          dataIndex: 'orderNum',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: 'CPC',
-      dataIndex: 'cpc',
-      key: 'cpc',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpc' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpc, marketplace, currency),
-          dataIndex: 'cpc',
-          width: 80,
-          align: 'center',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: 'CPA',
-      dataIndex: 'cpa',
-      key: 'cpa',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpa' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpa, marketplace, currency),
-          dataIndex: 'cpa',
-          width: 80,
-          align: 'center',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: 'Spend',
-      dataIndex: 'spend',
-      key: 'spend',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'spend' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.spend, marketplace, currency),
-          dataIndex: 'spend',
-          width: 80,
-          align: 'center',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: 'ACoS',
-      dataIndex: 'acos',
-      key: 'acos',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'acos' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.acos),
-          dataIndex: 'acos',
-          width: 80,
-          align: 'center',
-          render: (value: number) => numberToPercent(value),
-        },
-      ] as any,
-    }, {
-      title: 'RoAS',
-      dataIndex: 'roas',
-      key: 'roas',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'roas' ? order : null,
-      children: [
-        {
-          title: dataTotal.roas ? dataTotal.roas.toFixed(2) : '—',
-          dataIndex: 'roas',
-          align: 'center',
-          width: 80,
-          render: (value: number) => value ? value.toFixed(2) : '—',
-        },
-      ] as any,
-    }, {
-      title: 'Impressions',
-      dataIndex: 'impressions',
-      key: 'impressions',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'impressions' ? order : null,
-      children: [
-        {
-          title: dataTotal.impressions,
-          dataIndex: 'impressions',
-          align: 'center',
-          width: 100,
-        },
-      ] as any,
-    }, {
-      title: 'Clicks',
-      dataIndex: 'clicks',
-      key: 'clicks',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'clicks' ? order : null,
-      children: [
-        {
-          title: dataTotal.clicks,
-          dataIndex: 'clicks',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-      
-    }, {
-      title: 'CTR',
-      dataIndex: 'ctr',
-      key: 'ctr',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'ctr' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.ctr),
-          dataIndex: 'ctr',
-          width: 80,
-          align: 'center',
-          render: (value: number) => numberToPercent(value),
-        },
-      ] as any,
-    }, {
-      title: '转化率',
-      dataIndex: 'conversionsRate',
-      key: 'conversionsRate',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'conversionsRate' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.conversionsRate),
-          dataIndex: 'conversionsRate',
-          width: 80,
-          align: 'center',
-          render: (value: number) => numberToPercent(value),
-        },
-      ] as any,
-    }, {
+    },
+
+    ...getStatisticsCols({
+      total: dataTotal,
+      sort,
+      order,
+      marketplace,
+      currency,
+    }),
+
+    {
       title: '操作',
       children: [
         {
@@ -727,6 +566,7 @@ const Group: React.FC = function() {
                       campaignName: record.camName,
                       groupId: record.id,
                       groupName: record.name,
+                      targetingType: record.campaignTargetType,
                     })
                   }
                 >定时</a>
@@ -768,6 +608,7 @@ const Group: React.FC = function() {
                       campaignName: record.camName,
                       groupId: record.id,
                       groupName: record.name,
+                      targetingType: record.campaignTargetType,
                     })
                   }
                 >target设置</a>
@@ -835,7 +676,7 @@ const Group: React.FC = function() {
   return (
     <div>
       <div className={commonStyles.head}>
-        <MySearch placeholder="输入广告组名称/ASIN/SKU" defaultValue="" handleSearch={handleSearch} />
+        <MySearch placeholder="广告活动/广告组/ASIN/SKU" defaultValue="" handleSearch={handleSearch} />
         <Button
           type="primary"
           className={commonStyles.btnFiltrate}
@@ -849,7 +690,7 @@ const Group: React.FC = function() {
       { visibleFiltrate ? <Filtrate { ...filtrateProps } /> : <Crumbs { ...crumbsProps } /> }
       <div className={commonStyles.tableToolBar}>
         <div>
-          <Link to="/">
+          <Link to="/ppc/group/add">
             <Button type="primary">
               创建广告组<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
@@ -906,12 +747,8 @@ const Group: React.FC = function() {
       </Modal>
       <DataChartModal
         type="group"
-        visible={chartsState.visible}
         onCancel={() => setChartsState({ ...chartsState, visible: false })}
-        campaignId={chartsState.campaignId}
-        campaignName={chartsState.campaignName}
-        groupId={chartsState.groupId}
-        groupName={chartsState.groupName}
+        { ...chartsState }
       />
     </div>
   );

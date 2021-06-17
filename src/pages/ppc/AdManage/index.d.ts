@@ -9,6 +9,7 @@ export interface ITreeSelectedInfo {
   groupId?: string;
   groupName?: string;
   groupType: 'keyword' | 'target' | '';
+  targetingType: API.CamTargetType | '';
 }
 
 /** 广告组简要信息 */

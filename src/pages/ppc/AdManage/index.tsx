@@ -1,3 +1,8 @@
+/**
+ * 广告管理
+ * Tabs 可优化为只显示一个 Tab
+ * targetingType 字段是为了区分能不能添加targeting
+ */
 import React, { useState, useEffect } from 'react';
 import { Tree, Tabs, Layout } from 'antd';
 import { IConnectState } from '@/models/connect';
@@ -110,23 +115,18 @@ const Manage: React.FC = function() {
   const [tabsState, setTabsState] = useState<string>('default');
   // 选中的标签(默认选中第一个)
   const [activeTabKey, setActiveTabKey] = useState<string>(tabsStateDict[tabsState][0]);
-  // const [activeTabKey, setActiveTabKey] = useState<string>('group');
+  // const [activeTabKey, setActiveTabKey] = useState<string>('targeting');
   // 菜单树侧边栏是否收起
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
+  // loading 标签页数量
+  const loadingTabsCellCount = loadingEffect['adManage/fetchTabsCellCount']; 
   
   useEffect(() => {
     if (currentShopId !== '-1') {
       // 店铺更新时间
       dispatch({
         type: 'adManage/fetchUpdateTime',
-        payload: {
-          headersParams: { StoreId: currentShopId },
-        },
-        callback: requestErrorFeedback,
-      });
-      // 各标签显示的数量
-      dispatch({
-        type: 'adManage/fetchTabsCellCount',
         payload: {
           headersParams: { StoreId: currentShopId },
         },
@@ -139,8 +139,26 @@ const Manage: React.FC = function() {
         window.history.replaceState(null, '', '/ppc/manage');
       }
       const { 
-        campaignType, campaignState, campaignId, campaignName, groupId, groupName, tab, groupType,
+        campaignType,
+        campaignState,
+        campaignId,
+        campaignName,
+        groupId,
+        groupName,
+        tab,
+        groupType,
+        targetingType,
       } = qsParams as { [key: string]: string };
+      // 各标签显示的数量
+      dispatch({
+        type: 'adManage/fetchTabsCellCount',
+        payload: {
+          headersParams: { StoreId: currentShopId },
+          campaignId,
+          groupId,
+        },
+        callback: requestErrorFeedback,
+      });
       // 设置标签类型状态
       let qsTabsState = 'default';
       if (groupId) {
@@ -205,6 +223,7 @@ const Manage: React.FC = function() {
             groupId,
             groupName,
             groupType,
+            targetingType,
           },
         });
         return () => {
@@ -302,6 +321,7 @@ const Manage: React.FC = function() {
       groupId: paramsArr[3],
       groupName: '',
       groupType: selectedNode.groupType,
+      targetingType: selectedNode.targetingType,
     };
     switch (paramsArr.length) {
     case 3:
@@ -327,9 +347,11 @@ const Manage: React.FC = function() {
   function handleBreadcrumbClick(type: 'shop' | 'campaign') {
     let selectedInfo: ITreeSelectedInfo = {
       key: '',
-      campaignId: '',
+      // 后端接口 campaignId 不允许为空字符串
+      campaignId: undefined,
       campaignName: '',
       groupType: '',
+      targetingType: '',
     };
     let tabsState: TabsState = 'default';
     if (type === 'shop') {
@@ -339,7 +361,7 @@ const Manage: React.FC = function() {
         payload: { keys: [] },
       });
     } else if (type === 'campaign') {
-      const paramsArr = treeSelectedInfo.key.split('-');
+      const paramsArr = treeSelectedInfo.key.split('-');      
       selectedInfo = {
         key: `${paramsArr[0]}-${paramsArr[1]}-${paramsArr[2]}`,
         campaignType: paramsArr[0] as API.CamType,
@@ -347,6 +369,7 @@ const Manage: React.FC = function() {
         campaignId: treeSelectedInfo.campaignId,
         campaignName: treeSelectedInfo.campaignName,
         groupType: '',
+        targetingType: treeSelectedInfo.targetingType,
       };
       tabsState = 'campaign';
     }
@@ -438,7 +461,13 @@ const Manage: React.FC = function() {
                   tab={
                     <span className={styles.tabsTitle}>
                       { tab.tab }
-                      <span>{ tab.countKey ? <>({tabsCellCount[tab.countKey]})</> : null }</span>
+                      <span>
+                        {
+                          tab.countKey
+                            ? <>({ loadingTabsCellCount ? '...' : tabsCellCount[tab.countKey] })</>
+                            : null
+                        }
+                      </span>
                     </span>
                   }
                 >

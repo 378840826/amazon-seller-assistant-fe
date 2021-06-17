@@ -4,7 +4,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
-import { Select, Button, Modal, message, Spin } from 'antd';
+import { Select, Button, Modal, message } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
@@ -16,7 +16,7 @@ import Crumbs from '../components/Crumbs';
 import BatchSetBid from '../components/BatchSetBid';
 import StateSelect, { stateOptions } from '../components/StateSelect';
 import DataChartModal from '../components/DataChartModal';
-import Rate from '@/components/Rate';
+import SuggestedPrice from '../components/SuggestedPrice';
 import editable from '@/pages/components/EditableCell';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import AddModal from './AddModal';
@@ -29,10 +29,15 @@ import {
   strToMoneyStr,
   storage,
   getDateCycleParam,
-  numberToPercent,
 } from '@/utils/utils';
-import { isArchived, getAssignUrl, getDefinedCalendarFiltrateParams } from '../utils';
-import { add, minus, times, divide } from '@/utils/precisionNumber';
+import {
+  isArchived,
+  getAssignUrl,
+  getDefinedCalendarFiltrateParams,
+  getBidExprVlaue,
+  getStatisticsCols,
+  isOperableTargetingGroup,
+} from '../utils';
 import { UpOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { IComputedBidParams } from '../index.d';
 import classnames from 'classnames';
@@ -113,7 +118,7 @@ const Targeting: React.FC = function() {
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, currentShopId]);
+  }, [dispatch, currentShopId, treeSelectedInfo]);
 
   // 修改数据
   function modifyTargeting(params: {[key: string]: string | number}) {
@@ -157,10 +162,6 @@ const Targeting: React.FC = function() {
   // 执行筛选
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleFiltrate(values: { [key: string]: any }) {
-    // targeting类型的key targetingType 后端要求为 deliveryMethod
-    if (values.targetingType) {
-      values.deliveryMethod = values.targetingType;
-    }
     setVisibleFiltrate(false);
     dispatch({
       type: 'adManage/fetchTargetingList',
@@ -255,69 +256,15 @@ const Targeting: React.FC = function() {
     return params;
   }
 
-  // 按公式计算竞价
-  function getComputedBid(params: IComputedBidParams, record: API.IAdTargeting) {
-    let result = 0;
-    const { type, unit, operator, exprValue } = params;
-    const opDict = {
-      '+': add,
-      '-': minus,
-    };
-    // 建议竞价/最高/最低建议竞价
-    const baseValue = record[type];
-    if (unit === 'percent') {
-      result = opDict[operator](baseValue, times(baseValue, divide(exprValue, 100)));
-    } else if (unit === 'currency') {
-      result = opDict[operator](baseValue, exprValue);
-    }
-    return result;
-  }
-
-  // 获取批量竞价按公式修改的实际结果
-  function getBidExprVlaue(params: IComputedBidParams) {
-    const { type, unit, operator, exprValue, price } = params;
-    const data = [];
-    const minValue = marketplace === 'JP' ? 2 : 0.02;
-    // 值类型
-    if (type === 'value' && price) {
-      if (price < minValue) {
-        message.error(`竞价不能低于${minValue}`);
-        return;
-      }
-      for (let index = 0; index < checkedIds.length; index++) {
-        data.push({
-          id: checkedIds[index],
-          bid: getShowPrice(price),
-        });
-      }
-    } else {
-      // 计算类型
-      for (let index = 0; index < checkedIds.length; index++) {
-        const id = checkedIds[index];
-        const record = records.find(item => item.id === id) as API.IAdTargeting;
-        const bid = getComputedBid({
-          type,
-          operator,
-          unit,
-          exprValue,
-        }, record);
-        if (bid < minValue) {
-          message.error(`竞价不能低于${minValue}`);
-          return;
-        }
-        data.push({
-          id,
-          bid: getShowPrice(bid),
-        });
-      }
-    }
-    return data;
-  }
-
   // 批量设置竞价
-  function setBatchBid (values: IComputedBidParams) {
+  function setBatchBid (exprParams: IComputedBidParams) {
     // 计算后的
-    const data = getBidExprVlaue(values);
+    const data = getBidExprVlaue({
+      marketplace,
+      exprParams,
+      checkedIds,
+      records,
+    });
     if (data) {
       dispatch({
         type: 'adManage/batchTargeting',
@@ -336,7 +283,7 @@ const Targeting: React.FC = function() {
   function applySuggestedBid(ids: string[]) {
     const data: { id: string; bid: number }[] = [];
     records.forEach(item => {
-      if (item.suggested === 0) {
+      if (!item.suggested) {
         return;
       }
       if (ids.includes(item.id)) {
@@ -346,6 +293,10 @@ const Targeting: React.FC = function() {
         });
       }
     });
+    if (data.length !== ids.length) {
+      message.error('应用失败，建议竞价不正确！');
+      return;
+    }
     dispatch({
       type: 'adManage/batchTargeting',
       payload: {
@@ -354,6 +305,16 @@ const Targeting: React.FC = function() {
       },
       callback: requestFeedback,
     });
+  }
+
+  // 点击添加targeting按钮
+  function handleClickAddBtn() {
+    const { targetingType } = treeSelectedInfo;
+    if (!isOperableTargetingGroup(targetingType)) {
+      message.warning('此广告活动/广告组不支持添加Targeting');
+      return;
+    }
+    setVisibleAdd(true);
   }
 
   // targeting 类型下拉框
@@ -435,6 +396,7 @@ const Targeting: React.FC = function() {
                     groupId: record.groupId,
                     groupName: record.groupName,
                     groupType: record.groupType,
+                    targetingType: record.campaignTargetType,
                   })
                 }
               >{record.groupName}</a>
@@ -481,20 +443,16 @@ const Targeting: React.FC = function() {
           width: 100,
           align: 'center',
           render: (value: string, record: API.IAdTargeting) => (
-            <Spin spinning={loading.suggestedBid} size="small">
-              <div className={commonStyles.suggested}>
-                {getShowPrice(value, marketplace, currency)}
-                <Button
-                  disabled={isArchived(record.state)}
-                  onClick={() => applySuggestedBid([record.id])}
-                >应用</Button>
-              </div>
-              <div>
-                ({getShowPrice(record.rangeStart, marketplace, currency)}
-                -
-                {getShowPrice(record.rangeEnd, marketplace, currency)})
-              </div>
-            </Spin>
+            <SuggestedPrice
+              loading={loading.suggestedBid}
+              disabled={isArchived(record.state)}
+              suggestedPrice={value}
+              suggestedMin={record.rangeStart}
+              suggestedMax={record.rangeEnd}
+              marketplace={marketplace}
+              currency={currency}
+              onApply={() => applySuggestedBid([record.id])}
+            />
           ),
         },
       ] as any,
@@ -537,239 +495,17 @@ const Targeting: React.FC = function() {
           align: 'center',
         },
       ] as any,
-    }, {
-      title: '销售额',
-      dataIndex: 'sales',
-      key: 'sales',
-      align: 'right',
-      sorter: true,
-      sortOrder: sort === 'sales' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.sales, marketplace, currency),
-          dataIndex: 'sales',
-          width: 100,
-          align: 'right',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.salesRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: '订单量',
-      dataIndex: 'orderNum',
-      key: 'orderNum',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'orderNum' ? order : null,
-      children: [
-        {
-          title: dataTotal.orderNum,
-          dataIndex: 'orderNum',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.orderNumRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'CPC',
-      dataIndex: 'cpc',
-      key: 'cpc',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpc' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpc, marketplace, currency),
-          dataIndex: 'cpc',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.cpcRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'CPA',
-      dataIndex: 'cpa',
-      key: 'cpa',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpa' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.cpa, marketplace, currency),
-          dataIndex: 'cpa',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.cpaRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'Spend',
-      dataIndex: 'spend',
-      key: 'spend',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'spend' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.spend, marketplace, currency),
-          dataIndex: 'spend',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.spendRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'ACoS',
-      dataIndex: 'acos',
-      key: 'acos',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'acos' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.acos),
-          dataIndex: 'acos',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { numberToPercent(value) }
-              <div><Rate value={record.acosRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'RoAS',
-      dataIndex: 'roas',
-      key: 'roas',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'roas' ? order : null,
-      children: [
-        {
-          title: dataTotal.roas ? dataTotal.roas.toFixed(2) : '—',
-          dataIndex: 'roas',
-          align: 'center',
-          width: 80,
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { value ? value.toFixed(2) : '—' }
-              <div><Rate value={record.roasRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'Impressions',
-      dataIndex: 'impressions',
-      key: 'impressions',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'impressions' ? order : null,
-      children: [
-        {
-          title: dataTotal.impressions,
-          dataIndex: 'impressions',
-          align: 'center',
-          width: 100,
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.impressionsRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: 'Clicks',
-      dataIndex: 'clicks',
-      key: 'clicks',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'clicks' ? order : null,
-      children: [
-        {
-          title: dataTotal.clicks,
-          dataIndex: 'clicks',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { getShowPrice(value, marketplace, currency) }
-              <div><Rate value={record.clicksRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-      
-    }, {
-      title: 'CTR',
-      dataIndex: 'ctr',
-      key: 'ctr',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'ctr' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.ctr),
-          dataIndex: 'ctr',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { numberToPercent(value) }
-              <div><Rate value={record.ctrRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
-      title: '转化率',
-      dataIndex: 'conversionsRate',
-      key: 'conversionsRate',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'conversionsRate' ? order : null,
-      children: [
-        {
-          title: numberToPercent(dataTotal.conversionsRate),
-          dataIndex: 'conversionsRate',
-          width: 80,
-          align: 'center',
-          render: (value: number, record: API.IAdTargeting) => (
-            <>
-              { numberToPercent(value) }
-              <div><Rate value={record.conversionsRateRatio} decimals={2} /></div>
-            </>
-          ),
-        },
-      ] as any,
-    }, {
+    }, 
+    
+    ...getStatisticsCols({
+      total: dataTotal,
+      sort,
+      order,
+      marketplace,
+      currency,
+    }),
+    
+    {
       title: '操作',
       align: 'center',
       children: [
@@ -855,7 +591,12 @@ const Targeting: React.FC = function() {
   return (
     <div>
       <div className={commonStyles.head}>
-        <MySearch placeholder="输入广告活动、广告组、ASIN/SKU或关键词" defaultValue="" handleSearch={handleSearch} />
+        <MySearch
+          placeholder="广告活动/广告组/ASIN/SKU/关键词"
+          defaultValue=""
+          width="300px"
+          handleSearch={handleSearch}
+        />
         <Button
           type="primary"
           className={commonStyles.btnFiltrate}
@@ -885,7 +626,7 @@ const Targeting: React.FC = function() {
       <div className={commonStyles.tableToolBar}>
         <div>
           <span>
-            <Button type="primary" onClick={() => setVisibleAdd(true)}>
+            <Button type="primary" onClick={handleClickAddBtn}>
               添加Targeting<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
           </span>
@@ -919,14 +660,8 @@ const Targeting: React.FC = function() {
       <AdManageTable { ...tableProps } />
       <DataChartModal
         type="targeting"
-        visible={chartsState.visible}
         onCancel={() => setChartsState({ ...chartsState, visible: false })}
-        campaignId={chartsState.campaignId}
-        campaignName={chartsState.campaignName}
-        groupId={chartsState.groupId}
-        groupName={chartsState.groupName}
-        targetId={chartsState.targetId}
-        targetName={chartsState.targetName}
+        { ...chartsState }
       />
       <AddModal visible={visibleAdd} setVisible={setVisibleAdd} />
     </div>

@@ -13,7 +13,7 @@ export default {
   },
 
   // 广告活动简表
-  'GET /api/gd/management/cam/store/list': (_: Request, res: Response) => {
+  'GET /api/gd/management/campaign/store/list': (_: Request, res: Response) => {
     const records = [{
       name: '广告活动-B073DY9671 B073DXX8PS B073CGP25H',
       id: '0',
@@ -201,13 +201,15 @@ export default {
     setTimeout(() => {
       res.send({
         code: 200,
-        data: [
-          { id: 1, name: 'portfolio-1' },
-          { id: 2, name: '字符字符字符字符字符字符字符字符字符字符' },
-          { id: 3, name: 'portfolio-3' },
-          { id: 4, name: 'portfolio-4' },
-          { id: 5, name: 'portfolio-5' },
-        ],
+        data: {
+          records: [
+            { id: 1, name: 'portfolio-1' },
+            { id: 2, name: '字符字符字符字符字符字符字符字符字符字符' },
+            { id: 3, name: 'portfolio-3' },
+            { id: 4, name: 'portfolio-4' },
+            { id: 5, name: 'portfolio-5' },
+          ],
+        },
       });
     }, 500);
   },
@@ -384,7 +386,7 @@ export default {
               id: '1',
               state: 'enabled',
               bid: 5.5,
-              recommendBid: 1.11,
+              recommendBid: null,
               recommendBidStart: 0.11,
               recommendBidEnd: 11.1,
               target: 'queryHighRelMatches',
@@ -527,6 +529,7 @@ export default {
         orderNum: 10010,
         conversionsRate: 10010,
         addTime: '2020-01-02 12:13:56',
+        campaignTargetType: 'manual',
       });
     }
     setTimeout(() => {
@@ -737,6 +740,7 @@ export default {
         salesRatio: 18,
         orderNumRatio: 99,
         conversionsRateRatio: 100,
+        campaignTargetType: 'manual',
       });
     }
     setTimeout(() => {
@@ -774,9 +778,9 @@ export default {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const records = keywords.map((kw: any) => ({
         id: kw.id,
-        suggested: Math.floor(Math.random() * 10),
-        rangeStart: 0.33,
-        rangeEnd: 3.33,
+        suggested: kw.id > 2 ? null : Math.floor(Math.random() * 10),
+        rangeStart: kw.id > 2 ? null : 0.3,
+        rangeEnd: kw.id > 2 ? null : 33.3,
         keywordText: kw.keywordText,
         matchType: kw.matchType,
       }));
@@ -861,6 +865,7 @@ export default {
         salesRatio: 18,
         orderNumRatio: 99,
         conversionsRateRatio: 100,
+        campaignTargetType: 'manual',
       });
     }
     setTimeout(() => {
@@ -896,7 +901,10 @@ export default {
     const { body: { ids } } = req;
     setTimeout(() => {
       const records = ids.map((id: string) => ({
-        id, suggested: 2.11, rangeStart: 0.11, rangeEnd: 3.11,
+        id,
+        suggested: id > '1' ? null : Math.floor(Math.random() * 10),
+        rangeStart: id > '1' ? null : 0.3,
+        rangeEnd: id > '1' ? null : 33.3,
       }));
       res.send({
         code: 200,
@@ -931,13 +939,13 @@ export default {
 
   // Targeting-建议分类
   'GET /api/gd/management/target/suggested-categories': (_: Request, res: Response) => {
-    const data = [{
+    const records = [{
       categoryId: '0',
       categoryName: '分类-0',
       path: '路径',
     }];
     for (let index = 1; index < 3; index++) {
-      data.push({
+      records.push({
         categoryId: String(index),
         categoryName: `分类-${index}`,
         path: '路径路径路径路径路径路径>路径路径路径路径路径路径路径路径路径路径路径路径路径路径路径路径>路径路径',
@@ -946,7 +954,7 @@ export default {
     setTimeout(() => {
       res.send({
         code: 200,
-        data,
+        data: { records },
       });
     }, 0);
   },
@@ -972,8 +980,8 @@ export default {
   },
 
   // Targeting-建议商品
-  'GET /api/gd/management/target/suggested-goods': (_: Request, res: Response) => {
-    const data = [{
+  'GET /api/gd/management/target/suggested-asin': (_: Request, res: Response) => {
+    const records = [{
       asin: 'B000000000',
       title: '商品名称-0',
       imgUrl: null,
@@ -982,7 +990,7 @@ export default {
       reviewCount: 2333,
     }];
     for (let index = 1; index < 4; index++) {
-      data.push({
+      records.push({
         asin: `B000000000${index}`,
         title: `商品名称-${index}`,
         imgUrl: null,
@@ -994,7 +1002,7 @@ export default {
     setTimeout(() => {
       res.send({
         code: 200,
-        data,
+        data: { records },
       });
     }, 0);
   },
@@ -1005,9 +1013,9 @@ export default {
     setTimeout(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const records = categories.map((item: any) => ({
-        suggested: Math.floor(Math.random() * 10),
-        rangeStart: 0.33,
-        rangeEnd: 3.33,
+        suggested: item.categoryId > '1' ? null : Math.floor(Math.random() * 10),
+        rangeStart: item.categoryId > '1' ? null : 0.3,
+        rangeEnd: item.categoryId > '1' ? null : 33.3,
         categoryId: item.categoryId,
         brandId: item.brandId,
         priceLessThan: item.priceLessThan,
@@ -1030,9 +1038,9 @@ export default {
     setTimeout(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const records = asins.map((item: any) => ({
-        suggested: Math.floor(Math.random() * 10),
-        rangeStart: 0.33,
-        rangeEnd: 3.33,
+        suggested: item > 'B000000001' ? null : Math.floor(Math.random() * 10),
+        rangeStart: item > 'B000000001' ? null : 0.3,
+        rangeEnd: item > 'B000000001' ? null : 33.3,
         asin: item,
       }));
       res.send({
@@ -1119,6 +1127,7 @@ export default {
           total: 111,
           size: 20,
           current: 3,
+          pages: 6,
           records,
         },
       });
@@ -1172,7 +1181,7 @@ export default {
     setTimeout(() => {
       res.send({
         code: 200,
-        data,
+        data: { records: data },
       });
     }, 0);
   },
@@ -1195,6 +1204,7 @@ export default {
           total: 111,
           size: 20,
           current: 3,
+          pages: 6,
           records,
         },
       });
@@ -1238,7 +1248,7 @@ export default {
     setTimeout(() => {
       res.send({
         code: 200,
-        data,
+        data: { records: data },
       });
     }, 0);
   },

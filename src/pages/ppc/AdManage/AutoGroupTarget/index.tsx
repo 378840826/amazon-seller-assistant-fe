@@ -7,6 +7,7 @@ import { Button, Table, Switch, message, Dropdown, Checkbox, Row, Col } from 'an
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import DateRangePicker from '../components/DateRangePicker';
+import SuggestedPrice from '../components/SuggestedPrice';
 import {
   getPageQuery,
   getShowPrice,
@@ -18,9 +19,8 @@ import {
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import commonStyles from '../common.less';
 import styles from './index.less';
-import { getAssignUrl } from '../utils';
+import { getAssignUrl, isArchived } from '../utils';
 
 const TargetingGroupsDict = {
   queryHighRelMatches: 'Close-match',
@@ -213,20 +213,15 @@ const AutoGroupTarget: React.FC = function() {
       align: 'center',
       width: 110,
       render: (value, record) => (
-        <>
-          <div className={commonStyles.suggested}>
-            {getShowPrice(value, marketplace, currency)}
-            <Button
-              disabled={!value}
-              onClick={() => handleSelectedApplySuggestedBid(record)}
-            >应用</Button>
-          </div>
-          <div>
-            ({getShowPrice(record.recommendBidStart, marketplace, currency)}
-            -
-            {getShowPrice(record.recommendBidEnd, marketplace, currency)})
-          </div>
-        </>
+        <SuggestedPrice
+          disabled={isArchived(record.state)}
+          suggestedPrice={value}
+          suggestedMin={record.recommendBidStart}
+          suggestedMax={record.recommendBidEnd}
+          marketplace={marketplace}
+          currency={currency}
+          onApply={() => handleSelectedApplySuggestedBid(record)}
+        />
       ),
     }, {
       title: '竞价',

@@ -18,6 +18,7 @@ import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { ISimpleGroup } from '../../index.d';
 import BatchSetBid from '../../components/BatchSetBid';
+import SuggestedPrice from '../../components/SuggestedPrice';
 import DetailSetDropdown from './DetailSetDropdown';
 import editable from '@/pages/components/EditableCell';
 import GoodsImg from '@/pages/components/GoodsImg';
@@ -29,7 +30,7 @@ import {
   strToMoneyStr,
   objToQueryString,
 } from '@/utils/utils';
-import { createIdTargeting, getBidExprVlaue, isValidTargetingBid } from '../../utils';
+import { createIdTargeting, getBidExprVlaue, isOperableTargetingGroup, isValidTargetingBid } from '../../utils';
 import { IBrand, ICategoryTargeting, IGoodsTargeting, IComputedBidParams } from '../../index.d';
 import classnames from 'classnames';
 import commonStyles from '../../common.less';
@@ -51,6 +52,8 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
   const loading = {
     suggestedCategory: loadingEffect['adManage/fetchSuggestedCategory'],
+    suggestedCategorySuggestedBid: loadingEffect['adManage/fetchSuggestedCategorySuggestedBid'],
+    suggestedGoodsSuggestedBid: loadingEffect['adManage/fetchSuggestedGoodsSuggestedBid'],
     add: loadingEffect['adManage/addTargeting'],
     fetchGroupList: loadingEffect['adManage/fetchSimpleGroupList'],
   };
@@ -127,7 +130,7 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
 
   // 获取建议分类和建议商品
   useEffect(() => {
-    if (currentShopId !== '-1' && addState.groupId) {
+    if (currentShopId !== '-1' && addState.groupId && isOperableTargetingGroup(treeSelectedInfo.targetingType)) {
       dispatch({
         type: 'adManage/fetchSuggestedCategory',
         payload: {
@@ -377,6 +380,8 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
   // 批量操作已选 targeting（删除、应用建议竞价）
   function handleBatchSetSelectedTargeting(type: 'delete' | 'applyBid') {
     let newList: IGoodsTargeting[] | ICategoryTargeting[] = [];
+    /** 建议竞价是否有误 */
+    let bidError = false;
     switch (type) {
     case 'delete':
       newList = selectedTargetingList.filter((item: any) => {
@@ -398,6 +403,9 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
         let kw = item;
         checkedSelectedTargetingIds.forEach(id => {
           if (item.id === id) {
+            if (!item.suggested) {
+              bidError = true;
+            }
             kw = { ...item, bid: item.suggested };
           }
         });
@@ -407,6 +415,10 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
     default:
       console.error('handleBatchSetSelectedTargeting 参数错误');
       break;
+    }
+    if (bidError) {
+      message.error('应用失败，建议竞价不正确！');
+      return;
     }
     setSelectedTargetingList(newList);
   }
@@ -471,7 +483,7 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
       >
         {
           campaignSimpleList.map(item => (
-            item.campaignType !== 'sb' && 
+            isOperableTargetingGroup(item.targetingType) && 
             <Option key={item.id} value={item.id}>{ item.name }</Option>)
           )
         }
@@ -706,20 +718,15 @@ const AddTargetingModal: React.FC<IProps> = function(props) {
       align: 'center',
       width: 100,
       render: (value, record) => (
-        <>
-          <div className={commonStyles.suggested}>
-            {getShowPrice(value, marketplace, currency)}
-            <Button
-              disabled={!value}
-              onClick={() => handleApplySuggestedBid(record)}
-            >应用</Button>
-          </div>
-          <div>
-            ({getShowPrice(record.rangeStart, marketplace, currency)}
-            -
-            {getShowPrice(record.rangeEnd, marketplace, currency)})
-          </div>
-        </>
+        <SuggestedPrice
+          loading={loading.suggestedCategorySuggestedBid || loading.suggestedGoodsSuggestedBid}
+          suggestedPrice={value}
+          suggestedMin={record.rangeStart}
+          suggestedMax={record.rangeEnd}
+          marketplace={marketplace}
+          currency={currency}
+          onApply={() => handleApplySuggestedBid(record)}
+        />
       ),
     }, {
       title: '竞价',
