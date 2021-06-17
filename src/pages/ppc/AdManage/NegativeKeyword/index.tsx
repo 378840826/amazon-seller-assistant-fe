@@ -590,7 +590,7 @@ const NegativeKeyword: React.FC = function() {
           添加否定关键词
         </Button>
         <Button disabled={!checkedIds.length} onClick={() => handleBatchArchive()}>归档</Button>
-        <MySearch placeholder="输入否定关键词" defaultValue="" handleSearch={val => handleSearch({ code: val })} />
+        <MySearch placeholder="否定关键词" defaultValue="" handleSearch={val => handleSearch({ code: val })} />
         匹配方式:
         <Radio.Group onChange={e => handleSearch({ matchType: e.target.value })} value={matchType}>
           <Radio value={undefined}>不限</Radio>
@@ -642,7 +642,6 @@ const NegativeKeyword: React.FC = function() {
                               { label: matchTypeDict[key], value: key }
                             ))
                           }
-                          defaultValue={['Apple']}
                           // eslint-disable-next-line @typescript-eslint/no-explicit-any
                           onChange={(values) => setCandidateMatchType(values as any)}
                         />

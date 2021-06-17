@@ -10,7 +10,7 @@ export async function queryUpdateTime(params: API.IParams) {
 
 // 广告活动简表
 export async function querySimpleCampaignList(params: API.IParams) {
-  return request('/api/gd/management/cam/store/list', {
+  return request('/api/gd/management/campaign/store/list', {
     data: params,
     params,
   });
@@ -265,7 +265,7 @@ export async function querySuggestedKeywords(params: API.IParams) {
 
 // 关键词-添加关键词
 export async function addKeyword(params: API.IParams) {
-  return request('/api/gd/management/product/add', {
+  return request('/api/gd/management/st/add/keyword', {
     method: 'POST',
     data: params,
   });
@@ -329,7 +329,7 @@ export async function querySuggestedBrands(params: API.IParams) {
 
 // Targeting-获取建议商品
 export async function querySuggestedGoods(params: API.IParams) {
-  return request('/api/gd/management/target/suggested-goods', {
+  return request('/api/gd/management/target/suggested-asin', {
     data: params,
     params,
   });

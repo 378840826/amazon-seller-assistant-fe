@@ -4,7 +4,7 @@
  */
 import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'umi';
-import { Button, Modal, Table, Input, Select, Spin, message, AutoComplete } from 'antd';
+import { Button, Modal, Table, Input, Select, message, AutoComplete } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
@@ -13,6 +13,7 @@ import Filtrate from '../components/Filtrate';
 import Crumbs from '../components/Crumbs';
 import CustomCols from '../components/CustomCols';
 import ContainTitleSelect from '../components/ContainTitleSelect';
+import SuggestedPrice from '../components/SuggestedPrice';
 import editable from '@/pages/components/EditableCell';
 import DefinedCalendar from '@/components/DefinedCalendar';
 import { matchTypeDict } from '@/pages/ppc/AdManage';
@@ -31,6 +32,7 @@ import {
   getTableColumns,
   isValidTargetingBid,
   getDefinedCalendarFiltrateParams,
+  getStatisticsCols,
 } from '../utils';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
@@ -704,174 +706,17 @@ const SearchTerm: React.FC = function() {
           ),
         },
       ] as any,
-    }, {
-      title: '销售额',
-      dataIndex: 'sales',
-      key: 'sales',
-      align: 'right',
-      sorter: true,
-      sortOrder: sort === 'sales' ? order : null,
-      children: [
-        {
-          title: getShowPrice(dataTotal.sales, marketplace, currency),
-          dataIndex: 'sales',
-          width: 100,
-          align: 'right',
-          render: (value: number) => getShowPrice(value, marketplace, currency),
-        },
-      ] as any,
-    }, {
-      title: '订单量',
-      dataIndex: 'orderNum',
-      key: 'orderNum',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'orderNum' ? order : null,
-      children: [
-        {
-          title: dataTotal.orderNum,
-          dataIndex: 'orderNum',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: 'CPC',
-      dataIndex: 'cpc',
-      key: 'cpc',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpc' ? order : null,
-      children: [
-        {
-          title: dataTotal.cpc,
-          dataIndex: 'cpc',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: 'CPA',
-      dataIndex: 'cpa',
-      key: 'cpa',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'cpa' ? order : null,
-      children: [
-        {
-          title: dataTotal.cpa,
-          dataIndex: 'cpa',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: 'Spend',
-      dataIndex: 'spend',
-      key: 'spend',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'spend' ? order : null,
-      children: [
-        {
-          title: dataTotal.spend,
-          dataIndex: 'spend',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: 'ACoS',
-      dataIndex: 'acos',
-      key: 'acos',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'acos' ? order : null,
-      children: [
-        {
-          title: dataTotal.acos,
-          dataIndex: 'acos',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: 'RoAS',
-      dataIndex: 'roas',
-      key: 'roas',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'roas' ? order : null,
-      children: [
-        {
-          title: dataTotal.roas,
-          dataIndex: 'roas',
-          align: 'center',
-          width: 80,
-        },
-      ] as any,
-    }, {
-      title: 'Impressions',
-      dataIndex: 'impressions',
-      key: 'impressions',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'impressions' ? order : null,
-      children: [
-        {
-          title: dataTotal.impressions,
-          dataIndex: 'impressions',
-          align: 'center',
-          width: 100,
-        },
-      ] as any,
-    }, {
-      title: 'Clicks',
-      dataIndex: 'clicks',
-      key: 'clicks',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'clicks' ? order : null,
-      children: [
-        {
-          title: dataTotal.clicks,
-          dataIndex: 'clicks',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-      
-    }, {
-      title: 'CTR',
-      dataIndex: 'ctr',
-      key: 'ctr',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'ctr' ? order : null,
-      children: [
-        {
-          title: dataTotal.ctr,
-          dataIndex: 'ctr',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
-      title: '转化率',
-      dataIndex: 'conversionsRate',
-      key: 'conversionsRate',
-      align: 'center',
-      sorter: true,
-      sortOrder: sort === 'conversionsRate' ? order : null,
-      children: [
-        {
-          title: dataTotal.conversionsRate,
-          dataIndex: 'conversionsRate',
-          width: 80,
-          align: 'center',
-        },
-      ] as any,
-    }, {
+    }, 
+    
+    ...getStatisticsCols({
+      total: dataTotal,
+      sort,
+      order,
+      marketplace,
+      currency,
+    }),
+    
+    {
       title: '操作',
       align: 'center',
       children: [
@@ -1025,19 +870,15 @@ const SearchTerm: React.FC = function() {
       align: 'center',
       width: 130,
       render: (value, record) => (
-        <Spin spinning={loading.suggestedBid} size="small">
-          <div className={commonStyles.suggested}>
-            {getShowPrice(value, marketplace, currency)}
-            <Button onClick={
-              () => modifyPutKeywordInfo({ bid: record.suggested, id: record.id })
-            }>应用</Button>
-          </div>
-          <div>
-            ({getShowPrice(record.suggestedRangeStart, marketplace, currency)}
-            -
-            {getShowPrice(record.suggestedRangeEnd, marketplace, currency)})
-          </div>
-        </Spin>
+        <SuggestedPrice
+          loading={loading.suggestedBid}
+          suggestedPrice={value}
+          suggestedMin={record.suggestedRangeStart}
+          suggestedMax={record.suggestedRangeEnd}
+          marketplace={marketplace}
+          currency={currency}
+          onApply={() => modifyPutKeywordInfo({ bid: record.suggested, id: record.id })}
+        />
       ),
     }, {
       title: '竞价',
@@ -1300,7 +1141,7 @@ const SearchTerm: React.FC = function() {
           className={styles.Search}
           value={asinKeyword}
           onChange={e => setAsinKeyword(e.target.value)}
-          placeholder="搜索ASIN,找到ASIN相关的搜索词"
+          placeholder="搜索ASIN,找到相关的搜索词"
           onSearch={handleAsinSearch}
         />
         <Button

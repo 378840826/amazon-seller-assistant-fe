@@ -23,7 +23,7 @@ const config =  {
   ignoreMomentLocale: true,
   favicon: '/favicon.ico',
   title: '安知助手',
-  mock: {},
+  mock: false,
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',

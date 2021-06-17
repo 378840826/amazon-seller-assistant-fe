@@ -11,11 +11,12 @@ const { Search } = Input;
 interface IProps {
   placeholder: string;
   defaultValue: string;
+  width?: string | number;
   handleSearch: (value: string) => void;
 }
 
-const EditableCell: React.FC<IProps> = (props) => {
-  const { placeholder, defaultValue, handleSearch } = props;
+const MySearch: React.FC<IProps> = (props) => {
+  const { placeholder, defaultValue, width, handleSearch } = props;
   const [value, setValue] = useState<string>('');
 
   // 输入框 change
@@ -25,7 +26,7 @@ const EditableCell: React.FC<IProps> = (props) => {
   }
 
   return (
-    <span className={styles.SearchContainer}>
+    <span className={styles.SearchContainer} style={{ width }}>
       <Search
         className={styles.Search}
         placeholder={placeholder}
@@ -50,4 +51,4 @@ const EditableCell: React.FC<IProps> = (props) => {
   );
 };
 
-export default EditableCell;
+export default MySearch;

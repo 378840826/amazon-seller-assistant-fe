@@ -187,7 +187,7 @@ const NegativeTargeting: React.FC = function() {
           添加否定Targeting
         </Button>
         <Button disabled={!checkedIds.length} onClick={() => handleBatchArchive()}>归档</Button>
-        <MySearch placeholder="输入广品牌或ASIN" defaultValue="" handleSearch={handleSearch} />
+        <MySearch placeholder="品牌或ASIN" defaultValue="" handleSearch={handleSearch} />
       </div>
       <div className={styles.tableContainer}>
         <Table

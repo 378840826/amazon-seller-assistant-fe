@@ -123,7 +123,8 @@ declare namespace API {
   type CamType = 'sb' | 'sp' | 'sd';
   type AdKeywordMatchType = 'exact' | 'phrase' | 'broad';
   type AdNegativeKeywordMatchType = 'negativeExact' | 'negativePhrase';
-  type CamTargetType = 'manual' | 'auto';
+  /** 手动manual，自动auto，分类/商品T00020，受众T00030 */
+  type CamTargetType = 'manual' | 'auto' | 'T00020' | 'T00030';
   // 广告管理-广告活动
   interface IAdCampaign {
     id: string;
@@ -245,6 +246,7 @@ declare namespace API {
     sales: number;
     orderNum: number;
     conversionsRate: number;
+    campaignTargetType: CamTargetType;
   }
 
   // 广告管理-Targeting/关键词
@@ -267,6 +269,7 @@ declare namespace API {
     rangeEnd: number;
     bid: number;
     addTime: string;
+    campaignTargetType: CamTargetType;
     impressions: number;
     clicks: number;
     spend: number;

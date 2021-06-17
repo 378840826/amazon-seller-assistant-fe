@@ -12,7 +12,15 @@ import PeriodDatePicker from '@/pages/components/PeriodDatePicker';
 import Rate from '@/components/Rate';
 import PathCrumbs from '../PathCrumbs';
 import { requestErrorFeedback, storage, getDateCycleParam, objToQueryString } from '@/utils/utils';
-import { nameDict, getFormatterValue, colors, downloadUrl, actionTypes, localStorageKeys } from './utils';
+import {
+  nameDict,
+  getFormatterValue,
+  getMenuShowValue,
+  colors,
+  downloadUrl,
+  actionTypes,
+  localStorageKeys,
+} from './utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import classnames from 'classnames';
 import styles from './index.less';
@@ -97,8 +105,12 @@ const DataChartModal: React.FC<IProps> = function(props) {
       targetType: type,
       payload: {
         headersParams: { StoreId: currentShopId },
-        camId: campaignId,
         cycle: cycle || defaultSelectedKey,
+        camId: campaignId,
+        groupId,
+        adId,
+        keywordId,
+        targetId,
       },
       callback: (code: number, msg: string, data: { [key: string]: number}) => {
         requestErrorFeedback(code, msg);
@@ -127,6 +139,9 @@ const DataChartModal: React.FC<IProps> = function(props) {
       },
       callback: (code: number, msg: string, data: API.IAdChartsPolyline) => {
         requestErrorFeedback(code, msg);
+        Object.keys(data).forEach(key => {
+          !data[key] && delete data[key];
+        });
         setChartData(data);
       },
     });
@@ -165,7 +180,7 @@ const DataChartModal: React.FC<IProps> = function(props) {
       getStatisticData();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaignId]);
+  }, [campaignId, groupId, adId, keywordId, targetId]);
 
   useEffect(() => {
     if (campaignId) {
@@ -173,7 +188,7 @@ const DataChartModal: React.FC<IProps> = function(props) {
       getTableData();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [periodType, menuSelectedKeys, campaignId]);
+  }, [periodType, menuSelectedKeys, campaignId, groupId, adId, keywordId, targetId]);
 
   // 选中数据菜单
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -533,15 +548,15 @@ const DataChartModal: React.FC<IProps> = function(props) {
         {
           name: '销售额',
           key: 'sales',
-          value: `${currency}${statisticState.sales}`,
-          lastCycleValue: `${currency}${statisticState.firstHalfSales}`,
-          chainRatio: statisticState.salesRatio,
+          value: getMenuShowValue(statisticState.sales, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfSales, currency),
+          chainRatio: <Rate value={statisticState.salesRatio} decimals={2} />,
         }, {
           name: '订单量',
           key: 'orderNum',
-          value: statisticState.orderNum,
-          lastCycleValue: statisticState.firstHalfOrderNum,
-          chainRatio: statisticState.orderNumRatio,
+          value: getMenuShowValue(statisticState.orderNum, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfOrderNum, currency),
+          chainRatio: <Rate value={statisticState.orderNumRatio} decimals={2} />,
         },
       ],
     }, {
@@ -551,33 +566,33 @@ const DataChartModal: React.FC<IProps> = function(props) {
         {
           name: 'CPC',
           key: 'cpc',
-          value: `${currency}${statisticState.cpc}`,
-          lastCycleValue: `${currency}${statisticState.firstHalfCpc}`,
-          chainRatio: statisticState.cpcRatio,
+          value: getMenuShowValue(statisticState.cpc, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfCpc, currency),
+          chainRatio: <Rate value={statisticState.cpcRatio} decimals={2} />,
         }, {
           name: 'CPA',
           key: 'cpa',
-          value: `${currency}${statisticState.cpa}`,
-          lastCycleValue: `${currency}${statisticState.firstHalfCpa}`,
-          chainRatio: statisticState.cpaRatio,
+          value: getMenuShowValue(statisticState.cpa, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfCpa, currency),
+          chainRatio: <Rate value={statisticState.cpaRatio} decimals={2} />,
         }, {
           name: 'ACoS',
           key: 'acos',
-          value: `${statisticState.acos}%`,
-          lastCycleValue: `${statisticState.firstHalfAcos}%`,
-          chainRatio: statisticState.acosRatio,
+          value: getMenuShowValue(statisticState.acos, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfAcos, currency),
+          chainRatio: <Rate value={statisticState.acosRatio} decimals={2} />,
         }, {
           name: 'Spend',
           key: 'spend',
-          value: `${currency}${statisticState.spend}`,
-          lastCycleValue: `${currency}${statisticState.firstHalfSpend}`,
-          chainRatio: statisticState.spendRatio,
+          value: getMenuShowValue(statisticState.spend, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfSpend, currency),
+          chainRatio: <Rate value={statisticState.spendRatio} decimals={2} />,
         }, {
           name: 'RoAS',
           key: 'roas',
-          value: statisticState.roas,
-          lastCycleValue: statisticState.firstHalfRoas,
-          chainRatio: statisticState.roasRatio,
+          value: getMenuShowValue(statisticState.roas, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfRoas, currency),
+          chainRatio: <Rate value={statisticState.roasRatio} decimals={2} />,
         },
       ],
     }, {
@@ -587,27 +602,27 @@ const DataChartModal: React.FC<IProps> = function(props) {
         {
           name: 'Impressions',
           key: 'impressions',
-          value: statisticState.impressions,
-          lastCycleValue: statisticState.firstHalfImpressions,
-          chainRatio: statisticState.impressionsRatio,
+          value: getMenuShowValue(statisticState.impressions, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfImpressions, currency),
+          chainRatio: <Rate value={statisticState.impressionsRatio} decimals={2} />,
         }, {
           name: 'Clicks',
           key: 'clicks',
-          value: statisticState.clicks,
-          lastCycleValue: statisticState.firstHalfClicks,
-          chainRatio: statisticState.clicksRatio,
+          value: getMenuShowValue(statisticState.clicks, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfClicks, currency),
+          chainRatio: <Rate value={statisticState.clicksRatio} decimals={2} />,
         }, {
           name: 'CTR',
           key: 'ctr',
-          value: `${statisticState.ctr}%`,
-          lastCycleValue: `${statisticState.firstHalfCtr}%`,
-          chainRatio: statisticState.ctrRatio,
+          value: getMenuShowValue(statisticState.ctr, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfCtr, currency),
+          chainRatio: <Rate value={statisticState.ctrRatio} decimals={2} />,
         }, {
           name: '转化率',
           key: 'conversionsRate',
-          value: `${statisticState.conversionsRate}%`,
-          lastCycleValue: `${statisticState.firstHalfConversionsRate}%`,
-          chainRatio: statisticState.conversionsRateRatio,
+          value: getMenuShowValue(statisticState.conversionsRate, currency),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfConversionsRate, currency),
+          chainRatio: <Rate value={statisticState.conversionsRateRatio} decimals={2} />,
         },
       ],
     },
@@ -653,7 +668,7 @@ const DataChartModal: React.FC<IProps> = function(props) {
                                 上期：
                                 <span className={styles.lastCycleValue}>{menu.lastCycleValue}</span>
                               </div>
-                              <div>环比：<Rate value={menu.chainRatio} decimals={2} /></div>
+                              <div>环比：{menu.chainRatio}</div>
                             </div>
                           </div>
                         </Menu.Item>

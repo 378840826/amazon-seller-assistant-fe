@@ -25,6 +25,14 @@ export function getFormatterValue(name?: string, value?: unknown, currency?: str
   return result;
 }
 
+// 左侧菜单数据显示处理
+export function getMenuShowValue(value?: number | null, currency?: string, percent?: boolean) {
+  if (value === null || value === undefined) {
+    return '—';
+  }
+  return `${currency}${value}${percent && '%'}`;
+}
+
 // 折线图线条的颜色
 export const colors = ['#49B5FF', '#FFC175'];
 
