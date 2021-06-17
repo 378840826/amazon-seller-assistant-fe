@@ -585,4 +585,20 @@ export default {
       });
     }, 300);
   },
+
+  // 调价规则
+  'GET /api/mws/nrule/list': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        data: {
+          total: 1221,
+          size: 20,
+          current: 1,
+          pages: 62,
+          records: [],
+        },
+      });
+    }, 300);
+  },
 };

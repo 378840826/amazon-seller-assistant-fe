@@ -3,6 +3,7 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 import { message } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
+import { moneyFormat } from '@/utils/huang';
 
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
@@ -241,6 +242,46 @@ export const strToReviewScoreStr = function (value: string) {
   return newValue;
 };
 
+/**
+ * 格式化区分日本站点的金额
+ * @param price 金额
+ * @param marketplace 站点
+ * @param currency 货币符号
+ * @param separator 分隔符配置
+ * @returns 
+ */
+// eslint-disable-next-line max-params
+export const getShowPrice = function(
+  price?: number | null | string, marketplace?: string, currency?: string,
+  separator?: {
+    decimals?: number;
+    thousandsSep?: string;
+    decPoint?: string;
+    zeroIsSave?: boolean;
+  } | boolean,
+) {
+  let result = '';
+  if (price !== null && price !== '' && price !== undefined) {
+    if (marketplace === 'JP') {
+      result = String(price);
+    } else {
+      result = Number(price).toFixed(2);
+    }
+  }
+  if (result === '') {
+    return '—';
+  }
+  // 分隔符
+  if (separator) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { decimals, thousandsSep, decPoint, zeroIsSave } = separator as any;
+    result = moneyFormat(
+      Number(result), decimals === undefined ? 2 : decimals, thousandsSep, decPoint, zeroIsSave,
+    );
+  }
+  return `${currency || ''}${result}`;
+};
+
 // 复制文字
 export const copyText = function (text: string, successMsg?: string): void {
   const input = document.createElement('input');
@@ -261,15 +302,39 @@ export const isRepeatArray = function (array: Array<string | number>): boolean {
   return false;
 };
 
+// 获取后端所需的时间周期对应的数字（由 src/components/DefinedCalendar 组件的 itemKey 映射）
+export function getDateCycleParam(type: string): string {
+  // dict 的 key 对应 src/components/DefinedCalendar 组件中的 itemKey
+  const dict = {
+    '7': '6',
+    '30': '7',
+    '60': '8',
+    '90': '9',
+    '180': '10',
+    '365': '11',
+    'year': '12',
+    'lastYear': '13',
+  };
+  return dict[type] || '';
+}
+
+// 把数值转为两位小数的百分数
+export function numberToPercent(type: number | null | undefined): string {
+  if (type !== null && type !== undefined) {
+    return `${type.toFixed(2)}%`;
+  }
+  return '—';
+}
+
 // 获取解析后的 queryString 参数
-export const getPageQuery = () => parse(window.location.href.split('?')[1]);
+export const getPageQuery = () => parse(window.location.search.split('?')[1]);
 
 // obj 转 queryString
-export const objToQueryString = (obj: { [key: string]: string | number | boolean}) => {
+export const objToQueryString = (obj: { [key: string]: string | number | boolean | undefined}) => {
   let queryString = '';
   Object.keys(obj).forEach(key => {
     if (obj[key] !== '' && obj[key] !== undefined && obj[key] !== null) {
-      queryString += `${key}=${encodeURIComponent(obj[key])}&`;
+      queryString += `${key}=${encodeURIComponent(obj[key] || '')}&`;
     }
   });
   return queryString.slice(0, queryString.length - 1);
@@ -301,6 +366,34 @@ export const storage = {
     window.localStorage.removeItem(key);
   },
 };
+
+// localstorage 方法
+export const _sessionStorage = {
+  set(key: string, value: unknown) {
+    if (typeof value === 'string') {
+      window.sessionStorage[key] = value;
+    } else {
+      window.sessionStorage[key] = JSON.stringify(value);
+    }
+  },
+
+  get(key: string) {
+    const data = window.sessionStorage[key];
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        return data;
+      }
+    }
+    return '';
+  },
+
+  remove(key: string) {
+    window.sessionStorage.removeItem(key);
+  },
+};
+
 //用户名，邮箱，密码正则
 export const validate = {
   email: /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/, //

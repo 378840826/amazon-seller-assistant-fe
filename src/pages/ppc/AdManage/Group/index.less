@@ -1,0 +1,60 @@
+// Portfolio 下拉框中的新建 Portfolio
+.tableAddPortfolio {
+  padding: 6px 12px;
+  height: 100px;
+  margin-top: 16px;
+
+  input {
+    border: none;
+    padding: 0 2px;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  :global {
+    .ant-input-search {
+      margin: 10px 0;
+      border-bottom: 1px solid @border-color-base;
+    }
+
+    .ant-input-group-addon {
+      position: absolute;
+      top: 32px;
+      left: 0;
+
+      button {
+        border-radius: 4px !important;
+        color: @primary-color;
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+.tableAddPortfolioTitle {
+  text-align: left;
+  color: @heading-color;
+  margin: 0 2px;
+}
+
+// 复制广告组
+.Modal {
+  .groupName {
+    text-align: left;
+    color: @heading-color;
+
+    input {
+      margin-top: 10px;
+    }
+  }
+
+  .btns {
+    margin-top: 20px;
+
+    button {
+      margin: 0 7px;
+    }
+  }
+}

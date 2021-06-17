@@ -1,0 +1,114 @@
+.cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    .editableBtn {
+      opacity: 1;
+    }
+  }
+
+  .cellValue {
+    flex: 1;
+    word-break: break-all;
+
+    &:hover {
+      text-decoration-line: underline;
+    }
+  }
+
+  .editableBtn {
+    float: right;
+    margin-left: 5px;
+    opacity: 0;
+
+    &:hover {
+      color: @primary-color;
+      opacity: 1;
+    }
+  }
+}
+
+.editableContainer {
+  position: relative;
+
+  .Input {
+    resize: none;
+    border-radius: 4px 4px 0 4px;
+    height: 30px;
+    text-align: center;
+    padding: 3px;
+  }
+
+  .btns {
+    float: right;
+  }
+
+  .btn {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    background-color: #fafafa;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #d3d3d3;
+    border-top: none;
+  }
+
+  .confirm {
+    border-radius: 0 0 @border-radius-base 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      bottom: 12px;
+      width: 17px;
+      height: 10px;
+      border-color: transparent transparent @text-color-secondary @text-color-secondary;
+      border-style: solid;
+      border-width: 1px;
+      transform: rotate(-45deg);
+    }
+
+    &:hover {
+      &::after {
+        border-color: transparent transparent @primary-color @primary-color;
+      }
+    }
+  }
+
+  .cancel {
+    border-right: none;
+    border-radius: 0 0 0 @border-radius-base;
+
+    &::before {
+      content: "";
+      width: 20px;
+      border-top: 1px solid @text-color-secondary;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      content: "";
+      width: 20px;
+      border-top: 1px solid @text-color-secondary;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &:hover {
+      &::before,
+      &::after {
+        border-top: 1px solid @error-color;
+      }
+    }
+  }
+}

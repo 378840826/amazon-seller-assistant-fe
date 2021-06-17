@@ -1,0 +1,145 @@
+.page {
+  display: flex;
+  height: calc(100vh - 66px);
+  margin-top: 12px;
+
+  .Sider {
+    overflow: auto;
+    margin-bottom: 30px;
+  }
+
+  .Tree {
+    font-size: @font-size-sm;
+    width: 100%;
+    padding: 17px 8px 0 8px;
+    border-radius: 0;
+    overflow: auto;
+  }
+
+  .rootTitle {
+    color: #444;
+    font-weight: bold;
+  }
+
+  .switcherIcon {
+    transform: rotate(90deg);
+  }
+
+  .trigger {
+    color: @text-color-secondary;
+    transform: rotate(90deg);
+
+    &.left {
+      transform: rotate(270deg);
+    }
+  }
+
+  .tabsTitle {
+    font-size: @font-size-lg;
+    font-weight: normal;
+
+    span {
+      font-size: @font-size-sm;
+      color: @text-color-secondary;
+    }
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    padding: 0 20px;
+
+    .breadcrumbBtn {
+      font-size: 12px;
+      color: @link-color;
+      cursor: pointer;
+      max-width: 300px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &:last-child {
+        color: @text-color;
+        cursor: auto;
+      }
+    }
+
+    .breadcrumbSeparator {
+      font-size: 10px;
+      color: #ccc;
+      transform: rotate(-90deg);
+      margin: 0 6px;
+    }
+  }
+
+  :global {
+    // 标签样式覆盖
+    .ant-tabs > .ant-tabs-nav {
+      padding: 0 20px;
+    }
+
+    .ant-tabs-tab {
+      margin: 0 24px 0 0;
+      padding: 8px 0;
+    }
+
+    // sider-trigger 样式覆盖
+    .ant-layout-sider-trigger {
+      height: 30px;
+      line-height: 30px;
+      background: @simple-table-header-bg;
+      border-top: 1px solid @border-color-base;
+    }
+
+    // tree 覆盖
+    .ant-tree {
+      .ant-tree-switcher {
+        width: 14px;
+      }
+
+      .ant-tree-title {
+        word-break: break-all;
+      }
+
+      .ant-tree-node-content-wrapper .ant-tree-iconEle {
+        width: 18px;
+      }
+    }
+  }
+}
+
+.updateTime {
+  font-size: @font-size-sm;
+}
+
+.hide {
+  display: none;
+  opacity: 0;
+  transition: opacity 2s;
+  pointer-events: none;
+}
+
+.tabsContainer {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  background: #fff;
+  border-left: 1px solid @border-color-base;
+}
+
+// .tabContent {
+//   padding: 0 20px;
+// }
+
+.iconEnabled {
+  color: @success-color;
+}
+
+.iconPaused {
+  color: @error-color;
+}
+
+.iconArchived {
+  color: @text-color-disabled;
+}

@@ -1,0 +1,136 @@
+.head {
+  // 因为 .head 可能会换行, .head 的 margin-bottom 放到子元素
+  margin-bottom: 0;
+  flex-wrap: wrap;
+
+  // 因为 .head 可能会换行, .head 的 margin-bottom 放到子元素
+  & > * {
+    margin-bottom: 14px;
+  }
+
+  & > button {
+    width: @btn-long-width;
+  }
+
+  .Input {
+    width: 260px;
+  }
+
+  & > .Search {
+    width: 280px;
+
+    button {
+      min-width: 40px;
+    }
+
+    :global(.ant-input-search-button) {
+      padding: 3px 8px;
+    }
+  }
+}
+
+.batchBtnContainer {
+  margin-right: 0;
+
+  button:not(:last-child) {
+    margin-right: 20px;
+  }
+
+  &.disabled button {
+    pointer-events: none;
+    color: @text-color-disabled;
+  }
+}
+
+.tableToolBar {
+  // 因为 .head 可能会换行
+  margin-top: 0;
+}
+
+.tips {
+  color: #666;
+  font-size: @font-size-sm;
+}
+
+.iconTips {
+  color: @warning-color;
+  margin-right: 6px;
+}
+
+.exclusion {
+  color: @error-color;
+}
+
+.modalContent {
+  max-height: 500px;
+  overflow: auto;
+
+  .tips {
+    color: @text-color-secondary;
+    text-align: left;
+  }
+
+  .Table {
+    margin: 16px 0;
+    border: 1px solid #f3f3f3;
+
+    tr > td,
+    tr > th {
+      padding: 12px 8px;
+    }
+
+    tr > th {
+      background: #f3f3f3;
+    }
+  }
+
+  .operationBtn {
+    color: @btn-text-color;
+    font-size: @font-size-sm;
+    min-width: 30px;
+    padding: 3px;
+
+    &:hover {
+      color: @link-color;
+    }
+
+    &[disabled] {
+      color: rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .deleteBtn {
+    color: @error-color;
+
+    &:hover {
+      color: @error-color;
+      opacity: 0.8;
+    }
+  }
+
+  :global {
+    .ant-select {
+      font-size: @font-size-sm;
+    }
+
+    // 广告活动和广告组下拉框显示多行
+    .ant-select-single.ant-select-sm .ant-select-selector {
+      height: auto;
+
+      .ant-select-selection-item {
+        white-space: normal;
+        word-break: break-all;
+      }
+    }
+  }
+}
+
+.modalFooter {
+  button {
+    margin: 0 10px;
+  }
+}
+
+.errorMsg {
+  color: @error-color;
+}

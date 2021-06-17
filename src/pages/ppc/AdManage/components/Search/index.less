@@ -1,0 +1,40 @@
+.SearchContainer {
+  position: relative;
+  display: inline-block;
+  width: 280px;
+
+  .emptySearch {
+    position: absolute;
+    right: 46px;
+    top: 8px;
+    font-size: 14px;
+    z-index: 1;
+    color: @text-color-secondary;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  .enterButton {
+    font-size: 19px;
+    padding-top: 2px;
+  }
+}
+
+.Search {
+  width: 100%;
+
+  input {
+    padding-right: 28px;
+  }
+
+  button {
+    min-width: 40px;
+  }
+
+  :global(.ant-input-search-button) {
+    padding: 3px 8px;
+  }
+}

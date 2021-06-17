@@ -1,0 +1,88 @@
+.Form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background-color: #fafafa;
+  padding: 4px 0;
+
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .filtrateBtns {
+    width: 340px;
+    justify-content: flex-end;
+
+    button {
+      margin-right: 15px;
+    }
+
+    .btnEmpty {
+      margin: 0 0 0 4px;
+      padding: 0;
+      width: auto;
+      min-width: auto;
+    }
+  }
+
+  .FormItem {
+    // margin-bottom: 0;
+    width: 340px;
+    margin: 0 20px;
+  }
+
+  .FormRangeItem {
+    display: inline-block;
+    width: calc(50% - 12px);
+    margin: 10px 0;
+
+    input {
+      text-align: center;
+    }
+  }
+
+  .acFormItem {
+    :global(.ant-form-item-label) {
+      white-space: inherit;
+      overflow: visible;
+    }
+  }
+
+  .statusFormItem {
+    :global {
+      .ant-radio-wrapper {
+        margin-right: 6px;
+
+        span.ant-radio + * {
+          padding: 2px;
+        }
+      }
+    }
+  }
+
+  :global {
+    .ant-form-item-control {
+      overflow: auto;
+    }
+
+    .ant-form-item-label > label {
+      color: @text-color;
+    }
+  }
+}
+
+.hyphen {
+  display: inline-block;
+  width: 24px;
+  margin: 10px 0;
+  line-height: @height-base;
+  text-align: center;
+  color: #979797;
+  font-size: 10px;
+}
+
+.secondary {
+  color: @text-color-secondary;
+}

@@ -1,0 +1,36 @@
+.page {
+  width: 740px;
+  margin: 0 auto;
+}
+
+// 工具栏
+.head {
+  display: flex;
+  margin-bottom: 14px;
+
+  & > * {
+    margin-right: 20px;
+  }
+}
+
+.tableContainer {
+  :global {
+    .ant-table-container {
+      border: 1px solid #eee;
+    }
+
+    .ant-table-tbody tr td.ant-table-selection-column {
+      padding: 0 40px;
+    }
+  }
+}
+
+.modalTitle {
+  color: @heading-color;
+  font-size: @font-size-lg;
+  text-align: left;
+}
+
+.asinAddButton {
+  margin-top: 20px;
+}

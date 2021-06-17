@@ -1,0 +1,108 @@
+.editableContainer {
+  position: relative;
+
+  .Input {
+    resize: none;
+    border-radius: 4px 4px 0 4px;
+    height: 30px;
+    text-align: center;
+    padding: 3px;
+  }
+
+  .btns {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+  }
+
+  .btn {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    background-color: #fafafa;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #d3d3d3;
+    border-top: none;
+  }
+
+  .confirm {
+    border-radius: 0 0 @border-radius-base 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      bottom: 12px;
+      width: 17px;
+      height: 10px;
+      border-color: transparent transparent @text-color-secondary @text-color-secondary;
+      border-style: solid;
+      border-width: 1px;
+      transform: rotate(-45deg);
+    }
+
+    &:hover {
+      &::after {
+        border-color: transparent transparent @primary-color @primary-color;
+      }
+    }
+  }
+
+  .cancel {
+    border-right: none;
+    border-radius: 0 0 0 @border-radius-base;
+
+    &::before {
+      content: "";
+      width: 20px;
+      border-top: 1px solid @text-color-secondary;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      content: "";
+      width: 20px;
+      border-top: 1px solid @text-color-secondary;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &:hover {
+      &::before,
+      &::after {
+        border-top: 1px solid @error-color;
+      }
+    }
+  }
+}
+
+.cellValue {
+  flex: 1;
+}
+
+.editableBtn {
+  color: @text-color-secondary;
+}
+
+.editCell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  word-break: break-all;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 1px 0 #d9d9d9;
+
+    .editableBtn {
+      color: @primary-color;
+    }
+  }
+}

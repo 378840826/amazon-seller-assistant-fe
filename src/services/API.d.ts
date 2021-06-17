@@ -118,6 +118,269 @@ declare namespace API {
     groupName: string;
   }
 
+  // 广告管理
+  type AdState = 'enabled' | 'paused' | 'archived';
+  type GroupType = 'keyword' | 'targeting';
+  type CamType = 'sb' | 'sp' | 'sd';
+  type AdKeywordMatchType = 'exact' | 'phrase' | 'broad';
+  type AdNegativeKeywordMatchType = 'negativeExact' | 'negativePhrase';
+  /** 手动manual，自动auto，分类/商品T00020，受众T00030 */
+  type CamTargetType = 'manual' | 'auto' | 'T00020' | 'T00030';
+  // 广告管理-广告活动
+  interface IAdCampaign {
+    id: string;
+    name: string;
+    state: AdState;
+    portfolioId: number;
+    portfolioName: string;
+    groupCount?: number;
+    adType: CamType;
+    targetingType: string;
+    dailyBudget: number;
+    negativeTargetCount?: number;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+    biddingStrategy: string;
+    biddingPlacementTop: number;
+    biddingPlacementProductPage: number;
+    createdTime: string;
+    startTime: string;
+    endTime: string;
+  }
+
+  // 广告管理-广告活动分组
+  interface IPortfolio {
+    id: string;
+    name: string;
+  }
+
+  // 广告管理-广告组
+  interface IAdGroup {
+    id: string;
+    name: string;
+    camId: string;
+    camName: string;
+    camState: AdState;
+    camType: CamType;
+    campaignTargetType: CamTargetType;
+    groupType: GroupType;
+    state: AdState;
+    negativeTargetCount?: number;
+    targetCount: number;
+    productCount: number;
+    defaultBid: number;
+    budgetLimit: number;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+    createdTime: string;
+    startTime: string;
+    endTime: string;
+  }
+
+  // 广告管理-广告组-自动广告组target
+  interface IAdAutoGroupTarget {
+    id: string;
+    state: AdState;
+    bid: number;
+    recommendBid: number;
+    recommendBidStart: number;
+    recommendBidEnd: number;
+    target: string;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+  }
+
+  // 广告管理-广告
+  interface IAd {
+    id: string;
+    // name: string;
+    camId: string;
+    camName: string;
+    camState: AdState;
+    camType: CamType;
+    groupId: string;
+    groupName: string;
+    groupType: GroupType;
+    state: string;
+    qualification: string;
+    qualificationMessage: string;
+    asin: string;
+    sku: string;
+    title: string;
+    img: string;
+    addTime: string;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+    campaignTargetType: CamTargetType;
+  }
+
+  // 广告管理-Targeting/关键词
+  interface IAdTargeting {
+    id: string;
+    keywordName: string;
+    camId: string;
+    camName: string;
+    camState: AdState;
+    camType: CamType;
+    groupId: string;
+    groupName: string;
+    groupType: GroupType;
+    state: string;
+    targeting: string;
+    expression?: string;
+    matchType: AdKeywordMatchType;
+    suggested: number;
+    rangeStart: number;
+    rangeEnd: number;
+    bid: number;
+    addTime: string;
+    campaignTargetType: CamTargetType;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+    // 涨跌幅比例
+    impressionsRatio: number;
+    clicksRatio: number;
+    spendRatio: number;
+    acosRatio: number;
+    roasRatio: number;
+    ctrRatio: number;
+    cpcRatio: number;
+    cpaRatio: number;
+    salesRatio: number;
+    orderNumRatio: number;
+    conversionsRateRatio: number;
+  }
+
+  // 否定Targeting
+  interface IAdNegativeTargeting {
+    neTargetId: string;
+    targetText: string;
+    addTime: string;
+  }
+
+  // 否定关键词
+  interface IAdNegativeKeyword {
+    neKeywordId: string;
+    keywordText: string;
+    matchType: AdNegativeKeywordMatchType;
+    addTime: string;
+  }
+
+  // 广告管理-SearchTerm
+  interface IAdSearchTerm {
+    id: string;
+    camId: string;
+    camName: string;
+    camState: AdState;
+    camType: CamType;
+    campaignTargetType: CamTargetType;
+    groupId: string;
+    groupName: string;
+    groupType: GroupType;
+    groupBid: number;
+    /** searchTerm 类型 true: asin false: 关键词 */
+    queryKeywordType: boolean;
+    matchType: AdKeywordMatchType;
+    keywordText: string;
+    keywordId: string;
+    deliveryStatus: 'alreadyLive' | 'noAlready';
+    queryKeyword: string;
+    existQueryKeyword?: {
+      keyword: string;
+      exist: boolean;
+    }[];
+    // 搜索词的竞价
+    queryKeywordBid: number;
+    impressions: number;
+    clicks: number;
+    spend: number;
+    acos: number;
+    roas: number;
+    ctr: number;
+    cpc: number;
+    cpa: number;
+    sales: number;
+    orderNum: number;
+    conversionsRate: number;
+  }
+
+  // 广告管理-操作记录
+  interface IAdOperationRecord {
+    id: string;
+    behaviorDate: string;
+    objectType: string;
+    objectInfo: string;
+    behaviorInfo: string;
+    oldValue: string;
+    newValue: string;
+    behaviorExecutor: string;
+  }
+
+  // 广告管理-数据分析-折线图
+  interface IAdChartsPolylineCell {
+    value: number;
+    time: string;
+  }
+
+  interface IAdChartsPolyline {
+    impressions?: IAdChartsPolylineCell[];
+    clicks?: IAdChartsPolylineCell[];
+    spend?: IAdChartsPolylineCell[];
+    acos?: IAdChartsPolylineCell[];
+    roas?: IAdChartsPolylineCell[];
+    ctr?: IAdChartsPolylineCell[];
+    cpc?: IAdChartsPolylineCell[];
+    cpa?: IAdChartsPolylineCell[];
+    sales?: IAdChartsPolylineCell[];
+    orderNum?: IAdChartsPolylineCell[];
+    conversionsRate?: IAdChartsPolylineCell[];
+  }
+
   interface IInventoryReplenishmentLabels {
     id: string;
     labelName: string;
