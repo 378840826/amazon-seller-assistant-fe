@@ -84,43 +84,51 @@ const ChildAsin: React.FC<IProps> = props => {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
       return;
     }
-
+    // 基础参数
+    const baseParams = {
+      headersParams: {
+        StoreId: currentShop.id,
+      },
+      sellerId: currentShop.sellerId,
+      marketplace: currentShop.marketplace,
+      ...getCalendarFields(calendar, adinTableCalendar),
+    };
+    // 筛选参数
     const filtern = searchForm.getFieldsValue();
-    
     const filternparams = {};
-    const filtrations = ['search']; // 不加入条件组
+    // const filtrations = ['search']; // 不加入条件组
+    const filtrations = ['']; // 不加入条件组
     for (const key in filtern) {
       const value = filtern[key];
       if (filtrations.indexOf(key) > -1) {
         continue;
       }
-
       if (value !== undefined && value !== null && value !== '' ) {
         filternparams[key] = value;
       }
     }
-
-    let payload = {
-      headersParams: {
-        StoreId: currentShop.id,
-      },
-      current,
+    // 查询参数
+    const searchParams = {
       size: pageSize,
-      sellerId: currentShop.sellerId,
-      marketplace: currentShop.marketplace,
-      ...getCalendarFields(calendar, adinTableCalendar),
-      ...filternparams,
+      current,
+      order,
+      asc: sort,
     };
-
-    payload = Object.assign(payload, params);
+    const payload = { baseParams, searchParams, filternparams };
+    Object.assign(payload, params);
+  
     setLoading(true);
-
     new Promise((resolve, reject) => {
       dispatch({
         type: 'asinTable/getParentInitList',
         reject,
         resolve,
-        payload,
+        payload: {
+          // ...queryParams,
+          ...payload.baseParams,
+          ...payload.searchParams,
+          ...payload.filternparams,
+        },
       });
     }).then(datas => {
       setLoading(false);

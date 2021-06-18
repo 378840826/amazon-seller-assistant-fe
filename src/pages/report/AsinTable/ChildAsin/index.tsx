@@ -111,43 +111,52 @@ const ChildAsin: React.FC<IProps> = props => {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
       return;
     }
-
+    // 基础参数
+    const baseParams = {
+      headersParams: {
+        StoreId: currentShop.id,
+      },
+      sellerId: currentShop.sellerId,
+      marketplace: currentShop.marketplace,
+      ...getCalendarFields(calendar, adinTableCalendar),
+    };
+    // 筛选参数
     const filtern = searchForm.getFieldsValue();
     const filternparams = {};
-    const filtrations = ['search']; // 不加入条件组
+    // const filtrations = ['search']; // 不加入条件组
+    const filtrations = ['']; // 不加入条件组
     for (const key in filtern) {
       const value = filtern[key];
       if (filtrations.indexOf(key) > -1) {
         continue;
       }
-
       if (value !== undefined && value !== null && value !== '' ) {
         filternparams[key] = value;
       }
     }
-
-    let payload = {
-      headersParams: {
-        StoreId: currentShop.id,
-      },
-      current,
+    // 查询参数
+    const searchParams = {
       size: pageSize,
-      sellerId: currentShop.sellerId,
-      marketplace: currentShop.marketplace,
+      current,
       order,
       asc: sort,
-      ...getCalendarFields(calendar, adinTableCalendar),
-      ...filternparams,
     };
-    
-    payload = Object.assign(payload, params);
+    const payload = { baseParams, searchParams, filternparams };
+    Object.assign(payload, params);
+
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'asinTable/getChildInitList',
         reject,
         resolve,
-        payload,
+        // payload: Object.assign(childQueryParams, payload),
+        payload: {
+          // ...queryParams,
+          ...payload.baseParams,
+          ...payload.searchParams,
+          ...payload.filternparams,
+        },
       });
     }).then(datas => {
       setLoading(false);
@@ -211,7 +220,7 @@ const ChildAsin: React.FC<IProps> = props => {
 
   useEffect(() => {
     if (tabValue === 'child') {
-      requestFn({ current: 1, size: 20 });
+      requestFn();
       getChildPreference();
     }
   }, [tabValue, requestFn, getChildPreference]);
@@ -222,7 +231,9 @@ const ChildAsin: React.FC<IProps> = props => {
       // console.log('点击删除图标不筛选');
       return;
     }
-    requestFn({ search: val, size: pageSize });
+    requestFn({
+      searchParams: { search: val, size: pageSize, current: 1, order: '', asc: false },
+    });
   };
 
   // 删除单个偏好
@@ -440,9 +451,11 @@ const ChildAsin: React.FC<IProps> = props => {
   // 排序
   const sortCallback = (order: string, asc: boolean) => {
     requestFn({
-      order,
-      asc,
-      size: pageSize,
+      searchParams: {
+        order,
+        asc,
+        size: pageSize,
+      },
     });
   };
 
@@ -456,7 +469,11 @@ const ChildAsin: React.FC<IProps> = props => {
     onChange(current: number, size: number | undefined) {
       setCurrent(current);
       setPageSize(size as number);
-      requestFn({ size, current, asc: sort, order });
+      requestFn({
+        searchParams: {
+          size, current, asc: sort, order,
+        },
+      });
     },
     showSizeChanger: true, // pageSize 切换器
     className: 'h-page-small',
