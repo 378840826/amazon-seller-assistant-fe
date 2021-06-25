@@ -400,7 +400,7 @@ const TimeSelectBox: React.FC<ITimingSelectProps> = props => {
         for (const key in initValues) {
           const rowItems = tableRows.list[weekTransition(key)];
           const dataItem: IDateItem[] = initValues[key];
-          dataItem.forEach(item => {
+          dataItem?.forEach(item => {
             const temp = dateTransitionTdIndex(item);            
             rowItems.forEach(item => {
               if (temp.includes(item.time)) {
