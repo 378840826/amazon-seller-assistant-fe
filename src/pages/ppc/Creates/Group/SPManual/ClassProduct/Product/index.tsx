@@ -34,6 +34,8 @@ import { getAmazonAsinUrl, Iconfont } from '@/utils/utils';
 import { asinPandectBaseRouter } from '@/utils/routes';
 
 interface IProps {
+  campaignType: CreateCampaign.ICampaignType; // 广告活动类型 sp sb 
+  tactic: string;
   form: FormInstance;
   currency: API.Site;
   marketplace: string;
@@ -51,7 +53,7 @@ interface IPage extends ConnectProps {
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
+  const { form, currency, marketplace, storeId, putMathod, campaignType, tactic } = props;
   const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   const dispatch = useDispatch();
   
@@ -145,6 +147,8 @@ const ClassProduct: React.FC<IProps> = props => {
             StoreId: storeId,
           },
           asins,
+          tactic,
+          campaignType,
         },
       });
     }).then(datas => {

@@ -123,6 +123,28 @@
       height: 226px;
       margin-bottom: 12px;
     }
+
+    .matchType {
+      height: 22px;
+      line-height: 22px;
+    }
+
+    .keywordSelectItem {
+      font-size: @font-size-sm;
+      color: @btn-text-color;
+      margin: 0;
+      padding: 0;
+      height: 22px;
+      line-height: 22px;
+
+      &:hover {
+        color: @link-color;
+      }
+
+      &[disabled] {
+        color: rgba(0, 0, 0, 0.25);
+      }
+    }
   }
 
   .rightLayout {
@@ -139,6 +161,12 @@
 
     td {
       border-bottom: 1px solid @divider-line-color;
+    }
+
+    td,
+    th {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
     }
 
     header {

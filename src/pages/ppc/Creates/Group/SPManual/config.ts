@@ -19,3 +19,10 @@ export function matchTransition(match: string) {
     
   }
 }
+
+// 匹配方式
+export const matchTypeDict = {
+  broad: '广泛',
+  phrase: '词组',
+  exact: '精准',
+};

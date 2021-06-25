@@ -13,6 +13,7 @@ import KeywordComponent from './Keyword';
 import ClassProductComponent from './ClassProduct';
 
 interface IProps {
+  campaignType: CreateCampaign.ICampaignType; // 广告活动类型 sp sb 
   form: FormInstance;
   currency: string;
   marketplace: string;
@@ -22,7 +23,7 @@ interface IProps {
 
 const { Item } = Form;
 const SPManual: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
+  const { form, currency, marketplace, storeId, putMathod, campaignType } = props;
   const [nav, setNav] = useState<'keyword'|'classify'>('keyword');
   const [batchSetBidVisible, setBatchSetBidVisible] = useState<boolean>(false); // 批量设置建议竞价显隐
   const [matchingVisible, setMatchingVisible] = useState<boolean>(false); // 批量修改匹配方式显隐
@@ -99,6 +100,7 @@ const SPManual: React.FC<IProps> = props => {
         marketplace={marketplace}
         storeId ={storeId}
       /> : <ClassProductComponent 
+        campaignType={campaignType}
         form={form}
         currency={currency as API.Site}
         marketplace={marketplace}

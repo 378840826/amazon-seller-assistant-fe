@@ -31,12 +31,8 @@ const Group: React.FC<IProps> = props => {
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   
   // base
-  let { currency = '$', marketplace, timezone, id } = currentShop;
-  marketplace = 'US';
-  currency = '$';
-  timezone = 'Asia/Shanghai';
-  id = '2';
-  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone).format('YYYY-MM-DD HH:mm:ss'); // 站点时间
+  const { id, currency, marketplace, timezone } = currentShop;
+  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
   const [startDate, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
 
   function startDateChange (date: Moment | null) {
@@ -75,6 +71,7 @@ const Group: React.FC<IProps> = props => {
     
     <div className={classnames(['manual', 'classProduct'].includes(putMathod) ? '' : 'none')}>
       <SPManual 
+        campaignType={campaignType}
         form={form}
         currency={currency}
         marketplace={marketplace}

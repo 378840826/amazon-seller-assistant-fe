@@ -60,17 +60,18 @@ const Group: React.FC = () => {
   );
   
   // base
-  let { currency, marketplace, timezone, id } = currentShop;
-  marketplace = 'US';
-  currency = '$';
-  timezone = 'Asia/Shanghai';
-  id = '2';
+  const { currency, marketplace, timezone, id } = currentShop;
 
   const [campaignType, setCampaignType] = useState<CreateCampaign.ICampaignType>('sponsoredProducts');
+  // sd 广告活动的类型(受众 or 分类/商品  = T0030 or T0020)
+  const [tactic, setTactic] = useState('T0020');
   const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 投放方式
   const [campaignList, setCampaignList] = useState<CreateGroup.ICampaignList[]>([]);
-  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone).format('YYYY-MM-DD HH:mm:ss'); // 站点时间
+  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
   const [startDate, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const loadingEffect = useSelector((state: any) => state.loading.effects);
+  const loading = loadingEffect['createGroup/createGroup'];
 
   const navList: Snav.INavList[] = [
     {
@@ -128,6 +129,7 @@ const Group: React.FC = () => {
       });
       setPutMathod(firstData.targetingType || 'classProduct'); // sd 分类/商品
       setCampaignType(firstData.campaignType);
+      setTactic(firstData.tactic);
     }
   }, [form, campaignList]);
 
@@ -138,6 +140,7 @@ const Group: React.FC = () => {
       if (item.campaignId === id) {
         setPutMathod(item.targetingType || 'classProduct'); // sd 分类/商品
         setCampaignType(item.campaignType);
+        setTactic(item.tactic);
         break;
       }
     }
@@ -208,7 +211,7 @@ const Group: React.FC = () => {
       // 关键词模式
       if ( manualType === 'keyword') { 
         if (keywords.length === 0) {
-          message.error('关键词列表不能为空，请添加关键词！');
+          message.error('关键词不能为空，请添加关键词！');
           return;
         }
         // 关键词
@@ -339,6 +342,7 @@ const Group: React.FC = () => {
           marketplace={marketplace}
           storeId={id}
           campaignType={campaignType}
+          tactic={tactic}
           putMathod={putMathod}
         />
       </div>
@@ -382,6 +386,7 @@ const Group: React.FC = () => {
         <Button>取消</Button>
       </Popconfirm>
       <Button
+        loading={loading}
         type="primary" 
         onClick={saveCreate}
       >
