@@ -110,7 +110,7 @@ const GroupTime: React.FC = function() {
   const rangePickerConfig: any = {
     dateFormat: 'YYYY-MM-DD',
     allowClear: false,
-    value: [moment(date.startDate), moment(date.endDate)],
+    value: [date.startDate && moment(date.startDate), date.endDate && moment(date.endDate)],
     disabledDate,
     onChange: (_: Moment, dates: string[]) => {
       const [startDate, endDate] = dates;
@@ -174,7 +174,7 @@ const GroupTime: React.FC = function() {
               取消
             </Link>
           </Button>
-          <Button type="primary" onClick={handleSave}>保存</Button>
+          <Button type="primary" loading={loadingSave} onClick={handleSave}>保存</Button>
         </div>
       </Spin>
     </div>
