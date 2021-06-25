@@ -22,6 +22,7 @@ import EditBox from '../../../../../components/EditBox';
 import ThiningModal from './ThiningModal';
 
 interface IProps {
+  campaignType: CreateCampaign.ICampaignType; // 广告活动类型 sp sb 
   form: FormInstance;
   currency: API.Site;
   marketplace: string;
@@ -48,15 +49,15 @@ interface IAddRecord {
 
 
 interface IPage extends ConnectProps {
-  createGroup: ICreateGampaignState;
+  createCampagin: ICreateGampaignState;
 }
 
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
+  const { form, currency, marketplace, storeId, putMathod, campaignType } = props;
   const dispatch = useDispatch();
-  const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
+  const selectProducts = useSelector((state: IPage) => state.createCampagin.selectProduct);
   
   const [nav, setNav] = useState<'suggestClass' |'searchClass'>('suggestClass'); // 
   const [batchSetBidVisible, setBatchSetBidVisible] = useState<boolean>(false); // 批量设置建议竞价显隐
@@ -109,7 +110,7 @@ const ClassProduct: React.FC<IProps> = props => {
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
-        type: 'createGroup/getClassifys',
+        type: 'createCampagin/getClassifys',
         resolve,
         reject,
         payload: {
@@ -117,6 +118,8 @@ const ClassProduct: React.FC<IProps> = props => {
             StoreId: storeId,
           },
           asins,
+          tactic: form.getFieldsValue().outer?.sdPutMathod || null,
+          campaignType,
         },
       });
     }).then(datas => {
@@ -161,7 +164,7 @@ const ClassProduct: React.FC<IProps> = props => {
     const jsonString = JSON.stringify(suggestedClass);
     const newArray: CreateCampaign.ISuggestedClassType = JSON.parse(jsonString);
     dispatch({
-      type: 'createGroup/setClassifys',
+      type: 'createCampagin/setClassifys',
       payload: newArray,
     });
   }, [dispatch, suggestedClass]);

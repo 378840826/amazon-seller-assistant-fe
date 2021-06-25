@@ -43,10 +43,12 @@ const ProductSelect: React.FC<IProps> = props => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataSource, setDataSource] = useState<CampaignCreate.IProductSelect[]>(products);
   const [selects, setSelects] = useState<CampaignCreate.IProductSelect[]>(selectsArray);
+  const lenght = dataSource.length;
   
   const {
-    marketplace = 'US',
-    id = 2,
+    marketplace,
+    id,
+    sellerId,
   } = currentShop;
 
   useEffect(() => {
@@ -65,8 +67,8 @@ const ProductSelect: React.FC<IProps> = props => {
       headersParams: {
         StoreId: id,
       },
-      country: '',
-      sellerId: '',
+      country: marketplace,
+      sellerId,
       code: asin,
     };
 
@@ -93,6 +95,7 @@ const ProductSelect: React.FC<IProps> = props => {
         message.error(msg || '获取商品列表失败！');
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, dispatch, asin]);
 
   // 选中的数据放到dva中
@@ -303,7 +306,7 @@ const ProductSelect: React.FC<IProps> = props => {
           onSearch={searchProduct}
         />
         <span style={{
-          paddingRight: dataSource.length > 3 ? 36 : 20,
+          paddingRight: lenght > 3 ? 36 : 20,
         }} className={classnames(
           styles.allSelect, 
           dataSource.length ? '' : styles.disable,

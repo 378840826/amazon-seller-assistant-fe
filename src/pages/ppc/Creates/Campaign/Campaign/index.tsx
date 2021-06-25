@@ -34,7 +34,7 @@ const { Item } = Form;
 const Campaign: React.FC<IProps> = props => {
   const { campaignType, pattern, currency, timezone, marketplace, form } = props;
 
-  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone).format('YYYY-MM-DD HH:mm:ss'); // 站点时间
+  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
   const [startData, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
 
   const limitedInput = (value: string) => {
@@ -154,30 +154,30 @@ const Campaign: React.FC<IProps> = props => {
         </Radio.Group>
       </Item>
       {/* SD的投放方式 */}
-      <Item name={['outer', 'sdPutMathod']} label="投放方式：" initialValue="classProduct" className={classnames(
+      <Item name={['outer', 'sdPutMathod']} label="投放方式：" initialValue="T0020" className={classnames(
         styles.putMathod,
         campaignType === 'sd' ? '' : 'none'
       )}>
         <Radio.Group>
-          <Radio value="audiences" disabled className={styles.putMathodAuto}><span title="功能开发中">受众</span></Radio>
-          <Radio value="classProduct">分类/商品</Radio>
+          <Radio value="T0030" disabled className={styles.putMathodAuto}><span title="功能开发中">受众</span></Radio>
+          <Radio value="T0020">分类/商品</Radio>
         </Radio.Group>
       </Item>
       <Item label="竞价策略：" name="biddingStrategy" initialValue="legacyForSales" className={styles.bidding}>
         <Select dropdownClassName={styles.biddingDownList}>
-          <Select.Option value="legacyForSales">Down Only</Select.Option>
-          <Select.Option value="autoForSales">Up and Down</Select.Option>
-          <Select.Option value="manual">Fixed bids</Select.Option>
+          <Select.Option value="legacyForSales">动态竞价 - 仅降低</Select.Option>
+          <Select.Option value="autoForSales">动态竞价 - 提高和降低</Select.Option>
+          <Select.Option value="manual">固定竞价</Select.Option>
         </Select>
       </Item>
       <div className={styles.commonInput}>
-        <Item label="Top of search：" normalize={limitedInput} name="biddingPlacementTop" className={styles.topSearch}>
+        <Item label="搜索结果顶部(首页)：" normalize={limitedInput} name="biddingPlacementTop" className={styles.topSearch}>
           <Input autoComplete="off" />
         </Item>
         <span className={styles.currency}>%</span>
       </div>
       <div className={styles.commonInput}>
-        <Item label="Product page：" normalize={limitedInput} name="biddingPlacementProductPage" className={styles.productPage}>
+        <Item label="商品页面：" normalize={limitedInput} name="biddingPlacementProductPage" className={styles.productPage}>
           <Input autoComplete="off" />
         </Item>
         <span className={styles.currency}>%</span>

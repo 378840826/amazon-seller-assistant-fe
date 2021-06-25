@@ -9,6 +9,8 @@ declare namespace CreateGroup {
     name: string;
     campaignId: string;
     campaignType: CreateCampaign.ICampaignType;
+    /** sd 广告活动的类型(受众 or 分类/商品  = T0030 or T0020) */
+    tactic: string;
     targetingType: 'auto'|'manual';	
   }
 }
