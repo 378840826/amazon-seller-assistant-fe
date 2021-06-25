@@ -17,6 +17,7 @@ import ClassifyComponent from './Classify';
 import ProductComponent from './Product';
 
 interface IProps {
+  campaignType: CreateCampaign.ICampaignType; // 广告活动类型 sp sb 
   form: FormInstance;
   currency: API.Site;
   marketplace: string;
@@ -26,7 +27,7 @@ interface IProps {
 
 const { TabPane } = Tabs;
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
+  const { form, currency, marketplace, storeId, putMathod, campaignType } = props;
   
   const [twoNav, setTwoNav] = useState<'classify' |'product'>('classify'); // 
 
@@ -58,12 +59,14 @@ const ClassProduct: React.FC<IProps> = props => {
     </header>
     
     {twoNav === 'classify' ? <ClassifyComponent
+      campaignType={campaignType}
       currency={currency}
       form={form}
       marketplace={marketplace}
       storeId={storeId}
       putMathod={putMathod}
-    /> : <ProductComponent 
+    /> : <ProductComponent
+      campaignType={campaignType}
       currency={currency}
       form={form}
       marketplace={marketplace}

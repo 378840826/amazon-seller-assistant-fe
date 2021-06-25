@@ -22,6 +22,8 @@ import EditBox from '../../../../components/EditBox';
 import ThiningModal from './ThiningModal';
 
 interface IProps {
+  campaignType: CreateCampaign.ICampaignType; // 广告活动类型 sp sb 
+  tactic: string;
   form: FormInstance;
   currency: API.Site;
   marketplace: string;
@@ -54,7 +56,7 @@ interface IPage extends ConnectProps {
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod } = props;
+  const { form, currency, marketplace, storeId, putMathod, campaignType, tactic } = props;
   const dispatch = useDispatch();
   const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   
@@ -117,6 +119,8 @@ const ClassProduct: React.FC<IProps> = props => {
             StoreId: storeId,
           },
           asins,
+          tactic,
+          campaignType,
         },
       });
     }).then(datas => {

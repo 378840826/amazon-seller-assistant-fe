@@ -4,11 +4,11 @@ import classnames from 'classnames';
 import { 
   history, 
   ConnectProps, 
-  ICreateGampaignState, 
   useSelector,
   useDispatch,
 } from 'umi';
 import { ppcCampaginListRouter } from '@/utils/routes';
+import { ICreateGampaignState } from '../models/campaign';
 import moment from 'moment';
 
 
@@ -42,10 +42,10 @@ const CampaignAdd = () => {
   const classifys = useSelector((state: IPage) => state.createCampagin.classifys);
   const saveProducts = useSelector((state: IPage) => state.createCampagin.saveProducts);
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
-  let { currency = '$', timezone = 'Asia/Shanghai', marketplace } = currentShop;
-  currency = '$';
-  timezone = 'Asia/Shanghai';
-  marketplace = 'US';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const loadingEffect = useSelector((state: any) => state.loading.effects);
+  const loading = loadingEffect['createCampagin/createCampagin'];
+  const { currency, timezone, marketplace } = currentShop;
 
   const [form] = Form.useForm();
   const [campaignForm] = Form.useForm(); // 广告活动的表单
@@ -99,7 +99,7 @@ const CampaignAdd = () => {
   // 下一步或者保存
   // 发送给后端的数据
   reqData.headersParams = {
-    StoreId: 2,
+    StoreId: currentShop.id,
   };
   reqData.targetingType = campaignType === 'sponsoredProducts' ? putMathod : null; // 手动或自动
   reqData.timezone = timezone; //
@@ -129,6 +129,11 @@ const CampaignAdd = () => {
 
     // 广告活动的下一步（第三步）
     if (stepIndex === 2) {
+      // sd 广告活动的建议分类和商品需要 tactic 参数
+      if (campaignType === 'sd') {
+        reqData.tactic = campaignData.outer.sdPutMathod;
+      }
+
       const name = campaignData.name;
       const dailyBudget = campaignData.dailyBudget;
 
@@ -407,6 +412,7 @@ const CampaignAdd = () => {
         <Button 
           type="primary" 
           onClick={nextStep}
+          loading={loading}
         >
           {stepIndex === 3 ? '保存' : '下一步'}
         </Button>

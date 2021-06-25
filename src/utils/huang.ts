@@ -347,3 +347,21 @@ export function createUUID(len = 36): string {
   return str;
 }
 
+/**
+ * 按关键词内容和匹配方式生成 id
+ * @param keyword 关键词
+ * @param matchType 匹配方式 
+ */
+export function createKeywordID(keyword: string, matchType: string): string {
+  return `${keyword}-${matchType}`;
+}
+
+// 生成包含的临时 id 的 关键词
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createIdKeyword(keyword: any): any {
+  const { keywordText, matchType } = keyword;
+  return ({
+    ...keyword,
+    id: `${keywordText}-${matchType}`,
+  });
+}

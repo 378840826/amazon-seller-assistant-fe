@@ -15,4 +15,15 @@ declare namespace CampaignCreate {
     sellable: string;
     ranking: string;
   }
+  
+  interface IKeyword {
+    keywordText: string;
+    matchType: string;
+    suggested?: number;
+    rangeStart?: number;
+    rangeEnd?: number;
+    bid?: number;
+    /** 临时的 id ，用于判断唯一性 */
+    id?: string;
+  }
 }
