@@ -307,6 +307,10 @@ export const isRepeatArray = function (array: Array<string | number>): boolean {
 export function getDateCycleParam(type: string): string {
   // dict 的 key 对应 src/components/DefinedCalendar 组件中的 itemKey
   const dict = {
+    'week': '2',
+    'lastWeek': '3',
+    'month': '4',
+    'lastMonth': '5',
     '7': '6',
     '30': '7',
     '60': '8',
