@@ -30,7 +30,7 @@ export function getMenuShowValue(value?: number | null, currency?: string, perce
   if (value === null || value === undefined) {
     return '—';
   }
-  return `${currency}${value}${percent && '%'}`;
+  return `${currency ? currency : ''}${value}${percent ? '%' : ''}`;
 }
 
 // 折线图线条的颜色
