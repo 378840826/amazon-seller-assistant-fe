@@ -105,7 +105,7 @@ const DataChartModal: React.FC<IProps> = function(props) {
       targetType: type,
       payload: {
         headersParams: { StoreId: currentShopId },
-        cycle: cycle || defaultSelectedKey,
+        cycle: cycle || getDateCycleParam(defaultSelectedKey),
         camId: campaignId,
         groupId,
         adId,
@@ -554,8 +554,8 @@ const DataChartModal: React.FC<IProps> = function(props) {
         }, {
           name: '订单量',
           key: 'orderNum',
-          value: getMenuShowValue(statisticState.orderNum, currency),
-          lastCycleValue: getMenuShowValue(statisticState.firstHalfOrderNum, currency),
+          value: getMenuShowValue(statisticState.orderNum),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfOrderNum),
           chainRatio: <Rate value={statisticState.orderNumRatio} decimals={2} />,
         },
       ],
@@ -578,8 +578,8 @@ const DataChartModal: React.FC<IProps> = function(props) {
         }, {
           name: 'ACoS',
           key: 'acos',
-          value: getMenuShowValue(statisticState.acos, currency),
-          lastCycleValue: getMenuShowValue(statisticState.firstHalfAcos, currency),
+          value: getMenuShowValue(statisticState.acos, '', true),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfAcos, '', true),
           chainRatio: <Rate value={statisticState.acosRatio} decimals={2} />,
         }, {
           name: 'Spend',
@@ -590,8 +590,8 @@ const DataChartModal: React.FC<IProps> = function(props) {
         }, {
           name: 'RoAS',
           key: 'roas',
-          value: getMenuShowValue(statisticState.roas, currency),
-          lastCycleValue: getMenuShowValue(statisticState.firstHalfRoas, currency),
+          value: getMenuShowValue(statisticState.roas),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfRoas),
           chainRatio: <Rate value={statisticState.roasRatio} decimals={2} />,
         },
       ],
@@ -602,26 +602,26 @@ const DataChartModal: React.FC<IProps> = function(props) {
         {
           name: 'Impressions',
           key: 'impressions',
-          value: getMenuShowValue(statisticState.impressions, currency),
-          lastCycleValue: getMenuShowValue(statisticState.firstHalfImpressions, currency),
+          value: getMenuShowValue(statisticState.impressions),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfImpressions),
           chainRatio: <Rate value={statisticState.impressionsRatio} decimals={2} />,
         }, {
           name: 'Clicks',
           key: 'clicks',
-          value: getMenuShowValue(statisticState.clicks, currency),
-          lastCycleValue: getMenuShowValue(statisticState.firstHalfClicks, currency),
+          value: getMenuShowValue(statisticState.clicks),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfClicks),
           chainRatio: <Rate value={statisticState.clicksRatio} decimals={2} />,
         }, {
           name: 'CTR',
           key: 'ctr',
-          value: getMenuShowValue(statisticState.ctr, currency),
-          lastCycleValue: getMenuShowValue(statisticState.firstHalfCtr, currency),
+          value: getMenuShowValue(statisticState.ctr, '', true),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfCtr, '', true),
           chainRatio: <Rate value={statisticState.ctrRatio} decimals={2} />,
         }, {
           name: '转化率',
           key: 'conversionsRate',
-          value: getMenuShowValue(statisticState.conversionsRate, currency),
-          lastCycleValue: getMenuShowValue(statisticState.firstHalfConversionsRate, currency),
+          value: getMenuShowValue(statisticState.conversionsRate, '', true),
+          lastCycleValue: getMenuShowValue(statisticState.firstHalfConversionsRate, '', true),
           chainRatio: <Rate value={statisticState.conversionsRateRatio} decimals={2} />,
         },
       ],
@@ -717,7 +717,12 @@ const DataChartModal: React.FC<IProps> = function(props) {
               </div>
               {
                 chartType === 'table'
-                  ? <Button onClick={handleDownload} loading={downloadBtnLoading}>下载</Button>
+                  ? 
+                  <Button 
+                    onClick={handleDownload}
+                    loading={downloadBtnLoading}
+                    disabled={!tableState.records?.length}
+                  >下载</Button>
                   : null
               }
             </div>
