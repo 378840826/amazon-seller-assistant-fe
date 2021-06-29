@@ -42,3 +42,17 @@ export async function bindShop(params: API.IParams) {
     data: params,
   });
 }
+
+export async function adAuthorize(params: API.IParams) {
+  return request('/api/gd/management/store/authorize', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function cancelAdAuthorize(params: API.IParams) {
+  return request('/api/gd/management/store/cancel', {
+    method: 'GET',
+    data: params,
+  });
+}

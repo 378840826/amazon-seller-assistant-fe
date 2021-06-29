@@ -44,3 +44,44 @@
 .page table td.shopNameCol {
   padding-left: 70px;
 }
+
+.authorizeBtn {
+  padding: 0;
+  width: 70px;
+  min-width: 70px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 13px;
+  font-size: 12px;
+
+  &:hover {
+    color: @primary-color;
+  }
+}
+
+// 广告授权弹窗
+.authorizeModalContent {
+  .title {
+    text-align: left;
+    color: @heading-color;
+    font-weight: bold;
+  }
+
+  .body {
+    text-align: left;
+    margin: 12px 0 20px 0;
+    color: @text-color;
+
+    p {
+      display: block;
+    }
+  }
+
+  .foot {
+    text-align: center;
+
+    button {
+      margin: 14px;
+    }
+  }
+}

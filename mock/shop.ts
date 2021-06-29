@@ -17,6 +17,7 @@ export default {
               timezone: 'America/ Los_Angeles',
               currency: '$',
               tokenInvalid: false,
+              adAuthorize: false,
             }, {
               id: '1261140381664944131',
               storeName: 'store-name-store-name-2',
@@ -27,6 +28,7 @@ export default {
               timezone: 'America/ Los_Angeles',
               currency: '£',
               tokenInvalid: true,
+              adAuthorize: false,
             }, {
               id: '3',
               storeName: 'store-3',
@@ -37,7 +39,19 @@ export default {
               timezone: 'America/ Los_Angeles',
               currency: '￥',
               tokenInvalid: false,
-            },
+              adAuthorize: true,
+            }, {
+              id: '1261140381664944132',
+              storeName: 'store-name-1',
+              marketplace: 'US',
+              sellerId: 'sellerId-1',
+              token: 'amzn.mws.ecb25605-138b-62fb-56e6-83652c2b0d35',
+              autoPrice: false,
+              timezone: 'America/ Los_Angeles',
+              currency: '$',
+              tokenInvalid: false,
+              adAuthorize: false,
+            }, 
           ],
         },
       });
@@ -134,6 +148,24 @@ export default {
       res.send({
         code: 200,
         message: '绑定成功',
+      });
+    }, 800);
+  },
+
+  'POST /api/gd/management/store/authorize': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '授权成功',
+      });
+    }, 800);
+  },
+  
+  'GET /api/gd/management/store/cancel': (_: Request, res: Response) => {
+    setTimeout(() => {
+      res.send({
+        code: 200,
+        message: '取消授权成功',
       });
     }, 800);
   },

@@ -7,6 +7,8 @@ import {
   unbindShop,
   renameShop,
   updateShopToken,
+  adAuthorize,
+  cancelAdAuthorize,
   bindShop,
 } from '@/services/shop';
 import { storage } from '@/utils/utils';
@@ -69,6 +71,7 @@ const GlobalModel: IGlobalModelType = {
         currency: '$',
         tokenInvalid: false,
         timezone: '',
+        adAuthorize: false,
       },
       mws: [],
       ppc: [],
@@ -202,6 +205,38 @@ const GlobalModel: IGlobalModelType = {
       }
       callback && callback(res.code, res.message);
     },
+
+    // 广告店铺授权
+    *adAuthorize({ payload, callback }, { call, put }) {
+      const res = yield call(adAuthorize, payload);
+      if (res.code === 200) {
+        // 修改授权状态
+        yield put({
+          type: 'updateShopAdAuthorize',
+          payload: {
+            ...payload,
+            authorize: true,
+          },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
+
+    //取消广告店铺授权
+    *cancelAdAuthorize({ payload, callback }, { call, put }) {
+      const res = yield call(cancelAdAuthorize, payload);
+      if (res.code === 200) {
+        // 修改授权状态
+        yield put({
+          type: 'updateShopAdAuthorize',
+          payload: {
+            ...payload,
+            authorize: false,
+          },
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
   },
 
   reducers: {
@@ -262,6 +297,37 @@ const GlobalModel: IGlobalModelType = {
           const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
           !pathname.includes('/shop/') && history.push(url);
         }
+      }
+    },
+
+    // 修改店铺授权状态
+    updateShopAdAuthorize(state, { payload }) {
+      const { authorize, storeId, sellerId } = payload;
+      const list = [...state.shop.mws, ...state.shop.ppc];
+      // 授权, 相同 sellerId 下的店铺都会授权成功
+      if (authorize) {
+        for (let index = 0; index < list.length; index++) {
+          const shop = list[index];
+          if (shop.sellerId === sellerId) {
+            shop.adAuthorize = true;
+          }
+        }
+      } else {
+        // 取消授权，只取消单个店铺
+        for (let index = 0; index < list.length; index++) {
+          const shop = list[index];
+          if (shop.id === storeId) {
+            console.log('shop', storeId, shop);
+            
+            shop.adAuthorize = false;
+            break;
+          }
+        }
+      }
+      // 修改选中店铺
+      if (state.shop.current.id === storeId) {
+        state.shop.current.adAuthorize = authorize;
+        storage.set('currentShop', state.shop.current);
       }
     },
 
