@@ -6,18 +6,15 @@ const Guard: React.FC = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
     dispatch({
       type: 'global/fetchShopList',
-      payload: { type },
     });
   }, [dispatch]);
 
   useEffect(() => {
     if (currentShop.id === undefined ) {
-      const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
-      const url = type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-      location.pathname === url ? '' : history.push(url);
+      const url = '/shop/list';
+      location.pathname === url ? null : history.push(url);
     }
   }, [currentShop]);
 

@@ -33,10 +33,8 @@ export interface IGlobalModelState {
 
 export interface IShopSelector {
   status: 'normal' | 'hidden' | 'disabled';
-  type: 'mws' | 'ppc';
   current: API.IShop;
-  mws: Array<API.IShop>;
-  ppc: Array<API.IShop>;
+  list: API.IShop[];
 }
 
 interface IGlobalModelType extends IModelType {
@@ -60,7 +58,6 @@ const GlobalModel: IGlobalModelType = {
     // 店铺选择
     shop: {
       status: 'normal',
-      type: window.location.pathname.includes('/ppc') ? 'ppc' : 'mws',
       current: {
         id: '-1',
         marketplace: 'US',
@@ -73,8 +70,7 @@ const GlobalModel: IGlobalModelType = {
         timezone: '',
         adAuthorize: false,
       },
-      mws: [],
-      ppc: [],
+      list: [],
     },
   },
 
@@ -92,16 +88,12 @@ const GlobalModel: IGlobalModelType = {
     },
 
     // 获取全部店铺
-    *fetchShopList({ payload: { type } }, { call, put }) {
-      const mws = yield call(queryMwsShopList);
-      // const ppc = yield call(queryPpcShopList);
-      const ppc = { data: { records: [] } };
+    *fetchShopList(_, { call, put }) {
+      const res = yield call(queryMwsShopList);
       yield put({
         type: 'saveShopList',
         payload: {
-          mws: mws.data.records,
-          ppc: ppc.data.records,
-          type,
+          list: res.data.records,
         },
       });
     },
@@ -200,7 +192,6 @@ const GlobalModel: IGlobalModelType = {
         // 接口没有返回绑定成功的店铺，重新获取店铺列表
         yield put({
           type: 'fetchShopList',
-          payload: { type: 'mws' },
         });
       }
       callback && callback(res.code, res.message);
@@ -263,7 +254,7 @@ const GlobalModel: IGlobalModelType = {
     saveShopList(state, { payload }) {
       // 检查 localStorage 的 currentShop 是否存在于当前 shopList
       const currentShop = storage.get('currentShop');
-      const list = payload[payload.type];
+      const list = payload.list;
       const current = list.some((shop: API.IShop) => shop.id === currentShop.id)
         ? currentShop
         : list[0] || {};
@@ -274,9 +265,7 @@ const GlobalModel: IGlobalModelType = {
       );
       state.shop = {
         status: state.shop.status,
-        mws: payload.mws.sort(compare),
-        ppc: payload.ppc,
-        type: payload.type,
+        list: list.sort(compare),
         current,
       };
       // 如果没有店铺跳转到添加店铺页面
@@ -303,7 +292,7 @@ const GlobalModel: IGlobalModelType = {
     // 修改店铺授权状态
     updateShopAdAuthorize(state, { payload }) {
       const { authorize, storeId, sellerId } = payload;
-      const list = [...state.shop.mws, ...state.shop.ppc];
+      const list = state.shop.list;
       // 授权, 相同 sellerId 下的店铺都会授权成功
       if (authorize) {
         for (let index = 0; index < list.length; index++) {
@@ -317,8 +306,6 @@ const GlobalModel: IGlobalModelType = {
         for (let index = 0; index < list.length; index++) {
           const shop = list[index];
           if (shop.id === storeId) {
-            console.log('shop', storeId, shop);
-            
             shop.adAuthorize = false;
             break;
           }
@@ -333,11 +320,7 @@ const GlobalModel: IGlobalModelType = {
 
     // 切换店铺
     setCurrentShop(state, { payload }) {
-      console.log(payload, '/');
-      
-      const shopList = state.shop.type === 'mws'
-        ? state.shop.mws
-        : state.shop.ppc;
+      const shopList = state.shop.list;
       let current = undefined;
       shopList.forEach((shop: API.IShop) => {
         if (shop.id === payload.id) {
@@ -348,54 +331,6 @@ const GlobalModel: IGlobalModelType = {
       state.shop.current = current;
     },
 
-    // 切换店铺类型 + 没有添加店铺跳转到添加页面
-    switchShopType(state, { payload }) {
-      const { type, pathname } = payload;
-      // 如果没有添加店铺，跳转到对应的添加店铺页
-      const url = type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-      const { shop } = state;
-      if (shop.type === type) {
-        if (shop[type].length === 0 && shop.current.id > -1 && !pathname.includes('/shop/')) {
-          history.push(url);
-        }
-        return { ...state };
-      }
-      const oldShop = storage.get('currentShop');
-      let current = undefined;
-      const newShopList = state.shop[type];
-      // 如果切换后的店铺类型中没有添加店铺，跳转到对应的添加店铺页
-      if ((!newShopList || newShopList.length === 0) && !pathname.includes('/shop/')) {
-        history.push(url);
-        const { shop } = state;
-        return { ...state, shop: { ...shop, type } };
-      }
-      for (let index = 0; index < newShopList.length; index++) {
-        const shop = newShopList[index];
-        if (shop.sellerId === oldShop.sellerId && shop.marketplace === oldShop.marketplace) {
-          current = shop;
-          break;
-        }
-      }
-      // 若没有相同的店铺，显示第一个店铺，并提示去添加店铺
-      if (current === undefined) {
-        current = newShopList[0];
-        const { storeName, marketplace } = current;
-        const text = type === 'ppc' ? '授权' : '绑定';
-        const url = type === 'ppc' ? '/' : '/';
-        confirm({
-          title: `店铺 ${marketplace} : ${storeName} 未${text}`,
-          okText: `去${text}`,
-          cancelText: '取消',
-          centered: true,
-          onOk() {
-            history.push(url);
-          },
-        });
-      }
-      storage.set('currentShop', current);
-      state.shop.type = type;
-      state.shop.current = current;
-    },
 
     // 切换店铺选择器状态
     switchShopStatus(state, { payload }) {
@@ -479,20 +414,10 @@ const GlobalModel: IGlobalModelType = {
   },
 
   subscriptions: {
-    // 监听路由切换，修改店铺类型或店铺选择器状态
-    // 广告 <=> 非广告店铺类型切换 或 隐藏 / 禁用 店铺选择器状态切换
+    // 监听路由切换，修改店铺选择器状态
+    // 广告 <=> 非广告店铺类型切换不再需要判断，只监听隐藏/禁用店铺选择器状态切换
     listen({ dispatch, history }) {
       return history.listen(async ({ pathname }) => {
-        let type = '';
-        if (pathname.includes('/ppc/')) {
-          type = 'ppc';
-        } else {
-          type = 'mws';
-        }
-        type && dispatch({
-          type: 'switchShopType',
-          payload: { type, pathname },
-        });
         const hiddenShopSelectorUrl = [
           '/shop/list',
           '/shop/bind',
