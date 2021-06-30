@@ -26,7 +26,7 @@ declare global {
 const ShopList: React.FC = () => {
   const dispatch = useDispatch();
   const loadingEffect = useSelector((state: IConnectState) => state.loading);
-  const mwsShop = useSelector((state: IConnectState) => state.global.shop.mws);
+  const shopList = useSelector((state: IConnectState) => state.global.shop.list);
   const [authorizeState, setAuthorizeState] = useState({
     visible: false,
     marketplace: '',
@@ -303,7 +303,7 @@ const ShopList: React.FC = () => {
         columns={columns}
         rowClassName={styles.tableTr}
         rowKey="id"
-        dataSource={mwsShop}
+        dataSource={shopList}
         pagination={false}
         locale={{ emptyText: <TableNotData hint="未绑定店铺，请点击右上角按钮完成绑定" /> }}
       />
