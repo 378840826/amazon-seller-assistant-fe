@@ -18,11 +18,9 @@ const ShopSelector: React.FC = () => {
   const shop = useSelector((state: IConnectState) => state.global.shop);
 
   useEffect(() => {
-    const type = location.pathname.includes('/ppc') ? 'ppc' : 'mws';
-    const isRequest = shop[type].length > 0 ? false : true;
+    const isRequest = shop.list.length > 0 ? false : true;
     isRequest && dispatch({
       type: 'global/fetchShopList',
-      payload: { type },
     });
   }, [dispatch]); // eslint-disable-line
   // 因为使用路由守卫后，不再需要监听shop，监听shop就会无限请求(店铺列表为0的情况下)
@@ -34,9 +32,9 @@ const ShopSelector: React.FC = () => {
     });
   };
 
-  const { type, current, status } = shop;
+  const { current, status } = shop;
   const { id: currentId, storeName: currentShopName } = current;
-  const shopList = shop[type];
+  const shopList = shop.list;
   const disabled = status === 'disabled' || loading ? true : false;
   return (
     status === 'hidden'
