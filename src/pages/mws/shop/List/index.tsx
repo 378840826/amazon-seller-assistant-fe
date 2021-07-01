@@ -231,13 +231,13 @@ const ShopList: React.FC = () => {
     },
     {
       title: '广告授权',
-      dataIndex: 'adAuthorize',
+      dataIndex: 'bindAdStore',
       align: 'center',
-      render: (adAuthorized, record) => {
+      render: (bindAdStore, record) => {
         return (
           <>
             {
-              adAuthorized
+              bindAdStore
                 ?
                 <Button
                   onClick={() => handleClickCancelAuthorize(record)}
@@ -247,7 +247,7 @@ const ShopList: React.FC = () => {
                 <Button
                   onClick={() => handleClickAuthorize(record)}
                   className={styles.authorizeBtn}
-                >授权</Button>
+                >授权 {bindAdStore}</Button>
             }
           </>
         );
