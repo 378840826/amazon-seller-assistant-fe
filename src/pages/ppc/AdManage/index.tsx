@@ -111,7 +111,7 @@ const Manage: React.FC = function() {
   } = adManage;
   // 店铺
   const {
-    id: currentShopId, storeName, adStoreId, marketplace,
+    id: currentShopId, storeName, bindAdStore, marketplace,
   } = useSelector((state: IConnectState) => state.global.shop.current);
   // 标签页的类型
   const [tabsState, setTabsState] = useState<string>('default');
@@ -126,7 +126,7 @@ const Manage: React.FC = function() {
   
   useEffect(() => {
     // 没有授权广告的店铺不加载
-    if (currentShopId !== '-1' && adStoreId) {
+    if (currentShopId !== '-1' && bindAdStore) {
       // 店铺更新时间
       dispatch({
         type: 'adManage/fetchUpdateTime',
@@ -391,7 +391,7 @@ const Manage: React.FC = function() {
   return (
     <div className={classnames(styles.page, commonStyles.adManageContainer)}>
       {
-        adStoreId
+        bindAdStore
           ?
           <>
             <Layout>

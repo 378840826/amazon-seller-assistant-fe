@@ -40,6 +40,7 @@ declare namespace API {
     timezone: string;
     currency: string;
     tokenInvalid: boolean;
+    bindAdStore: boolean;
   }
 
   type fulfillmentChannel = 'FBA' | 'FBM' | '';
