@@ -192,8 +192,8 @@ const Group: React.FC = () => {
       return;
     }
 
-    if (data.name.length < 1 || data.name.length > 256) {
-      message.error('广告组名称长度不能小于1或者大于256位');
+    if (data.name.length < 1 || data.name.length > 255) {
+      message.error('广告组名称长度不能小于1或者大于255位');
       return;
     }
 
@@ -323,10 +323,10 @@ const Group: React.FC = () => {
         rules={[{
           required: true,
           min: 1,
-          max: 256,
+          max: 255,
           message: '广告组名称长度不能为0或大于256位！',
         }]}>
-        <Input maxLength={256}/>
+        <Input maxLength={255}/>
       </Item>
       <div className={styles.product}>
         <ProductSelect getSelectProduct={getSelectProduct}/>

@@ -57,10 +57,10 @@ const Group: React.FC<IProps> = props => {
       rules={[{
         required: true,
         min: 1,
-        max: 256,
-        message: '广告组名称长度不能为0或大于256位！',
+        max: 255,
+        message: '广告组名称长度不能为0或大于255位！',
       }]}>
-      <Input maxLength={256}/>
+      <Input maxLength={255}/>
     </Item>
     <div className={styles.product}>
       {stepIndex === 3 ? <ProductSelect /> : ''}

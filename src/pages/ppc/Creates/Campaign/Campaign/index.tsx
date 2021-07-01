@@ -83,13 +83,14 @@ const Campaign: React.FC<IProps> = props => {
       rules={[{
         required: true,
         validator(rule, value) {
-          const min = marketplace === 'JP' ? 200 : 1;
+          const min = marketplace === 'JP' ? 100 : 1;
+          const max = marketplace === 'JP' ? 2100000000 : 1000000;
           if (isNaN(value) || value < min) {
             return Promise.reject(`广告活动每日预算至少${currency}${min}`);
           }
 
-          if (value > 1000000) {
-            return Promise.reject(`广告活动每日预算不能超过${currency}1000000`);
+          if (value > max) {
+            return Promise.reject(`广告活动每日预算不能超过${currency}${max}`);
           }
           return Promise.resolve();
         },
@@ -171,13 +172,25 @@ const Campaign: React.FC<IProps> = props => {
         </Select>
       </Item>
       <div className={styles.commonInput}>
-        <Item label="搜索结果顶部(首页)：" normalize={limitedInput} name="biddingPlacementTop" className={styles.topSearch}>
+        <Item
+          label="搜索结果顶部(首页)："
+          initialValue={0}
+          normalize={limitedInput}
+          name="biddingPlacementTop"
+          className={styles.topSearch}
+        >
           <Input autoComplete="off" />
         </Item>
         <span className={styles.currency}>%</span>
       </div>
       <div className={styles.commonInput}>
-        <Item label="商品页面：" normalize={limitedInput} name="biddingPlacementProductPage" className={styles.productPage}>
+        <Item
+          label="商品页面："
+          initialValue={0}
+          normalize={limitedInput}
+          name="biddingPlacementProductPage"
+          className={styles.productPage}
+        >
           <Input autoComplete="off" />
         </Item>
         <span className={styles.currency}>%</span>
