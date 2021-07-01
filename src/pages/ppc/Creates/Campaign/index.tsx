@@ -176,8 +176,8 @@ const CampaignAdd = () => {
         return;
       }
       
-      if (reqData.adGroup.name.length < 1 || reqData.adGroup.name.length > 256) {
-        message.error('广告组名称长度不能小于1或者大于256位');
+      if (reqData.adGroup.name.length < 1 || reqData.adGroup.name.length > 255) {
+        message.error('广告组名称长度不能小于1或者大于255位');
         return;
       }
 

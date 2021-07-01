@@ -97,12 +97,13 @@ const SpAuto: React.FC<IProps> = props => {
         required: true,
         validator(rule, value) {
           const min = marketplace === 'JP' ? 2 : 0.02;
+          const max = marketplace === 'JP' ? 2100000000 : 1000000;
           if (isNaN(value) || value < min) {
             return Promise.reject(`广告组默认竞价至少${currency}${min}`);
           }
 
           if (value > 1000000) {
-            return Promise.reject(`广告活动每日预算不能超过${currency}1000000`);
+            return Promise.reject(`广告活动每日预算不能超过${currency}${max}`);
           }
           return Promise.resolve();
         },
