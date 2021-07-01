@@ -68,7 +68,7 @@ const GlobalModel: IGlobalModelType = {
         currency: '$',
         tokenInvalid: false,
         timezone: '',
-        adAuthorize: false,
+        bindAdStore: false,
       },
       list: [],
     },
@@ -206,7 +206,7 @@ const GlobalModel: IGlobalModelType = {
           type: 'updateShopAdAuthorize',
           payload: {
             ...payload,
-            authorize: true,
+            bindAdStore: true,
           },
         });
       }
@@ -222,7 +222,7 @@ const GlobalModel: IGlobalModelType = {
           type: 'updateShopAdAuthorize',
           payload: {
             ...payload,
-            authorize: false,
+            bindAdStore: false,
           },
         });
       }
@@ -291,14 +291,14 @@ const GlobalModel: IGlobalModelType = {
 
     // 修改店铺授权状态
     updateShopAdAuthorize(state, { payload }) {
-      const { authorize, storeId, sellerId } = payload;
+      const { bindAdStore, storeId, sellerId } = payload;
       const list = state.shop.list;
       // 授权, 相同 sellerId 下的店铺都会授权成功
-      if (authorize) {
+      if (bindAdStore) {
         for (let index = 0; index < list.length; index++) {
           const shop = list[index];
           if (shop.sellerId === sellerId) {
-            shop.adAuthorize = true;
+            shop.bindAdStore = true;
           }
         }
       } else {
@@ -306,14 +306,14 @@ const GlobalModel: IGlobalModelType = {
         for (let index = 0; index < list.length; index++) {
           const shop = list[index];
           if (shop.id === storeId) {
-            shop.adAuthorize = false;
+            shop.bindAdStore = false;
             break;
           }
         }
       }
       // 修改选中店铺
       if (state.shop.current.id === storeId) {
-        state.shop.current.adAuthorize = authorize;
+        state.shop.current.bindAdStore = bindAdStore;
         storage.set('currentShop', state.shop.current);
       }
     },

@@ -17,7 +17,7 @@ export default {
               timezone: 'America/ Los_Angeles',
               currency: '$',
               tokenInvalid: false,
-              adAuthorize: false,
+              bindAdStore: false,
             }, {
               id: '1261140381664944131',
               storeName: 'store-name-store-name-2',
@@ -28,7 +28,7 @@ export default {
               timezone: 'America/ Los_Angeles',
               currency: '£',
               tokenInvalid: true,
-              adAuthorize: false,
+              bindAdStore: false,
             }, {
               id: '3',
               storeName: 'store-3',
@@ -39,7 +39,7 @@ export default {
               timezone: 'America/ Los_Angeles',
               currency: '￥',
               tokenInvalid: false,
-              adAuthorize: true,
+              bindAdStore: true,
             }, {
               id: '1261140381664944132',
               storeName: 'store-name-1',
@@ -50,7 +50,7 @@ export default {
               timezone: 'America/ Los_Angeles',
               currency: '$',
               tokenInvalid: false,
-              adAuthorize: false,
+              bindAdStore: false,
             }, 
           ],
         },
