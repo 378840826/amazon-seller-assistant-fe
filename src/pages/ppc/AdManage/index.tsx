@@ -2,6 +2,7 @@
  * 广告管理
  * Tabs 可优化为只显示一个 Tab
  * targetingType 字段是为了区分能不能添加targeting
+ * 未授权广告的店铺不加载页面
  */
 import React, { useState, useEffect } from 'react';
 import { Tree, Tabs, Layout } from 'antd';
@@ -19,6 +20,7 @@ import NegativeTargeting from './NegativeTargeting';
 import NegativeKeyword from './NegativeKeyword';
 import SearchTerm from './SearchTerm';
 import OperationRecord from './OperationRecord';
+import Unauthorized from './components/Unauthorized';
 import { ITreeSelectedInfo } from './index.d';
 import classnames from 'classnames';
 import commonStyles from './common.less';
@@ -109,7 +111,7 @@ const Manage: React.FC = function() {
   } = adManage;
   // 店铺
   const {
-    id: currentShopId, storeName,
+    id: currentShopId, storeName, adStoreId, marketplace,
   } = useSelector((state: IConnectState) => state.global.shop.current);
   // 标签页的类型
   const [tabsState, setTabsState] = useState<string>('default');
@@ -123,7 +125,8 @@ const Manage: React.FC = function() {
   const loadingTabsCellCount = loadingEffect['adManage/fetchTabsCellCount']; 
   
   useEffect(() => {
-    if (currentShopId !== '-1') {
+    // 没有授权广告的店铺不加载
+    if (currentShopId !== '-1' && adStoreId) {
       // 店铺更新时间
       dispatch({
         type: 'adManage/fetchUpdateTime',
@@ -387,101 +390,123 @@ const Manage: React.FC = function() {
 
   return (
     <div className={classnames(styles.page, commonStyles.adManageContainer)}>
-      <Layout>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={state => setCollapsed(state)}
-          className={classnames(styles.Sider, 'h-scroll')}
-          width={300}
-          collapsedWidth={50}
-          trigger={<Iconfont type="icon-zhankai" className={classnames(styles.trigger, collapsed ? styles.left : '')} />}
-        >
-          <Tree
-            showIcon
-            loadData={onLoadData}
-            treeData={treeData}
-            expandedKeys={treeExpandedKeys}
-            selectedKeys={[treeSelectedInfo.key]}
-            switcherIcon={<Iconfont type="icon-xiangyoujiantou" className={styles.switcherIcon} />}
-            className={classnames(styles.Tree, collapsed ? styles.hide : '')}
-            onSelect={handleSelect}
-            onExpand={(keys) => {
-              dispatch({
-                type: 'adManage/changeTreeExpandedKeys',
-                payload: { keys },
-              });
-            }}
-          />
-        </Sider>
-      </Layout>
-      <div className={styles.tabsContainer}>
-        {
-          treeSelectedInfo.campaignName && 
-            <div className={styles.breadcrumb}>
-              <span
-                className={styles.breadcrumbBtn}
-                title={storeName}
-                onClick={() => handleBreadcrumbClick('shop')}
+      {
+        adStoreId
+          ?
+          <>
+            <Layout>
+              <Sider
+                collapsible
+                collapsed={collapsed}
+                onCollapse={state => setCollapsed(state)}
+                className={classnames(styles.Sider, 'h-scroll')}
+                width={300}
+                collapsedWidth={50}
+                trigger={
+                  <Iconfont
+                    type="icon-zhankai"
+                    className={classnames(styles.trigger, collapsed ? styles.left : '')}
+                  />
+                }
               >
-                {storeName}
-              </span>
-              <Iconfont type="icon-zhankai" className={styles.breadcrumbSeparator} />
-              <span
-                className={styles.breadcrumbBtn}
-                title={`${treeSelectedInfo.campaignName}`}
-                onClick={ treeSelectedInfo.groupId ? () => handleBreadcrumbClick('campaign') : undefined}
-              >
-                { treeSelectedInfo.campaignName }
-              </span>
-              {
-                treeSelectedInfo.groupName &&
-                <>
-                  <Iconfont type="icon-zhankai" className={styles.breadcrumbSeparator} />
-                  <span className={styles.breadcrumbBtn} title={`${treeSelectedInfo.groupName}`}>
-                    { treeSelectedInfo.groupName }
-                  </span>
-                </>
-              }
-            </div>
-        }
-        <Tabs
-          activeKey={activeTabKey}
-          onChange={handleTabChange}
-          tabBarExtraContent={
-            <div className={styles.updateTime}>更新时间：{updateTime}</div>
-          }
-        >
-          {
-            tabsStateDict[tabsState].map((key: string) => {
-              const tab = allTab[key];
-              return (
-                <TabPane
-                  key={key}
-                  tab={
-                    <span className={styles.tabsTitle}>
-                      { tab.tab }
-                      <span>
-                        {
-                          tab.countKey
-                            ? <>({ loadingTabsCellCount ? '...' : tabsCellCount[tab.countKey] })</>
-                            : null
-                        }
-                      </span>
-                    </span>
+                <Tree
+                  showIcon
+                  loadData={onLoadData}
+                  treeData={treeData}
+                  expandedKeys={treeExpandedKeys}
+                  selectedKeys={[treeSelectedInfo.key]}
+                  switcherIcon={
+                    <Iconfont type="icon-xiangyoujiantou" className={styles.switcherIcon} />
                   }
-                >
-                  <div className={styles.tabContent}>
+                  className={classnames(styles.Tree, collapsed ? styles.hide : '')}
+                  onSelect={handleSelect}
+                  onExpand={(keys) => {
+                    dispatch({
+                      type: 'adManage/changeTreeExpandedKeys',
+                      payload: { keys },
+                    });
+                  }}
+                />
+              </Sider>
+            </Layout>
+            <div className={styles.tabsContainer}>
+              {
+                treeSelectedInfo.campaignName && 
+                  <div className={styles.breadcrumb}>
+                    <span
+                      className={styles.breadcrumbBtn}
+                      title={storeName}
+                      onClick={() => handleBreadcrumbClick('shop')}
+                    >
+                      {storeName}
+                    </span>
+                    <Iconfont type="icon-zhankai" className={styles.breadcrumbSeparator} />
+                    <span
+                      className={styles.breadcrumbBtn}
+                      title={`${treeSelectedInfo.campaignName}`}
+                      onClick={
+                        treeSelectedInfo.groupId
+                          ? () => handleBreadcrumbClick('campaign')
+                          : undefined
+                      }
+                    >
+                      { treeSelectedInfo.campaignName }
+                    </span>
                     {
-                      tab.tabPane || tab.tab
+                      treeSelectedInfo.groupName &&
+                      <>
+                        <Iconfont type="icon-zhankai" className={styles.breadcrumbSeparator} />
+                        <span
+                          className={styles.breadcrumbBtn}
+                          title={`${treeSelectedInfo.groupName}`}
+                        >
+                          { treeSelectedInfo.groupName }
+                        </span>
+                      </>
                     }
                   </div>
-                </TabPane>
-              );
-            })
-          }
-        </Tabs>
-      </div>
+              }
+              <Tabs
+                activeKey={activeTabKey}
+                onChange={handleTabChange}
+                tabBarExtraContent={
+                  <div className={styles.updateTime}>更新时间：{updateTime}</div>
+                }
+              >
+                {
+                  tabsStateDict[tabsState].map((key: string) => {
+                    const tab = allTab[key];
+                    return (
+                      <TabPane
+                        key={key}
+                        tab={
+                          <span className={styles.tabsTitle}>
+                            { tab.tab }
+                            <span>
+                              {
+                                tab.countKey
+                                  ? <>({ loadingTabsCellCount ? '...' : tabsCellCount[tab.countKey] })</>
+                                  : null
+                              }
+                            </span>
+                          </span>
+                        }
+                      >
+                        <div className={styles.tabContent}>
+                          {
+                            tab.tabPane || tab.tab
+                          }
+                        </div>
+                      </TabPane>
+                    );
+                  })
+                }
+              </Tabs>
+            </div>
+          </>
+          :
+          <Unauthorized storeName={storeName} marketplace={marketplace} />
+      }
     </div>
   ); 
 };
