@@ -32,6 +32,7 @@ declare namespace API {
 
   interface IShop {
     id: string;
+    adStoreId?: string;
     storeName: string;
     marketplace: Site;
     sellerId: string;
