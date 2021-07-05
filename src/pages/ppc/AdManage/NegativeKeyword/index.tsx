@@ -54,7 +54,8 @@ const NegativeKeyword: React.FC = function() {
     treeSelectedInfo,
   } = adManage;
   const { total, records } = list;
-  const { current, size, matchType } = searchParams;
+  const { current, size, matchType, sort, order } = searchParams;
+  
   // 添加否定关键词
   const [addState, setAddState] = useState({
     visible: false,
@@ -185,6 +186,8 @@ const NegativeKeyword: React.FC = function() {
       title: '否定关键词',
       dataIndex: 'neKeywordId',
       width: 300,
+      sorter: true,
+      sortOrder: sort === 'neKeywordId' ? order : null,
       render: (_, record) => (
         <div className={styles.keywordText}>{record.keywordText}</div>
       ),
@@ -193,6 +196,8 @@ const NegativeKeyword: React.FC = function() {
       dataIndex: 'matchType',
       align: 'center',
       width: 200,
+      sorter: true,
+      sortOrder: sort === 'matchType' ? order : null,
       render: value => negativeMatchTypeDict[value],
     }, {
       title: <>添加时间<Iconfont className={commonStyles.iconQuestion} type="icon-yiwen" title="北京时间" /></>,
@@ -200,6 +205,8 @@ const NegativeKeyword: React.FC = function() {
       key: 'addTime',
       align: 'center',
       width: 220,
+      sorter: true,
+      sortOrder: sort === 'addTime' ? order : null,
     },
   ];
 
@@ -245,14 +252,26 @@ const NegativeKeyword: React.FC = function() {
   }
 
   // 表格参数变化
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleTableChange (pagination: any) {
+  // eslint-disable-next-line max-params
+  function handleTableChange (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    pagination: any, __: any, sorter: any, action: any) {
     const { current, pageSize: size } = pagination;
+    const { field: sort, order } = sorter;    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let params: { [key: string]: any } = {};
+    const actionType = action.action;
+    if (actionType === 'paginate') {
+      // 由翻页触发的, 只传分页参数，model 中会获取旧的排序参数
+      params = { current, size };
+    } else if (actionType === 'sort') {
+      // 由排序触发的， 重置页码为 1
+      params = { current: 1, size, sort, order };
+    }
     dispatch({
       type: 'adManage/fetchNegativeKeywordList',
       payload: {
-        headersParams: { StoreId: currentShopId },
-        searchParams: { current, size },
+        searchParams: params,
         type,
       },
       callback: requestErrorFeedback,
@@ -361,7 +380,7 @@ const NegativeKeyword: React.FC = function() {
         headersParams: { StoreId: currentShopId },
         negativeKeywords: selectedKeywordsList.map(kw => ({
           camId: addState.campaignId,
-          groupId: addState.groupId,
+          groupId: addState.groupId || null,
           keywordText: kw.keywordText,
           matchType: negativeMatchTypeMap[kw.matchType as string],
         })),
@@ -390,7 +409,7 @@ const NegativeKeyword: React.FC = function() {
   // 添加输入的否定关键词
   function handleAddTextAreaKeyword() {
     const lineArr = textAreaKeywords.text.split(/\r\n|\r|\n/);
-    const keywordArr: INegativeKeyword[] = [];
+    const keywordArr = [];
     for (let i = 0; i < lineArr.length; i++) {
       const line = lineArr[i];
       const kw = line.trim();
@@ -401,6 +420,8 @@ const NegativeKeyword: React.FC = function() {
       kw !== '' && keywordArr.push({
         keywordText: kw,
         matchType: negativeMatchTypeMap[textAreaKeywords.matchType],
+        camId: addState.campaignId,
+        groupId: addState.groupId || null,
       });
     }
     if (keywordArr.length === 0) {
@@ -412,8 +433,6 @@ const NegativeKeyword: React.FC = function() {
       payload: {
         headersParams: { StoreId: currentShopId },
         negativeKeywords: keywordArr,
-        campaignId: addState.campaignId,
-        groupId: addState.groupId,
         type,
       },
       callback: (code: number, msg: string) => {
@@ -451,6 +470,8 @@ const NegativeKeyword: React.FC = function() {
       dataIndex: 'keywordText',
       fixed: 'left',
       width: 200,
+      sorter: true,
+      sortOrder: sort === 'keywordName' ? order : null,
     }, {
       title: '匹配方式',
       dataIndex: 'matchType',

@@ -293,6 +293,9 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: '广告活动',
+      dataIndex: 'camName',
+      sorter: true,
+      sortOrder: sort === 'camName' ? order : null,
       children: [
         {
           dataIndex: 'camId',
@@ -318,6 +321,9 @@ const Group: React.FC = function() {
       ] as any,
     }, {
       title: '广告组',
+      dataIndex: 'name',
+      sorter: true,
+      sortOrder: sort === 'name' ? order : null,
       children: [
         {
           dataIndex: 'id',
@@ -352,6 +358,9 @@ const Group: React.FC = function() {
       title: <>创建时间<Iconfont className={commonStyles.iconQuestion} type="icon-yiwen" title="北京时间" /></>,
       align: 'center',
       key: 'createdTime',
+      dataIndex: 'createdTime',
+      sorter: true,
+      sortOrder: sort === 'createdTime' ? order : null,
       children: [
         {
           dataIndex: 'createdTime',

@@ -46,9 +46,9 @@ request.interceptors.request.use((url, options) => {
     // 需要插入到 headers 中的参数
     const { headersParams } = data;
     // 广告管理模块的所有请求都需要加上 adStoreId 请求头，目前和 storeId 请求头添加方式没有统一，待优化
-    if (url.includes('/api/gd/management/')) {
+    if (url.includes('/api/gd/')) {
       const shop = storage.get('currentShop');
-      Object.assign(headers, { adStoreId: shop?.adStoreId || '' }, headersParams);
+      Object.assign(headers, { AdStoreId: shop?.adStoreId || '' }, headersParams);
     } else {
       Object.assign(headers, headersParams);
     }
