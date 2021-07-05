@@ -345,6 +345,9 @@ const Campaign: React.FC = function() {
       ] as any,
     }, {
       title: '广告活动',
+      dataIndex: 'name',
+      sorter: true,
+      sortOrder: sort === 'name' ? order : null,
       children: [
         {
           title: '合计',
@@ -375,6 +378,9 @@ const Campaign: React.FC = function() {
     }, {
       title: '广告类型',
       key: 'adType',
+      dataIndex: 'adType',
+      sorter: true,
+      sortOrder: sort === 'adType' ? order : null,
       children: [
         {
           dataIndex: 'adType',
@@ -398,6 +404,9 @@ const Campaign: React.FC = function() {
       title: <>创建时间<Iconfont className={commonStyles.iconQuestion} type="icon-yiwen" title="北京时间" /></>,
       align: 'center',
       key: 'createdTime',
+      dataIndex: 'createdTime',
+      sorter: true,
+      sortOrder: sort === 'createdTime' ? order : null,
       children: [
         {
           dataIndex: 'createdTime',
@@ -510,6 +519,9 @@ const Campaign: React.FC = function() {
       title: '日预算',
       align: 'right',
       key: 'dailyBudget',
+      dataIndex: 'dailyBudget',
+      sorter: true,
+      sortOrder: sort === 'dailyBudget' ? order : null,
       children: [
         {
           dataIndex: 'dailyBudget',

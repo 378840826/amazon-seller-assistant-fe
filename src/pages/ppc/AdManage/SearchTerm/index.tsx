@@ -567,6 +567,9 @@ const SearchTerm: React.FC = function() {
   const allColumns: ColumnProps<API.IAdSearchTerm>[] = [
     {
       title: '搜索词',
+      dataIndex: 'queryKeyword',
+      sorter: true,
+      sortOrder: sort === 'queryKeyword' ? order : null,
       children: [
         {
           title: '合计',
@@ -619,6 +622,9 @@ const SearchTerm: React.FC = function() {
     {
       title: '投放词',
       key: 'keywordText',
+      dataIndex: 'keywordText',
+      sorter: true,
+      sortOrder: sort === 'keywordText' ? order : null,
       children: [
         {
           dataIndex: 'keywordText',
@@ -646,6 +652,9 @@ const SearchTerm: React.FC = function() {
     {
       title: '匹配方式',
       key: 'matchType',
+      dataIndex: 'matchType',
+      sorter: true,
+      sortOrder: sort === 'matchType' ? order : null,
       align: 'center',
       children: [
         {
@@ -661,6 +670,9 @@ const SearchTerm: React.FC = function() {
     },
     {
       title: '广告活动',
+      dataIndex: 'camName',
+      sorter: true,
+      sortOrder: sort === 'camName' ? order : null,
       children: [
         {
           dataIndex: 'camId',

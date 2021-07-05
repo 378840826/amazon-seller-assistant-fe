@@ -31,7 +31,7 @@ const NegativeTargeting: React.FC = function() {
     treeSelectedInfo,
   } = adManage;
   const { total, records } = list;
-  const { current, size } = searchParams;
+  const { current, size, sort, order } = searchParams;
   // 添加否定 targeting
   const [visible, setVisible] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>('asin');
@@ -102,6 +102,8 @@ const NegativeTargeting: React.FC = function() {
       title: '否定品牌或ASIN',
       dataIndex: 'neTargetId',
       width: 360,
+      sorter: true,
+      sortOrder: sort === 'neTargetId' ? order : null,
       render: (_, record) => record.targetText,
     }, {
       title: <>添加时间<Iconfont className={commonStyles.iconQuestion} type="icon-yiwen" title="北京时间" /></>,
@@ -109,18 +111,32 @@ const NegativeTargeting: React.FC = function() {
       key: 'addTime',
       align: 'center',
       width: 220,
+      sorter: true,
+      sortOrder: sort === 'addTime' ? order : null,
     },
   ];
 
   // 表格参数变化
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleTableChange (pagination: any) {
+  // eslint-disable-next-line max-params
+  function handleTableChange (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    pagination: any, __: any, sorter: any, action: any) {
     const { current, pageSize: size } = pagination;
+    const { field: sort, order } = sorter;    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let params: { [key: string]: any } = {};
+    const actionType = action.action;
+    if (actionType === 'paginate') {
+      // 由翻页触发的, 只传分页参数，model 中会获取旧的排序参数
+      params = { current, size };
+    } else if (actionType === 'sort') {
+      // 由排序触发的， 重置页码为 1
+      params = { current: 1, size, sort, order };
+    }
     dispatch({
       type: 'adManage/fetchNegativeTargetingList',
       payload: {
-        headersParams: { StoreId: currentShopId },
-        searchParams: { current, size },
+        searchParams: params,
       },
       callback: requestErrorFeedback,
     });

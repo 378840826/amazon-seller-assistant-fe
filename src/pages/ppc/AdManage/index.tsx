@@ -3,6 +3,7 @@
  * Tabs 可优化为只显示一个 Tab
  * targetingType 字段是为了区分能不能添加targeting
  * 未授权广告的店铺不加载页面
+ * 因开发周期太长且收尾匆忙，有些地方待优化
  */
 import React, { useState, useEffect } from 'react';
 import { Tree, Tabs, Layout } from 'antd';

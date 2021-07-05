@@ -228,6 +228,8 @@ export interface IAdManage {
     searchParams: {
       size: number;
       current: number;
+      order: Order;
+      sort: string;
     };
     checkedIds: string[];
   };
@@ -242,6 +244,8 @@ export interface IAdManage {
       current: number;
       matchType?: API.AdNegativeKeywordMatchType;
       code?: string;
+      order: Order;
+      sort: string;
     };
     checkedIds: string[];
   };
@@ -437,7 +441,8 @@ const AdManageModel: IAdManageModelType = {
       },
       // 查询参数
       searchParams: {
-        order: null,
+        sort: 'createdTime',
+        order: 'descend',
         current: 1,
         size: 20,
       },
@@ -483,7 +488,8 @@ const AdManageModel: IAdManageModelType = {
       },
       // 查询参数
       searchParams: {
-        order: null,
+        sort: 'createdTime',
+        order: 'descend',
         current: 1,
         size: 20,
       },
@@ -523,7 +529,8 @@ const AdManageModel: IAdManageModelType = {
       },
       // 查询参数
       searchParams: {
-        order: null,
+        sort: 'addTime',
+        order: 'descend',
         current: 1,
         size: 20,
       },
@@ -558,7 +565,8 @@ const AdManageModel: IAdManageModelType = {
       },
       // 查询参数
       searchParams: {
-        order: null,
+        sort: 'addTime',
+        order: 'descend',
         current: 1,
         size: 20,
       },
@@ -595,7 +603,8 @@ const AdManageModel: IAdManageModelType = {
       },
       // 查询参数
       searchParams: {
-        order: null,
+        sort: 'addTime',
+        order: 'descend',
         current: 1,
         size: 20,
       },
@@ -631,6 +640,8 @@ const AdManageModel: IAdManageModelType = {
       searchParams: {
         current: 1,
         size: 20,
+        sort: 'addTime',
+        order: 'descend',
       },
       // 勾选的id
       checkedIds: [],
@@ -644,6 +655,8 @@ const AdManageModel: IAdManageModelType = {
       searchParams: {
         current: 1,
         size: 20,
+        sort: 'addTime',
+        order: 'descend',
       },
       // 勾选的id
       checkedIds: [],
