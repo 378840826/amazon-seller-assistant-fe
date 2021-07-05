@@ -356,6 +356,9 @@ const Targeting: React.FC = function() {
       ] as any,
     }, {
       title: '广告活动',
+      dataIndex: 'camName',
+      sorter: true,
+      sortOrder: sort === 'camName' ? order : null,
       children: [
         {
           dataIndex: 'camId',
@@ -379,6 +382,9 @@ const Targeting: React.FC = function() {
       ] as any,
     }, {
       title: '广告组',
+      dataIndex: 'groupName',
+      sorter: true,
+      sortOrder: sort === 'groupName' ? order : null,
       children: [
         {
           dataIndex: 'groupId',
@@ -488,6 +494,9 @@ const Targeting: React.FC = function() {
       title: <>添加时间<Iconfont className={commonStyles.iconQuestion} type="icon-yiwen" title="北京时间" /></>,
       align: 'center',
       key: 'addTime',
+      dataIndex: 'addTime',
+      sorter: true,
+      sortOrder: sort === 'addTime' ? order : null,
       children: [
         {
           dataIndex: 'addTime',

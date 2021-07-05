@@ -362,9 +362,18 @@ export async function addTargeting(params: API.IParams) {
 // 否定Targeting
 // 否定Targeting-列表
 export async function queryNegativeTargetingList(params: API.IParams) {
+  // targeting名称排序参数特殊处理
+  if (params.sort === 'neTargetId') {
+    params.sort = 'targetText';
+  }
   return request('/api/gd/management/group/ne-target/list', {
     data: params,
-    params,
+    params: {
+      ...params,
+      // 后端接口要求
+      order: params.sort,
+      asc: params.order === 'ascend' ? 'true' : 'false',
+    },
   });
 }
 
@@ -394,9 +403,18 @@ export async function queryNegativeKeywordList(params: API.IParams) {
   } else if (params.type === 'group') {
     url = '/api/gd/management/group/ne-keyword/list';
   }
+  // 关键词名称排序参数特殊处理
+  if (params.sort === 'neKeywordId') {
+    params.sort = 'keywordText';
+  }
   return request(url, {
     data: params,
-    params,
+    params: {
+      ...params,
+      // 后端接口要求
+      order: params.sort,
+      asc: params.order === 'ascend' ? 'true' : 'false',
+    },
   });
 }
 
