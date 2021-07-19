@@ -19,6 +19,8 @@ import Summary from './Summary';
 import {
   Tooltip,
   Table,
+  Dropdown,
+  Menu
 } from 'antd';
 
 /**
@@ -477,7 +479,27 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
                   {title}
                 </a>
                 <footer>
-                  <Link to={`/asin/base?asin=${asin}`} className={styles.title}>{asin}</Link>
+                <div>
+                <Dropdown 
+                      overlay={
+                        <Menu>
+                          <Menu.Item key="toGoodlist" >
+                            <Link to={`/product/list?asin=${asin}`} target="_self">商品列表</Link>
+                          </Menu.Item>
+                          <Menu.Item key="toASINview">
+                            <Link to={`/asin/order?asin=${asin}`} target="_self">订单解读</Link>
+                          </Menu.Item>
+                          <Menu.Item key="toOrderview">
+                            <Link to={`/dynamic/asin-overview?asin=${asin}`} target="_self">ASIN动态汇总</Link>
+                          </Menu.Item>
+                        </Menu>
+                      }                                          
+                    >
+                      <a  onClick={e => e.preventDefault()} className={styles.title}>
+                        {asin} 
+                      </a>
+                    </Dropdown>
+              </div>
                   <Tooltip title={`大类排名：#${categoryRanking} ${categoryName}`}>
                     <span>#{categoryRanking}</span>
                   </Tooltip>
