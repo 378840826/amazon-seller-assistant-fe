@@ -410,7 +410,8 @@ const GlobalModel: IGlobalModelType = {
     // 当前店铺切换回切换之前的店铺
     saveHistoryShop(state) {
       const historyShop = { ...state.shop.current };
-      storage.set('currentShop', historyShop);
+      //不保存店铺到缓存
+ 
       state.shop.current = historyShop;
     },
   },

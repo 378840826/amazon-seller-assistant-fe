@@ -101,15 +101,30 @@ const GoodsList: React.FC = () => {
         },
         callback: requestErrorFeedback,
       });
-      dispatch({
-        type: 'goodsList/fetchGoodsList',
-        payload: {
-          headersParams: { StoreId: currentShopId },
-          filtrateParams: queryParams,
-          searchParams: { current: 1 },
-        },
-        callback: requestErrorFeedback,
-      });
+      //判断是否有有路由传参
+      if (queryParams.asin){
+        dispatch({
+          type: 'goodsList/fetchGoodsList',
+          payload: {
+            headersParams,
+            filtrateParams: {
+              search: queryParams.asin,
+            },
+            searchParams: { current: 1, order: null },
+          },
+          callback: requestErrorFeedback,
+        });
+      } else {
+        dispatch({
+          type: 'goodsList/fetchGoodsList',
+          payload: {
+            headersParams: { StoreId: currentShopId },
+            filtrateParams: queryParams,
+            searchParams: { current: 1 },
+          },
+          callback: requestErrorFeedback,
+        });
+      } 
       dispatch({
         type: 'goodsList/fetchCycle',
         payload: {
