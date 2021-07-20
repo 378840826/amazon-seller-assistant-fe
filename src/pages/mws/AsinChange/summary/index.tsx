@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import LinkHeader from '../components/LinkHeader';
 import styles from './index.less';
-import { Iconfont,getPageQuery} from '@/utils/utils';
+import { Iconfont, getPageQuery } from '@/utils/utils';
 import { Input } from 'antd';
 import { connect } from 'umi';
 import { IConnectState, IConnectProps } from '@/models/connect';
@@ -47,15 +47,15 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     }));
   };
   //加载路由传过来的参数
-  useEffect(()=>{
-    const queryParams=getPageQuery()
-    if(queryParams.asin){
+  useEffect(() => {
+    const queryParams = getPageQuery();
+    if (queryParams.asin){
       setSendState(state => ({
         ...state,
-        asin:queryParams.asin as string 
+        asin: queryParams.asin as string, 
       })); 
     }
-  },[])
+  }, []);
   //切换店铺 修改分页相关信息
   useEffect(() => {
     setSendState((sendState) => ({

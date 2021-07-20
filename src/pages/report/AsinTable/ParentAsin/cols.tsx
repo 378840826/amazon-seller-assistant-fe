@@ -20,7 +20,7 @@ import {
   Tooltip,
   Table,
   Dropdown,
-  Menu
+  Menu,
 } from 'antd';
 
 /**
@@ -479,8 +479,8 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
                   {title}
                 </a>
                 <footer>
-                <div>
-                <Dropdown 
+                  <div>
+                    <Dropdown 
                       overlay={
                         <Menu>
                           <Menu.Item key="toGoodlist" >
@@ -495,11 +495,11 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
                         </Menu>
                       }                                          
                     >
-                      <a  onClick={e => e.preventDefault()} className={styles.title}>
+                      <a onClick={e => e.preventDefault()} className={styles.title}>
                         {asin} 
                       </a>
                     </Dropdown>
-              </div>
+                  </div>
                   <Tooltip title={`大类排名：#${categoryRanking} ${categoryName}`}>
                     <span>#{categoryRanking}</span>
                   </Tooltip>

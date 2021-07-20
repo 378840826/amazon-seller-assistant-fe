@@ -165,25 +165,25 @@ export const getFullColumns = (params: any) => {
               &&
               <div className={styles.asin}>
                 <Dropdown 
-                    overlay={
-                      <Menu>
-                        <Menu.Item key="toGoodlist" >
-                          <Link to={`/product/list?asin=${record.asin}`} target="_blank">商品列表</Link>
-                        </Menu.Item>
-                        <Menu.Item key="toASINview">
-                          <Link to={`/asin/order?asin=${record.asin}`} target="_self">订单解读</Link>
-                        </Menu.Item>
-                        <Menu.Item key="toOrderview">
-                          <Link to={`/dynamic/asin-overview?asin=${record.asin}`} target="_self">ASIN动态汇总</Link>
-                        </Menu.Item>
-                      </Menu>
-                    }                     
-                  >
-                      <a className="ant-dropdown-link" onClick={e => e.preventDefault()} >
-                        {record.asin} 
-                      </a>
-                  </Dropdown>
-                
+                  overlay={
+                    <Menu>
+                      <Menu.Item key="toGoodlist" >
+                        <Link to={`/product/list?asin=${record.asin}`} target="_blank">商品列表</Link>
+                      </Menu.Item>
+                      <Menu.Item key="toASINview">
+                        <Link to={`/asin/order?asin=${record.asin}`} target="_self">订单解读</Link>
+                      </Menu.Item>
+                      <Menu.Item key="toOrderview">
+                        <Link to={`/dynamic/asin-overview?asin=${record.asin}`} target="_self">ASIN动态汇总</Link>
+                      </Menu.Item>
+                    </Menu>
+                  }                     
+                >
+                  <a className="ant-dropdown-link" onClick={e => e.preventDefault()} >
+                    {record.asin} 
+                  </a>
+                </Dropdown>
+               
               </div>
             }
             <div className={styles.iconContainer}>

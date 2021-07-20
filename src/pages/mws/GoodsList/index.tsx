@@ -102,19 +102,19 @@ const GoodsList: React.FC = () => {
         callback: requestErrorFeedback,
       });
       //判断是否有有路由传参
-       if(queryParams.asin){
+      if (queryParams.asin){
         dispatch({
           type: 'goodsList/fetchGoodsList',
           payload: {
             headersParams,
             filtrateParams: {
-              search: queryParams.asin
+              search: queryParams.asin,
             },
             searchParams: { current: 1, order: null },
           },
           callback: requestErrorFeedback,
         });
-      }else{
+      } else {
         dispatch({
           type: 'goodsList/fetchGoodsList',
           payload: {

@@ -13,7 +13,7 @@
 'use strict';
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
-import { Table, message,Dropdown, Menu,ConfigProvider, Form } from 'antd';
+import { Table, message, Dropdown, Menu, ConfigProvider, Form } from 'antd';
 import TableNotData from '@/components/TableNotData';
 import { connect } from 'dva';
 import { useDispatch, useSelector, Link } from 'umi';
@@ -285,27 +285,29 @@ const OrderList: React.FC = () => {
                                     <span><ShowData value={unitPrice} isCurrency /></span>
                                   </p>
                                   <p>
-                                  <span className={styles.asin}>
+                                    <span>
                                       {/** 点击asin，跳转订单解读,商品列表*/}
                                       <Dropdown 
-                                          overlay={
-                                            <Menu >
-                                              <Menu.Item key="toGoodlist">                                                
-                                                <Link to={`/product/list?asin=${rows.asin}`} target="_blank">商品列表</Link>
-                                              </Menu.Item>
-                                              <Menu.Item key="toASINview">
-                                                <Link to={`/asin/order?asin=${rows.asin}`} target="_self">订单解读</Link>
-                                              </Menu.Item>
-                                              <Menu.Item key="toOrderview">
-                                                <Link to={`/dynamic/asin-overview?asin=${rows.asin}`} target="_self">ASIN动态汇总</Link>
-                                              </Menu.Item>
-                                            </Menu>
-                                          }                                          
+                                        overlay={
+                                          <Menu >
+                                            <Menu.Item key="toGoodlist">                                                
+                                              <Link to={`/product/list?asin=${rows.asin}`} target="_blank">商品列表</Link>
+                                            </Menu.Item>
+                                            <Menu.Item key="toASINview">
+                                              <Link to={`/asin/order?asin=${rows.asin}`} target="_self">订单解读</Link>
+                                            </Menu.Item>
+                                            <Menu.Item key="toOrderview">
+                                              <Link to={`/dynamic/asin-overview?asin=${rows.asin}`} target="_self">ASIN动态汇总</Link>
+                                            </Menu.Item>
+                                          </Menu>
+                                        }                                          
+                                      >
+                                        <a onClick={e => e.preventDefault()} 
+                                          className={styles.asin}
                                         >
-                                            <a onClick={e => e.preventDefault()} className={styles.asin}>
-                                              {rows.asin} 
-                                            </a>
-                                        </Dropdown>                                      
+                                          {rows.asin}
+                                        </a>
+                                      </Dropdown>
                                     </span>
                                     <span>x{rows.quantity || 0}</span>
                                   </p>
