@@ -17,7 +17,7 @@ import {
   message,
 } from 'antd';
 import ShowData from '@/components/ShowData';
-import { Iconfont, getAmazonAsinUrl, requestErrorFeedback } from '@/utils/utils';
+import { Iconfont, getAmazonAsinUrl, requestErrorFeedback, strToUnsignedIntStr } from '@/utils/utils';
 import { useDispatch, useSelector, ConnectProps, IFbaBaseState, IPianListState, history } from 'umi';
 import GoodsImg from '@/pages/components/GoodsImg';
 import MyUPload from './Upload';
@@ -198,14 +198,15 @@ const Addplan: React.FC<IProps> = function(props) {
     
     if (sites.length) {
       form.setFieldsValue({ countryCode: sites[0] });
-      getShops(sites[0]);
+      // 不需要手动请求， 上面设置站点后 useEffect 会请求一次店铺
+      // getShops(sites[0]);
     } else {
       dispatch({
         type: 'fbaBase/saveShop',
         payload: [],
       });
     }
-  }, [dispatch, form, getShops, sites, visible]);
+  }, [dispatch, form, sites, visible]);
 
   // 当请求店铺列表成功后，再开始请求商品接口和发货地址下拉列表
   useEffect(() => {
@@ -290,7 +291,7 @@ const Addplan: React.FC<IProps> = function(props) {
   };
 
   // 修改申报量
-  const updateSaid = function(asin: string, newValue: number) {
+  const updateSaid = function(asin: string, newValue: string) {
     for (let index = 0; index < selects.length; index++) {
       const item = selects[index];
       if (item.asin1 === asin) {
@@ -409,7 +410,7 @@ const Addplan: React.FC<IProps> = function(props) {
           }
   
           return <span className={styles.handleCol} onClick={() => {
-            selects.push(Object.assign({}, record, { declareNum: '' }));
+            selects.push(Object.assign({}, record, { declareNum: 0 }));
             setSelects([...selects]);
           }}>选择</span>;
         },
@@ -423,9 +424,20 @@ const Addplan: React.FC<IProps> = function(props) {
         align: 'center',
         dataIndex: 'declareNum',
         width: 80,
-        render(_: string, record: planList.IProductList) {
-          return <InputEditBox value={''} chagneCallback={val => updateSaid(record.asin1, val)}/>;
-        },
+        render: (val: string, record: planList.IProductList) => (
+          <InputEditBox
+            value={val}
+            chagneCallback={val => updateSaid(record.asin1, String(val))}
+            format={{
+              converterFun: strToUnsignedIntStr,
+              valueRule: {
+                min: '1',
+                max: '99999999',
+                required: true,
+              },
+            }}
+          />
+        ),
       };
 
       columns.splice(3, 0, saidCol);
@@ -465,7 +477,7 @@ const Addplan: React.FC<IProps> = function(props) {
   const LeftTable = {
     columns: getColumns('leftColumns') as [],
     dataSource: data,
-    rowKey: (record: {sku: string}) => record.sku,
+    rowKey: (record: {asin1: string}) => record.asin1,
     loading,
     locale: {
       emptyText: <span className="secondaryText">店铺无商品</span>,
@@ -479,7 +491,7 @@ const Addplan: React.FC<IProps> = function(props) {
   const rightTable = {
     columns: getColumns('rightColumns') as [],
     dataSource: selects,
-    rowKey: (record: {sku: string}) => record.sku,
+    rowKey: (record: {asin1: string}) => record.asin1,
     locale: {
       emptyText: <span className="secondaryText">左边添加商品</span>,
     },

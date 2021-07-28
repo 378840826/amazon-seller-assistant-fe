@@ -10,9 +10,10 @@ import GoodsImg from '@/pages/components/GoodsImg';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import { Link } from 'umi';
 import { asinPandectBaseRouter } from '@/utils/routes';
-import InputEditBox from '../../components/InputEditBox';
+import InputEditBox from '@/pages/fba/components/InputEditBox';
 import { 
   Table,
+  message,
 } from 'antd';
 
 interface IProps {
@@ -21,6 +22,7 @@ interface IProps {
   site: API.Site;
   data: Shipment.IProductList[];
   updateDeclared: (newNumber: number, index: number) => void;
+  delProduct: (id: string) => void; // 删除商品
 }
 
 const Product: React.FC<IProps> = props => {
@@ -28,6 +30,7 @@ const Product: React.FC<IProps> = props => {
     site,
     data,
     updateDeclared,
+    delProduct,
   } = props;
 
 
@@ -100,7 +103,7 @@ const Product: React.FC<IProps> = props => {
       render(val: number, _: {}, index: number ) {
         return <InputEditBox 
           value={String(val)} 
-          chagneCallback={(val: number) => updateDeclared(val, index)} 
+          chagneCallback={(val) => updateDeclared(val as number, index)} 
         />;
       },
     },
@@ -127,9 +130,14 @@ const Product: React.FC<IProps> = props => {
       key: 'handle',
       align: 'center',
       dataIndex: 'id',
-      render() {
-        return <span className={styles.handleCol}>打印标签</span>;
-      },
+      width: 100,
+      render: (id: string) => (
+        <>
+          <span className={styles.handleCol} onClick={() => message.warning('功能未开放')}>打印标签</span>
+          <span className={styles.handleCol} onClick={() => message.warning('功能未开放')}>创建加工单</span>
+          <span className={styles.handleCol} onClick={() => delProduct(id)}>删除</span>
+        </>
+      ),
     },
   ];
 

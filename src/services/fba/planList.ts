@@ -103,10 +103,10 @@ export async function planVerifySubmit(data: API.IParams) {
 }
 
 // 撤销已核实货件
-export async function untoVerify(data: API.IParams) {
+export async function untoVerify(params: API.IParams) {
   return request('/api/mws/shipment/plan/verify/cancel/submit', {
     method: 'POST',
-    data,
+    params,
   });
 }
 
@@ -117,6 +117,21 @@ export async function planVerifyPageInitData(params: API.IParams) {
   });
 }
 
+// 货件处理页面初始化接口
+export async function beforePreviewShipment(params: API.IParams) {
+  return request('/api/mws/shipment/plan/treatment/submit', {
+    method: 'POST',
+    params,
+  });
+}
+
+// 生成发货单
+export async function createInvoice(data: API.IParams) {
+  return request('/api/mws/shipment/plan/generate/invoice', {
+    method: 'POST',
+    data,
+  });
+}
 
 // 货件处理页面初始化接口
 export async function planHandlePageInitData(params: API.IParams) {

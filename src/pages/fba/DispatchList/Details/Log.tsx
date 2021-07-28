@@ -11,7 +11,6 @@ import styles from './index.less';
 import { Table } from 'antd';
 
 interface IProps {
-  dispose: boolean;
   data: DispatchList.IDispatchLog[]|null;
 }
 
@@ -61,6 +60,7 @@ const Log: React.FC<IProps> = props => {
   ];
 
   const tableConfig = {
+    rowKey: (record: {gmtCreate: string}) => record.gmtCreate,
     pagination: false as false,
     columns: columns as [],
     dataSource: dataSource,

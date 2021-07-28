@@ -21,6 +21,8 @@ import {
   updateDetails,
   planVerify,
   planVerifySubmit,
+  beforePreviewShipment,
+  createInvoice,
   untoVerify,
   planVerifyPageInitData,
   planHandlePageInitData,
@@ -51,6 +53,8 @@ interface IPlanListModel {
     updateDetails: Effect;
     planVerify: Effect;
     planVerifySubmit: Effect;
+    beforePreviewShipment: Effect;
+    createInvoice: Effect;
     untoVerify: Effect;
     planVerifyPageInitData: Effect;
     planHandlePageInitData: Effect;
@@ -60,7 +64,7 @@ interface IPlanListModel {
   };
   reducers: {
     savePlanList: Reducer;
-    updatePlanList: Reducer;
+    // updatePlanList: Reducer;
     saveSites: Reducer;
     saveWarehouses: Reducer;
     updatePlanState: Reducer;
@@ -193,11 +197,29 @@ const planList: IPlanListModel = {
       }
     },
 
+    // 货件计划-去处理 的预处理（跳转到预览生成Shipment前需要的步骤）
+    *beforePreviewShipment({ payload, resolve, reject }, { call }) {
+      try {
+        const res = yield call(beforePreviewShipment, payload);
+        resolve(res);
+      } catch (error) {
+        reject(error);
+      }
+    },
+
+    
+    // 货件计划-生成发货单
+    *createInvoice({ payload, resolve, reject }, { call }) {
+      try {
+        const res = yield call(createInvoice, payload);
+        resolve(res);
+      } catch (error) {
+        reject(error);
+      }
+    },
+
     // 核实货件计划核实按钮
     *planVerifySubmit({ payload, resolve, reject }, { call, put }) {
-      console.log(payload, 'ss');
-      
-      return;
       try {
         const res = yield call(planVerifySubmit, payload);
         if (res.code && res.code === 200) {
@@ -285,14 +307,14 @@ const planList: IPlanListModel = {
       state.planList = payload;
     },
 
-    // 更新货件计划列表的数据
-    updatePlanList(state, { payload }) {
-      state.planList.forEach((item: planList.IRecord) => {
-        if (payload.indexOf(item.id) > -1) {
-          item.deleted = false;
-        }
-      });
-    },
+    // // 更新货件计划列表的数据
+    // updatePlanList(state, { payload }) {
+    //   state.planList.forEach((item: planList.IRecord) => {
+    //     if (payload.indexOf(item.id) > -1) {
+    //       item.deleted = false;
+    //     }
+    //   });
+    // },
 
     // 保存站点列表
     saveSites(state, { payload }) {

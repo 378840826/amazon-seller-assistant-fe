@@ -16,6 +16,7 @@ export interface IFbaBaseState {
   shops: {
     id: string;
     storeName: string;
+    marketplace: string;
   }[];
   logistics: string[];
   spinAddress: planList.IAddressLine[];
@@ -57,15 +58,13 @@ const fbaBase: IFbaBaseModel = {
     // 创建货件计划 - 获取物流方式列表
     *getLogistics({ payload, callback }, { call, put }) {
       const res = yield call(getLogistics, payload);
-      console.log('?????', res);
-      
       if (res.code === 200) {
         yield put({
           type: 'saveLogistics',
           payload: res.data || [],
         });
       }
-      callback(res.code, res.message);
+      callback && callback(res.code, res.message);
     },
 
     // 创建货件计划 - 获取发货地址列表
@@ -79,7 +78,7 @@ const fbaBase: IFbaBaseModel = {
             payload: res.data || [],
           });
         }
-        callback(res.code, res.message);
+        callback && callback(res.code, res.message);
       } catch (error) {
         reject(error);
       }

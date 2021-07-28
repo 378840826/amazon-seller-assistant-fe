@@ -20,8 +20,13 @@ import {
 } from 'antd';
 import { useDispatch } from 'umi';
 
-const Logisticis: React.FC = () => {
-  const [other, setOther] = useState<string>('UPS');
+interface IProps {
+  mwsShipmentId: string;
+}
+
+const Logisticis: React.FC<IProps> = (props) => {
+  const { mwsShipmentId } = props;
+  const [isPartnered, setIsPartnered] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   
@@ -32,26 +37,21 @@ const Logisticis: React.FC = () => {
   // 确定
   const onConfirm = function () {
     const data = form.getFieldsValue();
-
-    if (other === '其它' && !data.name) {
+    if (!isPartnered && !data.carrier) {
       message.error('承运商名称不能为空');
       return;
     }
-    delete data.other;
-
-    if (loading) {
-      message.error('正在提交中');
-      return;
+    if (isPartnered) {
+      delete data.carrier;
+      delete data.shippingType;
     }
-
-    console.log(data, '提交');
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'shipment/uploadLogisticisInfo',
         resolve,
         reject,
-        payload: Object.assign({}, data),
+        payload: Object.assign({ mwsShipmentId }, data),
       });
     }).then(datas => {
       setLoading(false);
@@ -59,12 +59,10 @@ const Logisticis: React.FC = () => {
         message: msg,
         code,
       } = datas as Global.IBaseResponse;
-
       if (code !== 200) {
         message.error(msg);
         return;
       }
-
       message.success(msg);
     });
   };
@@ -80,35 +78,39 @@ const Logisticis: React.FC = () => {
         labelAlign="left"
         form={form}
         initialValues={{
-          sfsf: '1',
-          method: '1',
-          other: 'UPS',
+          isPartnered: true,
+          shipmentType: 'SP',
+          shippingType: '海运',
         }}>
 
         <header className={styles.title}>上传物流信息</header>
-        <Form.Item label="货件类型：" name="sfsf">
+        <Form.Item label="货件类型：" name="shipmentType">
           <Select className={styles.select}>
-            <Select.Option value="1">小物件托运</Select.Option>
-            <Select.Option value="2">零担运输</Select.Option>
+            <Select.Option value="SP">小物件托运</Select.Option>
+            <Select.Option value="LTL">零担运输</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="承运人：" name="other" className={styles.twoLine}>
-          <Radio.Group className={styles.radio} options={['UPS', '其它']} onChange={e => setOther(e.target.value)}></Radio.Group>
+        <Form.Item label="承运人：" name="isPartnered" className={styles.twoLine}>
+          <Radio.Group
+            className={styles.radio}
+            options={[{ label: 'UPS', value: true }, { label: '其他', value: false }]}
+            onChange={e => setIsPartnered(e.target.value)}
+          />
         </Form.Item>
         <div className={styles.other}>
-          <Form.Item name="method">
-            <Select className={styles.method} disabled={other !== '其它'}>
-              <Select.Option value="1">海运</Select.Option>
-              <Select.Option value="2">空运</Select.Option>
-              <Select.Option value="3">陆运</Select.Option>
+          <Form.Item name="shippingType">
+            <Select className={styles.method} disabled={isPartnered}>
+              <Select.Option value="海运">海运</Select.Option>
+              <Select.Option value="空运">空运</Select.Option>
+              <Select.Option value="陆运">陆运</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item name="name">
-            <Input disabled={other !== '其它'} placeholder="承运商名称" className={styles.input}/>
+          <Form.Item name="carrier">
+            <Input disabled={isPartnered} placeholder="承运商名称" className={styles.input}/>
           </Form.Item>
         </div>
         <footer className={styles.footer}>
-          <Button onClick={() => setVisible(false)}>取消</Button>
+          <Button onClick={() => setVisible(false)} disabled={loading}>取消</Button>
           <Button type="primary" onClick={onConfirm} loading={loading}>确定</Button>
         </footer>
       </Form>}>

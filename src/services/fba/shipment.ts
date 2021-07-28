@@ -25,9 +25,25 @@ export async function getRefereceid(data: API.IParams) {
   });
 }
 
+// 修改shipment - 修改名称、物流方式、商品
+export async function updateShipmentItem(data: API.IParams) {
+  return request('/api/mws/shipment/plan/update/itemList', {
+    method: 'POST',
+    data,
+  });
+}
+
 // 修改shipment - 批量标记出运或取消
 export async function updateShipment(data: API.IParams) {
   return request('/api/mws/shipment/plan/update/state', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 生成发货单
+export async function generateInvoice(data: API.IParams) {
+  return request('/api/mws/shipment/entity/generate/invoice', {
     method: 'POST',
     data,
   });
@@ -42,14 +58,18 @@ export async function getShipmentDetails(params: API.IParams) {
 
 // 上传物流信息
 export async function uploadLogisticisInfo(data: API.IParams) {
-  return request('/api/xxx', {
+  return request('/api/mws/shipment/plan/putTransportContent', {
     method: 'POST',
-    params: {
-      current: data.current,
-      size: data.size,
-      order: data.order,
-      asc: data.asc,
-    },
     data,
+  });
+}
+
+// 上传装箱清单文件
+export async function uploadPackageFile(data: API.IParams) {
+  const formData = new FormData();
+  formData.append('file', data.file);
+  return request('/api/mws/shipment/plan/packageLabels/upload', {
+    method: 'POST',
+    data: formData,
   });
 }

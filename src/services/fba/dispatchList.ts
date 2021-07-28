@@ -22,8 +22,16 @@ export async function getSites() {
 }
 
 // 修改配货、发货、作废
-export async function updateDispatch(data: API.IParams) {
+export async function updateDispatchState(data: API.IParams) {
   return request('/api/mws/invoice/update/state', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 修改发货单信息
+export async function updateDispatch(data: API.IParams) {
+  return request('/api/mws/invoice/update', {
     method: 'POST',
     data,
   });

@@ -13,6 +13,7 @@ import {
   getDispatchList, 
   getSites, 
   updateDispatch,
+  updateDispatchState,
   getInvoiceDetail,
 } from '@/services/fba/dispatchList';
 
@@ -27,6 +28,7 @@ interface IFbaDispatchListModel {
     getDispatchList: Effect;
     getSites: Effect;
     updateDispatch: Effect;
+    updateDispatchState: Effect;
     getInvoiceDetail: Effect;
   };
   reducers: {
@@ -66,6 +68,16 @@ const fbaBase: IFbaDispatchListModel = {
     },
 
     // 修改配货、发货、作废
+    *updateDispatchState({ payload, reject, resolve }, { call }) {
+      try {
+        const res = yield call(updateDispatchState, payload);
+        resolve(res);
+      } catch (error) {
+        reject(error);
+      }
+    },
+
+    // 修改发货单信息
     *updateDispatch({ payload, reject, resolve }, { call }) {
       try {
         const res = yield call(updateDispatch, payload);

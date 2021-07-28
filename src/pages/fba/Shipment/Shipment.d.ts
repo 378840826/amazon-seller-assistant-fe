@@ -6,7 +6,8 @@
  */
 declare namespace Shipment {
   interface IShipmentList {
-    id: number;
+    id: string;
+    isGenerateInvoice: boolean;
     shipmentState: string;
     mwsShipmentId: string;
     shipmentName: string;
@@ -35,7 +36,7 @@ declare namespace Shipment {
   }
 
   interface IProductList {
-    id: number;
+    id: string;
     url: string;
     itemName: string;
     asin1: string;
@@ -56,6 +57,7 @@ declare namespace Shipment {
   }
 
   interface IShipmentDetails {
+    isGenerateInvoice: boolean;
     shipmentStatus: string;
     mwsShipmentId: string;
     shipmentName: string;

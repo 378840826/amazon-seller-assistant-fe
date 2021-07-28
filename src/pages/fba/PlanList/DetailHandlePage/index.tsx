@@ -5,6 +5,7 @@
  * @LastEditTime: 2021-05-19 14:02:02
  * 
  * 处理页面
+ * 状态较混乱，后续优化可改为统一管理
  */
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './index.less';
@@ -51,7 +52,6 @@ interface IData extends planList.IPlanDetail{
 
 const { Item } = Form;
 const { Option } = Select;
-const delProductIds: string[] = []; // 删除的商品明细id
 
 const Details: React.FC<IProps> = function(props) {
   const {
@@ -70,14 +70,25 @@ const Details: React.FC<IProps> = function(props) {
   const [verify, setVerify] = useState<boolean>(false); // 可发量核实
   const [dispose, setDispose] = useState<boolean>(false); // 是否已处理
   const [isFBA, setisFBA] = useState<boolean>(false); // true为FBA货件详情，false为海外自营仓货件详情
-  const [baseData, setBaseData] = useState<planList.IPlanDetail|null>(null); // 货件计划详情（头部的基本数据）
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [baseData, setBaseData] = useState<planList.IPlanDetail>({} as any); // 货件计划详情（头部的基本数据）
   const [logData, setLogData] = useState<planList.ILog[]>([]); // 操作日志列表
   const [productData, setProductData] = useState<planList.IProductList[]>([]); // 商品明细列表
   const [spinAddress, setSpinAddress] = useState<planList.IAddressLine[]>([]); // 发货地址下拉列表
   const [verifyData, setVerifyData] = useState<planList.IVerifyProductRecord[]>([]); // 核实页面商品明细的数据
   const [handleData, setHandleData] = useState<planList.IHandlePageRecord[]>([]); // 处理页面的表格数据
-  const [requestVerifyLoading, setRequestVerifyLoading] = useState<boolean>(false);
+  // loading， 因为混乱造成的一些原因，没用 loadingEffect
+  const [productListLoading, setProductListLoading] = useState<boolean>(false);
+  const [verifyLoading, setVerifyLoading] = useState<boolean>(false); // 确定核实
+  const [saveLoading, setSaveLoading] = useState<boolean>(false); // 确定核实
+  const [untoVerifyLoading, setUntoVerifyLoading] = useState<boolean>(false); // 确定取消核实
+  const [createShipmentLoading, setCreateShipmentLoading] = useState<boolean>(false); // 生成shipment
+  const [
+    beforePreviewShipmentLoading, setBeforePreviewShipmentLoading,
+  ] = useState<boolean>(false); // 去处理前的预处理
+  const [createInvoiceLoading, setCreateInvoiceLoading] = useState<boolean>(false); // 生成发货单
   const [batchapplyProduct, setBatchProduct] = useState<string[]>([]); // 批量应用可发量选中的商品（行）
+  const [delProductIds, setDelProductIds] = useState<string[]>([]); // 要删除的商品（后端接口要求）
 
   const initValues = {
     areCasesRequired: String(wayPacking[0].value),
@@ -93,15 +104,34 @@ const Details: React.FC<IProps> = function(props) {
 
   // 初始化请求目的仓库下拉列表
   useEffect(() => {
-    visible && dispatch({
+    // FBA货件计划不能修改目标仓库
+    visible && !isFBA && dispatch({
       type: 'planList/getWarehouses',
       callback: requestErrorFeedback,
       payload: {
-        nonfba: false,
+        nonfba: !isFBA,
         nonDomestic: true,
       },
     });
-  }, [dispatch, visible]);
+  }, [dispatch, isFBA, visible]);
+
+  // 弹窗的 title 不同状态下显示不同
+  function getTitle() {
+    let title = '货件计划详情';
+    // FBA 货件计划的核实
+    if (isFBA && showText === '核实') {
+      title = '货件计划 > 核实库存';
+    }
+    // FBA 货件计划处理预览
+    if (isFBA && showText === '处理') {
+      title = '货件计划处理';
+    }
+    // 海外仓货件计划核实
+    if (!isFBA && showText === '核实') {
+      title = '可发量核实';
+    }
+    return title;
+  }
 
   // 发货地址
   const getSpinAddress = useCallback((storeId: string) => {
@@ -151,7 +181,7 @@ const Details: React.FC<IProps> = function(props) {
       requestUrl = 'planList/planVerify';
       break;
     }
-    
+    setProductListLoading(true);
     // 货件计划详情（头部的基本数据）
     new Promise((resolve, reject) => {
       dispatch({
@@ -161,6 +191,7 @@ const Details: React.FC<IProps> = function(props) {
         payload: { id, ascending: false },
       });
     }).then(datas => {
+      setProductListLoading(false);
       const { 
         code,
         message: msg,
@@ -179,7 +210,8 @@ const Details: React.FC<IProps> = function(props) {
         setDispose(data.pstate === '已处理');
         setisFBA(data.warehouseType === 'fba');
         showText === '核实' && setVerifyData(data.verifyProducts);
-        (showText === '处理' || pageName === '处理页面') && setHandleData(data.shipmentPlans);
+        // (showText === '处理' || pageName === '处理页面') && setHandleData(data.shipmentPlans);
+        data.shipmentPlans && setHandleData(data.shipmentPlans);
         form.setFieldsValue({ 
           shippingType: data.shippingType,
           addressLine1: data.addressLine1,
@@ -189,7 +221,7 @@ const Details: React.FC<IProps> = function(props) {
       }
       message.error(msg);
     });
-  }, [dispatch, id, form, showText, pageName]);
+  }, [dispatch, id, form, showText]);
 
   useEffect(() => {
     getSpinAddress(storeId);
@@ -201,7 +233,8 @@ const Details: React.FC<IProps> = function(props) {
     }
 
     request();
-  }, [visible, request]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   // 货件计划作废（单个）
   const updateItemPlan = function(id: string) {
@@ -230,6 +263,10 @@ const Details: React.FC<IProps> = function(props) {
 
   // 未核实时 - 商品明细修改申报量
   const changeShenBaoLiangCallback = function(id: string, newValue: number) {
+    // if (!newValue) {
+    //   message.warning('申报量不能为0！');
+    //   return;
+    // }
     const tempObj = productData.find(item => item.id === id);
     tempObj && (tempObj.declareNum = String(newValue));
     setProductData([...productData]);
@@ -245,7 +282,7 @@ const Details: React.FC<IProps> = function(props) {
   const delProduct = function(id: string) {
     const index = productData.findIndex(item => item.id === id);
     if (index > -1) {
-      delProductIds.push(id);
+      setDelProductIds([...delProductIds, id]);
       productData.splice(index, 1);
       setProductData([...productData]);
     }
@@ -253,6 +290,7 @@ const Details: React.FC<IProps> = function(props) {
 
   // 已核实未处理的货件，可以撤销核实
   const untoVerify = function() {
+    setUntoVerifyLoading(true);
     // 撤销成功后，要更改列表
     const promise = new Promise((resolve, reject) => {
       dispatch({
@@ -264,6 +302,7 @@ const Details: React.FC<IProps> = function(props) {
     });
 
     promise.then(res => {
+      setUntoVerifyLoading(false);
       const { code, message: msg } = res as Global.IBaseResponse;
       if (code === 200) {
         message.success(msg || '撤销成功！');
@@ -277,12 +316,16 @@ const Details: React.FC<IProps> = function(props) {
 
   // 保存更改
   const save = function() {
+    if (productData.length === 0) {
+      message.warning('商品不能为空！');
+      return;
+    }
     const data = form.getFieldsValue();
     data.id = id;
     data.areCasesRequired = data.areCasesRequired === 'true'; // 是否原包装
     data.products = productData;
-    data.productIds = delProductIds;
-    
+    data.productIds = [...delProductIds];
+    setSaveLoading(true);
     const promise = new Promise((resolve, reject) => {
       dispatch({
         type: 'planList/updateDetails',
@@ -293,6 +336,9 @@ const Details: React.FC<IProps> = function(props) {
     });
 
     promise.then(res => {
+      setSaveLoading(false);
+      setVisible(false);
+      setDelProductIds([]);
       const { code, message: msg } = res as Global.IBaseResponse;
       if (code === 200) {
         message.success(msg || '修改成功！');
@@ -302,11 +348,15 @@ const Details: React.FC<IProps> = function(props) {
     });
   };
 
+  // 批量设置申报量为可发量
   const batchApplyshipments = function() {
-    console.log(batchapplyProduct, 'batchapplyProduct');
+    if (batchapplyProduct.length === 0) {
+      message.warning('请先勾选要修改的商品');
+      return;
+    }
     for (const item of productData) {
-      if (batchapplyProduct.includes(item.id)) {
-        item.verifyNum = item.declareNum;
+      if (batchapplyProduct.includes(item.id) && !['', undefined, null].includes(item.verifyNum)) {
+        item.declareNum = item.verifyNum;
       }
     }
     
@@ -315,7 +365,13 @@ const Details: React.FC<IProps> = function(props) {
 
   // 核实
   const toVerify = function() {
-    setRequestVerifyLoading(true);
+    // 可发量 verifyNum 均不能为空
+    const isNull = verifyData.some(item => ['', null, undefined].includes(item.verifyNum));
+    if (isNull) {
+      message.error('国内仓可发量不能为空！');
+      return;
+    }
+    setVerifyLoading(true);
     const promise = new Promise((resolve, reject) => {
       dispatch({
         type: 'planList/planVerifySubmit',
@@ -327,8 +383,7 @@ const Details: React.FC<IProps> = function(props) {
 
     promise.then(res => {
       const { code, message: msg } = res as Global.IBaseResponse;
-      
-      setRequestVerifyLoading(false);
+      setVerifyLoading(false);
       if (code === 200) {
         message.success(msg || '核实成功！');
         setVisible(false);
@@ -338,7 +393,7 @@ const Details: React.FC<IProps> = function(props) {
     });
   };
 
-  // 确定生成Shipment
+  // 确定生成Shipment;
   const createShipment = function() {
     const generateShipmentPlans: { mwsShipmentId: string; shipmentName: string }[] = [];
     handleData.map(item => {
@@ -347,7 +402,7 @@ const Details: React.FC<IProps> = function(props) {
         shipmentName: item.shipmentName,
       });
     });
-    
+    setCreateShipmentLoading(true);
     const promise = new Promise((resolve, reject) => {
       dispatch({
         type: 'planList/createShipment',
@@ -361,6 +416,7 @@ const Details: React.FC<IProps> = function(props) {
     });
 
     promise.then(res => {
+      setCreateShipmentLoading(false);
       const { code, message: msg } = res as Global.IBaseResponse;
 
       if (code === 200) {
@@ -374,15 +430,79 @@ const Details: React.FC<IProps> = function(props) {
 
   // 去处理按钮
   const toHandle = function() {
-    // request('处理');
-    setPageName('处理页面');
+    // FBA货件计划处理前，后端需要一个预处理步骤
+    if (isFBA) {
+      setBeforePreviewShipmentLoading(true);
+      const promise = new Promise((resolve, reject) => {
+        dispatch({
+          type: 'planList/beforePreviewShipment',
+          resolve,
+          reject,
+          payload: { id },
+        });
+      });
+      promise.then(res => {
+        setBeforePreviewShipmentLoading(false);
+        const { code, message: msg } = res as Global.IBaseResponse;
+        if (code === 200) {
+          request('处理');
+          setPageName('处理页面');
+          return;
+        }
+        message.error(msg);
+      });
+    } else {
+      request('处理');
+      setPageName('处理页面');
+    }
   };
 
-  const changeVerifyNum = function(newValue: number, id: string) {
-    console.log(newValue);
+  // 生成发货单按钮
+  const handleCreateInvoice = function() {
+    // 商品不能为空
+    if (productData.length === 0) {
+      message.warning('商品不能为空！');
+      return;
+    }
+    const payload = form.getFieldsValue();
+    payload.id = id;
+    payload.products = productData;
+    payload.productIds = [...delProductIds];
+    setCreateInvoiceLoading(true);
+    const promise = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'planList/createInvoice',
+        resolve,
+        reject,
+        payload,
+      });
+    });
+    promise.then(res => {
+      setCreateInvoiceLoading(false);
+      const { code, message: msg } = res as Global.IBaseResponse;
+      if (code === 200) {
+        message.success(msg || '操作成功！');
+        setVisible(false);
+        return;
+      }
+      message.error(msg);
+    });
+  };
+
+  // 修改可发量 verifyNum
+  const changeVerifyNum = function(newValue: string, id: string) {
     const temp = verifyData.find((item: planList.IVerifyProductRecord) => item.id === id);
     temp && (
-      temp.verifyNum = String(newValue),
+      temp.verifyNum = newValue,
+      setVerifyData([...verifyData])
+    );
+  };
+
+  // 修改申报量 declareNum
+  const changeDeclareNum = function(newValue: string, id: string) {
+    const temp = verifyData.find((item: planList.IVerifyProductRecord) => item.id === id);
+    temp && (
+      temp.declareNum = newValue,
       setVerifyData([...verifyData])
     );
   };
@@ -390,21 +510,55 @@ const Details: React.FC<IProps> = function(props) {
   // 根据不同条件生成按钮
   const GetFooter = function() {
     
-    // 核实页面
+    // 点击核实打开的弹窗
     if (showText === '核实') {
+      const loading = verifyLoading || untoVerifyLoading;
       return <div>
-        <Button onClick={() => setVisible(false)}>取消</Button>
-        <Button type="primary" onClick={toVerify} loading={requestVerifyLoading}>核实</Button>
+        <Button onClick={() => setVisible(false)} disabled={loading}>取消</Button>
+        {
+          // 已核实未处理的货件(FBA和非FBA都是)，显示撤销按钮
+          (verify && !dispose)
+            ?
+            <Popconfirm 
+              disabled={loading}
+              title="确定要将已核实的货件撤销吗？"
+              placement="top"
+              overlayClassName={styles.delTooltip}
+              onConfirm={untoVerify}
+              icon={<Iconfont type="icon-tishi2" />}
+            >
+              <Button type="primary" loading={untoVerifyLoading}>撤销核实</Button>
+            </Popconfirm>
+            :
+            <Button
+              type="primary"
+              onClick={toVerify}
+              loading={verifyLoading}
+              disabled={untoVerifyLoading}
+            >
+              核实
+            </Button>
+        }
       </div>;
     }
 
     if (showText === '处理' || pageName === '处理页面') {
       return <div>
-        <Button onClick={() => setVisible(false)}>取消</Button>
-        <Button type="primary" onClick={createShipment}>确定生成Shipment</Button>
+        <Button
+          onClick={() => {
+            setVisible(false);
+            setPageName('基本页面');
+          }}
+          disabled={createShipmentLoading}>
+          取消
+        </Button>
+        <Button type="primary" onClick={createShipment} loading={createShipmentLoading}>
+          确定生成Shipment
+        </Button>
       </div>;
     }
 
+    // 点击详情打开的弹窗
     if (showText === '详情') {
       // 已核实已处理或者已作废
       if (!isinvalid || (dispose && verify)) {
@@ -414,8 +568,9 @@ const Details: React.FC<IProps> = function(props) {
       // 未核实未处理
       if (!dispose && !verify) {
         return <div>
-          <Button onClick={() => setVisible(false)}>取消</Button>
+          <Button onClick={() => setVisible(false)} disabled={saveLoading}>取消</Button>
           <Popconfirm 
+            disabled={saveLoading}
             title="作废后不可恢复，确定作废？"
             placement="top"
             overlayClassName={styles.delTooltip}
@@ -424,15 +579,19 @@ const Details: React.FC<IProps> = function(props) {
           >
             <Button>作废</Button>
           </Popconfirm>
-          <Button type="primary" onClick={save}>保存</Button>
+          <Button type="primary" onClick={save} loading={saveLoading}>保存</Button>
         </div>;
       }
       
       // 已核实未处理
-      if (verify && verify) {
+      if (verify && !dispose) {
+        const loading = createInvoiceLoading || saveLoading || beforePreviewShipmentLoading;
         return <div>
-          <Button onClick={() => setVisible(false)}>取消</Button>
+          <Button onClick={() => setVisible(false)} disabled={loading}>
+            取消
+          </Button>
           <Popconfirm 
+            disabled={loading}
             title="作废后不可恢复，确定作废？"
             placement="top"
             overlayClassName={styles.delTooltip}
@@ -441,45 +600,43 @@ const Details: React.FC<IProps> = function(props) {
           >
             <Button>作废</Button>
           </Popconfirm>
-          <Button type="primary" onClick={save}>保存</Button>
-          {<Button type="primary" onClick={toHandle}>去处理</Button>}
-          < AssociatShipment id={baseData?.shipmentId}/>
+          <Button type="primary" onClick={save} loading={saveLoading} disabled={loading}>
+            保存
+          </Button>
+          {
+            // 海外仓计划不用处理生成shipment，直接生成发货单
+            isFBA
+              ?
+              <Button
+                type="primary"
+                onClick={toHandle}
+                loading={beforePreviewShipmentLoading}
+                disabled={loading}
+              >
+                去处理
+              </Button>
+              :
+              <Button
+                type="primary"
+                onClick={handleCreateInvoice}
+                loading={createInvoiceLoading}
+                disabled={loading}
+              >
+                生成发货单
+              </Button>
+          }
         </div>;
       }
 
-      return <div>
-        <Button onClick={() => setVisible(false)}>取消</Button>
-        {
-          // 未处理的货件都有作废按钮
-          !dispose && <Popconfirm 
-            title="作废后不可恢复，确定作废？"
-            placement="top"
-            overlayClassName={styles.delTooltip}
-            onConfirm={() => updateItemPlan(String(id))}
-            icon={<Iconfont type="icon-tishi2" />}
-          >
-            <Button>作废</Button>
-          </Popconfirm>
-        }
-        {
-          // 已核实未处理的货件(海外自营仓和fba货件)，显示撤销按钮
-          verify && !dispose && <Popconfirm 
-            title="确定要将已核实的货件撤销吗？"
-            placement="top"
-            overlayClassName={styles.delTooltip}
-            onConfirm={untoVerify}
-            icon={<Iconfont type="icon-tishi2" />}
-          ><Button type="primary">撤销核实</Button></Popconfirm>
-        }
-        { 
-          // 未处理的货件都有保存按钮
-          !dispose && <Button type="primary" onClick={save}>保存</Button>
-        }
-        {
-          // 已核实未处理的fba货件有“去处理”按钮
-          (verify && !dispose && isFBA) && <Button type="primary" onClick={toHandle}>去处理</Button>
-        }
-      </div>;
+      // 已处理
+      if (isFBA && dispose) {
+        return (
+          <div>
+            <Button onClick={() => setVisible(false)}>取消</Button>
+            <AssociatShipment id={baseData.shipmentId}/>
+          </div>
+        );
+      }
     }
 
     return <></>;
@@ -491,10 +648,10 @@ const Details: React.FC<IProps> = function(props) {
       maskClosable={false}
       width={1180}
       wrapClassName={styles.modalBox}
-      // onCancel={() => setVisible(false)}
+      onCancel={() => setVisible(false)}
       footer={<GetFooter />}
     >
-      <header className={styles.topHead}>货件计划详情</header>
+      <header className={styles.topHead}>{getTitle()}</header>
       <Form 
         className={styles.details}
         initialValues={initValues}
@@ -514,7 +671,11 @@ const Details: React.FC<IProps> = function(props) {
           <div className={styles.item}>
             <span className={styles.text}>ShipmentID：</span>
             <span className={styles.content}>
-              {baseData?.mwsShipmentId ? baseData?.mwsShipmentId : <Line/>}
+              {
+                baseData?.mwsShipmentId
+                  ? baseData?.mwsShipmentId.map(item => `${item}、`)
+                  : <Line/>
+              }
             </span>
           </div>
           <div className={styles.item}>
@@ -538,67 +699,115 @@ const Details: React.FC<IProps> = function(props) {
         </div>
         
         <div className={styles.centerLayout}>
-          <div className={styles.item}>
-            <span className={styles.text}>目的仓库：</span>
-            { dispose && !isFBA ? baseData?.warehouseDe : 
-              <Item name="warehouseDe" className={styles.select}>
-                <Select>
-                  {warehouses.map((item, index) => {
-                    return <Option value={item.name} key={index}>{item.name}</Option>;
-                  })}
-                </Select>
-              </Item>
-            }
-          </div>
-          <div className={styles.item}>
-            <span className={styles.text}>物流方式：</span>
-            { dispose ? baseData?.shippingType : 
-              <Item name="shippingType" className={styles.select}>
-                <Select>
-                  {logistics && logistics.map((item, index) => {
-                    return <Option value={item} key={index}>{item}</Option>;
-                  })}
-                </Select>
-              </Item>
-            }
-          </div>
-          <div className={styles.item}>
-            <span className={styles.text}>包装方式：</span>
-            {/* eslint-disable-next-line */}
-            { dispose ? (baseData?.areCasesRequired ? '原厂包装' : '混装') : 
-              <Item name="areCasesRequired" className={classnames(styles.select, styles.wayPacking)}>
-                <Select>
-                  {wayPacking.map((item, i) => {
-                    return <Option value={String(item.value)} key={i}>{item.label}</Option>;
-                  })}
-                </Select>
-              </Item>
-            }
-          </div>
-          <div className={styles.item}>
-            <span className={styles.text}>贴标方：</span>
-            { dispose ? labelling.find(item => item.value === baseData?.labelingType)?.label : 
-              <Item name="labelingType" className={classnames(styles.select, styles.labeling)}>
-                <Select>
-                  {labelling.map((item, i) => {
-                    return <Option value={item.value} key={i}>{item.label}</Option>;
-                  })}
-                </Select>
-              </Item>
-            }
-          </div>
-          <div className={styles.item}>
-            <span className={styles.text}>发货地址：</span>
-            { dispose ? baseData?.addressLine1 : 
-              <Item name="addressLine1" className={styles.select}>
-                <Select>
-                  {spinAddress.map((item, i) => {
-                    return <Option value={item.addressLine1} key={i}>{item.addressLine1}</Option>;
-                  })}
-                </Select>
-              </Item>
-            }
-          </div>
+          {/* 核实页面和处理页面不可修改基础信息 */}
+          {
+            pageName === '核实页面' || pageName === '处理页面'
+              ?
+              <>
+                <div className={styles.item}>
+                  <span className={styles.text}>目的仓库：</span>
+                  <span className={styles.content}>
+                    { baseData.warehouseDe || <Line/> }
+                  </span>
+                </div> 
+                <div className={styles.item}>
+                  <span className={styles.text}>物流方式：</span>
+                  <span className={styles.content}>
+                    { baseData.shippingType || <Line/> }
+                  </span>
+                </div>
+                <div className={styles.item}>
+                  <span className={styles.text}>包装方式：</span>
+                  { (baseData.areCasesRequired ? '原厂包装' : '混装') }
+                </div>
+                <div className={styles.item}>
+                  <span className={styles.text}>贴标方：</span>
+                  <span className={styles.content}>
+                    {
+                    labelling.find(
+                      item => item.value === baseData.labelingType
+                    )?.label || <Line/>
+                    }
+                  </span>
+                </div>
+                <div className={styles.item}>
+                  <span className={styles.text}>发货地址：</span>
+                  <span className={styles.content}>
+                    { baseData.addressLine1 || <Line/> }
+                  </span>
+                </div>
+              </>
+              :
+              <>
+                <div className={styles.item}>
+                  <span className={styles.text}>目的仓库：</span>
+                  <Item name="warehouseDe" className={styles.select}>
+                    {
+                      // FBA货件计划不可修改目标仓库，非FBA货件计划可以修改，但是不能修改为 FBA 仓和国内仓
+                      isFBA
+                        ? baseData.warehouseDe
+                        :
+                        <Select dropdownMatchSelectWidth={false}>
+                          {
+                            warehouses.map(
+                              item => <Option value={item.name} key={item.name}>{item.name}</Option>
+                            )
+                          }
+                        </Select>
+                    }
+                  </Item>
+                </div> 
+                <div className={styles.item}>
+                  <span className={styles.text}>物流方式：</span>
+                  { dispose ? baseData?.shippingType : 
+                    <Item name="shippingType" className={styles.select}>
+                      <Select dropdownMatchSelectWidth={false}>
+                        {logistics && logistics.map((item, index) => {
+                          return <Option value={item} key={index}>{item}</Option>;
+                        })}
+                      </Select>
+                    </Item>
+                  }
+                </div>
+                <div className={styles.item}>
+                  <span className={styles.text}>包装方式：</span>
+                  {/* eslint-disable-next-line */}
+                  { dispose ? (baseData?.areCasesRequired ? '原厂包装' : '混装') : 
+                    <Item name="areCasesRequired" className={styles.select}>
+                      <Select dropdownMatchSelectWidth={false}>
+                        {wayPacking.map((item, i) => {
+                          return <Option value={String(item.value)} key={i}>{item.label}</Option>;
+                        })}
+                      </Select>
+                    </Item>
+                  }
+                </div>
+                <div className={styles.item}>
+                  <span className={styles.text}>贴标方：</span>
+                  { dispose ? labelling.find(item => item.value === baseData?.labelingType)?.label :
+                    <Item name="labelingType" className={styles.select}>
+                      <Select dropdownMatchSelectWidth={false}>
+                        {labelling.map((item, i) => {
+                          return <Option value={item.value} key={i}>{item.label}</Option>;
+                        })}
+                      </Select>
+                    </Item>
+                  }
+                </div>
+                <div className={styles.item}>
+                  <span className={styles.text}>发货地址：</span>
+                  { dispose ? baseData?.addressLine1 : 
+                    <Item name="addressLine1" className={styles.select}>
+                      <Select dropdownMatchSelectWidth={false}>
+                        {spinAddress.map((item, i) => (
+                          <Option value={item.addressLine1} key={i}>{item.addressLine1}</Option>
+                        ))}
+                      </Select>
+                    </Item>
+                  }
+                </div>
+              </>
+          }
           <div className={styles.item}>
             <span className={styles.text}>可发量核实：</span>
             <span className={classnames(styles.content, verify ? styles.success : styles.error)}>
@@ -675,6 +884,8 @@ const Details: React.FC<IProps> = function(props) {
             delProduct={delProduct}
             shopId={baseData?.storeId}
             setBatchProduct={setBatchProduct}
+            loading={productListLoading}
+            state={baseData?.state || false}
           /> }
 
           {/*  Shipment信息 */}
@@ -697,6 +908,7 @@ const Details: React.FC<IProps> = function(props) {
           data={verifyData} 
           theadData={baseData}
           changeVerifyNum={changeVerifyNum}
+          changeDeclareNum={changeDeclareNum}
           shopId={baseData?.storeId}
           areCasesRequired={baseData?.areCasesRequired}
         />

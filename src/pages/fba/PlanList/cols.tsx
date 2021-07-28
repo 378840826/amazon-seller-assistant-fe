@@ -8,7 +8,7 @@
  */
 import React, { useCallback, useEffect } from 'react';
 import styles from './index.less';
-import ConfireDownList from './ConfireDownList';
+import ConfireDownList from '@/pages/fba/components/ConfireDownList';
 import ShowData from '@/components/ShowData';
 import { Popconfirm, message } from 'antd';
 import { useDispatch, useSelector, ConnectProps, IFbaBaseState, Link } from 'umi';
@@ -111,6 +111,15 @@ const Columns = (props: IProps ) => {
       align: 'center',
       title: 'ShipmentID',
       width: 120,
+      render: (value: string[]) => (
+        <>
+          {
+            value?.map(item => {
+              <div>{item}</div>;
+            })
+          }
+        </>
+      ),
     },
     {
       dataIndex: 'invoiceId',
@@ -118,6 +127,15 @@ const Columns = (props: IProps ) => {
       align: 'center',
       title: '发货单号',
       width: 120,
+      render: (value: string[]) => (
+        <>
+          {
+            value?.map(item => {
+              <div>{item}</div>;
+            })
+          }
+        </>
+      ),
     },
     {
       dataIndex: 'countryCode',
@@ -147,15 +165,23 @@ const Columns = (props: IProps ) => {
       title: '物流方式',
       width: 100,
       render(val: string, record: planList.IPlanDetail) {
-        if (record.pstate === '已处理') {
-          return <span title="已处理的货件计划无法更改！">{val}</span>;
+        if (record.pstate === '已处理' || record.state === false) {
+          return <span title="该货件计划已处理或已作废，无法修改物流方式">{val}</span>;
         }
         return <ConfireDownList 
           onConfirm={(newValue: string) => changeLogistics(newValue, record.id)} 
           dataList={logistics} 
           val={val}
+          selectStyle={{ fontSize: 12, minWidth: 80 }}
         />;
       },
+    },
+    {
+      dataIndex: 'mskuSum',
+      key: 'mskuSum',
+      align: 'center',
+      title: 'MSKU种类',
+      width: 100,
     },
     {
       dataIndex: 'declareSum',
@@ -245,7 +271,7 @@ const Columns = (props: IProps ) => {
       width: 85,
       className: styles.handleCol,
       render(id: string, record: planList.IPlanDetail) {
-        const { state, pstate, verifyType, warehouseDe = 'fba', mwsShipmentId } = record;
+        const { state, pstate, verifyType, warehouseDe = 'fba' } = record;
         // 未核实未处理 作废 核实
         return <div className={styles.handleCol}>
           < DetailHandlePage 
@@ -255,8 +281,8 @@ const Columns = (props: IProps ) => {
             isinvalid={state}
             storeId={record.storeId}/>
           {
-            // 已处理的货件计划，已经绑定了shipmentid ，不能点击作废, 有shipmentId的货件也不能再点击作废
-            (state === true || mwsShipmentId === '') && (
+            // 已处理的货件计划不能点击“作废”；已作废的货件计划也不能点击“作废”
+            (state === false || pstate === '已处理') ? null : (
               <Popconfirm 
                 title="作废后不可恢复，确定作废？"
                 placement="left"
@@ -267,10 +293,22 @@ const Columns = (props: IProps ) => {
                 <span>作废</span>
               </Popconfirm>)
           }
-          { 
+          {/* { 
             // 已处理和已作废的货件计划，不能点击“核实”；未核实的货件计划，可以点击“核实”；已核实但是未处理的货件计划，可以点击“核实”；
             // 已核实过的货件也不显示核实按钮了
             (state && (pstate !== '未处理' || !verifyType)) && < DetailHandlePage 
+              showText="核实" 
+              id={id}
+              logistics={logistics}
+              isinvalid={state}
+              storeId={record.storeId}/>
+            // (pstate !== '已处理' || !state || !verifyType) && (< Verify id={record.id} />)
+          } */}
+          { 
+            // 上面的“核实”按钮逻辑增加了“已核实过的布显示核实按钮”逻辑 和原型+文档描述的不符。目前无法确定那个正确
+            // 已处理和已作废的货件计划，不能点击“核实”；未核实的货件计划，可以点击“核实”；已核实但是未处理的货件计划，可以点击“核实”；
+            // 未处理一定未核实
+            (state && (pstate === '未处理')) && < DetailHandlePage 
               showText="核实" 
               id={id}
               logistics={logistics}

@@ -9,7 +9,10 @@
 import { Effect, Reducer } from 'umi';
 import { 
   uploadLogisticisInfo,
+  uploadPackageFile,
   updateShipment,
+  updateShipmentItem,
+  generateInvoice,
   getShipmentList,
   getRefereceid,
   getShipmentDetails,
@@ -26,9 +29,12 @@ interface IShipmentModel {
   effects: {
     getShipmentList: Effect;
     updateShipment: Effect;
+    updateShipmentItem: Effect;
+    generateInvoice: Effect;
     getRefereceid: Effect;
     getShipmentDetails: Effect;
     uploadLogisticisInfo: Effect;
+    uploadPackageFile: Effect;
   };
   reducers: {
     saveShipmentList: Reducer;
@@ -75,6 +81,26 @@ const chipment: IShipmentModel = {
       }
     },
 
+    // 修改shipment - 修改名称/物流方式/商品
+    *updateShipmentItem({ payload, reject, resolve }, { call }) {
+      try {
+        const res = yield call(updateShipmentItem, payload);
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    },
+
+    // 生成发货单
+    *generateInvoice({ payload, reject, resolve }, { call }) {
+      try {
+        const res = yield call(generateInvoice, payload);
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    },
+
     // shipment详情
     *getShipmentDetails({ payload, reject, resolve }, { call }) {
       try {
@@ -89,6 +115,16 @@ const chipment: IShipmentModel = {
     *uploadLogisticisInfo({ payload, reject, resolve }, { call }) {
       try {
         const res = yield call(uploadLogisticisInfo, payload);
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    },
+
+    // 上传装箱清单文件
+    *uploadPackageFile({ payload, reject, resolve }, { call }) {
+      try {
+        const res = yield call(uploadPackageFile, payload);
         resolve(res);
       } catch (err) {
         reject(err);

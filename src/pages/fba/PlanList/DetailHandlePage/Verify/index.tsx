@@ -4,12 +4,12 @@
  * @Date: 2021-02-07 14:41:31
  * @LastEditTime: 2021-05-19 11:48:26
  * 
- * 核实页面 
+ * 核实页面(在弹窗中) 
  */
 import React from 'react';
 import styles from './index.less';
 import GoodsImg from '@/pages/components/GoodsImg';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, strToUnsignedIntStr, strToNaturalNumStr } from '@/utils/utils';
 import { useDispatch, history } from 'umi';
 import { asinPandectBaseRouter } from '@/utils/routes';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
@@ -20,7 +20,8 @@ interface IProps {
   id: string;
   data: planList.IVerifyProductRecord[];
   theadData: planList.IPlanDetail|null;
-  changeVerifyNum: (newValue: number, id: string) => void;
+  changeVerifyNum: (newValue: string, id: string) => void;
+  changeDeclareNum: (newValue: string, id: string) => void;
   shopId?: string;
   areCasesRequired?: boolean;
 }
@@ -48,7 +49,7 @@ const Verify: React.FC<IProps> = props => {
     }, 10);
   };
 
-  const { data = [], theadData, changeVerifyNum } = props;
+  const { data = [], theadData, changeVerifyNum, changeDeclareNum } = props;
   const columns = [
     {
       title: <>
@@ -127,6 +128,25 @@ const Verify: React.FC<IProps> = props => {
       dataIndex: 'declareNum',
       align: 'center',
       width: 100,
+      render(val: string, record: { id: string }) {
+        if (theadData?.verifyType) {
+          return val;
+        }
+        return (
+          <InputEditBox
+            value={val}
+            chagneCallback={v => changeDeclareNum(String(v), record.id)}
+            format={{
+              converterFun: strToUnsignedIntStr,
+              valueRule: {
+                min: '1',
+                max: '99999999',
+                required: true,
+              },
+            }}
+          />
+        );
+      },
     },
     {
       title: '国内仓可发量',
@@ -135,8 +155,23 @@ const Verify: React.FC<IProps> = props => {
       align: 'center',
       width: 100,
       render(val: string, record: { id: string }) {
-        console.log('recore', record);
-        return <InputEditBox value={val} chagneCallback={v => changeVerifyNum(v, record.id)} />;
+        if (theadData?.verifyType) {
+          return val;
+        }
+        return (
+          <InputEditBox
+            value={val}
+            chagneCallback={v => changeVerifyNum(String(v), record.id)}
+            format={{
+              converterFun: strToNaturalNumStr,
+              valueRule: {
+                // min: '1',
+                max: '99999999',
+                required: false,
+              },
+            }}
+          />
+        );
       },
     },
     {
@@ -169,9 +204,9 @@ const Verify: React.FC<IProps> = props => {
   const productConfig = {
     pagination: false as false,
     columns: columns as [],
-    rowSelection: {
-      selectedRowKeys: [],
-    },
+    // rowSelection: {
+    //   selectedRowKeys: [],
+    // },
     rowKey: (record: { id: string }) => record.id,
     dataSource: data as [],
     className: styles.productTable,

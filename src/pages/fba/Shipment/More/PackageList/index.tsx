@@ -4,7 +4,7 @@
  * @Date: 2021-02-19 10:01:16
  * @LastEditTime: 2021-02-19 10:59:12
  * 
- * 上传装箱清单
+ * 上传装箱清单文件
  */
 import React, { useState } from 'react';
 import styles from './index.less';
@@ -21,33 +21,35 @@ import { useDispatch } from 'umi';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 
-const Logisticis: React.FC = () => {
+interface IProps {
+  mwsShipmentId: string;
+}
+
+const Logisticis: React.FC<IProps> = props => {
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   
+  const { mwsShipmentId } = props;
   
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   // 确定
   const onConfirm = function () {
-    const data = form.getFieldsValue();
-    delete data.other;
-
-    if (loading) {
-      message.error('正在提交中');
+    if (fileList.length === 0) {
+      message.warning('请先选择要上传的文件');
       return;
     }
 
-    console.log(data, '提交');
+    const data = form.getFieldsValue();
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
-        type: 'shipment/uploadLogisticisInfo',
+        type: 'shipment/uploadPackageFile',
         resolve,
         reject,
-        payload: Object.assign({}, data),
+        payload: { file: data.file.file },
       });
     }).then(datas => {
       setLoading(false);
@@ -65,17 +67,14 @@ const Logisticis: React.FC = () => {
     });
   };
 
-  const props = {
+  const uploadConfig = {
     name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
+    accept: '.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     fileList,
+    beforeUpload: () => false,
     onChange(info: UploadChangeParam) {
       let fileList = [...info.fileList];
       fileList = fileList.slice(-1); // 限制数量
-
       fileList = fileList.map(file => {
         if (file.response) {
           // Component will show file.url as link
@@ -87,6 +86,13 @@ const Logisticis: React.FC = () => {
       setFileList(fileList);
     },
   };
+
+  // 生成下载模板链接
+  function getDownloadUrl() {
+    const baseUrl = '/api/mws/shipment/plan/downloadPackingTemplate';
+    const num = form.getFieldValue('input') || 0;
+    return `${baseUrl}?packagesNum=${num}&mwsShipmentId=${mwsShipmentId}`;
+  }
 
   return <Popover 
     trigger="click"
@@ -106,17 +112,23 @@ const Logisticis: React.FC = () => {
         }}>
         <div className={styles.file}>
           <Form.Item name="file" label="选择文件：">
-            <Upload {...props}>
+            <Upload {...uploadConfig}>
               <Button>+选择文件</Button>
             </Upload>
           </Form.Item>
-          <a href="22" className={styles.download}>下载箱单模板</a>
+          <a
+            download
+            className={styles.download}
+            href={getDownloadUrl()}
+          >
+            下载箱单模板
+          </a>
         </div>
-        <Form.Item name="input" label="填写箱数：">
-          <InputNumber min={0} style={{ width: 235 }}/>
+        <Form.Item name="input" label="填写箱数：" initialValue="1">
+          <InputNumber min={1} style={{ width: 235 }}/>
         </Form.Item>
         <footer className={styles.footer}>
-          <Button onClick={() => setVisible(false)}>取消</Button>
+          <Button onClick={() => setVisible(false)} disabled={loading}>取消</Button>
           <Button type="primary" onClick={onConfirm} loading={loading}>确定</Button>
         </footer>
       </Form>}>

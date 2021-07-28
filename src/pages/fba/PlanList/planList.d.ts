@@ -16,7 +16,8 @@ declare namespace planList {
   // 货件计划列表
   interface IRecord {
     id: number;
-    deleted: boolean;
+    // deleted: boolean;
+    state: boolean;
     pstate: boolean;
   }
 
@@ -55,7 +56,8 @@ declare namespace planList {
     id: string;
     userName: string;
     shipmentId: string;
-    mwsShipmentId: string;
+    /** 亚马逊生成的 ShipmentId， 后端接口传回 ShipmentId 数组 */
+    mwsShipmentId: string[];
     invoiceId: string;
     countryCode: string;
     storeName: string;

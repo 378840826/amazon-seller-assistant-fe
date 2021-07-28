@@ -3,6 +3,8 @@
  * @Email: 1089109@qq.com
  * @Date: 2021-02-07 14:41:31
  * @LastEditTime: 2021-05-18 10:39:34
+ * 
+ * 发货单详情
  */
 import React, { useEffect, useState, useRef, PureComponent } from 'react';
 import styles from './index.less';
@@ -12,24 +14,24 @@ import {
   Form,
   Button,
   message,
+  Select,
 } from 'antd';
 import { useDispatch } from 'umi';
 import Product from './Product';
 import Log from './Log';
-import CheckInventory from './CheckInventory';
-import DisposePage from './DisposePage';
-import AsyncEditBox from '../../components/AsyncEditBox';
 import { useReactToPrint } from 'react-to-print';
+import InputEditBox from '@/pages/fba/components/InputEditBox';
+
+const { Item } = Form;
+const { Option } = Select;
 
 interface IProps {
   visible: boolean;
-  method: 'FBA'| 'overseas'; // 发货方式 FBA和每外仓库
-  dispose: boolean; // 是否已处理
-  verify: boolean; // 是否已核实
-  pageName?: 'dispose' | 'verify';
   onCancel: () => void;
   site: API.Site;
   data: DispatchList.IDispatchDetail;
+  logistics: string[];
+  onUpdateDispatch: (params: { [key: string]: string; id: string }) => Promise<boolean>;
 }
 
 interface IState {
@@ -160,15 +162,21 @@ class ComponentToPrint extends PureComponent<IPrintProps, IState> {
 const Details: React.FC<IProps> = function(props) {
   const {
     visible = true,
-    dispose = true,
-    verify = true,
-    pageName,
     onCancel,
     site,
     data,
+    logistics,
+    onUpdateDispatch,
   } = props;
 
-  console.log(props, 'ppppp');
+  const [form] = Form.useForm();
+  form.setFieldsValue({ 
+    shippingType: data.shippingType,
+    shippingId: data.shippingId,
+    trackingId: data.trackingId,
+    remarkText: data.remarkText,
+  });
+
   const [nav, setNav] = useState<'product' | 'log' | 'notShow'>('product');
   const [initData, setInitData] = useState<DispatchList.IDispatchDetail|null>(null); // 
   const [productVos, setProductVos] = useState<DispatchList.IProductVos[]|null>(null); // 商品明细
@@ -180,21 +188,7 @@ const Details: React.FC<IProps> = function(props) {
     pageStyle: pageStyle,
   });
 
-  const initValues = {
-    method: '1',
-    packaging: '1',
-    paste: '1',
-    location: '1',
-  };
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (pageName === 'verify' || pageName === 'dispose') {
-      setNav('notShow');
-      return;
-    }
-    setNav('product');
-  }, [pageName]);
 
   useEffect(() => {
     if (!visible) {
@@ -236,13 +230,14 @@ const Details: React.FC<IProps> = function(props) {
     
   }, [dispatch, visible, data]);
 
-  const ruleNameCallback = () => (
-    Promise.resolve(true)
-  );
-
+  function handleSave() {
+    const formVal = form.getFieldsValue();
+    onUpdateDispatch({ id: data.id, ...formVal });
+  }
 
   return <div className={styles.box}>
-    <Modal visible={visible}
+    <Modal
+      visible={visible}
       centered
       maskClosable={false}
       width={1180}
@@ -251,15 +246,23 @@ const Details: React.FC<IProps> = function(props) {
       footer={null}
     >
       <header className={styles.topHead}>发货单详情</header>
-      <Form className={styles.details} initialValues={initValues} layout="horizontal">
+      <Form form={form} className={styles.details} layout="horizontal">
         <div className={styles.leftLayout}>
           <div className={styles.item}>
             <span className={styles.text}>状态：</span>
             <span className={styles.content}>{initData?.state}</span>
           </div>
           <div className={styles.item}>
+            <span className={styles.text}>发货单号：</span>
+            <span className={styles.content} title={initData?.invoiceId}>
+              {initData?.invoiceId}
+            </span>
+          </div>
+          <div className={styles.item}>
             <span className={styles.text}>货件计划ID：</span>
-            <span className={styles.content}>{initData?.shipmentId}</span>
+            <span className={styles.content} title={initData?.shipmentId}>
+              {initData?.shipmentId}
+            </span>
           </div>
           <div className={styles.item}>
             <span className={styles.text}>ShipmentID：</span>
@@ -287,15 +290,31 @@ const Details: React.FC<IProps> = function(props) {
           </div>
           <div className={styles.item}>
             <span className={styles.text}>物流方式：</span>
-            xxx
+            <Item name="shippingType" className={styles.select}>
+              <Select dropdownMatchSelectWidth={false}>
+                {logistics && logistics.map((item, index) => {
+                  return <Option value={item} key={index}>{item}</Option>;
+                })}
+              </Select>
+            </Item>
           </div>
           <div className={styles.item}>
             <span className={styles.text}>物流单号：</span>
-            xxx
+            <Item name="shippingId" className={styles.select}>
+              <InputEditBox
+                value={String(data.shippingId)}
+                chagneCallback={val => form.setFieldsValue({ shippingId: val })}
+              />
+            </Item>
           </div>
           <div className={styles.item}>
             <span className={styles.text}>物流跟踪号：</span>
-            xxx
+            <Item name="trackingId" className={styles.select}>
+              <InputEditBox
+                value={String(data.trackingId)}
+                chagneCallback={val => form.setFieldsValue({ trackingId: val })}
+              />
+            </Item>
           </div>
           <div className={styles.item}>
             <span className={styles.text}>包装方式：</span>
@@ -338,21 +357,20 @@ const Details: React.FC<IProps> = function(props) {
           </div>
           <div className={styles.remark}>
             <span className={styles.text}>备注：</span>
-            <AsyncEditBox 
-              onOk={() => ruleNameCallback()} 
-              value={'可修改'}
-              errorText="修改失败"
-              style={{ padding: 0 }}
-              successText="修改成功"
-            />
+            <Item name="remarkText" className={styles.select}>
+              <InputEditBox
+                value={String(data.remarkText)}
+                chagneCallback={val => {
+                  form.setFieldsValue({ remarkText: val });
+                  return Promise.resolve(val);
+                }}
+              />
+            </Item>
           </div>
         </div>
       </Form>
 
-      <div className={classnames(
-        styles.navs,
-        pageName === 'dispose' || pageName === 'verify' ? 'none' : ''
-      )}>
+      <div className={styles.navs}>
         <nav className={styles.nav}>
           <span className={classnames(
             styles.navItem, 
@@ -369,28 +387,11 @@ const Details: React.FC<IProps> = function(props) {
         </nav>
       </div>
       
-      {/* // 商品 */}
-      {
-        nav === 'product' && <Product 
-          verify={verify} 
-          dispose={dispose} 
-          site={site}
-          data={productVos}
-        />
-      }
-      {/* 操作日志 */}
-      {
-        nav === 'log' && <Log dispose={dispose} data={logs}/>
-      }
-      {/* 核实库存页面 */}
-      {
-        pageName === 'verify' && <CheckInventory site={site}/>
-      }
-      {/* 处理（预览&生成Shipment） */}
-      { pageName === 'dispose' && <DisposePage site={site}/> }
+      { nav === 'product' && <Product site={site} data={productVos}/> }
+      { nav === 'log' && <Log data={logs}/> }
       <footer className={styles.btns}>
         <Button onClick={onCancel}>取消</Button>
-        <Button onClick={onCancel} type="primary">保存</Button>
+        <Button onClick={handleSave} type="primary">保存</Button>
         <Button onClick={handlePrint} type="primary">打印发货单</Button>
       </footer>
 

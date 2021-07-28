@@ -56,6 +56,10 @@ export default {
     message: '成功或者失败',
   }),
 
+  'POST /api/mws/invoice/update': Mock.mock({
+    code: 200,
+    message: '修改成功',
+  }),
 
   'GET /api/mws/invoice/entity': Mock.mock({
     code: 200,
@@ -66,9 +70,11 @@ export default {
       'warehouse': '国内2号仓',
       'warehouseDe': 'FBA',
       'destinationFulfillmentCenterId': 'YTQE',
-      'mwsShipmentId': 'ShipmentID',
+      'mwsShipmentId|1-9999': 1,
       'countryCode': 'US-美国',
+      'storeName': 'storeName-1',
       'shippingType': '海派',
+      'shipmentId|1-9999': 1,
       'shippingId|1-9999': 1,
       'trackingId|1-9999': 1,
       'casesRequired': '原厂包装',

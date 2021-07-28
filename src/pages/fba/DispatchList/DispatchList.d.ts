@@ -7,7 +7,7 @@
 
 declare namespace DispatchList {
   interface IListRecord {
-    id: number;
+    id: string;
     state: string;
   }
 
@@ -33,7 +33,12 @@ declare namespace DispatchList {
   }
 
   interface IDispatchDetail {
-    id: number;
+    id: string;
+    invoiceId: string;
+    shippingType: string;
+    shippingId: string;
+    trackingId: string;
+    remarkText: string;
     state: string;
     shipmentId: string;
     mwsShipmentId: string;

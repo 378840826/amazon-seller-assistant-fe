@@ -5,13 +5,10 @@
  * @LastEditTime: 2021-04-21 14:34:02
  */
 
-import Mock from 'mockjs';
-
-const random = Mock.Random;
 
 export default {
-  'GET /api/mws/shipment/marketplace/list': Mock.mock({
+  'GET /api/mws/shipment/marketplace/list': {
     code: 200,
-    'data|1-100': [random.cname()],
-  }),
+    data: ['US', 'CA', 'MX'],
+  },
 };

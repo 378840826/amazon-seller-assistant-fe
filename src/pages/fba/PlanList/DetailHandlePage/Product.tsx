@@ -3,15 +3,18 @@
  * @Email: 1089109@qq.com
  * @Date: 2021-02-07 17:03:33
  * @LastEditTime: 2021-05-18 13:40:19
+ * 
+ * 详情弹窗中的商品
  */
 import React from 'react';
 import styles from './index.less';
 import GoodsImg from '@/pages/components/GoodsImg';
-import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
+import { Iconfont, getAmazonAsinUrl, strToUnsignedIntStr } from '@/utils/utils';
 import { useDispatch, history } from 'umi';
 import { asinPandectBaseRouter } from '@/utils/routes';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
 import { 
+  message,
   Table,
 } from 'antd';
 
@@ -23,6 +26,8 @@ interface IParams {
   delProduct: (id: string) => void; // 删除商品
   shopId?: string;
   setBatchProduct: (selectRowKeys: string[]) => void;
+  loading?: boolean;
+  state: boolean;
 }
 
 
@@ -35,14 +40,21 @@ const ProductCol = function(props: IParams) {
     delProduct,
     shopId,
     setBatchProduct,
+    loading,
+    state,
   } = props;
   const dispatch = useDispatch();
 
 
-  // 应用可发量
-  const appleVaild = function() {
-    console.log('应用可发量');
-    
+  // 应用可发量为申报量
+  const appleVaild = function(id: string) {
+    const product = data.find(item => item.id === id);
+    if (!product || ['', undefined, null].includes(product.verifyNum)) {
+      message.error('可发量为空！');
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    changeShenBaoLiangCallback(id, product.verifyNum as any);
   };
 
   // 跳转到新窗口
@@ -131,13 +143,27 @@ const ProductCol = function(props: IParams) {
       align: 'center',
       width: 100,
       render(val: string, { id }: planList.IProductList) {
-        // 已处理的货件不能再修改申报量，其它情况下都可以申请
+        // 已处理或已作废的货件不能再修改申报量
         return <div className={styles.applyCol}>
-          {dispose ? val : <InputEditBox 
-            value={String(val)}
-            chagneCallback={val => changeShenBaoLiangCallback(id, val)} /> }
           {
-            !dispose && verify && <p className={styles.apply} onClick={appleVaild}>应用可发量</p>
+            (dispose || !state)
+              ? val :
+              <InputEditBox 
+                value={String(val)}
+                chagneCallback={val => changeShenBaoLiangCallback(id, Number(val))}
+                format={{
+                  converterFun: strToUnsignedIntStr,
+                  valueRule: {
+                    min: '1',
+                    max: '99999999',
+                    required: true,
+                  },
+                }}
+              />
+          }
+          {
+            !dispose && verify &&
+            <p className={styles.apply} onClick={() => appleVaild(id)}>应用可发量</p>
           }
         </div>;
       },
@@ -148,6 +174,9 @@ const ProductCol = function(props: IParams) {
       dataIndex: 'verifyNum',
       align: 'center',
       width: 100,
+      render: (val: string) => (
+        verify ? val : '未核实'
+      ),
     },
     {
       title: '库存缺口',
@@ -184,6 +213,7 @@ const ProductCol = function(props: IParams) {
     scroll: {
       y: 316,
     },
+    loading,
   };
 
   if (!(verify && dispose)) {

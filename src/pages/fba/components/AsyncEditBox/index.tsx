@@ -9,7 +9,7 @@
  * 带确认取消按钮的
  * 
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState, useRef } from 'react';
 import styles from './index.less';
 import { Iconfont } from '@/utils/utils';
@@ -52,6 +52,12 @@ export default (props: IProps) => {
   const [showValue, setShowValue] = useState<string>(value); // 默认显示的值
 
   const inputRef = useRef<Input>(null);
+
+  // 因为有些数据可以用除了这个组件之外的地方修改
+  useEffect(() => {
+    setEditValue(value);
+    setShowValue(value);
+  }, [value]);
 
   message.config({
     maxCount: 1,

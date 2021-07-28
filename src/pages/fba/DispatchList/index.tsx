@@ -10,14 +10,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, requestErrorFeedback } from '@/utils/utils';
 import { useSelector, 
   useDispatch, 
   ConnectProps, 
   IWarehouseLocationState, 
   IFbaDispatchListState, 
-  IConfigurationBaseState,
-  ILogisticsState,
+  IFbaBaseState,
 } from 'umi';
 import {
   Table,
@@ -30,28 +29,25 @@ import {
 } from 'antd';
 import AddPlan from './AddPlan';
 import { TableRowSelection } from 'antd/lib/table/interface';
-import ConfireDownList from './ConfireDownList';
+import ConfireDownList from '@/pages/fba/components/ConfireDownList';
 import Details from './Details';
 import AsyncEditBox from '../components/AsyncEditBox';
-import { logisticMethods } from '../config';
 import TableNotData from '@/components/TableNotData';
 import moment from 'moment';
 import Line from '@/components/Line';
+import { ColumnProps } from 'antd/es/table';
 
 interface IDetailModalType {
   visible: boolean;
-  method: 'FBA'| 'overseas'; // FBA和每外仓库
-  dispose: boolean; // 是否已处理
-  verify: boolean; // 是否已核实
-  pageName?: 'dispose' | 'verify'; // dispose页面是处理页面， verify是核实页面
-  data: DispatchList.IDispatchDetail|null;
+  data: DispatchList.IDispatchDetail;
 }
 
 interface IPage extends ConnectProps {
   warehouseLocation: IWarehouseLocationState;
   fbaDispatchList: IFbaDispatchListState;
-  configurationBase: IConfigurationBaseState;
-  logistics: ILogisticsState;
+  // configurationBase: IConfigurationBaseState;
+  // logistics: ILogisticsState;
+  fbaBase: IFbaBaseState;
 }
 
 const { Option } = Select;
@@ -67,10 +63,10 @@ const PackageList: React.FC = function() {
   const [form] = Form.useForm();
 
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
-  const shops = useSelector((state: IPage) => state.configurationBase.shops); // 店铺列表
+  const shops = useSelector((state: IPage) => state.fbaBase.shops); // 店铺列表
   const warehouses = useSelector((state: IPage) => state.warehouseLocation.warehouses); // 仓库列表
   const dispatchList = useSelector((state: IPage) => state.fbaDispatchList.dispatchList); // 发货单列表
-  const logistics = useSelector((state: IPage) => state.logistics.logistics); // 仓库列表
+  const logistics = useSelector((state: IPage) => state.fbaBase.logistics); // 仓库列表
 
   const [current, setCurrent] = useState<number>(1);
   const [addVisible, setAddVisible] = useState<boolean>(false); // 添加货件
@@ -79,14 +75,10 @@ const PackageList: React.FC = function() {
   const [loading, setLoading] = useState<boolean>(false);
   const [sites, setSites] = useState<string[]>([]);
 
-  // 打开货件详情的初始值
+  // 打开发货单详情的初始值
   const [detailModal, setDateilModal] = useState<IDetailModalType>({
     visible: false,
-    method: 'FBA',
-    dispose: false,
-    verify: false,
-    pageName: 'verify',
-    data: null,
+    data: {} as DispatchList.IDispatchDetail,
   });
 
   const {
@@ -94,6 +86,15 @@ const PackageList: React.FC = function() {
     id: StoreId,
   } = currentShop;
   const dispatch = useDispatch();
+
+  // 供筛选的店铺
+  const shopFilter = shops.filter(shop => {
+    const selectedMarketplace = form.getFieldValue('countryCode');
+    if (selectedMarketplace) {
+      return shop.marketplace === selectedMarketplace;
+    }
+    return true;
+  });
 
   // 请求列表数据
   const request = useCallback((params = { currentPage: 1, pageSize: 20 }) => {
@@ -197,9 +198,10 @@ const PackageList: React.FC = function() {
   const getLogistics = useCallback(() => {
     logistics.length === 0 && new Promise((resolve, reject) => {
       dispatch({
-        type: 'logistics/getLogisticsList',
+        type: 'fbaBase/getLogistics',
         reject,
         resolve,
+        callback: requestErrorFeedback,
         payload: {
           state: true,
         },
@@ -215,33 +217,122 @@ const PackageList: React.FC = function() {
     requestShop();
     requestSite();
     getLogistics();
-  }, [request, requestWarehourse, requestShop, requestSite, getLogistics]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // }, [request, requestWarehourse, requestShop, requestSite, getLogistics]);
 
-  // 修改物流方式的回调
-  const changeLogistics = function() {
-    const count = Math.random() * 10;
-    return Promise.resolve(count > 5);
-  };
-
-  const ruleNameCallback = (value: string) => (
-    new Promise((resolve, reject) => {
+  // 修改信息
+  const handleUpdateDispatch = function(params: {
+    id: string;
+    [key: string]: string;
+  }) {
+    const promise = new Promise((resolve, reject) => {
       dispatch({
-        type: 'sfsf/setRulsfseName',
+        type: 'fbaDispatchList/updateDispatch',
         payload: {
           headersParams: {
             StoreId: currentShop.id,
           },
-          name: value,
+          ...params,
         },
         resolve,
         reject,
       });
-    }).then(() => {
-      return true;
-    })
-  );
+    });
+    return promise.then(res => {
+      const { code, message: msg } = res as Global.IBaseResponse;
+      if (code === 200) {
+        message.success(msg || '操作成功！');
+        // 更新 state 数据
+        dispatch({
+          type: 'fbaDispatchList/saveDispatchList',
+          payload: dispatchList.map(item => {
+            if (params.id === item.id) {
+              return {
+                ...item,
+                ...params,
+              };
+            }
+            return item;
+          }),
+        });
+        // 如果详情弹窗是打开的，修改弹窗数据
+        if (detailModal.visible && detailModal.data.id === params.id) {
+          setDateilModal({
+            ...detailModal,
+            data: {
+              ...detailModal.data,
+              ...params,
+            },
+          });
+        }
+        return Promise.resolve(true);
+      }
+      message.error(msg || '操作失败！');
+      return Promise.resolve(false);
+    });
+  };
+
+  // 批量修改状态
+  const handleBatchDispatch = function(stateType: string, ids?: string[]) {
+    const idArray = ids || rowSelection;
+    if (idArray.length === 0) {
+      message.warning('请先勾选发货单！');
+      return;
+    }
+
+    const payload = {
+      ids: idArray,
+      stateType,
+    };
+
+    // 业务删除
+    const promise = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'fbaDispatchList/updateDispatchState',
+        resolve,
+        reject,
+        payload,
+      });
+    });
+
+    promise.then(datas => {
+      const {
+        code,
+        message: msg,
+      } = datas as Global.IBaseResponse;
+
+      if (code === 200) {
+        message.success(msg);
+        const temp = JSON.stringify(dispatchList);
+        const newDispatchList: DispatchList.IListRecord[] = JSON.parse(temp);
+        idArray.map(item => {
+          const data = newDispatchList.find(dItem => item === dItem.id);
+          switch (stateType) {
+          case symbols.DISTRIBUTION : 
+            data && (data.state = '已配货');
+            break;
+          case symbols.DELIVERY : 
+            data && (data.state = '已发货');
+            break;
+          case symbols.DELETED : 
+            data && (data.state = '已作废');
+            break;
+          default :
+            // ee
+          }
+        });
+        dispatch({
+          type: 'fbaDispatchList/saveDispatchList',
+          payload: newDispatchList,
+        });
+        return;
+      }
+      message.error(msg);
+    });
+  };
   
-  const columns = [
+  const columns: ColumnProps<DispatchList.IDispatchDetail>[] = [
     {
       dataIndex: 'state',
       key: 'state',
@@ -249,11 +340,12 @@ const PackageList: React.FC = function() {
       title: '状态',
       width: 80,
       fixed: 'left',
+      render: val => val === '已配货' ? '已配货(待发货)' : val,
     },
     {
       dataIndex: 'invoiceId',
       key: 'invoiceId',
-      align: 'state',
+      align: 'center',
       title: '发货单号',
       width: 100,
       fixed: 'left',
@@ -261,7 +353,7 @@ const PackageList: React.FC = function() {
     {
       dataIndex: 'warehouse',
       key: 'warehouse',
-      align: 'right',
+      align: 'center',
       title: '发货仓库',
       width: 150,
       fixed: 'left',
@@ -279,7 +371,7 @@ const PackageList: React.FC = function() {
       key: 'destinationFulfillmentCenterId',
       align: 'center',
       title: '亚马逊仓库代码',
-      width: 150,
+      width: 126,
     },
     {
       dataIndex: 'mwsShipmentId',
@@ -310,8 +402,8 @@ const PackageList: React.FC = function() {
       width: 100,
     },
     {
-      dataIndex: '',
-      key: '',
+      dataIndex: 'declareNum',
+      key: 'declareNum',
       align: 'center',
       title: '发货量',
       width: 170,
@@ -320,7 +412,7 @@ const PackageList: React.FC = function() {
       dataIndex: 'issuedNum',
       key: 'issuedNum',
       align: 'center',
-      title: '已收量',
+      title: '已发量',
       width: 170,
     },
     {
@@ -350,8 +442,15 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '物流方式',
       width: 100,
-      render() {
-        return <ConfireDownList onConfirm={changeLogistics} val="1"/>;
+      render(val, record) {
+        return (
+          <ConfireDownList
+            onConfirm={val => handleUpdateDispatch({ id: record.id, shippingType: val })}
+            val={val}
+            dataList={logistics} 
+            selectStyle={{ fontSize: 12, minWidth: 80 }}
+          />
+        );
       },
     },
     {
@@ -360,15 +459,14 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '物流单号',
       width: 150,
-      render(value: string) {
+      render(value, record) {
         return <AsyncEditBox 
-          onOk={(val) => ruleNameCallback(val)} 
+          onOk={val => handleUpdateDispatch({ id: record.id, shippingId: val })}
           value={value}
           style={{
             padding: '6px 0 6px 14px',
           }}
-          errorText="修改失败"
-          successText="修改成功"
+          maxLength={50}
         />;
       },
     },
@@ -378,15 +476,14 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '物流跟踪号',
       width: 110,
-      render(value: string) {
+      render(value, record) {
         return <AsyncEditBox 
-          onOk={(val) => ruleNameCallback(val)} 
+          onOk={val => handleUpdateDispatch({ id: record.id, trackingId: val })}
           value={value}
           style={{
             padding: '6px 0 6px 14px',
           }}
-          errorText="修改失败"
-          successText="修改成功"
+          maxLength={50}
         />;
       },
     },
@@ -403,7 +500,7 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '创建时间',
       width: 110,
-      render: (val: string) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
+      render: (val) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       dataIndex: 'gmtModified',
@@ -411,7 +508,7 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '更新时间',
       width: 110,
-      render: (val: string) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
+      render: (val) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       dataIndex: 'distributionTime',
@@ -419,7 +516,7 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '配货时间',
       width: 110,
-      render: (val: string) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
+      render: (val) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       dataIndex: 'deliveryTime',
@@ -427,7 +524,7 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '发货时间',
       width: 110,
-      render: (val: string) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
+      render: (val) => val === null ? <Line /> : moment(val).format('YYYY-MM-DD HH:mm:ss'),
     },
 
     {
@@ -436,15 +533,15 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '备注',
       width: 100,
-      render(value: string) {
+      render(value, record) {
         return <AsyncEditBox 
-          onOk={(val) => ruleNameCallback(val)} 
+          onOk={val => handleUpdateDispatch({ id: record.id, remarkText: val })}
           value={value}
           style={{
             padding: '6px 0 6px 14px',
           }}
-          errorText="修改失败"
-          successText="修改成功"
+          maxLength={40}
+          maxLengthHint="备注最多40个字符"
         />;
       },
     },
@@ -456,28 +553,46 @@ const PackageList: React.FC = function() {
       fixed: 'right',
       width: 120,
       className: styles.handleCol,
-      render(_: string, record: DispatchList.IDispatchDetail, index: number) {
+      render(_, record) {
         return <div className={styles.handleCol}>
           <div>
             <span onClick={() => {
               setDateilModal({
                 visible: true,
-                dispose: false,
-                verify: true,
-                method: 'FBA',
+                // dispose: false,
+                // verify: true,
+                // method: 'FBA',
                 data: record,
               });
             }}>详情</span>
-            {<span
-              className={styles.create}
-              onClick={() => {
-                alert('提示“操作成功! 已经生成的不能再生成');
-              }}>{index > 2 ? '标记配货' : '标记发货'}</span>}
+            {
+              record.state === '待配货' &&
+              <Popconfirm 
+                title="确定标记为已配货？"
+                placement="left"
+                overlayClassName={styles.cencalModal}
+                onConfirm={() => handleBatchDispatch('DISTRIBUTION', [record.id])}
+              >
+                <span>标记配货</span>
+              </Popconfirm>
+            }
+            {
+              record.state === '已配货' &&
+              <Popconfirm 
+                title="确定标记为已发货？"
+                placement="left"
+                overlayClassName={styles.cencalModal}
+                onConfirm={() => handleBatchDispatch('DELIVERY', [record.id])}
+              >
+                <span>标记发货</span>
+              </Popconfirm>
+            }
           </div>
           <div>
             {
+              !['已作废', '已取消'].includes(record.state) && 
               <Popconfirm 
-                title="暂时放着"
+                title="功能暂未开放"
                 placement="left"
                 overlayClassName={styles.cencalModal}
                 icon={<></>}
@@ -486,11 +601,13 @@ const PackageList: React.FC = function() {
               </Popconfirm>
             }
             {
+              !['已作废', '已发货'].includes(record.state) &&
               <Popconfirm 
-                title="确定将此货件计划作废？"
+                title="确定将此发货单作废？"
                 placement="left"
                 overlayClassName={styles.cencalModal}
                 icon={<></>}
+                onConfirm={() => handleBatchDispatch('DELETED', [record.id])}
               >
                 <span>作废</span>
               </Popconfirm>
@@ -520,7 +637,7 @@ const PackageList: React.FC = function() {
       },
     } as {},
     columns: columns as [],
-    dataSource: dispatchList as [],
+    dataSource: dispatchList,
     className: styles.table,
     loading,
     rowKey: (record: {id: string}) => record.id,
@@ -553,7 +670,7 @@ const PackageList: React.FC = function() {
         currentPage: myCurrent,
         pageSize,
       };
-      console.log(field, 'field');
+      // console.log(field, 'field');
       
       const data = Object.assign({}, objs);
       setLoading(true);
@@ -570,65 +687,12 @@ const PackageList: React.FC = function() {
     request({ currentPage: 1, pageSize });
   };
 
-  const handleDispatch = function(stateType: string) {
-    if (rowSelection.length === 0) {
-      message.error('未选中任何行！');
-      return;
-    }
-
-    const payload = {
-      ids: rowSelection,
-      stateType,
-    };
-
-    // 业务删除
-    const promise = new Promise((resolve, reject) => {
-      dispatch({
-        type: 'fbaDispatchList/updateDispatch',
-        resolve,
-        reject,
-        payload,
-      });
-    });
-
-    promise.then(datas => {
-      const {
-        code,
-        message: msg,
-      } = datas as Global.IBaseResponse;
-
-      if (code === 200) {
-        message.success(msg);
-        const temp = JSON.stringify(dispatchList);
-        const newDispatchList: DispatchList.IListRecord[] = JSON.parse(temp);
-        rowSelection.map(item => {
-          const data = newDispatchList.find(dItem => item === dItem.id);
-          switch (stateType) {
-          case symbols.DISTRIBUTION : 
-            data && (data.state = '已配货');
-            break;
-          case symbols.DELIVERY : 
-            data && (data.state = '已发货');
-            break;
-          case symbols.DELETED : 
-            data && (data.state = '已作废');
-            break;
-          default :
-            // ee
-          }
-        });
-        dispatch({
-          type: 'fbaDispatchList/saveDispatchList',
-          payload: newDispatchList,
-        });
-        return;
-      }
-      message.error(msg);
-    });
-  };
-
   // 顶部筛选框
   const searchCondition = function(values: any) { // eslint-disable-line
+    // 如果切换了站点，清空店铺选择
+    if (Reflect.has(values, 'countryCode')) {
+      form.setFieldsValue({ storeId: undefined });
+    }
     if (
       Reflect.has(values, 'match')
       || Reflect.has(values, 'code')
@@ -682,9 +746,11 @@ const PackageList: React.FC = function() {
           optionFilterProp="children"
           allowClear
         >
-          {shops.map(({ value, label }, i) => (
-            <Option value={value} key={i}>{label}</Option>
-          )) }
+          {
+            shopFilter.map(({ id, storeName, marketplace }) => (
+              <Option value={id} key={id}>{`${marketplace}-${storeName}`}</Option>
+            ))
+          }
         </Select>
       </Item>
       <Item name="status" className={styles.state}>
@@ -705,8 +771,8 @@ const PackageList: React.FC = function() {
       <Item name="shippingType" className={styles.handle} >
         <Select allowClear
           placeholder="物流方式">
-          {logisticMethods.map((item, i) => {
-            return <Option value={item.value} key={i}>{item.label}</Option>;
+          {logistics.map((item, i) => {
+            return <Option value={item} key={i}>{item}</Option>;
           })}
         </Select>
       </Item>
@@ -718,17 +784,17 @@ const PackageList: React.FC = function() {
     </Form>
     <div className={styles.navHead}>
       <Button 
-        onClick={() => handleDispatch(symbols.DISTRIBUTION)} 
+        onClick={() => handleBatchDispatch(symbols.DISTRIBUTION)} 
         className={styles.addBtn}>
           标记配货
       </Button>
       <Button 
-        onClick={() => handleDispatch(symbols.DELIVERY)} 
+        onClick={() => handleBatchDispatch(symbols.DELIVERY)} 
         className={styles.addBtn}>
           标记发货
       </Button>
       <Button 
-        onClick={() => handleDispatch(symbols.DELETED)} 
+        onClick={() => handleBatchDispatch(symbols.DELETED)} 
         className={styles.addBtn}>
           作废
       </Button>
@@ -742,11 +808,13 @@ const PackageList: React.FC = function() {
       marketplace={marketplace}
     />
     <Details 
+      logistics={logistics}
+      onUpdateDispatch={handleUpdateDispatch}
       onCancel={() => {
-        detailModal.visible = false;
-        setDateilModal({ ...detailModal });
+        setDateilModal({ ...detailModal, visible: false });
       }} 
-      site={marketplace} {...detailModal}
+      site={marketplace}
+      {...detailModal}
     />
   </div>;
 };

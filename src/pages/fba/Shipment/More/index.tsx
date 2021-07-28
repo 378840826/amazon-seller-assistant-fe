@@ -15,23 +15,24 @@ import PackageList from './PackageList';
 import Mark from './Mark';
 
 interface IProps {
-  isShipment: boolean; 
+  shipmentData: Shipment.IShipmentList;
+  handleMarkShipped: () => void;
+  handleCancelShipment: () => void;
 }
 
 const More: React.FC<IProps> = props => {
-  const { isShipment } = props;
-  const [visible, setVisible] = useState<boolean>(true);
+  const {
+    shipmentData: { mwsShipmentId, shipmentState },
+    handleMarkShipped, handleCancelShipment,
+  } = props;
+  const [visible, setVisible] = useState<boolean>(false);
+  // 是否已出运， 待修改
+  const isShipped = shipmentState !== 'WORKING';
 
-
-  // 上传物流信息
-  const uploadLogisticis = function() {
-    //
-  };
-
-  const popoverConfig = {
-    trigger: 'click',
-    placement: 'left' as 'left',
-  };
+  // const popoverConfig = {
+  //   trigger: 'click',
+  //   placement: 'left' as 'left',
+  // };
 
   return <div className={styles.box}>
     <Popover 
@@ -39,21 +40,19 @@ const More: React.FC<IProps> = props => {
       title={''} 
       content={<div className={styles.list}>
         {
-          isShipment && <>
-            <Logisticis />
-            <PackageList />
+          // 如果shipment已出运，就只有“取消”，其他按钮都没有了
+          !isShipped && <>
+            <Logisticis mwsShipmentId={mwsShipmentId} />
+            <PackageList mwsShipmentId={mwsShipmentId} />
             <Mark/>
+            <span onClick={() => handleMarkShipped()} className={styles.item}>标记出运</span>
+            {/* 删除功能先搁置
             <Popover {...popoverConfig}>
-              <span onClick={uploadLogisticis} className={styles.item}>标记出运</span>
-            </Popover>
-            {/* <Popover {...popoverConfig}>
-              <span onClick={uploadLogisticis} className={styles.item}>删除</span>
+              <span onClick={} className={styles.item}>删除</span>
             </Popover> */}
           </>
         }
-        <Popover {...popoverConfig}>
-          <span onClick={uploadLogisticis} className={styles.item}>取消</span>
-        </Popover>
+        <span onClick={handleCancelShipment} className={styles.item}>取消</span>
       </div>} 
       trigger="click"
       visible={visible}

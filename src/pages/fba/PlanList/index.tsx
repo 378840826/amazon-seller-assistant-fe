@@ -81,6 +81,15 @@ const PackageList: React.FC = function() {
     return Object.assign({}, formData, params);
   }, [form]);
 
+  // 供筛选的店铺
+  const shopFilter = shops.filter(shop => {
+    const selectedMarketplace = form.getFieldValue('countryCode');
+    if (selectedMarketplace) {
+      return shop.marketplace === selectedMarketplace;
+    }
+    return true;
+  });
+
   // 初始化货件列表
   const request = useCallback((params = { currentPage: 1, pageSize: 20 }) => {
     setLoading(true);
@@ -103,7 +112,7 @@ const PackageList: React.FC = function() {
         message: msg,
         data: {
           current = 1,
-          pageSize = 20,
+          size = 20,
           total = 0,
           records = [],
         } = {},
@@ -112,7 +121,7 @@ const PackageList: React.FC = function() {
         message?: string;
         data?: {
           current: number;
-          pageSize: number;
+          size: number;
           total: number;
           records: planList.IRecord[];
         };
@@ -121,16 +130,14 @@ const PackageList: React.FC = function() {
       setLoading(false);
       if (code === 200) {
         const tempArr: number[] = [];
-        setCurrent(current);
-        setPageSize(pageSize);
+        setCurrent(Number(current));
+        setPageSize(size);
         setTotal(total);
-
+        // 默认选中正常状态的
         records.forEach(item => {
-          item.deleted && tempArr.push(item.id);
+          item.state && tempArr.push(item.id);
         });
-
         setSelectedRowKeys([...tempArr]);
-
         return;
       }
       message.error(msg || '获取货件列表失败！');
@@ -175,7 +182,7 @@ const PackageList: React.FC = function() {
       pageSizeOptions: ['20', '50', '100'],
       total,
       pageSize,
-      current: current,
+      current,
       showQuickJumper: true, // 快速跳转到某一页
       showSizeChanger: true,
       showTotal: (total: number) => `共 ${total} 个`,
@@ -278,6 +285,10 @@ const PackageList: React.FC = function() {
 
   // 筛选条件
   const formfieldChange = function (fields: any) { // eslint-disable-line
+    // 如果切换了站点，清空店铺选择
+    if (Reflect.has(fields, 'countryCode')) {
+      form.setFieldsValue({ storeId: undefined });
+    }
     // 限制搜索框输入就搜索
     if (fields.code === '' || fields.code) {
       return;
@@ -291,8 +302,8 @@ const PackageList: React.FC = function() {
       <Select className={styles.list}>
         <Option value="ShipmentId">货件计划ID</Option>
         <Option value="MwsShipmentId">ShipmentID</Option>
-        <Option value="Usrname">备注</Option>
-        <Option value="RemarkText">创建人</Option>
+        <Option value="RemarkText">备注</Option>
+        <Option value="Usrname">创建人</Option>
       </Select>
     </Item>
   );
@@ -305,7 +316,7 @@ const PackageList: React.FC = function() {
         match: 'ShipmentId',
         handle: 0,
         timeMatch: 'GmtCreate',
-        dateTime: [moment().subtract(7, 'days'), currentDate],
+        dateTime: [moment().subtract(60, 'days'), currentDate],
       }}
       onValuesChange={formfieldChange}
     >
@@ -331,9 +342,9 @@ const PackageList: React.FC = function() {
           allowClear
         >
           {
-            shops.map((item, index) => {
-              return <Option value={item.id} key={index}>{item.storeName}</Option>;
-            }) 
+            shopFilter.map(({ id, storeName, marketplace }) => (
+              <Option value={id} key={id}>{`${marketplace}-${storeName}`}</Option>
+            ))
           }
         </Select>
       </Item>

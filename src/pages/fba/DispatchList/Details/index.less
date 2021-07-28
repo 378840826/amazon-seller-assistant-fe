@@ -25,9 +25,25 @@
 
 .details {
   display: flex;
+  justify-content: space-between;
+
+  :global {
+    .h-async-default-icon,
+    .h-default-icon {
+      opacity: 1 !important;
+    }
+  }
+
+  .item {
+    display: flex;
+  }
 
   .content {
     color: @heading-color;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .leftLayout {
@@ -42,7 +58,8 @@
     display: inline-flex;
     margin: 0;
     max-height: 22px;
-    overflow: hidden;
+    z-index: 1;
+    // overflow: hidden;
 
     :global(.ant-form-item-control-input) {
       min-height: auto;

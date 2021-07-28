@@ -4,16 +4,23 @@
  * @Date: 2021-02-04 09:59:29
  * @LastEditTime: 2021-04-23 15:38:51
  * 
- * 货件计划列表
+ * shipment列表
  *
  */
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, requestErrorFeedback } from '@/utils/utils';
 import moment from 'moment';
 import { DoubleRightOutlined } from '@ant-design/icons';
-import { useSelector, useDispatch, IShipmentState, ConnectProps, IConfigurationBaseState } from 'umi';
+import {
+  useSelector,
+  useDispatch,
+  IShipmentState,
+  ConnectProps,
+  // IConfigurationBaseState,
+  IFbaBaseState,
+} from 'umi';
 import AddPlan from './AddPlan';
 import {
   Table,
@@ -24,23 +31,26 @@ import {
   DatePicker,
   Popconfirm,
   message,
+  Modal,
 } from 'antd';
 import { TableRowSelection } from 'antd/lib/table/interface';
-import ConfireDownList from './ConfireDownList';
+import ConfireDownList from '@/pages/fba/components/ConfireDownList';
 import Details from './Details';
 import More from './More';
+import { ColumnProps } from 'antd/es/table';
 
 interface IDetailModalType {
   visible: boolean;
   method: 'FBA'| 'overseas'; // FBA和每外仓库
   dispose: boolean; // 是否已处理
   verify: boolean; // 是否已核实
-  id: number;
+  id: string;
 }
 
 interface IPage extends ConnectProps {
   shipment: IShipmentState;
-  configurationBase: IConfigurationBaseState;
+  // configurationBase: IConfigurationBaseState;
+  fbaBase: IFbaBaseState;
 }
 
 const { Option } = Select;
@@ -50,7 +60,9 @@ const PackageList: React.FC = function() {
  
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   const shipmentList = useSelector((state: IPage) => state.shipment.shipmentList);
-  const shops = useSelector((state: IPage) => state.configurationBase.shops); // 店铺列表
+  // const shops = useSelector((state: IPage) => state.configurationBase.shops); // 店铺列表
+  const shops = useSelector((state: IPage) => state.fbaBase.shops); // 店铺列表
+  const logistics = useSelector((state: IPage) => state.fbaBase.logistics); // 仓库列表
 
   const [current, setCurrent] = useState<number>(1);
   const [addVisible, setAddVisible] = useState<boolean>(false); // 添加货件
@@ -62,7 +74,7 @@ const PackageList: React.FC = function() {
     method: 'FBA',
     dispose: false,
     verify: false,
-    id: -1,
+    id: '-1',
   });
   const [sites, setSites] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -83,18 +95,18 @@ const PackageList: React.FC = function() {
     '最近365天': [moment().subtract(365, 'days'), currentDate],
   };
 
-  const request = useCallback((params = { current: 1, pageSize: 20 }) => {
+  const request = useCallback((params = { currentPage: 1, pageSize: 20 }) => {
     const data = form.getFieldsValue();
     const [startTime, endTime] = data.rangeDateTime;
     data.startTime = startTime.format('YYYY-MM-DD');
-    data.endTime = endTime.format('YYYY-MM-DD');
+    data.endTime = `${endTime.format('YYYY-MM-DD')} 23:59:59`;
     
     Reflect.deleteProperty(data, 'rangeDateTime');
 
     setLoading(true);
     let payload = {
-      current: params.current,
-      pageSize: params.pageSize,
+      currentPage: params.currentPage || 1,
+      pageSize: params.pageSize || 20,
       ...data,
     };
     payload = Object.assign({}, payload, params);
@@ -171,30 +183,206 @@ const PackageList: React.FC = function() {
   // 请求店铺
   const requestShop = useCallback((marketplace?: string) => {
     dispatch({
-      type: 'configurationBase/getShop',
-      payload: { marketplace },
+      type: 'fbaBase/getShops',
+      payload: { marketplace: marketplace || null },
     });
   }, [dispatch]);
 
+  // 请求仓库列表
+  const getLogistics = useCallback(() => {
+    logistics.length === 0 && new Promise((resolve, reject) => {
+      dispatch({
+        type: 'fbaBase/getLogistics',
+        reject,
+        resolve,
+        callback: requestErrorFeedback,
+        payload: {
+          state: true,
+        },
+      });
+    });
+  }, [dispatch, logistics]);
 
   // 请求
   useEffect(() => {
     request();
     requestSite();
     requestShop();
-  }, [request, requestSite, requestShop]);
+    getLogistics();
+  }, [request, requestSite, requestShop, getLogistics]);
 
-  // 修改物流方式的回调
-  const changeLogistics = function() {
-    const count = Math.random() * 10;
-    return Promise.resolve(count > 5);
+  // 供筛选的店铺
+  const shopFilter = shops.filter(shop => {
+    const selectedMarketplace = form.getFieldValue('countryCode');
+    if (selectedMarketplace) {
+      return shop.marketplace === selectedMarketplace;
+    }
+    return true;
+  });
+
+  // 修改物流方式、名称、商品信息
+  const handleUpdateShipment = function(params: {
+    id: string;
+    [key: string]: string;
+  }) {
+    const item = shipmentList.find(item => params.id === item.id);
+    // invoiceId 改成专用于判断是否生成发货单的字段
+    if (item?.isGenerateInvoice) {
+      message.warning('如需修改Shipment，请先作废相应的发货单');
+      return Promise.resolve(false);
+    }
+    const promise = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'shipment/updateShipmentItem',
+        payload: {
+          ...params,
+        },
+        resolve,
+        reject,
+      });
+    });
+    return promise.then(res => {
+      const { code, message: msg } = res as Global.IBaseResponse;
+      if (code === 200) {
+        message.success(msg || '操作成功！');
+        // 更新 state 数据
+        dispatch({
+          type: 'shipment/saveShipmentList',
+          payload: shipmentList.map(item => {
+            if (params.id === item.id) {
+              return {
+                ...item,
+                ...params,
+              };
+            }
+            return item;
+          }),
+        });
+        return Promise.resolve(true);
+      }
+      message.error(msg || '操作失败！');
+      return Promise.resolve(false);
+    });
+  };
+
+  // 生成发货单(批量)
+  const handleCreateInvoice = function(ids: string[] | number[]) {
+    if (ids.length === 0) {
+      message.warning('请先勾选shipment');
+      return;
+    }
+    Modal.confirm({
+      title: '确定生成发货单？',
+      icon: null,
+      onOk() {
+        const promise = new Promise((resolve, reject) => {
+          dispatch({
+            type: 'shipment/generateInvoice',
+            reject,
+            resolve,
+            payload: { ids },
+          });
+        });
+        promise.then(datas => {
+          const {
+            code,
+            data,
+            message: msg,
+          } = datas as {
+            code: number;
+            message?: string;
+            data: {
+              id: number;
+              invoiceId: string;
+            }[];
+          };
+          if (code === 200) {
+            // 更新数据
+            const temp = JSON.stringify(shipmentList);
+            const newShipmentList: Shipment.IShipmentList[] = JSON.parse(temp);
+            rowSelection.map(item => {
+              const datas = newShipmentList.find(dItem => String(item) === dItem.id);
+              const refereceid = data.find(({ id }) => id === item);
+              datas && refereceid && (datas.invoiceId = refereceid.invoiceId);
+            });
+            dispatch({
+              type: 'shipment/saveShipmentList',
+              payload: newShipmentList,
+            });
+            message.success(msg || '操作成功！');
+            return;
+          }
+          message.error(msg);
+        });
+      },
+    });
+  };
+
+  // 批量操作 -- 标记出运、取消、删除 (删除功能搁置)
+  const handleShipmentAndDelete = function (state: 'SHIPPED' | 'CANCELLED', ids?: string[]) {
+    const idArray = ids || rowSelection;
+    if (idArray.length === 0) {
+      message.warning('请先勾选shipment');
+      return;
+    }
+    const titleDice = {
+      SHIPPED: '确定标记出运？',
+      CANCELLED: '确定取消Shipment？',
+    };
+    Modal.confirm({
+      title: titleDice[state],
+      icon: null,
+      onOk() {
+        const mwsShipmentIds: string[] = [];
+        idArray.map(id => {
+          for (let i = 0; i < shipmentList.length; i++) {
+            const shipment = shipmentList[i];
+            if (shipment.id === String(id)) {
+              mwsShipmentIds.push(shipment.mwsShipmentId);
+              break;
+            }
+          }
+        });
+        const promise = new Promise((resolve, reject) => {
+          dispatch({
+            type: 'shipment/updateShipment',
+            reject,
+            resolve,
+            payload: {
+              mwsShipmentIds,
+              state,
+            },
+          });
+        });
+        promise.then(datas => {
+          const {
+            code,
+            message: msg,
+          } = datas as Global.IBaseResponse;
+          if (code === 200) {
+            const temp = JSON.stringify(shipmentList);
+            const newShipmentList: Shipment.IShipmentList[] = JSON.parse(temp);
+            idArray.map(item => {
+              const data = newShipmentList.find(dItem => String(item) === dItem.id);
+              data && (data.shipmentState = state);
+            });
+            dispatch({
+              type: 'shipment/saveShipmentList',
+              payload: newShipmentList,
+            });
+            return;
+          }
+          message.error(msg);
+        });
+      },
+    });
   };
   
-  const columns = [
+  const columns: ColumnProps<Shipment.IShipmentList>[] = [
     {
       dataIndex: 'shipmentState',
       key: 'shipmentState',
-      align: 'state',
+      align: 'center',
       title: '状态',
       width: 60,
       fixed: 'left',
@@ -202,7 +390,7 @@ const PackageList: React.FC = function() {
     {
       dataIndex: 'mwsShipmentId',
       key: 'mwsShipmentId',
-      align: 'right',
+      align: 'center',
       title: 'ShipmentID',
       width: 100,
       fixed: 'left',
@@ -248,7 +436,7 @@ const PackageList: React.FC = function() {
       key: 'destinationFulfillmentCenterId',
       align: 'center',
       title: '亚马逊仓库代码',
-      width: 100,
+      width: 126,
     },
     {
       dataIndex: 'shippingType',
@@ -256,9 +444,14 @@ const PackageList: React.FC = function() {
       align: 'center',
       title: '物流方式',
       width: 100,
-      render() {
-        return <ConfireDownList onConfirm={changeLogistics} val="1"/>;
-      },
+      render: (value, record) => (
+        <ConfireDownList
+          onConfirm={val => handleUpdateShipment({ id: record.id, shippingType: val })}
+          val={value}
+          dataList={logistics} 
+          selectStyle={{ fontSize: 12, minWidth: 80 }}
+        />
+      ),
     },
     {
       dataIndex: 'shippingId',
@@ -286,6 +479,7 @@ const PackageList: React.FC = function() {
       key: 'labelingType',
       align: 'center',
       title: '贴标方',
+      width: 100,
     },
     {
       dataIndex: 'packageLabelType',
@@ -299,7 +493,7 @@ const PackageList: React.FC = function() {
       key: 'referenceId',
       align: 'center',
       title: 'ReferenceID',
-      width: 100,
+      width: 120,
     },
     {
       dataIndex: 'mskuNum',
@@ -313,28 +507,28 @@ const PackageList: React.FC = function() {
       key: 'declareNum',
       align: 'center',
       title: '申报量',
-      width: 170,
+      width: 100,
     },
     {
       dataIndex: 'issuedNum',
       key: 'issuedNum',
       align: 'center',
       title: '已发量',
-      width: 170,
+      width: 100,
     },
     {
       dataIndex: 'receivedNum',
       key: 'receivedNum',
       align: 'center',
       title: '已收量',
-      width: 170,
+      width: 100,
     },
     {
       dataIndex: 'disparityNum',
       key: 'disparityNum',
       align: 'center',
       title: '申收差异',
-      width: 170,
+      width: 100,
     },
     {
       dataIndex: 'userName',
@@ -372,7 +566,7 @@ const PackageList: React.FC = function() {
       fixed: 'right',
       width: 120,
       className: styles.handleCol,
-      render(_: string, record: Shipment.IShipmentList, index: number) {
+      render(_: string, record: Shipment.IShipmentList) {
         return <div className={styles.handleCol}>
           <div>
             <span onClick={() => {
@@ -384,16 +578,24 @@ const PackageList: React.FC = function() {
                 id: record.id,
               });
             }}>详情</span>
-            {<span
-              className={styles.create}
-              onClick={() => {
-                alert('提示“操作成功! 已经生成的不能再生成');
-              }}>生成发货单</span>}
+            {
+              // 排除已生成发货单、已作废、已取消的
+              !(record.isGenerateInvoice || ['已作废', '已取消'].includes(record.shipmentState)) &&
+              <Popconfirm 
+                title="确定生成发货单？"
+                placement="left"
+                overlayClassName={styles.delTooltip}
+                onConfirm={() => handleCreateInvoice([record.id])}
+                icon={<Iconfont type="icon-tishi2" />}
+              >
+                <span className={styles.create}>生成发货单</span>
+              </Popconfirm>
+            }
           </div>
           <div>
             {
               <Popconfirm 
-                title="暂时放着"
+                title="功能暂未开放"
                 placement="left"
                 overlayClassName={styles.cencalModal}
                 icon={<></>}
@@ -401,8 +603,11 @@ const PackageList: React.FC = function() {
                 <span>打印</span>
               </Popconfirm>
             }
-            {/* 如果shipment已经标记出运，就只有“取消”，其他按钮都没有了 */}
-            <More isShipment={index > 2 ? true : false}/>
+            <More
+              shipmentData={record}
+              handleMarkShipped={() => handleShipmentAndDelete('SHIPPED', [record.id])}
+              handleCancelShipment={() => handleShipmentAndDelete('CANCELLED', [record.id])}
+            />
           </div>
         </div>;
       },
@@ -447,13 +652,15 @@ const PackageList: React.FC = function() {
       return;
     }
 
-    request({ current: 1 });
+    request();
   };
 
   // 顶部筛选框
   const searchCondition = function(values: any) { // eslint-disable-line
-    console.log(values, 'form');
-    
+    // 如果切换了站点，清空店铺选择
+    if (Reflect.has(values, 'countryCode')) {
+      form.setFieldsValue({ storeId: undefined });
+    }
     if (
       Reflect.has(values, 'match')
       || Reflect.has(values, 'code')
@@ -463,30 +670,31 @@ const PackageList: React.FC = function() {
     request({ current: 1 });
   };
 
-  const cancellation = function() {
+  // 同步 ReferenceID
+  const handleSyncReferenceId = function() {
     if (rowSelection.length === 0) {
-      message.error('未选中任何行！');
+      message.warning('请先勾选shipment');
       return;
     }
 
-    // 业务删除
-    console.log('?');
-  };
-
-  // 标记出运
-  const handleShipment = function() {
-    if (rowSelection.length === 0) {
-      message.error('未选中任何行！');
-      return;
-    }
-
+    const mwsShipmentIds: string[] = [];
+    rowSelection.map(id => {
+      for (let i = 0; i < shipmentList.length; i++) {
+        const shipment = shipmentList[i];
+        if (shipment.id === String(id)) {
+          mwsShipmentIds.push(shipment.mwsShipmentId);
+          break;
+        }
+      }
+    });
+  
     const promise = new Promise((resolve, reject) => {
       dispatch({
         type: 'shipment/getRefereceid',
         resolve,
         reject,
         payload: {
-          mwsShipmentIds: rowSelection,
+          mwsShipmentIds,
         },
       });
     });
@@ -509,7 +717,7 @@ const PackageList: React.FC = function() {
         const temp = JSON.stringify(shipmentList);
         const newShipmentList: Shipment.IShipmentList[] = JSON.parse(temp);
         rowSelection.map(item => {
-          const datas = newShipmentList.find(dItem => item === dItem.id);
+          const datas = newShipmentList.find(dItem => String(item) === dItem.id);
           const refereceid = data.find(({ id }) => id === item);
           datas && refereceid && (datas.referenceId = refereceid.amazonReferenceId);
         });
@@ -521,54 +729,6 @@ const PackageList: React.FC = function() {
       }
 
       message.error(msg || '同步RefereceID失败，重稍后重试！');
-    });
-  };
-
-  // 批量操作 -- 标记出运和删除
-  const handleShipmentAndDelete = function (type: string) {
-    if (rowSelection.length === 0) {
-      message.error('未选中任何行！');
-      return;
-    }
-
-    const promise = new Promise((resolve, reject) => {
-      dispatch({
-        type: 'shipment/updateShipment',
-        reject,
-        resolve,
-        payload: {
-          state: type,
-          mwsShipmentId: rowSelection,
-        },
-      });
-    });
-
-    promise.then(datas => {
-      const {
-        code,
-        message: msg,
-      } = datas as Global.IBaseResponse;
-
-      if (code === 200) {
-        const temp = JSON.stringify(shipmentList);
-        const newShipmentList: Shipment.IShipmentList[] = JSON.parse(temp);
-        // 标记出运
-        if (type === 'SHIPPED') {
-          rowSelection.map(item => {
-            const data = newShipmentList.find(dItem => item === dItem.id);
-            data && (data.shipmentState = 'shipped');
-          });
-        } else if (type === 'CANCELLED') { // 删除
-          // ....
-        }
-        
-        dispatch({
-          type: 'shipment/saveShipmentList',
-          payload: newShipmentList,
-        });
-        return;
-      }
-      message.error(msg);
     });
   };
 
@@ -593,7 +753,7 @@ const PackageList: React.FC = function() {
       initialValues={{
         match: 'MwsShipmenrId',
         timeMatch: 'GmtCreate',
-        rangeDateTime: [moment().subtract(7, 'days'), currentDate],
+        rangeDateTime: [moment().subtract(60, 'days'), currentDate],
       }}
       onValuesChange={searchCondition}
     >
@@ -608,40 +768,39 @@ const PackageList: React.FC = function() {
         />
       </Item>
       <Item name="countryCode" className={styles.site}>
-        <Select placeholder="站点">
+        <Select placeholder="站点" allowClear>
           {sites.map((item, i) => <Option value={item} key={i}>{item}</Option>)}
         </Select>
       </Item>
       <Item name="storeId" className={styles.shopName}>
-        <Select
-          placeholder="店铺名称"
-          optionFilterProp="children"
-        >
-          {shops.map(({ value, label }, i) => (
-            <Option value={value} key={i}>{label}</Option>
-          )) }
+        <Select placeholder="店铺名称" allowClear optionFilterProp="children">
+          {
+            shopFilter.map(({ id, storeName, marketplace }) => (
+              <Option value={id} key={id}>{`${marketplace}-${storeName}`}</Option>
+            ))
+          }
         </Select>
       </Item>
       <Item name="status" className={styles.state}>
-        <Select placeholder="状态">
-          <Option value="1">WORKING</Option>
-          <Option value="2">SHIPPED</Option>
-          <Option value="3">IN_TRANSIT</Option>
-          <Option value="4">DELIVERED</Option>
-          <Option value="5">CHECKED_IN</Option>
-          <Option value="7">RECEIVING</Option>
-          <Option value="8">CLOSED</Option>
-          <Option value="6">CANCELLED</Option>
-          <Option value="9">DELETED</Option>
-          <Option value="24">ERROR</Option>
+        <Select placeholder="状态" allowClear>
+          <Option value="WORKING">WORKING</Option>
+          <Option value="SHIPPED">SHIPPED</Option>
+          <Option value="IN_TRANSIT">IN_TRANSIT</Option>
+          <Option value="DELIVERED">DELIVERED</Option>
+          <Option value="CHECKED_IN">CHECKED_IN</Option>
+          <Option value="RECEIVING">RECEIVING</Option>
+          <Option value="CLOSED">CLOSED</Option>
+          <Option value="CANCELLED">CANCELLED</Option>
+          <Option value="DELETED">DELETED</Option>
+          <Option value="ERROR">ERROR</Option>
         </Select>
       </Item>
       <Item name="packageLabelStatus" className={styles.handle} >
-        <Select placeholder="货箱状态">
-          <Option value="1">已上传</Option>
-          <Option value="2">上传失败</Option>
-          <Option value="3">未上传</Option>
-          <Option value="4">上传中</Option>
+        <Select placeholder="装箱清单" allowClear>
+          <Option value="已上传">已上传</Option>
+          <Option value="上传失败">上传失败</Option>
+          <Option value="未上传">未上传</Option>
+          <Option value="上传中">上传中</Option>
         </Select>
       </Item>
     </Form>
@@ -656,13 +815,17 @@ const PackageList: React.FC = function() {
         >
           创建Shipment <DoubleRightOutlined />
         </Button>
-        <Button onClick={cancellation} className={styles.addBtn}>生成发货单</Button>
-        <Button onClick={handleShipment} className={styles.addBtn}>同步ReferenceID</Button>
+        <Button onClick={() => handleCreateInvoice(rowSelection)} className={styles.addBtn}>
+          生成发货单
+        </Button>
+        <Button onClick={handleSyncReferenceId} className={styles.addBtn}>同步ReferenceID</Button>
         <Button onClick={() => handleShipmentAndDelete('SHIPPED')} className={styles.addBtn}>标记出运</Button>
-        <Button onClick={() => handleShipmentAndDelete('CANCELLED')} disabled className={styles.addBtn}>删除</Button>
+        {/* 删除先搁置，目前 api 不支持 - 2021.07.21*/}
+        {/* <Button onClick={() => handleShipmentAndDelete('CANCELLED')} className={styles.addBtn}>
+          删除
+        </Button> */}
       </div>
-      <Form form={form} className={styles.rightLayout}onFieldsChange={() => console.log(2222)}
-        onValuesChange={searchCondition}>
+      <Form form={form} className={styles.rightLayout} onValuesChange={searchCondition}>
         <Item name="timeMatch" className={styles.typeDownList}>
           <Select>
             <Option value="GmtCreate">创建日期</Option>
@@ -687,6 +850,7 @@ const PackageList: React.FC = function() {
       marketplace={marketplace}
     />
     <Details 
+      onUpdateShipment={handleUpdateShipment}
       onCancel={() => {
         detailModal.visible = false;
         setDateilModal({ ...detailModal });

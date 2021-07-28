@@ -9,29 +9,35 @@ import Mock from 'mockjs';
 const random = Mock.Random;
 
 export default {
-  'GET /api/mws/shipment/list': Mock.mock({
+  'POST /api/mws/shipment/list': Mock.mock({
     code: 200,
-    'data|20': [{
-      'id|1-999999': 1, 
-      'userName': random.cname(),
-      'declare_sum|1-999': 1, 
-      'verify_sum|1-999': 1, 
-      'disparity_sum|1-999': 1, 
-      'pstate|1': ['未处理', '已处理'], 
-      'shipmentId|1-999': 1, 
-      'mwsShipmentId|1-999': 1, 
-      'invoiceId|1-999': 1, 
-      'countryCode': 'US',
-      'storeId|1-999': 1, 
-      'storeName': random.string(), 
-      'warehouseDe': random.string(),
-      'shippingType|1': ['海运', '空运', '海派', '空派'],
-      'remarkText': random.string(),
-      'gmtCreate': random.datetime(),
-      'gmtModified': random.datetime(),
-      'verifyType': random.boolean,
-      'deleted': random.boolean,
-    }],
+    data: {
+      total: 1000,
+      pages: 50,
+      current: 2,
+      size: 50,
+      'records|20': [{
+        'id|1-999999': 1, 
+        'userName': random.cname(),
+        'declareSum|1-999': 1, 
+        'verifySum|1-999': 1, 
+        'disparitySum|1-999': 1, 
+        'pstate|1': ['未处理', '已处理'], 
+        'shipmentId|1-999': 1, 
+        'mwsShipmentId': ['33333333333333333', '4444444444'],
+        'invoiceId': ['1111111', '22222222222222222222'],
+        'countryCode': 'US',
+        'storeId|1-999': 1, 
+        'storeName': random.string(), 
+        'warehouseDe': random.string(),
+        'shippingType|1': ['海运', '空运', '海派', '空派'],
+        'remarkText': random.string(),
+        'gmtCreate': random.datetime(),
+        'gmtModified': random.datetime(),
+        'verifyType': random.boolean,
+        'state': random.boolean,
+      }],
+    },
   }),
 
   'POST /api/mws/shipment/plan/state': Mock.mock({
@@ -55,7 +61,7 @@ export default {
     ],
   }),
 
-  'GET /api/mws/shipment/destination/warehouse/list': Mock.mock({
+  'POST /api/mws/shipment/destination/warehouse/list': Mock.mock({
     code: 200,
     'data|1-200': [
       {
@@ -94,8 +100,8 @@ export default {
       'id|1-100000': 0,
       'userName': random.cname(),
       'shipmentId|1-10': '',
-      'mwsShipmentId|1-10': '',
-      'invoiceId|1-10': '',
+      'mwsShipmentId': ['33333333333333333', '4444444444'],
+      'invoiceId': ['1111111', '22222222222222222222'],
       'countryCode|2': '',
       'storeName|1-20': '',
       'warehouseDe|1-20': '',
