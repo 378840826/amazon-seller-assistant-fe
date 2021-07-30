@@ -134,7 +134,7 @@ const GroupTime: React.FC = function() {
           {groupName}
         </Link>
         <Iconfont type="icon-zhankai" className={styles.separator} />
-        <span>目标设置</span>
+        <span>定时设置</span>
       </div>
       <Spin spinning={loading || loadingSave || false}>
         <div className={styles.tableToolBar}>

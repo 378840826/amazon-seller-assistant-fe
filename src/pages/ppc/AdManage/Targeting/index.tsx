@@ -59,9 +59,6 @@ const Targeting: React.FC = function() {
     suggestedBid: loadingEffect['adManage/fetchTargetingSuggestedBid'],
     batchSet: loadingEffect['adManage/batchTargeting'],
   };
-  // const loadingTable = loadingEffect['adManage/fetchTargetingList'];
-  // const loadingSuggestedBid = loadingEffect['adManage/fetchTargetingSuggestedBid'];
-  // const loadingBatchSet = loadingEffect['adManage/batchTargeting'];
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     targetingTab: { list, searchParams, filtrateParams, customCols, checkedIds },
@@ -121,7 +118,7 @@ const Targeting: React.FC = function() {
   }, [dispatch, currentShopId, treeSelectedInfo]);
 
   // 修改数据
-  function modifyTargeting(params: {[key: string]: string | number}) {
+  function modifyTargeting(params: {id: API.IAdTargeting['id']; [key: string]: string | number}) {
     dispatch({
       type: 'adManage/modifyTargeting',
       payload: {
@@ -192,7 +189,7 @@ const Targeting: React.FC = function() {
             type: 'adManage/batchTargeting',
             payload: {
               headersParams: { StoreId: currentShopId },
-              targes: checkedIds.map(id => ({ id, state })),
+              targets: checkedIds.map(id => ({ id, state })),
             },
             callback: requestFeedback,
           });

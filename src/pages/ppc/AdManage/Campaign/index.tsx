@@ -48,6 +48,7 @@ const Campaign: React.FC = function() {
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
   const loading = loadingEffect['adManage/fetchCampaignList'];
   const loadingBatchSet = loadingEffect['adManage/batchCampaign'];
+  const loadingNewPortfolio = loadingEffect['adManage/newPortfolio'];
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const {
     campaignTab: { list, searchParams, filtrateParams, portfolioList, customCols, checkedIds },
@@ -94,7 +95,7 @@ const Campaign: React.FC = function() {
   }, [dispatch, currentShopId, treeSelectedInfo]);
 
   // 修改广告活动数据(状态、portfolio、名称、竞价策略 、Top of Search、Product page、日限额	、时间范围)
-  function modifyCampaign(params: {[key: string]: string | number}) {
+  function modifyCampaign(params: {id: API.IAdCampaign['id']; [key: string]: string | number}) {
     dispatch({
       type: 'adManage/modifyCampaign',
       payload: {
@@ -329,6 +330,7 @@ const Campaign: React.FC = function() {
                         // 用 Search 组件改造的新建
                         placeholder="请输入Portfolios名称"
                         enterButton="保存"
+                        loading={loadingNewPortfolio}
                         size="small"
                         maxLength={40}
                         onSearch={value => handleNewPortfolio(value, record.id)}
