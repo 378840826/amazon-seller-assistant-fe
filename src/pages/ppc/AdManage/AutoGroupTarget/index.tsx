@@ -6,6 +6,7 @@ import { useSelector, useDispatch, Link } from 'umi';
 import { Button, Table, Switch, message, Dropdown, Checkbox, Row, Col } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
+import editable from '@/pages/components/EditableCell';
 import DateRangePicker from '../components/DateRangePicker';
 import SuggestedPrice from '../components/SuggestedPrice';
 import {
@@ -14,7 +15,9 @@ import {
   Iconfont,
   numberToPercent,
   requestErrorFeedback,
+  requestFeedback,
   storage,
+  strToMoneyStr,
 } from '@/utils/utils';
 import { getRangeDate as getTimezoneDateRange } from '@/utils/huang';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
@@ -127,25 +130,35 @@ const AutoGroupTarget: React.FC = function() {
     });
   }
 
-  // 状态开关
-  function handleSwitch(state: boolean, record: API.IAdAutoGroupTarget) {
+  // 修改状态开关和竞价
+  function modifyGroup(
+    targetId: API.IAdAutoGroupTarget['id'], state: API.IAdAutoGroupTarget['state'], bid: string
+  ) {
+    if (!bid || bid === '0') {
+      message.error('竞价不能为0或空！');
+      return;
+    }
     dispatch({
       type: 'adManage/updateAutoGroupTarget',
       payload: {
         headersParams: { StoreId: currentShopId },
-        targetId: record.id,
-        state: state ? 'enabled' : 'paused',
+        targetId,
+        state,
+        bid,
       },
       callback: (code: number, msg: string) => {
-        requestErrorFeedback(code, msg);
+        requestFeedback(code, msg);
         // 修改列表
-        const newList = list.map(item => {
-          if (item.id === record.id) {
-            item.state = state ? 'enabled' : 'paused';
-          }
-          return item;
-        });
-        setList(newList);
+        if (code === 200) {
+          const newList = list.map(item => {
+            if (item.id === targetId) {
+              item.state = state;
+              item.bid = Number(bid);
+            }
+            return item;
+          });
+          setList(newList);
+        }
       },
     });
   }
@@ -197,7 +210,9 @@ const AutoGroupTarget: React.FC = function() {
           <Switch
             className={styles.Switch}
             checked={value === 'enabled'}
-            onClick={checked => handleSwitch(checked, record)}
+            onClick={
+              checked => modifyGroup(record.id, checked ? 'enabled' : 'paused', String(record.bid))
+            }
           />
           : '已归档'
       ),
@@ -228,7 +243,18 @@ const AutoGroupTarget: React.FC = function() {
       dataIndex: 'bid',
       align: 'center',
       width: 80,
-      render: value => getShowPrice(value, marketplace, currency),
+      render: (value, record) => (
+        editable({
+          inputValue: getShowPrice(value),
+          formatValueFun: strToMoneyStr,
+          maxLength: 10,
+          prefix: currency,
+          ghostEditBtn: true,
+          confirmCallback: value => {
+            modifyGroup(record.id, record.state, value);
+          },
+        })
+      ),
     }, {
       title: '销售额',
       dataIndex: 'sales',

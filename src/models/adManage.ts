@@ -26,6 +26,7 @@ import {
   updateAutoGroupTarget,
   queryGroupTime,
   updateGroupTime,
+  queryGroupDefaultBid,
   // 广告
   queryAdList,
   updateAd,
@@ -838,7 +839,7 @@ const AdManageModel: IAdManageModelType = {
 
     // 广告活动-添加 Portfolio 并设置广告活动为这个新的 Portfolio
     *newPortfolio({ payload, callback }, { call, put }) {
-      const res = yield call(createPortfolio, payload);
+      const res = yield call(createPortfolio, { name: payload.record.name });
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -928,8 +929,23 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // 广告活动-修改广告活动的数据
-    *modifyCampaign({ payload, callback }, { call, put }) {
-      const res = yield call(updateCampaign, payload);
+    *modifyCampaign({ payload, callback }, { call, put, select }) {
+      // 后端需要此广告活动全部能修改的数据作为参数
+      const list = yield select((state: IConnectState) => state.adManage.campaignTab.list.records);
+      const cam: API.IAdCampaign = list.find((item: API.IAdCampaign) => item.id === payload.id);
+      const reqParams = {
+        state: cam.state,
+        portfolioId: cam.portfolioId,
+        name: cam.name,
+        biddingStrategy: cam.biddingStrategy,
+        biddingPlacementTop: cam.biddingPlacementTop,
+        biddingPlacementProductPage: cam.biddingPlacementProductPage,
+        dailyBudget: cam.dailyBudget,
+        startTime: cam.startTime,
+        endTime: cam.endTime,
+        ...payload,
+      };
+      const res = yield call(updateCampaign, reqParams);
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -981,8 +997,20 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // 广告组-修改广告组的数据
-    *modifyGroup({ payload, callback }, { call, put }) {
-      const res = yield call(updateGroup, payload);
+    *modifyGroup({ payload, callback }, { call, put, select }) {
+      // 后端需要此广告组全部能修改的数据作为参数
+      const list = yield select((state: IConnectState) => state.adManage.groupTab.list.records);
+      const group: API.IAdGroup = list.find((item: API.IAdGroup) => item.id === payload.id);
+      const reqParams = {
+        state: group.state,
+        name: group.name,
+        defaultBid: group.defaultBid,
+        budgetLimit: group.budgetLimit,
+        startDate: group.startTime,
+        endDate: group.endTime,
+        ...payload,
+      };
+      const res = yield call(updateGroup, reqParams);
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -1033,6 +1061,12 @@ const AdManageModel: IAdManageModelType = {
     // 广告组-保存修改定时设置
     *updateGroupTime({ payload, callback }, { call }) {
       const res = yield call(updateGroupTime, payload);
+      callback && callback(res.code, res.message, res.data);
+    },
+
+    // 广告组-获取广告组的默认竞价（获取广告组的全部信息后再提取默认竞价）
+    *fetchGroupDefaultBid({ payload, callback }, { call }) {
+      const res = yield call(queryGroupDefaultBid, payload);
       callback && callback(res.code, res.message, res.data);
     },
 
@@ -1105,7 +1139,7 @@ const AdManageModel: IAdManageModelType = {
     // 广告-添加广告时搜索商品
     *fetchGoodsList({ payload, callback }, { call }) {
       const res = yield call(queryGoodsList, { ...payload });
-      callback && callback(res.code, res.message, res.data && res.data.records);
+      callback && callback(res.code, res.message, res.data && res.data);
     },
 
     // 广告-添加广告
@@ -1174,8 +1208,25 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // 关键词-批量修改
-    *batchKeyword({ payload, callback }, { call, put }) {
-      const res = yield call(batchKeyword, payload);
+    *batchKeyword({ payload, callback }, { call, put, select }) {
+      // 后端需要此关键词全部能修改的数据作为参数
+      const list: API.IAdTargeting[] = yield select(
+        (state: IConnectState) => state.adManage.keywordTab.list.records
+      );
+      const payloadKwList = payload.keywords;
+      const reqKwList = payloadKwList.map((payloadKw: API.IAdTargeting) => {
+        const k = list.find(kw => kw.id === payloadKw.id);
+        return {
+          id: payloadKw.id,
+          state: payloadKw.state || k?.state,
+          bid: payloadKw.bid || k?.bid,
+        };
+      });
+      const reqData = {
+        headersParams: payload.headersParams,
+        keywords: reqKwList,
+      };
+      const res = yield call(batchKeyword, reqData);
       if (res.code === 200) {
         const { data: records } = res;
         yield put({
@@ -1186,9 +1237,22 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 关键词-修改关键词数据
-    *modifyKeyword({ payload, callback }, { call, put }) {
-      const res = yield call(batchKeyword, payload);
+    // 关键词-单个修改关键词数据
+    *modifyKeyword({ payload, callback }, { call, put, select }) {
+      // 后端需要此关键词全部能修改的数据作为参数
+      const list = yield select((state: IConnectState) => state.adManage.keywordTab.list.records);
+      const kw: API.IAdTargeting = list.find(
+        (item: API.IAdTargeting) => item.id === payload.keyword.id
+      );
+      const reqParams = {
+        keywords: [{
+          state: kw.state,
+          bid: kw.bid,
+          ...payload.keyword,
+        }],
+        headersParams: payload.headersParams,
+      };
+      const res = yield call(batchKeyword, reqParams);
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -1281,8 +1345,25 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // Targeting-批量修改
-    *batchTargeting({ payload, callback }, { call, put }) {
-      const res = yield call(batchTargeting, payload);
+    *batchTargeting({ payload, callback }, { call, put, select }) {
+      // 后端需要此关键词全部能修改的数据作为参数
+      const list: API.IAdTargeting[] = yield select(
+        (state: IConnectState) => state.adManage.targetingTab.list.records
+      );
+      const payloadTgList = payload.targets;
+      const reqTgList = payloadTgList.map((payloadTg: API.IAdTargeting) => {
+        const t = list.find(kw => kw.id === payloadTg.id);
+        return {
+          id: payloadTg.id,
+          state: payloadTg.state || t?.state,
+          bid: payloadTg.bid || t?.bid,
+        };
+      });
+      const reqData = {
+        headersParams: payload.headersParams,
+        targets: reqTgList,
+      };
+      const res = yield call(batchTargeting, reqData);
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -1293,9 +1374,19 @@ const AdManageModel: IAdManageModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // Targeting-修改关键词数据
-    *modifyTargeting({ payload, callback }, { call, put }) {
-      const res = yield call(updateTargeting, payload);
+    // Targeting-单个修改Targeting数据
+    *modifyTargeting({ payload, callback }, { call, put, select }) {
+      // 后端需要此 Targeting 全部能修改的数据作为参数
+      const list = yield select((state: IConnectState) => state.adManage.targetingTab.list.records);
+      const targeting: API.IAdTargeting = list.find(
+        (item: API.IAdTargeting) => item.id === payload.id
+      );
+      const reqParams = {
+        state: targeting.state,
+        bid: targeting.bid,
+        ...payload,
+      };
+      const res = yield call(updateTargeting, reqParams);
       if (res.code === 200) {
         const { data } = res;
         yield put({

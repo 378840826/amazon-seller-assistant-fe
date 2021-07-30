@@ -91,7 +91,7 @@ const Group: React.FC = function() {
   }, [dispatch, currentShopId, treeSelectedInfo]);
 
   // 修改广告组数据(状态、名称、默认竞价、预算控制、时间范围)
-  function modifyGroup(params: {[key: string]: string | number}) {
+  function modifyGroup(params: {id: API.IAdGroup['id']; [key: string]: string | number}) {
     dispatch({
       type: 'adManage/modifyGroup',
       payload: {
@@ -726,6 +726,8 @@ const Group: React.FC = function() {
         title=""
         closable={false}
         mask={false}
+        // 用于重置 Input 的 defaultValue
+        destroyOnClose
         centered
         footer={null}
         width={320}

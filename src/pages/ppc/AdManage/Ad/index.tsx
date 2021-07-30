@@ -72,6 +72,10 @@ const Ad: React.FC = function() {
   });
   // 添加广告时，提供选择的广告组
   const [groupSimpleList, setGroupSimpleList] = useState<{id: string; name: string}[]>([]);
+  // 店铺下全部的商品
+  const [shopGoodsList, setShopGoodsList] = useState<API.IGoods[]>([]);
+  // 本地搜索商品时的虚拟loading，以便让用户明显看到表格的变化
+  const [loadingSearchGoods, setLoadingSearchGoods] = useState<boolean>(false);
   // 商品的搜索结果
   const [goodsList, setGoodsList] = useState<API.IGoods[]>([]);
   // 已选商品
@@ -154,8 +158,27 @@ const Ad: React.FC = function() {
     setSelectedGoodsList([]);
   }, [addState.groupId]);
 
+  // 首次打开添加广告弹窗，获取全店商品
+  useEffect(() => {
+    if (addState.visible && goodsList.length === 0) {
+      dispatch({
+        type: 'adManage/fetchGoodsList',
+        payload: {
+          headersParams: { StoreId: currentShopId },
+          code: '',
+        },
+        callback: (code: number, msg: string, data: API.IGoods[]) => {
+          requestErrorFeedback(code, msg);
+          setShopGoodsList(data);
+          setGoodsList(data);
+        },
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addState.visible]);
+
   // 修改广告数据(状态)
-  function modifyAd(params: {[key: string]: string | number}) {
+  function modifyAd(params: {id: API.IAd['id']; [key: string]: string | number}) {
     dispatch({
       type: 'adManage/modifyAd',
       payload: {
@@ -314,21 +337,20 @@ const Ad: React.FC = function() {
 
   // 搜索 asin/sku
   function handleAddSearch(value: string) {
+    // 虚拟 loading
+    setLoadingSearchGoods(true);
+    setTimeout(() => setLoadingSearchGoods(false), 200);
     const val = value.trim();
-    if (val === '') {
-      return;
-    }
-    dispatch({
-      type: 'adManage/fetchGoodsList',
-      payload: {
-        headersParams: { StoreId: currentShopId },
-        code: value,
-      },
-      callback: (code: number, msg: string, data: API.IGoods[]) => {
-        requestErrorFeedback(code, msg);
-        setGoodsList(data);
-      },
+    // 从全部的商品中筛选
+    const resultGoodsList = shopGoodsList.filter(goods => {
+      if (
+        goods.asin.toLowerCase().includes(val.toLowerCase()) ||
+        goods.sku.toLowerCase().includes(val.toLowerCase())
+      ) {
+        return goods;
+      }
     });
+    setGoodsList(resultGoodsList);
   }
 
   // 添加广告时的广告活动选择器
@@ -441,7 +463,7 @@ const Ad: React.FC = function() {
               <span className={styles.asin}>{record.asin}</span>
               <span className={styles.review}>
                 <span className={styles.reviewScore}>{record.reviewScore}</span>
-                <span className={styles.reviewCount}>({`${record.reviewCount}` || '-'})</span>
+                <span className={styles.reviewCount}>({`${record.reviewCount || '—'}`})</span>
               </span>
               <span className={styles.price}>
                 { getShowPrice(record.price, marketplace, currency) }
@@ -848,10 +870,10 @@ const Ad: React.FC = function() {
             <div className={styles.tableContent}>
               <MySearch placeholder="请输入ASIN或SKU" defaultValue="" handleSearch={handleAddSearch} />
               <Table
-                loading={loading.searchGoods}
+                loading={loading.searchGoods || loadingSearchGoods}
                 columns={candidateGoodsTableColumns}
                 scroll={{ x: 'max-content', y: '450px' }}
-                rowKey="id"
+                rowKey={record => record.asin}
                 dataSource={goodsList}
                 locale={{ emptyText: '请输入本店铺的ASIN、SKU进行查询' }}
                 pagination={false}
@@ -863,7 +885,7 @@ const Ad: React.FC = function() {
                 loading={loading.addAd}
                 columns={selectedGoodsTableColumns}
                 scroll={{ x: 'max-content', y: '450px' }}
-                rowKey="id"
+                rowKey={record => record.asin}
                 dataSource={selectedGoodsList}
                 locale={{ emptyText: '请从左侧表格选择产品' }}
                 pagination={false}
