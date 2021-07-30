@@ -175,6 +175,14 @@ export async function updateGroupTime(params: API.IParams) {
   });
 }
 
+// 广告组-获取广告组的默认竞价（获取广告组的全部信息后再提取默认竞价）
+export async function queryGroupDefaultBid(params: API.IParams) {
+  return request('/api/gd/management/group/list', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 广告
 // 广告-获取广告列表
 export async function queryAdList(params: API.IParams) {

@@ -600,6 +600,7 @@ const NegativeKeyword: React.FC = function() {
     total,
     defaultPageSize: 20,
     pageSizeOptions: ['20', '50', '100'],
+    showSizeChanger: true,
     showQuickJumper: true,
     showTotal: (total: number) => (<>共 {total} 个</>),
   };
@@ -694,7 +695,7 @@ const NegativeKeyword: React.FC = function() {
                     <div className={classnames(styles.batchToolbar, !checkedSelectedIds.length ? styles.disabled : '')}>
                       <Button onClick={() => handleBatchDeleteSelectedKeywords()}>批量删除</Button>
                       <ContainTitleSelect
-                        title="投放方式"
+                        title="匹配方式"
                         value=""
                         options={Object.keys(matchTypeDict).map(key => (
                           { value: key, element: matchTypeDict[key] }

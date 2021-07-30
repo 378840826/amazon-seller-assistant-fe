@@ -196,6 +196,26 @@ const Keyword: React.FC = function() {
               setGroupSimpleList(data);
             },
           });
+        } else {
+          // 已选中广告组，需要获取广告组的默认竞价
+          dispatch({
+            type: 'adManage/fetchGroupDefaultBid',
+            payload: {
+              headersParams: { StoreId: currentShopId },
+              current: 1,
+              campaignId: campaignId,
+              groupId: groupId,
+            },
+            callback: (code: number, message: string, data: any) => {
+              console.log('code, message, data', code, message, data);
+              setAddState({
+                ...addState,
+                campaignId: campaignId,
+                groupId: groupId,
+                groupDefaultBid: data.page.records[0].defaultBid,
+              });
+            },
+          });
         }
       }
       // 如果已选中广告活动或广告组，设置 addState 
@@ -230,12 +250,12 @@ const Keyword: React.FC = function() {
   }, [dispatch, currentShopId, addState.groupId]);
 
   // 修改数据
-  function modifyKeyword(params: {[key: string]: string | number}) {
+  function modifyKeyword(params: {id: API.IAdTargeting['id']; [key: string]: string | number}) {
     dispatch({
       type: 'adManage/modifyKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
-        keywords: [params],
+        keyword: params,
       },
       callback: requestFeedback,
     });
