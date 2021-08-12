@@ -1,3 +1,7 @@
+/**
+ * 商品选择
+ */
+
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { 
@@ -296,15 +300,16 @@ const ProductSelect: React.FC<IProps> = props => {
 
   return <div className={styles.productSelect}>
     <div className={styles.layoutLeft}>
+      <Input.Search
+        autoComplete="off"
+        placeholder="输入标题、ASIN或SKU" 
+        enterButton={<Iconfont type="icon-sousuo" />} 
+        className="h-search"
+        allowClear
+        onSearch={searchProduct}
+      />
       <header className={styles.head}>
-        <Input.Search
-          autoComplete="off"
-          placeholder="输入标题、ASIN或SKU" 
-          enterButton={<Iconfont type="icon-sousuo" />} 
-          className="h-search"
-          allowClear
-          onSearch={searchProduct}
-        />
+        <span>共{products.length}个结果</span>
         <span style={{
           paddingRight: lenght > 3 ? 36 : 20,
         }} className={classnames(
@@ -321,7 +326,7 @@ const ProductSelect: React.FC<IProps> = props => {
     </div>
     <div className={styles.layoutRight}>
       <header className={styles.head}>
-        <span>已选商品</span>
+        <span>已选商品({selectProduct.length})</span>
         <span style={{
           paddingRight: selects.length > 3 ? 36 : 20,
         }} className={classnames(

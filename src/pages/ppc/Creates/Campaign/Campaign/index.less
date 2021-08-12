@@ -119,12 +119,21 @@
       margin-bottom: 20px;
 
       :global(.ant-form-item-control) {
-        max-width: 200px;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      :global(.ant-form-item-explain-error) {
+        margin-left: 14px;
+      }
+
+      :global(.ant-form-item-control-input) {
+        width: 200px;
       }
 
       input {
         text-align: center;
-        padding-right: 32px;
+        padding-right: 60px;
       }
     }
   }

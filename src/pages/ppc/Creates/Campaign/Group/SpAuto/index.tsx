@@ -34,11 +34,12 @@ interface IProps {
   currency: string;
   autoGroupBidType: string; // 投放方式是手动还是自动
   marketplace: string;
+  campaignDailyBudget: string;
 }
 
 const { Item } = Form;
 const SpAuto: React.FC<IProps> = props => {
-  const { currency, autoGroupBidType, marketplace } = props;
+  const { currency, autoGroupBidType, marketplace, campaignDailyBudget } = props;
 
   const dispatch = useDispatch();
 
@@ -87,7 +88,7 @@ const SpAuto: React.FC<IProps> = props => {
     </Item>
     <div className={classnames(styles.defaultBid, autoGroupBidType === 'auto' ? '' : 'none')}>
       {currency}
-      <Item name={['auto', 'defaultBid']} normalize={val => {
+      <Item label=" " name={['auto', 'defaultBid']} normalize={val => {
         if (marketplace === 'JP') {
           return strToNaturalNumStr(val);
         }
@@ -95,19 +96,22 @@ const SpAuto: React.FC<IProps> = props => {
       }}
       rules={[{
         required: true,
-        validator(rule, value) {
+        validator(_, value) {
           const min = marketplace === 'JP' ? 2 : 0.02;
           const max = marketplace === 'JP' ? 2100000000 : 1000000;
           if (isNaN(value) || value < min) {
             return Promise.reject(`广告组默认竞价至少${currency}${min}`);
+          }     
+          if (value > Number(campaignDailyBudget)) {
+            return Promise.reject(`广告组默认竞价不能超过广告活动日预算`);
           }
-
-          if (value > 1000000) {
-            return Promise.reject(`广告活动每日预算不能超过${currency}${max}`);
+          if (value > max) {
+            return Promise.reject(`广告组默认竞价不能超过${currency}${max}`);
           }
           return Promise.resolve();
         },
-      }]}>
+      }]}
+      >
         <Input placeholder={`至少${currency}${marketplace === 'JP' ? 2 : 0.02}`} autoComplete="off" />
       </Item>
     </div>

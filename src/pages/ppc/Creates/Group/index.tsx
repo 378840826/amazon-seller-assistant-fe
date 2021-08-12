@@ -67,6 +67,7 @@ const Group: React.FC = () => {
   const [tactic, setTactic] = useState('T0020');
   const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 投放方式
   const [campaignList, setCampaignList] = useState<CreateGroup.ICampaignList[]>([]);
+  const [campaignDailyBudget, setCampaignDailyBudget] = useState<number>(0); // 所属广告活动的日预算
   const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
   const [startDate, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -130,6 +131,7 @@ const Group: React.FC = () => {
       setPutMathod(firstData.targetingType || 'classProduct'); // sd 分类/商品
       setCampaignType(firstData.campaignType);
       setTactic(firstData.tactic);
+      setCampaignDailyBudget(firstData.dailyBudget || firstData.budget);
     }
   }, [form, campaignList]);
 
@@ -141,6 +143,7 @@ const Group: React.FC = () => {
         setPutMathod(item.targetingType || 'classProduct'); // sd 分类/商品
         setCampaignType(item.campaignType);
         setTactic(item.tactic);
+        setCampaignDailyBudget(item.dailyBudget || item.budget);
         break;
       }
     }
@@ -187,6 +190,7 @@ const Group: React.FC = () => {
       data.endData = moment(data.endData).format('YYYY-MM-DD');
     }
 
+    data.name = data.name.trim();
     if (['', undefined, null].includes(data.name)) {
       message.error('广告组名称不能为空！');
       return;
@@ -293,7 +297,8 @@ const Group: React.FC = () => {
     <nav className={styles.nav}>
       <Snav navList={navList}/>
     </nav>
-    <Form form={form} 
+    <Form
+      form={form} 
       colon={false} 
       labelAlign="left"
       initialValues={{
@@ -303,7 +308,12 @@ const Group: React.FC = () => {
         },
       }}
     >
-      <Item name="campaignId" label="选择广告活动：" className={styles.campaignSelect}>
+      <Item
+        name="campaignId"
+        label="选择广告活动："
+        className={styles.campaignSelect}
+        rules={[{ required: true }]}
+      >
         <Select 
           dropdownClassName={styles.campaignSelect} 
           onChange={campaignChange}
@@ -322,17 +332,26 @@ const Group: React.FC = () => {
         className={styles.name}
         rules={[{
           required: true,
-          min: 1,
-          max: 255,
-          message: '广告组名称长度不能为0或大于256位！',
-        }]}>
+          validator: (_, value: string) => {
+            if ([undefined, null, ''].includes(value) || value.trim().length === 0) {
+              return Promise.reject();
+            }
+            return Promise.resolve();
+          },
+          message: '广告组名称不能为空！',
+        }]}
+      >
         <Input maxLength={255}/>
       </Item>
       <div className={styles.product}>
         <ProductSelect getSelectProduct={getSelectProduct}/>
       </div>
       <div className={classnames(putMathod === 'auto' ? '' : 'none')}>
-        <SpAuto currency={currency} marketplace={marketplace}/>
+        <SpAuto
+          currency={currency}
+          marketplace={marketplace}
+          campaignDailyBudget={campaignDailyBudget}
+        />
       </div>
       
       <div className={classnames(putMathod === 'manual' || putMathod === 'classProduct' ? '' : 'none')}>
@@ -344,6 +363,7 @@ const Group: React.FC = () => {
           campaignType={campaignType}
           tactic={tactic}
           putMathod={putMathod}
+          campaignDailyBudget={campaignDailyBudget}
         />
       </div>
       <div className={styles.rangeDate}>
