@@ -33,6 +33,8 @@ interface IProps {
   currency: API.Site;
   marketplace: string;
   storeId: number|string;
+  /** 广告活动日预算 */
+  campaignDailyBudget: string;
 }
 
 interface IPage extends ConnectProps {
@@ -76,7 +78,7 @@ function getUniqueKeywordList(list: CampaignCreate.IKeyword[]) {
 }
 
 const SPManual: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId } = props;
+  const { form, currency, marketplace, storeId, campaignDailyBudget } = props;
   const dispatch = useDispatch();
   const selectProducts = useSelector((state: IPage) => state.createCampagin.selectProduct);
 
@@ -192,6 +194,11 @@ const SPManual: React.FC<IProps> = props => {
       message.error(`竞价不能小于${defaultBidMin}`);
       return Promise.resolve(false);
     }
+    // 不能超过广告活动的日预算
+    if (val > Number(campaignDailyBudget)) {
+      message.error(`竞价不能超过广告活动日预算`);
+      return Promise.resolve(false);
+    }
     const newList = [...selectedKeywordsList];
     const index = newList.findIndex(item => (
       item.keywordText === record.keywordText && item.matchType === record.matchType
@@ -203,7 +210,27 @@ const SPManual: React.FC<IProps> = props => {
 
   // 建议关键词全部添加
   const addAllKeyword = () => {
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
+      return;
+    }
+    // 未勾选匹配方式时
+    if (candidateMatchTypes.length === 0) {
+      message.warning('请先勾选匹配方式');
+      return;
+    }
     const defaultBid = form.getFieldValue('defaultBid');
+    // 默认竞价未填写时，或小于最低竞价，禁止选择关键词
+    if ([undefined, null, ''].includes(defaultBid)) {
+      message.error('关键词竞价不能为空，请填写默认竞价');
+      return;
+    }
+    if (Number(defaultBid) < defaultBidMin) {
+      message.error(`关键词竞价不能低于${defaultBidMin}`);
+      return;
+    }
     // 按已选匹配方式生成关键词列表
     const all = createKeywords(suggestedKeywords, candidateMatchTypes, Number(defaultBid));
     // 去重
@@ -213,13 +240,19 @@ const SPManual: React.FC<IProps> = props => {
 
   // 建议关键词单个添加
   function handleSelectKeyword(record: CampaignCreate.IKeyword) {
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
+      return;
+    }
     const defaultBid = form.getFieldValue('defaultBid');
     if ([undefined, null, ''].includes(defaultBid)) {
       message.error('关键词竞价不能为空，请填写默认竞价');
       return;
     }
     if (Number(defaultBid) < defaultBidMin) {
-      message.error(`关键词竞价必须大于等于${defaultBidMin}`);
+      message.error(`关键词竞价不能低于${defaultBidMin}`);
       return;
     }
     const newList = [
@@ -240,6 +273,17 @@ const SPManual: React.FC<IProps> = props => {
       message.error('请输入关键词');
       return;
     }
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
+      return;
+    }
+    // 未勾选匹配方式时
+    if (candidateMatchTypes.length === 0) {
+      message.warning('请先勾选匹配方式');
+      return;
+    }
     const defaultBid = form.getFieldValue('defaultBid');
     if ([undefined, null, ''].includes(defaultBid)) {
       message.error('关键词竞价不能为空，请填写默认竞价');
@@ -250,6 +294,13 @@ const SPManual: React.FC<IProps> = props => {
     // 去重
     const newList = getUniqueKeywordList([...all, ...selectedKeywordsList]);
     setSelectedKeywordsList(newList);
+    // 此次批量输入去重后成功添加的关键词(+匹配方式)数量
+    const newKwSum = newList.length - selectedKeywordsList.length;
+    if (newKwSum) {
+      message.success(`${newKwSum}个关键词添加成功`);
+    } else {
+      message.success('输入的关键词均已添加');
+    }
   }
 
   // 输入关键词改变时、改变添加按钮的状态
@@ -313,6 +364,11 @@ const SPManual: React.FC<IProps> = props => {
     }
     if (Number(data.value) < defaultBidMin) {
       message.error(`竞价不能小于${defaultBidMin}`);
+      return;
+    }
+    // 不能超过广告活动的日预算
+    if (Number(data.value) > Number(campaignDailyBudget)) {
+      message.error(`竞价不能超过广告活动日预算`);
       return;
     }
     // 因为目前只有一个固定值，其它建议竞价都拿不到，所以只写了固定值的修改

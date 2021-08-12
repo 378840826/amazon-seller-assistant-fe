@@ -28,6 +28,8 @@ interface IProps {
   marketplace: string;
   storeId: string|number;
   putMathod: CreateCampaign.putMathod;
+  /** 广告活动日预算 */
+  campaignDailyBudget: string;
 }
 
 interface IRecord {
@@ -55,7 +57,15 @@ interface IPage extends ConnectProps {
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod, campaignType } = props;
+  const {
+    form,
+    currency,
+    marketplace,
+    storeId,
+    putMathod,
+    campaignType,
+    campaignDailyBudget,
+  } = props;
   const dispatch = useDispatch();
   const selectProducts = useSelector((state: IPage) => state.createCampagin.selectProduct);
   
@@ -206,16 +216,13 @@ const ClassProduct: React.FC<IProps> = props => {
 
   // 全部添加
   const addAllSuggestClass = () => {
-    const defaultBid = form.getFieldValue('defaultBid');
-    if ([undefined, null, ''].includes(defaultBid)) {
-      message.error('默认竞价不能为空，请填写默认竞价');
-      return;
-    } 
-
-    if (Number(defaultBid) < defaultBidMin) {
-      message.error(`默认竞价必须大于等于${defaultBidMin}`);
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
       return;
     }
+    const defaultBid = form.getFieldValue('defaultBid');
 
     suggestClass.forEach(item => {
       if (item.isChecked) {
@@ -232,6 +239,12 @@ const ClassProduct: React.FC<IProps> = props => {
 
   // 添加单个建议分类
   const addOneSuggestClass = (classText: string, isChecked: boolean) => {
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
+      return;
+    }
     let data: any = {}; // eslint-disable-line
     const defaultBid = form.getFieldValue('defaultBid');
 
@@ -390,13 +403,18 @@ const ClassProduct: React.FC<IProps> = props => {
       return;
     }
 
-    message.warn('暂时建议竞价');
+    message.warn('暂无建议竞价');
   };
 
   // 批量设置竞价确定回调
   const batchsetBidConfire = (data: CreateCampaign.ICallbackDataType) => {
     if (selectedRowKeys.length === 0) {
       message.warn(`当前选中分类为${selectedRowKeys.length}个`);
+      return;
+    }
+    // 不能超过广告活动的日预算
+    if (Number(data.value) > Number(campaignDailyBudget)) {
+      message.error(`竞价不能超过广告活动日预算`);
       return;
     }
     setBatchSetBidVisible(false);
@@ -439,6 +457,16 @@ const ClassProduct: React.FC<IProps> = props => {
 
   // 右边添加的分类修改竞价的回调
   const bidCallback = (val: number, index: number) => {
+    // 竞价不能小于最低竞价
+    if (val < defaultBidMin) {
+      message.error(`竞价不能小于${defaultBidMin}`);
+      return Promise.resolve(false);
+    }
+    // 不能超过广告活动的日预算
+    if (val > Number(campaignDailyBudget)) {
+      message.error(`竞价不能超过广告活动日预算`);
+      return Promise.resolve(false);
+    }
     suggestedClass[index].bid = val;
     setSuggestedClass([...suggestedClass]);
     return Promise.resolve(true as true);

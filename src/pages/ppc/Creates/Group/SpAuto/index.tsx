@@ -33,11 +33,12 @@ export interface IRecord {
 interface IProps {
   currency: string;
   marketplace: string;
+  campaignDailyBudget: number;
 }
 
 const { Item } = Form;
 const SpAuto: React.FC<IProps> = props => {
-  const { currency, marketplace } = props;
+  const { currency, marketplace, campaignDailyBudget } = props;
 
   const dispatch = useDispatch();
 
@@ -88,7 +89,7 @@ const SpAuto: React.FC<IProps> = props => {
     </Item>
     <div className={classnames(styles.defaultBid, autoGroupBidType === 'auto' ? '' : 'none')}>
       {currency}
-      <Item name={['auto', 'defaultBid']} normalize={val => {
+      <Item name={['auto', 'defaultBid']} label=" " normalize={val => {
         if (marketplace === 'JP') {
           return strToNaturalNumStr(val);
         }
@@ -96,15 +97,27 @@ const SpAuto: React.FC<IProps> = props => {
       }}
       rules={[{
         required: true,
-        validator(rule, value) {
+        validator(_, value) {
           const min = marketplace === 'JP' ? 2 : 0.02;
+          const max = marketplace === 'JP' ? 2100000000 : 1000000;
           if (isNaN(value) || value < min) {
             return Promise.reject(`广告组默认竞价至少${currency}${min}`);
+          }     
+          if (value > campaignDailyBudget) {
+            return Promise.reject(`广告组默认竞价不能超过日预算`);
+          }
+          if (value > max) {
+            return Promise.reject(`广告组默认竞价不能超过${currency}${max}`);
           }
           return Promise.resolve();
         },
-      }]}>
-        <Input placeholder={`至少${currency}${marketplace === 'JP' ? 2 : 0.02}`} autoComplete="off" />
+      }]}
+      >
+        <Input
+          placeholder={`至少${currency}${marketplace === 'JP' ? 2 : 0.02}`}
+          autoComplete="off"
+          maxLength={10}
+        />
       </Item>
     </div>
     <div className={classnames(styles.targetingGroupTable, autoGroupBidType !== 'auto' ? '' : 'none')}>

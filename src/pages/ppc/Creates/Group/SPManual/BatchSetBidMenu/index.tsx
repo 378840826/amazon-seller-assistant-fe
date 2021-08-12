@@ -46,7 +46,7 @@ const BatchSetBidMenu: React.FC<IProps> = props => {
     }
 
     if (Number(data.value) < defaultBidMin ) {
-      message.error(`关键词竞价必须大于等于${defaultBidMin}`);
+      message.error(`关键词竞价不能低于${defaultBidMin}`);
     }
 
     if (data.oneSelect !== 'a') {

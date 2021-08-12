@@ -39,6 +39,7 @@ interface ICreateCampaignModalType {
     getThiningBrands: Effect;
     getProductAsins: Effect;
     getCampaignList: Effect;
+    createGroup: Effect;
   };
 
   reducers: {

@@ -134,13 +134,13 @@ const CampaignAdd = () => {
         reqData.tactic = campaignData.outer.sdPutMathod;
       }
 
-      const name = campaignData.name;
+      const name = campaignData.name.trim();
       const dailyBudget = campaignData.dailyBudget;
 
-      const startDate = campaignData.startDate.format('YYYY-MM-DD');
+      const startDate = campaignData.startDate.format('YYYYMMDD');
       let endDate = campaignData.endDate;
       const min = marketplace === 'JP' ? 200 : 1; // 日本站最小值200
-      endDate = endDate ? endDate.format('YYYY-MM-DD') : undefined;
+      endDate = endDate ? endDate.format('YYYYMMDD') : undefined;
 
       if (!name || name.length < 0 || name > 128) {
         campaignForm.submit();
@@ -171,6 +171,7 @@ const CampaignAdd = () => {
       reqData.adGroup.startDate = groupData ? moment(groupData).format('YYYY-MM-DD') : '';
       groupData.endDate ? reqData.adGroup.endDate = moment(groupData.endDate).format('YYYY-MM-DD') : '';
 
+      reqData.adGroup.name = reqData.adGroup.name.trim();
       if (['', undefined, null].includes(reqData.adGroup.name)) {
         message.error('广告组名称不能为空！');
         return;
@@ -233,7 +234,16 @@ const CampaignAdd = () => {
         return;
       }
 
+      // 接口要求 activeTime 等数据放到 adGroup 中
+      reqData.adGroup.activeTime = reqData.activeTime || {};
+      reqData.adGroup.activeTime.startDate = reqData.adGroup.startDate;
+      reqData.adGroup.activeTime.endDate = reqData.adGroup.endDate;
+      reqData.adGroup.activeTime.timezone = reqData.timezone;
+      reqData.adGroup.activeTime.switch = reqData.switch;
       // 删除多余参数
+      delete reqData.activeTime;
+      delete reqData.adGroup.startDate;
+      delete reqData.adGroup.endDate;
       delete reqData.adGroup.auto;
       (putMathod !== 'manual' || groupData.manualType !== 'keyword') && delete reqData.adGroup.keywords;
       delete reqData.adGroup.manualType;
@@ -388,6 +398,7 @@ const CampaignAdd = () => {
             autoGroupBidType={autoGroupBidType} 
             putMathod={putMathod} 
             form={groupForm}
+            campaignDailyBudget={campaignForm.getFieldValue('dailyBudget')}
             getTimingData={getTimingData}
             campaignType={campaignType}
             stepIndex={stepIndex}/>
