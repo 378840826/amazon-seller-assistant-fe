@@ -88,8 +88,10 @@ export default {
       'name|10-30': '',
       'campaignId|8-14': '',
       'campaignType': 'sp',
-      // 'targetingType|1': ['auto', 'manual'],
-      'targetingType|1': ['auto'],
+      'targetingType|1': ['auto', 'manual'],
+      // 'targetingType|1': ['auto'],
+      'dailyBudget|2-20': 10,
+      'budget|2-20': 10,
     }],
   }),
 };

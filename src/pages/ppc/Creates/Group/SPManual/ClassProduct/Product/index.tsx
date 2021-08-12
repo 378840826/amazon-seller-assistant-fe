@@ -41,6 +41,8 @@ interface IProps {
   marketplace: string;
   storeId: string|number;
   putMathod: CreateCampaign.putMathod;
+  /** 广告活动日预算 */
+  campaignDailyBudget: number;
 }
 
 interface ISuggestedProduct extends CreateCampaign.IProductAwaitType {
@@ -53,7 +55,16 @@ interface IPage extends ConnectProps {
 
 let selectedRowKeys: string[] = [];
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod, campaignType, tactic } = props;
+  const {
+    form,
+    currency,
+    marketplace,
+    storeId,
+    putMathod,
+    campaignType,
+    tactic,
+    campaignDailyBudget,
+  } = props;
   const selectProducts = useSelector((state: IPage) => state.createGroup.selectProduct);
   const dispatch = useDispatch();
   
@@ -243,6 +254,12 @@ const ClassProduct: React.FC<IProps> = props => {
 
   // 全部添加
   const addAllSuggestProduct = () => {
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
+      return;
+    }
     const defaultBid = form.getFieldValue('defaultBid');
     if ([undefined, null, ''].includes(defaultBid)) {
       message.error('关键词竞价不能为空，请填写默认竞价');
@@ -250,7 +267,7 @@ const ClassProduct: React.FC<IProps> = props => {
     } 
 
     if (Number(defaultBid) < defaultBidMin) {
-      message.error(`关键词竞价必须大于等于${defaultBidMin}`);
+      message.error(`关键词竞价不能低于${defaultBidMin}`);
       return;
     }
 
@@ -269,6 +286,12 @@ const ClassProduct: React.FC<IProps> = props => {
 
   // 添加单个建议商品
   const addOneSuggestProduct = (asin: string, isChecked: boolean) => {
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
+      return;
+    }
     let data: any = {}; // eslint-disable-line
     const defaultBid = form.getFieldValue('defaultBid');
 
@@ -278,7 +301,7 @@ const ClassProduct: React.FC<IProps> = props => {
     } 
 
     if (Number(defaultBid) < defaultBidMin) {
-      message.error(`关键词竞价必须大于等于${defaultBidMin}`);
+      message.error(`关键词竞价不能低于${defaultBidMin}`);
       return;
     }
 
@@ -332,13 +355,18 @@ const ClassProduct: React.FC<IProps> = props => {
       return;
     }
 
-    message.warn('暂时建议竞价');
+    message.warn('暂无建议竞价');
   };
 
   // 批量设置竞价确定回调
   const batchsetBidConfire = (data: CreateCampaign.ICallbackDataType) => {
     if (selectedRowKeys.length === 0) {
       message.warn(`当前选中关键词为${selectedRowKeys.length}个`);
+      return;
+    }
+    // 不能超过广告活动的日预算
+    if (Number(data.value) > campaignDailyBudget) {
+      message.error(`竞价不能超过广告活动日预算`);
       return;
     }
     setBatchSetBidVisible(false);
@@ -393,6 +421,12 @@ const ClassProduct: React.FC<IProps> = props => {
       return;
     }
 
+    // 默认竞价填写错误时，禁止选择关键词
+    const defaultBidError = form.getFieldsError(['defaultBid'])[0];
+    if (defaultBidError.errors.length) {
+      message.warning('请先输入正确的默认竞价');
+      return;
+    }
 
     if ([undefined, null, ''].includes(defaultBid)) {
       message.error('关键词竞价不能为空，请填写默认竞价');
@@ -400,7 +434,7 @@ const ClassProduct: React.FC<IProps> = props => {
     } 
 
     if (Number(defaultBid) < defaultBidMin) {
-      message.error(`关键词竞价必须大于等于${defaultBidMin}`);
+      message.error(`关键词竞价不能低于${defaultBidMin}`);
       return;
     }
 
@@ -415,9 +449,9 @@ const ClassProduct: React.FC<IProps> = props => {
 
       // 判断是否已添加
       for (let j = 0; j < products.length; j++) {
-        const item = products[i];
+        const item = products[j];
         if (item.asin === asin) {
-          message.error('部分ASIN已添加！');
+          message.error('ASIN已经添加！');
           flag = true;
           return;
         }
@@ -445,6 +479,11 @@ const ClassProduct: React.FC<IProps> = props => {
 
   // 右边添加的修改竞价的回调
   const bidCallback = (val: number, index: number) => {
+    // 不能超过广告活动的日预算
+    if (val > campaignDailyBudget) {
+      message.error(`竞价不能超过广告活动日预算`);
+      return Promise.resolve(false);
+    }
     products[index].bid = val;
     setProducts([...products]);
     return Promise.resolve(true as true);

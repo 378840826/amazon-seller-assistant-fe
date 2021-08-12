@@ -62,9 +62,10 @@ const Campaign: React.FC<IProps> = props => {
       validateTrigger={['onKeyUp', 'onBlur']}
       rules={[{
         required: true,
-        min: 1,
-        max: 128,
-        message: '广告活动名称长度不能为0或大于128位！',
+        validator: (_, value: string) => (
+          value.trim().length === 0 ? Promise.reject() : Promise.resolve()
+        ),
+        message: '广告活动名称不能为空！',
       }]}
     >
       <Input className={styles.input} placeholder="请输入广告活动名称" autoComplete="off" maxLength={128} />
@@ -82,7 +83,7 @@ const Campaign: React.FC<IProps> = props => {
       }}
       rules={[{
         required: true,
-        validator(rule, value) {
+        validator(_, value) {
           const min = marketplace === 'JP' ? 100 : 1;
           const max = marketplace === 'JP' ? 2100000000 : 1000000;
           if (isNaN(value) || value < min) {
@@ -96,7 +97,12 @@ const Campaign: React.FC<IProps> = props => {
         },
       }]}
     >
-      <Input className={styles.input} placeholder={`至少${currency}${marketplace === 'JP' ? 200 : 1}`} autoComplete="off" />
+      <Input
+        className={styles.input}
+        placeholder={`至少${currency}${marketplace === 'JP' ? 200 : 1}`}
+        autoComplete="off"
+        maxLength={12}
+      />
     </Item>
     <Item label="预算控制：" name="autoDefaultBid" className={classnames(
       styles.control,
@@ -178,8 +184,12 @@ const Campaign: React.FC<IProps> = props => {
           normalize={limitedInput}
           name="biddingPlacementTop"
           className={styles.topSearch}
+          rules={[{
+            validator: (_, value) => value > 900 ? Promise.reject() : Promise.resolve(),
+            message: '最大值不能超过900',
+          }]}
         >
-          <Input autoComplete="off" />
+          <Input autoComplete="off" maxLength={3} />
         </Item>
         <span className={styles.currency}>%</span>
       </div>
@@ -190,8 +200,12 @@ const Campaign: React.FC<IProps> = props => {
           normalize={limitedInput}
           name="biddingPlacementProductPage"
           className={styles.productPage}
+          rules={[{
+            validator: (_, value) => value > 900 ? Promise.reject() : Promise.resolve(),
+            message: '最大值不能超过900',
+          }]}
         >
-          <Input autoComplete="off" />
+          <Input autoComplete="off" maxLength={3} />
         </Item>
         <span className={styles.currency}>%</span>
       </div>

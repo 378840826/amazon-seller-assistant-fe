@@ -24,10 +24,20 @@ interface IProps {
   stepIndex: number;
   campaignType: CreateCampaign.ICampaignType;
   getTimingData: (values: ITimingInitValueType) => void;
+  /** 广告活动的日预算，用于限制广告组的默认竞价 */
+  campaignDailyBudget: string;
 }
 
 const Group: React.FC<IProps> = props => {
-  const { autoGroupBidType, putMathod, form, stepIndex, getTimingData, campaignType } = props;
+  const {
+    autoGroupBidType,
+    putMathod,
+    form,
+    stepIndex,
+    getTimingData,
+    campaignType,
+    campaignDailyBudget,
+  } = props;
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   
   // base
@@ -56,17 +66,27 @@ const Group: React.FC<IProps> = props => {
       className={styles.name}
       rules={[{
         required: true,
-        min: 1,
-        max: 255,
-        message: '广告组名称长度不能为0或大于255位！',
-      }]}>
+        validator: (_, value: string) => {
+          if ([undefined, null, ''].includes(value) || value.trim().length === 0) {
+            return Promise.reject();
+          }
+          return Promise.resolve();
+        },
+        message: '广告组名称不能为空！',
+      }]}
+    >
       <Input maxLength={255}/>
     </Item>
     <div className={styles.product}>
       {stepIndex === 3 ? <ProductSelect /> : ''}
     </div>
     <div className={classnames(campaignType === 'sponsoredProducts' && putMathod === 'auto' ? '' : 'none')}>
-      <SpAuto currency={currency} autoGroupBidType={autoGroupBidType} marketplace={marketplace}/>
+      <SpAuto
+        currency={currency}
+        autoGroupBidType={autoGroupBidType}
+        marketplace={marketplace}
+        campaignDailyBudget={campaignDailyBudget}
+      />
     </div>
     
     <div className={classnames(['manual', 'classProduct'].includes(putMathod) ? '' : 'none')}>
@@ -77,6 +97,7 @@ const Group: React.FC<IProps> = props => {
         marketplace={marketplace}
         storeId={id}
         putMathod={putMathod}
+        campaignDailyBudget={campaignDailyBudget}
       />
     </div>
     

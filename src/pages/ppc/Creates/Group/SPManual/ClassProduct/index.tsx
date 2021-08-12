@@ -24,11 +24,22 @@ interface IProps {
   marketplace: string;
   storeId: string|number;
   putMathod: CreateCampaign.putMathod;
+  /** 广告活动日预算 */
+  campaignDailyBudget: number;
 }
 
 const { TabPane } = Tabs;
 const ClassProduct: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod, campaignType, tactic } = props;
+  const {
+    form,
+    currency,
+    marketplace,
+    storeId,
+    putMathod,
+    campaignType,
+    tactic,
+    campaignDailyBudget,
+  } = props;
   
   const [twoNav, setTwoNav] = useState<'classify' |'product'>('classify'); // 
 
@@ -66,6 +77,7 @@ const ClassProduct: React.FC<IProps> = props => {
       marketplace={marketplace}
       storeId={storeId}
       putMathod={putMathod}
+      campaignDailyBudget={campaignDailyBudget}
     /> : <ProductComponent
       campaignType={campaignType}
       tactic={tactic}
@@ -74,6 +86,7 @@ const ClassProduct: React.FC<IProps> = props => {
       marketplace={marketplace}
       storeId={storeId}
       putMathod={putMathod}
+      campaignDailyBudget={campaignDailyBudget}
     /> }
   </div>;
 };

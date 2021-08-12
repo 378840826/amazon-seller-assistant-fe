@@ -19,11 +19,21 @@ interface IProps {
   marketplace: string;
   storeId: string|number;
   putMathod: CreateCampaign.putMathod;
+  /** 广告活动日预算 */
+  campaignDailyBudget: string;
 }
 
 const { Item } = Form;
 const SPManual: React.FC<IProps> = props => {
-  const { form, currency, marketplace, storeId, putMathod, campaignType } = props;
+  const {
+    form,
+    currency,
+    marketplace,
+    storeId,
+    putMathod,
+    campaignType,
+    campaignDailyBudget,
+  } = props;
   const [nav, setNav] = useState<'keyword'|'classify'>('keyword');
   const [batchSetBidVisible, setBatchSetBidVisible] = useState<boolean>(false); // 批量设置建议竞价显隐
   const [matchingVisible, setMatchingVisible] = useState<boolean>(false); // 批量修改匹配方式显隐
@@ -62,16 +72,23 @@ const SPManual: React.FC<IProps> = props => {
       }}
       rules={[{
         required: true,
-        validator(rule, value) {
+        validator(_, value) {
           const min = marketplace === 'JP' ? 2 : 0.02;
+          const max = marketplace === 'JP' ? 2100000000 : 1000000;
           if (isNaN(value) || value < min) {
-            return Promise.reject(`默认竞价必须大于等于${min}`);
+            return Promise.reject(`广告组默认竞价至少${currency}${min}`);
+          }
+          if (value > Number(campaignDailyBudget)) {
+            return Promise.reject(`广告组默认竞价不能超过广告活动日预算`);
+          }
+          if (value > max) {
+            return Promise.reject(`广告组默认竞价不能超过${currency}${max}`);
           }
           return Promise.resolve();
         },
       }]}
     >
-      <Input placeholder={`至少${marketplace === 'JP' ? 2 : 0.02}`} />
+      <Input placeholder={`至少${marketplace === 'JP' ? 2 : 0.02}`} maxLength={10} />
     </Item>
 
     <div className={styles.box}>
@@ -99,6 +116,7 @@ const SPManual: React.FC<IProps> = props => {
         currency={currency as API.Site}
         marketplace={marketplace}
         storeId ={storeId}
+        campaignDailyBudget={campaignDailyBudget}
       /> : <ClassProductComponent 
         campaignType={campaignType}
         form={form}
@@ -106,6 +124,7 @@ const SPManual: React.FC<IProps> = props => {
         marketplace={marketplace}
         storeId ={storeId}
         putMathod={putMathod}
+        campaignDailyBudget={campaignDailyBudget}
       />}
     </div>
   </div>;

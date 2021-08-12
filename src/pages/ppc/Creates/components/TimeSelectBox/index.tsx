@@ -63,10 +63,10 @@ let downStartX = 0; // 点击时开始的X坐标
 let downStartY = 0; // 点击时开始的Y坐标
 // let upX = 0; // 鼠标松开的X坐标
 // let upY = 0; // 鼠标松开的Y坐标
-let tds: null|NodeListOf<HTMLElement> = null; // 数据
+// let tds: null|NodeListOf<HTMLElement> = null; // 数据
 const TimeSelectBox: React.FC<ITimingSelectProps> = props => {
   const { initValues, getValues } = props;
-
+  let tds: null|NodeListOf<HTMLElement> = null; // 数据
   // 表格初始化依赖
   const [tableRows, settableRows] = useState<ITableRows>({
     head: [],
@@ -181,6 +181,7 @@ const TimeSelectBox: React.FC<ITimingSelectProps> = props => {
    */
   const setTdStatus = useCallback((endX: number, endY: number) => {
     if (tds === null) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       tds = document.querySelectorAll('#h-timing-table td:not(:first-child');
     }
    
