@@ -21,6 +21,7 @@ import Product from './Product';
 import Log from './Log';
 import { useReactToPrint } from 'react-to-print';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
+import moment from 'moment';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -34,128 +35,125 @@ interface IProps {
   onUpdateDispatch: (params: { [key: string]: string; id: string }) => Promise<boolean>;
 }
 
-interface IState {
-  datas: { a: number; b: number; c: number }[];
-}
-
 interface IPrintProps {
-  a: string;
+  data: DispatchList.IDispatchDetail; 
 }
 
 const pageStyle = `
   @media print {
+    html, body {
+      width: 100%;
+      height: initial !important;
+      overflow: initial !important;
+      -webkit-print-color-adjust: exact;
+    }
     section {page-break-before: always;}
-    h1 {page-break-after: always;}
-    .aaa {page-break-inside: avoid; color: red;}
   }
 `;
 
+const rowCount = 24; // 每页的行数
 
-let count = 0;
-const rowCount = 12; // 每页的行数
-class ComponentToPrint extends PureComponent<IPrintProps, IState> {
+
+class ComponentToPrint extends PureComponent<IPrintProps> {
   constructor(props: IPrintProps) {
     super(props);
-    this.state = {
-      datas: [
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-        { a: 1, b: 2, c: 3 },
-      ],
-    };
   }
-  
-  render() {
-    return (<div className={styles.printBox}>
-      <table>
-        <thead>
-          <tr>
-            <th>创建日期</th>
-            <th colSpan={6}>2021年4月24日15:59:32</th>
-          </tr>
-          <tr>
-            <th>创建人</th>
-            <th colSpan={6}>张三</th>
-          </tr>
-          <tr>
-            <th>Shipment名称</th>
-            <th colSpan={6}>Shipment名称Shipment名称Shipment名称</th>
-          </tr>
-          <tr>
-            <th>ShipmentID</th>
-            <th colSpan={6}>ShipmentIDShipmentIDShipmentID</th>
-          </tr>
-          <tr>
-            <th>发货单号</th>
-            <th colSpan={6}>SF49991988</th>
-          </tr>
-          <tr>
-            <th>拣货员</th>
-            <th colSpan={6}></th>
-          </tr>
-          <tr>
-            <th>MSKU</th>
-            <th>数量</th>
-            <th>FnSKU</th>
-            <th>SKU</th>
-            <th>中文名称</th>
-            <th className={styles.last}>包装方式1</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            this.state.datas.map((item: {}, index: number) => {
-              if ((index + 1) % rowCount === 0 || index + 1 === this.state.datas.length) {
-                count++;
-                return <><tr>
-                  <td 
-                    colSpan={7} 
-                    style={{ backgroundColor: 'pink', textAlign: 'right' }}
-                  >
-                      第{count}页 共{Math.ceil(this.state.datas.length / rowCount)}页
-                  </td>
-                </tr>
-                <tr>
-                  <td>data 1</td>
-                  <td>data 2</td>
-                  <td>data 3</td>
-                  <td>data 4</td>
-                  <td>data 5</td>
-                  <td>{index}</td>
-                </tr>
-                </>;
-              }
 
-              return <tr key={index}>
-                <td>data 1</td>
-                <td>data 2</td>
-                <td>data 3</td>
-                <td>data 4</td>
-                <td>data 5</td>
-                <td className={styles.last}>{index}</td>
-              </tr>;
-            })
-          }
-        </tbody>
-      </table>
-    </div>);
+  render() {
+    const { 
+      data: { 
+        gmtCreate, 
+        shippingType, 
+        userName,
+        mwsShipmentId, 
+        invoiceId, 
+        casesRequired, 
+        productItemVos, 
+      }, 
+    } = this.props;
+    return (
+      <div className={styles.printtable}>
+        <table>
+          <thead>
+            <tr>
+              <td>创建日期</td>
+              <td colSpan={5}>{gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</td>
+            </tr>
+            <tr>
+              <td>创建人</td>
+              <td colSpan={5}>{userName}</td>
+            </tr>
+            <tr>
+              <td>Shipment名称</td>
+              <td colSpan={5}>Shipment名称</td>
+            </tr>
+            <tr>
+              <td>ShipmentID</td>
+              <td colSpan={5}>{mwsShipmentId}</td>
+            </tr>
+            <tr>
+              <td>发货单号</td>
+              <td colSpan={5}>{invoiceId}</td>
+            </tr>
+            <tr>
+              <td>拣货员</td>
+              <td colSpan={5}>拣货员</td>
+            </tr>
+            <tr>
+              <td>物流方式</td>
+              <td colSpan={5}>{shippingType}</td>
+            </tr>
+            <tr>
+              <th>MSKU</th>
+              <th>发货量</th>
+              <th>FNSKU</th>
+              <th>SKU</th>
+              <th>中文名称</th>
+              <th>包装方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              (productItemVos || []).map((item, index) => {
+                let count = 0;
+                const currnetIndex = index + 1;
+                if ( 
+                  (currnetIndex > 2 && currnetIndex % rowCount === 0) 
+               || currnetIndex === productItemVos.length
+                ) {
+                  count++;
+                  return <>
+                    <tr>
+                      <td width={270} >{item.sellerSku}</td>
+                      <td width={120}>{item.issuedNum}</td>
+                      <td width={120}>{item.fnsku}</td>
+                      <td width={120}>{item.sku}</td>
+                      <td width={320}>-</td>
+                      <td width={100}>{casesRequired}</td>
+                    </tr>
+                    <tr>
+                      <td 
+                        colSpan={7} 
+                        style={{ backgroundColor: 'white', textAlign: 'right' }}
+                      >
+                       第{count}页 共{Math.ceil(productItemVos.length / rowCount)}页
+                      </td>
+                    </tr>
+                  </>;
+                }
+                return <tr key={index}>
+                  <td width={270}>{item.sellerSku}</td>
+                  <td width={120}>{item.issuedNum}</td>
+                  <td width={120}>{item.fnsku}</td>
+                  <td width={120}>{item.sku}</td>
+                  <td width={320}> -</td>
+                  <td width={100}>{casesRequired}</td>
+                </tr>;
+              })
+            }
+          </tbody>
+        </table>
+      </div>);
   }
 }
 
@@ -181,6 +179,9 @@ const Details: React.FC<IProps> = function(props) {
   const [initData, setInitData] = useState<DispatchList.IDispatchDetail|null>(null); // 
   const [productVos, setProductVos] = useState<DispatchList.IProductVos[]|null>(null); // 商品明细
   const [logs, setLogs] = useState<DispatchList.IDispatchLog[]|null>(null); // 操作日志
+  const 
+    [printdata, setPrintdata] = 
+      useState<DispatchList.IDispatchDetail>({} as DispatchList.IDispatchDetail);
   const componentRef = useRef<any>(); // eslint-disable-line
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -219,6 +220,7 @@ const Details: React.FC<IProps> = function(props) {
 
       if (code === 200) {
         setInitData({ ...data });
+        setPrintdata({ ...data });
         setProductVos([...data.productItemVos]);
         setLogs([...data.shipmentModifies]);
         return;
@@ -396,7 +398,7 @@ const Details: React.FC<IProps> = function(props) {
       </footer>
 
       <div style={{ display: 'none' }}>
-        <ComponentToPrint ref={componentRef} a="333"/>
+        <ComponentToPrint ref={componentRef} data={printdata}/>
       </div>
     </Modal>
   </div>;

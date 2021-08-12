@@ -20,6 +20,7 @@
     "dva": "^2.6.0-beta.6",
     "echarts": "^4.8.0",
     "echarts-for-react": "^2.0.16",
+    "jsbarcode": "^3.11.4",
     "moment-timezone": "^0.5.31",
     "qrcode.react": "^1.0.0",
     "react": "^16.8.6",

@@ -10,16 +10,20 @@ import GoodsImg from '@/pages/components/GoodsImg';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import { Link } from 'umi';
 import { asinPandectBaseRouter } from '@/utils/routes';
-import { 
-  message,
+import {
   Table,
 } from 'antd';
+import Label from './label';
 
 interface IParams {
   // dispose: boolean;
   // verify: boolean;
   site: API.Site;
   data: DispatchList.IProductVos[]|null; // 商品明细 ， null是未请求的初始值，不管加载后，是否有值，都返回数组
+}
+interface ILabelType{
+    modalvisible: boolean;
+    recordData: DispatchList.IProductVos;
 }
 
 const ProductCol: React.FC<IParams> = props => {
@@ -30,6 +34,22 @@ const ProductCol: React.FC<IParams> = props => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [dataSource, setDataSource] = useState<DispatchList.IProductVos[]>(data || []);
+  const [lebalModalData, setLabelModalData] = useState<ILabelType>({
+    modalvisible: false,
+    recordData: {
+      id: '-1',
+      url: '',
+      itemName: '',
+      asin1: '',
+      sku: '',
+      sellerSku: '',
+      fnsku: '',
+      issuedNum: 0,
+      receiveNum: 0,
+      disparityNum: 0,
+      locationNo: [],     
+    },   
+  });
 
   useEffect(() => {
     Array.isArray(data) && (
@@ -133,9 +153,11 @@ const ProductCol: React.FC<IParams> = props => {
       align: 'center',
       dataIndex: 'name',
       width: 100,
-      render() {
+      render(_: string, record: DispatchList.IProductVos) {
         return (
-          <span className={styles.handleCol} onClick={() => message.warning('功能未开放')}>
+          <span className={styles.handleCol} onClick={() => {
+            setLabelModalData({ modalvisible: true, recordData: record });
+          }}>
             打印标签
           </span>
         );
@@ -155,7 +177,12 @@ const ProductCol: React.FC<IParams> = props => {
     },
   };
   
-  return <Table {...productConfig}/>;
+  return <>
+    <Table {...productConfig}/>
+    <Label site={site} data={data} modalData={lebalModalData} onCancle={() => {
+      lebalModalData.modalvisible = false;setLabelModalData({ ...lebalModalData }); 
+    }}></Label>
+  </>;
 };
 
 export default ProductCol;

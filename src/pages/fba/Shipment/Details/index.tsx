@@ -6,7 +6,7 @@
  * 
  * shipment 详情
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, PureComponent } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import {
@@ -22,6 +22,8 @@ import Product from './Product';
 import Log from './Log';
 import { requestErrorFeedback } from '@/utils/utils';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
+import { useReactToPrint } from 'react-to-print';
+import moment from 'moment';
 
 interface IProps {
   visible: boolean;
@@ -37,6 +39,110 @@ interface IProps {
 interface IPage extends ConnectProps {
   fbaBase: IFbaBaseState;
 }
+interface IPrintProps {
+  data: Shipment.IShipmentDetails;
+}
+
+const pageStyle = `
+  @media print {
+    html, body {
+      width: 100%;
+      height: initial !important;
+      overflow: initial !important;
+      -webkit-print-color-adjust: exact;
+    }
+    section {page-break-before: always;}
+  }
+`;
+
+const rowCount = 24; // 每页的行数
+
+class ComponentToPrint extends PureComponent<IPrintProps> {
+  constructor(props: IPrintProps) {
+    super(props);
+  }
+
+  render() {
+    const { 
+      data: { 
+        shipmentName, 
+        userName, 
+        gmtCreate,
+        mwsShipmentId,
+        productItemVos,
+        areCasesRequired,
+      },
+    } = this.props;
+    return (<div className={styles.printtable}>
+      <table>
+        <thead>
+          <tr>
+            <td >创建日期</td>
+            <td colSpan={5}>{gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</td>
+          </tr>
+          <tr>
+            <td >创建人</td>
+            <td colSpan={5}>{userName}</td>
+          </tr>
+          <tr>
+            <td >Shipment名称</td>
+            <td colSpan={5}>{shipmentName}</td>
+          </tr>
+          <tr>
+            <td width={270}>ShipmentID</td>
+            <td colSpan={5}>{mwsShipmentId}</td>
+          </tr>
+          <tr>
+            <th>MkSKU</th>
+            <th>申报量</th>
+            <th>FnSKU</th>
+            <th>SKU</th>
+            <th>中文名称</th>
+            <th>包装方式</th>
+          </tr>
+          {(productItemVos || []).map((item, index) => {
+            let count = 0;
+            const currnetIndex = index + 1;
+            if ( 
+              (currnetIndex > 2 && currnetIndex % rowCount === 0) 
+               || currnetIndex === productItemVos.length
+            ) {
+              count++;
+              return <>
+                <tr>
+                  <td width={270} >{item.sellerSku}</td>
+                  <td width={120}>{item.declareNum}</td>
+                  <td width={120}>{item.fnsku}</td>
+                  <td width={120}>{item.sku}</td>
+                  <td width={320}>-</td>
+                  <td width={100}>{areCasesRequired }</td>
+                </tr>
+                <tr>
+                  <td 
+                    colSpan={7} 
+                    style={{ backgroundColor: 'white', textAlign: 'right' }}
+                  >
+                       第{count}页 共{Math.ceil(productItemVos.length / rowCount)}页
+                  </td>
+                </tr>
+              </>;
+            }
+            return <tr key={index}>
+              <td >{item.sellerSku}</td>
+              <td >{item.issuedNum}</td>
+              <td >{item.fnsku}</td>
+              <td >{item.sku}</td>
+              <td >-</td>
+              <td >{areCasesRequired}</td>
+            </tr>;
+            
+          })}
+        </thead>
+      </table>
+    </div>);
+  }
+}
+
 
 const { Option } = Select;
 const { Item } = Form;
@@ -60,8 +166,15 @@ const Details: React.FC<IProps> = function(props) {
   const [log, setLog] = useState<Shipment.ILogs[]>([]);
 
 
+  const componentRef = useRef<any>(); // eslint-disable-line
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+
+  //打印清单
+  const printlist = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: pageStyle,
+  });
 
   useEffect(() => {
     data && form.setFieldsValue({
@@ -314,8 +427,11 @@ const Details: React.FC<IProps> = function(props) {
         <footer className={styles.btns}>
           <Button onClick={onCancel}>取消</Button>
           <Button onClick={handleSave} type="primary">保存</Button>
-          <Button onClick={() => message.warning('功能未开放')} type="primary">打印清单</Button>
+          <Button onClick={printlist} type="primary">打印清单</Button>
         </footer>
+        <div style={{ display: 'none' }}>
+          <ComponentToPrint ref={componentRef} data={data} />
+        </div>
       </Spin>
     </Modal>
   </div>;

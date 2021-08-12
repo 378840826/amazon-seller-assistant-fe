@@ -7,7 +7,7 @@
  * 发货单列表
  *
  */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef, PureComponent } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { Iconfont, requestErrorFeedback } from '@/utils/utils';
@@ -36,6 +36,7 @@ import TableNotData from '@/components/TableNotData';
 import moment from 'moment';
 import Line from '@/components/Line';
 import { ColumnProps } from 'antd/es/table';
+import { useReactToPrint } from 'react-to-print';
 
 interface IDetailModalType {
   visible: boolean;
@@ -49,6 +50,122 @@ interface IPage extends ConnectProps {
   // logistics: ILogisticsState;
   fbaBase: IFbaBaseState;
 }
+interface IPrintType{
+  printprops: DispatchList.IDispatchDetail;
+  shipmentName: string;
+}
+
+const pageStyle = `
+  @media print {
+    section {page-break-before: always;}
+    h1 {page-break-after: always;}
+    .aaa {page-break-inside: avoid; color: red;}
+  }
+`;
+const rowCount = 24; // 每页的行数
+class IndexToPrint extends PureComponent<IPrintType>{
+  constructor(props: IPrintType) {
+    super(props);
+  }
+
+  render(){
+    const { 
+      printprops: { 
+        gmtCreate, 
+        shippingType, 
+        userName, 
+        mwsShipmentId, 
+        invoiceId, 
+        casesRequired, 
+        productItemVos, 
+      },
+      shipmentName,
+    } = this.props;
+    return (
+      <div className={styles.printtable}>
+        <table>
+          <thead>
+            <tr>
+              <td>创建日期</td>
+              <td colSpan={5}>{gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</td>
+            </tr>
+            <tr>
+              <td>创建人</td>
+              <td colSpan={5}>{userName}</td>
+            </tr>
+            <tr>
+              <td>Shipment名称</td>
+              <td colSpan={5}>{shipmentName}</td>
+            </tr>
+            <tr>
+              <td>ShipmentID</td>
+              <td colSpan={5}>{mwsShipmentId}</td>
+            </tr>
+            <tr>
+              <td>发货单号</td>
+              <td colSpan={5}>{invoiceId}</td>
+            </tr>
+            <tr>
+              <td>拣货员</td>
+              <td colSpan={5}>拣货员</td>
+            </tr>
+            <tr>
+              <td>物流方式</td>
+              <td colSpan={5}>{shippingType}</td>
+            </tr>
+            <tr>
+              <th>MSKU</th>
+              <th>发货量</th>
+              <th>FNSKU</th>
+              <th>SKU</th>
+              <th>中文名称</th>
+              <th>包装方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              (productItemVos || []).map((item, index) => {
+                let count = 0;
+                const currnetIndex = index + 1;
+                if ( 
+                  (currnetIndex > 2 && currnetIndex % rowCount === 0) 
+               || currnetIndex === productItemVos.length
+                ) {
+                  count++;
+                  return <>
+                    <tr>
+                      <td width={270} >{item.sellerSku}</td>
+                      <td width={120}>{item.issuedNum}</td>
+                      <td width={120}>{item.fnsku}</td>
+                      <td width={120}>{item.sku}</td>
+                      <td width={320}>-</td>
+                      <td width={100}>{casesRequired}</td>
+                    </tr>
+                    <tr>
+                      <td 
+                        colSpan={7} 
+                        style={{ backgroundColor: 'white', textAlign: 'right' }}
+                      >
+                       第{count}页 共{Math.ceil(productItemVos.length / rowCount)}页
+                      </td>
+                    </tr>
+                  </>;
+                }
+                return <tr key={index}>
+                  <td width={270}>{item.sellerSku}</td>
+                  <td width={120}>{item.issuedNum}</td>
+                  <td width={120}>{item.fnsku}</td>
+                  <td width={120}>{item.sku}</td>
+                  <td width={320}> -</td>
+                  <td width={100}>{casesRequired}</td>
+                </tr>;
+              })
+            }
+          </tbody>
+        </table>
+      </div>);
+  }   
+}
 
 const { Option } = Select;
 const { Item } = Form;
@@ -58,9 +175,11 @@ const symbols = {
   DELETED: 'DELETED', // 作废
 };
 
+
 let rowSelection: number[] = []; // 选中的行
 const PackageList: React.FC = function() {
   const [form] = Form.useForm();
+  const componentRef = useRef<any>();//eslint-disable-line
 
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
   const shops = useSelector((state: IPage) => state.fbaBase.shops); // 店铺列表
@@ -75,6 +194,11 @@ const PackageList: React.FC = function() {
   const [loading, setLoading] = useState<boolean>(false);
   const [sites, setSites] = useState<string[]>([]);
 
+  //传递给打印的值
+  const 
+    [printprops, setPrintprops] = 
+      useState<DispatchList.IDispatchDetail>({} as DispatchList.IDispatchDetail);
+  const [shipmentName, setShipmentName] = useState<string>('');
   // 打开发货单详情的初始值
   const [detailModal, setDateilModal] = useState<IDetailModalType>({
     visible: false,
@@ -331,6 +455,72 @@ const PackageList: React.FC = function() {
       message.error(msg);
     });
   };
+
+  //获取对应id的详情数据
+  const confirmprint = (id: string) => {
+
+    const promise = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'fbaDispatchList/getInvoiceDetail',
+        resolve,
+        reject,
+        payload: {
+          id: id,
+        },
+      });
+    });
+    promise.then(datas => {
+      const {
+        code, 
+        data,
+        message: msg,
+      } = datas as {
+        code: number;
+        data: DispatchList.IDispatchDetail;
+        message?: string;
+      };
+
+      if (code === 200) {
+        setPrintprops({ ...data });  
+        return;
+      }  
+      message.error(msg || '获取初始化数据失败！请重试');
+    });
+
+    //获取shipment名称
+    const shipmentname = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'shipment/getShipmentDetails',
+        resolve,
+        reject,
+        payload: { id },
+      });
+    });
+
+    shipmentname.then(datas => {
+      const {
+        code,
+        message: msg,
+        data,
+      } = datas as {
+        code: number;
+        message?: string;
+        data: Shipment.IShipmentDetails;
+      };
+
+      setLoading(false);
+      if (code === 200) {
+        setShipmentName(data.shipmentName);
+        return;
+      }
+      message.error(msg || '获取shipemet详情失败，请重试！');
+    });
+  };
+
+  const indexprint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: pageStyle,
+  });
   
   const columns: ColumnProps<DispatchList.IDispatchDetail>[] = [
     {
@@ -590,14 +780,25 @@ const PackageList: React.FC = function() {
           </div>
           <div>
             {
-              !['已作废', '已取消'].includes(record.state) && 
+              !['已作废', '已取消'].includes(record.state) &&
+
               <Popconfirm 
-                title="功能暂未开放"
+                title="确定打印"
                 placement="left"
                 overlayClassName={styles.cencalModal}
+                onConfirm={indexprint}
                 icon={<></>}
               >
-                <span>打印</span>
+                <span onClick={() => {
+                  confirmprint(record.id);
+                }}>打印</span>
+                <div style={{ display: 'none' }}>
+                  <IndexToPrint 
+                    ref={componentRef} 
+                    printprops={printprops} 
+                    shipmentName={shipmentName}
+                  ></IndexToPrint>
+                </div>
               </Popconfirm>
             }
             {

@@ -4,7 +4,7 @@
  * @Date: 2021-02-07 17:03:33
  * @LastEditTime: 2021-04-23 16:31:50
  */
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './index.less';
 import GoodsImg from '@/pages/components/GoodsImg';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
@@ -15,6 +15,7 @@ import {
   Table,
   message,
 } from 'antd';
+import Lebal from './label';
 
 interface IProps {
   dispose: boolean;
@@ -25,6 +26,11 @@ interface IProps {
   delProduct: (id: string) => void; // 删除商品
 }
 
+interface ILabelType {
+  modalvisible: boolean;
+  recordData: Shipment.IProductList;  
+}
+
 const Product: React.FC<IProps> = props => {
   const {
     site,
@@ -33,6 +39,22 @@ const Product: React.FC<IProps> = props => {
     delProduct,
   } = props;
 
+  const [lebalModalData, setLabelModalData] = useState<ILabelType>({
+    modalvisible: false,
+    recordData: {
+      id: '-1',
+      url: '',
+      itemName: '',
+      asin1: '',
+      sku: '',
+      sellerSku: '',
+      fnsku: '',
+      declareNum: 0,
+      issuedNum: 0,
+      receiveNum: 0,
+      mskuState: '',
+    },   
+  });
 
   const columns = [
     {
@@ -131,9 +153,11 @@ const Product: React.FC<IProps> = props => {
       align: 'center',
       dataIndex: 'id',
       width: 100,
-      render: (id: string) => (
+      render: (id: string, record: Shipment.IProductList ) => (
         <>
-          <span className={styles.handleCol} onClick={() => message.warning('功能未开放')}>打印标签</span>
+          <span className={styles.handleCol} onClick={() => {
+            setLabelModalData({ modalvisible: true, recordData: record }); 
+          }}>打印标签</span>
           <span className={styles.handleCol} onClick={() => message.warning('功能未开放')}>创建加工单</span>
           <span className={styles.handleCol} onClick={() => delProduct(id)}>删除</span>
         </>
@@ -151,7 +175,12 @@ const Product: React.FC<IProps> = props => {
     },
   };
   
-  return <Table {...productConfig}/>;
+  return <>
+    <Table {...productConfig}/>
+    <Lebal site={site} data={data} modalData={lebalModalData} onCancle={() => {
+      lebalModalData.modalvisible = false; setLabelModalData({ ...lebalModalData });
+    }}></Lebal>
+  </>;
 };
 
 export default Product;

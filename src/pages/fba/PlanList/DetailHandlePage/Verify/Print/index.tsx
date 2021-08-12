@@ -1,5 +1,4 @@
 /*
- * 打印核实单
  * @Author: your name
  * @Date: 2021-05-12 10:37:09
  * @LastEditTime: 2021-05-19 15:51:58
@@ -39,7 +38,6 @@ const pageStyle = `
   }
 `;
 
-let count = 0;
 const rowCount = 12; // 每页的行数
 
 const Print: React.FC<IProps> = props => {
@@ -55,8 +53,8 @@ const Print: React.FC<IProps> = props => {
     }
     
     render() {
-      return (<div className={styles.box}>
-        <table className={styles.table}>
+      return (<div className={styles.printtable}>
+        <table >
           <thead>
             <tr>
               <th>创建日期</th>
@@ -72,7 +70,7 @@ const Print: React.FC<IProps> = props => {
               <th>可发量</th>
               <th>FnSKU</th>
               <th>SKU</th>
-              <th>中文名称</th>
+              <th>-</th>
               <th>包装方式</th>
             </tr>
           </thead>
@@ -80,6 +78,7 @@ const Print: React.FC<IProps> = props => {
             {
               this.state.product.map((item, index: number) => {
                 const currnetIndex = index + 1;
+                let count = 0;
                 if ( 
                   (currnetIndex > 2 && currnetIndex % rowCount === 0) 
                   || currnetIndex === this.state.product.length
@@ -87,18 +86,18 @@ const Print: React.FC<IProps> = props => {
                   count++;
                   return <>
                     <tr>
-                      <td>{item.sellerSku}</td>
-                      <td>{item.declareNum}</td>
-                      <td>{item.verifyNum}</td>
-                      <td>{item.fnsku}</td>
-                      <td>{item.sellerSku}</td>
-                      <td>{item.itemNameNa ? item.itemNameNa : '—'}</td>
-                      <td>{areCasesRequired ? ' 原厂包装' : '混装'}</td>
+                      <td width={270}>{item.sellerSku}</td>
+                      <td width={120}>{item.declareNum}</td>
+                      <td width={120}>{item.verifyNum}</td>
+                      <td width={120}>{item.fnsku}</td>
+                      <td width={120}>{item.sellerSku}</td>
+                      <td width={300}>{item.itemNameNa ? item.itemNameNa : '—'}</td>
+                      <td width={100}>{areCasesRequired ? ' 原厂包装' : '混装'}</td>
                     </tr>
                     <tr>
                       <td 
                         colSpan={7} 
-                        style={{ backgroundColor: 'pink', textAlign: 'right' }}
+                        style={{ backgroundColor: 'white', textAlign: 'right' }}
                       >
                           第{count}页 共{Math.ceil(this.state.product.length / rowCount)}页
                       </td>
