@@ -68,6 +68,7 @@ export async function uploadLogisticisInfo(data: API.IParams) {
 export async function uploadPackageFile(data: API.IParams) {
   const formData = new FormData();
   formData.append('file', data.file);
+  formData.append('packagesNum', data.packagesNum); 
   return request('/api/mws/shipment/plan/packageLabels/upload', {
     method: 'POST',
     data: formData,

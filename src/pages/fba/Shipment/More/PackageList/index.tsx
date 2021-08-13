@@ -35,21 +35,26 @@ const Logisticis: React.FC<IProps> = props => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  // 确定
+  // 确定确定的回调
   const onConfirm = function () {
+
     if (fileList.length === 0) {
       message.warning('请先选择要上传的文件');
       return;
     }
 
     const data = form.getFieldsValue();
+    console.log(data, `上传数量`);
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
         type: 'shipment/uploadPackageFile',
         resolve,
         reject,
-        payload: { file: data.file.file },
+        payload: { 
+          file: data.file.file,
+          packagesNum: data.input || 1,
+        },
       });
     }).then(datas => {
       setLoading(false);
@@ -62,7 +67,6 @@ const Logisticis: React.FC<IProps> = props => {
         message.error(msg);
         return;
       }
-
       message.success(msg);
     });
   };
@@ -86,12 +90,13 @@ const Logisticis: React.FC<IProps> = props => {
       setFileList(fileList);
     },
   };
+  
 
   // 生成下载模板链接
   function getDownloadUrl() {
     const baseUrl = '/api/mws/shipment/plan/downloadPackingTemplate';
-    const num = form.getFieldValue('input') || 0;
-    return `${baseUrl}?packagesNum=${num}&mwsShipmentId=${mwsShipmentId}`;
+    const num = form.getFieldValue('input') || 1;
+    return `${baseUrl}?mwsShipmentId=${mwsShipmentId}&packagesNum=${num}`;
   }
 
   return <Popover 
@@ -119,7 +124,7 @@ const Logisticis: React.FC<IProps> = props => {
           <a
             download
             className={styles.download}
-            href={getDownloadUrl()}
+            href={getDownloadUrl()}           
           >
             下载箱单模板
           </a>

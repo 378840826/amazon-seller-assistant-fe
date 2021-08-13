@@ -751,7 +751,7 @@ const PackageList: React.FC = function() {
               <div style={{ display: 'none' }}>
                 <ComponentToPrint ref={componentRef} printprops={printprops}></ComponentToPrint>
               </div>            
-            </Popconfirm>                                                      
+            </Popconfirm>                                                                
             <More
               shipmentData={record}
               handleMarkShipped={() => handleShipmentAndDelete('SHIPPED', [record.id])}
