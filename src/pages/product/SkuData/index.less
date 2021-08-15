@@ -1,0 +1,137 @@
+.box {
+  padding: 20px 20px 0;
+  background-color: #fff;
+
+  tbody tr:not(:first-child) td {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  :global {
+    .ant-table-body {
+      border: 1px solid @divider-line-color;
+      border-top: none !important;
+    }
+
+    .ant-table-empty td,
+    .ant-table-expanded-row-fixed {
+      padding: 0 !important;
+      margin: 0;
+    }
+  }
+
+  tr:nth-child(odd) td {
+    background-color: @simple-table-header-bg;
+  }
+}
+
+.topHead {
+  margin-bottom: 20px;
+
+  button {
+    width: 116px;
+    margin-right: 20px;
+  }
+
+  .batch {
+    width: 136px;
+  }
+
+  .search {
+    width: auto !important;
+  }
+}
+
+.skuCol {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.imgCol {
+  margin: 0 auto;
+}
+
+.packVolume {
+  .oversize {
+    color: @text-color-secondary;
+  }
+}
+
+.bedNumberCol {
+  white-space: pre-wrap;
+  word-break: break-all;
+
+  .text {
+    white-space: nowrap;
+  }
+}
+
+.batchRelevanceBtn {
+  width: 136px !important;
+}
+
+.batchRelevanceBox {
+  width: 366px;
+
+  :global {
+    .ant-popover-title {
+      height: 68px;
+      line-height: 68px;
+      font-size: @font-size-lg;
+      font-weight: 600;
+    }
+
+    .ant-upload-list-item-info {
+      margin: 0 19px 0 65px;
+    }
+  }
+
+  .content {
+    position: relative;
+  }
+
+  .notFile {
+    padding: 8px 0 0 68px;
+    color: @text-color-secondary;
+    font-size: @font-size-sm;
+  }
+
+  .rightLayout {
+    padding-top: 5px;
+    position: absolute;
+    right: 25px;
+    top: 0;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+
+    button {
+      margin: 0 8px;
+    }
+  }
+}
+
+.errorBox {
+  text-align: left;
+}
+
+.batchState {
+  padding-top: 15px;
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  footer {
+    margin: 15px 0 0;
+    text-align: center;
+
+    button {
+      margin: 0 8px;
+    }
+  }
+}

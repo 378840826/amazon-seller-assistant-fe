@@ -1,0 +1,351 @@
+.box {
+  :global {
+    .ant-modal-header {
+      border-bottom: 0;
+      padding: 16px 20px 0;
+    }
+
+    .ant-modal-title {
+      font-weight: bold;
+    }
+
+    .ant-modal-body {
+      height: 605px;
+      text-align: left;
+      padding: 20px 20px 0;
+    }
+
+    .ant-modal-footer {
+      text-align: center;
+      border-top: 0;
+      padding-bottom: 20px;
+
+      button {
+        margin: 0 8px;
+      }
+    }
+  }
+}
+
+.showText {
+  color: @btn-text-color;
+  cursor: pointer;
+
+  &.active {
+    color: @primary-color;
+  }
+
+  &:hover {
+    color: @link-color;
+  }
+}
+
+.title {
+  font-weight: bold;
+  color: @heading-color;
+  padding-bottom: 8px;
+}
+
+.base {
+  display: flex;
+}
+
+.leftLayout,
+.centerLayout {
+  input {
+    width: 384px;
+  }
+
+  :global {
+    .ant-form-item-label {
+      width: 84px;
+
+      label::before {
+        position: absolute;
+        right: 0;
+      }
+    }
+
+    .ant-form-item {
+      margin-bottom: 20px;
+      margin-right: 0;
+    }
+  }
+}
+
+.leftLayout {
+  .state {
+    margin: -10px 0 14px;
+
+    :global {
+      .ant-form-item-label {
+        width: 42px;
+      }
+
+      span.ant-radio + * {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+    }
+  }
+}
+
+.centerLayout {
+  margin: 0 0 0 42px;
+}
+
+.rightLayout {
+  margin-left: 42px;
+
+  :global {
+    .ant-upload.ant-upload-select-picture-card,
+    .ant-upload-list-picture-card-container {
+      width: 74px;
+      height: 74px;
+    }
+
+    .ant-upload-list-picture-card .ant-upload-list-item {
+      padding: 2px;
+    }
+
+    .anticon-eye {
+      display: none;
+    }
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+
+    .text {
+      width: 58px;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      display: inline-block;
+      align-items: center;
+    }
+  }
+
+  .item:first-child {
+    margin-bottom: 15px;
+  }
+}
+
+.nav {
+  width: 100%;
+  border-top: 1px solid @divider-line-color;
+  padding-top: 3px;
+
+  :global {
+    .ant-tabs-nav::before {
+      border: none;
+    }
+
+    .ant-tabs-tab {
+      padding-bottom: 8px;
+    }
+  }
+}
+
+// 包装信息
+.packInfoBox {
+  input {
+    width: 112px;
+    text-align: center !important;
+  }
+
+  :global {
+    .ant-form-item {
+      margin-right: 0;
+    }
+
+    .ant-form-item-label {
+      width: 84px;
+
+      label::before {
+        position: absolute;
+        right: 0;
+      }
+    }
+
+    .ant-form-item-with-help {
+      margin-bottom: 0;
+    }
+  }
+
+  .volume {
+    display: flex;
+    height: 50px;
+  }
+
+  .star {
+    color: @heading-color;
+    margin: 6px 9px 0;
+    display: inline-block;
+  }
+
+  .oversize {
+    color: @error-color;
+    padding-left: 10px;
+  }
+
+  .packWeight {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .texture {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// 指导价
+.costPriceBox {
+  input {
+    width: 384px;
+  }
+
+  :global {
+    .ant-form-item-label {
+      width: 80px;
+    }
+
+    .ant-form-item {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.mskuBox {
+  width: 867px;
+  margin: 0 auto;
+
+  :global {
+    .ant-form-item {
+      margin-right: 0;
+    }
+  }
+
+  .form {
+    margin-bottom: 10px;
+  }
+
+  .topHead {
+    display: flex;
+  }
+
+  .site {
+    width: 140px;
+
+    :global(.ant-select-selector) {
+      border-radius: 4px 0 0 4px !important;
+    }
+  }
+
+  .search {
+    display: flex;
+  }
+
+  .shop {
+    width: 180px;
+  }
+
+  .table {
+    margin-top: 10px;
+
+    th {
+      height: 44px !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      background-color: #f3f3f3 !important;
+    }
+
+    tr:hover td {
+      background-color: @simple-table-header-bg !important;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    :global {
+      .ant-table-body {
+        border: 1px solid @divider-line-color;
+        border-top: 0;
+        overflow-y: auto !important;
+      }
+    }
+  }
+
+  .handleCol {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+}
+
+.bedNumberBox {
+  width: 760px;
+  margin: 0 auto;
+
+  :global {
+    .ant-form-item {
+      margin-right: 0;
+    }
+  }
+
+  .form {
+    margin-bottom: 10px;
+    display: flex;
+  }
+
+  .warehouses {
+    width: 160px;
+
+    :global(.ant-select-selector) {
+      border-radius: 4px 0 0 4px !important;
+    }
+  }
+
+  .locationSearch {
+    display: flex;
+    width: 200px;
+    margin-right: 20px;
+  }
+
+  .table {
+    margin-top: 10px;
+
+    th {
+      height: 44px !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      background-color: #f3f3f3 !important;
+    }
+
+    tr:hover td {
+      background-color: @simple-table-header-bg !important;
+    }
+
+    :global {
+      .ant-table-body {
+        border: 1px solid @divider-line-color;
+        border-top: 0;
+        overflow-y: auto !important;
+      }
+    }
+  }
+
+  .handleCol {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+}

@@ -7639,6 +7639,11 @@ js-yaml@^3.12.1, js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
+jsbarcode@^3.11.4:
+  version "3.11.4"
+  resolved "https://registry.nlark.com/jsbarcode/download/jsbarcode-3.11.4.tgz#00dfe90329af94269ac0808b0858206aa3a71416"
+  integrity sha1-AN/pAymvlCaawICLCFggaqOnFBY=
+
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.npm.taobao.org/jsbn/download/jsbn-0.1.1.tgz?cache=0&sync_timestamp=1589682745609&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fjsbn%2Fdownload%2Fjsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
@@ -11015,6 +11020,13 @@ react-test-renderer@^16.7.0:
     prop-types "^15.6.2"
     react-is "^16.8.6"
     scheduler "^0.19.1"
+
+react-to-print@^2.12.6:
+  version "2.12.6"
+  resolved "https://registry.nlark.com/react-to-print/download/react-to-print-2.12.6.tgz#ac4537e12528ce865a1a652dcdfb19c5b20c9cce"
+  integrity sha1-rEU34SUozoZaGmUtzfsZxbIMnM4=
+  dependencies:
+    prop-types "^15.7.2"
 
 react-transition-group@^1.2.0:
   version "1.2.1"

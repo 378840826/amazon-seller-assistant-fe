@@ -19,8 +19,10 @@ import {
   ruleAddSalesRouter,
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
-  ppcCampaignAddRouter,
   report,
+  ppcCampaignAddRouter,
+  configuration,
+  fba,
 } from '@/utils/routes';
 import { notTagShopHint } from './config/array';
 
@@ -430,6 +432,12 @@ const GlobalModel: IGlobalModelType = {
           '/sub-account',
           '/auth/index',
           report.profit,
+          configuration.logistics,
+          configuration.storageLocation,
+          configuration.warehouse,
+          fba.planList,
+          fba.shipment,
+          fba.dispatchList,
         ];
         const disabledShopSelectorUrl = [
           ppcCampaignAddRouter,
