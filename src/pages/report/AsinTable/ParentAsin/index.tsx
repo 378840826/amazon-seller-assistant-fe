@@ -109,10 +109,10 @@ const ChildAsin: React.FC<IProps> = props => {
     }
     // 查询参数
     const searchParams = {
-      size: pageSize,
-      current,
+      size: params.size || pageSize,
+      current: params.current || current,
       order: params.order || order,
-      asc: sort,
+      asc: params.asc || sort,
     };
     const payload = { baseParams, searchParams, filternparams };
     Object.assign(payload, params);
