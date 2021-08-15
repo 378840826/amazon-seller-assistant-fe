@@ -79,7 +79,7 @@ const ChildAsin: React.FC<IProps> = props => {
   // 保存当前点击筛选的偏好ID ，删除如果是当前ID,就删除掉
   const [loadPreferenceId, setLoadPreferenceId] = useState<string>('');
 
-  // 请求表格列表
+  // 请求表格列表 (参数还可以优化)
   const requestFn = useCallback((params = {}) => {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
       return;
@@ -111,7 +111,7 @@ const ChildAsin: React.FC<IProps> = props => {
     const searchParams = {
       size: pageSize,
       current,
-      order,
+      order: params.order || order,
       asc: sort,
     };
     const payload = { baseParams, searchParams, filternparams };
