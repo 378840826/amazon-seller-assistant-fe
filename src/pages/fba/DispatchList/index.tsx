@@ -62,7 +62,7 @@ const pageStyle = `
     .aaa {page-break-inside: avoid; color: red;}
   }
 `;
-const rowCount = 24; // 每页的行数
+
 class IndexToPrint extends PureComponent<IPrintType>{
   constructor(props: IPrintType) {
     super(props);
@@ -107,7 +107,7 @@ class IndexToPrint extends PureComponent<IPrintType>{
             </tr>
             <tr>
               <td>拣货员</td>
-              <td colSpan={5}>拣货员</td>
+              <td colSpan={5}></td>
             </tr>
             <tr>
               <td>物流方式</td>
@@ -124,41 +124,17 @@ class IndexToPrint extends PureComponent<IPrintType>{
           </thead>
           <tbody>
             {
-              (productItemVos || []).map((item, index) => {
-                let count = 0;
-                const currnetIndex = index + 1;
-                if ( 
-                  (currnetIndex > 2 && currnetIndex % rowCount === 0) 
-               || currnetIndex === productItemVos.length
-                ) {
-                  count++;
-                  return <>
-                    <tr>
-                      <td width={270} >{item.sellerSku}</td>
-                      <td width={120}>{item.issuedNum}</td>
-                      <td width={120}>{item.fnsku}</td>
-                      <td width={120}>{item.sku}</td>
-                      <td width={320}>-</td>
-                      <td width={100}>{casesRequired}</td>
-                    </tr>
-                    <tr>
-                      <td 
-                        colSpan={7} 
-                        style={{ backgroundColor: 'white', textAlign: 'right' }}
-                      >
-                       第{count}页 共{Math.ceil(productItemVos.length / rowCount)}页
-                      </td>
-                    </tr>
-                  </>;
-                }
-                return <tr key={index}>
-                  <td width={270}>{item.sellerSku}</td>
-                  <td width={120}>{item.issuedNum}</td>
-                  <td width={120}>{item.fnsku}</td>
-                  <td width={120}>{item.sku}</td>
-                  <td width={320}> -</td>
-                  <td width={100}>{casesRequired}</td>
-                </tr>;
+              productItemVos?.map((item, index) => {
+                return (
+                  <tr key={index}>
+                    <td width={270}>{item.sellerSku}</td>
+                    <td width={120}>{item.issuedNum}</td>
+                    <td width={120}>{item.fnsku}</td>
+                    <td width={120}>{item.sku}</td>
+                    <td width={320}> -</td>
+                    <td width={100}>{casesRequired}</td>
+                  </tr>
+                );
               })
             }
           </tbody>
@@ -456,39 +432,19 @@ const PackageList: React.FC = function() {
     });
   };
 
-  //获取对应id的详情数据
-  const confirmprint = (id: string) => {
-
-    const promise = new Promise((resolve, reject) => {
+  // 获取需要打印的数据
+  const getPrintDetails = async (id: string) => {
+    // 获取详情数据
+    const p1 = new Promise((resolve, reject) => {
       dispatch({
         type: 'fbaDispatchList/getInvoiceDetail',
         resolve,
         reject,
-        payload: {
-          id: id,
-        },
+        payload: { id },
       });
     });
-    promise.then(datas => {
-      const {
-        code, 
-        data,
-        message: msg,
-      } = datas as {
-        code: number;
-        data: DispatchList.IDispatchDetail;
-        message?: string;
-      };
-
-      if (code === 200) {
-        setPrintprops({ ...data });  
-        return;
-      }  
-      message.error(msg || '获取初始化数据失败！请重试');
-    });
-
-    //获取shipment名称
-    const shipmentname = new Promise((resolve, reject) => {
+    // 获取 shipment 名称
+    const p2 = new Promise((resolve, reject) => {
       dispatch({
         type: 'shipment/getShipmentDetails',
         resolve,
@@ -496,31 +452,38 @@ const PackageList: React.FC = function() {
         payload: { id },
       });
     });
-
-    shipmentname.then(datas => {
-      const {
-        code,
-        message: msg,
-        data,
-      } = datas as {
-        code: number;
-        message?: string;
-        data: Shipment.IShipmentDetails;
-      };
-
-      setLoading(false);
-      if (code === 200) {
-        setShipmentName(data.shipmentName);
-        return;
-      }
-      message.error(msg || '获取shipemet详情失败，请重试！');
-    });
+    const res = await Promise.all([p1, p2]);
+    const [p1Res, p2Res] = res as {
+      code: number;
+      data: DispatchList.IDispatchDetail & Shipment.IShipmentDetails;
+      message?: string;
+    }[];
+    if (p1Res.code === 200) {
+      setPrintprops({ ...p1Res.data });
+    } else {
+      throw new Error('获取打印数据失败！');
+    }
+    if (p2Res.code === 200) {
+      setShipmentName(p2Res.data.shipmentName);
+    } else {
+      throw new Error('获取打印数据失败！');
+    }
   };
 
+  // 调用打印
   const indexprint = useReactToPrint({
     content: () => componentRef.current,
     pageStyle: pageStyle,
   });
+
+  // 点击打印
+  const handlePrint = (id: string) => {
+    getPrintDetails(id).then(() => {
+      indexprint && indexprint();
+    }).catch(err => {
+      message.error(err.message);
+    });
+  };
   
   const columns: ColumnProps<DispatchList.IDispatchDetail>[] = [
     {
@@ -781,25 +744,16 @@ const PackageList: React.FC = function() {
           <div>
             {
               !['已作废', '已取消'].includes(record.state) &&
-
-              <Popconfirm 
-                title="确定打印"
-                placement="left"
-                overlayClassName={styles.cencalModal}
-                onConfirm={indexprint}
-                icon={<></>}
-              >
-                <span onClick={() => {
-                  confirmprint(record.id);
-                }}>打印</span>
+              <>
+                <span onClick={() => handlePrint(record.id)}>打印</span>
                 <div style={{ display: 'none' }}>
-                  <IndexToPrint 
-                    ref={componentRef} 
-                    printprops={printprops} 
+                  <IndexToPrint
+                    ref={componentRef}
+                    printprops={printprops}
                     shipmentName={shipmentName}
-                  ></IndexToPrint>
+                  />
                 </div>
-              </Popconfirm>
+              </>
             }
             {
               !['已作废', '已发货'].includes(record.state) &&

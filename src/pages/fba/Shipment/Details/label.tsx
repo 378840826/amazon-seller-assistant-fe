@@ -61,34 +61,36 @@ class Printpage extends PureComponent<IPrint>{
     } = this.props;
     return (<div className={styles.printstyle}>
       <div className={styles.firstdiv}>
-        {tabledata.map((item, index) => {
-          return (<>
-            {item.issuuednumdata.map((key, i) => {
-              return (
-                <div 
-                  style={{ width: columnnumprops, height: lebalheightprops }} 
-                  className={styles.flex} key={index}>
-                  <div style={{ width: lebalwidthprops }} className={styles.divlebal}>
-                    <div className={styles.centerlebal} key={i}>
-                      <Barcode 
-                        fontSize={barcodeFontsize} 
-                        value={item.fnsku} 
-                        barcodewidthprops={barcodewidthprops} 
-                        id={`${item.id}`}></Barcode>
-                    </div>
-                    <div>
-                      { isPrintProductname ? item.itemName : ''}
-                    </div> 
-                    <div>
-                      {isPrintSKU ? item.sku : ''}
-                    </div>
-                    <div>Made in China</div>
-                  </div>                                                  
-                </div>);
-            })
-            }
-          </>);
-        })
+        {
+          tabledata.map((item, index) => {
+            return (
+              item.issuuednumdata.map((key, i) => {
+                return (
+                  <div 
+                    style={{ width: columnnumprops, height: lebalheightprops }} 
+                    className={styles.flex}
+                    key={`${index}-${i}`}
+                  >
+                    <div style={{ width: lebalwidthprops }} className={styles.divlebal}>
+                      <div className={styles.centerlebal} key={i}>
+                        <Barcode 
+                          fontSize={barcodeFontsize} 
+                          value={item.fnsku} 
+                          barcodewidthprops={barcodewidthprops} 
+                          id={`${item.id}`}></Barcode>
+                      </div>
+                      <div>
+                        { isPrintProductname ? item.itemName : ''}
+                      </div> 
+                      <div>
+                        {isPrintSKU ? item.sku : ''}
+                      </div>
+                      <div>Made in China</div>
+                    </div>                                                  
+                  </div>);
+              })
+            );
+          })
         }             
       </div>           
     </div>);   
@@ -423,7 +425,8 @@ const Lebal: React.FC<IProps> = (props) => {
               className={styles.table}
               scroll={{ y: 276 }}
               pagination={false}
-            ></Table>                                                                      
+              rowKey="id"
+            />                                                                 
           </div>   
           <div className={styles.right}>
             <div className={styles.title} >标签预览</div>
@@ -461,33 +464,36 @@ const Lebal: React.FC<IProps> = (props) => {
         <div className={styles.a4}>
           <div className={styles.a4content}>
             <div className={styles.flex}>                                                         
-              {tabledata.map((item, index) => {
-                return (<>
-                  {item.issuuednumdata.map((key, i) => {
-                    return (
-                      <div style={{ width: columnnumprops, height: lebalheightprops }} 
-                        className={styles.flex} key={index} >
-                        <div style={{ width: lebalwidthprops }} className={styles.divlebal}>
-                          <div className={styles.centerlebal} key={i}>
-                            <Barcode 
-                              fontSize={barcodeFontsizeprops} 
-                              value={item.fnsku} 
-                              barcodewidthprops={barcodewidthprops}
-                              id={`${item.id}`}></Barcode>
-                          </div>
-                          <div>
-                            { isPrintProductname ? item.itemName : ''}
-                          </div> 
-                          <div>
-                            {isPrintSKU ? item.sku : ''}
-                          </div>
-                          <div>Made in China</div>
-                        </div>                                                  
-                      </div>);
-                  })
-                  }
-                </>);
-              })
+              {
+                tabledata.map((item, index) => {
+                  return (
+                    item.issuuednumdata.map((key, i) => {
+                      return (
+                        <div
+                          style={{ width: columnnumprops, height: lebalheightprops }} 
+                          className={styles.flex}
+                          key={index}
+                        >
+                          <div style={{ width: lebalwidthprops }} className={styles.divlebal}>
+                            <div className={styles.centerlebal} key={i}>
+                              <Barcode 
+                                fontSize={barcodeFontsizeprops} 
+                                value={item.fnsku} 
+                                barcodewidthprops={barcodewidthprops}
+                                id={`${item.id}`}></Barcode>
+                            </div>
+                            <div>
+                              { isPrintProductname ? item.itemName : ''}
+                            </div> 
+                            <div>
+                              {isPrintSKU ? item.sku : ''}
+                            </div>
+                            <div>Made in China</div>
+                          </div>                                                  
+                        </div>);
+                    })
+                  );
+                })
               }                         
             </div>
           </div>                

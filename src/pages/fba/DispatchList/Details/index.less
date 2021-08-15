@@ -285,6 +285,7 @@
 
       .singlediv {
         display: flex;
+        align-items: center;
 
         .span {
           display: inline-block;
@@ -305,6 +306,11 @@
 
         :global(.ant-form-item) {
           margin-bottom: 0;
+        }
+
+        :global(.ant-radio-wrapper) {
+          display: inline-flex;
+          align-items: center;
         }
 
         .lastspan {

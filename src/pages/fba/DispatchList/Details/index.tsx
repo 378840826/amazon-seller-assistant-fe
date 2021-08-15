@@ -51,9 +51,6 @@ const pageStyle = `
   }
 `;
 
-const rowCount = 24; // 每页的行数
-
-
 class ComponentToPrint extends PureComponent<IPrintProps> {
   constructor(props: IPrintProps) {
     super(props);
@@ -69,6 +66,7 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
         invoiceId, 
         casesRequired, 
         productItemVos, 
+        shipmentName,
       }, 
     } = this.props;
     return (
@@ -85,7 +83,7 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
             </tr>
             <tr>
               <td>Shipment名称</td>
-              <td colSpan={5}>Shipment名称</td>
+              <td colSpan={5}>{shipmentName}</td>
             </tr>
             <tr>
               <td>ShipmentID</td>
@@ -97,7 +95,7 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
             </tr>
             <tr>
               <td>拣货员</td>
-              <td colSpan={5}>拣货员</td>
+              <td colSpan={5}></td>
             </tr>
             <tr>
               <td>物流方式</td>
@@ -114,41 +112,17 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
           </thead>
           <tbody>
             {
-              (productItemVos || []).map((item, index) => {
-                let count = 0;
-                const currnetIndex = index + 1;
-                if ( 
-                  (currnetIndex > 2 && currnetIndex % rowCount === 0) 
-               || currnetIndex === productItemVos.length
-                ) {
-                  count++;
-                  return <>
-                    <tr>
-                      <td width={270} >{item.sellerSku}</td>
-                      <td width={120}>{item.issuedNum}</td>
-                      <td width={120}>{item.fnsku}</td>
-                      <td width={120}>{item.sku}</td>
-                      <td width={320}>-</td>
-                      <td width={100}>{casesRequired}</td>
-                    </tr>
-                    <tr>
-                      <td 
-                        colSpan={7} 
-                        style={{ backgroundColor: 'white', textAlign: 'right' }}
-                      >
-                       第{count}页 共{Math.ceil(productItemVos.length / rowCount)}页
-                      </td>
-                    </tr>
-                  </>;
-                }
-                return <tr key={index}>
-                  <td width={270}>{item.sellerSku}</td>
-                  <td width={120}>{item.issuedNum}</td>
-                  <td width={120}>{item.fnsku}</td>
-                  <td width={120}>{item.sku}</td>
-                  <td width={320}> -</td>
-                  <td width={100}>{casesRequired}</td>
-                </tr>;
+              productItemVos?.map((item, index) => {
+                return (
+                  <tr key={index}>
+                    <td width={270}>{item.sellerSku}</td>
+                    <td width={120}>{item.issuedNum}</td>
+                    <td width={120}>{item.fnsku}</td>
+                    <td width={120}>{item.sku}</td>
+                    <td width={320}> -</td>
+                    <td width={100}>{casesRequired}</td>
+                  </tr>
+                );
               })
             }
           </tbody>
@@ -185,7 +159,7 @@ const Details: React.FC<IProps> = function(props) {
   const componentRef = useRef<any>(); // eslint-disable-line
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    onBeforePrint: () => console.log(document.querySelector('#content')),
+    // onBeforePrint: () => console.log(document.querySelector('#content')),
     pageStyle: pageStyle,
   });
 
@@ -195,41 +169,40 @@ const Details: React.FC<IProps> = function(props) {
     if (!visible) {
       return;
     }
-
-    const promise = new Promise((resolve, reject) => {
+    // 获取需要打印的数据
+    const p1 = new Promise((resolve, reject) => {
       dispatch({
         type: 'fbaDispatchList/getInvoiceDetail',
         resolve,
         reject,
-        payload: {
-          id: data.id,
-        },
+        payload: { id: data.id },
       });
     });
-
-    promise.then(datas => {
-      const {
-        code, 
-        data,
-        message: msg,
-      } = datas as {
-        code: number;
-        data: DispatchList.IDispatchDetail;
-        message?: string;
-      };
-
-      if (code === 200) {
-        setInitData({ ...data });
-        setPrintdata({ ...data });
-        setProductVos([...data.productItemVos]);
-        setLogs([...data.shipmentModifies]);
-        return;
-      }
-      
-      message.error(msg || '获取初始化数据失败！请重试');
+    // 获取 shipment 名称
+    const p2 = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'shipment/getShipmentDetails',
+        resolve,
+        reject,
+        payload: { id: data.id },
+      });
     });
-
-    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Promise.all([p1, p2]).then((res: any) => {
+      const [p1Res, p2Res] = res;
+      if (p1Res.code === 200) {
+        setInitData({ ...p1Res.data });
+        setProductVos([...p1Res.data.productItemVos]);
+        setLogs([...p1Res.data.shipmentModifies]);
+        if (p2Res.code === 200) {
+          setPrintdata({ ...p1Res.data, shipmentName: p2Res.data.shipmentName });
+        } else {
+          message.error(p2Res.message || '获取打印数据失败！');
+        }
+      } else {
+        message.error(p1Res.message || '获取初始化数据失败！请重试');
+      }
+    });
   }, [dispatch, visible, data]);
 
   function handleSave() {
@@ -398,7 +371,7 @@ const Details: React.FC<IProps> = function(props) {
       </footer>
 
       <div style={{ display: 'none' }}>
-        <ComponentToPrint ref={componentRef} data={printdata}/>
+        <ComponentToPrint ref={componentRef} data={printdata} />
       </div>
     </Modal>
   </div>;

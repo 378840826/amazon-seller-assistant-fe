@@ -55,8 +55,6 @@ const pageStyle = `
   }
 `;
 
-const rowCount = 24; // 每页的行数
-
 class ComponentToPrint extends PureComponent<IPrintProps> {
   constructor(props: IPrintProps) {
     super(props);
@@ -100,43 +98,18 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
             <th>中文名称</th>
             <th>包装方式</th>
           </tr>
-          {(productItemVos || []).map((item, index) => {
-            let count = 0;
-            const currnetIndex = index + 1;
-            if ( 
-              (currnetIndex > 2 && currnetIndex % rowCount === 0) 
-               || currnetIndex === productItemVos.length
-            ) {
-              count++;
-              return <>
-                <tr>
-                  <td width={270} >{item.sellerSku}</td>
-                  <td width={120}>{item.declareNum}</td>
-                  <td width={120}>{item.fnsku}</td>
-                  <td width={120}>{item.sku}</td>
-                  <td width={320}>-</td>
-                  <td width={100}>{areCasesRequired }</td>
-                </tr>
-                <tr>
-                  <td 
-                    colSpan={7} 
-                    style={{ backgroundColor: 'white', textAlign: 'right' }}
-                  >
-                       第{count}页 共{Math.ceil(productItemVos.length / rowCount)}页
-                  </td>
-                </tr>
-              </>;
-            }
-            return <tr key={index}>
-              <td >{item.sellerSku}</td>
-              <td >{item.issuedNum}</td>
-              <td >{item.fnsku}</td>
-              <td >{item.sku}</td>
-              <td >-</td>
-              <td >{areCasesRequired}</td>
-            </tr>;
-            
-          })}
+          {
+            productItemVos?.map((item, index) => (
+              <tr key={index}>
+                <td width={270} >{item.sellerSku}</td>
+                <td width={120}>{item.issuedNum}</td>
+                <td width={120}>{item.fnsku}</td>
+                <td width={120}>{item.sku}</td>
+                <td width={320}>-</td>
+                <td width={100}>{areCasesRequired }</td>
+              </tr>
+            ))
+          }
         </thead>
       </table>
     </div>);

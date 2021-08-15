@@ -70,8 +70,6 @@ const pageStyle = `
   }
 `;
 
-const rowCount = 24; // 每页的行数
-
 class ComponentToPrint extends PureComponent<IPrintType> {
   constructor(props: IPrintType) {
     super(props);
@@ -108,50 +106,26 @@ class ComponentToPrint extends PureComponent<IPrintType> {
             <td colSpan={5}>{mwsShipmentId}</td>
           </tr>
           <tr>
-            <th>MkSKU</th>
+            <th>MSKU</th>
             <th>申报量</th>
             <th>FnSKU</th>
             <th>SKU</th>
             <th>中文名称</th>
             <th>包装方式</th>
           </tr>
-          {(productItemVos || []).map((item, index) => {
-            let count = 0;
-            const currnetIndex = index + 1;
-            if ( 
-              (currnetIndex > 2 && currnetIndex % rowCount === 0) 
-               || currnetIndex === productItemVos.length
-            ) {
-              count++;
-              return <>
-                <tr>
-                  <td width={270} >{item.sellerSku}</td>
-                  <td width={120}>{item.declareNum}</td>
+          {
+            productItemVos?.map(item => {
+              return (
+                <tr key={item.sellerSku}>
+                  <td width={270}>{item.sellerSku}</td>
+                  <td width={120}>{item.issuedNum}</td>
                   <td width={120}>{item.fnsku}</td>
                   <td width={120}>{item.sku}</td>
                   <td width={320}>-</td>
-                  <td width={100}>{areCasesRequired }</td>
+                  <td width={100}>{areCasesRequired}</td>
                 </tr>
-                <tr>
-                  <td 
-                    colSpan={7} 
-                    style={{ backgroundColor: 'white', textAlign: 'right' }}
-                  >
-                       第{count}页 共{Math.ceil(productItemVos.length / rowCount)}页
-                  </td>
-                </tr>
-              </>;
-            }
-
-            return <tr key={index}>
-              <td >{item.sellerSku}</td>
-              <td >{item.issuedNum}</td>
-              <td >{item.fnsku}</td>
-              <td >{item.sku}</td>
-              <td >-</td>
-              <td >{areCasesRequired}</td>
-            </tr>;   
-          })
+              );   
+            })
           }
         </thead>
       </table>
@@ -203,12 +177,7 @@ const PackageList: React.FC = function() {
     '最近180天': [moment().subtract(180, 'days'), currentDate],
     '最近365天': [moment().subtract(365, 'days'), currentDate],
   };
-  
-  //点击打印的回调
-  const printpage = useReactToPrint({
-    content: () => componentRef.current,
-    pageStyle: pageStyle,
-  });
+
   const request = useCallback((params = { currentPage: 1, pageSize: 20 }) => {
     const data = form.getFieldsValue();
     const [startTime, endTime] = data.rangeDateTime;
@@ -492,9 +461,14 @@ const PackageList: React.FC = function() {
     });
   };
 
-  //获取对应id的详情
-  const confirmprint = (id: string) => {
- 
+  // 调用打印
+  const printpage = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: pageStyle,
+  });
+
+  // 获取打印需要的数据
+  const getPrintDetails = async (id: string) => {
     const promise = new Promise((resolve, reject) => {
       dispatch({
         type: 'shipment/getShipmentDetails',
@@ -503,27 +477,30 @@ const PackageList: React.FC = function() {
         payload: { id },
       });
     });
+    const datas = await promise;
+    const {
+      code, message: msg, data,
+    } = datas as {
+      code: number;
+      message?: string;
+      data: Shipment.IShipmentDetails;
+    };
+    if (code === 200) {
+      setPrintprops({ ...data });
+      return;
+    }
+    throw new Error(msg || '获取shipemet详情失败，请重试！');
+  };
 
-    promise.then(datas => {
-      const {
-        code,
-        message: msg,
-        data,
-      } = datas as {
-        code: number;
-        message?: string;
-        data: Shipment.IShipmentDetails;
-      };
-
-      if (code === 200) {
-        setPrintprops({ ...data });
-        return;
-      }
-      message.error(msg || '获取shipemet详情失败，请重试！');
+  // 点击打印
+  const handlePrint = (id: string) => {
+    getPrintDetails(id).then(() => {
+      printpage && printpage();
+    }).catch(err => {
+      message.error(err.message);
     });
   };
 
-  
   const columns: ColumnProps<Shipment.IShipmentList>[] = [
     {
       dataIndex: 'shipmentState',
@@ -739,19 +716,10 @@ const PackageList: React.FC = function() {
             }
           </div>
           <div>
-            <Popconfirm
-              title="确定打印"
-              placement="left"
-              onConfirm={printpage}
-              overlayClassName={styles.cencalModal}
-              icon={<></>}>
-              <span onClick={() => {
-                confirmprint(record.id); 
-              }}>打印</span>
-              <div style={{ display: 'none' }}>
-                <ComponentToPrint ref={componentRef} printprops={printprops}></ComponentToPrint>
-              </div>            
-            </Popconfirm>                                                                
+            <span onClick={() => handlePrint(record.id)}>打印</span>
+            <div style={{ display: 'none' }}>
+              <ComponentToPrint ref={componentRef} printprops={printprops} />
+            </div> 
             <More
               shipmentData={record}
               handleMarkShipped={() => handleShipmentAndDelete('SHIPPED', [record.id])}

@@ -58,5 +58,6 @@ declare namespace DispatchList {
     userName: string;
     productItemVos: IProductVos[];
     shipmentModifies: IDispatchLog[];
+    shipmentName?: string;
   }
 }

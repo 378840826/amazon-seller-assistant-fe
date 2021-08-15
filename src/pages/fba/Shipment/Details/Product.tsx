@@ -173,6 +173,7 @@ const Product: React.FC<IProps> = props => {
     scroll: {
       y: 316,
     },
+    rowKey: 'id',
   };
   
   return <>

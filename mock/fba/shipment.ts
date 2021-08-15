@@ -78,7 +78,8 @@ export default {
       res.send(Mock.mock({
         code: 200,
         data: {
-          'shipmentStatus|1': ['working', 'SHIPPED'],
+          'isGenerateInvoice': true,
+          'shipmentStatus|1': 'working',
           'mwsShipmentId': 'ShipmentID',
           'shipmentName|1-10': '',
           'shipmentId|1-10': '',
@@ -105,7 +106,7 @@ export default {
           'receivingTime': random.datetime(),
           'gmtModified': random.datetime(),
           'txtUrl': random.url(),
-          'productItemVos|1-20': [
+          'productItemVos|72': [
             {
               'id|1-9999': 1, 
               'url': random.url(), 
@@ -115,10 +116,11 @@ export default {
               'sellerSku|10': '', 
               'fnsku|10': '', 
               'declareNum|1-1000': 1, 
+              'disparityNum|1-1000': 1, 
               'issuedNum|1-1000': 1, 
               'receiveNum|1-1000': 1, 
               'locationNo|1-10': [random.cname()],
-              'mskuState': ['working', 'SHIPPED'],
+              'mskuState': 'working',
             },
           ],
           'shipmentModifies|1-100': [

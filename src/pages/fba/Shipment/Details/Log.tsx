@@ -54,6 +54,7 @@ const Log: React.FC<IProps> = props => {
   ];
 
   const tableConfig = {
+    rowKey: (r: {gmtCreate: string; modifyText: string}) => `${r.gmtCreate}-${r.modifyText}`,
     pagination: false as false,
     columns: columns as [],
     dataSource: data,
