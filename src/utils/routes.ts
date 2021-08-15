@@ -55,3 +55,24 @@ export const ppcCampaignAddRouter = '/ppc/campaign/add'; // 创建广告活动
 export const ppcGroupAddRouter = '/ppc/group/add'; // 创建广告组
 export const ppcCampaginListRouter = '/ppc/manage'; // 广告活动列表
 export const ppcGroupListRouter = '/ppc/manage?tab=group'; // 广告组列表
+// 商品
+export const product = {
+  list: '/product/list', // 商品列表,
+  skuData: '/product/sku', // SKU资料管理
+};
+
+
+// FBA 
+export const fba = {
+  planList: '/fba/plan-list', // 货件计划列表
+  shipment: '/fba/shipment', // shipment
+  dispatchList: '/fba/dispatch-list', // 发货单
+};
+
+
+// 配置
+export const configuration = {
+  logistics: '/config/wuliu', // 物流方式管理
+  storageLocation: '/config/kuwei', // 库位管理
+  warehouse: '/config/warehouse', // 仓库地址管理
+};

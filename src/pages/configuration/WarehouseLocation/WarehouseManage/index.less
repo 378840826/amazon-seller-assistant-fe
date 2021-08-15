@@ -1,0 +1,97 @@
+.modalBox {
+  :global {
+    .ant-modal-title {
+      font-weight: bold;
+    }
+
+    .ant-modal-header,
+    .ant-modal-footer {
+      border-width: 0;
+      padding-bottom: 0;
+    }
+
+    .ant-modal-footer {
+      text-align: center;
+      padding-bottom: 20px;
+      padding-top: 0;
+    }
+
+    .ant-modal-body {
+      text-align: left;
+      padding-top: 14px;
+    }
+
+    .ant-form-item-label {
+      min-width: 82px;
+
+      label {
+        min-width: 82px;
+      }
+
+      label::before {
+        position: absolute;
+        right: 0;
+      }
+    }
+
+    .ant-form-item {
+      margin-bottom: 14px;
+    }
+  }
+}
+
+.input {
+  width: 390px !important;
+}
+
+.address {
+  position: relative;
+
+  .textLabel {
+    display: inline-block;
+    min-width: 82px;
+    color: @heading-color;
+  }
+
+  .inputs {
+    margin-left: 82px;
+  }
+
+  .star {
+    position: absolute;
+    left: -10px;
+    font-size: 16px;
+    top: 6px;
+    color: @error-color;
+  }
+
+  .countrySelect {
+    width: 120px;
+  }
+}
+
+.shopBox {
+  .textLabel {
+    display: inline-block;
+    min-width: 82px;
+    color: @heading-color;
+  }
+
+  .shops {
+    display: grid;
+    grid-template-columns: repeat(3, 195px);
+    grid-column-gap: 20px;
+    grid-row-gap: 4px;
+    margin-left: 82px;
+    max-height: 170px;
+    overflow-y: auto;
+
+    :global {
+      .ant-checkbox-group-item {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

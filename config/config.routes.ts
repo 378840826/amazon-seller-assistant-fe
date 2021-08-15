@@ -13,6 +13,9 @@ import {
   report,
   ppcCampaignAddRouter,
   ppcGroupAddRouter,
+  fba,
+  configuration,
+  product,
 } from '../src/utils/routes';
 
 export default [
@@ -109,6 +112,7 @@ export default [
       { title: '商品列表', path: '/product/list', component: './mws/GoodsList' },
       { title: '错误报告', path: '/product/error-report', component: './mws/ErrorReport' },
       { title: '竞品设定', path: setCompetingGoodsRouter, component: './mws/CompetingGoods' }, // 入口是商品列表
+      { title: 'SKU资料管理', path: product.skuData, component: './product/SkuData' },
       // 重定向
       { path: '/product', redirect: '/product/list' },
     ],
@@ -289,6 +293,32 @@ export default [
       { path: '/competitor', redirect: '/competitor/monitor' },
     ],
   },
+
+  // 配置
+  {
+    path: '/config',
+    component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
+    routes: [
+      { title: '物流方式管理', path: configuration.logistics, component: './configuration/Logistics' },
+      { title: '库位管理',  path: configuration.storageLocation, component: './configuration/StorageLocation'  },
+      { title: '仓库地址管理',  path: configuration.warehouse, component: './configuration/WarehouseLocation'  },
+    ]
+  },
+
+  // FBA
+  {
+    path: '/fba',
+    component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
+    routes: [
+      { title: '补货计划', path: '/fba/replenishment', component: './mws/Replenishment' },
+      { title: '货件计划',  path: fba.planList, component: './fba/PlanList'  },
+      { title: 'Shipment',  path: fba.shipment, component: './fba/Shipment'  },
+      { title: '发货单',  path: fba.dispatchList, component: './fba/DispatchList'  },
+    ]
+  },
+  
 
   // 首页
   {

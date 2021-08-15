@@ -1,0 +1,302 @@
+.modalBox {
+  :global {
+    .ant-modal-body {
+      padding: 16px 20px 0;
+      text-align: left;
+    }
+
+    .ant-modal-footer {
+      border-top: 0;
+      text-align: center;
+    }
+
+    .ant-table-empty .ant-table-expanded-row-fixed {
+      margin: 0 !important;
+    }
+  }
+}
+
+.topHead {
+  height: 21px;
+  line-height: 21px;
+  color: @heading-color;
+  font-weight: bold;
+  font-size: @font-size-lg;
+  margin-bottom: 16px;
+}
+
+.strikingText {
+  color: @heading-color;
+}
+
+.error {
+  color: @error-color !important;
+}
+
+.success {
+  color: @success-color !important;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+
+  .planId {
+    display: flex;
+
+    .text {
+      flex: 0 0 auto;
+      width: 85px;
+    }
+
+    .content {
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .content {
+    color: @heading-color;
+  }
+
+  .leftLayout {
+    min-width: 290px;
+  }
+
+  .centerLayout {
+    min-width: 380px;
+  }
+
+  .select {
+    display: inline-flex;
+    margin: 0;
+    max-height: 22px;
+    // overflow: hidden;
+
+    :global(.ant-form-item-control-input) {
+      min-height: auto;
+      height: 22px;
+      line-height: 22px;
+    }
+
+    :global(.ant-select) {
+      height: 22px;
+      color: @heading-color !important;
+    }
+
+    :global(.ant-select-selector) {
+      padding: 0 8px 0 0;
+      height: 22px;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    :global(.ant-select-selection-item) {
+      line-height: initial;
+    }
+
+    :global(.ant-form-item-control-input-content) {
+      height: 22px;
+    }
+  }
+
+  // .labeling {
+  //   width: 68px;
+  // }
+
+  // .wayPacking {
+  //   width: 85px;
+  // }
+}
+
+.navs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav {
+  margin: 20px 0 10px;
+
+  .navItem {
+    padding: 0 0 5px 0;
+    margin-right: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  .navItem.active {
+    color: @link-color;
+    border-bottom: 1px solid @primary-color;
+  }
+}
+
+//
+.productTable,
+.shipmentBox,
+.logBox {
+  :global(.ant-table-column-sorters) {
+    padding: 0 !important;
+  }
+
+  :global(.ant-table-body) {
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+    overflow-y: auto !important;
+  }
+
+  tr:last-child td {
+    border-bottom: 0 !important;
+  }
+
+  tr:hover {
+    td {
+      background-color: @simple-table-header-bg !important;
+    }
+
+    :global(.h-default-icon) {
+      opacity: 1;
+    }
+  }
+
+  th {
+    height: 44px;
+    line-height: 44px;
+    background-color: #f3f3f3 !important;
+  }
+
+  th,
+  td {
+    padding: 0 !important;
+  }
+}
+
+// 商品明细
+.productTable {
+  .handleCol {
+    color: @error-color;
+    cursor: pointer;
+  }
+
+  div.productCol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 50px 6px 0;
+    text-align: left;
+
+    .details {
+      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title {
+      width: 255px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .linkIcon {
+      color: @text-color-secondary;
+      transition: all 0.3s;
+      padding-right: 2px;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .asin {
+      width: 90px;
+      flex: 0 0 auto;
+      color: @btn-text-color;
+    }
+
+    .sku {
+      width: 160px;
+      flex: 0 0 auto;
+      white-space: pre-wrap;
+      word-break: initial;
+      line-height: 14px;
+    }
+
+    &:hover {
+      .linkIcon {
+        color: @link-color;
+      }
+    }
+  }
+
+  .applyCol {
+    .apply {
+      color: @link-color;
+      cursor: pointer;
+    }
+  }
+}
+
+.shipmentBox {
+  .notData {
+    padding: 50px 0;
+    color: @text-color-secondary;
+  }
+
+  .dateCol {
+    padding: 6px 0;
+  }
+}
+
+.logBox {
+  width: 753px;
+
+  td {
+    height: 44px;
+  }
+}
+
+.delTooltip {
+  min-width: 276px;
+  text-align: center;
+
+  :global(.ant-popover-message) {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    font-size: @font-size-lg;
+
+    :global(.anticon) {
+      position: static;
+      padding-bottom: 6px;
+      padding-bottom: 0;
+    }
+  }
+
+  :global(.ant-popover-message-title) {
+    padding-left: 12px;
+    color: @heading-color;
+  }
+
+  :global(.ant-popover-buttons) {
+    text-align: center;
+
+    button {
+      min-width: 82px;
+      height: 30px;
+      line-height: 30px;
+      font-size: @font-size-base;
+      margin: 6px 10px;
+    }
+  }
+}

@@ -1,0 +1,90 @@
+.box {
+  background-color: #fff;
+  padding: 20px;
+
+  :global {
+    .ant-table-body {
+      border: 1px solid @divider-line-color;
+      border-top: 0;
+      border-bottom: 0;
+    }
+
+    .ant-table-empty .ant-table-expanded-row-fixed {
+      margin: 0;
+    }
+  }
+
+  tr:nth-child(odd) td {
+    background: @simple-table-header-bg;
+  }
+
+  tbody tr:not(:first-child) td {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    height: 44px;
+  }
+}
+
+.topHead {
+  margin-bottom: 15px;
+}
+
+.handleCol {
+  span {
+    padding: 0 5px;
+    cursor: pointer;
+  }
+
+  .edit {
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  .delete {
+    color: @error-color;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+}
+
+.delTooltip {
+  min-width: 276px;
+  text-align: center;
+
+  :global(.ant-popover-message) {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    font-size: @font-size-lg;
+
+    :global(.anticon) {
+      position: static;
+      padding-bottom: 6px;
+      padding-bottom: 0;
+    }
+  }
+
+  :global(.ant-popover-message-title) {
+    padding-left: 12px;
+    color: @heading-color;
+  }
+
+  :global(.ant-popover-buttons) {
+    text-align: center;
+
+    button {
+      min-width: 82px;
+      height: 30px;
+      line-height: 30px;
+      font-size: @font-size-base;
+      margin: 6px 10px;
+    }
+  }
+}

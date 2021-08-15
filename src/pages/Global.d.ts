@@ -37,4 +37,15 @@ declare namespace Global {
     code: number;
     message: string;
   }
+
+  interface IOption {
+    value: string;
+    label: string;
+  }
+
+  // 排序
+  interface ISortedType {
+    order: 'ascend' | 'descend'; // 升序降序
+    columnKey: string; // 排序字段
+  }
 }
