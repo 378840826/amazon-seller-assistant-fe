@@ -506,12 +506,12 @@ const SearchTerm: React.FC = function() {
 
   // 投放关键词
   function handlePut(keywords?: IPutKeyword[]) {
-    const keywordTexts = keywords || putKeywords;
+    const creatKeywordQos = keywords || putKeywords;
     dispatch({
       type: 'adManage/putQueryKeywords',
       payload: {
         headersParams: { StoreId: currentShopId },
-        keywordTexts,
+        creatKeywordQos,
       },
       callback: requestFeedback,
     });

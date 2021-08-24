@@ -780,9 +780,11 @@ const Keyword: React.FC = function() {
       type: 'adManage/addKeyword',
       payload: {
         headersParams: { StoreId: currentShopId },
-        keywordList: selectedKeywordsList,
-        camId: addState.campaignId,
-        groupId: addState.groupId,
+        creatKeywordQos: selectedKeywordsList.map(item => ({
+          ...item,
+          camId: addState.campaignId,
+          groupId: addState.groupId,
+        })),
       },
       callback: (code: number, msg: string) => {
         requestFeedback(code, msg);
