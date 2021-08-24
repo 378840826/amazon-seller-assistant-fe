@@ -1008,6 +1008,8 @@ const AdManageModel: IAdManageModelType = {
         budgetLimit: group.budgetLimit,
         startDate: group.startTime,
         endDate: group.endTime,
+        // cpc参数后端校验用，没有实际作用
+        cpc: group.cpc,
         ...payload,
       };
       const res = yield call(updateGroup, reqParams);
@@ -1681,10 +1683,10 @@ const AdManageModel: IAdManageModelType = {
       let code = res.code;
       let message = res.message;
       if (res.code === 200) {
-        const { keywordTexts } = payload;
+        const { creatKeywordQos } = payload;
         const { data: resData } = res;
         const newPutKeywords: IPutKeyword[] = [];
-        keywordTexts.forEach((payloadItem: IPutKeyword) => {
+        creatKeywordQos.forEach((payloadItem: IPutKeyword) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           resData.forEach((resItem: any) => {
             if (
@@ -1703,7 +1705,7 @@ const AdManageModel: IAdManageModelType = {
         if (newPutKeywords.length === 0) {
           code = 200;
           message = '投放成功';
-        } else if (newPutKeywords.length === payload.keywordTexts.length) {
+        } else if (newPutKeywords.length === payload.creatKeywordQos.length) {
           code = 400;
           message = '投放失败';
         } else {
