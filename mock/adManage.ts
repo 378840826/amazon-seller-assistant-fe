@@ -1405,11 +1405,11 @@ export default {
   
   // SearchTerm报表-投放搜索词为关键词
   'POST /api/gd/management/st/add/keyword': (req: Request, res: Response) => {
-    const { body: { keywordTexts } } = req;
+    const { body: { creatKeywordQos } } = req;
     setTimeout(() => {
       res.send({
         code: 200,
-        data: keywordTexts.map((item: IPutKeyword) => {
+        data: creatKeywordQos.map((item: IPutKeyword) => {
           return {
             ...item,
             state: Math.random() > 0.5 ? 'fail' : 'success',
