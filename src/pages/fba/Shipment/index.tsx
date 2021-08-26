@@ -118,10 +118,10 @@ class ComponentToPrint extends PureComponent<IPrintType> {
               return (
                 <tr key={item.sellerSku}>
                   <td width={270}>{item.sellerSku}</td>
-                  <td width={120}>{item.issuedNum}</td>
+                  <td width={120}>{item.declareNum}</td>
                   <td width={120}>{item.fnsku}</td>
                   <td width={120}>{item.sku}</td>
-                  <td width={320}>-</td>
+                  <td width={320}>{item.nameNa ? item.nameNa : '-'}</td>
                   <td width={100}>{areCasesRequired}</td>
                 </tr>
               );   
@@ -206,9 +206,9 @@ const PackageList: React.FC = function() {
         message: msg,
         data: {
           page: {
-            current,
-            pageSize,
-            total,
+            current = 1,
+            pageSize = 20,
+            total = 0,
           },
         },
       } = datas as {
@@ -231,9 +231,6 @@ const PackageList: React.FC = function() {
         return;
       }
       message.error(msg);
-      setCurrent(1);
-      setPageSize(20);
-      setTotal(0);
     });
   }, [dispatch, form]);
 
@@ -292,7 +289,9 @@ const PackageList: React.FC = function() {
     requestSite();
     requestShop();
     getLogistics();
-  }, [request, requestSite, requestShop, getLogistics]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);//
+  // }, [request, requestSite, requestShop, getLogistics]);
 
   // 供筛选的店铺
   const shopFilter = shops.filter(shop => {
@@ -306,6 +305,7 @@ const PackageList: React.FC = function() {
   // 修改物流方式、名称、商品信息
   const handleUpdateShipment = function(params: {
     id: string;
+    shipmentName: string;
     [key: string]: string;
   }) {
     const item = shipmentList.find(item => params.id === item.id);
@@ -569,7 +569,12 @@ const PackageList: React.FC = function() {
       width: 100,
       render: (value, record) => (
         <ConfireDownList
-          onConfirm={val => handleUpdateShipment({ id: record.id, shippingType: val })}
+          onConfirm={ val => 
+            handleUpdateShipment({ 
+              id: record.id, 
+              shipmentName: record.shipmentName, 
+              shippingType: val }
+            )}
           val={value}
           dataList={logistics} 
           selectStyle={{ fontSize: 12, minWidth: 80 }}
@@ -719,11 +724,11 @@ const PackageList: React.FC = function() {
             <span onClick={() => handlePrint(record.id)}>打印</span>
             <div style={{ display: 'none' }}>
               <ComponentToPrint ref={componentRef} printprops={printprops} />
-            </div> 
+            </div>
             <More
               shipmentData={record}
               handleMarkShipped={() => handleShipmentAndDelete('SHIPPED', [record.id])}
-              handleCancelShipment={() => handleShipmentAndDelete('CANCELLED', [record.id])}
+              handleCancelShipment={() => handleShipmentAndDelete('CANCELLED', [record.id])}             
             />
           </div>
         </div>;

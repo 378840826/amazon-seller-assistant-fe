@@ -131,7 +131,7 @@ class IndexToPrint extends PureComponent<IPrintType>{
                     <td width={120}>{item.issuedNum}</td>
                     <td width={120}>{item.fnsku}</td>
                     <td width={120}>{item.sku}</td>
-                    <td width={320}> -</td>
+                    <td width={320}>{item.nameNa ? item.nameNa : '-' }</td>
                     <td width={100}>{casesRequired}</td>
                   </tr>
                 );

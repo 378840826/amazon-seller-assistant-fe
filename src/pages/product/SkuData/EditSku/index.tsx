@@ -92,7 +92,7 @@ const AddSku: React.FC<IProps> = props => {
   );
 
   // 站点改变时,修改下拉列表
-  const changeStore = function(val: string) {
+  const changeStore = function(val: string ) {
     form.setFieldsValue({
       storeName: undefined,
     });

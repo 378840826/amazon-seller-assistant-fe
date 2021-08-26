@@ -477,7 +477,7 @@ const Addplan: React.FC<IProps> = function(props) {
   const LeftTable = {
     columns: getColumns('leftColumns') as [],
     dataSource: data,
-    rowKey: (record: {asin1: string}) => record.asin1,
+    rowKey: 'contact_id',
     loading,
     locale: {
       emptyText: <span className="secondaryText">店铺无商品</span>,
@@ -491,7 +491,7 @@ const Addplan: React.FC<IProps> = function(props) {
   const rightTable = {
     columns: getColumns('rightColumns') as [],
     dataSource: selects,
-    rowKey: (record: {asin1: string}) => record.asin1,
+    rowKey: 'contact_id',
     locale: {
       emptyText: <span className="secondaryText">左边添加商品</span>,
     },

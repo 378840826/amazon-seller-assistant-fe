@@ -80,7 +80,7 @@ const SkuData: React.FC = () => {
         return;
       }
       message.error(msg || 'SKU资料管理列表请求失败！');
-    });
+    }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, state, code]);
 
   useEffect(() => {

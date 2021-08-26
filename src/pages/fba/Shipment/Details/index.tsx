@@ -31,7 +31,10 @@ interface IProps {
   dispose: boolean; // 是否已处理
   verify: boolean; // 是否已核实
   onCancel: () => void;
-  onUpdateShipment: (params: { [key: string]: string; id: string }) => Promise<boolean>;
+  onUpdateShipment: (
+    params: 
+      { [key: string]: string; id: string; shipmentName: string }
+  ) => Promise<boolean>;
   site: API.Site;
   id: string;
 }
@@ -102,10 +105,10 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
             productItemVos?.map((item, index) => (
               <tr key={index}>
                 <td width={270} >{item.sellerSku}</td>
-                <td width={120}>{item.issuedNum}</td>
+                <td width={120}>{item.declareNum}</td>
                 <td width={120}>{item.fnsku}</td>
                 <td width={120}>{item.sku}</td>
-                <td width={320}>-</td>
+                <td width={320}>{item.nameNa ? item.nameNa : '-'}</td>
                 <td width={100}>{areCasesRequired }</td>
               </tr>
             ))

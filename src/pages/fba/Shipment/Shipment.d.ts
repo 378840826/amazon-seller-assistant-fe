@@ -33,6 +33,7 @@ declare namespace Shipment {
     gmtCreate: string;
     receivingTime: string;
     gmtModified: string;
+    zipUrl: string;
   }
 
   interface IProductList {
@@ -47,6 +48,7 @@ declare namespace Shipment {
     issuedNum: number;
     receiveNum: number;
     mskuState: string;
+    nameNa: string;
   }
 
   interface ILogs {
@@ -87,5 +89,6 @@ declare namespace Shipment {
     txtUrl: string;
     productItemVos: IProductList[];
     shipmentModifies: ILogs[];
+    zipUrl: string;
   }
 }

@@ -18,7 +18,7 @@ import {
   message,
   Popconfirm,
 } from 'antd';
-import { useDispatch, useSelector, ConnectProps, IPianListState } from 'umi';
+import { useDispatch, useSelector, ConnectProps, IPianListState, history } from 'umi';
 import { labelling, wayPacking } from '../../config';
 import Line from '@/components/Line';
 import moment from 'moment';
@@ -29,6 +29,7 @@ import Product from './Product';
 import HandlePage from './HandlePage';
 import AssociatShipment from './AssociatShipment';
 import Verify from './Verify';
+import { fba } from '@/utils/routes';
 
 
 interface IProps {
@@ -37,6 +38,7 @@ interface IProps {
   storeId: string;
   showText: '详情'|'处理' | '核实';
   isinvalid: boolean; // 是否已作废
+  addSuccessCallbal: () => void;
 }
 
 interface IPage extends ConnectProps {
@@ -60,9 +62,11 @@ const Details: React.FC<IProps> = function(props) {
     storeId,
     showText,
     isinvalid,
+    addSuccessCallbal,   
   } = props;
 
   const warehouses = useSelector((state: IPage) => state.planList.warehouses);
+
   const [visible, setVisible] = useState<boolean>(false);
   const [nav, setNav] = useState<'product' | 'shipment' | 'log'>('product');
   // 用来显示不同内容的，基本：未处理, 已核实/未处理, 已处理； 处理页面是从fba已核实未处理下面的去处理点击过去的；核实页面是核实库存页面
@@ -270,6 +274,7 @@ const Details: React.FC<IProps> = function(props) {
     const tempObj = productData.find(item => item.id === id);
     tempObj && (tempObj.declareNum = String(newValue));
     setProductData([...productData]);
+    
   };
 
   const changeShipmentName = function(val: string, mwsShipmentId: string) {
@@ -319,9 +324,11 @@ const Details: React.FC<IProps> = function(props) {
     if (productData.length === 0) {
       message.warning('商品不能为空！');
       return;
-    }
+    }  
+
     const data = form.getFieldsValue();
     data.id = id;
+    data.warehouseDeId = warehouses.find(({ name: wname }) => wname === baseData.warehouseDe)?.id;
     data.areCasesRequired = data.areCasesRequired === 'true'; // 是否原包装
     data.products = productData;
     data.productIds = [...delProductIds];
@@ -342,6 +349,7 @@ const Details: React.FC<IProps> = function(props) {
       const { code, message: msg } = res as Global.IBaseResponse;
       if (code === 200) {
         message.success(msg || '修改成功！');
+        addSuccessCallbal();
         return;
       }
       message.error(msg || '修改失败！');
@@ -359,7 +367,7 @@ const Details: React.FC<IProps> = function(props) {
         item.declareNum = item.verifyNum;
       }
     }
-    
+    addSuccessCallbal();
     setProductData([...productData]);
   };
 
@@ -386,6 +394,7 @@ const Details: React.FC<IProps> = function(props) {
       setVerifyLoading(false);
       if (code === 200) {
         message.success(msg || '核实成功！');
+        addSuccessCallbal();
         setVisible(false);
         return;
       }
@@ -421,6 +430,7 @@ const Details: React.FC<IProps> = function(props) {
 
       if (code === 200) {
         message.success(msg || '成功生成！');
+        history.push(fba.shipment);
         return;
       }
 
@@ -464,9 +474,12 @@ const Details: React.FC<IProps> = function(props) {
       message.warning('商品不能为空！');
       return;
     }
+
     const payload = form.getFieldsValue();
     payload.id = id;
     payload.products = productData;
+    payload.warehouseDeId = 
+        warehouses.find(({ name: wname }) => wname === baseData.warehouseDe)?.id;
     payload.productIds = [...delProductIds];
     setCreateInvoiceLoading(true);
     const promise = new Promise((resolve, reject) => {

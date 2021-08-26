@@ -157,7 +157,7 @@ const AiMatch: React.FC<IProps> = props => {
           </div>
           <div className={styles.teoLineLayout}>
             <Radio value="match4" checked={radio === 'match4'} onClick={() => setRadio('match4')}/>
-            <span className={styles.text}>中间第</span>
+            <span className={styles.text}>倒数第</span>
             <Item name={['match4', 'start']} normalize={limitedInput} ><Input /></Item>
             <span className={styles.text}>位至末位匹配</span>
           </div>
