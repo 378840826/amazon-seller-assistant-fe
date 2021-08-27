@@ -98,7 +98,7 @@ const SpAuto: React.FC<IProps> = props => {
         required: true,
         validator(_, value) {
           const min = marketplace === 'JP' ? 2 : 0.02;
-          const max = marketplace === 'JP' ? 2100000000 : 1000000;
+          const max = marketplace === 'JP' ? 100000 : 1000;
           if (isNaN(value) || value < min) {
             return Promise.reject(`广告组默认竞价至少${currency}${min}`);
           }     
@@ -112,7 +112,17 @@ const SpAuto: React.FC<IProps> = props => {
         },
       }]}
       >
-        <Input placeholder={`至少${currency}${marketplace === 'JP' ? 2 : 0.02}`} autoComplete="off" />
+        <Input
+          placeholder={`至少${currency}${marketplace === 'JP' ? 2 : 0.02}`}
+          autoComplete="off"
+          maxLength={10}
+          onBlur={e => {
+            dataSource.forEach(item => {
+              item.bid = Number(e.target.value);
+            });
+            setDataSource([...dataSource]);
+          }}
+        />
       </Item>
     </div>
     <div className={classnames(styles.targetingGroupTable, autoGroupBidType !== 'auto' ? '' : 'none')}>

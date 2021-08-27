@@ -42,8 +42,8 @@ const Group: React.FC<IProps> = props => {
   
   // base
   const { id, currency, marketplace, timezone } = currentShop;
-  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
-  const [startDate, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
+  const siteDatetime = momentTimezone().tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
+  const [startDate, setStartDate] = useState<string>(moment(siteDatetime).format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
 
   function startDateChange (date: Moment | null) {
     const startDate = date?.format('YYYY-MM-DD HH:mm:ss');
