@@ -42,9 +42,6 @@ const Group: React.FC = function() {
   } = useSelector((state: IConnectState) => state.global.shop.current);
   // loading
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
-  // const loading = loadingEffect['adManage/fetchGroupList'];
-  // const copyGroupLoading = loadingEffect['adManage/copyGroup'];
-  // const loadingBatchSet = loadingEffect['adManage/batchGroup'];
   const loading = {
     table: loadingEffect['adManage/fetchGroupList'],
     copyGroup: loadingEffect['adManage/copyGroup'],
@@ -699,7 +696,7 @@ const Group: React.FC = function() {
       { visibleFiltrate ? <Filtrate { ...filtrateProps } /> : <Crumbs { ...crumbsProps } /> }
       <div className={commonStyles.tableToolBar}>
         <div>
-          <Link to="/ppc/group/add">
+          <Link to={`/ppc/group/add?camId=${treeSelectedInfo.campaignId}`}>
             <Button type="primary">
               创建广告组<Iconfont type="icon-zhankai" className={commonStyles.iconZhankai} />
             </Button>
