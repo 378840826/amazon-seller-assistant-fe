@@ -1,0 +1,88 @@
+.timeSelectBox {
+  background-color: #fff;
+
+  header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+
+    button {
+      margin-left: 20px;
+    }
+  }
+
+  .shadeBox {
+    position: relative;
+    overflow: hidden;
+    font-size: @font-size-sm;
+
+    .table {
+      width: 100%;
+      table-layout: fixed;
+
+      td {
+        height: 60px;
+        text-align: center;
+        cursor: default;
+        border: 1px solid #e6e6e6;
+
+        &:first-child {
+          background-color: #fafafa;
+        }
+      }
+
+      td:global(.td-select-time) {
+        border: 1px solid #fff;
+        background-color: #e7e7e7;
+      }
+
+      td[data-checked=true] {
+        background-color: #afd8ff;
+      }
+
+      thead {
+        th {
+          font-weight: bold;
+          height: 25px;
+          line-height: 25px;
+          border: 1px solid @divider-line-color;
+          text-align: center;
+          background-color: #fafafa;
+          color: @heading-color;
+
+          &:first-child {
+            min-width: 70px;
+            width: 70px;
+          }
+        }
+
+        .thHeading {
+          font-weight: normal;
+          color: @text-color;
+
+          span {
+            color: @text-color-secondary;
+          }
+        }
+
+        th.hour {
+          height: 19px;
+          line-height: 19px;
+          color: @text-color;
+          font-weight: normal;
+        }
+      }
+    }
+
+    // 遮罩
+    .shade {
+      width: 0;
+      height: 0;
+      position: absolute;
+      left: 0;
+      background: rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+      border: 1px solid @primary-color;
+    }
+  }
+}

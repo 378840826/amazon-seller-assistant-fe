@@ -1,0 +1,90 @@
+.secondary {
+  color: @text-color-secondary;
+}
+
+.bidType {
+  margin: 14px 0 0 125px;
+}
+
+.defaultBid {
+  margin: 8px 0 0 125px;
+  display: flex;
+  align-items: center;
+
+  :global(.ant-col.ant-form-item-label) {
+    min-width: 0;
+  }
+
+  :global(.ant-form-item) {
+    margin-bottom: 0;
+  }
+
+  :global(.ant-form-item-control) {
+    flex-direction: row;
+    margin-bottom: 0;
+    align-items: center;
+  }
+
+  :global(.ant-form-item-explain-error) {
+    margin-left: 14px;
+  }
+
+  input {
+    width: 400px;
+    margin-left: 10px;
+  }
+}
+
+.targetingGroupTable {
+  width: 540px;
+  margin: 5px 0 0 125px;
+
+  th {
+    background-color: #f3f3f3 !important;
+  }
+
+  tr:hover {
+    td {
+      background-color: #fafafa !important;
+    }
+
+    :global(.h-default-icon) {
+      opacity: 1 !important;
+    }
+  }
+
+  td {
+    border-bottom: 1px solid @divider-line-color;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 65px;
+  }
+
+  td:first-child {
+    border-left: 1px solid #e5e5e5;
+  }
+
+  td:last-child {
+    border-right: 1px solid #e5e5e5;
+  }
+
+  .oneRow {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+
+    > span {
+      margin-right: 5px;
+    }
+
+    button {
+      min-width: 40px;
+      border-radius: 10px;
+      margin-left: 5px;
+    }
+  }
+
+  th.thBidCol {
+    padding-right: 36px;
+  }
+}

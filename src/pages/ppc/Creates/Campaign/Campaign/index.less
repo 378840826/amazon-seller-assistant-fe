@@ -1,0 +1,144 @@
+.secondary {
+  color: @text-color-secondary;
+}
+
+// 广告活动设置
+.campaignBox {
+  margin: 20px auto 30px 390px;
+
+  label::before {
+    position: absolute;
+    right: -3px;
+    color: @error-color;
+    font-size: 20px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :global(.ant-form-item-label) {
+    min-width: 150px;
+    color: @heading-color;
+  }
+
+  .name,
+  .totalBugget {
+    margin-bottom: 0;
+
+    :global(.ant-form-item-control) {
+      flex-direction: row;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    :global(.ant-form-item-explain-error) {
+      margin-left: 14px;
+    }
+  }
+
+  .input {
+    width: 400px;
+    height: 32px;
+  }
+
+  .control {
+    .controlIcon {
+      margin-left: 5px;
+      transition: all 0.3s;
+
+      &:hover {
+        color: @warning-color;
+      }
+    }
+  }
+
+  .rangeDate {
+    display: flex;
+    align-items: center;
+
+    :global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    .text {
+      min-width: 150px;
+      color: @heading-color;
+    }
+
+    .line {
+      color: @border-color-base;
+      margin: 0 6px;
+    }
+
+    .date {
+      width: 158px;
+
+      input {
+        text-align: center;
+      }
+    }
+  }
+
+  .putMathod {
+    margin: 10px 0 12px;
+
+    .putMathodAuto {
+      margin-right: 10px;
+    }
+  }
+
+  .bidding {
+    margin-bottom: 20px;
+
+    :global(.ant-form-item-control) {
+      max-width: 200px;
+      text-align: center;
+
+      :global(.ant-select-selector) {
+        height: 32px;
+      }
+
+      :global(.ant-select-selection-item) {
+        line-height: 30px;
+      }
+    }
+  }
+
+  .commonInput {
+    position: relative;
+
+    .currency {
+      position: absolute;
+      left: 300px;
+      top: 4px;
+      color: @text-color-secondary;
+    }
+
+    .topSearch,
+    .productPage {
+      margin-bottom: 20px;
+
+      :global(.ant-form-item-control) {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      :global(.ant-form-item-explain-error) {
+        margin-left: 14px;
+      }
+
+      :global(.ant-form-item-control-input) {
+        width: 200px;
+      }
+
+      input {
+        text-align: center;
+        padding-right: 60px;
+      }
+    }
+  }
+}
+
+.spCapacity {
+  margin-top: 20px;
+}

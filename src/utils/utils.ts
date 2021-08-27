@@ -5,10 +5,9 @@ import { message } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { moneyFormat } from '@/utils/huang';
 
-
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
-  scriptUrl: '//at.alicdn.com/t/font_1799129_oo2x8u58u7o.js',
+  scriptUrl: '//at.alicdn.com/t/font_1799129_trsxcn53gyg.js',
 });
 
 // 获取亚马逊站点基本链接

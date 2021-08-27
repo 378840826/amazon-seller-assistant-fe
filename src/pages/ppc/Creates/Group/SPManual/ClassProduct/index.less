@@ -1,0 +1,169 @@
+.box {
+  padding: 0 15px 15px;
+  background-color: #fafafa;
+
+  .head {
+    width: 425px;
+
+    :global(.ant-tabs-nav) {
+      margin-bottom: 10px;
+
+      &::before {
+        border-bottom: 1px solid #dfdfdf;
+      }
+    }
+
+    :global(.ant-tabs-tab-btn[aria-selected=true]) {
+      color: @link-color;
+    }
+  }
+}
+//  ---分类/商品共有 start---------------------------------------------
+.classBox,
+.productBox {
+  display: flex;
+  justify-content: space-between;
+
+  :global(.ant-table-body) {
+    height: 226px;
+    overflow-y: auto !important;
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+  }
+
+  :global(.ant-table-row-selected) td {
+    background-color: transparent !important;
+  }
+
+  tr:global(.ant-table-row-selected:hover) > td,
+  tr:hover td {
+    background-color: #fafafa !important;
+  }
+
+  th {
+    background-color: #f3f3f3 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    height: 44px !important;
+    line-height: 44px !important;
+  }
+
+  .leftLayout {
+    width: 425px;
+    flex: 0 0 auto;
+
+    .threeNav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+
+      nav {
+        span {
+          padding-right: 20px;
+          cursor: pointer;
+        }
+
+        span.active {
+          color: @link-color;
+        }
+      }
+
+      .allBtn {
+        color: @btn-text-color;
+        cursor: pointer;
+        transition: all 0.3s;
+        padding-right: 24px;
+
+        &.paddingRight {
+          padding-right: 38px;
+        }
+
+        &:hover {
+          color: @link-color;
+        }
+      }
+    }
+  }
+}
+//  ---分类/商品共有 end-----------------------------------------------
+
+//  ---分类 start------------------------------------------------
+.classBox {
+  .leftLayout {
+    .classCol {
+      .thining {
+        color: @link-color;
+        padding-left: 20px;
+        cursor: pointer;
+      }
+
+      .path {
+        color: @text-color-secondary;
+      }
+    }
+
+    .handleCol {
+      color: @btn-text-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: @link-color;
+      }
+    }
+
+    .handleCol.active {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+
+    .searchClass {
+      background-color: #fff;
+      width: 100%;
+      height: 270px;
+      line-height: 270px;
+      border: 1px solid #e5e5e5;
+      border-radius: @border-radius-base;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+    }
+  }
+
+  .rightLayout {
+    width: 653px;
+    margin-left: 40px;
+    margin-top: -12px;
+
+    tr:hover :global(.h-default-icon) {
+      opacity: 1 !important;
+    }
+
+    header {
+      display: flex;
+      margin: 0 0 10px;
+
+      button {
+        width: 106px;
+        min-width: 106px;
+        margin-right: 10px;
+        padding: 3px 10px;
+      }
+    }
+
+    td.thKeywordCol {
+      padding-right: 0;
+    }
+
+    .handleCol {
+      color: @error-color;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        color: #ff000d;
+      }
+    }
+  }
+}
+//  ---分类 end------------------------------------------------

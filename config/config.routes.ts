@@ -10,7 +10,9 @@ import {
   ruleAddCompetitorRouter,
   ruleHistoryRouter,
   setCompetingGoodsRouter,
-  report
+  report,
+  ppcCampaignAddRouter,
+  ppcGroupAddRouter,
 } from '../src/utils/routes';
 
 export default [
@@ -221,6 +223,8 @@ export default [
       { title: '广告管理', path: '/ppc/manage/group/target', component: './ppc/AdManage/AutoGroupTarget' },
       { title: '广告管理', path: '/ppc/manage/group/time', component: './ppc/AdManage/GroupTime' },
       { title: '广告店铺授权', path: '/ppc/shop/list', component: './UncompletedPage' },
+      { title: '创建广告活动', path: ppcCampaignAddRouter, component: './ppc/Creates/Campaign' },
+      { title: '创建广告组', path: ppcGroupAddRouter, component: './ppc/Creates/Group' },
       // 以下为重定向路由
       { path: '/ppc', redirect: '/ppc/manage' },
     ],

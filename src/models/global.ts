@@ -20,6 +20,7 @@ import {
   ruleAddCartRouter,
   ruleAddCompetitorRouter,
   report,
+  ppcCampaignAddRouter,
 } from '@/utils/routes';
 import { notTagShopHint } from './config/array';
 
@@ -429,7 +430,7 @@ const GlobalModel: IGlobalModelType = {
           report.profit,
         ];
         const disabledShopSelectorUrl = [
-          '/ppc/campaign/add',
+          ppcCampaignAddRouter,
           '/ppc/group/add',
           '/competitor/history',
           '/competitor/list',

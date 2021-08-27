@@ -1,0 +1,127 @@
+// 自动广告组
+.groupBox {
+  width: 1306px;
+  padding: 25px 20px 0;
+  margin: 50px auto 0;
+  background-color: #fff;
+  position: relative;
+
+  :global(.ant-table-empty) {
+    tr:global(.ant-table-placeholder) td {
+      border-bottom: 0 !important;
+      height: 44px !important;
+      padding: 0 !important;
+    }
+
+    tr:hover {
+      td {
+        background-color: transparent !important;
+      }
+    }
+  }
+
+  .nav {
+    position: absolute;
+    top: -31px;
+    left: 0;
+  }
+
+  label::before {
+    position: absolute;
+    right: -3px;
+    color: @error-color;
+    font-size: 20px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :global(.ant-form-item-label) {
+    min-width: 125px;
+    color: @heading-color;
+  }
+
+  .name {
+    margin-bottom: 0;
+
+    input {
+      width: 400px;
+      height: 32px;
+    }
+
+    :global(.ant-form-item-control) {
+      flex-direction: row;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    :global(.ant-form-item-explain-error) {
+      margin-left: 14px;
+    }
+  }
+
+  .product {
+    margin: 0 0 0 125px;
+  }
+
+  .rangeDate {
+    display: flex;
+    align-items: center;
+    margin: 20px 0 13px;
+
+    :global(.ant-form-item) {
+      margin-bottom: 0;
+    }
+
+    .text {
+      min-width: 125px;
+      color: @heading-color;
+    }
+
+    .line {
+      color: @border-color-base;
+      margin: 0 6px;
+    }
+
+    .date {
+      width: 158px;
+
+      input {
+        text-align: center;
+      }
+    }
+  }
+
+  .timing {
+    position: relative;
+
+    .switch {
+      position: absolute;
+      margin-top: 3px;
+    }
+
+    :global(.h-timing) {
+      margin-left: 125px;
+    }
+  }
+
+  footer.btns {
+    text-align: center;
+    padding: 30px 0 20px;
+
+    button {
+      margin: 0 10px;
+    }
+  }
+}
+
+.campaignSelect {
+  // width: 400px;
+  :global(.ant-form-item-control-input) {
+    width: 400px;
+  }
+
+  :global(.ant-select-item[aria-selected=true]) {
+    font-weight: normal !important;
+  }
+}
