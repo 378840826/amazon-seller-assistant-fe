@@ -28,6 +28,7 @@ import moment, { Moment } from 'moment';
 import momentTimezone from 'moment-timezone';
 import skip from '@/components/Skip';
 import Snav from '@/components/Snav';
+import { getPageQuery } from '@/utils/utils';
 
 interface IPage extends ConnectProps {
   createCampagin: ICreateGampaignState;
@@ -68,8 +69,8 @@ const Group: React.FC = () => {
   const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 投放方式
   const [campaignList, setCampaignList] = useState<CreateGroup.ICampaignList[]>([]);
   const [campaignDailyBudget, setCampaignDailyBudget] = useState<number>(0); // 所属广告活动的日预算
-  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
-  const [startDate, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
+  const siteDatetime = momentTimezone().tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
+  const [startDate, setStartDate] = useState<string>(moment(siteDatetime).format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const loadingEffect = useSelector((state: any) => state.loading.effects);
   const loading = loadingEffect['createGroup/createGroup'];
@@ -124,7 +125,15 @@ const Group: React.FC = () => {
   // 初始化广告活动名称及广告活动类型
   useEffect(() => {
     if (campaignList.length) {
-      const firstData = campaignList[0];
+      // 获取 url 参数的 camId，默认选中
+      const qs = getPageQuery();
+      let firstData = campaignList[0];
+      if (qs.camId) {
+        const qsCam = campaignList.find(item => item.campaignId === qs.camId);
+        firstData = qsCam || campaignList[0];
+      }
+      // 清除 url 参数
+      window.history.replaceState(null, '', window.location.pathname);
       form.setFieldsValue({
         campaignId: firstData.campaignId,
       });
@@ -173,7 +182,6 @@ const Group: React.FC = () => {
   // 创建
   const saveCreate = () => {
     const data = form.getFieldsValue();
-    const defaultBidMin = marketplace === 'JP' ? 2 : 0.02;
     const manualType = data.other.manualType;// 先查看当前选中的是哪一个分类下
 
     data.productAds = selects;
@@ -190,9 +198,10 @@ const Group: React.FC = () => {
       data.endData = moment(data.endData).format('YYYY-MM-DD');
     }
 
-    data.name = data.name.trim();
+    data.name = data.name?.trim();
     if (['', undefined, null].includes(data.name)) {
-      message.error('广告组名称不能为空！');
+      message.error('广告组名称不能为空!');
+      form.scrollToField('name', { behavior: 'smooth' });
       return;
     }
 
@@ -246,8 +255,14 @@ const Group: React.FC = () => {
       return;
     }
 
-    if (Number(data.defaultBid) < defaultBidMin) {
-      message.error(`默认竞价必须大于等于${defaultBidMin}`);
+    // 统一处理报错
+    const groupFormErrors = form.getFieldsError();
+    const formError = groupFormErrors.find(item => {
+      return item.errors.length !== 0;
+    });
+    if (formError) {
+      message.error(formError.errors[0]);
+      return;
     }
 
     // 删除多余数据
