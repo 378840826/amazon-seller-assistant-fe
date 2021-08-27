@@ -44,14 +44,14 @@ export async function bindShop(params: API.IParams) {
 }
 
 export async function adAuthorize(params: API.IParams) {
-  return request('/api/gd/management/store/authorize', {
+  return request('/api/gd/store/authorize', {
     method: 'POST',
     data: params,
   });
 }
 
 export async function cancelAdAuthorize(params: API.IParams) {
-  return request('/api/gd/management/store/cancel', {
+  return request('/api/gd/store/cancel', {
     method: 'GET',
     data: params,
   });
