@@ -64,8 +64,8 @@ const Group: React.FC = () => {
   const { currency, marketplace, timezone, id } = currentShop;
 
   const [campaignType, setCampaignType] = useState<CreateCampaign.ICampaignType>('sponsoredProducts');
-  // sd 广告活动的类型(受众 or 分类/商品  = T0030 or T0020)
-  const [tactic, setTactic] = useState('T0020');
+  // sd 广告活动的类型(受众 or 分类/商品  = T00030 or T00020)
+  const [tactic, setTactic] = useState('T00020');
   const [putMathod, setPutMathod] = useState<CreateCampaign.putMathod>('auto'); // 投放方式
   const [campaignList, setCampaignList] = useState<CreateGroup.ICampaignList[]>([]);
   const [campaignDailyBudget, setCampaignDailyBudget] = useState<number>(0); // 所属广告活动的日预算
