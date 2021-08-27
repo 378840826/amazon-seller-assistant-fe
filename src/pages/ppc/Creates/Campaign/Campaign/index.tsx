@@ -161,13 +161,13 @@ const Campaign: React.FC<IProps> = props => {
         </Radio.Group>
       </Item>
       {/* SD的投放方式 */}
-      <Item name={['outer', 'sdPutMathod']} label="投放方式：" initialValue="T0020" className={classnames(
+      <Item name={['outer', 'sdPutMathod']} label="投放方式：" initialValue="T00020" className={classnames(
         styles.putMathod,
         campaignType === 'sd' ? '' : 'none'
       )}>
         <Radio.Group>
-          <Radio value="T0030" disabled className={styles.putMathodAuto}><span title="功能开发中">受众</span></Radio>
-          <Radio value="T0020">分类/商品</Radio>
+          <Radio value="T00030" disabled className={styles.putMathodAuto}><span title="功能开发中">受众</span></Radio>
+          <Radio value="T00020">分类/商品</Radio>
         </Radio.Group>
       </Item>
       <Item label="竞价策略：" name="biddingStrategy" initialValue="legacyForSales" className={styles.bidding}>
