@@ -85,16 +85,13 @@ const navigation: INavigation[] = [
       { title: '补货建议', path: '/replenishment' },
     ],
   },
-  // {
-  //   title: '广告',
-  //   menu: [
-  //     { title: '广告系列', path: '/ppc/campaign' },
-  //     { title: '广告组', path: '/ppc/group' },
-  //     { title: '广告', path: '/ppc/product' },
-  //     { title: 'Targeting', path: '/ppc/targeting' },
-  //     { title: 'search term 报表', path: '/ppc/search-report' },
-  //   ],
-  // },
+  {
+    title: '广告',
+    menu: [
+      { title: '广告管理', path: '/ppc/manage' },
+      { title: '广告管理', path: '/ppc/manage/group/target', hide: true },
+    ],
+  },
   {
     title: '评论',
     menu: [

@@ -1,0 +1,76 @@
+// 投放资格下拉框
+.qualificationSelect {
+  width: 110px;
+}
+
+// 商品信息
+.goodsInfoContainer {
+  display: flex;
+  align-items: center;
+  text-align: left;
+
+  & > * {
+    line-height: 14px;
+  }
+}
+
+.goodsInfoContent {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  margin-left: 10px;
+}
+
+.goodsTitle {
+  &:hover > span {
+    color: @link-color;
+  }
+}
+
+.qualificationMessage {
+  max-width: 90px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.Modal {
+  .tableContent {
+    width: 540px;
+
+    .title {
+      font-size: @font-size-base;
+      color: @heading-color;
+      line-height: @height-base;
+    }
+  }
+
+  .goodsInfoLine {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 0;
+
+    .asin {
+      width: 90px;
+      color: @btn-text-color;
+    }
+
+    .review {
+      width: 80px;
+    }
+
+    .reviewScore {
+      color: #ff9200;
+    }
+
+    .reviewCount {
+      color: @text-color-secondary;
+    }
+
+    .price {
+      display: inline-block;
+      color: @error-color;
+      text-align: right;
+    }
+  }
+}

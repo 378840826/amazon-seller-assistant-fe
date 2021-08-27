@@ -6,6 +6,7 @@ import { extend } from 'umi-request';
 import { history } from 'umi';
 import { stringify } from 'querystring';
 import { notification } from 'antd';
+import { storage } from './utils';
 
 // 异常处理程序
 const errorHandler = (error: { response: Response }): Response => {
@@ -44,7 +45,13 @@ request.interceptors.request.use((url, options) => {
   if (data) {
     // 需要插入到 headers 中的参数
     const { headersParams } = data;
-    Object.assign(headers, headersParams);
+    // 广告管理模块的所有请求都需要加上 adStoreId 请求头，目前和 storeId 请求头添加方式没有统一，待优化
+    if (url.includes('/api/gd/')) {
+      const shop = storage.get('currentShop');
+      Object.assign(headers, { AdStoreId: shop?.adStoreId || '' }, headersParams);
+    } else {
+      Object.assign(headers, headersParams);
+    }
     // 如果是文件上传，删除上面 extend 加上的 Content-Type，让浏览器自己设置
     if (Object.prototype.toString.call(data) === '[object FormData]') {
       headers && delete headers['Content-Type'];

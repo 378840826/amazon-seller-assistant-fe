@@ -11,10 +11,11 @@
   .editableBtn {
     float: right;
     margin-left: 5px;
+    color: @text-color-secondary;
   }
 
   .ghostEditBtn {
-    opacity: 0;
+    display: none;
   }
 
   &:hover {
@@ -23,7 +24,7 @@
     }
 
     .ghostEditBtn {
-      opacity: 1;
+      display: initial;
     }
   }
 }

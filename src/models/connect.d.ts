@@ -3,6 +3,7 @@ import { IGoodsListModelState } from './goodsList';
 import { IReplenishmentModelState } from './replenishment';
 import { IBsModelState } from './bs';
 import { IBiBoardModelState } from './biBoard';
+import { IAdManage } from './adManage';
 import { IVipModelState } from './vip';
 import { IGlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
@@ -18,7 +19,7 @@ export { IGlobalModelState, SettingModelState, IUserModelState };
 
 export interface IModelType {
   effects?: {
-    [key: string]: Effect | [Effect, { type: string; delay: number }];
+    [key: string]: Effect | [Effect, { type: string; delay?: number; ms?: number }];
   };
   reducers?: {
     [key: string]: ImmerReducer;
@@ -46,6 +47,7 @@ export interface IConnectState {
   replenishment: IReplenishmentModelState;
   bs: IBsModelState;
   biBoard: IBiBoardModelState;
+  adManage: IAdManage;
   vip: IVipModelState;
   loading: ILoading;
   settings: SettingModelState;

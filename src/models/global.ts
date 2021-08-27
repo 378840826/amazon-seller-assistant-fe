@@ -97,7 +97,7 @@ const GlobalModel: IGlobalModelType = {
         type: 'saveShopList',
         payload: {
           mws: mws.data.records,
-          ppc: ppc.data.records,
+          ppc: mws.data.records,
           type,
         },
       });
@@ -256,12 +256,12 @@ const GlobalModel: IGlobalModelType = {
           '/message',
           '/sub-account',
         ];
-        const isExclude = exclude.some(url => pathname.includes(url));
-        if (!isExclude) {
-          // message.destroy();
-          const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-          !pathname.includes('/shop/') && history.push(url);
-        }
+        // const isExclude = exclude.some(url => pathname.includes(url));
+        // if (!isExclude) {
+        //   // message.destroy();
+        //   const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
+        //   !pathname.includes('/shop/') && history.push(url);
+        // }
       }
     },
 
@@ -442,6 +442,8 @@ const GlobalModel: IGlobalModelType = {
           '/ppc/group/add',
           '/competitor/history',
           '/competitor/list',
+          '/ppc/manage/group/target',
+          '/ppc/manage/group/timer',
           ruleAddRouter,
           ruleAddSalesRouter,
           ruleAddCartRouter,
@@ -463,6 +465,9 @@ const GlobalModel: IGlobalModelType = {
         const unshownPageTitleUrl = [
           '/product/error-report',
           '/shop/bind',
+          '/ppc/manage',
+          '/ppc/manage/group/target',
+          '/ppc/manage/group/timer',
           // 因 bs导入 页面标题需要特殊的样式
           '/report/import',
           '/competitor/list',
