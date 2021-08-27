@@ -5,7 +5,6 @@ import { message } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { moneyFormat } from '@/utils/huang';
 
-
 export const Iconfont = createFromIconfontCN({
   // 在 iconfont.cn 上生成
   scriptUrl: '//at.alicdn.com/t/font_1799129_trsxcn53gyg.js',
