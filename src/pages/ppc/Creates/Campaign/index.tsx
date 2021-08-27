@@ -134,7 +134,7 @@ const CampaignAdd = () => {
         reqData.tactic = campaignData.outer.sdPutMathod;
       }
 
-      const name = campaignData.name.trim();
+      const name = campaignData.name?.trim();
       const dailyBudget = campaignData.dailyBudget;
 
       const startDate = campaignData.startDate.format('YYYYMMDD');
@@ -142,7 +142,7 @@ const CampaignAdd = () => {
       const min = marketplace === 'JP' ? 200 : 1; // 日本站最小值200
       endDate = endDate ? endDate.format('YYYYMMDD') : undefined;
 
-      if (!name || name.length < 0 || name > 128) {
+      if (!name || name.length < 0 || name.length > 128) {
         campaignForm.submit();
         return;
       }
@@ -163,7 +163,6 @@ const CampaignAdd = () => {
 
     // 广告组的保存（第四步）
     if (stepIndex === 3) {
-      const min = marketplace === 'JP' ? 2 : 0.02; // 日本站最小值200
       reqData.adGroup = Object.assign({}, reqData.adGroup, groupData);
       reqData.adGroup.productAds = selects;
       reqData.adGroup.campaignId = null;
@@ -171,9 +170,10 @@ const CampaignAdd = () => {
       reqData.adGroup.startDate = groupData ? moment(groupData).format('YYYY-MM-DD') : '';
       groupData.endDate ? reqData.adGroup.endDate = moment(groupData.endDate).format('YYYY-MM-DD') : '';
 
-      reqData.adGroup.name = reqData.adGroup.name.trim();
+      reqData.adGroup.name = reqData.adGroup.name?.trim();
       if (['', undefined, null].includes(reqData.adGroup.name)) {
         message.error('广告组名称不能为空！');
+        groupForm.scrollToField('name', { behavior: 'smooth' });
         return;
       }
       
@@ -229,8 +229,13 @@ const CampaignAdd = () => {
         return;
       }
 
-      if (Number(reqData.adGroup.defaultBid) < min) {
-        message.error(`默认竞价不能小于${min}`);
+      // 统一处理报错
+      const groupFormErrors = groupForm.getFieldsError();
+      const formError = groupFormErrors.find(item => {
+        return item.errors.length !== 0;
+      });
+      if (formError) {
+        message.error(formError.errors[0]);
         return;
       }
 

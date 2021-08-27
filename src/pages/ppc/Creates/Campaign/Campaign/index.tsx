@@ -34,8 +34,8 @@ const { Item } = Form;
 const Campaign: React.FC<IProps> = props => {
   const { campaignType, pattern, currency, timezone, marketplace, form } = props;
 
-  const siteDatetime = momentTimezone({ hour: 0, minute: 0, second: 0 }).tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
-  const [startData, setStartDate] = useState<string>(moment().format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
+  const siteDatetime = momentTimezone().tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
+  const [startData, setStartDate] = useState<string>(moment(siteDatetime).format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
 
   const limitedInput = (value: string) => {
     return strToNaturalNumStr(value);
@@ -63,7 +63,7 @@ const Campaign: React.FC<IProps> = props => {
       rules={[{
         required: true,
         validator: (_, value: string) => (
-          value.trim().length === 0 ? Promise.reject() : Promise.resolve()
+          !value || (value.trim().length === 0) ? Promise.reject() : Promise.resolve()
         ),
         message: '广告活动名称不能为空！',
       }]}
