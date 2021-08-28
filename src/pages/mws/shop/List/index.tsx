@@ -83,9 +83,9 @@ const ShopList: React.FC = () => {
       dispatch({
         type: 'global/adAuthorize',
         payload: {
-          storeId: authorizeState.storeId,
           sellerId: authorizeState.sellerId,
           code: response.code,
+          headersParams: { StoreId: authorizeState.storeId },
         },
         callback: requestFeedback,
       });
