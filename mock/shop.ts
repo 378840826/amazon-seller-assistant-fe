@@ -47,7 +47,7 @@ export default {
               sellerId: 'sellerId-1',
               token: 'amzn.mws.ecb25605-138b-62fb-56e6-83652c2b0d35',
               autoPrice: false,
-              timezone: 'America/ Los_Angeles',
+              timezone: 'America/Los_Angeles',
               currency: '$',
               tokenInvalid: false,
               bindAdStore: false,
@@ -152,7 +152,7 @@ export default {
     }, 800);
   },
 
-  'POST /api/gd/management/store/authorize': (_: Request, res: Response) => {
+  'POST /api/gd/store/authorize': (_: Request, res: Response) => {
     setTimeout(() => {
       res.send({
         code: 200,
@@ -161,7 +161,7 @@ export default {
     }, 800);
   },
   
-  'GET /api/gd/management/store/cancel': (_: Request, res: Response) => {
+  'GET /api/gd/store/cancel': (_: Request, res: Response) => {
     setTimeout(() => {
       res.send({
         code: 200,
