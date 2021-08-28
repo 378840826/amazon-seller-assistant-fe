@@ -59,7 +59,7 @@ const ClassProduct: React.FC<IProps> = props => {
     currency,
     marketplace,
     storeId,
-    putMathod,
+    // putMathod,
     campaignType,
     campaignDailyBudget,
   } = props;
@@ -135,10 +135,10 @@ const ClassProduct: React.FC<IProps> = props => {
     const asins: string[] = [];
     selectProducts.forEach(item => asins.push(item.asin));
 
-    if (putMathod && putMathod === 'classProduct') {
-      setHint('SD展示广告暂无推荐商品');
-      return;
-    }
+    // if (putMathod && putMathod === 'classProduct') {
+    //   setHint('SD展示广告暂无推荐商品');
+    //   return;
+    // }
 
     if (asins.length === 0) {
       setProducts([...[]]);
@@ -200,6 +200,7 @@ const ClassProduct: React.FC<IProps> = props => {
           newArray.push(obj);
         });
         setSuggestProduct([...newArray]);
+        !newArray.length && setHint('无建议商品');
         return;
       }
       message.error(msg);
@@ -280,6 +281,7 @@ const ClassProduct: React.FC<IProps> = props => {
     
     setProducts([...products]);
     setSuggestProduct([...suggestProduct]);
+    !suggestProduct.length && setHint('无建议商品');
   };
 
   // 添加单个建议商品
