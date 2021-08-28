@@ -106,7 +106,10 @@ const ShopList: React.FC = () => {
       onOk() {
         dispatch({
           type: 'global/cancelAdAuthorize',
-          payload: { storeId: record.id },
+          payload: {
+            storeId: record.id,
+            headersParams: { StoreId: authorizeState.storeId },
+          },
           callback: requestFeedback,
         });
       },
