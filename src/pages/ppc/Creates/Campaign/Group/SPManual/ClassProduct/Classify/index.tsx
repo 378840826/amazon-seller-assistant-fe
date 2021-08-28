@@ -62,7 +62,7 @@ const ClassProduct: React.FC<IProps> = props => {
     currency,
     marketplace,
     storeId,
-    putMathod,
+    // putMathod,
     campaignType,
     campaignDailyBudget,
   } = props;
@@ -107,10 +107,10 @@ const ClassProduct: React.FC<IProps> = props => {
     const asins: string[] = [];
     selectProducts.forEach(item => asins.push(item.asin));
 
-    if (putMathod && putMathod === 'classProduct') {
-      setHint('SD展示广告暂无建议分类');
-      return;
-    }
+    // if (putMathod && putMathod === 'classProduct') {
+    //   setHint('SD展示广告暂无建议分类');
+    //   return;
+    // }
 
     if (asins.length === 0) {
       setSuggestClass([...[]]);
@@ -163,6 +163,7 @@ const ClassProduct: React.FC<IProps> = props => {
           temArray.push(obj);
           setSuggestClass([...temArray]);
         });
+        !data.categories.length && setHint('无建议分类');
         return;
       }
       message.error(msg);
@@ -235,6 +236,7 @@ const ClassProduct: React.FC<IProps> = props => {
     
     setSuggestedClass([...suggestedClass]);
     setSuggestClass([...suggestClass]);
+    !suggestClass.length && setHint('无建议分类');
   };
 
   // 添加单个建议分类
