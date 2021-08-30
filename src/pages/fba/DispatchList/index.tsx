@@ -52,7 +52,7 @@ interface IPage extends ConnectProps {
 }
 interface IPrintType{
   printprops: DispatchList.IDispatchDetail;
-  shipmentName: string;
+  // shipmentName: string;
 }
 
 const pageStyle = `
@@ -78,8 +78,8 @@ class IndexToPrint extends PureComponent<IPrintType>{
         invoiceId, 
         casesRequired, 
         productItemVos, 
+        shipmentName,
       },
-      shipmentName,
     } = this.props;
     return (
       <div className={styles.printtable}>
@@ -174,7 +174,6 @@ const PackageList: React.FC = function() {
   const 
     [printprops, setPrintprops] = 
       useState<DispatchList.IDispatchDetail>({} as DispatchList.IDispatchDetail);
-  const [shipmentName, setShipmentName] = useState<string>('');
   // 打开发货单详情的初始值
   const [detailModal, setDateilModal] = useState<IDetailModalType>({
     visible: false,
@@ -435,7 +434,7 @@ const PackageList: React.FC = function() {
   // 获取需要打印的数据
   const getPrintDetails = async (id: string) => {
     // 获取详情数据
-    const p1 = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       dispatch({
         type: 'fbaDispatchList/getInvoiceDetail',
         resolve,
@@ -443,30 +442,18 @@ const PackageList: React.FC = function() {
         payload: { id },
       });
     });
-    // 获取 shipment 名称
-    const p2 = new Promise((resolve, reject) => {
-      dispatch({
-        type: 'shipment/getShipmentDetails',
-        resolve,
-        reject,
-        payload: { id },
-      });
-    });
-    const res = await Promise.all([p1, p2]);
-    const [p1Res, p2Res] = res as {
+    const datas = await promise;
+    const {
+      code, message: msg, data,
+    } = datas as {
       code: number;
-      data: DispatchList.IDispatchDetail & Shipment.IShipmentDetails;
       message?: string;
-    }[];
-    if (p1Res.code === 200) {
-      setPrintprops({ ...p1Res.data });
+      data: DispatchList.IDispatchDetail & Shipment.IShipmentDetails;
+    };
+    if (code === 200) {
+      setPrintprops({ ...data });
     } else {
-      throw new Error('获取打印数据失败！');
-    }
-    if (p2Res.code === 200) {
-      setShipmentName(p2Res.data.shipmentName);
-    } else {
-      throw new Error('获取打印数据失败！');
+      throw new Error(msg || '获取打印数据失败！请重试');
     }
   };
 
@@ -750,7 +737,7 @@ const PackageList: React.FC = function() {
                   <IndexToPrint
                     ref={componentRef}
                     printprops={printprops}
-                    shipmentName={shipmentName}
+                    // shipmentName={shipmentName}
                   />
                 </div>
               </>

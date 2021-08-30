@@ -18,7 +18,6 @@ interface IProps {
   shipmentData: Shipment.IShipmentList;
   handleMarkShipped: () => void;
   handleCancelShipment: () => void;
-  
 }
 
 const More: React.FC<IProps> = props => {

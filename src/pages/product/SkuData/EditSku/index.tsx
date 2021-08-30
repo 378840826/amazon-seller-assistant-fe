@@ -269,15 +269,23 @@ const AddSku: React.FC<IProps> = props => {
   const addbedNumber = function() {
     const datas = form.getFieldsValue();
     const locationNos = datas.locationNo; // 库位号
-    
-
-    for ( const item of locationNos) {
-      // const isExist = locations.find(citem => citem.locationNo === item); // 是否已存在
-      const locationNo = locationNum.find(citem => citem.locationNo === item);
-      locationNo && locations.push(locationNo);
+    // 从全部数据中找到要添加的数据
+    const filterTargets = locationNum.filter(item => {
+      return locationNos.includes(item.locationNo);
+    });
+    // 阻止重复添加
+    const repetition = locations.find(item => {
+      return filterTargets.find(t => {
+        if (t.locationId === item.locationId) {
+          return true;
+        }
+      });
+    });
+    if (repetition) {
+      message.error('请勿重复添加');
+      return;
     }
-    
-    setLocations([...locations]);
+    setLocations([...locations, ...filterTargets]);
   };
 
   const mskuColumns = [
@@ -385,21 +393,6 @@ const AddSku: React.FC<IProps> = props => {
       datas.imageUrl = imageUrl;
       datas.pimageUrl = packImage;
 
-      if (empyts.includes(datas.sku)) {
-        message.error('SKU不能为空');
-        return;
-      }
-
-      if (empyts.includes(datas.nameNa)) {
-        message.error('中文品名不能为空');
-        return;
-      }
-
-      if (empyts.includes(datas.packingWeight)) {
-        message.error('包装重量不能为空');
-        return;
-      }
-
       // 体积、重量是否大于1000
       if (
         (datas.packingLong && Number(datas.packingLong) > 1000)
@@ -432,6 +425,15 @@ const AddSku: React.FC<IProps> = props => {
           return;
         }
         datas.packingMaterial = datas.otherPacking;
+      }
+
+      // 错误禁止提交
+      const fieldError = form.getFieldsError().find(err => {
+        return err.errors.length && err;
+      });
+      if (fieldError) {
+        message.error(fieldError.errors[0]);
+        return;
       }
 
       const promise = new Promise((resolve, reject) => {
@@ -546,15 +548,26 @@ const AddSku: React.FC<IProps> = props => {
             <div className={styles.leftLayout}>
               <Item name="sku" label="SKU：" rules={[{
                 required: true,
+                message: 'SKU不能为空',
+              }, {
+                max: 40,
+                message: 'SKU长度不能超过40个字符',
               }]}>
-                <Input maxLength={40}/>
+                <Input />
               </Item>
               <Item name="nameUs" label="英文品名：" rules={[{
                 required: true,
+                message: '英文品名不能为空',
+              }, {
+                max: 200,
+                message: '英文品名长度不能超过200个字符',
               }]}>
-                <Input maxLength={200}/>
+                <Input />
               </Item>
-              <Item name="customsCode" label="海外编码：">
+              <Item name="customsCode" label="海外编码：" rules={[{
+                pattern: /^\d{10}$/,
+                message: '海外编码为10位纯数字',
+              }]}>
                 <Input />
               </Item>
               <Item className={styles.state} name="state" label="状态：">
@@ -564,15 +577,26 @@ const AddSku: React.FC<IProps> = props => {
             <div className={styles.centerLayout}>
               <Item name="nameNa" label="中文品名：" rules={[{
                 required: true,
+                message: '中文品名不能为空',
+              }, {
+                max: 80,
+                message: '中文品名长度不能超过80个字符',
               }]}>
-                <Input maxLength={80}/>
+                <Input />
               </Item>
               <Item name="category" label="品类：" rules={[{
                 required: true,
+                message: '品类不能为空',
+              }, {
+                max: 40,
+                message: '品类长度不能超过40个字符',
               }]}>
-                <Input maxLength={40}/>
+                <Input />
               </Item>
-              <Item name="salesman" label="开发业务员：">
+              <Item name="salesman" label="开发业务员：" rules={[{
+                max: 200,
+                message: '开发业务员长度不能超过200个字符',
+              }]}>
                 <Input />
               </Item>
             </div>

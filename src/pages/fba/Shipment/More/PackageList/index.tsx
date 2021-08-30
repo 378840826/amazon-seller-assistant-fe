@@ -17,7 +17,7 @@ import {
   Upload,
   InputNumber,
 } from 'antd';
-import { useDispatch } from 'umi';
+import { useDispatch, useSelector } from 'umi';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 
@@ -26,6 +26,8 @@ interface IProps {
 }
 
 const Logisticis: React.FC<IProps> = props => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const shipmentList = useSelector((state: any) => state.shipment.shipmentList);
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -46,7 +48,7 @@ const Logisticis: React.FC<IProps> = props => {
     }
 
     const data = form.getFieldsValue();
-    console.log(data, `上传数量`);
+    // console.log(data, `上传数量`);
     setLoading(true);
     new Promise((resolve, reject) => {
       dispatch({
@@ -63,13 +65,28 @@ const Logisticis: React.FC<IProps> = props => {
       const {
         message: msg,
         code,
-      } = datas as Global.IBaseResponse;
+        data: url,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } = datas as any;
 
       if (code !== 200) {
         message.error(msg);
         return;
       }
       message.success(msg);
+      // 更新此 shipment 的箱唛下载链接
+      dispatch({
+        type: 'shipment/saveShipmentList',
+        payload: shipmentList.map((item: Shipment.IShipmentList) => {
+          if (item.mwsShipmentId === mwsShipmentId) {
+            return {
+              ...item,
+              zipUrl: url,
+            };
+          }
+          return item;
+        }),
+      });
     });
   };
 
@@ -112,7 +129,7 @@ const Logisticis: React.FC<IProps> = props => {
         labelAlign="left"
         form={form}
         initialValues={{
-          sfsf: '1',
+          // sfsf: '1',
           method: '1',
           other: 'UPS',
         }}>

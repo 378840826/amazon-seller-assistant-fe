@@ -6,6 +6,7 @@
  * 
  * 打印箱唛
  */
+import classNames from 'classnames';
 import React from 'react';
 import styles from './index.less';
 
@@ -17,15 +18,23 @@ interface IProps{
 const Logisticis: React.FC<IProps> = (props) => {
   const { zipUrl } = props;
   
-  return <span>
-    <a
-      href={zipUrl}
-      target="_blank"
-      className={styles.showText} rel="noreferrer"
-    >
-        打印箱唛
-    </a>
-  </span>;
+  return (
+    <span>
+      {
+        zipUrl ?
+          <a
+            href={zipUrl}
+            target="_blank"
+            className={styles.showText} rel="noreferrer"
+          >
+            打印箱唛
+          </a>
+          :
+          <a className={classNames(styles.showText, styles.disabled)} rel="noreferrer">打印箱唛</a>
+      }
+      
+    </span>
+  );
   // content={
   //   <Form colon={false}
   //     labelAlign="left"
