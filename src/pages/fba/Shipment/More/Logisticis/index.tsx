@@ -26,7 +26,7 @@ interface IProps {
 
 const Logisticis: React.FC<IProps> = (props) => {
   const { mwsShipmentId } = props;
-  const [isPartnered, setIsPartnered] = useState<boolean>(true);
+  const [isPartnered, setIsPartnered] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   
@@ -78,7 +78,7 @@ const Logisticis: React.FC<IProps> = (props) => {
         labelAlign="left"
         form={form}
         initialValues={{
-          isPartnered: true,
+          isPartnered: false,
           shipmentType: 'SP',
           shippingType: '海运',
         }}>

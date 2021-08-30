@@ -42,18 +42,15 @@ const Add: React.FC<IProps> = props => {
       message.error('最多可以添加30种物流方式');
       return;
     }
-    const emptys = [null, undefined, ''];
 
-    if (emptys.includes(data.name)) {
-      message.error('物流名称不能为空');
+    // 错误禁止提交
+    const fieldError = form.getFieldsError().find(err => {
+      return err.errors.length && err;
+    });
+    if (fieldError) {
+      message.error(fieldError.errors[0]);
       return;
     }
-
-    if (emptys.includes(data.providerName)) {
-      message.error('物流商不能为空');
-      return;
-    }
-
 
     new Promise((resolve, reject) => {
       dispatch({
@@ -98,10 +95,10 @@ const Add: React.FC<IProps> = props => {
       <Form.Item label="物流名称：" name="name" rules={[{ required: true }]}>
         <Input maxLength={20}/>
       </Form.Item>
-      <Form.Item label="物流商名称：" name="providerName" rules={[{ required: true }]}>
+      <Form.Item label="物流商名称：" name="providerName" rules={[{ required: true, max: 20 }]}>
         <Input />
       </Form.Item>
-      <Form.Item label="货代：" name="forwarderName">
+      <Form.Item label="货代：" name="forwarderName" rules={[{ max: 12 }]}>
         <Input />
       </Form.Item>
       <Form.Item label="发货国家：" name="countryCode">

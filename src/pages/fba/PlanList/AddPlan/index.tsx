@@ -72,7 +72,8 @@ const Addplan: React.FC<IProps> = function(props) {
       if (searchProduct === 'notRequest') {
         return;
       }
-
+      console.log('code', code);
+      
       setLoading(true);
       new Promise((resolve, reject) => {
         dispatch({
@@ -458,7 +459,7 @@ const Addplan: React.FC<IProps> = function(props) {
       setSearchProduct('notRequest');
       return;
     }
-    requestProduct(form.getFieldValue('countryCode'), form.getFieldValue('storeId'));
+    requestProduct(form.getFieldValue('countryCode'), form.getFieldValue('storeId'), asin);
     // setSearchProduct(asin);
   };
 

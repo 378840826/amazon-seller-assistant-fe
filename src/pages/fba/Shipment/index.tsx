@@ -116,13 +116,13 @@ class ComponentToPrint extends PureComponent<IPrintType> {
           {
             productItemVos?.map(item => {
               return (
-                <tr key={item.sellerSku || '-'}>
-                  <td width={270}>{item.sellerSku || '-'}</td>
-                  <td width={120}>{item.declareNum || '-'}</td>
-                  <td width={120}>{item.fnsku || '-'}</td>
-                  <td width={120}>{item.sku || '-'}</td>
+                <tr key={item.sellerSku}>
+                  <td width={270}>{item.sellerSku}</td>
+                  <td width={120}>{item.declareNum}</td>
+                  <td width={120}>{item.fnsku}</td>
+                  <td width={120}>{item.sku}</td>
                   <td width={320}>{item.nameNa ? item.nameNa : '-'}</td>
-                  <td width={100}>{areCasesRequired || '-'}</td>
+                  <td width={100}>{areCasesRequired}</td>
                 </tr>
               );   
             })
@@ -158,7 +158,7 @@ const PackageList: React.FC = function() {
   });
   const [sites, setSites] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingPrint, setLoadingPrint] = useState<boolean>(false);
+  const [loadingPrintId, setLoadingPrintId] = useState<string>('');
   const 
     [printprops, setPrintprops] = 
       useState<Shipment.IShipmentDetails>({} as Shipment.IShipmentDetails);
@@ -189,7 +189,7 @@ const PackageList: React.FC = function() {
 
     setLoading(true);
     let payload = {
-      currentPage: params.currentPage || 1,
+      currentPage: params.current || 1,
       pageSize: params.pageSize || 20,
       ...data,
     };
@@ -208,7 +208,7 @@ const PackageList: React.FC = function() {
         data: {
           page: {
             current = 1,
-            pageSize = 20,
+            size = 20,
             total = 0,
           },
         },
@@ -218,7 +218,7 @@ const PackageList: React.FC = function() {
         data: {
           page: {
             current: number;
-            pageSize: number;
+            size: number;
             total: number;
           };
         };
@@ -226,8 +226,8 @@ const PackageList: React.FC = function() {
 
       setLoading(false);
       if (code === 200) {
-        setCurrent(current);
-        setPageSize(pageSize);
+        setCurrent(Number(current));
+        setPageSize(Number(size));
         setTotal(total);
         return;
       }
@@ -495,13 +495,13 @@ const PackageList: React.FC = function() {
 
   // 点击打印
   const handlePrint = (id: string) => {
-    setLoadingPrint(true);
+    setLoadingPrintId(id);
     getPrintDetails(id).then(() => {
       printpage && printpage();
     }).catch(err => {
       message.error(err.message);
     }).finally(() => {
-      setLoadingPrint(false);
+      setLoadingPrintId('');
     });
   };
 
@@ -719,12 +719,13 @@ const PackageList: React.FC = function() {
             }
           </div>
           <div>
-            <Spin size="small" spinning={loadingPrint} indicator={<LoadingOutlined />}>
+            <Spin
+              size="small"
+              spinning={loadingPrintId === record.id}
+              indicator={<LoadingOutlined />}
+            >
               <span onClick={() => handlePrint(record.id)}>打印</span>
             </Spin>
-            <div style={{ display: 'none' }}>
-              <ComponentToPrint ref={componentRef} printprops={printprops} />
-            </div>
             <More
               shipmentData={record}
               handleMarkShipped={() => handleShipmentAndDelete('SHIPPED', [record.id])}
@@ -869,6 +870,9 @@ const PackageList: React.FC = function() {
 
 
   return <div className={styles.box}>
+    <div className={styles.printPageContainer}>
+      <ComponentToPrint ref={componentRef} printprops={printprops} />
+    </div>
     <Form 
       className={styles.topHead} 
       form={form} 

@@ -408,7 +408,7 @@ const AddSku: React.FC<IProps> = props => {
         message.error('包装重量不能为空');
         return;
       }
-      if (!reg.test(datas.customsCode)){
+      if (datas.customsCode && !reg.test(datas.customsCode)){
         message.error('海外编码为10位纯数字');
         return;
       }
@@ -559,17 +559,19 @@ const AddSku: React.FC<IProps> = props => {
           <div className={styles.leftLayout}>
             <Item name="sku" label="SKU：" normalize={removeSpace} rules={[{
               required: true,
+              message: 'SKU不能为空',
             }, {
               max: 40,
-              message: 'SKU最大长度不能超过40',
+              message: 'SKU长度不能超过40',
             }]}>
               <Input />
             </Item>
             <Item name="nameUs" label="英文品名：" normalize={removeSpace} rules={[{
               required: true,
+              message: '英文品名不能为空',
             }, {
               max: 200,
-              message: '英文品名最大长度不能超过200',
+              message: '英文品名长度不能超过200',
             }]}>
               <Input />
             </Item>
@@ -586,23 +588,25 @@ const AddSku: React.FC<IProps> = props => {
           <div className={styles.centerLayout}>
             <Item name="nameNa" label="中文品名：" normalize={removeSpace} rules={[{
               required: true,
+              message: '中文品名不能为空',
             }, {
               max: 80,
-              message: '中文品名最大长度不能超过80',
+              message: '中文品名长度不能超过80',
             }]}>
               <Input />
             </Item>
             <Item name="category" label="品类：" normalize={removeSpace} rules={[{
               required: true,
+              message: '品类不能为空',
             }, {
               max: 40,
-              message: '品类最大长度不能超过40',
+              message: '品类长度不能超过40个字符',
             }]}>
               <Input />
             </Item>
             <Item name="salesman" label="开发业务员：" normalize={removeSpace} rules={[{
               max: 200,
-              message: '开发业务员最大长度不能超过200',
+              message: '开发业务员长度不能超过200',
             }]}>
               <Input />
             </Item>
