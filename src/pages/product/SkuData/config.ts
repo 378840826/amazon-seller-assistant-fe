@@ -199,7 +199,9 @@ export function sumVolumeOversize(unit: 'feet'|'m'|'cm'|'inch', data: { width: n
   wide = numberToinch(unit, Number(wide));
   height = numberToinch(unit, Number(height));
   const arr = [width, wide, height];
-  arr.sort();
+  arr.sort((a: number, b: number) => {
+    return a - b; 
+  });
   
   if (
     arr[2] > 18

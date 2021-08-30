@@ -53,6 +53,7 @@ declare namespace planList {
   }
 
   interface IPlanDetail {
+    shipments: Shipment.IShipmentList[];
     id: string;
     userName: string;
     shipmentId: string;

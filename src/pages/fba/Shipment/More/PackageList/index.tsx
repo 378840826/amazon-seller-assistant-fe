@@ -29,6 +29,8 @@ const Logisticis: React.FC<IProps> = props => {
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  // 填写的箱数，用于下载箱单模板
+  const [packagesNumValue, setPackagesNumValue] = useState<string>('1');
   
   const { mwsShipmentId } = props;
   
@@ -95,8 +97,7 @@ const Logisticis: React.FC<IProps> = props => {
   // 生成下载模板链接
   function getDownloadUrl() {
     const baseUrl = '/api/mws/shipment/plan/downloadPackingTemplate';
-    const num = form.getFieldValue('input') || 1;
-    return `${baseUrl}?mwsShipmentId=${mwsShipmentId}&packagesNum=${num}`;
+    return `${baseUrl}?mwsShipmentId=${mwsShipmentId}&packagesNum=${packagesNumValue}`;
   }
 
   return <Popover 
@@ -130,7 +131,11 @@ const Logisticis: React.FC<IProps> = props => {
           </a>
         </div>
         <Form.Item name="input" label="填写箱数：" initialValue="1">
-          <InputNumber min={1} style={{ width: 235 }}/>
+          <InputNumber
+            min={1}
+            className={styles.packagesNumInput}
+            onBlur={e => setPackagesNumValue(e.target.value)}
+          />
         </Form.Item>
         <footer className={styles.footer}>
           <Button onClick={() => setVisible(false)} disabled={loading}>取消</Button>

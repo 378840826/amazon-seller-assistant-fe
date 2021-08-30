@@ -18,7 +18,7 @@ import {
   message,
   Popconfirm,
 } from 'antd';
-import { useDispatch, useSelector, ConnectProps, IPianListState } from 'umi';
+import { useDispatch, useSelector, ConnectProps, IPianListState, history } from 'umi';
 import { labelling, wayPacking } from '../../config';
 import Line from '@/components/Line';
 import moment from 'moment';
@@ -29,6 +29,7 @@ import Product from './Product';
 import HandlePage from './HandlePage';
 import AssociatShipment from './AssociatShipment';
 import Verify from './Verify';
+import { fba } from '@/utils/routes';
 
 
 interface IProps {
@@ -37,6 +38,7 @@ interface IProps {
   storeId: string;
   showText: '详情'|'处理' | '核实';
   isinvalid: boolean; // 是否已作废
+  addSuccessCallbal: () => void;
 }
 
 interface IPage extends ConnectProps {
@@ -60,9 +62,11 @@ const Details: React.FC<IProps> = function(props) {
     storeId,
     showText,
     isinvalid,
+    addSuccessCallbal,   
   } = props;
 
   const warehouses = useSelector((state: IPage) => state.planList.warehouses);
+
   const [visible, setVisible] = useState<boolean>(false);
   const [nav, setNav] = useState<'product' | 'shipment' | 'log'>('product');
   // 用来显示不同内容的，基本：未处理, 已核实/未处理, 已处理； 处理页面是从fba已核实未处理下面的去处理点击过去的；核实页面是核实库存页面
@@ -71,7 +75,7 @@ const Details: React.FC<IProps> = function(props) {
   const [dispose, setDispose] = useState<boolean>(false); // 是否已处理
   const [isFBA, setisFBA] = useState<boolean>(false); // true为FBA货件详情，false为海外自营仓货件详情
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [baseData, setBaseData] = useState<planList.IPlanDetail>({} as any); // 货件计划详情（头部的基本数据）
+  const [baseData, setBaseData] = useState<IData>({} as any); // 货件计划详情（头部的基本数据）
   const [logData, setLogData] = useState<planList.ILog[]>([]); // 操作日志列表
   const [productData, setProductData] = useState<planList.IProductList[]>([]); // 商品明细列表
   const [spinAddress, setSpinAddress] = useState<planList.IAddressLine[]>([]); // 发货地址下拉列表
@@ -202,7 +206,7 @@ const Details: React.FC<IProps> = function(props) {
         data: IData;
       };  
 
-      if (code === 200) {
+      if (code === 200) {        
         setBaseData(data);
         setLogData(data.modifys);
         setProductData(data.products);  
@@ -270,6 +274,7 @@ const Details: React.FC<IProps> = function(props) {
     const tempObj = productData.find(item => item.id === id);
     tempObj && (tempObj.declareNum = String(newValue));
     setProductData([...productData]);
+    
   };
 
   const changeShipmentName = function(val: string, mwsShipmentId: string) {
@@ -319,9 +324,11 @@ const Details: React.FC<IProps> = function(props) {
     if (productData.length === 0) {
       message.warning('商品不能为空！');
       return;
-    }
+    }  
+
     const data = form.getFieldsValue();
     data.id = id;
+    data.warehouseDeId = warehouses.find(({ name: wname }) => wname === baseData.warehouseDe)?.id;
     data.areCasesRequired = data.areCasesRequired === 'true'; // 是否原包装
     data.products = productData;
     data.productIds = [...delProductIds];
@@ -342,6 +349,7 @@ const Details: React.FC<IProps> = function(props) {
       const { code, message: msg } = res as Global.IBaseResponse;
       if (code === 200) {
         message.success(msg || '修改成功！');
+        addSuccessCallbal();
         return;
       }
       message.error(msg || '修改失败！');
@@ -359,7 +367,6 @@ const Details: React.FC<IProps> = function(props) {
         item.declareNum = item.verifyNum;
       }
     }
-    
     setProductData([...productData]);
   };
 
@@ -386,6 +393,7 @@ const Details: React.FC<IProps> = function(props) {
       setVerifyLoading(false);
       if (code === 200) {
         message.success(msg || '核实成功！');
+        addSuccessCallbal();
         setVisible(false);
         return;
       }
@@ -421,6 +429,7 @@ const Details: React.FC<IProps> = function(props) {
 
       if (code === 200) {
         message.success(msg || '成功生成！');
+        history.push(fba.shipment);
         return;
       }
 
@@ -464,9 +473,12 @@ const Details: React.FC<IProps> = function(props) {
       message.warning('商品不能为空！');
       return;
     }
+
     const payload = form.getFieldsValue();
     payload.id = id;
     payload.products = productData;
+    payload.warehouseDeId = 
+        warehouses.find(({ name: wname }) => wname === baseData.warehouseDe)?.id;
     payload.productIds = [...delProductIds];
     setCreateInvoiceLoading(true);
     const promise = new Promise((resolve, reject) => {
@@ -886,10 +898,13 @@ const Details: React.FC<IProps> = function(props) {
             setBatchProduct={setBatchProduct}
             loading={productListLoading}
             state={baseData?.state || false}
+            changeProductData={
+              (products: IData['products']) => setBaseData({ ...baseData, products })
+            }
           /> }
 
           {/*  Shipment信息 */}
-          { nav === 'shipment' && <Shipment data={[]}/>}
+          { nav === 'shipment' && <Shipment data={baseData.shipments}/>}
           
           {/* 操作日志 */}
           { nav === 'log' && <Log data={logData}/> }

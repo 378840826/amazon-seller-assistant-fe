@@ -80,5 +80,10 @@ export default {
       },
     },
   }),
+
+  'POST /api/mws/shipment/sku/product/create': {
+    code: 200,
+    message: '成功',
+  },
 };
 

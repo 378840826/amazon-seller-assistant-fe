@@ -22,6 +22,7 @@ declare namespace DispatchList {
     issuedNum: number;
     receiveNum: number;
     disparityNum: number;
+    nameNa: string;
     locationNo: string[];
   }
 

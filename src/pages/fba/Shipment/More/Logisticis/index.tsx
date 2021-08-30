@@ -93,7 +93,7 @@ const Logisticis: React.FC<IProps> = (props) => {
         <Form.Item label="承运人：" name="isPartnered" className={styles.twoLine}>
           <Radio.Group
             className={styles.radio}
-            options={[{ label: 'UPS', value: true }, { label: '其他', value: false }]}
+            options={[{ label: 'UPS', value: true, disabled: true }, { label: '其他', value: false }]}
             onChange={e => setIsPartnered(e.target.value)}
           />
         </Form.Item>

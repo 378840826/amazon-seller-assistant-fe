@@ -141,9 +141,6 @@ const PackageList: React.FC = function() {
         return;
       }
       message.error(msg || '获取货件列表失败！');
-      setCurrent(1);
-      setPageSize(20);
-      setTotal(0);
     });
   }, [dispatch, getRequestParams]);
 
@@ -170,7 +167,9 @@ const PackageList: React.FC = function() {
     request();
     getShops();
     getSites();
-  }, [request, getShops, getSites]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  //}, [request, getShops, getSites]);
 
   // 当添加成功后，重新请求列表
   const addSuccessCallbal = function() {
@@ -196,9 +195,10 @@ const PackageList: React.FC = function() {
         setSelectedRowKeys(selectedRowKeys as number[]);
       },
     } as {},
-    loading,
+    loading, 
     columns: columns({ 
       sortedInfo,
+      addSuccessCallbal,
     }) as [],
     dataSource: data as [],
     // rowKey: () => tableCount++,
@@ -241,6 +241,7 @@ const PackageList: React.FC = function() {
         columnKey: asc === null ? '' : field,
         order: asc === true ? 'ascend' : 'descend',
       });
+      
     },
 
   };
@@ -404,7 +405,7 @@ const PackageList: React.FC = function() {
       </Form>
     </div>
     <main>
-      <Table {...tableConfig}/>
+      <Table {...tableConfig} />
     </main>
     <AddPlan 
       visible={addVisible} 

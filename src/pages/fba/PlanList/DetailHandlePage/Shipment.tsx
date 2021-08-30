@@ -11,7 +11,7 @@ import styles from './index.less';
 import { Table } from 'antd';
 
 interface IProps {
-  data: [];
+  data: Shipment.IShipmentList[];
 }
 
 
@@ -19,59 +19,59 @@ const Shipment: React.FC<IProps> = function({ data }) {
   const columns = [
     {
       title: 'ShipmentID',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'mwsShipmentId',
+      key: 'mwsShipmentId',
       align: 'center',
       width: 100,
     },
     {
       title: 'Shipment名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'shipmentName',
+      key: 'shipmentName',
       align: 'center',
       width: 100,
     },
     {
       title: '亚马逊仓库代码',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'destinationFulfillmentCenterId',
+      key: 'destinationFulfillmentCenterId',
       align: 'center',
       width: 100,
     },
     {
       title: '状态',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'shipmentStatus',
+      key: 'shipmentStatus',
       align: 'center',
       width: 100,
     },
     {
       title: '申报量',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'declareNum',
+      key: 'declareNum',
       align: 'center',
-      width: 100,
+      width: 60,
     },
     {
       title: '已发量',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'issuedNum',
+      key: 'issuedNum',
       align: 'center',
-      width: 100,
+      width: 60,
     },
     {
       title: '已收量',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'receiveNum',
+      key: 'receiveNum',
       align: 'center',
-      width: 100,
+      width: 60,
     },
     {
       title: '创建时间',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'gmtCreate',
+      key: 'gmtCreate',
       align: 'center',
-      width: 100,
+      width: 120,
       render(val: string) {
         return <div className={styles.dateCol}>
           {val}
@@ -80,10 +80,10 @@ const Shipment: React.FC<IProps> = function({ data }) {
     },
     {
       title: '开始收货时间',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'receivingTime',
+      key: 'receivingTime',
       align: 'center',
-      width: 100,
+      width: 120,
       render(val: string) {
         return <div className={styles.dateCol}>
           {val}
@@ -92,8 +92,8 @@ const Shipment: React.FC<IProps> = function({ data }) {
     },
     {
       title: '更新时间',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'gmtModified',
+      key: 'gmtModified',
       align: 'center',
       width: 100,
       render(val: string) {
@@ -104,8 +104,8 @@ const Shipment: React.FC<IProps> = function({ data }) {
     },
     {
       title: '创建人',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'username',
+      key: 'username',
       align: 'center',
       width: 100,
     },
