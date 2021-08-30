@@ -56,9 +56,9 @@ const chipment: IConfigurationBaseModel = {
     saveShop(state, { payload }) {
       
       const arr: Global.IOption[] = [];
-      payload.forEach((item: { id: string; storeName: string }) => {
+      payload.forEach((item: { id: string; mstoreName: string }) => {
         arr.push({
-          label: item.storeName,
+          label: item.mstoreName,
           value: item.id,
         });
       });

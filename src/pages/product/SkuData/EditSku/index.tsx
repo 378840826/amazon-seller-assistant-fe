@@ -92,7 +92,7 @@ const AddSku: React.FC<IProps> = props => {
   );
 
   // 站点改变时,修改下拉列表
-  const changeStore = function(val: string) {
+  const changeStore = function(val: string ) {
     form.setFieldsValue({
       storeName: undefined,
     });
@@ -472,10 +472,14 @@ const AddSku: React.FC<IProps> = props => {
       withCredentials: true,
       maxCount: 1,
       name: 'pic',
-      beforeUpload(file: { type: string}) {
+      beforeUpload(file: File) {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
           message.error('只允许上传jpg, png格式图片');
+        }
+        if (file.size > 2097152) {
+          message.error('文件大小不能超过2M');
+          return false;
         }
         return isJpgOrPng;
       },

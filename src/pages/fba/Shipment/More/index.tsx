@@ -18,11 +18,12 @@ interface IProps {
   shipmentData: Shipment.IShipmentList;
   handleMarkShipped: () => void;
   handleCancelShipment: () => void;
+  
 }
 
 const More: React.FC<IProps> = props => {
   const {
-    shipmentData: { mwsShipmentId, shipmentState },
+    shipmentData: { mwsShipmentId, shipmentState, zipUrl },
     handleMarkShipped, handleCancelShipment,
   } = props;
   const [visible, setVisible] = useState<boolean>(false);
@@ -42,9 +43,9 @@ const More: React.FC<IProps> = props => {
         {
           // 如果shipment已出运，就只有“取消”，其他按钮都没有了
           !isShipped && <>
-            <Logisticis mwsShipmentId={mwsShipmentId} />
+            <Logisticis mwsShipmentId={mwsShipmentId}/>
             <PackageList mwsShipmentId={mwsShipmentId} />
-            <Mark/>
+            <Mark zipUrl={zipUrl}/>
             <span onClick={() => handleMarkShipped()} className={styles.item}>标记出运</span>
             {/* 删除功能先搁置
             <Popover {...popoverConfig}>

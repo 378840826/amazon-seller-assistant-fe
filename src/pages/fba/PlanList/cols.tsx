@@ -19,6 +19,7 @@ import { fba } from '@/utils/routes';
 
 interface IProps {
   sortedInfo: null|Global.ISortedType;
+  addSuccessCallbal: () => void;
 }
 
 interface IPage extends ConnectProps {
@@ -26,7 +27,7 @@ interface IPage extends ConnectProps {
 }
 
 const Columns = (props: IProps ) => {
-  const { sortedInfo } = props;
+  const { sortedInfo, addSuccessCallbal } = props;
   const dispatch = useDispatch();
 
   const logistics = useSelector((state: IPage) => state.fbaBase.logistics);
@@ -112,13 +113,7 @@ const Columns = (props: IProps ) => {
       title: 'ShipmentID',
       width: 120,
       render: (value: string[]) => (
-        <>
-          {
-            value?.map(item => {
-              <div>{item}</div>;
-            })
-          }
-        </>
+        <>{ value?.map(item => <div key={item}>{item}</div>) }</>
       ),
     },
     {
@@ -279,7 +274,10 @@ const Columns = (props: IProps ) => {
             id={id}
             logistics={logistics}
             isinvalid={state}
-            storeId={record.storeId}/>
+            storeId={record.storeId}
+            addSuccessCallbal={addSuccessCallbal}
+
+          />
           {
             // 已处理的货件计划不能点击“作废”；已作废的货件计划也不能点击“作废”
             (state === false || pstate === '已处理') ? null : (
@@ -313,7 +311,8 @@ const Columns = (props: IProps ) => {
               id={id}
               logistics={logistics}
               isinvalid={state}
-              storeId={record.storeId}/>
+              storeId={record.storeId}
+              addSuccessCallbal={addSuccessCallbal}/>
             // (pstate !== '已处理' || !state || !verifyType) && (< Verify id={record.id} />)
           }
           {/* {(verifyType && pstate === '未处理') && <span >处理</span>} */}
@@ -325,7 +324,8 @@ const Columns = (props: IProps ) => {
                 id={id}
                 logistics={logistics}
                 isinvalid={state}
-                storeId={record.storeId}/> : <Link to={fba.dispatchList}>处理</Link>)
+                storeId={record.storeId}
+                addSuccessCallbal={addSuccessCallbal}/> : <Link to={fba.dispatchList}>处理</Link>)
           }
         </div>;
       },

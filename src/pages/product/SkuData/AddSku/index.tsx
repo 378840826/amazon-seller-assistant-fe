@@ -19,6 +19,7 @@ import TableNotData from '@/components/TableNotData';
 interface IProps {
   visible: boolean;
   onCancel: () => void;
+  onSuccess: (sku: string) => void;
 }
 
 interface IPage extends ConnectProps {
@@ -31,7 +32,7 @@ const { Item } = Form;
 const { TabPane } = Tabs;
 let lastFetchId = 0;
 const AddSku: React.FC<IProps> = props => {
-  const { visible, onCancel } = props;
+  const { visible, onCancel, onSuccess } = props;
 
   const shops = useSelector((state: IPage) => state.configurationBase.shops);
   const warehouses = useSelector((state: IPage) => state.warehouseLocation.warehouses);
@@ -70,14 +71,14 @@ const AddSku: React.FC<IProps> = props => {
   );
 
   // 站点改变时,修改下拉列表
-  const changeStore = function(val: string) {
+  const changeStore = function(val?: string | null) {
     form.setFieldsValue({
       storeName: undefined,
     });
 
     dispatch({
       type: 'configurationBase/getShop',
-      payload: { marketplace: val },
+      payload: { marketplace: val ? val : null },
     });
   };
 
@@ -341,7 +342,7 @@ const AddSku: React.FC<IProps> = props => {
     scroll: {
       y: 226,
     },
-    rowKey: (record: { locationId: string}) => record.locationId,
+    rowKey: 'contact_id',
     locale: {
       emptyText: <TableNotData hint="未添加库位号" style={{ padding: 20 }}/>,
     },
@@ -358,6 +359,7 @@ const AddSku: React.FC<IProps> = props => {
     onOk() {
       const datas = form.getFieldsValue();
       const empyts = [null, undefined, ''];
+      const reg = /^\d{10}$/;
       datas.mskuProducts = data;
       datas.locations = locations;
       datas.imageUrl = imageUrl;
@@ -367,14 +369,47 @@ const AddSku: React.FC<IProps> = props => {
         message.error('SKU不能为空');
         return;
       }
+      if (datas.sku.length >= 40){
+        message.error('SKU长度不能超过40');
+        return;
+      }
 
       if (empyts.includes(datas.nameNa)) {
         message.error('中文品名不能为空');
         return;
       }
+      if (datas.nameNa.length >= 80){
+        message.error('中文品名长度不能超过80');
+        return;
+      }
+      if (empyts.includes(datas.category)) {
+        message.error('品类不能为空');
+        return;
+      }
+      if (datas.category.length >= 40){
+        message.error('品类长度不能超过80');
+        return;
+      }
+
+      if (empyts.includes(datas.nameUs)) {
+        message.error('英文品名不能为空');
+        return;
+      }
+      if (datas.nameUs.length >= 200){
+        message.error('英文品名长度不能超过200');
+        return;
+      }
+      if (datas.salesman?.length >= 200){
+        message.error('业务员长度不能超过200');
+        return;
+      }
 
       if (empyts.includes(datas.packingWeight)) {
         message.error('包装重量不能为空');
+        return;
+      }
+      if (!reg.test(datas.customsCode)){
+        message.error('海外编码为10位纯数字');
         return;
       }
 
@@ -422,14 +457,15 @@ const AddSku: React.FC<IProps> = props => {
         });
       });
 
-      promise.then(datas => {
+      promise.then(res => {
         const {
           code,
           message: msg,
-        } = datas as Global.IBaseResponse;
+        } = res as Global.IBaseResponse;
         if (code === 200) {
           message.success(msg || '添加成功！');
           onCancel();
+          onSuccess(datas.sku);
           return;
         }
         message.error(msg || '添加失败！');
@@ -447,10 +483,14 @@ const AddSku: React.FC<IProps> = props => {
       withCredentials: true,
       maxCount: 1,
       name: 'pic',
-      beforeUpload(file: { type: string}) {
+      beforeUpload(file: File) {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
           message.error('只允许上传jpg, png格式图片');
+        }
+        if (file.size > 2097152) {
+          message.error('文件大小不能超过2M');
+          return false;
         }
         return isJpgOrPng;
       },
@@ -488,6 +528,12 @@ const AddSku: React.FC<IProps> = props => {
     };
   };
 
+  //清空两端空格
+  const removeSpace = function(val: string){
+    const newValue = val.replace(/(^\s*)|(\s*$)/g, '');
+    return newValue ? String(newValue) : '';   
+  };
+
   return <Modal {...modalConfig}>
     <div className={styles.content}>
       <header className={styles.title}>基本信息</header>
@@ -511,17 +557,26 @@ const AddSku: React.FC<IProps> = props => {
       >
         <div className={styles.base}>
           <div className={styles.leftLayout}>
-            <Item name="sku" label="SKU：" rules={[{
+            <Item name="sku" label="SKU：" normalize={removeSpace} rules={[{
               required: true,
+            }, {
+              max: 40,
+              message: 'SKU最大长度不能超过40',
             }]}>
-              <Input maxLength={40}/>
+              <Input />
             </Item>
-            <Item name="nameUs" label="英文品名：" rules={[{
+            <Item name="nameUs" label="英文品名：" normalize={removeSpace} rules={[{
               required: true,
+            }, {
+              max: 200,
+              message: '英文品名最大长度不能超过200',
             }]}>
-              <Input maxLength={200}/>
+              <Input />
             </Item>
-            <Item name="customsCode" label="海外编码：">
+            <Item name="customsCode" label="海外编码：" normalize={removeSpace} rules={[{
+              pattern: /^\d{10}$/,
+              message: '海外编码为10位纯数字',
+            }]}>
               <Input />
             </Item>
             <Item className={styles.state} name="state" label="状态：">
@@ -529,17 +584,26 @@ const AddSku: React.FC<IProps> = props => {
             </Item>
           </div>
           <div className={styles.centerLayout}>
-            <Item name="nameNa" label="中文品名：" rules={[{
+            <Item name="nameNa" label="中文品名：" normalize={removeSpace} rules={[{
               required: true,
+            }, {
+              max: 80,
+              message: '中文品名最大长度不能超过80',
             }]}>
-              <Input maxLength={80}/>
+              <Input />
             </Item>
-            <Item name="category" label="品类：" rules={[{
+            <Item name="category" label="品类：" normalize={removeSpace} rules={[{
               required: true,
+            }, {
+              max: 40,
+              message: '品类最大长度不能超过40',
             }]}>
-              <Input maxLength={40}/>
+              <Input />
             </Item>
-            <Item name="salesman" label="开发业务员：">
+            <Item name="salesman" label="开发业务员：" normalize={removeSpace} rules={[{
+              max: 200,
+              message: '开发业务员最大长度不能超过200',
+            }]}>
               <Input />
             </Item>
           </div>

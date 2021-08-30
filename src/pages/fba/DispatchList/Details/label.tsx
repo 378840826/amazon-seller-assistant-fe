@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, PureComponent } from 'react';
 import styles from './index.less';
-import { Radio, Modal, Table, Form, Input, message } from 'antd';
-import { Link } from 'umi';
+import { Radio, Modal, Table, Form, Input, message, Popconfirm } from 'antd';
+import { Link, history } from 'umi';
 import { strToUnsignedIntStr } from '@/utils/utils';
-import { asinPandectBaseRouter } from '@/utils/routes';
+import { asinPandectBaseRouter, product } from '@/utils/routes';
 import GoodsImg from '@/pages/components/GoodsImg';
 import { Iconfont, getAmazonAsinUrl } from '@/utils/utils';
 import Barcode from '../../components/Barcode';
@@ -69,7 +69,7 @@ class Printpage extends PureComponent<IPrint>{
                   <div
                     style={{ width: columnnumprops, height: lebalheightprops }} 
                     className={styles.flex}
-                    key={index}
+                    key={`${index}-${i}`}
                   >
                     <div style={{ width: lebalwidthprops }} className={styles.divlebal}>
                       <div className={styles.centerlebal} key={i}>
@@ -119,7 +119,9 @@ const Lebal: React.FC<IProps> = (props) => {
   //是否有提示语
   const [isinclus, setIsinclus] = useState<string>('');
   const [barcodeinclus, setBarcodeinclus] = useState<string>('');
-  const [barcodeHeightclus, setBarcodeHeightclus] = useState<string>('');
+
+  //是否去绑定sku的气泡框
+  const [skuVisible, setSkuVisible] = useState<boolean>(false);
 
   const [tabledata, setTabledata] = useState<ILebal[] >([]);
     
@@ -130,7 +132,7 @@ const Lebal: React.FC<IProps> = (props) => {
     barcodeFontsize: 20,
     barcodewidthprops: 250,
     lebalwidthprops: 250,
-    columnnumprops: 250,
+    columnnumprops: 262,
     lebalheightprops: 200,
   });
 
@@ -140,7 +142,7 @@ const Lebal: React.FC<IProps> = (props) => {
 
   //传给标签大小的值
   const [lebalwidthprops, setLebalwidthprops] = useState<number>(250);
-  const [columnnumprops, setColumnnumprops] = useState<number>(250);
+  const [columnnumprops, setColumnnumprops] = useState<number>(262);
   const [lebalheightprops, setLebalheightprops] = useState<number>(200);
 
   //表单默认值，传给打印模板的值
@@ -210,20 +212,14 @@ const Lebal: React.FC<IProps> = (props) => {
       setBarcodeinclus('');
     }
     if (lebalwidth * columnnum > 210){
-      setIsinclus('标签总长度不能超过a4纸大小');        
+      setIsinclus(
+        `标签总宽度（${lebalwidth}*${columnnum}=${lebalwidth * columnnum}mm）不能超过a4纸宽度（210mm），请修改列数或宽度`
+      );        
     } else {
       setIsinclus('');
-    }      
-    //获取最长的sku长度
-    const maxlengthsku = Math.max.apply(Math, [...tabledata.map((item) => {
-      return item.sku.length;
-    })]);
-    //货品名称的长度，sku的长度，不能大于标签的长度
-    if (maxlengthsku * 0.35 * barcodeFontsize > lebalwidth){
-      setBarcodeHeightclus('字体长度不能超过标签长度');
-    } else {
-      setBarcodeHeightclus('');
-    }
+    } 
+    isPrintSKU || setSkuVisible(false);
+    isPrintSKU && tabledata.some(item => item.sku === null) && setSkuVisible(true); 
   };  
   //点击删除的回调
   const handledelete = function(id: string){
@@ -235,11 +231,14 @@ const Lebal: React.FC<IProps> = (props) => {
       tabledata.splice(index, 1);
       setTabledata([...tabledata]);
     }
+
+    isPrintSKU || setSkuVisible(false);
+    isPrintSKU && tabledata.some(item => item.sku === null) && setSkuVisible(true);
   };
     
   //全部列
   const columns = [{
-    title: '图片中文品名sku',
+    title: '图片品名SKU',
     width: 325,
     dataIndex: 'itemName',
     key: 'itemName',  
@@ -279,7 +278,7 @@ const Lebal: React.FC<IProps> = (props) => {
     align: 'center',
     render(val: string, record: DispatchList.IProductVos, index: number) {            
       return <InputEditBox 
-        value={`${record.issuedNum}`} 
+        value={`${record.issuedNum ? record.issuedNum : 0}`} 
         chagneCallback={(val) => updateDeclared(val as number, index)} 
       />;   
     },
@@ -298,7 +297,7 @@ const Lebal: React.FC<IProps> = (props) => {
     return strToUnsignedIntStr(val);
   };
   const modleonok = () => {     
-    if (isinclus === '' && barcodeinclus === '' && barcodeHeightclus === '' ){
+    if (isinclus === '' && barcodeinclus === '' ){
       setPreviewdata({
         isPrintSKU: isPrintSKU,
         isPrintProductname: isPrintProductname,
@@ -373,10 +372,23 @@ const Lebal: React.FC<IProps> = (props) => {
               </div>
               <div className={styles.singlediv}>
                 <span className={styles.span}>SKU：</span>
-                <Item name="isPrintSKU">
-                  <Radio.Group >
+                <Item name="isPrintSKU">                  
+                  <Radio.Group>
                     <Radio value={false}>不打印</Radio>
-                    <Radio value={true}>打印</Radio>
+                    <Radio value={true}>
+                      <Popconfirm
+                        title="目前还未关联SKU,是否去关联"
+                        visible={skuVisible}
+                        okText="去关联"
+                        cancelText="取消"
+                        onCancel={() => setSkuVisible(false)}
+                        onConfirm={() => {
+                          history.push(product.skuData); 
+                        }}
+                      >
+                        <span>打印</span>
+                      </Popconfirm>
+                    </Radio>
                   </Radio.Group>
                 </Item>                       
               </div>
@@ -397,7 +409,6 @@ const Lebal: React.FC<IProps> = (props) => {
                   <Input/>
                 </Item>
                 <span>pt</span>
-                <span className={styles.inclus}>{barcodeHeightclus}</span>
               </div>
               <div className={styles.singlediv}>
                 <span className={styles.span}>条码宽度：</span>
@@ -466,7 +477,7 @@ const Lebal: React.FC<IProps> = (props) => {
                       return (
                         <div
                           style={{ width: columnnumprops, height: lebalheightprops }} 
-                          className={styles.flex}
+                          className={styles.flexcenter}
                           key={`${index}-${i}`}
                         >
                           <div style={{ width: lebalwidthprops }} className={styles.divlebal}>

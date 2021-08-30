@@ -38,7 +38,6 @@ const pageStyle = `
   }
 `;
 
-const rowCount = 12; // 每页的行数
 
 const Print: React.FC<IProps> = props => {
   const { product, theadData, areCasesRequired } = props;
@@ -70,49 +69,21 @@ const Print: React.FC<IProps> = props => {
               <th>可发量</th>
               <th>FnSKU</th>
               <th>SKU</th>
-              <th>-</th>
+              <th>中文名称</th>
               <th>包装方式</th>
             </tr>
           </thead>
           <tbody>
             {
-              this.state.product.map((item, index: number) => {
-                const currnetIndex = index + 1;
-                let count = 0;
-                if ( 
-                  (currnetIndex > 2 && currnetIndex % rowCount === 0) 
-                  || currnetIndex === this.state.product.length
-                ) {
-                  count++;
-                  return <>
-                    <tr>
-                      <td width={270}>{item.sellerSku}</td>
-                      <td width={120}>{item.declareNum}</td>
-                      <td width={120}>{item.verifyNum}</td>
-                      <td width={120}>{item.fnsku}</td>
-                      <td width={120}>{item.sellerSku}</td>
-                      <td width={300}>{item.itemNameNa ? item.itemNameNa : '—'}</td>
-                      <td width={100}>{areCasesRequired ? ' 原厂包装' : '混装'}</td>
-                    </tr>
-                    <tr>
-                      <td 
-                        colSpan={7} 
-                        style={{ backgroundColor: 'white', textAlign: 'right' }}
-                      >
-                          第{count}页 共{Math.ceil(this.state.product.length / rowCount)}页
-                      </td>
-                    </tr>
-                  </>;
-                }
-  
+              this.state.product.map((item, index: number) => {                  
                 return <tr key={index}>
-                  <td>{item.sellerSku}</td>
-                  <td>{item.declareNum}</td>
-                  <td>{item.verifyNum}</td>
-                  <td>{item.fnsku}</td>
-                  <td>{item.sellerSku}</td>
-                  <td>{item.itemNameNa ? item.itemNameNa : '—'}</td>
-                  <td>{areCasesRequired ? ' 原厂包装' : '混装'}</td>
+                  <td width={270}>{item.sellerSku}</td>
+                  <td width={120}>{item.declareNum}</td>
+                  <td width={120}>{item.verifyNum}</td>
+                  <td width={120}>{item.fnsku}</td>
+                  <td width={120}>{item.sellerSku}</td>
+                  <td width={300}>{item.itemNameNa ? item.itemNameNa : '—'}</td>
+                  <td width={100}>{areCasesRequired ? ' 原厂包装' : '混装'}</td>
                 </tr>;
               })
             }

@@ -80,7 +80,7 @@ const SkuData: React.FC = () => {
         return;
       }
       message.error(msg || 'SKU资料管理列表请求失败！');
-    });
+    }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, state, code]);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const SkuData: React.FC = () => {
   };
 
   const updateSku = function(newData: skuData.IRecord) {
-    console.log(newData);
+    // console.log(newData);
 
     const index = data.findIndex(item => item.id === newData.id);
     data[index] = newData;
@@ -170,7 +170,13 @@ const SkuData: React.FC = () => {
     </header>
 
     <Table {...tableConfig} />
-    <MyMOdal visible={addVisible} onCancel={() => setAddVisible(false)}/>
+    <MyMOdal
+      visible={addVisible}
+      onCancel={() => setAddVisible(false)}
+      onSuccess={sku => {
+        setCode(sku);
+      }}
+    />
     <AiMatch visible={aiVisible} onCancel={() => setAiVisible(false)}/>
   </div>;
 };
