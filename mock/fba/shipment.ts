@@ -175,4 +175,11 @@ export default {
       },
     ],
   }),
+
+  
+  'POST /api/mws/shipment/plan/packageLabels/upload': {
+    code: 200,
+    data: '/new-url',
+    message: '成功',
+  },
 };
