@@ -113,13 +113,7 @@ const Columns = (props: IProps ) => {
       title: 'ShipmentID',
       width: 120,
       render: (value: string[]) => (
-        <>
-          {
-            value?.map(item => {
-              <div>{item}</div>;
-            })
-          }
-        </>
+        <>{ value?.map(item => <div key={item}>{item}</div>) }</>
       ),
     },
     {

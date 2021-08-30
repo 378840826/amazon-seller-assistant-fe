@@ -12,7 +12,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import { Iconfont, requestErrorFeedback } from '@/utils/utils';
 import moment from 'moment';
-import { DoubleRightOutlined } from '@ant-design/icons';
+import { DoubleRightOutlined, LoadingOutlined } from '@ant-design/icons';
 import {
   useSelector,
   useDispatch,
@@ -29,9 +29,9 @@ import {
   Form,
   Button,
   DatePicker,
-  Popconfirm,
   message,
   Modal,
+  Spin,
 } from 'antd';
 import { TableRowSelection } from 'antd/lib/table/interface';
 import ConfireDownList from '@/pages/fba/components/ConfireDownList';
@@ -116,13 +116,13 @@ class ComponentToPrint extends PureComponent<IPrintType> {
           {
             productItemVos?.map(item => {
               return (
-                <tr key={item.sellerSku}>
-                  <td width={270}>{item.sellerSku}</td>
-                  <td width={120}>{item.declareNum}</td>
-                  <td width={120}>{item.fnsku}</td>
-                  <td width={120}>{item.sku}</td>
+                <tr key={item.sellerSku || '-'}>
+                  <td width={270}>{item.sellerSku || '-'}</td>
+                  <td width={120}>{item.declareNum || '-'}</td>
+                  <td width={120}>{item.fnsku || '-'}</td>
+                  <td width={120}>{item.sku || '-'}</td>
                   <td width={320}>{item.nameNa ? item.nameNa : '-'}</td>
-                  <td width={100}>{areCasesRequired}</td>
+                  <td width={100}>{areCasesRequired || '-'}</td>
                 </tr>
               );   
             })
@@ -158,6 +158,7 @@ const PackageList: React.FC = function() {
   });
   const [sites, setSites] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingPrint, setLoadingPrint] = useState<boolean>(false);
   const 
     [printprops, setPrintprops] = 
       useState<Shipment.IShipmentDetails>({} as Shipment.IShipmentDetails);
@@ -348,7 +349,7 @@ const PackageList: React.FC = function() {
     });
   };
 
-  // 生成发货单(批量)
+  // 生成发货单(单个/批量)
   const handleCreateInvoice = function(ids: string[] | number[]) {
     if (ids.length === 0) {
       message.warning('请先勾选shipment');
@@ -375,7 +376,7 @@ const PackageList: React.FC = function() {
             code: number;
             message?: string;
             data: {
-              id: number;
+              id: string;
               invoiceId: string;
             }[];
           };
@@ -383,9 +384,9 @@ const PackageList: React.FC = function() {
             // 更新数据
             const temp = JSON.stringify(shipmentList);
             const newShipmentList: Shipment.IShipmentList[] = JSON.parse(temp);
-            rowSelection.map(item => {
-              const datas = newShipmentList.find(dItem => String(item) === dItem.id);
-              const refereceid = data.find(({ id }) => id === item);
+            shipmentList.map(item => {
+              const datas = newShipmentList.find(dItem => item.id === dItem.id);
+              const refereceid = data.find(({ id }) => id === item.id);
               datas && refereceid && (datas.invoiceId = refereceid.invoiceId);
             });
             dispatch({
@@ -494,10 +495,13 @@ const PackageList: React.FC = function() {
 
   // 点击打印
   const handlePrint = (id: string) => {
+    setLoadingPrint(true);
     getPrintDetails(id).then(() => {
       printpage && printpage();
     }).catch(err => {
       message.error(err.message);
+    }).finally(() => {
+      setLoadingPrint(false);
     });
   };
 
@@ -709,19 +713,15 @@ const PackageList: React.FC = function() {
             {
               // 排除已生成发货单、已作废、已取消的
               !(record.isGenerateInvoice || ['已作废', '已取消'].includes(record.shipmentState)) &&
-              <Popconfirm 
-                title="确定生成发货单？"
-                placement="left"
-                overlayClassName={styles.delTooltip}
-                onConfirm={() => handleCreateInvoice([record.id])}
-                icon={<Iconfont type="icon-tishi2" />}
-              >
-                <span className={styles.create}>生成发货单</span>
-              </Popconfirm>
+              <span className={styles.create} onClick={() => handleCreateInvoice([record.id])}>
+                生成发货单
+              </span>
             }
           </div>
           <div>
-            <span onClick={() => handlePrint(record.id)}>打印</span>
+            <Spin size="small" spinning={loadingPrint} indicator={<LoadingOutlined />}>
+              <span onClick={() => handlePrint(record.id)}>打印</span>
+            </Spin>
             <div style={{ display: 'none' }}>
               <ComponentToPrint ref={componentRef} printprops={printprops} />
             </div>

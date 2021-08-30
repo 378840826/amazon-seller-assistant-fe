@@ -170,7 +170,7 @@ const Details: React.FC<IProps> = function(props) {
       return;
     }
     // 获取需要打印的数据
-    const p1 = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       dispatch({
         type: 'fbaDispatchList/getInvoiceDetail',
         resolve,
@@ -178,29 +178,16 @@ const Details: React.FC<IProps> = function(props) {
         payload: { id: data.id },
       });
     });
-    // 获取 shipment 名称
-    const p2 = new Promise((resolve, reject) => {
-      dispatch({
-        type: 'shipment/getShipmentDetails',
-        resolve,
-        reject,
-        payload: { id: data.id },
-      });
-    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Promise.all([p1, p2]).then((res: any) => {
-      const [p1Res, p2Res] = res;
-      if (p1Res.code === 200) {
-        setInitData({ ...p1Res.data });
-        setProductVos([...p1Res.data.productItemVos]);
-        setLogs([...p1Res.data.shipmentModifies]);
-        if (p2Res.code === 200) {
-          setPrintdata({ ...p1Res.data, shipmentName: p2Res.data.shipmentName });
-        } else {
-          message.error(p2Res.message || '获取打印数据失败！');
-        }
+    promise.then((res: any) => {
+      const { code, data, message: msg } = res;
+      if (code === 200) {
+        setInitData({ ...data });
+        setProductVos([...data.productItemVos]);
+        setLogs([...data.shipmentModifies]);
+        setPrintdata({ ...data });
       } else {
-        message.error(p1Res.message || '获取初始化数据失败！请重试');
+        message.error(msg || '获取初始化数据失败！请重试');
       }
     });
   }, [dispatch, visible, data]);

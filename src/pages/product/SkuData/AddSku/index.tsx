@@ -19,6 +19,7 @@ import TableNotData from '@/components/TableNotData';
 interface IProps {
   visible: boolean;
   onCancel: () => void;
+  onSuccess: (sku: string) => void;
 }
 
 interface IPage extends ConnectProps {
@@ -31,7 +32,7 @@ const { Item } = Form;
 const { TabPane } = Tabs;
 let lastFetchId = 0;
 const AddSku: React.FC<IProps> = props => {
-  const { visible, onCancel } = props;
+  const { visible, onCancel, onSuccess } = props;
 
   const shops = useSelector((state: IPage) => state.configurationBase.shops);
   const warehouses = useSelector((state: IPage) => state.warehouseLocation.warehouses);
@@ -398,7 +399,7 @@ const AddSku: React.FC<IProps> = props => {
         message.error('英文品名长度不能超过200');
         return;
       }
-      if (datas.salesman.length >= 200){
+      if (datas.salesman?.length >= 200){
         message.error('业务员长度不能超过200');
         return;
       }
@@ -456,14 +457,15 @@ const AddSku: React.FC<IProps> = props => {
         });
       });
 
-      promise.then(datas => {
+      promise.then(res => {
         const {
           code,
           message: msg,
-        } = datas as Global.IBaseResponse;
+        } = res as Global.IBaseResponse;
         if (code === 200) {
           message.success(msg || '添加成功！');
           onCancel();
+          onSuccess(datas.sku);
           return;
         }
         message.error(msg || '添加失败！');
@@ -481,10 +483,14 @@ const AddSku: React.FC<IProps> = props => {
       withCredentials: true,
       maxCount: 1,
       name: 'pic',
-      beforeUpload(file: { type: string}) {
+      beforeUpload(file: File) {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
           message.error('只允许上传jpg, png格式图片');
+        }
+        if (file.size > 2097152) {
+          message.error('文件大小不能超过2M');
+          return false;
         }
         return isJpgOrPng;
       },

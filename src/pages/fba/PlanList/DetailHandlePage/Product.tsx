@@ -28,6 +28,8 @@ interface IParams {
   setBatchProduct: (selectRowKeys: string[]) => void;
   loading?: boolean;
   state: boolean;
+  // 用于商品表格排序
+  changeProductData: (d: planList.IProductList[]) => void;
 }
 
 
@@ -42,6 +44,7 @@ const ProductCol = function(props: IParams) {
     setBatchProduct,
     loading,
     state,
+    changeProductData,
   } = props;
   const dispatch = useDispatch();
 
@@ -214,6 +217,21 @@ const ProductCol = function(props: IParams) {
       y: 316,
     },
     loading,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onChange: (_: any, __: any, sorter: any) => {
+      const { order, field } = sorter;
+      const newData = data.sort((a, b) => {
+        const nunA = Number(a[field] || 0);
+        const nunB = Number(b[field] || 0);
+        if (order === 'ascend') {
+          return nunA - nunB;
+        } else if (order === 'descend') {
+          return nunB - nunA;
+        }
+        return 0;
+      });
+      changeProductData(newData);
+    },
   };
 
   if (!(verify && dispose)) {

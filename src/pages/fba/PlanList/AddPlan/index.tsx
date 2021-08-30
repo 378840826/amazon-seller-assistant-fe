@@ -61,6 +61,11 @@ const Addplan: React.FC<IProps> = function(props) {
   const [spinAddress, setSpinAddress] = useState<planList.IAddressLine[]>([]);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const currentSiteShops = shops.filter(item => {
+    if (item.marketplace === form.getFieldValue('countryCode')) {
+      return item;
+    }
+  });
 
   const requestProduct = useCallback(
     (marketplace: string, storeId: string, code = searchProduct) => {
@@ -98,7 +103,7 @@ const Addplan: React.FC<IProps> = function(props) {
         }
         
         message.error(msg === '暂无数据！' ? '该店铺暂无商品' : '商品列表异常！');
-        setData([...[]]);
+        setData([]);
       }));
     }, [dispatch, searchProduct]);
 
@@ -453,12 +458,13 @@ const Addplan: React.FC<IProps> = function(props) {
       setSearchProduct('notRequest');
       return;
     }
-    
-    setSearchProduct(asin);
+    requestProduct(form.getFieldValue('countryCode'), form.getFieldValue('storeId'));
+    // setSearchProduct(asin);
   };
 
-  // 当选择了站点后，重新请求店铺
-  const fieldsValue = function(values: any) { // eslint-disable-line
+  // form change
+  const handleFormFieldsValue = function(values: any) { // eslint-disable-line
+    // 切换站点后，加载店铺
     if (values.countryCode) {
       getShops(values.countryCode);
     }
@@ -466,7 +472,7 @@ const Addplan: React.FC<IProps> = function(props) {
     // 切换站点或店铺时，选中的商品清空
     if (values.countryCode || values.storeId) {
       const countryCode = form.getFieldValue('countryCode');
-      setSelects([...[]]); 
+      setSelects([]); 
       values.storeId && (
         getSpinAddress(values.storeId),
         requestProduct(countryCode, values.storeId)
@@ -577,7 +583,7 @@ const Addplan: React.FC<IProps> = function(props) {
         labelAlign="left"
         name="addPlan"
         form={form}
-        onValuesChange={fieldsValue}
+        onValuesChange={handleFormFieldsValue}
       >
         <Item name="countryCode" label="站点">
           <Select>
@@ -588,9 +594,11 @@ const Addplan: React.FC<IProps> = function(props) {
         </Item>
         <Item name="storeId" label="店铺名称">
           <Select>
-            {shops.map((item, index) => {
-              return <Option value={item.id} key={index}>{item.storeName}</Option>;
-            })}
+            {
+              currentSiteShops.map((item, index) => (
+                <Option value={item.id} key={index}>{item.storeName}</Option>
+              ))
+            }
           </Select>
         </Item>
         <Item name="warehouseDe" label="目的仓库">

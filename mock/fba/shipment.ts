@@ -17,7 +17,37 @@ export default {
         size: 50,
         total: 999,
         page: 40,
-        'records|1-20': [
+        records: [
+          {
+            'id': '1427518284523413506',
+            'shipmentState': 'WORKING',
+            'mwsShipmentId': 'FBA16CG5GXTW',
+            'shipmentName': 'FBA（08/16/21 23:30 PM) -1',
+            'shipmentId': '2021081714301427518074967597058',
+            'invoiceId': '',
+            'countryCode': 'US',
+            'storeName': 'EnPoint',
+            'destinationFulfillmentCenterId': 'TEB9',
+            'shippingType': '物流名称- 测试',
+            'shippingId': '1111111',
+            'trackingId': '222222222222',
+            'casesRequired': '原厂包装',
+            'labelingType': '卖家',
+            'packageLabelType': '未上传',
+            'referenceId': '同步中',
+            'mskuNum': 1,
+            'declareNum': '17',
+            'issuedNum': '0',
+            'receivedNum': '0',
+            'disparityNum': '17',
+            'userId': '1272878051107381250',
+            'userName': '测试',
+            'gmtCreate': '2021-08-25T20:45:11+08:00',
+            'receivingTime': null,
+            'gmtModified': '2021-08-26T12:41:02+08:00',
+            'isGenerateInvoice': false,
+            'zipUrl': null,
+          },
           {
             'id|1-9999': 1,
             'shipmentState|1': ['working', 'shipped', 'receiving'],
@@ -138,6 +168,11 @@ export default {
 
   'POST /api/mws/shipment/entity/generate/invoice': Mock.mock({
     code: 200,
-    message: '成功',
+    data: [
+      {
+        id: '1427518284523413506',
+        invoiceId: '新的发货单号',
+      },
+    ],
   }),
 };

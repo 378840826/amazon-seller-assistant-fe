@@ -75,7 +75,7 @@ const Details: React.FC<IProps> = function(props) {
   const [dispose, setDispose] = useState<boolean>(false); // 是否已处理
   const [isFBA, setisFBA] = useState<boolean>(false); // true为FBA货件详情，false为海外自营仓货件详情
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [baseData, setBaseData] = useState<planList.IPlanDetail>({} as any); // 货件计划详情（头部的基本数据）
+  const [baseData, setBaseData] = useState<IData>({} as any); // 货件计划详情（头部的基本数据）
   const [logData, setLogData] = useState<planList.ILog[]>([]); // 操作日志列表
   const [productData, setProductData] = useState<planList.IProductList[]>([]); // 商品明细列表
   const [spinAddress, setSpinAddress] = useState<planList.IAddressLine[]>([]); // 发货地址下拉列表
@@ -206,7 +206,7 @@ const Details: React.FC<IProps> = function(props) {
         data: IData;
       };  
 
-      if (code === 200) {
+      if (code === 200) {        
         setBaseData(data);
         setLogData(data.modifys);
         setProductData(data.products);  
@@ -367,7 +367,6 @@ const Details: React.FC<IProps> = function(props) {
         item.declareNum = item.verifyNum;
       }
     }
-    addSuccessCallbal();
     setProductData([...productData]);
   };
 
@@ -899,10 +898,13 @@ const Details: React.FC<IProps> = function(props) {
             setBatchProduct={setBatchProduct}
             loading={productListLoading}
             state={baseData?.state || false}
+            changeProductData={
+              (products: IData['products']) => setBaseData({ ...baseData, products })
+            }
           /> }
 
           {/*  Shipment信息 */}
-          { nav === 'shipment' && <Shipment data={[]}/>}
+          { nav === 'shipment' && <Shipment data={baseData.shipments}/>}
           
           {/* 操作日志 */}
           { nav === 'log' && <Log data={logData}/> }
