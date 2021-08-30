@@ -1,0 +1,32 @@
+.box {
+  width: 450px;
+
+  :global {
+    .ant-form-item-label {
+      width: 58px;
+
+      label::before {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+}
+
+.showNumbert {
+  padding: 14px 0 14px;
+
+  .text {
+    min-width: 58px;
+    display: inline-block;
+    color: @heading-color;
+  }
+}
+
+.footBtns {
+  text-align: center;
+
+  button {
+    margin: 0 8px;
+  }
+}

@@ -1,0 +1,44 @@
+.editBox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: @border-radius-base;
+  transition: all 0.3s;
+  justify-content: center;
+  cursor: default;
+  margin-bottom: 5px;
+
+  .editIcon {
+    position: absolute;
+    right: -16px;
+    padding-left: 5px;
+    cursor: pointer;
+    opacity: 0;
+    color: @text-color-secondary;
+    transition: all 0.3s;
+  }
+
+  &:hover .editIcon {
+    color: @primary-color;
+  }
+
+  .showValue {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.editInputBox {
+  position: relative;
+
+  .input {
+    width: 100%;
+    height: 30px;
+    border-radius: @border-radius-base @border-radius-base 0 @border-radius-base;
+    resize: none;
+    text-align: center;
+  }
+}

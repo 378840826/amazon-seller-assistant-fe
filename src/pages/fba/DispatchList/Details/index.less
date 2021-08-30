@@ -1,0 +1,623 @@
+.modalBox {
+  :global(.ant-modal-body) {
+    padding: 16px 20px 0;
+    text-align: left;
+  }
+
+  :global(.ant-modal-footer) {
+    border-top: 0;
+    text-align: center;
+  }
+}
+
+.topHead {
+  height: 21px;
+  line-height: 21px;
+  color: @heading-color;
+  font-weight: bold;
+  font-size: @font-size-lg;
+  margin-bottom: 16px;
+}
+
+.strikingText {
+  color: @heading-color;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+
+  :global {
+    .h-async-default-icon,
+    .h-default-icon {
+      opacity: 1 !important;
+    }
+  }
+
+  .item {
+    display: flex;
+  }
+
+  .content {
+    color: @heading-color;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .leftLayout {
+    min-width: 290px;
+  }
+
+  .centerLayout {
+    min-width: 380px;
+  }
+
+  .select {
+    display: inline-flex;
+    margin: 0;
+    max-height: 22px;
+    z-index: 1;
+    // overflow: hidden;
+
+    :global(.ant-form-item-control-input) {
+      min-height: auto;
+      height: 22px;
+      line-height: 22px;
+    }
+
+    :global(.ant-select) {
+      height: 22px;
+      color: @heading-color !important;
+    }
+
+    :global(.ant-select-selector) {
+      padding: 0 8px 0 0;
+      height: 22px;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    :global(.ant-select-selection-item) {
+      line-height: initial;
+    }
+
+    :global(.ant-form-item-control-input-content) {
+      height: 22px;
+    }
+  }
+
+  .remark {
+    display: flex;
+  }
+}
+
+.navs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav {
+  margin: 20px 0 10px;
+
+  .navItem {
+    padding: 0 0 5px 0;
+    margin-right: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+
+  .navItem.active {
+    color: @link-color;
+    border-bottom: 1px solid @primary-color;
+  }
+}
+
+//
+.productTable,
+.shipmentBox,
+.logBox {
+  :global(.ant-table-column-sorters) {
+    padding: 0 !important;
+  }
+
+  :global(.ant-table-body) {
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+    overflow-y: auto !important;
+  }
+
+  tr:last-child td {
+    border-bottom: 0 !important;
+  }
+
+  tr:hover td {
+    background-color: @simple-table-header-bg !important;
+  }
+
+  th {
+    height: 44px;
+    line-height: 44px;
+    background-color: #f3f3f3 !important;
+  }
+
+  th,
+  td {
+    padding: 0 !important;
+  }
+
+  tr:not(:first-child) td {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+}
+
+// 商品明细
+
+.productTable {
+  .handleCol {
+    color: @btn-text-color;
+    cursor: pointer;
+  }
+
+  div.productCol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 50px 6px 0;
+    text-align: left;
+
+    .details {
+      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title {
+      width: 255px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .linkIcon {
+      color: @text-color-secondary;
+      transition: all 0.3s;
+      padding-right: 2px;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .asin {
+      width: 85px;
+      flex: 0 0 auto;
+      color: @btn-text-color;
+    }
+
+    .sku {
+      width: 160px;
+      flex: 0 0 auto;
+      white-space: pre-wrap;
+      word-break: initial;
+      line-height: 14px;
+    }
+
+    &:hover {
+      .linkIcon {
+        color: @link-color;
+      }
+    }
+  }
+
+  .applyCol {
+    .apply {
+      color: @link-color;
+      cursor: pointer;
+    }
+  }
+}
+
+.shipmentBox {
+  .notData {
+    padding: 50px 0;
+    color: @text-color-secondary;
+  }
+
+  .dateCol {
+    padding: 6px 0;
+  }
+}
+
+.logBox {
+  width: 753px;
+
+  td {
+    height: 44px;
+  }
+}
+
+.btns {
+  text-align: center;
+  padding: 10px 0 20px;
+
+  button {
+    margin: 0 8px;
+  }
+}
+
+//标签预览
+.modal {
+  :global(.ant-modal-body) {
+    width: 1116px;
+    border-radius: 4px;
+  }
+
+  .content {
+    display: flex;
+    font-size: 14px;
+    font-family: MicrosoftYaHei, sans-serif;
+    color: #555;
+    line-height: 26px;
+    text-align: left;
+
+    .title {
+      font-size: 16px;
+      font-family: MicrosoftYaHei-Bold, MicrosoftYaHei, sans-serif;
+      font-weight: bold;
+      color: #222;
+      line-height: 21px;
+      margin-bottom: 11px;
+    }
+
+    .left {
+      width: 646px;
+      border-right: 2px solid #d9d9d9;
+
+      .singlediv {
+        display: flex;
+        align-items: center;
+
+        .span {
+          display: inline-block;
+          width: 70px;
+        }
+
+        :global(.ant-input) {
+          display: inline-block;
+          width: 100px;
+          height: 28px;
+          border-radius: 4px;
+          border: 1px solid #d9d9d9;
+          margin-left: 9px;
+          margin-right: 9px;
+          text-align: center;
+          padding: 0;
+        }
+
+        :global(.ant-form-item) {
+          margin-bottom: 0;
+        }
+
+        :global(.ant-radio-wrapper) {
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .lastspan {
+          display: inline-block;
+          width: 98px;
+          margin-left: 390px;
+        }
+
+        .inclus {
+          font-size: 12px;
+          width: 230px;
+          font-family: MicrosoftYaHei, sans-serif;
+          color: #ff000d;
+          line-height: 14px;
+          margin-left: 10px;
+        }
+      }
+
+      .table {
+        margin-top: 12px;
+
+        :global(.ant-table-container) {
+          margin-right: 50px;
+          background: #fff;
+          border-radius: 2px 2px 0 0;
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC, sans-serif;
+          color: #222;
+          line-height: 17px;
+          text-align: center;
+          border: 1px solid #e5e5e5;
+        }
+
+        tr:last-child td {
+          border-bottom: 0 !important;
+        }
+
+        tr:hover td {
+          background-color: @simple-table-header-bg !important;
+        }
+
+        th {
+          height: 44px;
+          line-height: 44px;
+          background-color: #f3f3f3 !important;
+        }
+
+        th,
+        td {
+          padding: 0 !important;
+        }
+
+        tr:not(:first-child) td {
+          padding-top: 1px !important;
+          padding-bottom: 1px !important;
+        }
+
+        .productCol {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 6px 15px 6px 0;
+          text-align: left;
+
+          .coldetails {
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .coltitle {
+            width: 249px;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .collinkIcon {
+            color: @text-color-secondary;
+            transition: all 0.3s;
+            padding-right: 2px;
+          }
+
+          footer {
+            display: flex;
+            justify-content: space-between;
+          }
+
+          .colasin {
+            width: 85px;
+            flex: 0 0 auto;
+            color: @btn-text-color;
+          }
+
+          .colsku {
+            width: 160px;
+            flex: 0 0 auto;
+            white-space: pre-wrap;
+            word-break: initial;
+            line-height: 14px;
+          }
+
+          &:hover {
+            .collinkIcon {
+              color: @link-color;
+            }
+          }
+        }
+
+        .uninumber {
+          width: 112px;
+          height: 28px;
+          border-radius: 4px;
+          border: 1px solid #d9d9d9;
+        }
+
+        .handledelete {
+          font-size: 12px;
+          font-family: MicrosoftYaHei, sans-serif;
+          color: #ff000d;
+          line-height: 62px;
+        }
+      }
+    }
+
+    .right {
+      margin-left: 50px;
+      font-size: 14px;
+      font-family: MicrosoftYaHei, sans-serif;
+      color: #222;
+      line-height: 24px;
+
+      .lebal {
+        margin-top: 5px;
+        margin-bottom: 6px;
+      }
+
+      .divheight {
+        height: 24px;
+      }
+    }
+  }
+
+  :global(.ant-modal-footer) {
+    border-top: 0;
+    text-align: center;
+  }
+}
+
+.lebalmodal {
+  .title {
+    font-size: 16px;
+    font-family: MicrosoftYaHei-Bold, MicrosoftYaHei, sans-serif;
+    font-weight: bold;
+    color: #222;
+    line-height: 21px;
+    text-align: left;
+  }
+
+  .a4 {
+    width: 1050px;
+    height: 566px;
+    border-radius: 4px;
+    margin-top: 11px;
+    border: 1px solid #d9d9d9;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    .a4content {
+      width: 1050px;
+      height: 1600px;
+
+      .flex {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: left;
+      }
+
+      .flexcenter {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .divlebal {
+        text-align: left;
+        font-size: 12px;
+        font-family: MicrosoftYaHei, sans-serif;
+        color: #222;
+        line-height: 18px;
+
+        .centerlebal {
+          display: flex;
+          flex-direction: row;
+          -ms-flex-align: center;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .productCol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 50px 6px 0;
+    text-align: left;
+
+    .details {
+      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title {
+      width: 255px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .linkIcon {
+      color: @text-color-secondary;
+      transition: all 0.3s;
+      padding-right: 2px;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .asin {
+      width: 85px;
+      flex: 0 0 auto;
+      color: @btn-text-color;
+    }
+
+    .sku {
+      width: 160px;
+      flex: 0 0 auto;
+      white-space: pre-wrap;
+      word-break: initial;
+      line-height: 14px;
+    }
+
+    &:hover {
+      .linkIcon {
+        color: @link-color;
+      }
+    }
+  }
+}
+
+.printstyle {
+  width: 1050px;
+  margin: 0 15px;
+
+  .firstdiv {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+
+    .flex {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .divlebal {
+      text-align: left;
+      font-size: 12px;
+      font-family: MicrosoftYaHei, sans-serif;
+      color: #222;
+      line-height: 18px;
+
+      .centerlebal {
+        display: flex;
+        flex-direction: row;
+        -ms-flex-align: center;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+//打印样式
+.printtable {
+  width: 1050px;
+  background: #fff;
+
+  tr {
+    width: 100%;
+  }
+
+  th,
+  td {
+    text-align: center;
+    border: 1px solid #222;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+}
