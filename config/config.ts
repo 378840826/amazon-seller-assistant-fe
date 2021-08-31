@@ -30,6 +30,7 @@ const config =  {
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',
+      // 'target': 'https://test.workics.cn',
       'changeOrigin': true,
         secure: false,   
       // 'pathRewrite': { '^/api' : '' },

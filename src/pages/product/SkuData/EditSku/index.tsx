@@ -9,7 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Modal, Form, Input, Radio, Upload, Tabs, message, Select, Button, Table, Spin } from 'antd';
+import { Modal, Form, Input, Radio, Upload, Tabs, message, Select, Button, Table } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { states, packWeightUnit, packSizeUnit, packTextureUnit, shopDownlist } from '../config';
 import { useSelector, ConnectProps, IConfigurationBaseState, IWarehouseLocationState, useDispatch } from 'umi';
@@ -29,7 +29,7 @@ interface IProps {
 
 const { Item } = Form;
 const { TabPane } = Tabs;
-let lastFetchId = 0;
+// let lastFetchId = 0;
 const AddSku: React.FC<IProps> = props => {
   const { initData, updateSku } = props;
 
@@ -41,10 +41,12 @@ const AddSku: React.FC<IProps> = props => {
   const [imageUrl, setImageUrl] = useState<string|null>(null); // 首页图片
   const [packImage, setPackImage] = useState<string|null>(null); // 包装图片
   const [nav, setNav] = useState<string>('1');
-  const [fetching, setFetching] = useState<boolean>(false); // 搜索MSKU时的loading
-  const [skuData, setSkuData] = useState<skuData.IMskuList[]>([]);
+  // const [fetching, setFetching] = useState<boolean>(false); // 搜索MSKU时的loading
+  // 添加 MSKU 时，当前选中的站点下的全部 msku
+  const [storeSku, setStoreSku] = useState<skuData.IMskuList[]>([]);
+  const [skuListData, setSkuListData] = useState<skuData.IMskuList[]>([]);
   // msku列表
-  const [data, setData] = useState<skuData.IMskuList[]>([]);
+  const [mskuTableData, setMskuTableData] = useState<skuData.IMskuList[]>([]);
   // 库位号下拉列表
   const [locationNum, setLocatioNum] = useState<skuData.ILocations[]>([]);
   // 库位号列表
@@ -57,7 +59,7 @@ const AddSku: React.FC<IProps> = props => {
     form.setFieldsValue({ ... initData });
     setImageUrl(initData.imageUrl || '');
     setPackImage(initData.pimageUrl || '');
-    setData([...initData.mskus]);
+    setMskuTableData([...initData.mskus]);
     setLocations([...initData.locationNos]);
 
     // 其它包装材质
@@ -99,40 +101,21 @@ const AddSku: React.FC<IProps> = props => {
 
     dispatch({
       type: 'configurationBase/getShop',
-      payload: { marketplace: val },
+      payload: { marketplace: val ? val : null },
     });
   };
 
-  // 搜索msku
-  const search = (value: string) => {
-    const fetchId = lastFetchId;
-    const { storeName: id } = form.getFieldsValue();
-
-    if (!id) {
-      message.error('未选中店铺');
-      return;
-    }
-
-    setSkuData([...[]]);
-    setFetching(true);
-
-    if (fetchId !== lastFetchId) {
-      // for fetch callback order
-      return;
-    }
-
+  // 请求店铺下的全部 msku
+  const getStoreMsku = function(storeId: string) {
     new Promise((resolve, reject) => {
       dispatch({
         type: 'skuData/getMskuList',
         resolve,
         reject,
-        payload: {
-          id,
-          code: value,
-        },
+        // code 为接口要求不必须参数
+        payload: { id: storeId, code: '' },
       });
     }).then(datas => {
-      lastFetchId += 1;
       const {
         code,
         message: msg,
@@ -147,13 +130,22 @@ const AddSku: React.FC<IProps> = props => {
         if (data.length === 0) {
           message.error('暂无MSKU');
         }
-        setSkuData([...data]);
-        setFetching(false);
+        setSkuListData([...data]);
+        setStoreSku([...data]);
         return;
       }
       message.error(msg || '请求MSKU列表失败，请重试！');
     });
   };
+
+  // 搜索msku
+  const search = (value: string) => {
+    const newList = storeSku.filter(
+      msku => msku.sellerSku.toLowerCase().includes(value.toLowerCase())
+    );
+    setSkuListData(newList);
+  };
+  
 
   // 请求库位号
   const requestLocationNum = function(locationId: number, code: string|null = null) {
@@ -200,13 +192,8 @@ const AddSku: React.FC<IProps> = props => {
     let marketplace = datas.marketplace;
     let storeName = datas.storeName;
 
-    if (!marketplace) {
-      message.error('请选择站点！');
-      return;
-    }
-
-    if (!storeName) {
-      message.error('请选择店铺！');
+    if (!marketplace || !storeName) {
+      message.error('请选择站点和店铺！');
       return;
     }
 
@@ -231,31 +218,36 @@ const AddSku: React.FC<IProps> = props => {
     });
 
     mskuList.forEach((item: string) => {
-      const mskuIndex = skuData.findIndex(childItem => childItem.sellerSku === item);
-
-      data.push({
+      const mskuIndex = skuListData.findIndex(childItem => childItem.sellerSku === item);
+      // 不能重复
+      const repetition = mskuTableData.find(t => t.sellerSku === item);
+      if (repetition) {
+        message.warning(`MSKU：${repetition.sellerSku} 已添加，无需重复添加`);
+        return;
+      }
+      mskuTableData.push({
         sellerSku: item,
-        asin1: skuData[mskuIndex].asin1,
-        storeId: skuData[mskuIndex].storeId,
+        asin1: skuListData[mskuIndex].asin1,
+        storeId: skuListData[mskuIndex].storeId,
         marketplace,
         storeName,
       });
     });
     
-    setData([...data]);
+    setMskuTableData([...mskuTableData]);
   };
 
   // 删除sku
   const delMsku = function(sellerSku: string) {
     for (let i = 0; i < sellerSku.length; i++) {
-      const item = data[i];
+      const item = mskuTableData[i];
       if (item.sellerSku === sellerSku) {
-        data.splice(i, 1);
+        mskuTableData.splice(i, 1);
         break;
       }
     }
 
-    setData([...data]);
+    setMskuTableData([...mskuTableData]);
   };
 
   // 删除库位号
@@ -348,7 +340,7 @@ const AddSku: React.FC<IProps> = props => {
   // msku
   const mskuTableConfig = {
     pagination: false as false,
-    dataSource: data as [],
+    dataSource: mskuTableData as [],
     columns: mskuColumns as [],
     className: styles.table,
     scroll: {
@@ -388,7 +380,7 @@ const AddSku: React.FC<IProps> = props => {
       datas = Object.assign({}, initData, datas);
       const empyts = [null, undefined, ''];
       datas.id = initData.id;
-      datas.mskuProducts = data;
+      datas.mskuProducts = mskuTableData;
       datas.locations = locations;
       datas.imageUrl = imageUrl;
       datas.pimageUrl = packImage;
@@ -519,6 +511,24 @@ const AddSku: React.FC<IProps> = props => {
     };
   };
 
+  // form change
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFormVlaueChange = (changeVal: any, all: any) => {
+    const keys = Object.keys(changeVal);
+    // 如果修改了 站点或店铺
+    if (keys.includes('marketplace') || keys.includes('storeName')) {
+      // 店铺为空时，清空 msku
+      if (!all.marketplace || !changeVal.storeName) {
+        setSkuListData([]);
+        setStoreSku([]);
+      } else {
+        getStoreMsku(all.storeName);
+      }
+      // 清除下拉框中已选的 msku
+      form.setFieldsValue({ mskuList: undefined });
+    }
+  };
+
   return <div>
     <span 
       onClick={() => setVisible(!visible)} 
@@ -543,6 +553,7 @@ const AddSku: React.FC<IProps> = props => {
             packingMaterial: packTextureUnit[0].value,
             isFragile: false,
           }}
+          onValuesChange={handleFormVlaueChange}
         >
           <div className={styles.base}>
             <div className={styles.leftLayout}>
@@ -648,12 +659,12 @@ const AddSku: React.FC<IProps> = props => {
                         onSearch={search}
                         maxTagCount={2}
                         placeholder="输入MSKU"
-                        notFoundContent={fetching ? <Spin size="small" /> : null}
+                        // notFoundContent={fetching ? <Spin size="small" /> : null}
                         listItemHeight={10} 
                         listHeight={250}
                       >
                         {
-                          skuData.map((item, index) => {
+                          skuListData.map((item, index) => {
                             return <Select.Option 
                               key={index} 
                               value={item.sellerSku}>
