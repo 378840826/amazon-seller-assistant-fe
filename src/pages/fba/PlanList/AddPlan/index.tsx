@@ -278,9 +278,9 @@ const Addplan: React.FC<IProps> = function(props) {
   };
 
   // 删除单个
-  const delItemSelect = (asin: string) => {
+  const delItemSelect = (sellerSku: string) => {
     for (let i = 0; i < selects.length; i++) {
-      if (selects[i].asin1 === asin) {
+      if (selects[i].sellerSku === sellerSku) {
         selects.splice(i, 1);
         setSelects([...selects]);
         break;
@@ -297,10 +297,10 @@ const Addplan: React.FC<IProps> = function(props) {
   };
 
   // 修改申报量
-  const updateSaid = function(asin: string, newValue: string) {
+  const updateSaid = function(sellerSku: string, newValue: string) {
     for (let index = 0; index < selects.length; index++) {
       const item = selects[index];
-      if (item.asin1 === asin) {
+      if (item.sellerSku === sellerSku) {
         item.declareNum = String(newValue);
         break;
       }
@@ -385,7 +385,7 @@ const Addplan: React.FC<IProps> = function(props) {
       {
         title: '操作',
         align: 'center',
-        dataIndex: 'asin1',
+        dataIndex: 'sellerSku',
         // key: 'handle',
         width: 60,
         render(val: string, record: planList.IProductList) {
@@ -402,7 +402,7 @@ const Addplan: React.FC<IProps> = function(props) {
 
           for (let i = 0; i < selects.length; i++) {
             const item = selects[i];
-            if (item.asin1 === val) {
+            if (item.sellerSku === val) {
               flag = true;
               break;
             }
@@ -433,7 +433,7 @@ const Addplan: React.FC<IProps> = function(props) {
         render: (val: string, record: planList.IProductList) => (
           <InputEditBox
             value={val}
-            chagneCallback={val => updateSaid(record.asin1, String(val))}
+            chagneCallback={val => updateSaid(record.sellerSku, String(val))}
             format={{
               converterFun: strToUnsignedIntStr,
               valueRule: {

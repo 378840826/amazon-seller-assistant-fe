@@ -92,13 +92,13 @@ const Add: React.FC<IProps> = props => {
     overlayClassName: styles.box,
     width: 450,
     content: <Form form={form} colon={false} initialValues={initValues} labelAlign="left">
-      <Form.Item label="物流名称：" name="name" rules={[{ required: true }]}>
-        <Input maxLength={20}/>
+      <Form.Item label="物流名称：" name="name" rules={[{ required: true, max: 20 }]}>
+        <Input />
       </Form.Item>
       <Form.Item label="物流商名称：" name="providerName" rules={[{ required: true, max: 20 }]}>
         <Input />
       </Form.Item>
-      <Form.Item label="货代：" name="forwarderName" rules={[{ max: 12 }]}>
+      <Form.Item label="货代：" name="forwarderName" rules={[{ max: 20 }]}>
         <Input />
       </Form.Item>
       <Form.Item label="发货国家：" name="countryCode">

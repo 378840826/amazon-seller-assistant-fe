@@ -31,7 +31,10 @@ const Add: React.FC<IProps> = props => {
   const [warehouses, setWarehouses] = useState<Global.IOption[]>([]);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-
+  // 库区填写限制 A-Z 01-99
+  const districtReg = /^[A-Z](0[1-9]|[1-9][0-9])$/;
+  // 货架号 层 位 两位字母或数字
+  const twoNumStrReg = /^[A-Z|0-9][A-Z|0-9]$/;
 
   // 仓库列表
   useEffect(() => {
@@ -109,8 +112,8 @@ const Add: React.FC<IProps> = props => {
         return;
       }
 
-      if (!/^[A-Z]$/.test(data.district)) {
-        message.error('库区可填写A-Z');
+      if (!districtReg.test(data.district)) {
+        message.error('库区请输入一位大写字母+2位纯数字，如B02');
         form.submit();
         return;
       }
@@ -121,8 +124,8 @@ const Add: React.FC<IProps> = props => {
         return;
       }
 
-      if (!/^[1-9][0-9]?$/.test(data.number)) {
-        message.error('货架号可输入1-99');
+      if (!twoNumStrReg.test(data.number)) {
+        message.error('货架号可输入两个字符，支持大写字母或数字，如E9');
         form.submit();
         return;
       }
@@ -133,8 +136,8 @@ const Add: React.FC<IProps> = props => {
         return;
       }
 
-      if (!/^[1-9]$/.test(data.tier)) {
-        message.error('层可输入1-9');
+      if (!twoNumStrReg.test(data.tier)) {
+        message.error('层可输入两个字符，支持大写字母或数字，如E9');
         form.submit();
         return;
       }
@@ -145,8 +148,8 @@ const Add: React.FC<IProps> = props => {
         return;
       }
 
-      if (!/^[1-9][0-9]?$/.test(data.place)) {
-        message.error('位可输入1-99');
+      if (!twoNumStrReg.test(data.place)) {
+        message.error('位可输入两个字符，支持大写字母或数字，如E9');
         form.submit();
         return;
       }
@@ -197,6 +200,19 @@ const Add: React.FC<IProps> = props => {
       return;
     }
 
+    // 输入小写改为大写
+    const newFieldsValue: {
+      district?: string;
+      number?: string;
+      tier?: string;
+      place?: string;
+    } = {};
+    values.district && (newFieldsValue.district = values.district.toUpperCase());
+    values.number && (newFieldsValue.number = values.number.toUpperCase());
+    values.tier && (newFieldsValue.tier = values.tier.toUpperCase());
+    values.place && (newFieldsValue.place = values.place.toUpperCase());
+    form.setFieldsValue(newFieldsValue);
+
     if (values.radio) {
       setisCustom( values.radio === '自定义库位号');
     }
@@ -237,31 +253,34 @@ const Add: React.FC<IProps> = props => {
       <Form.Item label="" name="radio">
         <Radio.Group options={['标准库位号', '自定义库位号']}></Radio.Group>
       </Form.Item>
-      <Form.Item label=" " name="custom" className={classnames(isCustom ? '' : 'none')}>
+      <Form.Item label=" " name="custom" className={classnames(isCustom ? '' : 'none')} rules={[{
+        max: 12,
+        message: '库位号不能超过12个字符',
+      }]}>
         <Input />
       </Form.Item>
       <div className={classnames(isCustom ? 'none' : '')}>
         <Form.Item label="库区：" name="district" rules={[{
-          message: '可填写A-Z',
-          pattern: /^[A-Z]$/,
+          message: '库区请输入一位大写字母+2位纯数字，如B02',
+          pattern: districtReg,
         }]}>
           <Input />
         </Form.Item>
         <Form.Item label="货架号：" name="number" rules={[{
-          message: '可填写1-99',
-          pattern: /^[1-9][0-9]?$/,
+          message: '请输入两个字符，支持大写字母或数字，如E9',
+          pattern: twoNumStrReg,
         }]}>
           <Input />
         </Form.Item>
         <Form.Item label="层：" name="tier"rules={[{
-          message: '可填写1-9',
-          pattern: /^[1-9]$/,
+          message: '请输入两个字符，支持大写字母或数字，如E9',
+          pattern: twoNumStrReg,
         }]}>
           <Input />
         </Form.Item>
         <Form.Item label="位：" name="place" rules={[{
-          message: '可填写1-99',
-          pattern: /^[1-9][0-9]?$/,
+          message: '请输入两个字符，支持大写字母或数字，如E9',
+          pattern: twoNumStrReg,
         }]}>
           <Input />
         </Form.Item>
