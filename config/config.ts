@@ -24,6 +24,7 @@ const config =  {
   favicon: '/favicon.ico',
   title: '安知助手',
   mock: false,
+  // mock: {},
  /*  devServer:{
     host:'localhost.charlesproxy.com'
   }, */

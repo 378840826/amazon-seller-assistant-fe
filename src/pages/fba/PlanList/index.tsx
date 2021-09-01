@@ -318,6 +318,7 @@ const PackageList: React.FC = function() {
         handle: 0,
         timeMatch: 'GmtCreate',
         dateTime: [moment().subtract(60, 'days'), currentDate],
+        deleted: 1,
       }}
       onValuesChange={formfieldChange}
     >

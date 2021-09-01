@@ -63,6 +63,7 @@ const Logisticis: React.FC<IProps> = (props) => {
         message.error(msg);
         return;
       }
+      setVisible(false);
       message.success(msg);
     });
   };

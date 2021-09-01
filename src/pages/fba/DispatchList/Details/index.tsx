@@ -159,7 +159,10 @@ const Details: React.FC<IProps> = function(props) {
   const componentRef = useRef<any>(); // eslint-disable-line
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    // onBeforePrint: () => console.log(document.querySelector('#content')),
+    onBeforePrint: () => {
+      // 点击打印关闭弹窗
+      onCancel();
+    },
     pageStyle: pageStyle,
   });
 
@@ -323,6 +326,11 @@ const Details: React.FC<IProps> = function(props) {
               <InputEditBox
                 value={String(data.remarkText)}
                 chagneCallback={val => {
+                  if (String(val).length > 40) {
+                    message.warning('备注不得超过40个字符');
+                    form.setFieldsValue({ remarkText: String(val).slice(0, 40) });
+                    return;
+                  }
                   form.setFieldsValue({ remarkText: val });
                   return Promise.resolve(val);
                 }}
