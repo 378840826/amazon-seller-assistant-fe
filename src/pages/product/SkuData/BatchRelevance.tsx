@@ -13,7 +13,12 @@ import { Button, Popover, Upload, message, Modal } from 'antd';
 import { useDispatch } from 'umi';
 import { UploadFile, RcFile } from 'antd/lib/upload/interface';
 
-const BatchRelevance: React.FC = () => {
+interface IProps {
+  onUploadSuccess: () => void;
+}
+
+const BatchRelevance: React.FC<IProps> = props => {
+  const { onUploadSuccess } = props;
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -69,6 +74,7 @@ const BatchRelevance: React.FC = () => {
         setFileList([...[]]);
         setVisible(false);
         message.success('导入成功!');
+        onUploadSuccess();
         return;
       }
   

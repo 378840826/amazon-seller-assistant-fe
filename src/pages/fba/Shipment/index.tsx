@@ -20,6 +20,7 @@ import {
   ConnectProps,
   // IConfigurationBaseState,
   IFbaBaseState,
+  history,
 } from 'umi';
 import AddPlan from './AddPlan';
 import {
@@ -39,6 +40,7 @@ import Details from './Details';
 import More from './More';
 import { ColumnProps } from 'antd/es/table';
 import { useReactToPrint } from 'react-to-print';
+import { fba } from '@/utils/routes';
 
 
 interface IDetailModalType {
@@ -342,6 +344,8 @@ const PackageList: React.FC = function() {
             return item;
           }),
         });
+        // 成功后关闭弹窗
+        setDateilModal({ ...detailModal, visible: false });
         return Promise.resolve(true);
       }
       message.error(msg || '操作失败！');
@@ -394,6 +398,8 @@ const PackageList: React.FC = function() {
               payload: newShipmentList,
             });
             message.success(msg || '操作成功！');
+            // 跳转到发货单
+            history.push(fba.dispatchList);
             return;
           }
           message.error(msg);

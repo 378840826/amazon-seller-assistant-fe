@@ -158,7 +158,7 @@ const SkuData: React.FC = () => {
       />
       <Button type="primary" onClick={() => setAddVisible(!addVisible)}>添加SKU <DoubleRightOutlined /></Button>
       
-      <BatchRelevance />
+      <BatchRelevance onUploadSuccess={() => setCode('')} />
       <BatchSKU />
       <Button onClick={() => setAiVisible(!aiVisible)}>SKU智能匹配</Button>
       <BatchUpdateState ids={selectedSkuId} successCallback={batchStateSuccessCallback}/>

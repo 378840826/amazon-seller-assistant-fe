@@ -321,7 +321,7 @@ const AddSku: React.FC<IProps> = props => {
     },
     rowKey: (record: { sellerSku: string}) => record.sellerSku,
     locale: {
-      emptyText: <TableNotData hint="输入要添加的MSKU" style={{ padding: 20 }}/>,
+      emptyText: <TableNotData hint="选择要添加的MSKU" style={{ padding: 20 }}/>,
     },
   };
 
@@ -334,7 +334,7 @@ const AddSku: React.FC<IProps> = props => {
     scroll: {
       y: 226,
     },
-    rowKey: 'contact_id',
+    rowKey: 'locationId',
     locale: {
       emptyText: <TableNotData hint="未添加库位号" style={{ padding: 20 }}/>,
     },
@@ -457,7 +457,9 @@ const AddSku: React.FC<IProps> = props => {
         if (code === 200) {
           message.success(msg || '添加成功！');
           onCancel();
-          onSuccess(datas.sku);
+          // onSuccess(datas.sku);
+          // 不需要筛选添加的 sku
+          onSuccess('');
           return;
         }
         message.error(msg || '添加失败！');
@@ -669,7 +671,7 @@ const AddSku: React.FC<IProps> = props => {
                       mode="multiple"
                       onSearch={search}
                       maxTagCount={1}
-                      placeholder="输入MSKU"
+                      placeholder="搜索MSKU"
                       // notFoundContent={fetching ? <Spin size="small" /> : null}
                       listItemHeight={10} 
                       listHeight={250}
