@@ -348,7 +348,7 @@ const AddSku: React.FC<IProps> = props => {
     },
     rowKey: (record: { sellerSku: string}) => record.sellerSku,
     locale: {
-      emptyText: <TableNotData hint="输入要添加的MSKU" style={{ padding: 20 }}/>,
+      emptyText: <TableNotData hint="选择要添加的MSKU" style={{ padding: 20 }}/>,
     },
   };
 
@@ -658,7 +658,7 @@ const AddSku: React.FC<IProps> = props => {
                         mode="multiple"
                         onSearch={search}
                         maxTagCount={2}
-                        placeholder="输入MSKU"
+                        placeholder="搜索MSKU"
                         // notFoundContent={fetching ? <Spin size="small" /> : null}
                         listItemHeight={10} 
                         listHeight={250}

@@ -494,7 +494,8 @@ const Details: React.FC<IProps> = function(props) {
       const { code, message: msg } = res as Global.IBaseResponse;
       if (code === 200) {
         message.success(msg || '操作成功！');
-        setVisible(false);
+        // 跳转到发货单
+        history.push(fba.dispatchList);
         return;
       }
       message.error(msg);

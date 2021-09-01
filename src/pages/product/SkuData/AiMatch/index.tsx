@@ -54,7 +54,7 @@ const AiMatch: React.FC<IProps> = props => {
     centered: true,
     onCancel,
     onOk() {
-      console.log(form.getFieldsValue());
+      // console.log(form.getFieldsValue());
       const formData = form.getFieldsValue();
       const storeIds = formData.storeIds;
       const start = formData[radio].start;
@@ -100,6 +100,7 @@ const AiMatch: React.FC<IProps> = props => {
 
         if (code === 200) {
           message.success(msg || '匹配成功！');
+          onCancel();
           return;
         }
         message.error(msg || '匹配失败！');

@@ -24,6 +24,7 @@ import MyUPload from './Upload';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
 import { asinPandectBaseRouter } from '@/utils/routes';
 import { labelling, wayPacking } from '../../config';
+import TableNotData from '@/components/TableNotData';
 
 interface IProps {
   visible: boolean;
@@ -72,8 +73,6 @@ const Addplan: React.FC<IProps> = function(props) {
       if (searchProduct === 'notRequest') {
         return;
       }
-      console.log('code', code);
-      
       setLoading(true);
       new Promise((resolve, reject) => {
         dispatch({
@@ -484,10 +483,10 @@ const Addplan: React.FC<IProps> = function(props) {
   const LeftTable = {
     columns: getColumns('leftColumns') as [],
     dataSource: data,
-    rowKey: 'contact_id',
+    rowKey: 'sellerSku',
     loading,
     locale: {
-      emptyText: <span className="secondaryText">店铺无商品</span>,
+      emptyText: <TableNotData hint={'没有找到相关数据，请重新选择查询条件'} />,
     },
     scroll: {
       y: 320,
@@ -498,7 +497,7 @@ const Addplan: React.FC<IProps> = function(props) {
   const rightTable = {
     columns: getColumns('rightColumns') as [],
     dataSource: selects,
-    rowKey: 'contact_id',
+    rowKey: 'sellerSku',
     locale: {
       emptyText: <span className="secondaryText">左边添加商品</span>,
     },
@@ -538,6 +537,15 @@ const Addplan: React.FC<IProps> = function(props) {
 
     if (flag) {
       message.error('申请量不能为空或者小于0');
+      return;
+    }
+
+    // 错误禁止提交
+    const fieldError = form.getFieldsError().find(err => {
+      return err.errors.length && err;
+    });
+    if (fieldError) {
+      message.error(fieldError.errors[0]);
       return;
     }
 
@@ -637,8 +645,8 @@ const Addplan: React.FC<IProps> = function(props) {
             })}
           </Select>
         </Item>
-        <Item name="remarkText" label="备注">
-          <Input maxLength={40} />
+        <Item name="remarkText" label="备注" rules={[{ max: 40 }]}>
+          <Input />
         </Item>
       </Form>
       <div className={styles.uploading}>

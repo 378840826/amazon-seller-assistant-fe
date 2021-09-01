@@ -74,7 +74,7 @@ const Logisticis: React.FC<IProps> = props => {
         return;
       }
       message.success(msg);
-      // 更新此 shipment 的箱唛下载链接
+      // 更新此 shipment 的箱唛下载链接和装箱清单状态
       dispatch({
         type: 'shipment/saveShipmentList',
         payload: shipmentList.map((item: Shipment.IShipmentList) => {
@@ -82,11 +82,13 @@ const Logisticis: React.FC<IProps> = props => {
             return {
               ...item,
               zipUrl: url,
+              packageLabelType: '已上传',
             };
           }
           return item;
         }),
       });
+      setVisible(false);
     });
   };
 

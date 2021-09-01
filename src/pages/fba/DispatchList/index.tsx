@@ -368,6 +368,8 @@ const PackageList: React.FC = function() {
             },
           });
         }
+        // 成功后关闭弹窗
+        setDateilModal({ ...detailModal, visible: false });
         return Promise.resolve(true);
       }
       message.error(msg || '操作失败！');
