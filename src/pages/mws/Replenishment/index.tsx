@@ -1,3 +1,7 @@
+/**
+ * 补货计划
+ */
+
 import React, { ReactText, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
 import { IConnectState } from '@/models/connect';
@@ -6,6 +10,7 @@ import { requestErrorFeedback, objToQueryString, day } from '@/utils/utils';
 import Header from './Header';
 import { getFullColumns } from './cols';
 import TableNotData from '@/components/TableNotData';
+import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
 import CustomCols from './CustomCols';
 import styles from './index.less';
 
@@ -252,7 +257,7 @@ const Replenishment: React.FC = () => {
     const a = document.createElement('a');
     // 文件名
     const date = day.getNowFormatTime('YYYYMMDD');
-    a.download = `${date}_${marketplace}_${storeName}_补货建议.xlsx`;
+    a.download = `${date}_${marketplace}_${storeName}_补货计划.xlsx`;
     a.href = blobUrl;
     a.click();
   };
@@ -287,7 +292,7 @@ const Replenishment: React.FC = () => {
             dispatch({
               type: 'user/updateMemberFunctionalSurplus',
               payload: {
-                functionName: '补货建议导出',
+                functionName: '补货计划导出',
               },
             });
           })
@@ -301,6 +306,7 @@ const Replenishment: React.FC = () => {
 
   return (
     <div className={styles.page}>
+      <PageTitleRightInfo functionName={'补货计划导出'} />
       <Header />
       <div className={styles.toolBar}>
         <div className={styles.checkedAllContainer}>

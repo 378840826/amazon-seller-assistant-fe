@@ -283,7 +283,7 @@ const LevelExplain: React.FC = () => {
               <td>{shortBar}</td>
             </tr>
             <tr>
-              <td>补货建议导出</td>
+              <td>补货计划导出</td>
               <td>5次/月</td>
               <td>10次/月</td>
               <td>20次/月</td>
@@ -291,7 +291,7 @@ const LevelExplain: React.FC = () => {
               <td>{shortBar}</td>
             </tr>
             <tr>
-              <td>补货建议查看</td>
+              <td>补货计划查看</td>
               <td>{free}</td>
               <td>{free}</td>
               <td>{free}</td>

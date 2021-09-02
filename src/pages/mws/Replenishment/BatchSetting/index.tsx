@@ -33,12 +33,13 @@ const BatchSetting: React.FC = () => {
   const [salesType, setSalesType] = useState<number>(record.avgDailySalesRules);
   // 百分比是否等于 100
   const [percentError, setPercentError] = useState<boolean>(false);
-  // 增加 labelIds 用于 labels 设置传参
-  if (record.labels) {
-    record.labelIds = record.labels.map((label) => {
+  // form 初始值增加 labelIds 用于 labels 设置传参
+  const initialValues = Object.assign({}, record, {
+    labelIds: record.labels?.map((label) => {
       return label.id;
-    });
-  }
+    }),
+  });
+
   // record 更新时更新 salesType, (暂时先这样)
   useEffect(() => {
     setSalesType(record.avgDailySalesRules);
@@ -127,6 +128,12 @@ const BatchSetting: React.FC = () => {
       ) {
         setPercentError(true);
         return;
+      } else if (salesType === 1) {
+        // 固定日销量不能为空
+        const fixedSales = form.getFieldValue('fixedSales');
+        if (['', undefined, null].includes(fixedSales)) {
+          return;
+        }
       }
       break;
     default:
@@ -236,7 +243,7 @@ const BatchSetting: React.FC = () => {
           form={form}
           onFinish={handleFinish}
           validateMessages={validateMessages}
-          initialValues={record}
+          initialValues={initialValues}
         >
           <div className={styles.settingItem}>
             <span className={styles.title}>备货周期：</span>
@@ -301,6 +308,10 @@ const BatchSetting: React.FC = () => {
                       <FormItem
                         name="fixedSales"
                         getValueFromEvent={e => strToNaturalNumStr(e.target.value)}
+                        rules={[{
+                          required: form.getFieldValue('avgDailySalesRules') === 1,
+                          message: '请填写日销量',
+                        }]}
                       >
                         <Input maxLength={10} />
                       </FormItem>
