@@ -39,7 +39,7 @@ const UserModel: IUserModelType = {
         { functionName: 'Review监控', frequency: 0 },
         { functionName: '搜索排名监控', frequency: 0 },
         { functionName: '自动邮件', frequency: 0 },
-        { functionName: '补货建议导出', frequency: 0 },
+        { functionName: '补货计划导出', frequency: 0 },
         { functionName: 'PPC托管', frequency: 0 },
       ],
     },

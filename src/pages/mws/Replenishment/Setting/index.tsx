@@ -27,12 +27,12 @@ const Setting: React.FC = () => {
   const [salesType, setSalesType] = useState<number>(record.avgDailySalesRules);
   // 百分比是否等于 100
   const [percentError, setPercentError] = useState<boolean>(false);
-  // 增加 labelIds 用于 labels 设置传参
-  if (record.labels) {
-    record.labelIds = record.labels.map((label) => {
+  // form 初始值增加 labelIds 用于 labels 设置传参
+  const initialValues = Object.assign({}, record, {
+    labelIds: record.labels?.map((label) => {
       return label.id;
-    });
-  }
+    }),
+  });
 
   useEffect(() => {
     // record 更新时更新 salesType, (暂时先这样)
@@ -84,6 +84,7 @@ const Setting: React.FC = () => {
     const sales30 = Number(weightCount30sales);
     const sales60 = Number(weightCount60sales);
     const sales90 = Number(weightCount90sales);
+    // 动态日销量相加必须等于 100
     if (
       salesType === 2 &&
       sales7 + 
@@ -147,7 +148,7 @@ const Setting: React.FC = () => {
           form={form}
           onFinish={handleFinish}
           validateMessages={validateMessages}
-          initialValues={record}
+          initialValues={initialValues}
         >
           <div className={styles.settingItem}>
             <span className={styles.title}>备货周期：</span>
@@ -208,6 +209,10 @@ const Setting: React.FC = () => {
                       <FormItem
                         name="fixedSales"
                         getValueFromEvent={e => strToNaturalNumStr(e.target.value)}
+                        rules={[{
+                          required: form.getFieldValue('avgDailySalesRules') === 1,
+                          message: '请填写日销量',
+                        }]}
                       >
                         <Input maxLength={10} />
                       </FormItem>
