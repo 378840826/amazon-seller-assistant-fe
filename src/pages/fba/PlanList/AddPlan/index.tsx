@@ -58,7 +58,6 @@ const Addplan: React.FC<IProps> = function(props) {
   const [data, setData] = useState<planList.IProductList[]>([]);
   const [selects, setSelects] = useState<planList.IProductList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchProduct, setSearchProduct] = useState<string|'notRequest'>('');
   const [spinAddress, setSpinAddress] = useState<planList.IAddressLine[]>([]);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -69,10 +68,7 @@ const Addplan: React.FC<IProps> = function(props) {
   });
 
   const requestProduct = useCallback(
-    (marketplace: string, storeId: string, code = searchProduct) => {
-      if (searchProduct === 'notRequest') {
-        return;
-      }
+    (marketplace: string, storeId: string, code = '') => {
       setLoading(true);
       new Promise((resolve, reject) => {
         dispatch({
@@ -105,7 +101,7 @@ const Addplan: React.FC<IProps> = function(props) {
         message.error(msg === '暂无数据！' ? '该店铺暂无商品' : '商品列表异常！');
         setData([]);
       }));
-    }, [dispatch, searchProduct]);
+    }, [dispatch]);
 
   const getSites = useCallback(() => {
     dispatch({
@@ -226,7 +222,7 @@ const Addplan: React.FC<IProps> = function(props) {
       });
       
       requestProduct(countryCode, shops[0].id);
-      searchProduct === '' && getSpinAddress(shops[0].id);
+      getSpinAddress(shops[0].id);
     } else {
       setData([...[]]);
       dispatch({
@@ -234,7 +230,7 @@ const Addplan: React.FC<IProps> = function(props) {
         payload: [],
       });
     }
-  }, [dispatch, form, requestProduct, getSpinAddress, shops, visible, searchProduct]);
+  }, [dispatch, form, requestProduct, getSpinAddress, shops, visible]);
 
 
   // 表单初始化
@@ -455,7 +451,6 @@ const Addplan: React.FC<IProps> = function(props) {
   const searchProductCallback = (asin: string, event: any ) => { // eslint-disable-line
     // 这个条件限制当点击X图标时，不重新请求数据
     if (asin === '' && 'button' in event && event.target.className === 'ant-input') {
-      setSearchProduct('notRequest');
       return;
     }
     requestProduct(form.getFieldValue('countryCode'), form.getFieldValue('storeId'), asin);
