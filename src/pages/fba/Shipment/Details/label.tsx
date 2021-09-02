@@ -334,7 +334,10 @@ const Lebal: React.FC<IProps> = (props) => {
   //点击打印预览的回调
   const handleprint = useReactToPrint({
     content: () => componentRef.current,
-    onBeforePrint: () => console.log(document.querySelector('#content')),
+    onBeforePrint: () => {
+      // 点击打印关闭弹窗
+      onCancle();
+    },
     pageStyle: pagestyle,
   });
    

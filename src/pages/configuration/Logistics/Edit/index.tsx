@@ -95,7 +95,7 @@ const Add: React.FC<IProps> = props => {
       <Form.Item label="物流商名称：" name="providerName" rules={[{ required: true, max: 20 }]}>
         <Input />
       </Form.Item>
-      <Form.Item label="货代：" name="forwarderName" rules={[{ max: 12 }]}>
+      <Form.Item label="货代：" name="forwarderName" rules={[{ max: 20 }]}>
         <Input />
       </Form.Item>
       <Form.Item label="发货国家：" name="countryCode">

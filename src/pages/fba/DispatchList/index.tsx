@@ -26,6 +26,7 @@ import {
   Button,
   Popconfirm,
   message,
+  Spin,
 } from 'antd';
 import AddPlan from './AddPlan';
 import { TableRowSelection } from 'antd/lib/table/interface';
@@ -37,6 +38,7 @@ import moment from 'moment';
 import Line from '@/components/Line';
 import { ColumnProps } from 'antd/es/table';
 import { useReactToPrint } from 'react-to-print';
+import { LoadingOutlined } from '@ant-design/icons';
 
 interface IDetailModalType {
   visible: boolean;
@@ -169,6 +171,7 @@ const PackageList: React.FC = function() {
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [sites, setSites] = useState<string[]>([]);
+  const [loadingPrintId, setLoadingPrintId] = useState<string>('');
 
   //传递给打印的值
   const 
@@ -365,6 +368,8 @@ const PackageList: React.FC = function() {
             },
           });
         }
+        // 成功后关闭弹窗
+        setDateilModal({ ...detailModal, visible: false });
         return Promise.resolve(true);
       }
       message.error(msg || '操作失败！');
@@ -465,10 +470,13 @@ const PackageList: React.FC = function() {
 
   // 点击打印
   const handlePrint = (id: string) => {
+    setLoadingPrintId(id);
     getPrintDetails(id).then(() => {
       indexprint && indexprint();
     }).catch(err => {
       message.error(err.message);
+    }).finally(() => {
+      setLoadingPrintId('');
     });
   };
   
@@ -731,16 +739,13 @@ const PackageList: React.FC = function() {
           <div>
             {
               !['已作废', '已取消'].includes(record.state) &&
-              <>
+              <Spin
+                size="small"
+                spinning={loadingPrintId === record.id}
+                indicator={<LoadingOutlined />}
+              >
                 <span onClick={() => handlePrint(record.id)}>打印</span>
-                <div style={{ display: 'none' }}>
-                  <IndexToPrint
-                    ref={componentRef}
-                    printprops={printprops}
-                    // shipmentName={shipmentName}
-                  />
-                </div>
-              </>
+              </Spin>
             }
             {
               !['已作废', '已发货'].includes(record.state) &&
@@ -858,6 +863,13 @@ const PackageList: React.FC = function() {
 
 
   return <div className={styles.box}>
+    <div style={{ display: 'none' }}>
+      <IndexToPrint
+        ref={componentRef}
+        printprops={printprops}
+        // shipmentName={shipmentName}
+      />
+    </div>
     <Form 
       className={styles.topHead} 
       form={form} 

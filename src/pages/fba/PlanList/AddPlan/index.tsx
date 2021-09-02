@@ -24,6 +24,7 @@ import MyUPload from './Upload';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
 import { asinPandectBaseRouter } from '@/utils/routes';
 import { labelling, wayPacking } from '../../config';
+import TableNotData from '@/components/TableNotData';
 
 interface IProps {
   visible: boolean;
@@ -57,7 +58,6 @@ const Addplan: React.FC<IProps> = function(props) {
   const [data, setData] = useState<planList.IProductList[]>([]);
   const [selects, setSelects] = useState<planList.IProductList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchProduct, setSearchProduct] = useState<string|'notRequest'>('');
   const [spinAddress, setSpinAddress] = useState<planList.IAddressLine[]>([]);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -68,12 +68,7 @@ const Addplan: React.FC<IProps> = function(props) {
   });
 
   const requestProduct = useCallback(
-    (marketplace: string, storeId: string, code = searchProduct) => {
-      if (searchProduct === 'notRequest') {
-        return;
-      }
-      console.log('code', code);
-      
+    (marketplace: string, storeId: string, code = '') => {
       setLoading(true);
       new Promise((resolve, reject) => {
         dispatch({
@@ -106,7 +101,7 @@ const Addplan: React.FC<IProps> = function(props) {
         message.error(msg === '暂无数据！' ? '该店铺暂无商品' : '商品列表异常！');
         setData([]);
       }));
-    }, [dispatch, searchProduct]);
+    }, [dispatch]);
 
   const getSites = useCallback(() => {
     dispatch({
@@ -227,7 +222,7 @@ const Addplan: React.FC<IProps> = function(props) {
       });
       
       requestProduct(countryCode, shops[0].id);
-      searchProduct === '' && getSpinAddress(shops[0].id);
+      getSpinAddress(shops[0].id);
     } else {
       setData([...[]]);
       dispatch({
@@ -235,7 +230,7 @@ const Addplan: React.FC<IProps> = function(props) {
         payload: [],
       });
     }
-  }, [dispatch, form, requestProduct, getSpinAddress, shops, visible, searchProduct]);
+  }, [dispatch, form, requestProduct, getSpinAddress, shops, visible]);
 
 
   // 表单初始化
@@ -278,9 +273,9 @@ const Addplan: React.FC<IProps> = function(props) {
   };
 
   // 删除单个
-  const delItemSelect = (asin: string) => {
+  const delItemSelect = (sellerSku: string) => {
     for (let i = 0; i < selects.length; i++) {
-      if (selects[i].asin1 === asin) {
+      if (selects[i].sellerSku === sellerSku) {
         selects.splice(i, 1);
         setSelects([...selects]);
         break;
@@ -297,10 +292,10 @@ const Addplan: React.FC<IProps> = function(props) {
   };
 
   // 修改申报量
-  const updateSaid = function(asin: string, newValue: string) {
+  const updateSaid = function(sellerSku: string, newValue: string) {
     for (let index = 0; index < selects.length; index++) {
       const item = selects[index];
-      if (item.asin1 === asin) {
+      if (item.sellerSku === sellerSku) {
         item.declareNum = String(newValue);
         break;
       }
@@ -385,7 +380,7 @@ const Addplan: React.FC<IProps> = function(props) {
       {
         title: '操作',
         align: 'center',
-        dataIndex: 'asin1',
+        dataIndex: 'sellerSku',
         // key: 'handle',
         width: 60,
         render(val: string, record: planList.IProductList) {
@@ -402,7 +397,7 @@ const Addplan: React.FC<IProps> = function(props) {
 
           for (let i = 0; i < selects.length; i++) {
             const item = selects[i];
-            if (item.asin1 === val) {
+            if (item.sellerSku === val) {
               flag = true;
               break;
             }
@@ -433,7 +428,7 @@ const Addplan: React.FC<IProps> = function(props) {
         render: (val: string, record: planList.IProductList) => (
           <InputEditBox
             value={val}
-            chagneCallback={val => updateSaid(record.asin1, String(val))}
+            chagneCallback={val => updateSaid(record.sellerSku, String(val))}
             format={{
               converterFun: strToUnsignedIntStr,
               valueRule: {
@@ -456,7 +451,6 @@ const Addplan: React.FC<IProps> = function(props) {
   const searchProductCallback = (asin: string, event: any ) => { // eslint-disable-line
     // 这个条件限制当点击X图标时，不重新请求数据
     if (asin === '' && 'button' in event && event.target.className === 'ant-input') {
-      setSearchProduct('notRequest');
       return;
     }
     requestProduct(form.getFieldValue('countryCode'), form.getFieldValue('storeId'), asin);
@@ -484,10 +478,10 @@ const Addplan: React.FC<IProps> = function(props) {
   const LeftTable = {
     columns: getColumns('leftColumns') as [],
     dataSource: data,
-    rowKey: 'contact_id',
+    rowKey: 'sellerSku',
     loading,
     locale: {
-      emptyText: <span className="secondaryText">店铺无商品</span>,
+      emptyText: <TableNotData hint={'没有找到相关数据，请重新选择查询条件'} />,
     },
     scroll: {
       y: 320,
@@ -498,7 +492,7 @@ const Addplan: React.FC<IProps> = function(props) {
   const rightTable = {
     columns: getColumns('rightColumns') as [],
     dataSource: selects,
-    rowKey: 'contact_id',
+    rowKey: 'sellerSku',
     locale: {
       emptyText: <span className="secondaryText">左边添加商品</span>,
     },
@@ -538,6 +532,15 @@ const Addplan: React.FC<IProps> = function(props) {
 
     if (flag) {
       message.error('申请量不能为空或者小于0');
+      return;
+    }
+
+    // 错误禁止提交
+    const fieldError = form.getFieldsError().find(err => {
+      return err.errors.length && err;
+    });
+    if (fieldError) {
+      message.error(fieldError.errors[0]);
       return;
     }
 
@@ -637,8 +640,8 @@ const Addplan: React.FC<IProps> = function(props) {
             })}
           </Select>
         </Item>
-        <Item name="remarkText" label="备注">
-          <Input maxLength={40} />
+        <Item name="remarkText" label="备注" rules={[{ max: 40 }]}>
+          <Input />
         </Item>
       </Form>
       <div className={styles.uploading}>

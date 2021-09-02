@@ -24,12 +24,14 @@ const config =  {
   favicon: '/favicon.ico',
   title: '安知助手',
   mock: false,
+  // mock: {},
  /*  devServer:{
     host:'localhost.charlesproxy.com'
   }, */
   proxy: {
     '/api': {
       'target': 'http://dev.workics.cn',
+      // 'target': 'https://test.workics.cn',
       'changeOrigin': true,
         secure: false,   
       // 'pathRewrite': { '^/api' : '' },
