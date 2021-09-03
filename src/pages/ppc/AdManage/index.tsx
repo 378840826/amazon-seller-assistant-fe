@@ -104,6 +104,28 @@ export const negativeMatchTypeDict: {[key in API.AdNegativeKeywordMatchType]: st
   negativePhrase: '词组否定',
 };
 
+// 菜单树的 3 个图标
+const treeIconDict = {
+  sp: (
+    <Iconfont
+      type="icon-shangpin"
+      className={styles.treeIcon}
+    />
+  ),
+  sb: (
+    <Iconfont
+      type="icon-ai-r"
+      className={styles.treeIcon}
+    />
+  ),
+  sd: (
+    <Iconfont
+      type="icon-01_zhanshifenlei"
+      className={styles.treeIcon}
+    />
+  ),
+};
+
 const Manage: React.FC = function() {
   const dispatch = useDispatch();
   const adManage = useSelector((state: IConnectState) => state.adManage);
@@ -305,8 +327,12 @@ const Manage: React.FC = function() {
   // 菜单树选中节点
   function handleSelect(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    keys: React.Key[], e: { selected: boolean; selectedNodes: any[] }
+    keys: React.Key[], e: { selected: boolean; selectedNodes: any[]; nativeEvent: any }
   ) {
+    // 选中后点击展开图标进行展开
+    const targetEl = e.nativeEvent.target;
+    const expandArrows = targetEl.closest('div').querySelector('.ant-tree-switcher');
+    expandArrows && expandArrows.click();
     // 不能取消选中
     if (keys.length === 0) {
       return;
@@ -402,16 +428,13 @@ const Manage: React.FC = function() {
                 onCollapse={state => setCollapsed(state)}
                 className={classnames(styles.Sider, 'h-scroll')}
                 width={300}
-                collapsedWidth={50}
-                trigger={
-                  <Iconfont
-                    type="icon-zhankai"
-                    className={classnames(styles.trigger, collapsed ? styles.left : '')}
-                  />
-                }
+                collapsedWidth={0}
               >
                 <Tree
                   showIcon
+                  icon={(props) => {
+                    return treeIconDict[props.eventKey];
+                  }}
                   loadData={onLoadData}
                   treeData={treeData}
                   expandedKeys={treeExpandedKeys}
@@ -430,7 +453,23 @@ const Manage: React.FC = function() {
                 />
               </Sider>
             </Layout>
-            <div className={styles.tabsContainer}>
+            <div className={classnames(
+              styles.tabsContainer,
+              collapsed ? null : styles.tabsContainerShowTree,
+            )}>
+              <div className={classnames(
+                styles.triggerContainer, 
+                treeSelectedInfo.campaignId || treeSelectedInfo.groupId ? styles.triggerMove : '',
+              )}>
+                <Iconfont
+                  title="展开/收起侧边栏"
+                  type="icon-liebiao"
+                  className={classnames(styles.trigger, collapsed ? null : styles.triggerActive)}
+                  onClick={() => {
+                    setCollapsed(!collapsed);
+                  }}
+                />
+              </div>
               {
                 treeSelectedInfo.campaignName && 
                   <div className={styles.breadcrumb}>

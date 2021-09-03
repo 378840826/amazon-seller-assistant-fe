@@ -28,7 +28,7 @@ export default {
               timezone: 'America/Los_Angeles',
               currency: '£',
               tokenInvalid: true,
-              bindAdStore: false,
+              bindAdStore: true,
             }, {
               id: '3',
               storeName: 'store-3',

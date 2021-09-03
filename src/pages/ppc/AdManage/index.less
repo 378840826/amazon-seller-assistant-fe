@@ -4,8 +4,9 @@
   margin-top: 12px;
 
   .Sider {
-    overflow: auto;
-    margin-bottom: 30px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: #f8f8f8;
   }
 
   .Tree {
@@ -14,6 +15,19 @@
     padding: 17px 8px 0 8px;
     border-radius: 0;
     overflow: auto;
+    background: #f8f8f8;
+
+    :global {
+      // 点击范围加宽
+      .ant-tree-treenode,
+      .ant-tree-node-content-wrapper {
+        width: 100%;
+      }
+    }
+  }
+
+  .treeIcon {
+    color: @text-color-secondary;
   }
 
   .rootTitle {
@@ -25,12 +39,43 @@
     transform: rotate(90deg);
   }
 
-  .trigger {
-    color: @text-color-secondary;
-    transform: rotate(90deg);
+  .triggerContainer {
+    z-index: 1;
+    position: absolute;
+    left: -1px;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-right: 1px solid #d9d9d9;
+    background: #fff;
 
-    &.left {
-      transform: rotate(270deg);
+    &.triggerMove {
+      top: 30px;
+    }
+  }
+
+  .trigger {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    color: @heading-color;
+    border: 1px solid @border-color-base;
+    border-radius: @border-radius-base;
+    cursor: pointer;
+
+    &:hover {
+      color: @primary-color;
+      border-color: @primary-color;
+      transition: all 0.3s;
+    }
+
+    &.triggerActive {
+      background: @primary-color;
+      border-color: @primary-color;
+      color: #fff;
     }
   }
 
@@ -74,9 +119,14 @@
   }
 
   :global {
+    // 隐藏 Sider 本身的 trigger
+    .ant-layout-sider-zero-width-trigger {
+      display: none;
+    }
+
     // 标签样式覆盖
     .ant-tabs > .ant-tabs-nav {
-      padding: 0 20px;
+      padding: 0 20px 0 60px;
     }
 
     .ant-tabs-tab {
@@ -102,8 +152,14 @@
         word-break: break-all;
       }
 
-      .ant-tree-node-content-wrapper .ant-tree-iconEle {
-        width: 18px;
+      .ant-tree-node-content-wrapper {
+        &:hover {
+          background: #ebebeb;
+        }
+
+        &.ant-tree-iconEle {
+          width: 18px;
+        }
       }
     }
   }
@@ -125,12 +181,11 @@
   width: 100%;
   overflow: auto;
   background: #fff;
-  border-left: 1px solid @border-color-base;
-}
 
-// .tabContent {
-//   padding: 0 20px;
-// }
+  &.tabsContainerShowTree > :global.ant-tabs.ant-tabs-top {
+    border-left: 1px solid @border-color-base;
+  }
+}
 
 .iconEnabled {
   color: @success-color;
