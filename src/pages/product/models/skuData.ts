@@ -15,6 +15,7 @@ import {
   getLocationList,
   uploadBatchRelevance,
   uploadBatchSKU,
+  batchDelete,
   aiSKU,
   batchUpdateState,
   updateSku,
@@ -30,6 +31,7 @@ interface ISkuDataModel {
     getMskuList: Effect;
     uploadBatchRelevance: Effect;
     uploadBatchSKU: Effect;
+    batchDelete: Effect;
     aiSKU: Effect;
     batchUpdateState: Effect;
     updateSku: Effect;
@@ -93,6 +95,16 @@ const skuData: ISkuDataModel = {
     *uploadBatchSKU({ payload, reject, resolve }, { call }) {
       try {
         const res = yield call(uploadBatchSKU, payload);
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    },
+
+    // 批量删除SKU
+    *batchDelete({ payload, reject, resolve }, { call }) {
+      try {
+        const res = yield call(batchDelete, payload);
         resolve(res);
       } catch (err) {
         reject(err);

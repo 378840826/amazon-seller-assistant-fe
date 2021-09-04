@@ -13,6 +13,7 @@ import EditSku from './EditSku';
 
 interface IProps {
   updateSku: (newData: skuData.IRecord) => void;
+  onBatchDel: (id: string) => void;
 }
 
 // 获取包装体积、商品体积的中文名称
@@ -39,7 +40,7 @@ const Empty = () => <span className="secondary-text">—</span>;
 const emptys = [undefined, null, ''];
 
 const Columns = (props: IProps) => {
-  const { updateSku } = props;
+  const { updateSku, onBatchDel } = props;
   return [
     {
       title: '状态',
@@ -289,11 +290,16 @@ const Columns = (props: IProps) => {
     {
       title: '操作',
       align: 'center',
-      width: 60,
-      dataIndex: 'name',
+      width: 100,
+      dataIndex: 'id',
       fixed: 'right',
-      render(_: string, record: skuData.IRecord) {
-        return <EditSku initData={record} updateSku={updateSku}/>;
+      render(id: string, record: skuData.IRecord) {
+        return (
+          <div className={styles.operation}>
+            <EditSku initData={record} updateSku={updateSku}/>
+            <span className={styles.delete} onClick={() => onBatchDel(id)}>删除</span>
+          </div>
+        );
       },
     },
   ];

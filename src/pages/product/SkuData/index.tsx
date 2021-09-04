@@ -9,7 +9,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Button, Select, Table, message, Input } from 'antd';
+import { Button, Select, Table, message, Input, Modal } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
 import { TableRowSelection } from 'antd/lib/table/interface';
 import { useDispatch } from 'umi';
@@ -113,6 +113,51 @@ const SkuData: React.FC = () => {
     setData([...data]);
   };
 
+  // 删除 sku 单个/批量
+  const handleBatchDel = (id?: string) => {
+    if (!id && !selectedSkuId.length) {
+      message.warning('请先勾选要删除的SKU');
+      return;
+    }
+    const ids = id ? [id] : selectedSkuId;
+    const skuArr = ids.map(id => (
+      data.find(item => item.id === id)?.sku
+    ));
+    Modal.confirm({
+      title: `确定删除以下${ids.length > 1 ? `${ids.length}个` : ''}SKU？`,
+      content: (
+        <div className={styles.delModalContent}>
+          {`${[...skuArr]}`}
+        </div>
+      ),
+      icon: null,
+      maskClosable: true,
+      centered: true,
+      onOk() {
+        const promise = new Promise((resolve, reject) => {
+          dispatch({
+            type: 'skuData/batchDelete',
+            resolve,
+            reject,
+            payload: { ids },
+          });
+        });
+        promise.then(datas => {
+          const {
+            code,
+            message: msg,
+          } = datas as Global.IBaseResponse;
+          if (code === 200) {
+            message.success(msg || '操作成功');
+            request();
+            return;
+          }
+          message.error(msg || '操作失败');
+        });
+      },
+    });
+  };
+
   const tableConfig = {
     pagination: {
       pageSizeOptions: ['20', '50', '100'],
@@ -128,7 +173,7 @@ const SkuData: React.FC = () => {
     },
     dataSource: data as [],
     loading,
-    columns: columns({ updateSku }) as [],
+    columns: columns({ updateSku, onBatchDel: handleBatchDel }) as [],
     scroll: {
       x: 'max-content',
       y: 'calc(100vh - 300px)',
@@ -162,6 +207,7 @@ const SkuData: React.FC = () => {
       <BatchSKU />
       <Button onClick={() => setAiVisible(!aiVisible)}>SKU智能匹配</Button>
       <BatchUpdateState ids={selectedSkuId} successCallback={batchStateSuccessCallback}/>
+      <Button onClick={() => handleBatchDel()}>批量删除</Button>
       <Select style={{ width: 116 }} placeholder="状态" allowClear onChange={(val: string) => setState(val)}>
         {states.map((item, index) => {
           return <Select.Option key={index} value={item.value}>{item.label}</Select.Option>;
