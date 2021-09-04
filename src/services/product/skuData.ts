@@ -60,6 +60,16 @@ export async function uploadBatchSKU(data: API.IParams) {
   );
 }
 
+
+// 批量删除SKU
+export async function batchDelete(data: API.IParams) {
+  return request('/api/mws/shipment/sku/product/delete', { 
+    method: 'POST',
+    data,
+  });
+}
+
+
 // SKU智能匹配
 export async function aiSKU(data: API.IParams) {
   return request('/api/mws/shipment/sku/product/auto/skuProduct/msku', { 
