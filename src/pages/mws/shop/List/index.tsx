@@ -108,7 +108,7 @@ const ShopList: React.FC = () => {
           type: 'global/cancelAdAuthorize',
           payload: {
             storeId: record.id,
-            headersParams: { StoreId: authorizeState.storeId },
+            headersParams: { StoreId: record.id },
           },
           callback: requestFeedback,
         });
