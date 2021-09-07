@@ -16,7 +16,7 @@ import {
 
 interface ISwitchType {
   checked?: boolean;
-  id: number;
+  id: string;
 }
 
 const MySwitch: React.FC<ISwitchType> = (props) => {

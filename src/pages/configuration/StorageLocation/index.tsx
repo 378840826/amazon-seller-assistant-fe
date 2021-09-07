@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
-import { Table, message, Popconfirm, Button } from 'antd';
+import { Table, message, Popconfirm, Button, Modal } from 'antd';
 import { useDispatch } from 'umi';
 import Add from './Add';
 import Edit from './Edit';
@@ -18,7 +18,7 @@ import MySwitch from './MySwitch';
 import { Iconfont } from '@/utils/utils';
 import TableNotData from '@/components/TableNotData';
 import moment from 'moment';
-
+import { TableRowSelection } from 'antd/es/table/interface';
 
 const StorageLocation = () => {
   const [data, setData] = useState<StorageLocation.IRecord[]>([]);
@@ -27,6 +27,7 @@ const StorageLocation = () => {
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const dispatch = useDispatch();
 
@@ -76,29 +77,87 @@ const StorageLocation = () => {
     request({ pageSize, currentPage: current });
   }, [request, initCondition, pageSize, current]);
 
-  // 删除库位
-  const deleteStorageLocation = function(id: number) {
+  // 单个删除库位
+  const deleteStorageLocation = function(id: string) {
     new Promise((resolve, reject) => {
       dispatch({
         type: 'storageLocation/deleteStorageLocation',
         resolve,
         reject,
-        payload: {
-          id,
-        },
+        payload: { ids: [id] },
       });
     }).then(datas => {
       const {
         code,
         message: msg,
-      } = datas as Global.IBaseResponse;
-
+        data: { error },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } = datas as any;
       if (code === 200) {
-        message.success(msg);
+        message.success(msg || '操作成功');
         setInitCondition(!initCondition);
         return;
       }
-      message.error(msg);
+      Modal.error({
+        title: '删除失败',
+        width: 500,
+        icon: null,
+        content: <div className={styles.errorBox}>
+          {error && error.map((item: string, i: number) => <p key={i}>{item}</p>)}
+        </div>,
+      });
+    });
+  };
+
+  // 批量删除库位
+  const handleBatchDel = () => {
+    if (!selectedIds.length) {
+      message.warning('请先勾选要删除的库位');
+      return;
+    }
+    const delNumArr = selectedIds.map(id => (
+      data.find(item => item.id === id)?.locationNo
+    ));
+    Modal.confirm({
+      title: `确定删除以下${selectedIds.length > 1 ? `${selectedIds.length}个` : ''}库位号？`,
+      content: (
+        <div className={styles.delModalContent}>
+          {`${[...delNumArr]}`}
+        </div>
+      ),
+      icon: null,
+      maskClosable: true,
+      centered: true,
+      onOk() {
+        new Promise((resolve, reject) => {
+          dispatch({
+            type: 'storageLocation/deleteStorageLocation',
+            resolve,
+            reject,
+            payload: { ids: selectedIds },
+          });
+        }).then(datas => {
+          const {
+            code,
+            message: msg,
+            data: { error },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } = datas as any;
+          if (code === 200) {
+            message.success(msg || '操作成功');
+            setInitCondition(!initCondition);
+            return;
+          }
+          Modal.error({
+            title: '删除失败',
+            width: 500,
+            icon: null,
+            content: <div className={styles.errorBox}>
+              {error && error.map((item: string, i: number) => <p key={i}>{item}</p>)}
+            </div>,
+          });
+        });
+      },
     });
   };
 
@@ -216,6 +275,13 @@ const StorageLocation = () => {
     locale: {
       emptyText: <TableNotData hint="没有找到相关订单，请重新选择查询条件"/>,
     },
+    rowSelection: {
+      type: 'checkbox',
+      columnWidth: 38,
+      onChange (selectedRowKeys: TableRowSelection<string>) {
+        setSelectedIds([...selectedRowKeys as string[]]);
+      },
+    } as {},
   };
 
   return <div className={styles.box}>
@@ -226,6 +292,7 @@ const StorageLocation = () => {
       <Upload successCallback={ () => {
         setInitCondition(!initCondition);
       } }/>
+      <Button onClick={handleBatchDel}>批量删除</Button>
       <Button href="/api/mws/shipment/location/importTemplate" type="link">下载模板</Button>
     </header>
     <Table {...tableConfig} />
