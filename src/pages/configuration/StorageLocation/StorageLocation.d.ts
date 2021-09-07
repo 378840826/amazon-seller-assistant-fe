@@ -7,7 +7,7 @@
 
 declare namespace StorageLocation {
   interface IRecord {
-    id: number;
+    id: string;
     userid: number;
     username: string;
     warehouseId: number;
