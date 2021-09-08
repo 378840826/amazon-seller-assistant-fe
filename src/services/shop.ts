@@ -1,11 +1,7 @@
 import request from '@/utils/request';
 
-export async function queryMwsShopList() {
+export async function queryShopList() {
   return request('/api/mws/store/list');
-}
-
-export async function queryPpcShopList() {
-  return request('/api/adshop/list');
 }
 
 export async function modifyShopAutoPrice(params: API.IParams) {

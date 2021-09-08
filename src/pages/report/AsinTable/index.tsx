@@ -196,7 +196,7 @@ const AsinTable = () => {
           <footer>
             <span className={styles.ignore} 
               onClick={() => setMessageAd(!messagead)}>忽略</span>
-            <Link className={styles.to} to="/ppc/shop/list" target="_blank">去授权</Link>
+            <Link className={styles.to} to="/shop/list" target="_blank">去授权</Link>
           </footer>
         </div>
       </div>
