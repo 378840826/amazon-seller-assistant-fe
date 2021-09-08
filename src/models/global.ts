@@ -1,8 +1,7 @@
 import { IModelType, IConnectState } from './connect';
 import { queryUnreadNotices } from '@/services/notices';
 import {
-  queryMwsShopList,
-  // queryPpcShopList,
+  queryShopList,
   modifyShopAutoPrice,
   unbindShop,
   renameShop,
@@ -14,16 +13,11 @@ import {
 import { storage } from '@/utils/utils';
 import { Modal, message } from 'antd';
 import { history } from 'umi';
-import { 
-  ruleAddRouter, 
-  ruleAddSalesRouter,
-  ruleAddCartRouter,
-  ruleAddCompetitorRouter,
-  report,
-  ppcCampaignAddRouter,
-  configuration,
-  fba,
-} from '@/utils/routes';
+import {
+  configHiddenShopSelectorUrl,
+  configDisabledShopSelectorUrl,
+  configUnshownPageTitleUrl,
+} from '../../config/config.routes';
 import { notTagShopHint } from './config/array';
 
 const { confirm } = Modal;
@@ -92,7 +86,7 @@ const GlobalModel: IGlobalModelType = {
 
     // 获取全部店铺
     *fetchShopList(_, { call, put }) {
-      const res = yield call(queryMwsShopList);
+      const res = yield call(queryShopList);
       yield put({
         type: 'saveShopList',
         payload: {
@@ -101,7 +95,7 @@ const GlobalModel: IGlobalModelType = {
       });
     },
 
-    // 切换 mws 店铺总开关
+    // 切换店铺总开关
     *switchShopAutoPrice({ payload: { id, autoPrice }, callback }, { call, put }) {
       const res = yield call(modifyShopAutoPrice, { storeId: id, autoPrice });
       if (res.code === 200) {
@@ -116,8 +110,8 @@ const GlobalModel: IGlobalModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 解绑 mws 店铺
-    *unbindMwsShop({ payload: { storeId }, callback }, { select, call, put }) {
+    // 解绑店铺
+    *unbindShop({ payload: { storeId }, callback }, { select, call, put }) {
       const res = yield call(unbindShop, { storeId });
       if (res.code === 200) {
         const currentShop = yield select((state: IConnectState) => {
@@ -130,7 +124,7 @@ const GlobalModel: IGlobalModelType = {
           }, 500);
         } else {
           yield put({
-            type: 'deleteMwsShop',
+            type: 'deleteShop',
             payload: { id: storeId },
           });
           // 更新可绑定店铺数量
@@ -146,19 +140,19 @@ const GlobalModel: IGlobalModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 修改 mws 店铺名称
-    *modifyMwsShopName({ payload: { storeId, storeName }, callback }, { call, put }) {
+    // 修改店铺名称
+    *modifyShopName({ payload: { storeId, storeName }, callback }, { call, put }) {
       const res = yield call(renameShop, { storeId, storeName });
       if (res.code === 200) {
         yield put({
-          type: 'renameMwsShop',
+          type: 'renameShop',
           payload: { storeId, storeName },
         });
       }
       callback && callback(res.code, res.message);
     },
 
-    // 更新 mws 店铺 Auth Token
+    // 更新店铺 Auth Token
     *modifyShopToken({ payload: { id, token }, callback }, { call, put }) {
       const res = yield call(updateShopToken, { storeId: id, token });
       if (res.code === 200) {
@@ -170,7 +164,7 @@ const GlobalModel: IGlobalModelType = {
       callback && callback(res.code, res.message);
     },
 
-    // 绑定 mws 店铺
+    // 绑定店铺
     *bindShop({ payload, callback }, { call, put, select }) {
       const { sellerId, storeName, token, europe, northAmerica, asiaPacific } = payload;
       const marketplaces = [].concat(northAmerica || [], europe || [], asiaPacific || []);
@@ -271,25 +265,6 @@ const GlobalModel: IGlobalModelType = {
         list: list.sort(compare),
         current,
       };
-      // 如果没有店铺跳转到添加店铺页面
-      if (current.id === undefined) {
-        const { pathname } = window.location;
-        // 不需要绑定店铺的
-        const exclude = [
-          '/vip/instructions',
-          '/overview',
-          '/users',
-          '/center',
-          '/message',
-          '/sub-account',
-        ];
-        // const isExclude = exclude.some(url => pathname.includes(url));
-        // if (!isExclude) {
-        //   // message.destroy();
-        //   const url = payload.type === 'mws' ? '/shop/list' : '/ppc/shop/list';
-        //   !pathname.includes('/shop/') && history.push(url);
-        // }
-      }
     },
 
     // 修改店铺授权状态
@@ -347,7 +322,7 @@ const GlobalModel: IGlobalModelType = {
     // 切换店铺总开关
     saveShopAutoPrice(state, { payload }) {
       const { id, autoPrice } = payload;
-      const list = state.shop.mws;
+      const list = state.shop.list;
       for (let index = 0; index < list.length; index++) {
         const shop = list[index];
         if (shop.id === id) {
@@ -361,10 +336,10 @@ const GlobalModel: IGlobalModelType = {
       }
     },
 
-    // 解绑 mws 店铺
-    deleteMwsShop(state, { payload }) {
+    // 删除店铺数据
+    deleteShop(state, { payload }) {
       const { id } = payload;
-      const list = state.shop.mws;
+      const list = state.shop.list;
       for (let index = 0; index < list.length; index++) {
         const shop = list[index];
         if (shop.id === id) {
@@ -374,10 +349,10 @@ const GlobalModel: IGlobalModelType = {
       }
     },
     
-    // 重命名 mws 店铺
-    renameMwsShop(state, { payload }) {
+    // 重命名店铺
+    renameShop(state, { payload }) {
       const { storeId, storeName } = payload;
-      const list = state.shop.mws;
+      const list = state.shop.list;
       for (let index = 0; index < list.length; index++) {
         const shop = list[index];
         if (shop.id === storeId) {
@@ -394,7 +369,7 @@ const GlobalModel: IGlobalModelType = {
     // 更新店铺 Auth Token
     updateShopToken(state, { payload }) {
       const { id, token } = payload;
-      const list = state.shop.mws;
+      const list = state.shop.list;
       for (let index = 0; index < list.length; index++) {
         const shop = list[index];
         if (shop.id === id) {
@@ -421,36 +396,8 @@ const GlobalModel: IGlobalModelType = {
     // 广告 <=> 非广告店铺类型切换不再需要判断，只监听隐藏/禁用店铺选择器状态切换
     listen({ dispatch, history }) {
       return history.listen(async ({ pathname }) => {
-        const hiddenShopSelectorUrl = [
-          '/shop/list',
-          '/shop/bind',
-          '/overview',
-          '/ppc/overview',
-          '/ppc/auth',
-          '/center',
-          '/sub-account',
-          report.profit,
-          configuration.logistics,
-          configuration.storageLocation,
-          configuration.warehouse,
-          fba.planList,
-          fba.shipment,
-          fba.dispatchList,
-        ];
-        const disabledShopSelectorUrl = [
-          ppcCampaignAddRouter,
-          '/ppc/group/add',
-          '/competitor/history',
-          '/competitor/list',
-          '/ppc/manage/group/target',
-          '/ppc/manage/group/timer',
-          ruleAddRouter,
-          ruleAddSalesRouter,
-          ruleAddCartRouter,
-          ruleAddCompetitorRouter,
-        ];
-        const isHidden = hiddenShopSelectorUrl.some(path => path === pathname);
-        const isDisabled = disabledShopSelectorUrl.some(path => path === pathname);
+        const isHidden = configHiddenShopSelectorUrl.some(path => path === pathname);
+        const isDisabled = configDisabledShopSelectorUrl.some(path => path === pathname);
         let status = 'normal';
         if (isHidden) {
           status = 'hidden';
@@ -461,36 +408,7 @@ const GlobalModel: IGlobalModelType = {
           type: 'switchShopStatus',
           payload: { status },
         });
-        // 不需要渲染统一样式的页面标题的页面的路由
-        const unshownPageTitleUrl = [
-          '/product/error-report',
-          '/shop/bind',
-          '/ppc/manage',
-          '/ppc/manage/group/target',
-          '/ppc/manage/group/timer',
-          // 因 bs导入 页面标题需要特殊的样式
-          '/report/import',
-          '/competitor/list',
-          '/competitor/history',
-          '/mail/summary',
-          '/mail/inbox',
-          '/mail/reply',
-          '/mail/no-reply',
-          '/mail/outbox',
-          '/mail/send-success',
-          '/mail/send-fail',
-          '/mail/sending',
-          '/mail/rule',
-          '/mail/template',
-          '/dynamic/asin-overview',
-          '/dynamic/asin-monitor',
-          ruleAddRouter,
-          ruleAddSalesRouter,
-          ruleAddCartRouter,
-          ruleAddCompetitorRouter,
-          '/dynamic/rank-monitor',
-        ];
-        const isUnshow = unshownPageTitleUrl.some(path => path === pathname);
+        const isUnshow = configUnshownPageTitleUrl.some(path => path === pathname);
         dispatch({
           type: 'switchShowPageTitle',
           payload: { isShow: !isUnshow },

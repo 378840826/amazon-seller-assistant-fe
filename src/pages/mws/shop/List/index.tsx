@@ -148,7 +148,7 @@ const ShopList: React.FC = () => {
       cancelText: '取消',
       onOk() {
         dispatch({
-          type: 'global/unbindMwsShop',
+          type: 'global/unbindShop',
           payload: { storeId: record.id },
           callback: requestFeedback,
         });
@@ -183,7 +183,7 @@ const ShopList: React.FC = () => {
                     return;
                   }
                   dispatch({
-                    type: 'global/modifyMwsShopName',
+                    type: 'global/modifyShopName',
                     payload: {
                       storeId: record.id,
                       storeName: storeName,
@@ -290,7 +290,7 @@ const ShopList: React.FC = () => {
   ];
 
   const loading = loadingEffect.effects['global/fetchShopList'];
-  const unbindLoading = loadingEffect.effects['global/unbindMwsShop'];
+  const unbindLoading = loadingEffect.effects['global/unbindShop'];
   return (
     <div className={styles.page}>
       <PageTitleRightInfo
