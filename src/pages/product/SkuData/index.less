@@ -135,3 +135,22 @@
     }
   }
 }
+
+.delModalContent {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.operation {
+  display: flex;
+  justify-content: space-around;
+
+  .delete {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+}
