@@ -140,7 +140,7 @@ const StorageLocation = () => {
           const {
             code,
             message: msg,
-            data: { error },
+            data,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } = datas as any;
           if (code === 200) {
@@ -149,13 +149,15 @@ const StorageLocation = () => {
             return;
           }
           Modal.error({
-            title: '删除失败',
+            title: '部分删除失败',
             width: 500,
             icon: null,
             content: <div className={styles.errorBox}>
-              {error && error.map((item: string, i: number) => <p key={i}>{item}</p>)}
+              {data?.error && data.error.map((item: string, i: number) => <p key={i}>{item}</p>)}
             </div>,
           });
+          // 部分失败不影响其他成功的删除，所以失败也需要刷新列表
+          setInitCondition(!initCondition);
         });
       },
     });

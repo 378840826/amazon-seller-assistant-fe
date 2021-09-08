@@ -58,13 +58,15 @@ const MyUpload: React.FC<IProps> = props => {
             {error.map((item: string, i: number) => <p key={i}>{item}</p>)}
           </div>,
         });
+        // 部分失败不影响其他成功的，所以失败也需要刷新列表
+        successCallback();
       }
     },
   };
 
   return <>
     <Upload {...uploadConfig}>
-      <Button>选择文件</Button>
+      <Button>批量上传</Button>
     </Upload>
   </>;
 };
