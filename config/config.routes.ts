@@ -18,6 +18,69 @@ import {
   product,
 } from '../src/utils/routes';
 
+// 不需要显示店铺选择器的页面的路由
+export const configHiddenShopSelectorUrl = [
+  '/shop/list',
+  '/shop/bind',
+  '/overview',
+  '/ppc/overview',
+  '/ppc/auth',
+  '/center',
+  '/sub-account',
+  report.profit,
+  configuration.logistics,
+  configuration.storageLocation,
+  configuration.warehouse,
+  fba.planList,
+  fba.shipment,
+  fba.dispatchList,
+]
+
+// 显示但禁用店铺选择器的页面的路由
+export const configDisabledShopSelectorUrl = [
+  ppcCampaignAddRouter,
+  '/ppc/group/add',
+  '/competitor/history',
+  '/competitor/list',
+  '/ppc/manage/group/target',
+  '/ppc/manage/group/timer',
+  ruleAddRouter,
+  ruleAddSalesRouter,
+  ruleAddCartRouter,
+  ruleAddCompetitorRouter,
+];
+
+// 不需要渲染统一样式的页面标题的页面的路由
+export const configUnshownPageTitleUrl = [
+  '/product/error-report',
+  '/shop/bind',
+  '/ppc/manage',
+  '/ppc/manage/group/target',
+  '/ppc/manage/group/timer',
+  // 因 bs导入 页面标题需要特殊的样式
+  '/report/import',
+  '/competitor/list',
+  '/competitor/history',
+  '/mail/summary',
+  '/mail/inbox',
+  '/mail/reply',
+  '/mail/no-reply',
+  '/mail/outbox',
+  '/mail/send-success',
+  '/mail/send-fail',
+  '/mail/sending',
+  '/mail/rule',
+  '/mail/template',
+  '/dynamic/asin-overview',
+  '/dynamic/asin-monitor',
+  ruleAddRouter,
+  ruleAddSalesRouter,
+  ruleAddCartRouter,
+  ruleAddCompetitorRouter,
+  '/dynamic/rank-monitor',
+];
+
+// 全局路由配置
 export default [
   // 账户
   {
@@ -230,11 +293,11 @@ export default [
   {
     path: '/ppc',
     component: '../layouts/BasicLayout',
+    wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '广告管理', path: '/ppc/manage', component: './ppc/AdManage' },
       { title: '广告管理', path: '/ppc/manage/group/target', component: './ppc/AdManage/AutoGroupTarget' },
       { title: '广告管理', path: '/ppc/manage/group/time', component: './ppc/AdManage/GroupTime' },
-      { title: '广告店铺授权', path: '/ppc/shop/list', component: './UncompletedPage' },
       { title: '创建广告活动', path: ppcCampaignAddRouter, component: './ppc/Creates/Campaign' },
       { title: '创建广告组', path: ppcGroupAddRouter, component: './ppc/Creates/Group' },
       // 以下为重定向路由

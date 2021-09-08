@@ -53,17 +53,18 @@
 3. 如果是功能页需要添加导航，在 ```src/layouts/BasicLayout/navigation``` 中添加到对应导航菜单
 4. 如果是需要高亮一级导航但是不需要二级导航的页面(例如商品管理>错误报告)，在上一条的基础上并增加字段 ```hide: true```
 5. 如果是 index 或 user 等页面需要添加导航，在 ```src/layouts/``` 下对应的布局中添加导航菜单
-6. 如果页面需要隐藏或禁用店铺选择器，在 ```src/model/global``` 下的 hiddenShopSelectorUrl 或 disabledShopSelectorUrl 添加页面的路由
-7. 如果页面不需要渲染统一样式的页面标题，参考上一条， 在 unshownPageTitleUrl 中添加页面路由
+6. 如果页面需要隐藏或禁用店铺选择器，在 ```config/config.routes.ts``` 下的 configHiddenShopSelectorUrl 或 configDisabledShopSelectorUrl 添加页面的路由
+7. 如果页面不需要渲染统一样式的页面标题，在 ```config/config.routes.ts``` 下的 configUnshownPageTitleUrl 中添加页面路由
 
 ### 分支管理说明
 * 遵循新的 git 代码管理流程
 * 每个功能分支/修复分支都必须从 master 分支检出
 * git 功能分支以 feature/ 开头命名, 修复分支以 fix/ 开头命名
-* 环境分支不能直接提交代码，只能接受合并
-* 其他详情： https://con.workics.cn/pages/viewpage.action?pageId=127572006
+* 环境分支(master/test/develop)不允许直接提交代码，只接受合并和处理冲突的提交
+* 其他详情参考 https://con.workics.cn/pages/viewpage.action?pageId=127572006 中的代码管理说明
   
 ### 开发流程
+0. 开发前，你的本地应该已有远程仓库的一个完整克隆
 1. 从最新的 master 分支检出分支（以下简称 f 分支）
     * 功能分支命名：feature/xxx
     * 修复分支命名：fix/xxx
@@ -90,8 +91,9 @@
 * 所有 interface 以大写字母 I 开头
 * 减少图片的使用，用 iconfont 代替
 * 减少 class 组件的使用，使用函数组件或 hooks
-* TS 避免使用 any，如果必须使用，则只在这一行代码前注释 eslint disable
+* TS 避免使用 any，如果必须使用，则只在这一行代码前注释 eslint-disable-next-line @typescript-eslint/no-explicit-any
 * 开启了 immer，可简写 reducers
+* 请在 IDE(编辑器)上安装 ESlint 插件
 
 ### 其他说明
 * 使用了 Less 作为 css 处理器
