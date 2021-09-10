@@ -6,16 +6,18 @@
   .Sider {
     overflow-x: hidden;
     overflow-y: auto;
-    background: #f8f8f8;
+    // background: #f8f8f8;
+    background: #f1f1f1;
   }
 
   .Tree {
     font-size: @font-size-sm;
     width: 100%;
-    padding: 17px 8px 0 8px;
+    // padding: 17px 8px 0 8px;
     border-radius: 0;
     overflow: auto;
-    background: #f8f8f8;
+    // background: #f8f8f8;
+    background: #f1f1f1;
 
     :global {
       // 点击范围加宽
@@ -23,16 +25,31 @@
       .ant-tree-node-content-wrapper {
         width: 100%;
       }
+
+      .ant-tree-treenode {
+        padding: 3px 0 3px 10px;
+        transition: all 0.3s;
+
+        &:hover {
+          background: #e6e6e6;
+        }
+      }
+
+      .ant-tree-treenode-selected {
+        background-color: #e6e6e6;
+      }
     }
   }
 
-  .treeIcon {
+  .panelIcon {
+    margin-right: 10px;
     color: @text-color-secondary;
   }
 
   .rootTitle {
     color: #444;
     font-weight: bold;
+    font-size: @font-size-sm;
   }
 
   .switcherIcon {
@@ -53,7 +70,7 @@
     background: #fff;
 
     &.triggerMove {
-      top: 30px;
+      top: 28px;
     }
   }
 
@@ -61,20 +78,19 @@
     width: 30px;
     height: 30px;
     line-height: 30px;
-    color: @heading-color;
-    border: 1px solid @border-color-base;
+    color: @primary-color;
+    border: 1px solid @primary-color;
     border-radius: @border-radius-base;
     cursor: pointer;
 
     &:hover {
-      color: @primary-color;
-      border-color: @primary-color;
+      color: #fff;
+      background: @primary-color;
       transition: all 0.3s;
     }
 
     &.triggerActive {
       background: @primary-color;
-      border-color: @primary-color;
       color: #fff;
     }
   }
@@ -118,6 +134,52 @@
     }
   }
 
+  // 折叠面板
+  .Collapse {
+    background: #f1f1f1;
+
+    .Panel {
+      margin: 14px 10px;
+      overflow: hidden;
+      border: none;
+    }
+
+    :global {
+      .ant-collapse-header {
+        background: #fff;
+        box-shadow: 0 2px 4px 0 rgba(192, 191, 191, 0.5);
+        border-radius: 4px;
+      }
+
+      .ant-collapse-item-active .ant-collapse-header {
+        background: #edf6ff;
+        color: #0083ff;
+
+        .zdy-panel-title,
+        .zyd-icon {
+          color: #0083ff;
+        }
+
+        .ant-collapse-arrow.anticon {
+          color: #0083ff;
+        }
+      }
+
+      .ant-collapse-item > .ant-collapse-header {
+        padding: 4px 10px;
+
+        .ant-collapse-arrow {
+          padding: 4px 16px;
+          color: #bfbfbf;
+        }
+      }
+
+      .ant-collapse-content > .ant-collapse-content-box {
+        padding: 10px 0;
+      }
+    }
+  }
+
   :global {
     // 隐藏 Sider 本身的 trigger
     .ant-layout-sider-zero-width-trigger {
@@ -153,8 +215,9 @@
       }
 
       .ant-tree-node-content-wrapper {
-        &:hover {
-          background: #ebebeb;
+        &:hover,
+        &.ant-tree-node-selected {
+          background: #e6e6e6;
         }
 
         &.ant-tree-iconEle {

@@ -6,7 +6,7 @@
  * 因开发周期太长且收尾匆忙，有些地方待优化
  */
 import React, { useState, useEffect } from 'react';
-import { Tree, Tabs, Layout } from 'antd';
+import { Tree, Tabs, Layout, Collapse } from 'antd';
 import { IConnectState } from '@/models/connect';
 import { ITreeDataNode } from '@/models/adManage';
 import { useSelector, useDispatch } from 'umi';
@@ -29,6 +29,7 @@ import styles from './index.less';
 
 const { TabPane } = Tabs;
 const { Sider } = Layout;
+const { Panel } = Collapse;
 
 type TabsState = 'default' | 'campaign' | 'keywordGroup' | 'targetingGroup'
 
@@ -62,6 +63,47 @@ export const initTreeData: ITreeDataNode[] = [
     ],
   },
 ];
+
+// 用折叠面板分成 3 个菜单树
+export const initTreeDatas = {
+  sp: [
+    { title: '已开启', key: 'sp-enabled' },
+    { title: '已暂停', key: 'sp-paused' },
+    { title: '已归档', key: 'sp-archived' },
+  ],
+  sb: [
+    { title: '已开启', key: 'sb-enabled' },
+    { title: '已暂停', key: 'sb-paused' },
+    { title: '已归档', key: 'sb-archived' },
+  ],
+  sd: [
+    { title: '已开启', key: 'sd-enabled' },
+    { title: '已暂停', key: 'sd-paused' },
+    { title: '已归档', key: 'sd-archived' },
+  ],
+};
+
+// 3个广告类型的折叠面板，图标增加了 zyd-icon 用于设置选中后的颜色
+const panelDict = {
+  sp: (
+    <>
+      <Iconfont type="icon-tubiao_shangpin" className={classnames(styles.panelIcon, 'zyd-icon')}/>
+      <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SP商品广告</span>
+    </>
+  ),
+  sb: (
+    <>
+      <Iconfont type="icon-pinpai" className={classnames(styles.panelIcon, 'zyd-icon')}/>
+      <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SB品牌广告</span>
+    </>
+  ),
+  sd: (
+    <>
+      <Iconfont type="icon-liebiao1" className={classnames(styles.panelIcon, 'zyd-icon')}/>
+      <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SD展示广告</span>
+    </>
+  ),
+};
 
 // 全部标签
 const allTab = {
@@ -104,33 +146,11 @@ export const negativeMatchTypeDict: {[key in API.AdNegativeKeywordMatchType]: st
   negativePhrase: '词组否定',
 };
 
-// 菜单树的 3 个图标
-const treeIconDict = {
-  sp: (
-    <Iconfont
-      type="icon-shangpin"
-      className={styles.treeIcon}
-    />
-  ),
-  sb: (
-    <Iconfont
-      type="icon-ai-r"
-      className={styles.treeIcon}
-    />
-  ),
-  sd: (
-    <Iconfont
-      type="icon-01_zhanshifenlei"
-      className={styles.treeIcon}
-    />
-  ),
-};
-
 const Manage: React.FC = function() {
   const dispatch = useDispatch();
   const adManage = useSelector((state: IConnectState) => state.adManage);
   const { 
-    treeData, tabsCellCount, updateTime, treeSelectedInfo, treeExpandedKeys,
+    treeDatas, tabsCellCount, updateTime, treeSelectedInfo, treeExpandedKeys,
   } = adManage;
   // 店铺
   const {
@@ -143,6 +163,8 @@ const Manage: React.FC = function() {
   // const [activeTabKey, setActiveTabKey] = useState<string>('targeting');
   // 菜单树侧边栏是否收起
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  // 折叠面板展开的广告类型
+  const [activePanelType, setActivePanelType] = useState<string>('');
   const loadingEffect = useSelector((state: IConnectState) => state.loading.effects);
   // loading 标签页数量
   const loadingTabsCellCount = loadingEffect['adManage/fetchTabsCellCount']; 
@@ -185,6 +207,10 @@ const Manage: React.FC = function() {
         },
         callback: requestErrorFeedback,
       });
+      // 如果是跳转到具体广告活动/广告组，需要先展开对应的折叠面板
+      if (campaignType) {
+        setActivePanelType(campaignType);
+      }
       // 设置标签类型状态
       let qsTabsState = 'default';
       if (groupId) {
@@ -373,6 +399,47 @@ const Manage: React.FC = function() {
     });    
   }
 
+  // 折叠面板展开/收起
+  function handleActivePanelChange(key: API.CamType) {
+    // 展开相应面板
+    setActivePanelType(key);
+    // 修改菜单树选中的节点和面包屑等数据
+    changeSelected({
+      tabsState: 'default',
+      selectedInfo: {
+        // key 为 undefined 时(收起全部面板时)，清空筛选条件请求全店数据
+        key: key || '',
+        groupType: '',
+        targetingType: '',
+        campaignType: key,
+      },
+    });
+  }
+
+  // 按类型获取菜单树
+  function getTypeTree(type: API.CamType) {
+    return (
+      <Tree
+        showIcon
+        loadData={onLoadData}
+        treeData={treeDatas[type]}
+        expandedKeys={treeExpandedKeys}
+        selectedKeys={[treeSelectedInfo.key]}
+        switcherIcon={
+          <Iconfont type="icon-xiangyoujiantou" className={styles.switcherIcon} />
+        }
+        className={classnames(styles.Tree, collapsed ? styles.hide : '')}
+        onSelect={handleSelect}
+        onExpand={(keys) => {
+          dispatch({
+            type: 'adManage/changeTreeExpandedKeys',
+            payload: { keys },
+          });
+        }}
+      />
+    );
+  }
+
   // 面包屑导航点击
   function handleBreadcrumbClick(type: 'shop' | 'campaign') {
     let selectedInfo: ITreeSelectedInfo = {
@@ -385,11 +452,12 @@ const Manage: React.FC = function() {
     };
     let tabsState: TabsState = 'default';
     if (type === 'shop') {
-      // 收起菜单树
+      // 收起菜单树和折叠面板
       dispatch({
         type: 'adManage/changeTreeExpandedKeys',
         payload: { keys: [] },
       });
+      setActivePanelType('');
     } else if (type === 'campaign') {
       const paramsArr = treeSelectedInfo.key.split('-');      
       selectedInfo = {
@@ -430,27 +498,26 @@ const Manage: React.FC = function() {
                 width={300}
                 collapsedWidth={0}
               >
-                <Tree
-                  showIcon
-                  icon={(props) => {
-                    return treeIconDict[props.eventKey];
-                  }}
-                  loadData={onLoadData}
-                  treeData={treeData}
-                  expandedKeys={treeExpandedKeys}
-                  selectedKeys={[treeSelectedInfo.key]}
-                  switcherIcon={
-                    <Iconfont type="icon-xiangyoujiantou" className={styles.switcherIcon} />
-                  }
-                  className={classnames(styles.Tree, collapsed ? styles.hide : '')}
-                  onSelect={handleSelect}
-                  onExpand={(keys) => {
-                    dispatch({
-                      type: 'adManage/changeTreeExpandedKeys',
-                      payload: { keys },
-                    });
-                  }}
-                />
+                <Collapse
+                  accordion
+                  bordered={false}
+                  defaultActiveKey={[activePanelType]}
+                  expandIcon={({ isActive }) => <Iconfont type="icon-xiangyoujiantou" rotate={isActive ? 270 : 90} />}
+                  expandIconPosition="right"
+                  className={styles.Collapse}
+                  activeKey={[activePanelType]}
+                  onChange={key => handleActivePanelChange(key as API.CamType)}
+                >
+                  <Panel header={panelDict.sp} key="sp" className={styles.Panel}>
+                    { getTypeTree('sp') }
+                  </Panel>
+                  <Panel header={panelDict.sb} key="sb" className={styles.Panel}>
+                    { getTypeTree('sb') }
+                  </Panel>
+                  <Panel header={panelDict.sd} key="sd" className={styles.Panel}>
+                    { getTypeTree('sd') }
+                  </Panel>
+                </Collapse>
               </Sider>
             </Layout>
             <div className={classnames(

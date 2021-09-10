@@ -77,7 +77,7 @@ import {
   queryAnalysisTable,
 } from '@/services/adManage';
 import { storage } from '@/utils/utils';
-import { stateIconDict, initTreeData } from '@/pages/ppc/AdManage';
+import { stateIconDict, initTreeDatas } from '@/pages/ppc/AdManage';
 import { IPutKeyword, INegateKeyword } from '@/pages/ppc/AdManage/SearchTerm';
 import { ITreeSelectedInfo } from '@/pages/ppc/AdManage/index.d';
 
@@ -88,7 +88,11 @@ interface ICampaignAndGroup extends API.IAdCampaign {
 
 export interface IAdManage {
   updateTime: string;
-  treeData: ITreeDataNode[];
+  treeDatas: {
+    sp: ITreeDataNode[];
+    sb: ITreeDataNode[];
+    sd: ITreeDataNode[];
+  };
   campaignSimpleList: {
     name: string;
     id: string;
@@ -398,10 +402,20 @@ function updateTreeData(
   for (let i = 0; i < list.length; i++) {
     const node = list[i];
     if (node.key === key) {
-      list[i] = {
-        ...node,
-        children,
-      };
+      const o = { ...node };
+      // 因为不确定的原因，造成是当前是叶子节点时还有展开箭头，所以这里判断 children 是否为空，为空则设为叶子节点
+      // 可能是由于 antd 版本的原因，这个问题也许后续会被修复，修复后删除这个判断。直接设置下面的 children
+      if (children.length) {
+        o.children = children;
+      } else {
+        o.isLeaf = true;
+      }
+      list[i] = o;
+      // 这个赋值暂时改为增加上面的判断，后续问题解决了再改回这个赋值
+      // list[i] = {
+      //   ...node,
+      //   children,
+      // };
       break;
     } else if (node.children) {
       list[i] = {
@@ -418,7 +432,7 @@ const AdManageModel: IAdManageModelType = {
 
   state: {
     updateTime: '正在查询...',
-    treeData: initTreeData,
+    treeDatas: initTreeDatas,
     campaignSimpleList: [],
     // 在菜单树选中广告活动或广告组时，保存的广告活动和广告组信息
     treeSelectedInfo: { key: '', groupType: '', targetingType: '' },
@@ -1922,8 +1936,9 @@ const AdManageModel: IAdManageModelType = {
     saveTreeNode(state, { payload }) {      
       const { records, key, isLeaf, parentCampaignName } = payload;
       const formatRecords = formattingRecords(records, key, isLeaf, parentCampaignName);
-      const node = updateTreeData(state.treeData, key, formatRecords);
-      state.treeData = node;
+      const type = key.split('-')[0];
+      const typeNode = updateTreeData(state.treeDatas[type], key, formatRecords);
+      state.treeDatas[type] = typeNode;
     },
 
     // 菜单树-保存菜单树选中的key 和 广告活动或广告组信息
