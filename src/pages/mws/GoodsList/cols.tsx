@@ -21,6 +21,7 @@ import { IRule } from '@/models/goodsList';
 import classnames from 'classnames';
 import { MenuClickEventHandler } from 'rc-menu/lib/interface.d';
 import styles from './index.less';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const { Option } = Select;
 const { Item: MenuItem } = Menu;
@@ -164,7 +165,35 @@ export const getFullColumns = (params: any) => {
               customCols.asin
               &&
               <div className={styles.asin}>
-                <Link to={`/asin/base?asin=${record.asin}`} title="跳转到ASIN总览">{record.asin}</Link>
+                <Dropdown 
+                  overlay={
+                    <Menu>
+                      <Menu.Item key="toGoodlist" >
+                        <Link to={`/product/list?asin=${record.asin}`} target="_blank">商品列表</Link>
+                      </Menu.Item>
+                      <Menu.Item key="toASINview">
+                        <Link to={`/asin/order?asin=${record.asin}`} target="_self">订单解读</Link>
+                      </Menu.Item>
+                      <Menu.Item key="toOrderview">
+                        <Link to={`/dynamic/asin-overview?asin=${record.asin}`} target="_self">ASIN动态汇总</Link>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <CopyToClipboard 
+                          onCopy={() => {
+                            message.success('复制成功'); 
+                          }}
+                          text={record.asin}
+                        >
+                          <span>复制ASIN编号</span>
+                        </CopyToClipboard>
+                      </Menu.Item>
+                    </Menu>
+                  }                     
+                >
+                  <a className="ant-dropdown-link" onClick={e => e.preventDefault()} >
+                    {record.asin} 
+                  </a>
+                </Dropdown>
               </div>
             }
             <div className={styles.iconContainer}>
