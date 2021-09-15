@@ -14,8 +14,9 @@ import Rate from '@/components/Rate';
 import AdTypeData from '../components/AdTypeData';
 import RelatedSales from './RelatedSales';
 import { getlistingStatus } from '../config';
-import { Tooltip } from 'antd';
+import { Tooltip, Dropdown, Menu, message } from 'antd';
 import ShowData from '@/components/ShowData';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
@@ -71,7 +72,37 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
             >
               <Iconfont type="icon-lianjie" className={styles.linkIcon}/>{title}</a>
             <footer>
-              <Link to={`/asin/base?asin=${asin}`} className={styles.title}>{asin}</Link>
+              <div>
+                <Dropdown 
+                  overlay={
+                    <Menu>
+                      <Menu.Item key="toGoodlist" >
+                        <Link to={`/product/list?asin=${asin}`} target="_self">商品列表</Link>
+                      </Menu.Item>
+                      <Menu.Item key="toASINview">
+                        <Link to={`/asin/order?asin=${asin}`} target="_self">订单解读</Link>
+                      </Menu.Item>
+                      <Menu.Item key="toOrderview">
+                        <Link to={`/dynamic/asin-overview?asin=${asin}`} target="_self">ASIN动态汇总</Link>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <CopyToClipboard 
+                          onCopy={() => {
+                            message.success('复制成功'); 
+                          }}
+                          text={asin}
+                        >
+                          <span>复制ASIN编号</span>
+                        </CopyToClipboard>
+                      </Menu.Item>
+                    </Menu>
+                  }                                            
+                >
+                  <a onClick={e => e.preventDefault()} className={styles.title}>
+                    {asin} 
+                  </a>
+                </Dropdown>
+              </div>
               <Tooltip title={`大类排名：#${categoryRanking} ${categoryName}`}>
                 <span>#{categoryRanking}</span>
               </Tooltip>
