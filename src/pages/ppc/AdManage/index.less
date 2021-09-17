@@ -6,17 +6,14 @@
   .Sider {
     overflow-x: hidden;
     overflow-y: auto;
-    // background: #f8f8f8;
     background: #f1f1f1;
   }
 
   .Tree {
     font-size: @font-size-sm;
     width: 100%;
-    // padding: 17px 8px 0 8px;
     border-radius: 0;
     overflow: auto;
-    // background: #f8f8f8;
     background: #f1f1f1;
 
     :global {
@@ -41,11 +38,6 @@
     }
   }
 
-  .panelIcon {
-    margin-right: 10px;
-    color: @text-color-secondary;
-  }
-
   .rootTitle {
     color: #444;
     font-weight: bold;
@@ -60,17 +52,18 @@
     z-index: 1;
     position: absolute;
     left: -1px;
-    top: 0;
+    top: 1px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 40px;
     height: 40px;
-    border-right: 1px solid #d9d9d9;
+    border-right: 1px solid @border-color-base;
+    border-bottom: 1px solid @border-color-base;
     background: #fff;
 
     &.triggerMove {
-      top: 28px;
+      top: 29px;
     }
   }
 
@@ -142,21 +135,32 @@
       margin: 14px 10px;
       overflow: hidden;
       border: none;
+
+      &:hover {
+        box-shadow: 0 2px 4px 0 rgba(192, 191, 191, 0.5);
+      }
     }
 
     :global {
       .ant-collapse-header {
         background: #fff;
-        box-shadow: 0 2px 4px 0 rgba(192, 191, 191, 0.5);
+        border: 1px solid transparent;
         border-radius: 4px;
+      }
+
+      .ant-collapse-item-active {
+        &:hover {
+          box-shadow: none;
+        }
       }
 
       .ant-collapse-item-active .ant-collapse-header {
         background: #edf6ff;
         color: #0083ff;
+        border: 1px solid #c6e3ff;
+        border-radius: 4px;
 
-        .zdy-panel-title,
-        .zyd-icon {
+        .zdy-panel-title {
           color: #0083ff;
         }
 
@@ -181,6 +185,22 @@
   }
 
   :global {
+    // 左侧菜单和右侧之间增加分隔线
+    .ant-layout-has-sider {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 40px;
+        right: 0;
+        display: block;
+        width: 1px;
+        height: calc(100% - 40px);
+        background: @border-color-base;
+      }
+    }
+
     // 隐藏 Sider 本身的 trigger
     .ant-layout-sider-zero-width-trigger {
       display: none;
@@ -244,10 +264,6 @@
   width: 100%;
   overflow: auto;
   background: #fff;
-
-  &.tabsContainerShowTree > :global.ant-tabs.ant-tabs-top {
-    border-left: 1px solid @border-color-base;
-  }
 }
 
 .iconEnabled {
