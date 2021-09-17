@@ -30,6 +30,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     cycle: '',
     changeType: ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'],
   });
+  const [searchValue, setSearchValue] = useState<string | undefined | string[]>('');
 
   const modifySendState = (params: API.IParams) => {
     setSendState(state => ({
@@ -38,9 +39,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     }));
   };
 
-  const onSearch = (value: string) => {
-    console.log('onSearch:', value);
-    
+  const onSearch = (value: string) => { 
     setSendState(state => ({
       ...state,
       asin: value.trim(),
@@ -53,9 +52,15 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
       setSendState(state => ({
         ...state,
         asin: queryParams.asin as string, 
-      })); 
+      }));
+      console.log(queryParams.asin, `路由传过来的值`);
+      setSearchValue(queryParams.asin);
+      console.log(searchValue, `能不能保存`);
+      
     }
   }, []);
+
+
   //切换店铺 修改分页相关信息
   useEffect(() => {
     setSendState((sendState) => ({
@@ -130,8 +135,10 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
                 onSearch(value);
               }
             }}
+            defaultValue={searchValue}
             disabled={state.tableLoading}
-            enterButton={<Iconfont type="icon-sousuo" className={styles.icon_sousuo}/>}
+            enterButton={<Iconfont type="icon-sousuo"
+              className={styles.icon_sousuo}/>}
           />
         </div>
         
@@ -148,8 +155,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
           tableErrorMsg={state.tableErrorMsg}
           modifySendState={modifySendState}
         />
-      </div>
-      
+      </div>     
     </div>
   );
 };

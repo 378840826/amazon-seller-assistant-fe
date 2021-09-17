@@ -14,9 +14,9 @@ import Rate from '@/components/Rate';
 import AdTypeData from '../components/AdTypeData';
 import RelatedSales from './RelatedSales';
 import { getlistingStatus } from '../config';
-import { Tooltip } from 'antd';
+import { Tooltip, Dropdown, Menu, message } from 'antd';
 import ShowData from '@/components/ShowData';
-import { Dropdown, Menu } from 'antd';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
@@ -84,6 +84,16 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
                       </Menu.Item>
                       <Menu.Item key="toOrderview">
                         <Link to={`/dynamic/asin-overview?asin=${asin}`} target="_self">ASIN动态汇总</Link>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <CopyToClipboard 
+                          onCopy={() => {
+                            message.success('复制成功'); 
+                          }}
+                          text={asin}
+                        >
+                          <span>复制ASIN编号</span>
+                        </CopyToClipboard>
                       </Menu.Item>
                     </Menu>
                   }                                            

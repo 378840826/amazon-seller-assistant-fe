@@ -101,7 +101,7 @@ const GoodsList: React.FC = () => {
         },
         callback: requestErrorFeedback,
       });
-      //判断是否有有路由传参
+      //判断是否有路由传参
       if (queryParams.asin){
         dispatch({
           type: 'goodsList/fetchGoodsList',
@@ -124,7 +124,7 @@ const GoodsList: React.FC = () => {
           },
           callback: requestErrorFeedback,
         });
-      } 
+      }      
       dispatch({
         type: 'goodsList/fetchCycle',
         payload: {

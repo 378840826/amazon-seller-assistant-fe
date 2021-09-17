@@ -21,7 +21,9 @@ import {
   Table,
   Dropdown,
   Menu,
+  message,
 } from 'antd';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 /**
  * 每列的宽度用class来设置, 要不然不准确
@@ -492,8 +494,18 @@ export const parentAsinCols = (props: AsinTable.IParentAsinColsProps) => {
                           <Menu.Item key="toOrderview">
                             <Link to={`/dynamic/asin-overview?asin=${asin}`} target="_self">ASIN动态汇总</Link>
                           </Menu.Item>
+                          <Menu.Item>
+                            <CopyToClipboard 
+                              onCopy={() => {
+                                message.success('复制成功'); 
+                              }}
+                              text={asin}
+                            >
+                              <span>复制ASIN编号</span>
+                            </CopyToClipboard>
+                          </Menu.Item>
                         </Menu>
-                      }                                          
+                      }                                            
                     >
                       <a onClick={e => e.preventDefault()} className={styles.title}>
                         {asin} 

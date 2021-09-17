@@ -21,6 +21,7 @@ import { IRule } from '@/models/goodsList';
 import classnames from 'classnames';
 import { MenuClickEventHandler } from 'rc-menu/lib/interface.d';
 import styles from './index.less';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const { Option } = Select;
 const { Item: MenuItem } = Menu;
@@ -176,6 +177,16 @@ export const getFullColumns = (params: any) => {
                       <Menu.Item key="toOrderview">
                         <Link to={`/dynamic/asin-overview?asin=${record.asin}`} target="_self">ASIN动态汇总</Link>
                       </Menu.Item>
+                      <Menu.Item>
+                        <CopyToClipboard 
+                          onCopy={() => {
+                            message.success('复制成功'); 
+                          }}
+                          text={record.asin}
+                        >
+                          <span>复制ASIN编号</span>
+                        </CopyToClipboard>
+                      </Menu.Item>
                     </Menu>
                   }                     
                 >
@@ -183,7 +194,6 @@ export const getFullColumns = (params: any) => {
                     {record.asin} 
                   </a>
                 </Dropdown>
-               
               </div>
             }
             <div className={styles.iconContainer}>
