@@ -83,26 +83,11 @@ export const initTreeDatas = {
   ],
 };
 
-// 3个广告类型的折叠面板，图标增加了 zyd-icon 用于设置选中后的颜色
+// 3个广告类型的折叠面板
 const panelDict = {
-  sp: (
-    <>
-      <Iconfont type="icon-tubiao_shangpin" className={classnames(styles.panelIcon, 'zyd-icon')}/>
-      <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SP商品广告</span>
-    </>
-  ),
-  sb: (
-    <>
-      <Iconfont type="icon-pinpai" className={classnames(styles.panelIcon, 'zyd-icon')}/>
-      <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SB品牌广告</span>
-    </>
-  ),
-  sd: (
-    <>
-      <Iconfont type="icon-liebiao1" className={classnames(styles.panelIcon, 'zyd-icon')}/>
-      <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SD展示广告</span>
-    </>
-  ),
+  sp: <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SP商品广告</span>,
+  sb: <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SB品牌广告</span>,
+  sd: <span className={classnames(styles.rootTitle, 'zdy-panel-title')}>SD展示广告</span>,
 };
 
 // 全部标签
