@@ -22,6 +22,7 @@ import Log from './Log';
 import { useReactToPrint } from 'react-to-print';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
 import moment from 'moment';
+import Label from './label';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -37,6 +38,11 @@ interface IProps {
 
 interface IPrintProps {
   data: DispatchList.IDispatchDetail; 
+}
+
+interface ILabelType {
+  modalvisible: boolean;
+  recordData: DispatchList.IProductVos;  
 }
 
 const pageStyle = `
@@ -75,35 +81,36 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
           <thead>
             <tr>
               <td>创建日期</td>
-              <td colSpan={5}>{gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</td>
+              <td colSpan={6}>{gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</td>
             </tr>
             <tr>
               <td>创建人</td>
-              <td colSpan={5}>{userName}</td>
+              <td colSpan={6}>{userName}</td>
             </tr>
             <tr>
               <td>Shipment名称</td>
-              <td colSpan={5}>{shipmentName}</td>
+              <td colSpan={6}>{shipmentName}</td>
             </tr>
             <tr>
               <td>ShipmentID</td>
-              <td colSpan={5}>{mwsShipmentId}</td>
+              <td colSpan={6}>{mwsShipmentId}</td>
             </tr>
             <tr>
               <td>发货单号</td>
-              <td colSpan={5}>{invoiceId}</td>
+              <td colSpan={6}>{invoiceId}</td>
             </tr>
             <tr>
               <td>拣货员</td>
-              <td colSpan={5}></td>
+              <td colSpan={6}></td>
             </tr>
             <tr>
               <td>物流方式</td>
-              <td colSpan={5}>{shippingType}</td>
+              <td colSpan={6}>{shippingType}</td>
             </tr>
             <tr>
               <th>MSKU</th>
               <th>发货量</th>
+              <th>实际发货量</th>
               <th>FNSKU</th>
               <th>SKU</th>
               <th>中文名称</th>
@@ -115,11 +122,12 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
               productItemVos?.map((item, index) => {
                 return (
                   <tr key={index}>
-                    <td width={270}>{item.sellerSku}</td>
-                    <td width={120}>{item.issuedNum}</td>
-                    <td width={120}>{item.fnsku}</td>
-                    <td width={120}>{item.sku}</td>
-                    <td width={320}>{item.nameNa ? item.nameNa : '-'}</td>
+                    <td width={240}>{item.sellerSku}</td>
+                    <td width={110}>{item.declareNum}</td>
+                    <td width={110}></td>
+                    <td width={110}>{item.fnsku}</td>
+                    <td width={110}>{item.sku}</td>
+                    <td width={270}>{item.nameNa ? item.nameNa : '-' }</td>
                     <td width={100}>{casesRequired}</td>
                   </tr>
                 );
@@ -151,7 +159,7 @@ const Details: React.FC<IProps> = function(props) {
 
   const [nav, setNav] = useState<'product' | 'log' | 'notShow'>('product');
   const [initData, setInitData] = useState<DispatchList.IDispatchDetail|null>(null); // 
-  const [productVos, setProductVos] = useState<DispatchList.IProductVos[]|null>(null); // 商品明细
+  const [productVos, setProductVos] = useState<DispatchList.IProductVos[]>([]); // 商品明细
   const [logs, setLogs] = useState<DispatchList.IDispatchLog[]|null>(null); // 操作日志
   const 
     [printdata, setPrintdata] = 
@@ -164,6 +172,25 @@ const Details: React.FC<IProps> = function(props) {
       onCancel();
     },
     pageStyle: pageStyle,
+  });
+
+  const [lebalModalData, setLabelModalData] = useState<ILabelType>({
+    modalvisible: false,
+    recordData: {
+      id: '',
+      url: '',
+      itemName: '',
+      asin1: '',
+      sku: '',
+      sellerSku: '',
+      fnsku: '',
+      issuedNum: 0,
+      receiveNum: 0,
+      disparityNum: 0,
+      nameNa: '',
+      locationNo: [],
+      declareNum: '',
+    },   
   });
 
   const dispatch = useDispatch();
@@ -199,6 +226,11 @@ const Details: React.FC<IProps> = function(props) {
     const formVal = form.getFieldsValue();
     onUpdateDispatch({ id: data.id, ...formVal });
   }
+
+  //批量打印的回调
+  const batchPrintClick = () => {
+    setLabelModalData({ modalvisible: true, recordData: productVos[0] });
+  };
 
   return <div className={styles.box}>
     <Modal
@@ -355,6 +387,16 @@ const Details: React.FC<IProps> = function(props) {
           onClick={() => setNav('log')}
           >操作日志</span>
         </nav>
+        <Button onClick={batchPrintClick} type="primary" className={styles.batchbutton}>批量打印标签</Button>
+        <Label 
+          site={site} 
+          data={productVos} 
+          modalData={lebalModalData} 
+          onCancle={() => {
+            lebalModalData.modalvisible = false; 
+            setLabelModalData({ ...lebalModalData });
+          }}
+        />
       </div>
       
       { nav === 'product' && <Product site={site} data={productVos}/> }
