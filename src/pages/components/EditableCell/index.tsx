@@ -69,7 +69,8 @@ const EditableCell: React.FC<IProps> = (props) => {
           ref={inputEl}
           maxLength={maxLength}
           className={styles.Input}
-          value={value}
+          // 避免把代表空值的短横杆带入到输入框
+          value={formatValueFun ? formatValueFun(value) : value}
           defaultValue={inputValue}
           onChange={handelInput}
           onKeyUp={(e) => {
