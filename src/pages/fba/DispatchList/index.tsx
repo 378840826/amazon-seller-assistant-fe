@@ -89,35 +89,36 @@ class IndexToPrint extends PureComponent<IPrintType>{
           <thead>
             <tr>
               <td>创建日期</td>
-              <td colSpan={5}>{gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</td>
+              <td colSpan={6}>{gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</td>
             </tr>
             <tr>
               <td>创建人</td>
-              <td colSpan={5}>{userName}</td>
+              <td colSpan={6}>{userName}</td>
             </tr>
             <tr>
               <td>Shipment名称</td>
-              <td colSpan={5}>{shipmentName}</td>
+              <td colSpan={6}>{shipmentName}</td>
             </tr>
             <tr>
               <td>ShipmentID</td>
-              <td colSpan={5}>{mwsShipmentId}</td>
+              <td colSpan={6}>{mwsShipmentId}</td>
             </tr>
             <tr>
               <td>发货单号</td>
-              <td colSpan={5}>{invoiceId}</td>
+              <td colSpan={6}>{invoiceId}</td>
             </tr>
             <tr>
               <td>拣货员</td>
-              <td colSpan={5}></td>
+              <td colSpan={6}></td>
             </tr>
             <tr>
               <td>物流方式</td>
-              <td colSpan={5}>{shippingType}</td>
+              <td colSpan={6}>{shippingType}</td>
             </tr>
             <tr>
               <th>MSKU</th>
               <th>发货量</th>
+              <th>实际发货量</th>
               <th>FNSKU</th>
               <th>SKU</th>
               <th>中文名称</th>
@@ -129,11 +130,12 @@ class IndexToPrint extends PureComponent<IPrintType>{
               productItemVos?.map((item, index) => {
                 return (
                   <tr key={index}>
-                    <td width={270}>{item.sellerSku}</td>
-                    <td width={120}>{item.issuedNum}</td>
-                    <td width={120}>{item.fnsku}</td>
-                    <td width={120}>{item.sku}</td>
-                    <td width={320}>{item.nameNa ? item.nameNa : '-' }</td>
+                    <td width={240}>{item.sellerSku}</td>
+                    <td width={110}>{item.declareNum}</td>
+                    <td width={110}></td>
+                    <td width={110}>{item.fnsku}</td>
+                    <td width={110}>{item.sku}</td>
+                    <td width={270}>{item.nameNa ? item.nameNa : '-' }</td>
                     <td width={100}>{casesRequired}</td>
                   </tr>
                 );
