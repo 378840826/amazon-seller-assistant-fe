@@ -98,7 +98,8 @@ export function getDefinedCalendarFiltrateParams(dates: DefinedCalendar.IChangeP
     filtrateParams = {
       startTime: dateStart,
       endTime: dateEnd,
-      cycle: '',
+      // 为空时后端接口要求传 null
+      cycle: null,
       timeMethod: timeMethodDict[selectItemKey],
     };
   } else {
