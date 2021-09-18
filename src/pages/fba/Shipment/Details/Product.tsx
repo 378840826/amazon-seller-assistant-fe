@@ -53,6 +53,7 @@ const Product: React.FC<IProps> = props => {
       issuedNum: 0,
       receiveNum: 0,
       mskuState: '',
+      nameNa: '',
     },   
   });
 
@@ -178,9 +179,15 @@ const Product: React.FC<IProps> = props => {
   
   return <>
     <Table {...productConfig}/>
-    <Lebal site={site} data={data} modalData={lebalModalData} onCancle={() => {
-      lebalModalData.modalvisible = false; setLabelModalData({ ...lebalModalData });
-    }}></Lebal>
+    <Lebal 
+      site={site} 
+      data={[lebalModalData.recordData]} 
+      modalData={lebalModalData} 
+      onCancle={() => {
+        lebalModalData.modalvisible = false; 
+        setLabelModalData({ ...lebalModalData });
+      }}
+    />
   </>;
 };
 
