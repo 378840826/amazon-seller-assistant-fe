@@ -133,7 +133,8 @@ const SearchTerm: React.FC = function() {
       // 列表
       const cycle = getDateCycleParam(calendarDefaultKey);
       let params;
-      if (cycle) {
+      // cycle 是用公用的方法获取的，此接口要求的 cycle 最低为 6, 小于 6 则可视为不存在
+      if (cycle >= '6') {
         params = { ...defaultFiltrateParams, cycle };
       } else {
         const {
