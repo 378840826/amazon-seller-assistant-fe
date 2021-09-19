@@ -2,7 +2,7 @@ import React, { useRef, useMemo, ReactElement, useEffect } from 'react';
 import { DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Card } from 'antd';
-import { Iconfont } from '@/utils/utils';
+import { Iconfont, storage } from '@/utils/utils';
 import { Link } from 'umi';
 import classnames from 'classnames';
 import { throttle } from 'lodash';
@@ -88,6 +88,13 @@ const BiCard: React.FC<IProps> = props => {
   // 没有内容的卡片 className
   const notDataClassName: string = isNotData ? styles.notData : '';
 
+  // 跳转路由时存储
+  const onMonitor = () => {
+    if (link === '/dynamic/asin-overview') {
+      storage.set('changeType', ['changeAc']);
+    }
+  };
+
   return (
     <div ref={ref} className={styles[activeClassName]}>
       <Card
@@ -122,7 +129,7 @@ const BiCard: React.FC<IProps> = props => {
                         <Iconfont type="icon-zhankai" className={styles.linkIcon} />
                       </a>
                       :
-                      <Link to={link} target="_blank">
+                      <Link to={link} target="_blank" onClick={onMonitor}>
                         {linkText}
                         <Iconfont type="icon-zhankai" className={styles.linkIcon} />
                       </Link>
