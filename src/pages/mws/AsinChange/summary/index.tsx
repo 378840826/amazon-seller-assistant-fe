@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import LinkHeader from '../components/LinkHeader';
 import styles from './index.less';
-import { Iconfont, getPageQuery } from '@/utils/utils';
+import { Iconfont, getPageQuery, storage } from '@/utils/utils';
 import { Input } from 'antd';
 import { connect } from 'umi';
 import { IConnectState, IConnectProps } from '@/models/connect';
 import OperatorBar from './components/operatorBar';
 import TablePage from './components/tablePage';
 import moment from 'moment';
+
 
 const { Search } = Input;
 interface ISummary extends IConnectProps{
@@ -21,6 +22,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     updateTime: '',
     tableErrorMsg: '',
   });
+  const changeType = storage.get('changeType') || ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'];
   const [sendState, setSendState] = useState({
     size: 20,
     current: 1,
@@ -28,11 +30,11 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     dateStart: moment().subtract(29, 'days').format('YYYY-MM-DD'), //时间范围默认最近30天
     dateEnd: moment().format('YYYY-MM-DD'),
     cycle: '',
-    changeType: ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'],
+    changeType: changeType.length === 0 ? ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'] : changeType, //如果changeType为空时默认选择
   });
   const [searchValue, setSearchValue] = useState<string | undefined | string[]>('');
-
   const modifySendState = (params: API.IParams) => {
+    storage.set('changeType', params.changeType);
     setSendState(state => ({
       ...state,
       ...params,
@@ -52,15 +54,12 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
       setSendState(state => ({
         ...state,
         asin: queryParams.asin as string, 
-      }));
+      })); 
       console.log(queryParams.asin, `路由传过来的值`);
       setSearchValue(queryParams.asin);
-      console.log(searchValue, `能不能保存`);
-      
+      console.log(searchValue, `能不能保存`);    
     }
   }, []);
-
-
   //切换店铺 修改分页相关信息
   useEffect(() => {
     setSendState((sendState) => ({
