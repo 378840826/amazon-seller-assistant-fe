@@ -131,6 +131,26 @@ export const negativeMatchTypeDict: {[key in API.AdNegativeKeywordMatchType]: st
   negativePhrase: '词组否定',
 };
 
+// 菜单树滚动到选中的广告活动/广告组位置
+function scrollTreeToSelected() {
+  const selectrd = window.document.querySelector('.ant-tree-treenode-selected') as HTMLElement;
+  const offsetTop = selectrd?.offsetTop;
+  if (offsetTop) {
+    const sider = window.document.querySelector('.ant-layout-sider') as HTMLElement;
+    sider.scrollTo({
+      top: offsetTop,
+      behavior: 'smooth',
+    });
+  }
+}
+
+// 链接跳转到具体广告活动/广告组时请求菜单树后的回调
+function initTargetFetchTreeCallback(code: number, msg: string) {
+  requestErrorFeedback(code, msg);
+  // 延迟滚动是因为菜单树的高度有可能没渲染完，和菜单树节点的数量正相关
+  setTimeout(scrollTreeToSelected, 1000);
+}
+
 const Manage: React.FC = function() {
   const dispatch = useDispatch();
   const adManage = useSelector((state: IConnectState) => state.adManage);
@@ -233,7 +253,7 @@ const Manage: React.FC = function() {
                   parentCampaignName: campaignName,
                   headersParams: { StoreId: currentShopId },
                 },
-                callback: requestErrorFeedback,
+                callback: initTargetFetchTreeCallback,
               });
             },
           });
@@ -245,7 +265,7 @@ const Manage: React.FC = function() {
               key: stateKey,
               headersParams: { StoreId: currentShopId },
             },
-            callback: requestErrorFeedback,
+            callback: initTargetFetchTreeCallback,
           });
         }
         // 修改菜单树选中的 key 和广告信息
@@ -305,7 +325,7 @@ const Manage: React.FC = function() {
 
   // 切换选中的广告活动或广告组
   function changeSelected(
-    params: { tabsState: TabsState; selectedInfo: ITreeSelectedInfo }
+    params: { tabsState: TabsState; selectedInfo: ITreeSelectedInfo }, scrollTree = false
   ) {
     const { tabsState, selectedInfo } = params;
     // 根据节点重新加载标签页
@@ -333,6 +353,8 @@ const Manage: React.FC = function() {
       type: 'adManage/saveTreeSelectedInfo',
       payload: selectedInfo,
     });
+    // 菜单树滚动到选中位置, 在下一个事件循环中执行(先切换了选中再执行滚动)
+    scrollTree && setTimeout(scrollTreeToSelected, 0);
   }
 
   // 菜单树选中节点
@@ -460,7 +482,7 @@ const Manage: React.FC = function() {
     changeSelected({
       tabsState,
       selectedInfo,
-    });
+    }, true);
   }
 
   // 标签页切换

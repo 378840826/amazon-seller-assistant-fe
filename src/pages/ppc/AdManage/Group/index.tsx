@@ -382,6 +382,7 @@ const Group: React.FC = function() {
                 maxLength: 10,
                 prefix: currency,
                 ghostEditBtn: true,
+                editBtnInFlow: true,
                 confirmCallback: value => {
                   modifyGroup({ defaultBid: value, id: record.id });
                 },
@@ -532,6 +533,7 @@ const Group: React.FC = function() {
                   maxLength: 10,
                   prefix: currency,
                   ghostEditBtn: true,
+                  editBtnInFlow: true,
                   confirmCallback: value => {
                     modifyGroup({ budgetLimit: value, id: record.id });
                   },

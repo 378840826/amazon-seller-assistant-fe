@@ -80,6 +80,7 @@ import { storage } from '@/utils/utils';
 import { stateIconDict, initTreeDatas } from '@/pages/ppc/AdManage';
 import { IPutKeyword, INegateKeyword } from '@/pages/ppc/AdManage/SearchTerm';
 import { ITreeSelectedInfo } from '@/pages/ppc/AdManage/index.d';
+import { getTreeKey, parseTreeKey } from '@/pages/ppc/AdManage/utils';
 
 // 用于广告活动+广告组的级联选择
 interface ICampaignAndGroup extends API.IAdCampaign {
@@ -427,6 +428,31 @@ function updateTreeData(
   return list;
 }
 
+// 通过树的 key 获取菜单树的节点(状态节点、广告活动、广告组节点)
+function getTreeNodeByKey(treeDatas: IAdManage['treeDatas'], treeNodeKey: string) {
+  const nodeParams = parseTreeKey(treeNodeKey);
+  const { type, state, camId, groupId } = nodeParams;
+  const typeNode = treeDatas[type];
+  const stateNode = typeNode.find(item => item.key === getTreeKey({ type, state }));
+  const camNode = stateNode?.children?.find(
+    item => item.key === getTreeKey({ type, state, camId })
+  );
+  const groupNode = camNode?.children?.find(
+    item => item.key === getTreeKey({ type, state, camId, groupId })
+  );
+  if (type) {
+    if (state) {
+      if (camId) {
+        if (groupId) {
+          return groupNode;
+        }
+        return camNode;
+      }
+      return stateNode;
+    }
+  }
+}
+
 const AdManageModel: IAdManageModelType = {
   namespace: 'adManage',
 
@@ -752,7 +778,8 @@ const AdManageModel: IAdManageModelType = {
     *fetchTreeNode({ payload, callback, complete }, { call, put, select }) {
       // key 的组成： 类型-广告活动状态-广告活动ID-广告组ID
       // parentCampaignName 主要用于获取广告活动的名称展示在面包屑
-      const { key, parentCampaignName } = payload;
+      // expandedNode 在菜单树中展开此次获取的节点, 默认展开
+      const { key, parentCampaignName, expandedNode = true } = payload;
       const paramsArr = key.split('-');
       let service = queryCampaignSimpleList;
       // 广告组是叶子节点
@@ -770,6 +797,8 @@ const AdManageModel: IAdManageModelType = {
         service = queryGroupSimpleList;
         params.camId = paramsArr[2];
         isLeaf = true;
+        // 请求广告组时，不需要区分状态，因为广告组的状态和广告活动的状态无关
+        params.state = 'null';
       }
       const res = yield call(service, { ...params, headersParams: payload.headersParams });
       if (res.code === 200) {
@@ -779,14 +808,18 @@ const AdManageModel: IAdManageModelType = {
           payload: { records, key, isLeaf, parentCampaignName },
         });
         // 设置菜单树展开的节点（通过url跳转到指定广告活动/广告组时，获取菜单树后立即展开）
-        const currentKeys = yield select((state: IConnectState) => state.adManage.treeExpandedKeys);
-        const typeKey = params.adType;
-        const stateKey = `${typeKey}-${params.state}`;
-        yield put({
-          type: 'changeTreeExpandedKeys',
-          // 去重
-          payload: { keys: Array.from(new Set([...currentKeys, typeKey, stateKey, key])) },
-        });
+        if (expandedNode) {
+          const currentKeys = yield select(
+            (state: IConnectState) => state.adManage.treeExpandedKeys
+          );
+          const typeKey = params.adType;
+          const stateKey = `${typeKey}-${params.state}`;
+          yield put({
+            type: 'changeTreeExpandedKeys',
+            // 去重
+            payload: { keys: Array.from(new Set([...currentKeys, typeKey, stateKey, key])) },
+          });
+        }
       }
       complete && complete();
       callback && callback(res.code, res.message);
@@ -930,7 +963,7 @@ const AdManageModel: IAdManageModelType = {
     },
 
     // 广告活动-批量操作修改状态
-    *batchCampaign({ payload, callback }, { call, put }) {
+    *batchCampaign({ payload, callback }, { call, put, select }) {
       const res = yield call(batchCampaignState, payload);
       if (res.code === 200) {
         const { data } = res;
@@ -938,6 +971,30 @@ const AdManageModel: IAdManageModelType = {
           type: 'updateCampaignList',
           payload: { records: data },
         });
+        /**
+         * 重新加载菜单树
+         * 批量修改的广告活动可能同时存在于 sp sb sd 三个类型的菜单树中
+         * 避免复杂的判断，直接刷新菜单树中全部已加载的状态节点
+         */
+        const treeDatas = yield select((state: IConnectState) => state.adManage.treeDatas);
+        // 获取菜单树所有已加载的状态节点
+        const loadedStateTreeKeys: string[] = [];
+        Object.keys(treeDatas).forEach(key => {
+          treeDatas[key].forEach((stateTree: ITreeDataNode) => {
+            if (stateTree.children || stateTree.isLeaf) {
+              loadedStateTreeKeys.push(stateTree.key);
+            }
+          });
+        });
+        let length = loadedStateTreeKeys.length;
+        // yield 不能在for循环中
+        while (length) {
+          length--;
+          yield put({
+            type: 'fetchTreeNode',
+            payload: { key: loadedStateTreeKeys[length], expandedNode: false },
+          });
+        }
       }
       callback && callback(res.code, res.message);
     },
@@ -966,6 +1023,29 @@ const AdManageModel: IAdManageModelType = {
           type: 'updateCampaignList',
           payload: { records: [data] },
         });
+        // 如果修改了状态，需要更新菜单树
+        if (payload.state) {
+          yield put({
+            type: 'changeCamTreeNodePositionState',
+            payload: {
+              camType: cam.adType,
+              camId: cam.id,
+              camName: cam.name,
+              oldState: cam.state,
+              newState: payload.state,
+            },
+          });
+          // 如改变状态后添加的新节点处，此新节点没有子节点导致无法添加时，刷新此新节点
+          const newParentTreeNodeKey = getTreeKey({ type: cam.adType, state: payload.state });
+          const treeDatas = yield select((state: IConnectState) => state.adManage.treeDatas);
+          const newParentTreeNode = getTreeNodeByKey(treeDatas, newParentTreeNodeKey);
+          if (newParentTreeNode?.isLeaf) {
+            yield put({
+              type: 'fetchTreeNode',
+              payload: { key: newParentTreeNodeKey },
+            });
+          }
+        }
       }
       callback && callback(res.code, res.message);
     },
@@ -1033,18 +1113,46 @@ const AdManageModel: IAdManageModelType = {
           type: 'updateGroupList',
           payload: { records: [data] },
         });
+        // 如果修改了状态，需要更新菜单树
+        if (payload.state) {
+          yield put({
+            type: 'changeGroupTreeNodeState',
+            payload: {
+              keys: [
+                getTreeKey({
+                  type: group.camType, state: group.state, camId: group.camId, groupId: group.id,
+                }),
+              ],
+              newState: payload.state,
+            },
+          });
+        }
       }
       callback && callback(res.code, res.message);
     },
 
     // 广告组-批量修改状态
-    *batchGroup({ payload, callback }, { call, put }) {
+    *batchGroup({ payload, callback }, { call, put, select }) { 
       const res = yield call(batchGroupState, payload);
       if (res.code === 200) {
         const { data } = res;
         yield put({
           type: 'updateGroupList',
           payload: { records: data },
+        });
+        // 修改菜单树
+        const { ids, state } = payload;
+        const list = yield select((state: IConnectState) => state.adManage.groupTab.list.records);
+        const groups = list.filter((item: API.IAdGroup) => ids.includes(item.id));
+        const keys = groups.map((item: API.IAdGroup) => getTreeKey(
+          { type: item.camType, state: item.camState, camId: item.camId, groupId: item.id })
+        );
+        yield put({
+          type: 'changeGroupTreeNodeState',
+          payload: {
+            keys,
+            newState: state,
+          },
         });
       }
       callback && callback(res.code, res.message);
@@ -1273,7 +1381,7 @@ const AdManageModel: IAdManageModelType = {
         const { data } = res;
         yield put({
           type: 'updateKeywordList',
-          payload: { records: [data] },
+          payload: { records: data },
         });
       }
       callback && callback(res.code, res.message);
@@ -1939,6 +2047,47 @@ const AdManageModel: IAdManageModelType = {
       const type = key.split('-')[0];
       const typeNode = updateTreeData(state.treeDatas[type], key, formatRecords);
       state.treeDatas[type] = typeNode;
+    },
+
+    // 菜单树-修改菜单树中广告活动节点的位置和状态（修改广告活动状态后，需修改其在菜单树中的位置、key和状态图标）
+    changeCamTreeNodePositionState(state, { payload }) {
+      const treeDatas = state.treeDatas;
+      const { camType, camId, camName, oldState, newState } = payload;
+      // 获取被修改节点的父节点（状态节点）
+      const parentTreeNodeKey = getTreeKey({ type: camType, state: oldState });
+      const parentTreeNode = getTreeNodeByKey(treeDatas, parentTreeNodeKey);
+      // 如父节点有 children 说明已加载了子节点，删除此被修改的子节点
+      if (parentTreeNode?.children) {
+        // 广告活动需要改变状态和位置，广告组不需要改变位置，只需要改变状态
+        const key = getTreeKey({ type: camType, state: oldState, camId });
+        const index = parentTreeNode.children.findIndex((item: ITreeDataNode) => item.key === key);
+        parentTreeNode.children.splice(index, 1);
+      }
+      // 如果新状态所属的菜单树已加载，把此节点push到新状态所属的菜单树
+      const newParentTreeNodeKey = getTreeKey({ type: camType, state: newState });
+      const newParentTreeNode = getTreeNodeByKey(treeDatas, newParentTreeNodeKey);
+      if (newParentTreeNode?.children) {
+        const key = getTreeKey({ type: camType, state: newState, camId });
+        newParentTreeNode.children.push({
+          ...newParentTreeNode.children[0],
+          key,
+          title: camName,
+        });
+      }
+    },
+
+    // 菜单树-修改广告组节点的状态（修改广告组状态后，需修改其在菜单树中的状态图标和 key）
+    changeGroupTreeNodeState(state, { payload }) {
+      const treeDatas = state.treeDatas;
+      const { keys, newState } = payload;
+      keys.forEach((key: string) => {
+        const groupTreeNode = getTreeNodeByKey(treeDatas, key);
+        if (groupTreeNode) {
+          // 只需要改变状态图标和 key
+          groupTreeNode.icon = stateIconDict[newState];
+          groupTreeNode.key = key;
+        }
+      });
     },
 
     // 菜单树-保存菜单树选中的key 和 广告活动或广告组信息

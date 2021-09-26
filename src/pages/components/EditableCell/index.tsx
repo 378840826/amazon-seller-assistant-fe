@@ -17,11 +17,20 @@ interface IProps {
   };
   // 编辑按钮是否默认隐藏 hover 时候再显示
   ghostEditBtn?: boolean;
+  // 编辑按钮是否在文档流中(默认脱离文档流 absolute 悬浮于右下角)
+  editBtnInFlow?: boolean;
 }
 
 const EditableCell: React.FC<IProps> = (props) => {
   const { 
-    inputValue, prefix, suffix, confirmCallback, maxLength, formatValueFun, ghostEditBtn,
+    inputValue,
+    prefix,
+    suffix,
+    confirmCallback,
+    maxLength,
+    formatValueFun,
+    ghostEditBtn,
+    editBtnInFlow,
   } = props;
   const [value, setValue] = useState<string>(inputValue);
   const [editable, setEditable] = useState<boolean>(false);
@@ -86,7 +95,7 @@ const EditableCell: React.FC<IProps> = (props) => {
             }
           }}
         />
-        <div className={styles.btns}>
+        <div className={classnames(styles.btns, editBtnInFlow ? styles.editBtnInFlow : null)}>
           <button
             className={classnames(styles.btn, styles.cancel)}
             onClick={handelClickCancel}
