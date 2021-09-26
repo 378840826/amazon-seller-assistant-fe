@@ -1087,6 +1087,7 @@ const Keyword: React.FC = function() {
                   maxLength: 10,
                   prefix: currency,
                   ghostEditBtn: true,
+                  editBtnInFlow: true,
                   confirmCallback: value => {
                     modifyKeyword({ bid: value, id: record.id });
                   },

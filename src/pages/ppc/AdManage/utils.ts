@@ -47,7 +47,7 @@ export function getAssignUrl(params: {
     targetingType,
   } = params;
   // eslint-disable-next-line max-len
-  let url = `${baseUrl || '/ppc/manage'}?campaignType=${'sp' || campaignType}&campaignState=${campaignState}&campaignId=${campaignId}&campaignName=${campaignName}&targetingType=${targetingType || ''}`;
+  let url = `${baseUrl || '/ppc/manage'}?campaignType=${campaignType || 'sp'}&campaignState=${campaignState}&campaignId=${campaignId}&campaignName=${campaignName}&targetingType=${targetingType || ''}`;
   if (groupId && groupName) {
     url = `${url}&groupId=${groupId}&groupName=${groupName}${groupType ? `&groupType=${groupType}` : '' }`;
   }
@@ -542,4 +542,37 @@ export function getStatisticsCols(
     },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any;
+}
+
+// 拼接菜单树的 key ’type-state-camId-groupId‘
+export function getTreeKey (params: {
+  type: API.CamType;
+  state: API.AdState;
+  camId?: string;
+  groupId?: string;
+  adId?: string;
+}) {
+  const { type, state, camId, groupId, adId } = params;
+  let key = `${type}-${state}`;
+  if (camId) {
+    key = `${key}-${camId}`;
+    if (groupId) {
+      key = `${key}-${groupId}`;
+      if (adId) {
+        key = `${key}-${adId}`;
+      }
+    }
+  }
+  return key;
+}
+
+// 解析菜单树的 key, key 的格式为 getTreeKey 返回的格式
+export function parseTreeKey (treeNodeKey: string) {
+  const paramsArr = treeNodeKey.split('-');
+  return {
+    type: paramsArr[0] as API.CamType,
+    state: paramsArr[1] as API.AdState,
+    camId: paramsArr[2],
+    groupId: paramsArr[3],
+  };
 }

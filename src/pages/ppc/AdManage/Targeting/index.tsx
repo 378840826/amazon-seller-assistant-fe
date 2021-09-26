@@ -480,6 +480,7 @@ const Targeting: React.FC = function() {
                   maxLength: 10,
                   prefix: currency,
                   ghostEditBtn: true,
+                  editBtnInFlow: true,
                   confirmCallback: value => {
                     modifyTargeting({ bid: value, id: record.id });
                   },
