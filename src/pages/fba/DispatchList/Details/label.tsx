@@ -441,7 +441,9 @@ const Lebal: React.FC<IProps> = (props) => {
                         visible={skuVisible}
                         okText="去关联"
                         cancelText="取消"
-                        onCancel={() => setSkuVisible(false)}
+                        onCancel={() => {
+                          setSkuVisible(false);form.setFieldsValue({ isPrintSKU: false }); 
+                        }}
                         onConfirm={() => {
                           history.push(product.skuData); 
                         }}
