@@ -339,7 +339,7 @@ const Lebal: React.FC<IProps> = (props) => {
     title: '操作',
     key: 'handle',
     dataIndex: 'handle', 
-    align: 'center', 
+    align: 'center',
     render( _: string, record: Shipment.IProductList){
       return <span className={styles.handledelete} onClick={() => {
         handledelete(record.id);
@@ -452,7 +452,9 @@ const Lebal: React.FC<IProps> = (props) => {
                         visible={skuVisible}
                         okText="去关联"
                         cancelText="取消"
-                        onCancel={() => setSkuVisible(false)}
+                        onCancel={() => {
+                          setSkuVisible(false);form.setFieldsValue({ isPrintSKU: false }); 
+                        }}
                         onConfirm={() => {
                           history.push(product.skuData); 
                         }}
@@ -563,7 +565,6 @@ const Lebal: React.FC<IProps> = (props) => {
               columns={columns as []}
               dataSource={tabledata}
               className={styles.table}
-              scroll={{ y: 163 }}
               pagination={false}
               rowKey="id"
             />                                                                 

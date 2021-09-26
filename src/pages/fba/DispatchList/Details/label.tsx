@@ -441,7 +441,9 @@ const Lebal: React.FC<IProps> = (props) => {
                         visible={skuVisible}
                         okText="去关联"
                         cancelText="取消"
-                        onCancel={() => setSkuVisible(false)}
+                        onCancel={() => {
+                          setSkuVisible(false);form.setFieldsValue({ isPrintSKU: false }); 
+                        }}
                         onConfirm={() => {
                           history.push(product.skuData); 
                         }}
@@ -548,15 +550,14 @@ const Lebal: React.FC<IProps> = (props) => {
                 </Item>
               </div>
             </Form>
-            <Table 
+            <Table
               columns={columns as []} 
               dataSource={tabledata} 
-              className={styles.table} 
-              scroll={{ y: 276 }} 
+              className={styles.table}
               pagination={false}
               rowKey="id"
             />
-          </div>   
+          </div>
           <div className={styles.right}>
             <div className={styles.title} >标签预览</div>
             <div className={styles.border}>
