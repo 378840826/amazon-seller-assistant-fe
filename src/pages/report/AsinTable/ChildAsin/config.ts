@@ -2,6 +2,8 @@
 export const sprs = [
   'skuInfo', 
   'parentAsin', 
+  'EBC',
+  'video',
   'reviewNum', 
   'reviewScore',
 ];
