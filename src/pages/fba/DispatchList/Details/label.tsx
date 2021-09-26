@@ -550,15 +550,14 @@ const Lebal: React.FC<IProps> = (props) => {
                 </Item>
               </div>
             </Form>
-            <Table 
+            <Table
               columns={columns as []} 
               dataSource={tabledata} 
-              className={styles.table} 
-              scroll={{ y: 276 }} 
+              className={styles.table}
               pagination={false}
               rowKey="id"
             />
-          </div>   
+          </div>
           <div className={styles.right}>
             <div className={styles.title} >标签预览</div>
             <div className={styles.border}>

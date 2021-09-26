@@ -565,7 +565,6 @@ const Lebal: React.FC<IProps> = (props) => {
               columns={columns as []}
               dataSource={tabledata}
               className={styles.table}
-              scroll={{ y: 163 }}
               pagination={false}
               rowKey="id"
             />                                                                 
