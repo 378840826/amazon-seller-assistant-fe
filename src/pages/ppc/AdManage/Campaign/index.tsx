@@ -484,6 +484,7 @@ const Campaign: React.FC = function() {
                 maxLength: 10,
                 suffix: '%',
                 ghostEditBtn: true,
+                editBtnInFlow: true,
                 confirmCallback: value => {
                   modifyCampaign({ biddingPlacementTop: value, id: record.id });
                 },
@@ -509,6 +510,7 @@ const Campaign: React.FC = function() {
                 maxLength: 10,
                 suffix: '%',
                 ghostEditBtn: true,
+                editBtnInFlow: true,
                 confirmCallback: value => {
                   modifyCampaign({ biddingPlacementProductPage: value, id: record.id });
                 },
@@ -537,6 +539,7 @@ const Campaign: React.FC = function() {
                 maxLength: 10,
                 prefix: currency,
                 ghostEditBtn: true,
+                editBtnInFlow: true,
                 confirmCallback: value => {
                   const min = marketplace === 'JP' ? 200 : 1;
                   if (Number(value) < min) {
