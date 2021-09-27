@@ -38,6 +38,8 @@ interface IProps {
   tabValue: string;
   receptionMessage: (messageprofit: boolean) => void;
   canlendarCallback: (calendar: string) => void;
+  setParentAsin: (parentAsin: string) => void;
+  parentAsin: string;
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -45,6 +47,8 @@ const ChildAsin: React.FC<IProps> = props => {
   const {
     tabValue,
     receptionMessage,
+    setParentAsin,
+    parentAsin,
   } = props;
   // 店铺
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -75,7 +79,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const [sort, setSort] = useState<boolean>(false);
   const [exportText, setExportText] = useState<string>('导出');
   const [calendarFlag, setCalendarFlag] = useState<boolean>(false);
-
+  
   // 保存当前点击筛选的偏好ID ，删除如果是当前ID,就删除掉
   const [loadPreferenceId, setLoadPreferenceId] = useState<string>('');
 
@@ -107,12 +111,19 @@ const ChildAsin: React.FC<IProps> = props => {
         filternparams[key] = value;
       }
     }
+    console.log(parentAsin);
+    
+    // let tag = '';
+    // if ( history.state && history.state.state && history.state.state.tag ) {
+    //   tag = history.state.state.tag;
+    // }
     // 查询参数
     const searchParams = {
       size: params.size || pageSize,
       current: params.current || current,
       order: params.order || order,
       asc: params.asc || sort,
+      // search: params.search || parentAsin,
     };
     const payload = { baseParams, searchParams, filternparams };
     Object.assign(payload, params);
@@ -210,6 +221,7 @@ const ChildAsin: React.FC<IProps> = props => {
       return;
     }
     requestFn({ search: val, size: pageSize });
+    setParentAsin('');
   };
 
   // 删除单个偏好
@@ -600,7 +612,7 @@ const ChildAsin: React.FC<IProps> = props => {
       <Form form={searchForm} style={{
         'float': 'left',
       }}>
-        <Form.Item name="search" className={commonStyles.searchInput}>
+        <Form.Item name="search" className={commonStyles.searchInput} initialValue={parentAsin}>
           <Input.Search
             allowClear
             className="h-search"

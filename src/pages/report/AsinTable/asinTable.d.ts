@@ -229,6 +229,7 @@ declare namespace AsinTable {
     childCustomcol: string[];
     site: 'US' | 'CA' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT';
     sortCallback: (order: string, sort: boolean) => void;
+    setTabTag: ({ tag, asin }) => void;
   }
 
   type IDefineType = 'int'|'decimal'|'grade'|'other'; // 限定是 int(整) 小数(decimal) 评分(grade) other占位

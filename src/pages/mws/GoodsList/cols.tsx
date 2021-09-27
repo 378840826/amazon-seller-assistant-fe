@@ -234,6 +234,15 @@ export const getFullColumns = (params: any) => {
         </div>
       ),
     }, {
+      title: '父ASIN',
+      dataIndex: 'parentasin',
+      key: 'asin-parentasin',
+      align: 'center',
+      width: 70,
+      render: (parentasin) => {
+        return <p>{parentasin ? <Link to={{ pathname: `/report/asin-overview`, state: { parentasin, tag: 'parent' } }}>{parentasin}</Link> : '—'}</p>;
+      },
+    }, {
       title: () => (
         <span title="点击可按上架时间排序">
           SKU

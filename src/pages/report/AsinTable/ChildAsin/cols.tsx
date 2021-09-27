@@ -26,6 +26,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     sortCallback,
     childCustomcol,
     site,
+    setTabTag,
   } = props;
 
 
@@ -156,7 +157,8 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 110,
       fixed: 'left',
       render(val: number) {
-        return <p className={styles.parentAsinCol}>{val ? val : <Empty />}</p>;
+        return <p className={styles.parentAsinCol}
+        >{val ? <a onClick={() => setTabTag({ tag: 'parent', asin: val })}>{val}</a> : <Empty />}</p>;
       },
     },
     {
