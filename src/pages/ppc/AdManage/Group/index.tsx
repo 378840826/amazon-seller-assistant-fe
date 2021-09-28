@@ -291,6 +291,7 @@ const Group: React.FC = function() {
     }, {
       title: '广告活动',
       dataIndex: 'camName',
+      key: 'campaign',
       sorter: true,
       sortOrder: sort === 'camName' ? order : null,
       children: [

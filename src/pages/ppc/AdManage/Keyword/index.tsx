@@ -959,6 +959,7 @@ const Keyword: React.FC = function() {
     }, {
       title: '广告活动',
       dataIndex: 'camName',
+      key: 'campaign',
       sorter: true,
       sortOrder: sort === 'camName' ? order : null,
       children: [
@@ -985,6 +986,7 @@ const Keyword: React.FC = function() {
     }, {
       title: '广告组',
       dataIndex: 'groupName',
+      key: 'group',
       sorter: true,
       sortOrder: sort === 'groupName' ? order : null,
       children: [

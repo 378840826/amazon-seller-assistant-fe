@@ -577,6 +577,7 @@ const Ad: React.FC = function() {
     }, {
       title: '广告活动',
       dataIndex: 'camName',
+      key: 'campaign',
       sorter: true,
       sortOrder: sort === 'camName' ? order : null,
       children: [
@@ -603,6 +604,7 @@ const Ad: React.FC = function() {
     }, {
       title: '广告组',
       dataIndex: 'groupName',
+      key: 'group',
       sorter: true,
       sortOrder: sort === 'groupName' ? order : null,
       children: [
@@ -660,6 +662,7 @@ const Ad: React.FC = function() {
       ] as any,
     }, {
       title: '投放资格',
+      key: 'qualification',
       align: 'center',
       children: [
         {
