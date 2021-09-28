@@ -1,5 +1,6 @@
 /**
- * 公用的自定义列
+ * 广告模块公用的自定义列
+ * 要使用自定义列需在表格列配置中为列添加 key 参数，值和下面 allItem 中的键对应(key对应,非value对应)
  */
 import React, { useState } from 'react';
 import { useDispatch } from 'umi';
@@ -20,6 +21,8 @@ interface IProps {
 // 全部的字段（包括广告活动，广告组，广告，关键词等）
 const allItem = {
   // 广告活动和公共的
+  campaign: '广告活动',
+  group: '广告组',
   portfolios: 'Portfolios',
   adType: '广告类型',
   targetingType: '投放方式',
@@ -98,7 +101,13 @@ const CustomCols: React.FC<IProps> = props => {
   const keys = Object.keys(colsItems);
   const length = keys.length;
   // 超过 18 的得时候，分开两列
-  const divide = length >= 18;
+  const divide = length >= 18 ? Math.ceil(length / 2) : undefined;
+  // 选中的项目的数量
+  const checkedLength = keys.filter(key => colsItems[key]).length;
+  // 全选按钮是否处于半选状态
+  const indeterminate = checkedLength > 0 && checkedLength < length;
+  // 全选按钮是否勾选
+  const checkedAll = checkedLength === length;
 
   // 勾选
   function handleChange({ target: { value, checked } }: CheckboxChangeEvent) {
@@ -119,6 +128,19 @@ const CustomCols: React.FC<IProps> = props => {
     return customColsValue;
   }
 
+  // 全选
+  function handleCheckAllChange() {
+    const newState = !checkedAll;
+    const col = {};
+    keys.forEach(key => {
+      col[key] = newState;
+    });
+    dispatch({
+      type: targetTypeDict.dispatchType,
+      payload: col,
+    });
+  }
+
   // 显示/隐藏 (隐藏时保存数据到 localStorage)
   function handleVisibleChange(visible: boolean) {
     setVisible(visible);
@@ -130,13 +152,48 @@ const CustomCols: React.FC<IProps> = props => {
   // 下拉
   const customMenu = (
     <div className={styles.customColumnContainer}>
-      {
-        divide
-          ?
-          <>
-            <Checkbox.Group defaultValue={getCustomColsValue()}>
+      <div className={styles.toolBar}>
+        <Checkbox
+          className={styles.checkAll}
+          indeterminate={indeterminate}
+          onChange={handleCheckAllChange}
+          checked={checkedAll}
+        >
+          全选
+        </Checkbox>
+      </div>
+      <div className={styles.customColumnContent}>
+        {
+          divide
+            ?
+            <>
+              <Checkbox.Group value={getCustomColsValue()}>
+                {
+                  keys.slice(0, divide).map(key => (
+                    <Row key={key} gutter={[0, 6]}>
+                      <Col>
+                        <Checkbox onChange={handleChange} value={key}>{allItem[key]}</Checkbox>
+                      </Col>
+                    </Row>
+                  ))
+                }
+              </Checkbox.Group>
+              <Checkbox.Group value={getCustomColsValue()}>
+                {
+                  keys.slice(divide).map(key => (
+                    <Row key={key} gutter={[0, 6]}>
+                      <Col>
+                        <Checkbox onChange={handleChange} value={key}>{allItem[key]}</Checkbox>
+                      </Col>
+                    </Row>
+                  ))
+                }
+              </Checkbox.Group>
+            </>
+            :
+            <Checkbox.Group value={getCustomColsValue()}>
               {
-                keys.slice(0, length / 2).map(key => (
+                keys.map(key => (
                   <Row key={key} gutter={[0, 6]}>
                     <Col>
                       <Checkbox onChange={handleChange} value={key}>{allItem[key]}</Checkbox>
@@ -145,31 +202,8 @@ const CustomCols: React.FC<IProps> = props => {
                 ))
               }
             </Checkbox.Group>
-            <Checkbox.Group defaultValue={getCustomColsValue()}>
-              {
-                keys.slice(length / 2).map(key => (
-                  <Row key={key} gutter={[0, 6]}>
-                    <Col>
-                      <Checkbox onChange={handleChange} value={key}>{allItem[key]}</Checkbox>
-                    </Col>
-                  </Row>
-                ))
-              }
-            </Checkbox.Group>
-          </>
-          :
-          <Checkbox.Group defaultValue={getCustomColsValue()}>
-            {
-              keys.map(key => (
-                <Row key={key} gutter={[0, 6]}>
-                  <Col>
-                    <Checkbox onChange={handleChange} value={key}>{allItem[key]}</Checkbox>
-                  </Col>
-                </Row>
-              ))
-            }
-          </Checkbox.Group>
-      }
+        }
+      </div>
     </div>
   );
 

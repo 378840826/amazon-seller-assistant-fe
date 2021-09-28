@@ -1,16 +1,36 @@
 .customColumnContainer {
+  padding: 10px 0;
   background-color: #fff;
-  padding: 8px 20px;
   box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
 
-  // 分两列时
-  & > div:not(:last-child) {
-    margin-right: 30px;
+  .toolBar {
+    margin-bottom: 10px;
+    padding: 0 14px;
+    border-bottom: 1px solid @divider-line-color;
+  }
+
+  .customColumnContent {
+    display: flex;
+    padding: 0 14px;
+
+    // 分两列时
+    & > div:not(:last-child) {
+      margin-right: 30px;
+    }
+  }
+
+  .checkAll {
+    display: block;
+    margin-bottom: 5px;
   }
 
   :global {
     .ant-checkbox {
       transform: scale(0.875);
+    }
+
+    .ant-checkbox-wrapper {
+      white-space: nowrap;
     }
   }
 }
