@@ -24,6 +24,7 @@ declare namespace DispatchList {
     disparityNum: number;
     nameNa: string;
     locationNo: string[];
+    declareNum: string;
   }
 
   interface IDispatchLog {

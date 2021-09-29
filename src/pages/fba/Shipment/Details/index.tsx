@@ -24,6 +24,7 @@ import { requestErrorFeedback } from '@/utils/utils';
 import InputEditBox from '@/pages/fba/components/InputEditBox';
 import { useReactToPrint } from 'react-to-print';
 import moment from 'moment';
+import Lebal from './label';
 
 interface IProps {
   visible: boolean;
@@ -42,8 +43,13 @@ interface IProps {
 interface IPage extends ConnectProps {
   fbaBase: IFbaBaseState;
 }
+
 interface IPrintProps {
   data: Shipment.IShipmentDetails;
+}
+interface ILabelType {
+  modalvisible: boolean;
+  recordData: Shipment.IProductList;  
 }
 
 const pageStyle = `
@@ -140,6 +146,23 @@ const Details: React.FC<IProps> = function(props) {
   const [data, setData] = useState<Shipment.IShipmentDetails>({} as Shipment.IShipmentDetails);
   const [product, setProduct] = useState<Shipment.IProductList[]>([]);
   const [log, setLog] = useState<Shipment.ILogs[]>([]);
+  const [lebalModalData, setLabelModalData] = useState<ILabelType>({
+    modalvisible: false,
+    recordData: {
+      id: '-1',
+      url: '',
+      itemName: '',
+      asin1: '',
+      sku: '',
+      sellerSku: '',
+      fnsku: '',
+      declareNum: 0,
+      issuedNum: 0,
+      receiveNum: 0,
+      mskuState: '',
+      nameNa: '',
+    },   
+  });
 
 
   const componentRef = useRef<any>(); // eslint-disable-line
@@ -224,6 +247,11 @@ const Details: React.FC<IProps> = function(props) {
     const formVal = form.getFieldsValue();
     onUpdateShipment({ id, ...formVal, shipmentProductQos: product });
   }
+
+  //批量打印的回调
+  const batchPrintClick = () => {
+    setLabelModalData({ modalvisible: true, recordData: product[0] });
+  };
 
   return <div className={styles.box}>
     <Modal visible={visible}
@@ -381,6 +409,16 @@ const Details: React.FC<IProps> = function(props) {
             onClick={() => setNav('log')}
             >操作日志</span>
           </nav>
+          <Button onClick={batchPrintClick} type="primary" className={styles.batchbutton}>批量打印标签</Button>
+          <Lebal 
+            site={site} 
+            data={product} 
+            modalData={lebalModalData} 
+            onCancle={() => {
+              lebalModalData.modalvisible = false; 
+              setLabelModalData({ ...lebalModalData });
+            }}
+          />
         </div>
         
         {/* // 商品 */}

@@ -91,8 +91,13 @@
 
 .navs {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  position: relative;
+}
+
+.batchbutton {
+  position: absolute;
+  right: 0;
 }
 
 .nav {
@@ -272,18 +277,18 @@
   }
 }
 
-//标签预览
 .modal {
   :global(.ant-modal-body) {
     width: 1116px;
     border-radius: 4px;
+    padding-bottom: 0;
   }
 
   .content {
     display: flex;
     font-size: 14px;
     font-family: MicrosoftYaHei, sans-serif;
-    color: #555;
+    color: @text-color;
     line-height: 26px;
     text-align: left;
 
@@ -291,14 +296,14 @@
       font-size: 16px;
       font-family: MicrosoftYaHei-Bold, MicrosoftYaHei, sans-serif;
       font-weight: bold;
-      color: #222;
+      color: @heading-color;
       line-height: 21px;
-      margin-bottom: 11px;
     }
 
     .left {
-      width: 646px;
-      border-right: 2px solid #d9d9d9;
+      width: 638px;
+      height: 610px;
+      overflow-y: scroll;
 
       .singlediv {
         display: flex;
@@ -313,6 +318,7 @@
           display: inline-block;
           width: 100px;
           height: 28px;
+          line-height: 26px;
           border-radius: 4px;
           border: 1px solid #d9d9d9;
           margin-left: 9px;
@@ -332,30 +338,57 @@
 
         .lastspan {
           display: inline-block;
-          width: 98px;
-          margin-left: 390px;
+          width: 126px;
+          margin-left: 345px;
         }
 
         .inclus {
           font-size: 12px;
-          width: 230px;
+          width: 210px;
           font-family: MicrosoftYaHei, sans-serif;
           color: #ff000d;
           line-height: 14px;
           margin-left: 10px;
         }
+
+        .selfflex {
+          display: flex;
+          line-height: 28px;
+          text-align: center;
+
+          .text {
+            width: 190px;
+            text-align: left;
+            padding: 0 15px;
+          }
+
+          .jianicon {
+            width: 20px;
+            height: 20px;
+            color: @primary-color;
+            margin-top: 7px;
+          }
+
+          .addicon {
+            width: 20px;
+            height: 20px;
+            margin-left: 5px;
+            color: @error-color;
+            margin-top: 7px;
+          }
+        }
       }
 
       .table {
-        margin-top: 12px;
+        margin-top: 6px;
 
         :global(.ant-table-container) {
-          margin-right: 50px;
+          width: 579px;
           background: #fff;
           border-radius: 2px 2px 0 0;
           font-size: 12px;
           font-family: PingFangSC-Regular, PingFang SC, sans-serif;
-          color: #222;
+          color: @heading-color;
           line-height: 17px;
           text-align: center;
           border: 1px solid #e5e5e5;
@@ -370,8 +403,8 @@
         }
 
         th {
-          height: 44px;
-          line-height: 44px;
+          height: 36px;
+          line-height: 36px;
           background-color: #f3f3f3 !important;
         }
 
@@ -458,16 +491,25 @@
       margin-left: 50px;
       font-size: 14px;
       font-family: MicrosoftYaHei, sans-serif;
-      color: #222;
-      line-height: 24px;
+      color: @heading-color;
+      line-height: 18px;
 
-      .lebal {
-        margin-top: 5px;
-        margin-bottom: 6px;
+      .border {
+        width: 398px;
+        border-radius: 2px;
+        border: 1px solid @border-color-base;
+        display: flex;
+        justify-content: center;
       }
 
-      .divheight {
-        height: 24px;
+      .lebal {
+        display: flex;
+        justify-content: center;
+      }
+
+      .flexcenter {
+        display: flex;
+        justify-content: center;
       }
     }
   }
@@ -483,7 +525,7 @@
     font-size: 16px;
     font-family: MicrosoftYaHei-Bold, MicrosoftYaHei, sans-serif;
     font-weight: bold;
-    color: #222;
+    color: @heading-color;
     line-height: 21px;
     text-align: left;
   }
@@ -517,9 +559,9 @@
 
       .divlebal {
         text-align: left;
-        font-size: 12px;
+        font-size: 14px;
         font-family: MicrosoftYaHei, sans-serif;
-        color: #222;
+        color: @heading-color;
         line-height: 18px;
 
         .centerlebal {
@@ -591,6 +633,8 @@
   margin: 0 15px;
   display: flex;
   justify-content: center;
+  font-size: 14px;
+  line-height: 18px;
 
   .firstdiv {
     width: 100%;
@@ -608,15 +652,20 @@
 
     .divlebal {
       text-align: left;
-      font-size: 12px;
+      font-size: 14px;
       font-family: MicrosoftYaHei, sans-serif;
-      color: #222;
+      color: @heading-color;
       line-height: 18px;
 
       .centerlebal {
         display: flex;
         flex-direction: row;
         -ms-flex-align: center;
+        justify-content: center;
+      }
+
+      .textcenter {
+        display: flex;
         justify-content: center;
       }
     }
@@ -635,7 +684,7 @@
   th,
   td {
     text-align: center;
-    border: 1px solid #222;
+    border: 1px solid @heading-color;
     padding-top: 15px;
     padding-bottom: 15px;
   }

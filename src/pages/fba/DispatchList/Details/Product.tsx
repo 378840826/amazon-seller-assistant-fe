@@ -47,7 +47,9 @@ const ProductCol: React.FC<IParams> = props => {
       issuedNum: 0,
       receiveNum: 0,
       disparityNum: 0,
-      locationNo: [],     
+      locationNo: [],
+      nameNa: '',
+      declareNum: '',     
     },   
   });
 
@@ -179,9 +181,15 @@ const ProductCol: React.FC<IParams> = props => {
   
   return <>
     <Table {...productConfig}/>
-    <Label site={site} data={data} modalData={lebalModalData} onCancle={() => {
-      lebalModalData.modalvisible = false;setLabelModalData({ ...lebalModalData }); 
-    }}></Label>
+    <Label 
+      site={site} 
+      data={[lebalModalData.recordData]} 
+      modalData={lebalModalData} 
+      onCancle={() => {
+        lebalModalData.modalvisible = false; 
+        setLabelModalData({ ...lebalModalData });
+      }}
+    />
   </>;
 };
 
