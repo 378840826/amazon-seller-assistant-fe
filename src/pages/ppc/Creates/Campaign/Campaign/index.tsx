@@ -5,7 +5,7 @@
  * 
  * 广告活动设置（第三步）
  */
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { Iconfont, strToMoneyStr, strToNaturalNumStr } from '@/utils/utils';
@@ -16,10 +16,11 @@ import {
   Form,
   Input,
   DatePicker,
-  Select,
+  // Select,
 } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import ProductSelect from '../../components/ProductSelect';
+import { add, divide, times } from '@/utils/precisionNumber';
 
 interface IProps {
   currency: string;
@@ -36,6 +37,7 @@ const Campaign: React.FC<IProps> = props => {
 
   const siteDatetime = momentTimezone().tz(timezone)?.format('YYYY-MM-DD HH:mm:ss'); // 站点时间
   const [startData, setStartDate] = useState<string>(moment(siteDatetime).format('YYYY-MM-DD HH:mm:ss')); // 广告活动的开始时间
+  const [exampleChange, setExampleChange] = useState(0);
 
   const limitedInput = (value: string) => {
     return strToNaturalNumStr(value);
@@ -54,6 +56,38 @@ const Campaign: React.FC<IProps> = props => {
     }
   }
 
+  // 示例，搜索结果顶部（首页） 和 商品页面
+  const renderExample = useCallback((type: 'top' | 'page') => {
+    // 示例的基础竞价，区分日本站
+    const exampleBaseBid = marketplace === 'JP' ? 1000 : 0.75;
+    const typeDict = {
+      top: Number(form.getFieldValue('biddingPlacementTop')) || 0,
+      page: Number(form.getFieldValue('biddingPlacementProductPage')) || 0,
+    };
+    const biddingStrategy = form.getFieldValue('biddingStrategy');
+    const computed = times(exampleBaseBid, add(1, divide(typeDict[type], 100)));
+    // 保留两位小数，第三位四舍五入。日本站除外
+    const roundingOffComputed = marketplace === 'JP' ? computed : Math.round(computed * 100) / 100;
+    const dynamicDict = {
+      // 仅降低
+      legacyForSales: <>动态竞价范围 {currency}0 - {currency}{roundingOffComputed}</>,
+      // 提高和降低
+      autoForSales: <>动态竞价范围 {currency}0 - {currency}{(roundingOffComputed * 2).toFixed(2)}</>,
+    };
+    return (
+      <p>
+        示例：对于此广告位，{currency}{exampleBaseBid} 竞价将
+        {
+          exampleBaseBid === computed
+            ? `保持 ${currency}${exampleBaseBid} 不变。`
+            : `为 ${currency}${roundingOffComputed}。`
+        }
+        { dynamicDict[biddingStrategy] }
+      </p>
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exampleChange]);
+
   return <div className={styles.campaignBox}>
     <Item
       label="广告活动名称："
@@ -71,7 +105,7 @@ const Campaign: React.FC<IProps> = props => {
       <Input className={styles.input} placeholder="请输入广告活动名称" autoComplete="off" maxLength={128} />
     </Item>
     <Item
-      label={<>{pattern === 'ai' ? '总' : '日'}预算<span className={styles.secondary}>（{currency}）</span>：</>}
+      label={<>{pattern === 'ai' ? '总' : '日'}预算：</>}
       name="dailyBudget"
       className={styles.totalBugget}
       validateTrigger={['onKeyUp', 'onBlur']}
@@ -98,10 +132,11 @@ const Campaign: React.FC<IProps> = props => {
       }]}
     >
       <Input
-        className={styles.input}
-        placeholder={`至少${currency}${marketplace === 'JP' ? 200 : 1}`}
+        className={styles.dailyBudget}
+        placeholder={`至少${marketplace === 'JP' ? 200 : 1}`}
         autoComplete="off"
         maxLength={12}
+        prefix={currency}
       />
     </Item>
     <Item label="预算控制：" name="autoDefaultBid" className={classnames(
@@ -170,17 +205,21 @@ const Campaign: React.FC<IProps> = props => {
           <Radio value="T00020">分类/商品</Radio>
         </Radio.Group>
       </Item>
-      <Item label="竞价策略：" name="biddingStrategy" initialValue="legacyForSales" className={styles.bidding}>
-        <Select dropdownClassName={styles.biddingDownList}>
-          <Select.Option value="legacyForSales">动态竞价 - 仅降低</Select.Option>
-          <Select.Option value="autoForSales">动态竞价 - 提高和降低</Select.Option>
-          <Select.Option value="manual">固定竞价</Select.Option>
-        </Select>
+      <Item label="竞价策略：" name="biddingStrategy" initialValue="autoForSales" className={styles.bidding}>
+        <Radio.Group onChange={() => setExampleChange(exampleChange + 1)}>
+          <Radio value="legacyForSales">动态竞价 - 仅降低</Radio>
+          <p>当您的广告不太可能带来销售时，我们将实时降低您的竞价。</p>
+          <Radio value="autoForSales">动态竞价 - 提高和降低</Radio>
+          <p>当您的广告很有可能带来销售时，我们将实时提高您的竞价（最高可达 100%），并在您的广告不太可能带来销售时降低您的竞价。</p>
+          <Radio value="manual">固定竞价</Radio>
+          <p>我们将使用您的确切竞价和您设置的任何手动调整，而不会根据售出可能性对您的竞价进行更改。</p>
+        </Radio.Group>
       </Item>
       <div className={styles.commonInput}>
+        <p>除了竞价策略外，您可以将竞价最多提高 900%</p>
         <Item
-          label="搜索结果顶部(首页)："
-          initialValue={0}
+          label={<>搜索结果顶部<span className={styles.secondary}>（首页）</span></>}
+          initialValue={20}
           normalize={limitedInput}
           name="biddingPlacementTop"
           className={styles.topSearch}
@@ -189,13 +228,18 @@ const Campaign: React.FC<IProps> = props => {
             message: '最大值不能超过900',
           }]}
         >
-          <Input autoComplete="off" maxLength={3} />
+          <Input
+            autoComplete="off"
+            maxLength={3}
+            suffix="%"
+            onChange={() => setExampleChange(exampleChange + 1)}
+          />
         </Item>
-        <span className={styles.currency}>%</span>
+        { renderExample('top') }
       </div>
       <div className={styles.commonInput}>
         <Item
-          label="商品页面："
+          label="商品页面"
           initialValue={0}
           normalize={limitedInput}
           name="biddingPlacementProductPage"
@@ -205,9 +249,14 @@ const Campaign: React.FC<IProps> = props => {
             message: '最大值不能超过900',
           }]}
         >
-          <Input autoComplete="off" maxLength={3} />
+          <Input
+            autoComplete="off"
+            maxLength={3}
+            suffix="%"
+            onChange={() => setExampleChange(exampleChange + 1)}
+          />
         </Item>
-        <span className={styles.currency}>%</span>
+        { renderExample('page') }
       </div>
     </div>
 
