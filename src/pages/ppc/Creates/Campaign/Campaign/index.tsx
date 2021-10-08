@@ -65,14 +65,24 @@ const Campaign: React.FC<IProps> = props => {
       page: Number(form.getFieldValue('biddingPlacementProductPage')) || 0,
     };
     const biddingStrategy = form.getFieldValue('biddingStrategy');
+    // 计算竞价
     const computed = times(exampleBaseBid, add(1, divide(typeDict[type], 100)));
-    // 保留两位小数，第三位四舍五入。日本站除外
+    // 竞价保留两位小数，第三位四舍五入。日本站除外
     const roundingOffComputed = marketplace === 'JP' ? computed : Math.round(computed * 100) / 100;
+    // 最高竞价的倍数
+    // top 的最高动态竞价 = 竞价 x (1 + 100%)
+    // page 的最高动态竞价 = 竞价 x (1 + 50%)
+    const nDict = {
+      top: 2,
+      page: 1.5,
+    };
     const dynamicDict = {
       // 仅降低
       legacyForSales: <>动态竞价范围 {currency}0 - {currency}{roundingOffComputed}</>,
       // 提高和降低
-      autoForSales: <>动态竞价范围 {currency}0 - {currency}{(roundingOffComputed * 2).toFixed(2)}</>,
+      autoForSales: (
+        <>动态竞价范围 {currency}0 - {currency}{(roundingOffComputed * nDict[type]).toFixed(2)}</>
+      ),
     };
     return (
       <p>
