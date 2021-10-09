@@ -16,11 +16,12 @@ import {
   Form,
   Input,
   DatePicker,
-  // Select,
+  Tooltip,
 } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import ProductSelect from '../../components/ProductSelect';
 import { add, divide, times } from '@/utils/precisionNumber';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 interface IProps {
   currency: string;
@@ -115,7 +116,20 @@ const Campaign: React.FC<IProps> = props => {
       <Input className={styles.input} placeholder="请输入广告活动名称" autoComplete="off" maxLength={128} />
     </Item>
     <Item
-      label={<>{pattern === 'ai' ? '总' : '日'}预算：</>}
+      // label={<>{pattern === 'ai' ? '总' : '日'}预算：</>}
+      label={
+        <>竞价策略
+          {pattern === 'ai' ? '总' : '日'}预算
+          <Tooltip
+            // 后期增加智能托管模式后，需要更改此 title
+            title="您愿意每天为该广告活动花费的金额。如果广告活动支出低于您的每日预算，
+              则剩余金额可用于增加该日历月的其他日期的每日预算，最多可增加 25%。"
+          >
+            <QuestionCircleOutlined className={styles.hintIcon}/>
+          </Tooltip>
+          ：
+        </>
+      }
       name="dailyBudget"
       className={styles.totalBugget}
       validateTrigger={['onKeyUp', 'onBlur']}
@@ -215,7 +229,20 @@ const Campaign: React.FC<IProps> = props => {
           <Radio value="T00020">分类/商品</Radio>
         </Radio.Group>
       </Item>
-      <Item label="竞价策略：" name="biddingStrategy" initialValue="autoForSales" className={styles.bidding}>
+      <Item
+        label={
+          <>
+            竞价策略
+            <Tooltip title="选择您想要为广告点击付费的方式">
+              <QuestionCircleOutlined className={styles.hintIcon}/>
+            </Tooltip>
+            ：
+          </>
+        }
+        name="biddingStrategy"
+        initialValue="autoForSales"
+        className={styles.bidding}
+      >
         <Radio.Group onChange={() => setExampleChange(exampleChange + 1)}>
           <Radio value="legacyForSales">动态竞价 - 仅降低</Radio>
           <p>当您的广告不太可能带来销售时，我们将实时降低您的竞价。</p>
