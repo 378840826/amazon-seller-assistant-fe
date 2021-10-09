@@ -373,10 +373,10 @@ const EchartsCom: React.FC<IEchartsCom> = ({
                   html += `<span style="color:#555">&nbsp;${item.data[1] === null ? '' : `${item.data[1]}%` }</span><br/>`;
                 } else {
                   if (bigCategoryList.indexOf(item.seriesName as string) > -1){
-                    bigCateHtml += `<div style="line-height:22px;">${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`} 
+                    bigCateHtml += `<div style="line-height:22px;">${item.marker}<span style="color:${item.color}">${item.data[1] === null ? '' : `#${item.data[1]}`} 
                     </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span></div>`;
                   } else if (minCategoryList.indexOf(item.seriesName as string) > -1){
-                    smallCateHtml += `<div style="line-height:22px;">${item.marker}<span style="color:#FFAF4D">${item.data[1] === null ? '' : `#${item.data[1]}`}
+                    smallCateHtml += `<div style="line-height:22px;">${item.marker}<span style="color:${item.color}">${item.data[1] === null ? '' : `#${item.data[1]}`}
                     </span>&nbsp;&nbsp;<span style="color:#555">${item.seriesName}</span></div>`;
                   } else {
                     html += `${item.marker}<span>${item.seriesName}:</span>`;
