@@ -22,7 +22,7 @@ interface IProps {
 
 const More: React.FC<IProps> = props => {
   const {
-    shipmentData: { mwsShipmentId, shipmentState, zipUrl },
+    shipmentData: { mwsShipmentId, shipmentState, zipUrl, id },
     handleMarkShipped, handleCancelShipment,
   } = props;
   const [visible, setVisible] = useState<boolean>(false);
@@ -33,6 +33,12 @@ const More: React.FC<IProps> = props => {
   //   trigger: 'click',
   //   placement: 'left' as 'left',
   // };
+   
+  //生成下载MSKU模板链接
+  function getDownloadUrl() {
+    const baseUrl = '/api/mws/shipment/plan/get/itemList/download';
+    return `${baseUrl}?id=${id}`;
+  }
 
   return <div className={styles.box}>
     <Popover 
@@ -42,6 +48,7 @@ const More: React.FC<IProps> = props => {
         {
           // 如果shipment已出运，就只有“取消”，其他按钮都没有了
           !isShipped && <>
+            <a download href={getDownloadUrl()} className={styles.item}>下载SKU列表</a>
             <Logisticis mwsShipmentId={mwsShipmentId}/>
             <PackageList mwsShipmentId={mwsShipmentId} />
             <Mark zipUrl={zipUrl}/>
