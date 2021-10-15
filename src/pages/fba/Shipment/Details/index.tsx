@@ -100,7 +100,7 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
             <td colSpan={5}>{mwsShipmentId}</td>
           </tr>
           <tr>
-            <th>MkSKU</th>
+            <th>MSKU</th>
             <th>申报量</th>
             <th>FnSKU</th>
             <th>SKU</th>
