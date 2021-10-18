@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { Modal, Form, Input, Radio, Upload, Tabs, message, Select, Button, Table } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { states, packWeightUnit, packSizeUnit, packTextureUnit, shopDownlist } from '../config';
+import { states, packWeightUnit, packSizeUnit, packTextureUnit, shopDownlist, sumVolumeOversize, sumWeightOversize } from '../config';
 import { useSelector, ConnectProps, IConfigurationBaseState, IWarehouseLocationState, useDispatch } from 'umi';
 import PackInfo from './PackInfo';
 import CostPrice from './CostPrice';
@@ -52,6 +52,11 @@ const AddSku: React.FC<IProps> = props => {
   const [locationNum, setLocatioNum] = useState<skuData.ILocations[]>([]);
   // 库位号列表
   const [locations, setLocations] = useState<skuData.ILocations[]>([]);
+
+  const [productvolumeisOversize, setProductvolumeisOversize] = useState<boolean>(false);
+  const [packWeightisOversize, setPackWeightisOversize] = useState<boolean>(false);
+
+  const [isOversize, setIsOversize] = useState<boolean>(false);
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -340,6 +345,41 @@ const AddSku: React.FC<IProps> = props => {
     },
   };
 
+  const submitConfirm = () => {
+    const datas = form.getFieldsValue();     
+    datas.mskuProducts = mskuTableData;
+    datas.locations = locations;
+    datas.imageUrl = imageUrl;
+    datas.pimageUrl = packImage;
+    
+
+    const promise = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'skuData/addSku',
+        resolve,
+        reject,
+        payload: datas,
+      });
+    });
+
+    promise.then(res => {
+      const {
+        code,
+        message: msg,
+      } = res as Global.IBaseResponse;
+      if (code === 200) {
+        message.success(msg || '添加成功！');
+        onCancel();
+        // onSuccess(datas.sku);
+        // 不需要筛选添加的 sku
+        onSuccess('');
+        return;
+      }
+      message.error(msg || '添加失败！');
+    });
+
+  };
+
   // Modal 配置
   const modalConfig = {
     visible,
@@ -352,10 +392,7 @@ const AddSku: React.FC<IProps> = props => {
       const datas = form.getFieldsValue();
       const empyts = [null, undefined, ''];
       const reg = /^\d{10}$/;
-      datas.mskuProducts = mskuTableData;
-      datas.locations = locations;
-      datas.imageUrl = imageUrl;
-      datas.pimageUrl = packImage;
+      
 
       if (empyts.includes(datas.sku)) {
         message.error('SKU不能为空');
@@ -405,20 +442,9 @@ const AddSku: React.FC<IProps> = props => {
         return;
       }
 
-      // 体积、重量是否大于1000
-      if (
-        (datas.packingLong && Number(datas.packingLong) > 1000)
-        || datas.packingWide && Number(datas.packingWide) > 1000
-        || datas.packingHigh && Number(datas.packingHigh) > 1000
-        || datas.packingWeight && Number(datas.packingWeight) > 1000
-        || datas.commodityLong && Number(datas.commodityLong) > 1000
-        || datas.commodityWide && Number(datas.commodityWide) > 1000
-        || datas.commodityHigh && Number(datas.commodityHigh) > 1000
-        || datas.commodityWeight && Number(datas.commodityWeight) > 1000
-      ) {
-        message.error('体积长宽高或重量值不能大于1000');
-        return;
-      }
+      // 包装重量重量是否大于68038
+      const weightresult = sumWeightOversize(datas.packingWeightType, datas.packingWeight);
+      setPackWeightisOversize(weightresult);
 
       // 包装体积：创建时填写，长宽高，最大值是1000，都必填
       if (
@@ -429,8 +455,7 @@ const AddSku: React.FC<IProps> = props => {
         message.error('包装体积长宽高不能为空');
         return;
       }
-      
-
+    
       // 包装材质
       if (datas.packingMaterial === 'other') {
         if (empyts.includes(datas.otherPacking)) {
@@ -440,30 +465,20 @@ const AddSku: React.FC<IProps> = props => {
         datas.packingMaterial = datas.otherPacking;
       }
 
-      const promise = new Promise((resolve, reject) => {
-        dispatch({
-          type: 'skuData/addSku',
-          resolve,
-          reject,
-          payload: datas,
-        });
+      //包装体积是否oversize
+      const volumnResult = sumVolumeOversize(datas.packingType, {
+        width: datas.packingLong || 0,
+        wide: datas.packingWide || 0,
+        height: datas.packingHigh || 0,
       });
+      setProductvolumeisOversize(volumnResult);
+   
+      if (weightresult || volumnResult) {
+        setIsOversize(true);
+        return;
+      }
 
-      promise.then(res => {
-        const {
-          code,
-          message: msg,
-        } = res as Global.IBaseResponse;
-        if (code === 200) {
-          message.success(msg || '添加成功！');
-          onCancel();
-          // onSuccess(datas.sku);
-          // 不需要筛选添加的 sku
-          onSuccess('');
-          return;
-        }
-        message.error(msg || '添加失败！');
-      });
+      submitConfirm();
     },
   };
 
@@ -546,199 +561,219 @@ const AddSku: React.FC<IProps> = props => {
     }
   };
 
-  return <Modal {...modalConfig}>
-    <div className={styles.content}>
-      <header className={styles.title}>基本信息</header>
-      <Form 
-        form={form} 
-        colon={false} 
-        labelAlign="left" 
-        layout="inline"
-        className={styles.form}
-        name="addsku"
-        autoComplete="off"
-        initialValues={{
-          state: states[0].value,
-          packingType: packSizeUnit[0].value,
-          packingWeightType: packWeightUnit[0].value,
-          commodityType: packSizeUnit[0].value,
-          commodityWeightType: packWeightUnit[0].value,
-          packingMaterial: packTextureUnit[0].value,
-          isFragile: false,
-        }}
-        onValuesChange={handleFormVlaueChange}
-      >
-        <div className={styles.base}>
-          <div className={styles.leftLayout}>
-            <Item name="sku" label="SKU：" normalize={removeSpace} rules={[{
-              required: true,
-              message: 'SKU不能为空',
-            }, {
-              max: 40,
-              message: 'SKU长度不能超过40',
-            }]}>
-              <Input />
-            </Item>
-            <Item name="nameUs" label="英文品名：" normalize={removeSpace} rules={[{
-              required: true,
-              message: '英文品名不能为空',
-            }, {
-              max: 200,
-              message: '英文品名长度不能超过200',
-            }]}>
-              <Input />
-            </Item>
-            <Item name="customsCode" label="海外编码：" normalize={removeSpace} rules={[{
-              pattern: /^\d{10}$/,
-              message: '海外编码为10位纯数字',
-            }]}>
-              <Input />
-            </Item>
-            <Item className={styles.state} name="state" label="状态：">
-              <Radio.Group options={states}></Radio.Group>
-            </Item>
-          </div>
-          <div className={styles.centerLayout}>
-            <Item name="nameNa" label="中文品名：" normalize={removeSpace} rules={[{
-              required: true,
-              message: '中文品名不能为空',
-            }, {
-              max: 80,
-              message: '中文品名长度不能超过80',
-            }]}>
-              <Input />
-            </Item>
-            <Item name="category" label="品类：" normalize={removeSpace} rules={[{
-              required: true,
-              message: '品类不能为空',
-            }, {
-              max: 40,
-              message: '品类长度不能超过40个字符',
-            }]}>
-              <Input />
-            </Item>
-            <Item name="salesman" label="开发业务员：" normalize={removeSpace} rules={[{
-              max: 200,
-              message: '开发业务员长度不能超过200',
-            }]}>
-              <Input />
-            </Item>
-          </div>
-          <div className={styles.rightLayout}>
-            <div className={styles.item}>
-              <span className={styles.text}>首页</span>
-              <Upload listType="picture-card" {...getUploadConfig('index')}>
-                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%', height: '100%' }} /> : uploadButton}
-              </Upload>
+  return <>
+    <Modal {...modalConfig}>
+      <div className={styles.content}>
+        <header className={styles.title}>基本信息</header>
+        <Form 
+          form={form} 
+          colon={false} 
+          labelAlign="left" 
+          layout="inline"
+          className={styles.form}
+          name="addsku"
+          autoComplete="off"
+          initialValues={{
+            state: states[0].value,
+            packingType: packSizeUnit[0].value,
+            packingWeightType: packWeightUnit[0].value,
+            commodityType: packSizeUnit[0].value,
+            commodityWeightType: packWeightUnit[0].value,
+            packingMaterial: packTextureUnit[0].value,
+            isFragile: false,
+          }}
+          onValuesChange={handleFormVlaueChange}
+        >
+          <div className={styles.base}>
+            <div className={styles.leftLayout}>
+              <Item name="sku" label="SKU：" normalize={removeSpace} rules={[{
+                required: true,
+                message: 'SKU不能为空',
+              }, {
+                max: 40,
+                message: 'SKU长度不能超过40',
+              }]}>
+                <Input />
+              </Item>
+              <Item name="nameUs" label="英文品名：" normalize={removeSpace} rules={[{
+                required: true,
+                message: '英文品名不能为空',
+              }, {
+                max: 200,
+                message: '英文品名长度不能超过200',
+              }]}>
+                <Input />
+              </Item>
+              <Item name="customsCode" label="海外编码：" normalize={removeSpace} rules={[{
+                pattern: /^\d{10}$/,
+                message: '海外编码为10位纯数字',
+              }]}>
+                <Input />
+              </Item>
+              <Item className={styles.state} name="state" label="状态：">
+                <Radio.Group options={states}></Radio.Group>
+              </Item>
             </div>
-            <div className={styles.item}>
-              <span className={styles.text}>包装图</span>
-              <Upload listType="picture-card" {...getUploadConfig('package')}>
-                {packImage ? <img src={packImage} alt="avatar" style={{ width: '100%', height: '100%' }} /> : uploadButton}
-              </Upload>
+            <div className={styles.centerLayout}>
+              <Item name="nameNa" label="中文品名：" normalize={removeSpace} rules={[{
+                required: true,
+                message: '中文品名不能为空',
+              }, {
+                max: 80,
+                message: '中文品名长度不能超过80',
+              }]}>
+                <Input />
+              </Item>
+              <Item name="category" label="品类：" normalize={removeSpace} rules={[{
+                required: true,
+                message: '品类不能为空',
+              }, {
+                max: 40,
+                message: '品类长度不能超过40个字符',
+              }]}>
+                <Input />
+              </Item>
+              <Item name="salesman" label="开发业务员：" normalize={removeSpace} rules={[{
+                max: 200,
+                message: '开发业务员长度不能超过200',
+              }]}>
+                <Input />
+              </Item>
+            </div>
+            <div className={styles.rightLayout}>
+              <div className={styles.item}>
+                <span className={styles.text}>首页</span>
+                <Upload listType="picture-card" {...getUploadConfig('index')}>
+                  {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%', height: '100%' }} /> : uploadButton}
+                </Upload>
+              </div>
+              <div className={styles.item}>
+                <span className={styles.text}>包装图</span>
+                <Upload listType="picture-card" {...getUploadConfig('package')}>
+                  {packImage ? <img src={packImage} alt="avatar" style={{ width: '100%', height: '100%' }} /> : uploadButton}
+                </Upload>
+              </div>
             </div>
           </div>
-        </div>
-        <nav className={styles.nav}>
-          <Tabs activeKey={nav} onChange={key => setNav(key)}>
-            <TabPane tab="包装信息" key="1">
-              <PackInfo form={form}/>
-            </TabPane>
-            <TabPane tab="MSKU" key="2">
-              <div className={styles.mskuBox}>
-                <header className={styles.topHead}>
-                  <Form.Item name="marketplace" className={styles.site}>
-                    <Select allowClear placeholder="选择站点" listItemHeight={10} listHeight={250} onChange={store => changeStore(store as string)}>
-                      { shopDownlist.map((item, index) => {
-                        return <Select.Option key={index} value={item.value}>
-                          {item.label}
-                        </Select.Option>;
-                      })}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="storeName" className={styles.shop}>
-                    <Select allowClear placeholder="选择店铺">
-                      { shops.map((item, index) => {
-                        return <Select.Option key={index} value={item.value}>
-                          {item.label}
-                        </Select.Option>;
-                      })}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item className={styles.search} name="mskuList">
-                    <Select
-                      style={{ width: 320, margin: '0 20px 0 40px' }}
-                      mode="multiple"
-                      onSearch={search}
-                      maxTagCount={1}
-                      placeholder="搜索MSKU"
-                      // notFoundContent={fetching ? <Spin size="small" /> : null}
-                      listItemHeight={10} 
-                      listHeight={250}
-                    >
-                      {
-                        skuListData.map((item, index) => {
-                          return <Select.Option 
-                            key={index} 
-                            value={item.sellerSku}>
-                            {item.sellerSku}
+          <nav className={styles.nav}>
+            <Tabs activeKey={nav} onChange={key => setNav(key)}>
+              <TabPane tab="包装信息" key="1">
+                <PackInfo/>
+              </TabPane>
+              <TabPane tab="MSKU" key="2">
+                <div className={styles.mskuBox}>
+                  <header className={styles.topHead}>
+                    <Form.Item name="marketplace" className={styles.site}>
+                      <Select allowClear placeholder="选择站点" listItemHeight={10} listHeight={250} onChange={store => changeStore(store as string)}>
+                        { shopDownlist.map((item, index) => {
+                          return <Select.Option key={index} value={item.value}>
+                            {item.label}
                           </Select.Option>;
-                        })
-                      }
-                    </Select>
-                  </Form.Item>
-                  <Button type="primary" onClick={addMsku}>添加</Button>
-                </header>
-                <Table {...mskuTableConfig}/>
-              </div>
-            </TabPane>
-            <TabPane tab="库位号" key="3">
-              <div className={styles.bedNumberBox}>
-                <header className={styles.form}>
-                  <Form.Item name="warehouseName" className={styles.warehouses}>
-                    <Select 
-                      placeholder="选择仓库"
-                      onChange={(locationId: number) => {
-                        requestLocationNum(locationId);
-                        form.setFieldsValue({ locationNo: [] });
-                      }}
-                    >
-                      { warehouses.map((item, index) => {
-                        return <Select.Option key={index} value={item.id}>
-                          {item.name}
-                        </Select.Option>;
-                      })}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item className={styles.locationSearch} name="locationNo">
-                    <Select 
-                      placeholder="库位号" 
-                      allowClear 
-                      showSearch
-                      onSearch={(code: string) => searchLocation(code)}
-                      mode="multiple"
-                      maxTagCount={1}
-                    >
-                      {locationNum.map(item => {
-                        return <Select.Option key={item.locationNo} value={item.locationNo}>
-                          {item.locationNo}
-                        </Select.Option>;
-                      })}
-                    </Select>
-                  </Form.Item>
-                  <Button type="primary" onClick={addbedNumber}>添加</Button>
-                </header>
-                <Table {...tableConfig}/>
-              </div>
-            </TabPane>
-            <TabPane tab="成本价格" key="4">
-              <CostPrice />
-            </TabPane>
-          </Tabs>
-        </nav>
-      </Form>
-    </div>
-  </Modal>;
+                        })}
+                      </Select>
+                    </Form.Item>
+                    <Form.Item name="storeName" className={styles.shop}>
+                      <Select allowClear placeholder="选择店铺">
+                        { shops.map((item, index) => {
+                          return <Select.Option key={index} value={item.value}>
+                            {item.label}
+                          </Select.Option>;
+                        })}
+                      </Select>
+                    </Form.Item>
+                    <Form.Item className={styles.search} name="mskuList">
+                      <Select
+                        style={{ width: 320, margin: '0 20px 0 40px' }}
+                        mode="multiple"
+                        onSearch={search}
+                        maxTagCount={1}
+                        placeholder="搜索MSKU"
+                        // notFoundContent={fetching ? <Spin size="small" /> : null}
+                        listItemHeight={10} 
+                        listHeight={250}
+                      >
+                        {
+                          skuListData.map((item, index) => {
+                            return <Select.Option 
+                              key={index} 
+                              value={item.sellerSku}>
+                              {item.sellerSku}
+                            </Select.Option>;
+                          })
+                        }
+                      </Select>
+                    </Form.Item>
+                    <Button type="primary" onClick={addMsku}>添加</Button>
+                  </header>
+                  <Table {...mskuTableConfig}/>
+                </div>
+              </TabPane>
+              <TabPane tab="库位号" key="3">
+                <div className={styles.bedNumberBox}>
+                  <header className={styles.form}>
+                    <Form.Item name="warehouseName" className={styles.warehouses}>
+                      <Select 
+                        placeholder="选择仓库"
+                        onChange={(locationId: number) => {
+                          requestLocationNum(locationId);
+                          form.setFieldsValue({ locationNo: [] });
+                        }}
+                      >
+                        { warehouses.map((item, index) => {
+                          return <Select.Option key={index} value={item.id}>
+                            {item.name}
+                          </Select.Option>;
+                        })}
+                      </Select>
+                    </Form.Item>
+                    <Form.Item className={styles.locationSearch} name="locationNo">
+                      <Select 
+                        placeholder="库位号" 
+                        allowClear 
+                        showSearch
+                        onSearch={(code: string) => searchLocation(code)}
+                        mode="multiple"
+                        maxTagCount={1}
+                      >
+                        {locationNum.map(item => {
+                          return <Select.Option key={item.locationNo} value={item.locationNo}>
+                            {item.locationNo}
+                          </Select.Option>;
+                        })}
+                      </Select>
+                    </Form.Item>
+                    <Button type="primary" onClick={addbedNumber}>添加</Button>
+                  </header>
+                  <Table {...tableConfig}/>
+                </div>
+              </TabPane>
+              <TabPane tab="成本价格" key="4">
+                <CostPrice />
+              </TabPane>
+            </Tabs>
+          </nav>
+        </Form>
+      </div>
+    </Modal>
+    <Modal
+      visible={isOversize}
+      centered
+      onCancel={() => setIsOversize(false)}
+      onOk={() => {
+        submitConfirm();
+        setIsOversize(false);
+      }}
+      width={580}
+    >
+      {
+        productvolumeisOversize ? <p>最长边超过274cm或(长度+围度)*2超过419cm</p> : ''        
+      }
+      {
+        packWeightisOversize ? <p>包装重量超过68038g</p> : ''
+      }
+      <p>请确认该商品是否属于特殊大件？</p>      
+    </Modal>
+  </>;
 };
 
 
