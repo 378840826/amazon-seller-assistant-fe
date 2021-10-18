@@ -6,20 +6,22 @@
  * 
  * 包装信息
  */
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './index.less';
 import { Form, Input, Select, Radio } from 'antd';
-import { FormInstance } from 'antd/lib/form';
-import { packSizeUnit, packWeightUnit, packTextureUnit, sumVolumeOversize, sumWeightOversize } from '../config';
+//import { FormInstance } from 'antd/lib/form';
+import { packSizeUnit, packWeightUnit, packTextureUnit } from '../config';
 import { strToNaturalNumStr } from '@/utils/utils';
 
+/** 
 interface IProps {
   form: FormInstance;
 }
+*/
 
-const afterSelector = ({ name, change }: { name: string; change: () => void}) => {
+const afterSelector = ({ name }: { name: string }) => {
   return (<Form.Item name={name} noStyle>
-    <Select style={{ width: 82 }} onChange={change}>
+    <Select style={{ width: 82 }} >
       {packWeightUnit.map((item, index) => {
         return <Select.Option key={index} value={item.value}>{item.label}</Select.Option>;
       })}
@@ -28,18 +30,19 @@ const afterSelector = ({ name, change }: { name: string; change: () => void}) =>
 };
 
 const { Item } = Form;
-const PackInfo: React.FC<IProps> = props => {
-  const { form } = props;
+const PackInfo: React.FC = () => {
+  //const { form } = props;
   // 包装体积是否有oversize
-  const [packingStiplateisOversize, setPackingStiplateisOversize] = useState<string>(''); 
+  //const [packingStiplateisOversize, setPackingStiplateisOversize] = useState<string>(''); 
   // 商品体积是否有oversize
-  const [productvolumeisOversize, setProductvolumeisOversize] = useState<string>(''); 
+  //const [productvolumeisOversize, setProductvolumeisOversize] = useState<string>(''); 
   // 包装装量是否有oversize
-  const [packWeightisOversize, setPackWeightisOversize] = useState<string>(''); 
+  //const [packWeightisOversize, setPackWeightisOversize] = useState<boolean>(false); 
   // 商品装量是否有oversize
-  const [productisOversize, setProductisOversize] = useState<string>(''); 
+  //const [productisOversize, setProductisOversize] = useState<string>(''); 
 
   // 监听包装体积是否有oversize
+  /** 
   const packvolumeFieldsChange = function() {
     const packingLong = form.getFieldValue('packingLong');
     const packingWide = form.getFieldValue('packingWide');
@@ -68,7 +71,7 @@ const PackInfo: React.FC<IProps> = props => {
     });
     setProductvolumeisOversize(result);
   };
-
+  
   // 监听包装重量是否有oversize
   const packWeightFieldsChange = function() {
     const number = form.getFieldValue('packingWeight');
@@ -86,90 +89,77 @@ const PackInfo: React.FC<IProps> = props => {
     const result = sumWeightOversize(packingType, number);
     setProductisOversize(result);
   };
+  */
 
 
   const limitedInput = function(val: string) {
     return strToNaturalNumStr(val);
   };
 
-  // 验证长是否大于1000
-  const verifyWidthValue = function(_: any, value: string) { // eslint-disable-line
-    if (Number(value) > 1000) {
-      return Promise.reject('最大值为1000');
+  // 验证重量是否大于68038g
+  /**const verifyWidthValue = function(_: any, value: string) { // eslint-disable-line
+    if (Number(value) > 68038) {
+      return Promise.reject('最大值为68038');
     }
     return Promise.resolve();
   };
+  */
 
   return <div className={styles.packInfoBox}>
     <div className={styles.volume}>
-      <Item label="包装体积：" name="packingLong" normalize={limitedInput} rules={[{
-        validator: verifyWidthValue,
+      <Item label="包装体积：" name="packingLong" normalize={limitedInput} rules={[{       
         required: true,
       }]}>
-        <Input placeholder="长" onChange={packvolumeFieldsChange}/>
+        <Input placeholder="长" />
       </Item>
       <span className={styles.star}>*</span>
-      <Item name="packingWide" normalize={limitedInput} rules={[{
-        validator: verifyWidthValue,
-      }]}>
-        <Input placeholder="宽" onChange={packvolumeFieldsChange}/>
+      <Item name="packingWide" normalize={limitedInput}>
+        <Input placeholder="宽"/>
       </Item>
       <span className={styles.star}>*</span>
-      <Item name="packingHigh" normalize={limitedInput} rules={[{
-        validator: verifyWidthValue,
-      }]}>
-        <Input placeholder="高" onChange={packvolumeFieldsChange}/>
+      <Item name="packingHigh" normalize={limitedInput}>
+        <Input placeholder="高"/>
       </Item>
       <Item name="packingType"style={{ width: 96, marginLeft: 10 }}>
-        <Select onChange={packvolumeFieldsChange}>
+        <Select>
           {packSizeUnit.map((item, index) => {
             return <Select.Option key={index} value={item.value}>{item.label}</Select.Option>;
           })}
         </Select>
       </Item>
-      <span className={styles.oversize}>
-        {packingStiplateisOversize}
-      </span>
     </div>
     <div className={styles.packWeight}>
       <Item label="包装重量：" normalize={limitedInput} name="packingWeight" rules={[{
         required: true,
+        //validator: verifyWidthValue,
       }]}>
         <Input 
-          onChange={packWeightFieldsChange}
-          addonAfter={afterSelector({ name: 'packingWeightType', change: packWeightFieldsChange })} 
+          addonAfter={afterSelector({ name: 'packingWeightType' })} 
           style={{ width: 246 }}
         />
       </Item>
-      <span className={styles.oversize}>{packWeightisOversize}</span>
     </div>
     <div className={styles.volume}>
-      <Item label="商品体积：" name="commodityLong" normalize={limitedInput} rules={[{
-        validator: verifyWidthValue,
-      }]}>
-        <Input placeholder="长" onChange={productvolumeFieldsChange}/>
+      <Item label="商品体积：" name="commodityLong" normalize={limitedInput}>
+        <Input placeholder="长"/>
       </Item>
       <span className={styles.star}>*</span>
-      <Item name="commodityWide" normalize={limitedInput}><Input placeholder="宽" onChange={productvolumeFieldsChange}/></Item>
+      <Item name="commodityWide" normalize={limitedInput}><Input placeholder="宽"/></Item>
       <span className={styles.star}>*</span>
-      <Item name="commodityHigh" normalize={limitedInput}><Input placeholder="高" onChange={productvolumeFieldsChange}/></Item>
+      <Item name="commodityHigh" normalize={limitedInput}><Input placeholder="高"/></Item>
       <Item name="commodityType"style={{ width: 96, marginLeft: 10 }}>
-        <Select onChange={productvolumeFieldsChange}>
+        <Select>
           {packSizeUnit.map((item, index) => {
             return <Select.Option key={index} value={item.value}>{item.label}</Select.Option>;
           })}
         </Select>
       </Item>
-      <span className={styles.oversize}>{productvolumeisOversize}</span>
     </div>
     <div className={styles.packWeight}>
       <Item label="商品重量：" name="commodityWeight" normalize={limitedInput}>
-        <Input 
-          
-          onChange={productWeightFieldsChange}
-          addonAfter={afterSelector({ name: 'commodityWeightType', change: productWeightFieldsChange })} style={{ width: 246 }}/>
+        <Input           
+          addonAfter={afterSelector({ name: 'commodityWeightType' })} style={{ width: 246 }}/>
       </Item>
-      <span className={styles.oversize}>{productisOversize}</span>
     </div>
     <div className={styles.texture}>
       <Item label="包装材质：" name="packingMaterial">
