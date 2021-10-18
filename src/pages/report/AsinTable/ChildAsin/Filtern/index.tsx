@@ -494,11 +494,11 @@ const ChildAsinFiltern: React.FC<IProps> = (props) => {
           </div>
         </div>
         <div className={styles.radioAsin}>
-          <Form.Item label="独立ASIN" name="asin" initialValue="1">
+          <Form.Item label="独立ASIN" name="independentAsin" initialValue={null}>
             <Radio.Group>
-              <Radio value="1" checked className={styles.radio}>不限</Radio>
-              <Radio value="2" className={styles.radio}>是</Radio>
-              <Radio value="3" className={styles.radio}>否</Radio>
+              <Radio value={null} checked className={styles.radio}>不限</Radio>
+              <Radio value="1" className={styles.radio}>是</Radio>
+              <Radio value="2" className={styles.radio}>否</Radio>
             </Radio.Group>
           </Form.Item>
         </div>
