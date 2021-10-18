@@ -11,7 +11,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import { Modal, Form, Input, Radio, Upload, Tabs, message, Select, Button, Table } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { states, packWeightUnit, packSizeUnit, packTextureUnit, shopDownlist } from '../config';
+import { states, packWeightUnit, packSizeUnit, packTextureUnit, shopDownlist, sumVolumeOversize, sumWeightOversize } from '../config';
 import { useSelector, ConnectProps, IConfigurationBaseState, IWarehouseLocationState, useDispatch } from 'umi';
 import PackInfo from './PackInfo';
 import CostPrice from './CostPrice';
@@ -51,6 +51,10 @@ const AddSku: React.FC<IProps> = props => {
   const [locationNum, setLocatioNum] = useState<skuData.ILocations[]>([]);
   // 库位号列表
   const [locations, setLocations] = useState<skuData.ILocations[]>([]);
+
+  const [productvolumeisOversize, setProductvolumeisOversize] = useState<boolean>(false);
+  const [packWeightisOversize, setPackWeightisOversize] = useState<boolean>(false);
+  const [isOversize, setIsOversize] = useState<boolean>(false);
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -367,6 +371,45 @@ const AddSku: React.FC<IProps> = props => {
     },
   };
 
+  //确认提交
+  const submitConfirm = () => {
+    let datas = form.getFieldsValue();
+    datas = Object.assign({}, initData, datas);
+    datas.id = initData.id;
+    datas.mskuProducts = mskuTableData;
+    datas.locations = locations;
+    datas.imageUrl = imageUrl;
+    datas.pimageUrl = packImage;
+    
+
+    const promise = new Promise((resolve, reject) => {
+      dispatch({
+        type: 'skuData/updateSku',
+        resolve,
+        reject,
+        payload: datas,
+      });
+    });
+
+    promise.then(res => {
+      const {
+        code,
+        message: msg,
+      } = res as Global.IBaseResponse;
+
+      if (code === 200) {
+        message.success(msg || '修改成功！');
+        datas.mskus = datas.mskuProducts || [];
+        datas.locationNos = datas.locations || [];
+        updateSku(datas);
+        onCancel();
+        return;
+      }
+      message.error(msg || '修改失败！');
+    });
+
+  };
+
   // Modal 配置
   const modalConfig = {
     visible,
@@ -386,6 +429,7 @@ const AddSku: React.FC<IProps> = props => {
       datas.pimageUrl = packImage;
 
       // 体积、重量是否大于1000
+      /**
       if (
         (datas.packingLong && Number(datas.packingLong) > 1000)
         || datas.packingWide && Number(datas.packingWide) > 1000
@@ -399,6 +443,11 @@ const AddSku: React.FC<IProps> = props => {
         message.error('体积长宽高或重量值不能大于1000');
         return;
       }
+      */
+
+      // 包装重量重量是否大于68038
+      const weightresult = sumWeightOversize(datas.packingWeightType, datas.packingWeight);
+      setPackWeightisOversize(weightresult);
 
       // 包装体积：创建时填写，长宽高，最大值是1000，都必填
       if (
@@ -419,6 +468,19 @@ const AddSku: React.FC<IProps> = props => {
         datas.packingMaterial = datas.otherPacking;
       }
 
+      //包装体积是否oversize
+      const volumnResult = sumVolumeOversize(datas.packingType, {
+        width: datas.packingLong || 0,
+        wide: datas.packingWide || 0,
+        height: datas.packingHigh || 0,
+      });
+      setProductvolumeisOversize(volumnResult);
+   
+      if (weightresult || volumnResult) {
+        setIsOversize(true);
+        return;
+      }
+
       // 错误禁止提交
       const fieldError = form.getFieldsError().find(err => {
         return err.errors.length && err;
@@ -428,31 +490,7 @@ const AddSku: React.FC<IProps> = props => {
         return;
       }
 
-      const promise = new Promise((resolve, reject) => {
-        dispatch({
-          type: 'skuData/updateSku',
-          resolve,
-          reject,
-          payload: datas,
-        });
-      });
-
-      promise.then(res => {
-        const {
-          code,
-          message: msg,
-        } = res as Global.IBaseResponse;
-
-        if (code === 200) {
-          message.success(msg || '修改成功！');
-          datas.mskus = datas.mskuProducts || [];
-          datas.locationNos = datas.locations || [];
-          updateSku(datas);
-          onCancel();
-          return;
-        }
-        message.error(msg || '修改失败！');
-      });
+      submitConfirm();
     },
   };
 
@@ -539,7 +577,7 @@ const AddSku: React.FC<IProps> = props => {
         <Form 
           form={form} 
           colon={false} 
-          labelAlign="left" 
+          labelAlign="left"
           layout="inline"
           className={styles.form}
           name="editSku"
@@ -629,7 +667,7 @@ const AddSku: React.FC<IProps> = props => {
           <nav className={styles.nav}>
             <Tabs activeKey={nav} onChange={key => setNav(key)}>
               <TabPane tab="包装信息" key="1">
-                <PackInfo form={form}/>
+                <PackInfo/>
               </TabPane>
               <TabPane tab="MSKU" key="2">
                 <div className={styles.mskuBox}>
@@ -725,6 +763,24 @@ const AddSku: React.FC<IProps> = props => {
           </nav>
         </Form>
       </div>
+    </Modal>
+    <Modal
+      visible={isOversize}
+      centered
+      onCancel={() => setIsOversize(false)}
+      onOk={() => {
+        submitConfirm();
+        setIsOversize(false);
+      }}
+      width={580}
+    >
+      {
+        productvolumeisOversize ? <p>最长边超过274cm或(长度+围度)*2超过419cm</p> : ''        
+      }
+      {
+        packWeightisOversize ? <p>包装重量超过68038g</p> : ''
+      }
+      <p>请确认该商品是否属于特殊大件？</p>      
     </Modal>
   </div>;
 };
