@@ -13,7 +13,12 @@ import { Button, Popover, Upload, message, Modal } from 'antd';
 import { useDispatch } from 'umi';
 import { UploadFile, RcFile } from 'antd/lib/upload/interface';
 
-const BatchSKU: React.FC = () => {
+interface IProps {
+  request: () => void;
+}
+
+const BatchSKU: React.FC<IProps> = (props) => {
+  const { request } = props;
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -69,6 +74,7 @@ const BatchSKU: React.FC = () => {
         setFileList([...[]]);
         message.success('导入成功!');
         setVisible(false);
+        request();
         return;
       }
   
