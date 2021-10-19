@@ -26,6 +26,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
     sortCallback,
     childCustomcol,
     site,
+    setTabTag,
   } = props;
 
 
@@ -156,7 +157,36 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       width: 110,
       fixed: 'left',
       render(val: number) {
-        return <p className={styles.parentAsinCol}>{val ? val : <Empty />}</p>;
+        return <p className={styles.parentAsinCol}
+        >{ val ? <a onClick={() => setTabTag({ tag: 'parent', asin: val })}>{val}</a> : <Empty /> }</p>;
+      },
+    },
+    {
+      dataIndex: 'EBC',
+      title: 'EBC',
+      align: 'center',
+      width: 80,
+      render(val: number) {
+        if (val === 1) {
+          return <p>有</p>;
+        } else if (val === 2) {
+          return <p>无</p>;
+        }
+        return <Empty />;
+      },
+    },
+    {
+      dataIndex: 'video',
+      title: '视频',
+      align: 'center',
+      width: 80,
+      render(val: number) {
+        if (val === 2) {
+          return <p>有</p>;
+        } else if (val === 1) {
+          return <p>无</p>;
+        }
+        return <Empty />;
       },
     },
     {

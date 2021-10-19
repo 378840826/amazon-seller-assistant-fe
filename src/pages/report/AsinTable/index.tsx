@@ -11,6 +11,11 @@ import { Iconfont, storage } from '@/utils/utils';
 import { storageKeys } from '@/utils/huang';
 import { getCalendarFields } from './config';
 
+interface ITags {
+  tag: string;
+  asin: string;
+}
+
 const { TabPane } = Tabs;
 const { adinTableCalendar } = storageKeys;
 const AsinTable = () => {
@@ -36,12 +41,25 @@ const AsinTable = () => {
   const [calendar, setCalendar] = useState<string>(storage.get(`${adinTableCalendar}_dc_itemKey`) || '7'); // 日历
   const [canlendarFlag, setCanlendarFlag] = useState<boolean>(false); // 控制请求、比如点击2月、再点击3月时，
 
+  //tab共享传参标识
+  const [tabTag, setTabTag] = useState<ITags>({
+    tag: 'child',
+    asin: '',
+  });
   // 接收消息（为提高利润统计的准确性，请在商品列表导入成本、运费 ）
   const receptionMessage = (messageprofit: boolean) => {
     setMessageProfit(messageprofit);
     setMessageprofitAsync(messageprofit);
   };
-
+  useEffect(() => {
+    if (history.state && history.state.state && history.state.state.tag) {
+      setTabTag({
+        tag: history.state.state.tag,
+        asin: history.state.state.parentasin,
+      });
+    }
+  },[]);
+  
   const checkData = useCallback(function() {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
       return;
@@ -121,6 +139,13 @@ const AsinTable = () => {
   // 子ASIN和父ASIN的区别
   function tabCallback(key: string) {
     setCurrentTab(key);
+    setTabTag({ ...tabTag, tag: key });
+    if (key === 'child') {
+      setTabTag({
+        tag: 'child',
+        asin: '',
+      });
+    }
   }
 
   // 点击消息框
@@ -132,22 +157,24 @@ const AsinTable = () => {
   };
 
   return <div className={styles.asinTable}>
-    <Tabs defaultActiveKey={currentTab} className={styles.tabs} onChange={tabCallback} animated>
+    <Tabs activeKey={tabTag.tag} className={styles.tabs} onChange={tabCallback} animated>
       <TabPane tab="子ASIN" key="child">
         
       </TabPane>
       <TabPane tab="父ASIN" key="parent">
       </TabPane>
     </Tabs>
-    {currentTab === 'child' ? <ChildAsin 
-      tabValue={currentTab} 
+    {tabTag.tag === 'child' ? <ChildAsin 
+      tabValue={tabTag.tag} 
       receptionMessage={receptionMessage} 
       canlendarCallback={canlendarCallback}
+      setTabTag={setTabTag}
     /> : 
       <ParentAsin 
-        tabValue={currentTab} 
+        tabValue={tabTag.tag} 
         receptionMessage={receptionMessage} 
         canlendarCallback={canlendarCallback}
+        parentAsin={tabTag.asin}
       />
     }
 
