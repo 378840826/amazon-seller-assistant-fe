@@ -236,7 +236,7 @@ export const getFullColumns = (params: any) => {
     }, {
       title: '父ASIN',
       dataIndex: 'parentasin',
-      key: 'asin-parentasin',
+      key: 'parentasin',
       align: 'center',
       width: 70,
       render: (parentasin) => {
