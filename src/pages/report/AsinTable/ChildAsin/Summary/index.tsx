@@ -133,137 +133,145 @@ const Summary: React.FC<IProps> = (props) => {
       fixed: 'left',
     },
     {
-      dataIndex: 'reviewNum',
+      dataIndex: 'EBC',
       component: <td className={styles.title} key="3"></td>,
     },
     {
-      dataIndex: 'reviewScore',
+      dataIndex: 'video',
       component: <td className={styles.title} key="4"></td>,
     },
     {
+      dataIndex: 'reviewNum',
+      component: <td className={styles.title} key="5"></td>,
+    },
+    {
+      dataIndex: 'reviewScore',
+      component: <td className={styles.title} key="6"></td>,
+    },
+    {
       dataIndex: 'totalSales',
-      component: <td className={styles.right} key="5">
+      component: <td className={styles.right} key="7">
         <ShowData value={totalSales} isCurrency isMoney/>
       </td>,
     },
     {
       dataIndex: 'totalOrderQuantity',
-      component: <td className={styles.center} key="6">
+      component: <td className={styles.center} key="8">
         {totalOrderQuantity !== null ? totalOrderQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'totalSalesQuantity',
-      component: <td className={styles.center} key="7">
+      component: <td className={styles.center} key="9">
         {totalSalesQuantity !== null ? totalSalesQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'replyReviewRate',
-      component: <td className={styles.center} key="8">
+      component: <td className={styles.center} key="10">
         {replyReviewRate !== null ? `${moneyFormat(replyReviewRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'profit',
-      component: <td className={styles.right} key="9">
+      component: <td className={styles.right} key="11">
         <ShowData value={profit} isCurrency isMoney/>
       </td>,
     },
     {
       dataIndex: 'profitRate',
-      component: <td className={styles.center} key="10">
+      component: <td className={styles.center} key="12">
         {profitRate !== null ? `${moneyFormat(profitRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'salesQuantityExceptOrderQuantity',
-      component: <td className={styles.center} key="11">
+      component: <td className={styles.center} key="13">
         {salesQuantityExceptOrderQuantity !== null ? 
           `${moneyFormat(salesQuantityExceptOrderQuantity, 2, ',', '.', true)}` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'avgSellingPrice',
-      component: <td className={styles.right} key="12">
+      component: <td className={styles.right} key="14">
         <ShowData value={avgSellingPrice} isCurrency isMoney/>
       </td>,
     },
     {
       dataIndex: 'avgCustomerPrice',
-      component: <td className={styles.right} key="13">
+      component: <td className={styles.right} key="15">
         <ShowData value={avgCustomerPrice} isCurrency isMoney/>
       </td>,
     },
     {
       dataIndex: 'preferentialOrderQuantity',
-      component: <td className={styles.center} key="14">
+      component: <td className={styles.center} key="16">
         {preferentialOrderQuantity !== null ? preferentialOrderQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'associateSales',
-      component: <td className={styles.center} key="15">
+      component: <td className={styles.center} key="17">
         {associateSales !== null ? associateSales : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'pageView',
-      component: <td className={styles.center} key="16">
+      component: <td className={styles.center} key="18">
         {pageView !== null ? pageView : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'session',
-      component: <td className={styles.center} key="17">
+      component: <td className={styles.center} key="19">
         {session !== null ? session : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'pageViewExceptSession',
-      component: <td className={styles.center} key="18">
+      component: <td className={styles.center} key="20">
         {pageViewExceptSession !== null ? moneyFormat(pageViewExceptSession, 2, ',', '.', true) : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'conversionsRate',
-      component: <td className={styles.center} key="19">
+      component: <td className={styles.center} key="21">
         {conversionsRate !== null ? `${moneyFormat(conversionsRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'returnQuantity',
-      component: <td className={styles.center} key="20">
+      component: <td className={styles.center} key="22">
         {returnQuantity !== null ? returnQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'returnRate',
-      component: <td className={styles.center} key="21">
+      component: <td className={styles.center} key="23">
         {returnRate !== null ? `${moneyFormat(returnRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'b2bSales',
-      component: <td className={styles.center} key="22">
+      component: <td className={styles.center} key="24">
         <ShowData value={b2bSales} isCurrency isMoney/>
       </td>,
     },
     {
       dataIndex: 'b2bOrderQuantity',
-      component: <td className={styles.center} key="23">
+      component: <td className={styles.center} key="25">
         {b2bOrderQuantity !== null ? b2bOrderQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'b2bSalesQuantity',
-      component: <td className={styles.center} key="24">
+      component: <td className={styles.center} key="26">
         {b2bSalesQuantity !== null ? b2bSalesQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'b2bSalesQuantityExceptOrderQuantity',
-      component: <td className={styles.center} key="25">
+      component: <td className={styles.center} key="27">
         {
           b2bSalesQuantityExceptOrderQuantity !== null ? 
             moneyFormat(b2bSalesQuantityExceptOrderQuantity, 2, ',', '.', true) : <Empty/>
@@ -272,119 +280,119 @@ const Summary: React.FC<IProps> = (props) => {
     },
     {
       dataIndex: 'b2bAvgSellingPrice',
-      component: <td className={styles.right} key="26">
+      component: <td className={styles.right} key="28">
         <ShowData value={b2bAvgSellingPrice} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'b2bAvgCustomerPrice',
-      component: <td className={styles.right} key="27">
+      component: <td className={styles.right} key="29">
         <ShowData value={b2bAvgCustomerPrice} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'adAsinAdTypeStatistics',
-      component: <td key="28"></td>,
+      component: <td key="30"></td>,
     },
     {
       dataIndex: 'adSales',
-      component: <td className={styles.right} key="29">
+      component: <td className={styles.right} key="31">
         <ShowData value={adSales} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'skuAdSales',
-      component: <td className={styles.center} key="30">
+      component: <td className={styles.center} key="32">
         <ShowData value={skuAdSales} isCurrency isMoney/>  
       </td>,
     },
     {
       dataIndex: 'naturalSales',
-      component: <td className={styles.center} key="31">
+      component: <td className={styles.center} key="33">
         <ShowData value={naturalSales} isCurrency isMoney/>  
       </td>,
     },
     {
       dataIndex: 'adOrderQuantity',
-      component: <td className={styles.center} key="32">
+      component: <td className={styles.center} key="34">
         {adOrderQuantity !== null ? adOrderQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'skuAdOrderQuantity',
-      component: <td className={styles.center} key="33">
+      component: <td className={styles.center} key="35">
         {skuAdOrderQuantity !== null ? skuAdOrderQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'naturalOrderQuantity',
-      component: <td className={styles.center} key="34">
+      component: <td className={styles.center} key="36">
         {naturalOrderQuantity !== null ? naturalOrderQuantity : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'cpc',
-      component: <td className={styles.center} key="35">
+      component: <td className={styles.center} key="37">
         <ShowData value={cpc} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'spend',
-      component: <td className={styles.right} key="36">
+      component: <td className={styles.right} key="38">
         <ShowData value={spend} isCurrency isMoney/> 
       </td>,
     },
     {
       dataIndex: 'acos',
-      component: <td className={styles.center} key="37">
+      component: <td className={styles.center} key="39">
         {acos !== null ? `${moneyFormat(acos, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'compositeAcos',
-      component: <td className={styles.center} key="38">
+      component: <td className={styles.center} key="40">
         {compositeAcos !== null ? `${moneyFormat(compositeAcos, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'roas',
-      component: <td className={styles.center} key="39">
+      component: <td className={styles.center} key="41">
         {roas !== null ? moneyFormat(roas, 2, ',', '.', true) : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'compositeRoas',
-      component: <td className={styles.center} key="40">
+      component: <td className={styles.center} key="42">
         {compositeRoas !== null ? moneyFormat(compositeRoas, 2, ',', '.', true) : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'impressions',
-      component: <td className={styles.center} key="41">
+      component: <td className={styles.center} key="43">
         {impressions !== null ? impressions : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'clicks',
-      component: <td className={styles.center} key="42">
+      component: <td className={styles.center} key="44">
         {clicks !== null ? clicks : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'ctr',
-      component: <td className={styles.center} key="43">
+      component: <td className={styles.center} key="45">
         {ctr !== null ? `${moneyFormat(ctr, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'adConversionsRate',
-      component: <td className={styles.center} key="44">
+      component: <td className={styles.center} key="46">
         {adConversionsRate !== null ? `${moneyFormat(adConversionsRate, 2, ',', '.', true)}%` : <Empty/>}
       </td>,
     },
     {
       dataIndex: 'handle',
-      component: <td className={classnames(styles.title, styles.handleFixed, 'ant-table-cell-fix-right ant-table-cell-fix-right-first')} key="45"></td>,
+      component: <td className={classnames(styles.title, styles.handleFixed, 'ant-table-cell-fix-right ant-table-cell-fix-right-first')} key="47"></td>,
     },
   ];
 
