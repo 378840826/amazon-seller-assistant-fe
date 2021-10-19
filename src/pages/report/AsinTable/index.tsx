@@ -46,7 +46,6 @@ const AsinTable = () => {
     tag: 'child',
     asin: '',
   });
-  const [parentAsin, setParentAsin] = useState<string>('');
   // 接收消息（为提高利润统计的准确性，请在商品列表导入成本、运费 ）
   const receptionMessage = (messageprofit: boolean) => {
     setMessageProfit(messageprofit);
@@ -54,11 +53,13 @@ const AsinTable = () => {
   };
   useEffect(() => {
     if (history.state && history.state.state && history.state.state.tag) {
-      setTabTag({ ...tabTag, tag: history.state.state.tag });
-      setParentAsin(history.state.state.tag);
+      setTabTag({
+        tag: history.state.state.tag,
+        asin: history.state.state.parentasin,
+      });
     }
   },[]);
-
+  
   const checkData = useCallback(function() {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
       return;
@@ -140,7 +141,10 @@ const AsinTable = () => {
     setCurrentTab(key);
     setTabTag({ ...tabTag, tag: key });
     if (key === 'child') {
-      setParentAsin('');
+      setTabTag({
+        tag: 'child',
+        asin: '',
+      });
     }
   }
 
@@ -170,8 +174,7 @@ const AsinTable = () => {
         tabValue={tabTag.tag} 
         receptionMessage={receptionMessage} 
         canlendarCallback={canlendarCallback}
-        parentAsin={parentAsin}
-        setParentAsin={setParentAsin}
+        parentAsin={tabTag.asin}
       />
     }
 

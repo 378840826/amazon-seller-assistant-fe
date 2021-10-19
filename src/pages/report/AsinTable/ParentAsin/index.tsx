@@ -38,7 +38,6 @@ interface IProps {
   tabValue: string;
   receptionMessage: (messageprofit: boolean) => void;
   canlendarCallback: (calendar: string) => void;
-  setParentAsin: (parentAsin: string) => void;
   parentAsin: string;
 }
 
@@ -47,7 +46,6 @@ const ChildAsin: React.FC<IProps> = props => {
   const {
     tabValue,
     receptionMessage,
-    setParentAsin,
     parentAsin,
   } = props;
   // 店铺
@@ -111,19 +109,13 @@ const ChildAsin: React.FC<IProps> = props => {
         filternparams[key] = value;
       }
     }
-    console.log(parentAsin);
     
-    // let tag = '';
-    // if ( history.state && history.state.state && history.state.state.tag ) {
-    //   tag = history.state.state.tag;
-    // }
     // 查询参数
     const searchParams = {
       size: params.size || pageSize,
       current: params.current || current,
       order: params.order || order,
       asc: params.asc || sort,
-      // search: params.search || parentAsin,
     };
     const payload = { baseParams, searchParams, filternparams };
     Object.assign(payload, params);
@@ -221,9 +213,7 @@ const ChildAsin: React.FC<IProps> = props => {
       return;
     }
     requestFn({ search: val, size: pageSize });
-    setParentAsin('');
   };
-
   // 删除单个偏好
   const delPreferential = (id: string) => {
     conditions.forEach((item, i) => {

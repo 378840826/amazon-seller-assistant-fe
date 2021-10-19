@@ -158,7 +158,7 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       fixed: 'left',
       render(val: number) {
         return <p className={styles.parentAsinCol}
-        >{val ? <a onClick={() => setTabTag({ tag: 'parent', asin: val })}>{val}</a> : <Empty />}</p>;
+        >{ val ? <a onClick={() => setTabTag({ tag: 'parent', asin: val })}>{val}</a> : <Empty /> }</p>;
       },
     },
     {
