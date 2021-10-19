@@ -11,10 +11,12 @@ import styles from './index.less';
 import { Modal, Form, Input, Radio, Upload, Tabs, message, Select, Button, Table } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { states, packWeightUnit, packSizeUnit, packTextureUnit, shopDownlist } from '../config';
-import { useSelector, ConnectProps, IConfigurationBaseState, IWarehouseLocationState, useDispatch } from 'umi';
+import { useSelector, ISupplierState, ConnectProps, IConfigurationBaseState, IWarehouseLocationState, useDispatch } from 'umi';
 import PackInfo from './PackInfo';
 import CostPrice from './CostPrice';
 import TableNotData from '@/components/TableNotData';
+import { strToMoneyStr } from '@/utils/utils';
+import editable from '@/pages/components/EditableCell';
 
 interface IProps {
   visible: boolean;
@@ -25,17 +27,19 @@ interface IProps {
 interface IPage extends ConnectProps {
   configurationBase: IConfigurationBaseState;
   warehouseLocation: IWarehouseLocationState;
+  supplier: ISupplierState;
 }
-
 
 const { Item } = Form;
 const { TabPane } = Tabs;
+const { Option } = Select;
 // let lastFetchId = 0;
 const AddSku: React.FC<IProps> = props => {
   const { visible, onCancel, onSuccess } = props;
 
   const shops = useSelector((state: IPage) => state.configurationBase.shops);
   const warehouses = useSelector((state: IPage) => state.warehouseLocation.warehouses);
+  const supplierList = useSelector((state: IPage) => state.supplier.supplierList);
 
   const [loading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string|null>(null); // 首页图片
@@ -52,6 +56,11 @@ const AddSku: React.FC<IProps> = props => {
   const [locationNum, setLocatioNum] = useState<skuData.ILocations[]>([]);
   // 库位号列表
   const [locations, setLocations] = useState<skuData.ILocations[]>([]);
+  
+  //供应商表格数据
+  const [supplierTableData, setSupplierTableData] = useState<skuData.ISupplierDownList[]>([]);
+  //供应商下拉列表
+  const [supplierDownList, setsupplierDownList] = useState<Supplier.ISupplierList[]>([]);
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -65,6 +74,36 @@ const AddSku: React.FC<IProps> = props => {
       },
     });
   }, [dispatch]);
+
+  //请求供应商列表
+  useEffect(() => {
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: 'supplier/getSupplierList',
+        reject,
+        resolve,
+        payload: {
+          state: 'enabled',
+          match: 'SupplierName',
+          code: null,
+          settlementType: null,
+        },
+      });    
+    }).then((datas) => {
+      const {
+        code,
+        message: msg,
+      } = datas as {
+        code: number;
+        message: string;
+      };
+      if (code === 200 ){
+        setsupplierDownList([...supplierList]);
+        return;       
+      }
+      message.error(msg);
+    }); //eslint-disable-next-line react-hooks/exhaustive-deps   
+  }, [visible]);
 
   const uploadButton = (
     <div>
@@ -124,6 +163,13 @@ const AddSku: React.FC<IProps> = props => {
       msku => msku.sellerSku.toLowerCase().includes(value.toLowerCase())
     );
     setSkuListData(newList);
+  };
+  //搜索供应商
+  const suppliersearch = (value: string) => {
+    const newList = supplierList.filter(
+      supplier => supplier.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setsupplierDownList([...newList]);
   };
 
   // 请求库位号
@@ -252,6 +298,120 @@ const AddSku: React.FC<IProps> = props => {
     
     setLocations([...locations]);
   };
+  //添加供应商
+  const addSupplier = function() {
+    const datas = form.getFieldsValue();
+    const { price, placeUrl, currencyType, supplierId } = datas;
+    const emptys = [undefined, null, '', []];
+
+    //先出判断
+    if (!price || !placeUrl) {
+      message.error('请填写采购单价或下单链接');
+      return;
+    }
+    //供应商
+    if (emptys.includes(supplierId)) {
+      message.error('请选择供应商');
+      return;
+    }
+    //大小值
+    if (price < 0 || price > 100000000) {
+      message.error('最大输入值不超过10000 0000.00');
+      return;
+    }
+    //长度判断
+    if (placeUrl.length > 256) {
+      message.error('下单链接最大长度不超过256位字符');
+      return;
+    }
+
+
+    //给供应商名称找出来
+    supplierId.forEach((item: string) => {
+      const idindex = supplierList.findIndex( childItem => childItem.id === item);
+
+      //去重
+      const repetition = supplierTableData.find( repetion => repetion.supplierId === item);
+      if (repetition) {
+        message.warning(`供应商：${repetition.supplierName} 已添加，不可重复添加`);
+        return;
+      }
+
+      supplierTableData.push({
+        supplierId: item,
+        supplierName: supplierList[idindex].name,
+        currencyType: currencyType,
+        price: price,
+        placeUrl: placeUrl,
+      });
+    });
+    setSupplierTableData([...supplierTableData]);
+  };
+
+  //供应商表格下单链接编辑
+  const handleUpdatePlaceUrl = function(record: {supplierId: string; val: string}) {
+    new Promise((resolve, reject) => {
+      //找到对应的下标
+      supplierTableData.forEach( () => {
+        const supplierTableIndex = 
+          supplierTableData.findIndex(childItem => childItem.supplierId === record.supplierId);
+        supplierTableData[supplierTableIndex].placeUrl = record.val;
+        setSupplierTableData([...supplierTableData]);
+      });
+      resolve;
+      reject;
+    });   
+    return Promise.resolve(true);  
+  };
+  //供应商表格采购单价编辑
+  const handleUpdatePrice = function(record: {supplierId: string; val: number}) {
+    new Promise((resolve, reject) => {
+      //找到对应的下标
+      supplierTableData.forEach( () => {
+        const supplierTableIndex = 
+          supplierTableData.findIndex(childItem => childItem.supplierId === record.supplierId);
+        supplierTableData[supplierTableIndex].price = record.val;
+        setSupplierTableData([...supplierTableData]);
+      });
+      resolve;
+      reject;
+      
+    });  
+    return Promise.resolve(true);  
+  };
+  //删除供应商
+  const deletesupplier = (supplierId: string) => {
+    for (let i = 0; i < supplierTableData.length; i++) {
+      const item = supplierTableData[i];
+      if (item.supplierId === supplierId) {
+        supplierTableData.splice(i, 1);
+        break;
+      }
+    }
+    setSupplierTableData([...supplierTableData]);
+  };
+  
+  //供应商币种编辑
+  const currencyTypeChange = (supplierId: string, value: string) => {
+    
+    const supplierTableIndex = 
+      supplierTableData.findIndex(childItem => childItem.supplierId === supplierId);
+    supplierTableData[supplierTableIndex].currencyType = value;
+    setSupplierTableData([...supplierTableData]);
+    
+  };
+   
+  const supplierChange = (supplierId: string, value: string) => {
+    const supplierTableIndex = 
+        supplierTableData.findIndex(childItem => childItem.supplierId === supplierId);
+    supplierTableData[supplierTableIndex].supplierId = value;
+    //nsme=原id对应的name
+    const supplierListIndex = 
+        supplierList.findIndex(childItem => childItem.id === value);
+
+    supplierTableData[supplierTableIndex].supplierName = supplierList[supplierListIndex].name;
+    setSupplierTableData([...supplierTableData]);
+  };
 
   const mskuColumns = [
     {
@@ -309,6 +469,91 @@ const AddSku: React.FC<IProps> = props => {
       },
     },
   ];
+  //供应商表格列
+  const supplierColumns = [{
+    title: '供应商',
+    align: 'left',
+    dataIndex: 'supplierName',
+    key: 'supplierName',
+    width: 240,
+    render(value: string, record: skuData.ISupplierDownList) {
+      return (
+        <Select 
+          bordered={false}
+          style={{ width: 225 }} 
+          defaultValue={value} 
+          onChange={(val) => supplierChange(record.supplierId, val)}>         
+          {
+            supplierList.map((item, index) => {
+              return <Option value={item.id} key={index}>{item.name}</Option>;
+            })
+          }
+        </Select>);
+    },   
+  }, {
+    title: '采购单价',
+    align: 'right',
+    dataIndex: 'price',
+    key: 'price',
+    width: 133,
+    render(value: number, record: skuData.ISupplierDownList) {
+      return (
+        editable({
+          inputValue: String(value),
+          maxLength: 20,
+          confirmCallback: val => {
+            handleUpdatePrice({ supplierId: record.supplierId, val: Number(val) });
+          },
+        })        
+      );
+    },
+  }, {
+    title: '下单链接',
+    align: 'left',
+    dataIndex: 'placeUrl',
+    key: 'placeUrl',
+    width: 292,
+    render(value: string, record: skuData.ISupplierDownList) {
+      return (
+        editable({
+          inputValue: value,
+          maxLength: 20,
+          confirmCallback: val => {
+            handleUpdatePlaceUrl({ supplierId: record.supplierId, val: val });
+          },
+        })        
+      );
+    },
+  }, {
+    title: '币种',
+    align: 'center',
+    dataIndex: 'currencyType',
+    key: 'currencyType',
+    width: 119, 
+    render(value: string, record: skuData.ISupplierDownList) {
+      return (
+        <Select 
+          style={{ width: 90 }} 
+          defaultValue={value} 
+          onChange={(val) => currencyTypeChange(record.supplierId, val)}>
+          <Option value="人民币">人民币</Option>
+          <Option value="美元">美元</Option>
+          <Option value="英镑">英镑</Option>
+          <Option value="加元">加元</Option>
+          <Option value="欧元">欧元</Option>
+          <Option value="日元">日元</Option>
+        </Select>);
+    },
+  }, {
+    title: '操作',
+    align: 'center',
+    width: 56,
+    render(_: any, record: skuData.ISupplierDownList) { // eslint-disable-line
+      return <span 
+        onClick={() => deletesupplier(record.supplierId)} 
+        className={styles.handleCol}>删除</span>;
+    },
+  }];
 
   // msku
   const mskuTableConfig = {
@@ -325,6 +570,20 @@ const AddSku: React.FC<IProps> = props => {
     },
   };
 
+  //供应商表格配置
+  const supplierTableConfig = {
+    pagination: false as false,
+    dataSource: supplierTableData as [],
+    columns: supplierColumns as [],
+    className: styles.table,
+    scroll: {
+      y: 226,
+    },
+    rowKey: (record: { supplierId: string}) => record.supplierId,
+    locale: {
+      emptyText: <TableNotData hint="选择要添加的供应商" style={{ padding: 20 }}/>,
+    },
+  };
   // 库位号
   const tableConfig = {
     pagination: false as false,
@@ -356,6 +615,7 @@ const AddSku: React.FC<IProps> = props => {
       datas.locations = locations;
       datas.imageUrl = imageUrl;
       datas.pimageUrl = packImage;
+      datas.suppliers = supplierTableData;
 
       if (empyts.includes(datas.sku)) {
         message.error('SKU不能为空');
@@ -507,8 +767,6 @@ const AddSku: React.FC<IProps> = props => {
             type === 'package' && setPackImage(msg);
             return;
           }
-
-
           Modal.error({
             title: msg,
             width: 500,
@@ -546,6 +804,18 @@ const AddSku: React.FC<IProps> = props => {
     }
   };
 
+  //限制采购单价
+  const priceLimit = function(_: any, value: string) {// eslint-disable-line
+    if (Number(value) < 0 || Number(value) > 100000000) {
+      return Promise.reject('最大输入值不超过10000 0000.00');
+    }
+    return Promise.resolve();
+  };
+
+  const priceStrLimit = (value: string) => {
+    return strToMoneyStr(value); 
+  };
+
   return <Modal {...modalConfig}>
     <div className={styles.content}>
       <header className={styles.title}>基本信息</header>
@@ -565,6 +835,7 @@ const AddSku: React.FC<IProps> = props => {
           commodityWeightType: packWeightUnit[0].value,
           packingMaterial: packTextureUnit[0].value,
           isFragile: false,
+          currencyType: '人民币',
         }}
         onValuesChange={handleFormVlaueChange}
       >
@@ -733,6 +1004,67 @@ const AddSku: React.FC<IProps> = props => {
             </TabPane>
             <TabPane tab="成本价格" key="4">
               <CostPrice />
+            </TabPane>
+            <TabPane tab="供应商" key="5">
+              <div className={styles.mskuBox}>
+                <header className={styles.topHead}>
+                  <Item className={styles.search} name="supplierId" rules={[{
+                    required: true,
+                    message: '请选择供应商',
+                  }]}>     
+                    <Select
+                      optionFilterProp="children"
+                      style={{ width: 180, marginRight: 18 }}
+                      mode="multiple"
+                      placeholder="供应商"                     
+                      onSearch={suppliersearch}
+                      maxTagCount={1}>
+                      {
+                        supplierDownList.map((item, index) => {
+                          return (
+                            <Select.Option 
+                              key={index} 
+                              value={item.id}>
+                              {item.name}
+                            </Select.Option>);
+                        })
+                      }
+                    </Select>
+                  </Item>
+                  <Item name="currencyType" className={styles.search} rules={[{
+                    required: true,
+                    message: '请选择币种',
+                  }]}>
+                    <Select style={{ width: 90 }}>         
+                      <Option value="人民币">人民币</Option>
+                      <Option value="美元">美元</Option>
+                      <Option value="英镑">英镑</Option>
+                      <Option value="加元">加元</Option>
+                      <Option value="欧元">欧元</Option>
+                      <Option value="日元">日元</Option>
+                    </Select>
+                  </Item>
+                  <Item name="price" normalize={priceStrLimit} rules={[{
+                    required: true,
+                    message: '请填写采购单价',
+                  }, {
+                    validator: priceLimit,
+                  }]} >
+                    <Input style={{ width: 180 }} placeholder="采购单价" ></Input>
+                  </Item>
+                  <Item name="placeUrl" rules={[{
+                    required: true,
+                    message: '请填写下单链接',
+                  }, {
+                    max: 256,
+                    message: '下单链接不能超过256个字符',
+                  }]}>
+                    <Input style={{ width: 280, margin: '0 18px' }} placeholder="下单链接"></Input>
+                  </Item>
+                  <Button type="primary" onClick={addSupplier}>添加</Button>     
+                </header>
+                <Table {...supplierTableConfig}></Table> 
+              </div>;
             </TabPane>
           </Tabs>
         </nav>

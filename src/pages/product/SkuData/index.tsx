@@ -12,7 +12,7 @@ import classnames from 'classnames';
 import { Button, Select, Table, message, Input, Modal } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
 import { TableRowSelection } from 'antd/lib/table/interface';
-import { useDispatch } from 'umi';
+import { useDispatch, useSelector, ConnectProps, ISupplierState } from 'umi';
 import { states } from './config';
 import columns from './columns';
 import MyMOdal from './AddSku';
@@ -22,6 +22,10 @@ import BatchRelevance from './BatchRelevance';
 import BatchSKU from './BatchSKU';
 import TableNotData from '@/components/TableNotData';
 import BatchUpdateState from './BatchUpdateState';
+
+interface IPage extends ConnectProps {
+  supplier: ISupplierState;
+}
 
 const SkuData: React.FC = () => {
   const [current, setCurrent] = useState<number>(1);
@@ -34,6 +38,10 @@ const SkuData: React.FC = () => {
   const [state, setState] = useState<string|null>(null);
   const [code, setCode] = useState<string|null>(null);
   const [selectedSkuId, setSelectedSkuId] = useState<string[]>([]);
+
+  //const [supplierDownList, setsupplierDownList] = useState<Supplier.ISupplierList[]>([]);
+
+  const supplierList = useSelector((state: IPage) => state.supplier.supplierList);
 
 
   const dispatch = useDispatch();
@@ -83,8 +91,40 @@ const SkuData: React.FC = () => {
     }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, state, code]);
 
+  //获取供应商下拉列表
+
+  const getdownSupplier = useCallback(() => {
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: 'supplier/getSupplierList',
+        reject,
+        resolve,
+        payload: {
+          state: 'enabled',
+          match: 'SupplierName',
+          code: null,
+          settlementType: null,
+        },
+      });    
+    }).then((datas) => {
+      const {
+        code,
+        message: msg,
+      } = datas as {
+        code: number;
+        message: string;
+      };     
+      if (code === 200 ){
+        //setsupplierDownList([...supplierList]);
+        return;
+      }
+      message.error(msg);
+    }); //eslint-disable-next-line react-hooks/exhaustive-deps       
+  }, []);
+
   useEffect(() => {
     request();
+    getdownSupplier();//eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [request]);
 
   const searchProduct = function(val: string, event: any) { // eslint-disable-line
@@ -173,7 +213,7 @@ const SkuData: React.FC = () => {
     },
     dataSource: data as [],
     loading,
-    columns: columns({ updateSku, onBatchDel: handleBatchDel }) as [],
+    columns: columns({ updateSku, supplierList, onBatchDel: handleBatchDel }) as [],
     scroll: {
       x: 'max-content',
       y: 'calc(100vh - 300px)',

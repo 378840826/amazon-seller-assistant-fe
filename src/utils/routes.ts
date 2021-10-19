@@ -75,4 +75,5 @@ export const configuration = {
   logistics: '/config/wuliu', // 物流方式管理
   storageLocation: '/config/kuwei', // 库位管理
   warehouse: '/config/warehouse', // 仓库地址管理
+  supplier: '/config/supplier',
 };
