@@ -366,6 +366,7 @@ export default [
       { title: '物流方式管理', path: configuration.logistics, component: './configuration/Logistics' },
       { title: '库位管理',  path: configuration.storageLocation, component: './configuration/StorageLocation'  },
       { title: '仓库地址管理',  path: configuration.warehouse, component: './configuration/WarehouseLocation'  },
+      { title: '供应商管理',  path: configuration.supplier, component: './configuration/Supplier'  },
     ]
   },
 
