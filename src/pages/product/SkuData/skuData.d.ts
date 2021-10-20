@@ -45,6 +45,7 @@ declare namespace skuData {
     price: number;
     mskus: IMskuList[];
     locationNos: ILocations[];
+    suppliers: ISupplierDownList[];
     pimageUrl: string;
   }
 
@@ -65,5 +66,13 @@ declare namespace skuData {
     locationNo: string; // 库位号名称
     warehouseName: string; // 仓库名称
     warehouseId: string; // 仓库id
+  }
+
+  interface ISupplierDownList {
+    supplierId: string;//供应商id
+    supplierName: string;//供应商名称
+    currencyType: string;//链接
+    price: number;//价格
+    placeUrl: string;//下单链接
   }
 }
