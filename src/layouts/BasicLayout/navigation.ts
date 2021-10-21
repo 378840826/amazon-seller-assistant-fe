@@ -30,8 +30,8 @@ const navigation: INavigation[] = [
   {
     title: '大盘',
     menu: [
+      { title: '店铺报表', path: '/overview/shop' },
       { title: '数据大盘', path: '/overview' },
-      { title: '店铺报告', path: '/overview/shop' },
       { title: 'BI诊断', path: '/overview/bi' },
     ],
   },

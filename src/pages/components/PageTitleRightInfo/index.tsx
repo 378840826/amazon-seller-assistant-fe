@@ -9,7 +9,7 @@ import styles from './index.less';
 
 interface IProps {
   // 功能名称
-  functionName: string;
+  functionName?: string;
   // 如果有更新时间需要显示
   updateTime?: string;
   // 其他内容, 如 特殊格式的更新时间 按钮 等自定义内容
@@ -55,7 +55,7 @@ const PageTitleRightInfo: React.FC<IProps> = (props) => {
     )?.frequency || 0;
   }
 
-  const nameAndUnit = nameDict[functionName];
+  const nameAndUnit = functionName && nameDict[functionName];
 
   return (
     <div className={styles.pageTitleRight} style={containerStyle}>
@@ -67,10 +67,15 @@ const PageTitleRightInfo: React.FC<IProps> = (props) => {
             <span>手动{manualMail}封，自动{autoMail}封</span>
           </div>
           :
-          <div className={styles.remaining}>
-            {nameAndUnit[0]}：
-            <span>{remainingNumber}{nameAndUnit[1]}</span>
-          </div>
+          <>
+            {
+              nameAndUnit && 
+              <div className={styles.remaining}>
+                {nameAndUnit[0]}：
+                <span>{remainingNumber}{nameAndUnit[1]}</span>
+              </div>
+            }
+          </>
       }
       {
         updateTime
