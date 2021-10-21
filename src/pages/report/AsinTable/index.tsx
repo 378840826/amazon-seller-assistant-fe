@@ -41,16 +41,18 @@ const AsinTable = () => {
   const [calendar, setCalendar] = useState<string>(storage.get(`${adinTableCalendar}_dc_itemKey`) || '7'); // 日历
   const [canlendarFlag, setCanlendarFlag] = useState<boolean>(false); // 控制请求、比如点击2月、再点击3月时，
 
-  //tab共享传参标识
-  const [tabTag, setTabTag] = useState<ITags>({
-    tag: 'child',
-    asin: '',
-  });
   // 接收消息（为提高利润统计的准确性，请在商品列表导入成本、运费 ）
   const receptionMessage = (messageprofit: boolean) => {
     setMessageProfit(messageprofit);
     setMessageprofitAsync(messageprofit);
   };
+
+  //tab共享传参标识
+  const [tabTag, setTabTag] = useState<ITags>({
+    tag: 'child',
+    asin: '',
+  });
+
   useEffect(() => {
     if (history.state && history.state.state && history.state.state.tag) {
       setTabTag({
@@ -59,7 +61,7 @@ const AsinTable = () => {
       });
     }
   },[]);
-  
+
   const checkData = useCallback(function() {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
       return;
@@ -165,7 +167,7 @@ const AsinTable = () => {
       </TabPane>
     </Tabs>
     {tabTag.tag === 'child' ? <ChildAsin 
-      tabValue={tabTag.tag} 
+      tabValue={tabTag.tag}  
       receptionMessage={receptionMessage} 
       canlendarCallback={canlendarCallback}
       setTabTag={setTabTag}

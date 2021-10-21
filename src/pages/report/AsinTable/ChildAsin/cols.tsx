@@ -162,34 +162,6 @@ export const childAsinCols = (props: AsinTable.IChildAsinColsProps) => {
       },
     },
     {
-      dataIndex: 'EBC',
-      title: 'EBC',
-      align: 'center',
-      width: 80,
-      render(val: number) {
-        if (val === 1) {
-          return <p>有</p>;
-        } else if (val === 2) {
-          return <p>无</p>;
-        }
-        return <Empty />;
-      },
-    },
-    {
-      dataIndex: 'video',
-      title: '视频',
-      align: 'center',
-      width: 80,
-      render(val: number) {
-        if (val === 2) {
-          return <p>有</p>;
-        } else if (val === 1) {
-          return <p>无</p>;
-        }
-        return <Empty />;
-      },
-    },
-    {
       dataIndex: 'reviewNum',
       title: <TableHeadMain
         title="Review"

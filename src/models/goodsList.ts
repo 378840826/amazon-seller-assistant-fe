@@ -91,7 +91,7 @@ const GoodsListModel: IGoodsListModelType = {
       tag: true,
       usedNewSellNum: true,
       isBuyBox: true,
-      parentasin: true,
+      parentAsin: true,
       sku: true,
       openDate: true,
       fulfillmentChannel: true,
