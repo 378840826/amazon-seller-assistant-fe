@@ -33,10 +33,15 @@ import {
 } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
+interface ITags {
+  tag: string;
+  asin: string;
+}
 interface IProps {
   tabValue: string;
   receptionMessage: (messageprofit: boolean) => void;
   canlendarCallback: (calendar: string) => void;
+  setTabTag: ({ tag, asin }: ITags) => void;
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -44,6 +49,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const {
     tabValue,
     receptionMessage,
+    setTabTag,
   } = props;
   // dva
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -487,6 +493,7 @@ const ChildAsin: React.FC<IProps> = props => {
     childCustomcol,
     sortCallback,
     site: currentShop.marketplace,
+    setTabTag: setTabTag,
   });
 
   let count = 1;
