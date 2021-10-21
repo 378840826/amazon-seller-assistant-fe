@@ -505,8 +505,7 @@ const AddSku: React.FC<IProps> = props => {
               return (
                 <Option 
                   value={item.id} 
-                  key={index} 
-                  disabled={record.supplierId === item.id ? true : false}>
+                  key={index}>
                   {item.name}
                 </Option>
               );

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.less';
-import { Input, Form, Modal, Radio, Popconfirm, message, Select } from 'antd';
+import { Input, Form, Modal, Radio, Popconfirm, message, Select, Divider } from 'antd';
 import { useDispatch } from 'umi';
 import { strToMoneyStr, strToUnsignedIntStr } from '@/utils/utils';
 
@@ -13,6 +13,7 @@ interface IProps {
   addSupplierSuccess: () => void ;
 }
 
+
 const AddSupplier: React.FC<IProps> = props => {
   const [form] = Form.useForm();
 
@@ -21,9 +22,18 @@ const AddSupplier: React.FC<IProps> = props => {
   const { onCancel, userList, addSupplierSuccess } = props;
   const [isAddCollection, setIsAddCollection] = useState<boolean>(false);
   const [isAddWord, setIsAddWord] = useState<boolean>(false);
+  const [buyerNameValue, setBuyerNameValue] = useState<string>('');
+  const [usersList, setUsersList] = useState<string[]>([]);
 
   //是否月结
   const [isPayByMonthly, setIsPayMonthly] = useState<string>('now');
+  //初始化值
+  useEffect(() => {
+    userList.map(item => {
+      usersList.push(item.username);
+      setUsersList([...usersList]);
+    });  
+  }, []);//eslint-disable-line react-hooks/exhaustive-deps
 
   const initialValues = {
     buyerName: userList[0].username,
@@ -34,6 +44,17 @@ const AddSupplier: React.FC<IProps> = props => {
       bankName: '',
       bankAccount: '',
     }],
+  };
+
+  //自定义采购员
+  const onbuyerNameChange = (event: any) => { // eslint-disable-line
+    setBuyerNameValue(event.target.value);
+  };
+
+  const addbuyerNameItem = () => {
+    usersList.unshift(buyerNameValue);
+    setUsersList([...usersList]);
+    setBuyerNameValue('');
   };
 
   //添加供应商表单改变
@@ -59,8 +80,9 @@ const AddSupplier: React.FC<IProps> = props => {
     const data = form.getFieldsValue(); 
 
     //给采购员idbuyerId找出来
-    const index = userList.findIndex(item => item.username === data.buyerName);
+    /** const index = userList.findIndex(item => item.username === data.buyerName);
     data.buyerId = userList[index].id;
+    */
 
 
     //先出一系列的判断 
@@ -92,14 +114,16 @@ const AddSupplier: React.FC<IProps> = props => {
     }
 
     //长度判断
-    if ( data.name.length >= 40 || data.contactsName >= 40){
+    if ( data.name.length >= 40 || data.contactsName.length >= 40){
       message.error('请正确填写供应商信息长度');
       return;
     }
+    
     if (data.contactsPhone && data.contactsPhone.length > 11 ){
       message.error('请正确填写联系人电话');
       return;
     }
+    
 
     //1-31号判断
     if (data.cyclePay < 1 || data.cyclePay > 2000) {
@@ -198,12 +222,29 @@ const AddSupplier: React.FC<IProps> = props => {
           <span className={styles.centerspan}>采购员：
             <span className={styles.icon}>*</span></span>
           <Item name="buyerName">
-            <Select className={styles.searchList}>
+            <Select 
+              className={styles.searchList}
+              dropdownRender={menu => (
+                <div>
+                  {menu}
+                  <Divider style={{ margin: '4px 0' }} />
+                  <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                    <Input style={{ flex: 'auto' }} value={buyerNameValue} onChange={onbuyerNameChange} placeholder="请输入采购员名称"/>
+                    <a
+                      style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
+                      onClick={addbuyerNameItem}
+                    >
+                       添加
+                    </a>
+                  </div>
+                </div>
+              )}
+            >
               {
-                userList.map((item, index) => {
-                  return <Option value={item.username} key={index}>{item.username}</Option>;
+                usersList.map((item, index) => {
+                  return <Option value={item} key={index}>{item}</Option>;
                 })
-              }           
+              }      
             </Select>
           </Item>
         </div>

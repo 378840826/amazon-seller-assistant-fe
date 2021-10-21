@@ -485,11 +485,16 @@ const AddSku: React.FC<IProps> = props => {
           onChange={(val) => supplierChange(record.supplierId, val)}>         
           {
             supplierList.map((item, index) => {
-              return <Option value={item.id} key={index}>{item.name}</Option>;
+              return (
+                <Option 
+                  value={item.id} 
+                  key={index}
+                >{item.name}</Option>
+              );                                   
             })
           }
         </Select>);
-    },   
+    },
   }, {
     title: '采购单价',
     align: 'right',
