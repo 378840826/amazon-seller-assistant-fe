@@ -164,6 +164,8 @@ const Details: React.FC<IProps> = function(props) {
     },   
   });
 
+  const [shipmentProductDeleteIds, setShipmentProductDeleteIds] = useState<string[]>([]);
+
 
   const componentRef = useRef<any>(); // eslint-disable-line
   const dispatch = useDispatch();
@@ -212,6 +214,7 @@ const Details: React.FC<IProps> = function(props) {
         setData({ ...data });
         setProduct([...data.productItemVos]);
         setLog([...data.shipmentModifies]);
+        setShipmentProductDeleteIds([]);
         return;
       }
       message.error(msg || '获取shipemet详情失败，请重试！');
@@ -235,6 +238,10 @@ const Details: React.FC<IProps> = function(props) {
       message.warning('商品不能为空！');
       return;
     }
+    //后端要求将删除的id传过去
+    shipmentProductDeleteIds.push(id);
+    setShipmentProductDeleteIds([...shipmentProductDeleteIds]);
+
     const index = product.findIndex(item => item.id === id);
     if (index > -1) {
       product.splice(index, 1);
@@ -245,7 +252,11 @@ const Details: React.FC<IProps> = function(props) {
   // 保存
   function handleSave() {
     const formVal = form.getFieldsValue();
-    onUpdateShipment({ id, ...formVal, shipmentProductQos: product });
+    onUpdateShipment({ 
+      id, 
+      ...formVal, 
+      shipmentProductQos: product, 
+      shipmentProductDeleteIds: shipmentProductDeleteIds });
   }
 
   //批量打印的回调
