@@ -38,6 +38,7 @@ interface IProps {
   tabValue: string;
   receptionMessage: (messageprofit: boolean) => void;
   canlendarCallback: (calendar: string) => void;
+  parentAsin: string;
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -45,6 +46,7 @@ const ChildAsin: React.FC<IProps> = props => {
   const {
     tabValue,
     receptionMessage,
+    parentAsin,
   } = props;
   // 店铺
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -600,7 +602,7 @@ const ChildAsin: React.FC<IProps> = props => {
       <Form form={searchForm} style={{
         'float': 'left',
       }}>
-        <Form.Item name="search" className={commonStyles.searchInput}>
+        <Form.Item name="search" className={commonStyles.searchInput} initialValue={parentAsin}>
           <Input.Search
             allowClear
             className="h-search"

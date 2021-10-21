@@ -11,6 +11,11 @@ import { Iconfont, storage } from '@/utils/utils';
 import { storageKeys } from '@/utils/huang';
 import { getCalendarFields } from './config';
 
+interface ITags {
+  tag: string;
+  asin: string;
+}
+
 const { TabPane } = Tabs;
 const { adinTableCalendar } = storageKeys;
 const AsinTable = () => {
@@ -41,6 +46,21 @@ const AsinTable = () => {
     setMessageProfit(messageprofit);
     setMessageprofitAsync(messageprofit);
   };
+
+  //tab共享传参标识
+  const [tabTag, setTabTag] = useState<ITags>({
+    tag: 'child',
+    asin: '',
+  });
+
+  useEffect(() => {
+    if (history.state && history.state.state && history.state.state.tag) {
+      setTabTag({
+        tag: history.state.state.tag,
+        asin: history.state.state.parentasin,
+      });
+    }
+  },[]);
 
   const checkData = useCallback(function() {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
@@ -121,6 +141,13 @@ const AsinTable = () => {
   // 子ASIN和父ASIN的区别
   function tabCallback(key: string) {
     setCurrentTab(key);
+    setTabTag({ ...tabTag, tag: key });
+    if (key === 'child') {
+      setTabTag({
+        tag: 'child',
+        asin: '',
+      });
+    }
   }
 
   // 点击消息框
@@ -132,22 +159,24 @@ const AsinTable = () => {
   };
 
   return <div className={styles.asinTable}>
-    <Tabs defaultActiveKey={currentTab} className={styles.tabs} onChange={tabCallback} animated>
+    <Tabs activeKey={tabTag.tag} className={styles.tabs} onChange={tabCallback} animated>
       <TabPane tab="子ASIN" key="child">
         
       </TabPane>
       <TabPane tab="父ASIN" key="parent">
       </TabPane>
     </Tabs>
-    {currentTab === 'child' ? <ChildAsin 
-      tabValue={currentTab} 
+    {tabTag.tag === 'child' ? <ChildAsin 
+      tabValue={tabTag.tag}  
       receptionMessage={receptionMessage} 
       canlendarCallback={canlendarCallback}
+      setTabTag={setTabTag}
     /> : 
       <ParentAsin 
-        tabValue={currentTab} 
+        tabValue={tabTag.tag} 
         receptionMessage={receptionMessage} 
         canlendarCallback={canlendarCallback}
+        parentAsin={tabTag.asin}
       />
     }
 
