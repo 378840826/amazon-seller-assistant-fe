@@ -78,6 +78,7 @@ const CustomCols: React.FC<IProps> = props => {
                 { value: 'tag', name: '商品标签' },
                 { value: 'usedNewSellNum', name: '卖家数' },
                 { value: 'isBuyBox', name: '黄金购物车' },
+                { value: 'parentAsin', name: '父ASIN' },
                 { value: 'sku', name: 'SKU' },
                 { value: 'openDate', name: 'SKU创建时间' },
               ])
