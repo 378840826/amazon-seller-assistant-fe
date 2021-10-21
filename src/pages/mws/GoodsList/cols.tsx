@@ -233,7 +233,8 @@ export const getFullColumns = (params: any) => {
           </div>
         </div>
       ),
-    }, {
+    }, 
+    {
       title: '父ASIN',
       dataIndex: 'parentAsin',
       key: 'parentAsin',
