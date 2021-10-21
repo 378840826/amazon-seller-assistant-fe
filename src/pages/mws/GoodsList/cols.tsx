@@ -235,12 +235,12 @@ export const getFullColumns = (params: any) => {
       ),
     }, {
       title: '父ASIN',
-      dataIndex: 'parentasin',
-      key: 'parentasin',
+      dataIndex: 'parentAsin',
+      key: 'parentAsin',
       align: 'center',
       width: 70,
-      render: (parentasin) => {
-        return <p>{parentasin ? <Link to={{ pathname: `/report/asin-overview`, state: { parentasin, tag: 'parent' } }}>{parentasin}</Link> : '—'}</p>;
+      render: (parentAsin) => {
+        return <p>{parentAsin ? <Link to={{ pathname: `/report/asin-overview`, state: { parentasin: parentAsin, tag: 'parent' } }}>{parentAsin}</Link> : '—'}</p>;
       },
     }, {
       title: () => (
