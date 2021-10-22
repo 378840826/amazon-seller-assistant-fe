@@ -93,6 +93,7 @@ const AsinBase: React.FC = () => {
           promotionFee: productAsinSkuVo.promotionFee,
           storageFee: productAsinSkuVo.storageFee,
           otherFee: productAsinSkuVo.otherFee,
+          price: productAsinSkuVo.price,
         });
       });
     }
@@ -244,6 +245,7 @@ const AsinBase: React.FC = () => {
         promotionFee: data.promotionFee,
         storageFee: data.storageFee,
         otherFee: data.otherFee,
+        price: data.price,
       });
     }).catch(err => {
       console.error(err);
@@ -474,12 +476,20 @@ const AsinBase: React.FC = () => {
               >
                 <h2 onClick={formChange}>利润估算：</h2>
 
-                <div className={styles.base}>
-                  <span className={styles.text}>售价：</span>
-                  <span className={styles.va1}>
-                    <ShowData value={priceEs?.price} isCurrency/>
-                  </span>
-                  <span className={styles.va12}>（￥<ShowData value={priceEs?.priceCny}/>）</span>
+                <div className={styles.common}>
+                  <label className={styles.label}>
+                    <span className={styles.labelText}>售价：</span>
+                    <span>{currentShop.currency}</span>
+                    <Form.Item name="price" normalize={transitionInput}
+                    >
+                      <Input className={ styles.input } />
+                    </Form.Item>
+                    <span className={styles.placehoader} style={{
+                      display: priceEs?.priceCny === null ? 'none' : 'inline-block',
+                    }}>
+                    （￥<ShowData value={priceEs?.priceCny}/>）
+                    </span>
+                  </label>
                 </div>
 
                 <div className={styles.common}>
