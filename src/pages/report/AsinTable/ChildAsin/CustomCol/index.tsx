@@ -21,10 +21,8 @@ const ParentCustomCol: React.FC = () => {
   const skus = [
     { label: 'MSKU', value: sprs[0] },
     { label: '父ASIN', value: sprs[1] },
-    { label: ' EBC', value: sprs[2] },
-    { label: '视频 ', value: sprs[3] },
-    { label: 'Review', value: sprs[4] },
-    { label: '评分', value: sprs[5] },
+    { label: 'Review', value: sprs[2] },
+    { label: '评分', value: sprs[3] },
   ];
 
   // 总体销售表现
