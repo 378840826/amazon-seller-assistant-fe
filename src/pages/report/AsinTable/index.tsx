@@ -52,7 +52,7 @@ const AsinTable = () => {
     tag: 'child',
     asin: '',
   });
-
+  //商品父ASIN 跳转过来传接收参数
   useEffect(() => {
     if (history.state && history.state.state && history.state.state.tag) {
       setTabTag({
@@ -60,7 +60,7 @@ const AsinTable = () => {
         asin: history.state.state.parentasin,
       });
     }
-  },[]);
+  }, []);
 
   const checkData = useCallback(function() {
     if (currentShop.id === '-1' || currentShop.sellerId === 'sellerId-1') {
