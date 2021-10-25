@@ -40,6 +40,12 @@ const SupplierList: React.FC = () => {
 
   const request = useCallback((params = { currentPage: 1, pageSize: 20 }) => {
     const data = form.getFieldsValue();
+
+    //处理一下结算方式
+    if (!data.settlementType) {
+      data.settlementType = null;
+    }
+
     //传给接口的参数
     let payload = {
       currentPage: params.currentpage || 1,
@@ -149,6 +155,7 @@ const SupplierList: React.FC = () => {
   };
 
   const formChange = () => {
+
     request();
   };
   //添加供应商成功
@@ -176,7 +183,6 @@ const SupplierList: React.FC = () => {
     title: '状态',
     width: 72,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'state',
     key: 'state',
     render(val: string, record: Supplier.ISupplierList){
@@ -185,70 +191,61 @@ const SupplierList: React.FC = () => {
     },
   }, {
     title: '供应商ID',
-    width: 181,
+    width: 160,
     align: 'left',
-    fixed: 'left',
     dataIndex: 'supplierId',
     key: 'supplierId',
   }, {
     title: '供应商名称',
     width: 160,
     align: 'left',
-    fixed: 'left',
     dataIndex: 'name',
     key: 'name',   
   }, {
     title: '结算方式',
     width: 100,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'settlementTypeStr',
     key: 'settlementTypeStr',
   }, {
     title: '联系人',
-    width: 138,
+    width: 130,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'contactsName',
     key: 'contactsName',
   }, {
     title: '联系电话',
     width: 110,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'contactsPhone',
     key: 'contactsPhone',
   }, {
     title: '邮箱',
-    width: 136,
+    width: 130,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'email',
     key: 'email',
   }, {
     title: 'QQ',
-    width: 102,
+    width: 100,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'qq',
     key: 'qq',
   }, {
     title: '微信',
-    width: 114,
+    width: 110,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'wechat',
     key: 'wechat',
   }, {
     title: '采购员',
     width: 130,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'buyerName',
     key: 'buyerName',
   }, {
     title: '备注',
-    width: 233,
+    width: 230,
     align: 'center',
     dataIndex: 'remarkText',
     key: 'remarkText',
@@ -267,21 +264,18 @@ const SupplierList: React.FC = () => {
     title: '创建人',
     width: 140,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'userName',
     key: 'userName',
   }, {
     title: '创建时间',
-    width: 127,
+    width: 120,
     align: 'center',
-    fixed: 'left',
     dataIndex: 'gmtCreate',
     key: 'gmtCreate',
   }, {
     title: '操作',
     width: 90,
     align: 'center',
-    fixed: 'left',
     render(_, record: Supplier.ISupplierList){
       return <><span 
         className={styles.editor} 
@@ -305,9 +299,13 @@ const SupplierList: React.FC = () => {
   //表格配置项
   const tableConfig = {
     className: styles.table,
+    scroll: {
+      y: 'calc(100vh - 270px)',
+      x: 'max-content',
+    },
     dataSource: supplierList,
     columns: column,
-    rowKey: 'id',
+    rowKey: (record: Supplier.ISupplierList) => String(record.id),
     pagination: {
       pageSizeOptions: ['20', '50', '100'],
       total,
@@ -316,8 +314,8 @@ const SupplierList: React.FC = () => {
       showQuickJumper: true, // 快速跳转到某一页
       showSizeChanger: true,
       showTotal: (total: number) => `共 ${total} 个`,
-      onChange(current: number, pageSize: number | undefined){
-        request({ current, pageSize });
+      onChange(currentPage: number, pageSize: number | undefined){
+        request({ currentPage, pageSize });
       },
       className: classnames('h-page-small', styles.page),
     },
@@ -329,8 +327,8 @@ const SupplierList: React.FC = () => {
       className={styles.topHead}
       initialValues={{
         match: 'SupplierName',
-        settlementType: 'now',
         state: 'enabled',
+        settlementType: '',
       }}
       onValuesChange={formChange}
     >
@@ -353,6 +351,7 @@ const SupplierList: React.FC = () => {
         <Select className={styles.payment}>
           <Option value="now">现结</Option>
           <Option value="after">月结</Option>
+          <Option value="">不限</Option>
         </Select>
       </Item>
       <Item name="state">
@@ -368,7 +367,7 @@ const SupplierList: React.FC = () => {
         onClick={() => {
           setModalVisible(!modalVisible);
         }}> 添加供应商</Button>
-      <BatchSupplier/>
+      <BatchSupplier request={request}/>
       <a download href={`/api/mws/shipment/supplier/importTemplate`}>下载模板</a>
     </div> 
     <Table {...tableConfig}/>

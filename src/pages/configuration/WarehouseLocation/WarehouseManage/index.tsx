@@ -182,6 +182,9 @@ const AddWarehouse: React.FC<IProps> = props => {
           <Select.Option value="自营海外仓">自营海外仓</Select.Option>
         </Select>
       </Item>
+      <Item label="亚马逊地址中文备注：" name="addressLineNa">
+        <Input className={styles.addressLineNainput}/>
+      </Item>
       <div className={styles.address}>
         <span className={styles.textLabel}>详细地址：</span>
         <Input.Group compact className={styles.inputs} >
