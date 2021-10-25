@@ -396,7 +396,7 @@ const ChildAsin: React.FC<IProps> = props => {
     const data = searchForm.getFieldsValue();
 
     const arr = [];
-    const filtrations = ['status', 'adType', 'groupId', 'search']; // 不加入条件组
+    const filtrations = ['status', 'adType', 'groupId', 'search', 'independentAsin']; // 不加入条件组
 
     for (const key in data) {
       if (filtrations.indexOf(key) > -1) {
