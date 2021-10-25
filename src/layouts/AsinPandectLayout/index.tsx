@@ -41,6 +41,10 @@ interface IAsinItemType {
   asin: string;
   imgLink: string;
   title: string;
+  parentAsin: string;
+  ranking: string;
+  sellable: string;
+  price: string;
 }
 
 const { Option } = Select;
@@ -276,7 +280,15 @@ const AsinBase: React.FC = (props) => {
                             <GoodsImg className={styles.product} src={item.imgLink} width={28} alt=" " />
                             <div>
                               <p className={styles.title} title={item.title}>{item.title}</p>
-                              <p className={styles.asin}>{item.asin}</p>
+                              <p className={styles.asin}>
+                                {item.asin}
+                                &nbsp;&nbsp;&nbsp;&nbsp; 父ASIN：{item.parentAsin ? item.parentAsin : '—' }
+                              </p>
+                              <p>
+                                价格：{item.price ? item.price : '—' }
+                                &nbsp; 库存：{item.sellable}
+                                &nbsp; 排名：{item.ranking ? item.ranking : '—'}
+                              </p>
                             </div>
                           </div>
                         </Option>;
