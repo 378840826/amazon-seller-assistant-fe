@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
-import { Input, Form, Modal, Radio, Popconfirm, message, Select } from 'antd';
+import { Input, Form, Modal, Radio, Popconfirm, message, Select, Divider } from 'antd';
 import { useDispatch } from 'umi';
 import { strToMoneyStr, strToUnsignedIntStr } from '@/utils/utils';
 
@@ -29,6 +29,9 @@ const EditSupplier: React.FC<IProps> = props => {
   //是否月结
   const [isPayByMonthly, setIsPayMonthly] = useState<string>('now');
 
+  const [buyerNameValue, setBuyerNameValue] = useState<string>('');
+  const [usersList, setUsersList] = useState<string[]>([]);
+
   //初始化一些数据
   useEffect(() => {
     //是否月结
@@ -53,6 +56,11 @@ const EditSupplier: React.FC<IProps> = props => {
       return flag;
     }) ? setIsAddWord(true) : setIsAddWord(false);
 
+    userList.map(item => {
+      usersList.push(item.username);
+      setUsersList([...usersList]);
+    });
+
   }, []);//eslint-disable-line react-hooks/exhaustive-deps
   
   //添加供应商表单改变
@@ -71,6 +79,23 @@ const EditSupplier: React.FC<IProps> = props => {
     }) ? setIsAddWord(true) : setIsAddWord(false);
   };
 
+  //清空两端空格
+  const removeSpace = function(val: string){
+    const newValue = val.replace(/(^\s*)|(\s*$)/g, '');
+    return newValue ? String(newValue) : '';   
+  };
+
+  //自定义采购员
+  const onbuyerNameChange = (event: any) => { // eslint-disable-line
+    setBuyerNameValue(event.target.value);
+  };
+
+  const addbuyerNameItem = () => {
+    usersList.unshift(buyerNameValue);
+    setUsersList([...usersList]);
+    setBuyerNameValue('');
+  };
+
 
   //确定添加
   const modalOnOk = () => {
@@ -78,24 +103,29 @@ const EditSupplier: React.FC<IProps> = props => {
     const data = form.getFieldsValue();
 
     //给采购员idbuyerId找出来
+    /**
     const index = userList.findIndex(item => item.username === data.buyerName);
     data.buyerId = userList[index].id;
+    */
+
     //给id找出来
     data.id = initdata?.id;
 
     
     //先出一系列的判断 
     const emptys = [undefined, null, ''];
+    const phonereg = /^\d{11}$/;
+    const qqreg = /[1-9][0-9]{4,11}$/;
+    const emailreg = /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/;
+    const wechatreg = /^[a-z_\d]+$/;
     if (!data.name) {
       message.error('供应商名称不能为空');
       return;
     }
     if (
       emptys.includes(data.contactsName)
-      || emptys.includes(data.buyerName)
-      || emptys.includes(data.settlementType)
     ){
-      message.error('请正确填写供应商基本信息');
+      message.error('联系人不能为空');
       return;
     }
 
@@ -103,24 +133,22 @@ const EditSupplier: React.FC<IProps> = props => {
       data.settlementType === 'after'
       && (emptys.includes(data.cyclePay) || emptys.includes(data.dayPay))
     ) {
-      message.error('请正确填写供应商结算信息');
+      message.error('结算周期和结算日不能为空');
       return;
     }
 
     if (data.settlementType === 'now' && emptys.includes(data.proportionPay)) {
-      message.error('请正确填写供应商结算信息');
+      message.error('预付比例不能为空');
       return;
     }
 
     //长度判断
-    if ( data.name.length >= 40 || data.contactsName >= 40){
-      message.error('请正确填写供应商信息长度');
+    
+    if ( data.name.length >= 40 || data.contactsName.length >= 40){
+      message.error('供应商名称和联系人字符长度不能超过40');
       return;
     }
-    if (data.contactsPhone.length > 11){
-      message.error('请正确填写联系电话长度');
-      return;
-    }
+    
     //1-31号判断
     if (data.cyclePay < 1 || data.cyclePay > 2000) {
       message.error('结算周期在1-2000之间');
@@ -132,7 +160,24 @@ const EditSupplier: React.FC<IProps> = props => {
       return;
     }
 
-    //
+    //格式验证
+    if (data.contactsPhone && !phonereg.test(data.contactsPhone) ){
+      message.error('请正确填写联系电话格式');
+      return;
+    }
+    if (data.qq && !qqreg.test(data.qq) ){
+      message.error('请正确填写 QQ格式');
+      return;
+    }
+    if (data.email && !emailreg.test(data.email) ){
+      message.error('请正确填写邮箱格式');
+      return;
+    }
+    if (data.wechat && !wechatreg.test(data.wechat) ){
+      message.error('请正确填写微信格式');
+      return;
+    }
+
     new Promise((resolve, reject) => {
       dispatch({
         type: 'supplier/updateSupplier',
@@ -201,7 +246,7 @@ const EditSupplier: React.FC<IProps> = props => {
         <div className={styles.singleItem}>
           <span className={styles.leftspan}>供应商名称：
             <span className={styles.icon}>*</span></span>
-          <Item name="name" className={styles.leftspan} rules={[{
+          <Item name="name" className={styles.leftspan} normalize={removeSpace} rules={[{
             required: true,
             message: '供应商名称长度不能为空',
           }, {
@@ -215,7 +260,23 @@ const EditSupplier: React.FC<IProps> = props => {
           <span className={styles.centerspan}>采购员：
             <span className={styles.icon}>*</span></span>
           <Item name="buyerName">
-            <Select className={styles.searchList}>
+            <Select className={styles.searchList}
+              dropdownRender={menu => (
+                <div>
+                  {menu}
+                  <Divider style={{ margin: '4px 0' }} />
+                  <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                    <Input style={{ flex: 'auto' }} value={buyerNameValue} onChange={onbuyerNameChange} placeholder="请输入采购员名称"/>
+                    <a
+                      style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
+                      onClick={addbuyerNameItem}
+                    >
+                      添加
+                    </a>
+                  </div>
+                </div>
+              )}            
+            >
               {
                 userList.map((item, index) => {
                   return <Option value={item.username} key={index}>{item.username}</Option>;
@@ -237,7 +298,7 @@ const EditSupplier: React.FC<IProps> = props => {
         <div className={styles.singleItem}>
           <span className={styles.leftspan}>联系人：
             <span className={styles.icon}>*</span></span>
-          <Item name="contactsName" rules={[{
+          <Item name="contactsName" normalize={removeSpace} rules={[{
             required: true,
             message: '联系人不能为空',
           }, {
@@ -249,46 +310,55 @@ const EditSupplier: React.FC<IProps> = props => {
         </div>
         <div className={styles.singleItem}>
           <span className={styles.centerspan}>联系电话：</span>
-          <Item name="contactsPhone" rules={[{
-            max: 11,
-            message: '联系电话长度不超过11',
+          <Item name="contactsPhone" normalize={removeSpace} rules={[{
+            pattern: /^\d{11}$/,
+            message: '请输入正确格式的联系电话',
           }]}>
             <Input/>
           </Item>
         </div>
         <div className={styles.singleItem}>
           <span className={styles.rightspan}>邮箱：</span>
-          <Item name="email">
+          <Item name="email" normalize={removeSpace} rules={[{
+            pattern: /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/,
+            message: '请输入正确格式的邮箱',
+          }]}>
             <Input/>
           </Item>
         </div>
         <div className={styles.singleItem}>
           <span className={styles.leftspan}>QQ：</span>
-          <Item name="qq">
+          <Item name="qq" normalize={removeSpace} rules={[{
+            pattern: /[1-9][0-9]{4,11}$/,
+            message: '请输入正确格式的QQ号',
+          }]}>
             <Input/>
           </Item>
         </div>
         <div className={styles.singleItem}>
           <span className={styles.centerspan}>微信：</span>
-          <Item name="wechat">
+          <Item name="wechat" normalize={removeSpace} rules={[{
+            pattern: /^[a-z_\d]+$/,
+            message: '请输入正确格式的微信号',
+          }]}>
             <Input/>
           </Item>
         </div>
         <div className={styles.singleItem}>
           <span className={styles.rightspan}>传真：</span>
-          <Item name="fax">
+          <Item name="fax" normalize={removeSpace}>
             <Input/>
           </Item>
         </div>
         <div className={styles.singleItem}>
           <span className={styles.leftspan}>地址：</span>
-          <Item name="addressLine1">
+          <Item name="addressLine1" normalize={removeSpace}>
             <Input/>
           </Item>
         </div>
         <div className={styles.singleItem}>
           <span className={styles.centerspan}>备注：</span>
-          <Item name="remarkText">
+          <Item name="remarkText" normalize={removeSpace}>
             <Input/>
           </Item>
         </div>          
@@ -357,19 +427,19 @@ const EditSupplier: React.FC<IProps> = props => {
                     <div className={styles.flex} style={{ width: 390 }}>
                       <span className={styles.numspan}>{index + 1}.</span>
                       <span style={{ width: 56 }}>收款方：</span>
-                      <Item name={[index, 'name']}>
+                      <Item name={[index, 'name']} normalize={removeSpace}>
                         <Input style={{ width: 250 }}/>
                       </Item>
                     </div>
                     <div className={styles.flex} style={{ width: 405 }}>
                       <span style={{ width: 110 }}>银行/机构名称：</span>
-                      <Item name={[index, 'bankName']}>
+                      <Item name={[index, 'bankName']} normalize={removeSpace}>
                         <Input style={{ width: 250 }}/>
                       </Item>
                     </div>
                     <div className={styles.flex} >
                       <span style={{ width: 110 }}>银行/收款账号: </span>
-                      <Item name={[index, 'bankAccount']}>
+                      <Item name={[index, 'bankAccount']} normalize={removeSpace}>
                         <Input style={{ width: 250 }}/>
                       </Item>
                       {

@@ -125,7 +125,7 @@ const WarehouseLocation = () => {
       align: 'left',
       dataIndex: 'name',
       key: 'name',
-      width: 310,
+      width: 200,
       render(_: string, record: WarehouseLocation.IRecord) {
         const {
           countryCode,
@@ -138,8 +138,13 @@ const WarehouseLocation = () => {
           {countryCode + stateOrProvinceCode + districtOrCounty + addressLine1 + (addressLine2 ? addressLine2 : '')}
         </div>;
       },
-    },
-    {
+    }, {
+      title: '亚马逊中文地址备注',
+      align: 'left',
+      dataIndex: 'addressLineNa',
+      key: 'addressLineNa',
+      width: 110,
+    }, {
       title: '关联店铺',
       align: 'center',
       dataIndex: 'stores',
