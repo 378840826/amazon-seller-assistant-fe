@@ -278,8 +278,8 @@ const EditSupplier: React.FC<IProps> = props => {
               )}            
             >
               {
-                userList.map((item, index) => {
-                  return <Option value={item.username} key={index}>{item.username}</Option>;
+                usersList.map((item, index) => {
+                  return <Option value={item} key={index}>{item}</Option>;
                 })
               }           
             </Select>
