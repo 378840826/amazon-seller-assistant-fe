@@ -196,7 +196,6 @@ const ParentAsinFiltern: React.FC<IProps> = (props) => {
         field: 'numberOfChildren',
         defineType: 'decimal',
       },
-
       // 占个按钮组
       {
         headText: 'btns',
