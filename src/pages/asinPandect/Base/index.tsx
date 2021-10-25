@@ -43,6 +43,9 @@ const AsinBase: React.FC = () => {
   const [defaultSku, setDefaultSku] = useState<string>(''); // 选中的sku
   const [priceEs, setPriceEs] = useState<AsinBase.IProductAsinSkuVo|null>(null); // 价格估算及饼图占比
 
+  //判断小数点
+  const [priceVal, setPriceVal] = useState('');
+
   // 初始化请求
   useEffect(() => {
     if (currentShop.id) {
@@ -296,7 +299,7 @@ const AsinBase: React.FC = () => {
   const transitionInput = (value: string) => {
     return strToMoneyStr(value);
   };
-  
+
   return (
     <div className={styles.baseBox}>
       <div className={styles.base}>
@@ -480,9 +483,20 @@ const AsinBase: React.FC = () => {
                   <label className={styles.label}>
                     <span className={styles.labelText}>售价：</span>
                     <span>{currentShop.currency}</span>
-                    <Form.Item name="price" normalize={transitionInput}
+                    <Form.Item
+                      name="price"
+                      normalize={transitionInput}
+                      rules={[
+                        { required: true, message: '售价不能为空或0' },
+                        { pattern: new RegExp(/^[1-9]\d{0,7}(\.\d{1,3})?$|^0(\.\d{1,2})?$/),
+                          message: priceVal.charAt(priceVal.length - 1) === '.' ? '请输入小数，最多两位！' : '超过限制，请重新输入！' },
+                        { pattern: new RegExp(/[^0]/), message: '售价不能为0' },
+                      ]}
                     >
-                      <Input className={ styles.input } />
+                      <Input
+                        className={ styles.input }
+                        onChange={ (e) => setPriceVal(e.target.value) }
+                      />
                     </Form.Item>
                     <span className={styles.placehoader} style={{
                       display: priceEs?.priceCny === null ? 'none' : 'inline-block',
@@ -491,7 +505,7 @@ const AsinBase: React.FC = () => {
                     </span>
                   </label>
                 </div>
-
+                
                 <div className={styles.common}>
                   <label className={styles.label}>
                     <span className={styles.labelText}>采购成本：</span>
