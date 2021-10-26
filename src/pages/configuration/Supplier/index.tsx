@@ -10,6 +10,7 @@ import Addsupplier from './Addsupplier';
 import EditSupplier from './EditSupplier';
 import BatchSupplier from './BatchSupplier';
 import { Iconfont } from '@/utils/utils';
+import TableNotData from '@/components/TableNotData';
 
 
 interface IPage extends ConnectProps {
@@ -306,6 +307,9 @@ const SupplierList: React.FC = () => {
     dataSource: supplierList,
     columns: column,
     rowKey: (record: Supplier.ISupplierList) => String(record.id),
+    locale: {
+      emptyText: <TableNotData hint="没有找到相关订单，请重新选择查询条件"/>,
+    },
     pagination: {
       pageSizeOptions: ['20', '50', '100'],
       total,

@@ -52,6 +52,10 @@ const AddSupplier: React.FC<IProps> = props => {
   };
 
   const addbuyerNameItem = () => {
+    if (!buyerNameValue) {
+      message.error('请填写采购员');
+      return;
+    }
     usersList.unshift(buyerNameValue);
     setUsersList([...usersList]);
     setBuyerNameValue('');
@@ -94,7 +98,7 @@ const AddSupplier: React.FC<IProps> = props => {
     //先出一系列的判断 
     const emptys = [undefined, null, ''];
     const phonereg = /^\d{11}$/;
-    const qqreg = /[1-9][0-9]{4,11}$/;
+    const qqreg = /^[1-9][0-9]{6,11}$/;
     const emailreg = /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/;
     const wechatreg = /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/;
     if (!data.name) {
@@ -312,7 +316,7 @@ const AddSupplier: React.FC<IProps> = props => {
         <div className={styles.singleItem}>
           <span className={styles.leftspan}>QQ：</span>
           <Item name="qq" normalize={removeSpace} rules={[{
-            pattern: /[1-9][0-9]{4,11}$/,
+            pattern: /^[1-9][0-9]{6,11}$/,
             message: '请输入正确格式的QQ号',
           }]}>
             <Input/>
