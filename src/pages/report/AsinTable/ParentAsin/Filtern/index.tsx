@@ -191,7 +191,11 @@ const ParentAsinFiltern: React.FC<IProps> = (props) => {
         field: 'b2bAvgCustomerPrice',
         defineType: 'decimal',
       },
-
+      {
+        label: '子体数量', 
+        field: 'numberOfChildren',
+        defineType: 'int',
+      },
       // 占个按钮组
       {
         headText: 'btns',
