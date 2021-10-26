@@ -96,7 +96,7 @@ const AddSupplier: React.FC<IProps> = props => {
     const phonereg = /^\d{11}$/;
     const qqreg = /[1-9][0-9]{4,11}$/;
     const emailreg = /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/;
-    const wechatreg = /^[a-z_\d]+$/;
+    const wechatreg = /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/;
     if (!data.name) {
       message.error('供应商名称不能为空');
       return;
@@ -321,7 +321,7 @@ const AddSupplier: React.FC<IProps> = props => {
         <div className={styles.singleItem}>
           <span className={styles.centerspan}>微信：</span>
           <Item name="wechat" normalize={removeSpace} rules={[{
-            pattern: /^[a-z_\d]+$/,
+            pattern: /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/,
             message: '请输入正确格式的微信号',
           }]}>
             <Input/>
