@@ -164,6 +164,10 @@ const list = [
     label: 'Review',
     field: 'reviewNum',
   },
+  {
+    label: '子体数量',
+    field: 'numberOfChildren',
+  },
 ];
 
 // 状态, Active:在售, Inactive 不可售 ,Incomplete：禁止显示, Remove 移除
