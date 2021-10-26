@@ -31,11 +31,13 @@ const EditSupplier: React.FC<IProps> = props => {
 
   const [buyerNameValue, setBuyerNameValue] = useState<string>('');
   const [usersList, setUsersList] = useState<string[]>([]);
+  const [SupplierCollectionDeleteIds, setSupplierCollectionDeleteIds] = useState<string[]>([]);
 
   //初始化一些数据
   useEffect(() => {
     //是否月结
     setIsPayMonthly(settlementType);
+    setSupplierCollectionDeleteIds([]);
 
     if (collectionCreateQos.length <= 0) {
       form.setFieldsValue({ collectionCreateQos: [{
@@ -95,6 +97,14 @@ const EditSupplier: React.FC<IProps> = props => {
     setUsersList([...usersList]);
     setBuyerNameValue('');
   };
+  //
+  const deleteIds = (index: number) => {
+    const collectionCreateQos = form.getFieldValue('collectionCreateQos');
+    if (collectionCreateQos[index].id) {
+      SupplierCollectionDeleteIds.push(collectionCreateQos[index].id);
+      setSupplierCollectionDeleteIds([...SupplierCollectionDeleteIds]);
+    }
+  };
 
 
   //确定添加
@@ -110,14 +120,16 @@ const EditSupplier: React.FC<IProps> = props => {
 
     //给id找出来
     data.id = initdata?.id;
-
+    //传删除的收款信息id
+    data.SupplierCollectionDeleteIds = SupplierCollectionDeleteIds;
+    
     
     //先出一系列的判断 
     const emptys = [undefined, null, ''];
     const phonereg = /^\d{11}$/;
     const qqreg = /[1-9][0-9]{4,11}$/;
     const emailreg = /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/;
-    const wechatreg = /^[a-z_\d]+$/;
+    const wechatreg = /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/;
     if (!data.name) {
       message.error('供应商名称不能为空');
       return;
@@ -278,8 +290,8 @@ const EditSupplier: React.FC<IProps> = props => {
               )}            
             >
               {
-                userList.map((item, index) => {
-                  return <Option value={item.username} key={index}>{item.username}</Option>;
+                usersList.map((item, index) => {
+                  return <Option value={item} key={index}>{item}</Option>;
                 })
               }           
             </Select>
@@ -338,7 +350,7 @@ const EditSupplier: React.FC<IProps> = props => {
         <div className={styles.singleItem}>
           <span className={styles.centerspan}>微信：</span>
           <Item name="wechat" normalize={removeSpace} rules={[{
-            pattern: /^[a-z_\d]+$/,
+            pattern: /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/,
             message: '请输入正确格式的微信号',
           }]}>
             <Input/>
@@ -446,7 +458,11 @@ const EditSupplier: React.FC<IProps> = props => {
                         fields.length >= 2 ? 
                           <span 
                             className={styles.delespan} 
-                            onClick={ () => remove(index)}
+                            onClick={ () => {
+                              deleteIds(index);
+                              remove(index);                             
+                            }
+                            }
                           >删除</span>
                           : ''
                       }
