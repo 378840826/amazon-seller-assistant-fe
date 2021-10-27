@@ -4,6 +4,7 @@ import {
   getBaseInitData,
   updatePriceEstimated,
   tabSkuData,
+  priceEstimated,
 } from '@/services/asinPandect';
 
 interface IBaseType {
@@ -13,6 +14,7 @@ interface IBaseType {
     getinitData: Effect;
     updatePriceEstimated: Effect;
     tabSkuData: Effect;
+    priceEstimated: Effect;
   };
 }
 
@@ -42,6 +44,16 @@ const Base: IBaseType = {
     *updatePriceEstimated({ payload, resolve, reject }, { call }): Generator {
       try {
         const res = yield call(updatePriceEstimated, payload);
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    },
+
+    // 价格估算
+    *priceEstimated({ payload, resolve, reject }, { call }): Generator {
+      try {
+        const res = yield call(priceEstimated, payload);
         resolve(res);
       } catch (err) {
         reject(err);
