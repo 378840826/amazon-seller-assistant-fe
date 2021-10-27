@@ -458,10 +458,10 @@ const AddSku: React.FC<IProps> = props => {
     
       // 包装材质
       if (datas.packingMaterial === 'other') {
-        if (empyts.includes(datas.otherPacking)) {
-          message.error('包装材质不能为空');
-          return;
-        }
+        //if (empyts.includes(datas.otherPacking)) {
+        //message.error('包装材质不能为空');
+        //return;
+        //}
         datas.packingMaterial = datas.otherPacking;
       }
 

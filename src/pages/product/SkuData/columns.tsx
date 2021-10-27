@@ -177,6 +177,7 @@ const Columns = (props: IProps) => {
       align: 'center',
       width: 100,
       dataIndex: 'packingMaterial',
+      render: (val: string) => (val === 'other' ? '其他' : val),
     },
     {
       title: '易碎品',
