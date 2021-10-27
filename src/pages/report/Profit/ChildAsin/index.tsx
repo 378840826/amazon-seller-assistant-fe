@@ -329,6 +329,11 @@ const Shop: React.FC<IProps> = props => {
     {
       title: '店铺名称',
       fixed: 'center',
+      dataIndex: 'storeName',
+      key: 'storeName',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'storeName' ? sortedInfo.order : null,
+      showSorterTooltip: false,
       children: [
         {
           title: '合计',
