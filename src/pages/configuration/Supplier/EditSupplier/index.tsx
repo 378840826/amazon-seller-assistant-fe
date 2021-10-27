@@ -249,10 +249,11 @@ const EditSupplier: React.FC<IProps> = props => {
     visible
     mask={true} 
     centered 
-    width={1274}
+    width={1300}
     onCancel={onCancel}
     onOk={modalOnOk}
     className={styles.modal}
+    okText="保存"
   >
     <div className={styles.title}>编辑供应商资料</div>
     <Form
@@ -405,7 +406,7 @@ const EditSupplier: React.FC<IProps> = props => {
             }, {
               validator: cyclePayLimit,
             }]}>
-              <Input suffix="天"/>
+              <Input suffix="天" />
             </Item>               
           </div>
           <div className={styles.flex}>
@@ -418,7 +419,7 @@ const EditSupplier: React.FC<IProps> = props => {
             }, {
               validator: payDayLimit,
             }]}>
-              <Input placeholder="1-31号"/>
+              <Input placeholder="1-31号" style={{ width: 250 }}/>
             </Item> 
           </div>
         </> : 
@@ -431,7 +432,7 @@ const EditSupplier: React.FC<IProps> = props => {
             }, {
               validator: proPortionPayLimit,
             }]}>
-              <Input suffix="%"/>
+              <Input suffix="%" />
             </Item>               
           </div>
       }
@@ -486,7 +487,7 @@ const EditSupplier: React.FC<IProps> = props => {
                                   return;
                                 }
                                 add();
-                              }}>增加</span>
+                              }}>添加</span>
                             <Popconfirm
                               title="已超过5个，不能继续添加"
                               visible={isAddCollection}

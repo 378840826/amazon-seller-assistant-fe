@@ -61,6 +61,8 @@ const AddSku: React.FC<IProps> = props => {
   const [supplierTableData, setSupplierTableData] = useState<skuData.ISupplierDownList[]>([]);
   //供应商下拉列表
   const [supplierDownList, setsupplierDownList] = useState<Supplier.ISupplierList[]>([]);
+  const [isborder, setIsborder] = useState<boolean>(false);
+  
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -301,11 +303,11 @@ const AddSku: React.FC<IProps> = props => {
   //添加供应商
   const addSupplier = function() {
     const datas = form.getFieldsValue();
-    const { price, placeUrl, currencyType, supplierId } = datas;
+    const { prices, placeUrl, currencyType, supplierId } = datas;
     const emptys = [undefined, null, '', []];
 
     //先出判断
-    if (!price || !placeUrl) {
+    if (!prices || !placeUrl) {
       message.error('请填写采购单价或下单链接');
       return;
     }
@@ -315,7 +317,7 @@ const AddSku: React.FC<IProps> = props => {
       return;
     }
     //大小值
-    if (price < 0 || price > 100000000) {
+    if (prices < 0 || prices > 100000000) {
       message.error('最大输入值不超过10000 0000.00');
       return;
     }
@@ -341,7 +343,7 @@ const AddSku: React.FC<IProps> = props => {
         supplierId: item,
         supplierName: supplierList[idindex].name,
         currencyType: currencyType,
-        price: price,
+        price: prices,
         placeUrl: placeUrl,
       });
     });
@@ -479,9 +481,9 @@ const AddSku: React.FC<IProps> = props => {
     render(value: string, record: skuData.ISupplierDownList) {
       return (
         <Select 
-          bordered={false}
-          style={{ width: 225 }} 
-          defaultValue={value} 
+          bordered={false} 
+          defaultValue={value}
+          className={styles.select}
           onChange={(val) => supplierChange(record.supplierId, val)}>         
           {
             supplierList.map((item, index) => {
@@ -539,7 +541,10 @@ const AddSku: React.FC<IProps> = props => {
       return (
         <Select 
           style={{ width: 90 }} 
-          defaultValue={value} 
+          defaultValue={value}
+          bordered={isborder}
+          onMouseEnter={() => setIsborder(true)}
+          onMouseLeave={() => setIsborder(false)}
           onChange={(val) => currencyTypeChange(record.supplierId, val)}>
           <Option value="人民币">人民币</Option>
           <Option value="美元">美元</Option>
@@ -1049,7 +1054,7 @@ const AddSku: React.FC<IProps> = props => {
                       <Option value="日元">日元</Option>
                     </Select>
                   </Item>
-                  <Item name="price" normalize={priceStrLimit} rules={[{
+                  <Item name="prices" normalize={priceStrLimit} rules={[{
                     required: true,
                     message: '请填写采购单价',
                   }, {

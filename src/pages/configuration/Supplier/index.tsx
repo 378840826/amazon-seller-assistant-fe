@@ -247,7 +247,7 @@ const SupplierList: React.FC = () => {
   }, {
     title: '备注',
     width: 230,
-    align: 'center',
+    align: 'left',
     dataIndex: 'remarkText',
     key: 'remarkText',
     render(value, record){
@@ -263,7 +263,7 @@ const SupplierList: React.FC = () => {
     },
   }, {
     title: '创建人',
-    width: 140,
+    width: 130,
     align: 'center',
     dataIndex: 'userName',
     key: 'userName',
@@ -301,8 +301,8 @@ const SupplierList: React.FC = () => {
   const tableConfig = {
     className: styles.table,
     scroll: {
-      y: 'calc(100vh - 270px)',
       x: 'max-content',
+      y: 'calc(100vh - 330px)',
     },
     dataSource: supplierList,
     columns: column,

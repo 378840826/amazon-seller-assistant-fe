@@ -215,10 +215,11 @@ const AddSupplier: React.FC<IProps> = props => {
     visible
     mask={true} 
     centered 
-    width={1274}
+    width={1300}
     onCancel={onCancel}
     onOk={modalOnOk}
     className={styles.modal}
+    okText="保存"
   >
     <div className={styles.title}>供应商详情</div>
     <Form
@@ -385,20 +386,22 @@ const AddSupplier: React.FC<IProps> = props => {
             }, {
               validator: payDayLimit,
             }]}>
-              <Input placeholder="1-31号"/>
+              <Input placeholder="1-31号" style={{ width: 250 }} />
             </Item> 
           </div>
         </> : 
           <div className={styles.flex}>
-            <span className={styles.paymentspan}>预付比例：                
-              <span className={styles.icon}>*</span></span>
+            <span className={styles.paymentspan}>
+              预付比例：                
+              <span className={styles.icon}>*</span>
+            </span>
             <Item name="proportionPay" normalize={proportionPayLimit} rules={[{
               required: true,
               message: '请输入预付比例',
             }, {
               validator: proPortionPayLimit,
             }]}>
-              <Input suffix="%"/>
+              <Input suffix="%" />
             </Item>               
           </div>
       }
@@ -449,7 +452,7 @@ const AddSupplier: React.FC<IProps> = props => {
                                   return;
                                 }
                                 add();
-                              }}>增加</span>
+                              }}>添加</span>
                             <Popconfirm
                               title="已超过5个，不能继续添加"
                               visible={isAddCollection}
