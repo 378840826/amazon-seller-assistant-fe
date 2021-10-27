@@ -705,7 +705,7 @@ const AddSku: React.FC<IProps> = props => {
     onOk() {
       let datas = form.getFieldsValue();
       datas = Object.assign({}, initData, datas);
-      const empyts = [null, undefined, ''];
+      // = [null, undefined, ''];
       datas.id = initData.id;
       datas.mskuProducts = mskuTableData;
       datas.locations = locations;
@@ -746,10 +746,10 @@ const AddSku: React.FC<IProps> = props => {
       
       // 包装材质
       if (datas.packingMaterial === 'other') {
-        if (empyts.includes(datas.otherPacking)) {
-          message.error('包装材质不能为空');
-          return;
-        }
+        //if (empyts.includes(datas.otherPacking)) {
+        //message.error('包装材质不能为空');
+        //return;
+        //}
         datas.packingMaterial = datas.otherPacking;
       }
 
