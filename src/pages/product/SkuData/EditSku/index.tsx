@@ -650,6 +650,7 @@ const AddSku: React.FC<IProps> = props => {
     datas.locations = locations;
     datas.imageUrl = imageUrl;
     datas.pimageUrl = packImage;
+    datas.suppliers = supplierTableData;
     
 
     const promise = new Promise((resolve, reject) => {
