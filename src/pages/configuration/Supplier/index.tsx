@@ -308,7 +308,7 @@ const SupplierList: React.FC = () => {
     columns: column,
     rowKey: (record: Supplier.ISupplierList) => String(record.id),
     locale: {
-      emptyText: <TableNotData hint="没有找到相关订单，请重新选择查询条件"/>,
+      emptyText: <TableNotData hint="没有找到相关数据，请重新选择查询条件"/>,
     },
     pagination: {
       pageSizeOptions: ['20', '50', '100'],
