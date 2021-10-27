@@ -160,6 +160,13 @@ export async function tabSkuData(data: { sku: string}) {
   });
 }
 
+//价格预估
+export async function priceEstimated(data: { asin: string}) {
+  return request.post('/api/mws/product/estimate/sku-exp', {
+    data,
+  });
+}
+
 // 修改价格估算
 export async function updatePriceEstimated(data: { asin: string}) {
   return request.post('/api/mws/product/update/sku-exp', {
