@@ -11,7 +11,7 @@ import styles from './index.less';
 import { Form, Input, Select, Radio } from 'antd';
 //import { FormInstance } from 'antd/lib/form';
 import { packSizeUnit, packWeightUnit, packTextureUnit } from '../config';
-import { strToNaturalNumStr } from '@/utils/utils';
+//import { strToMoneyStr } from '@/utils/utils';
 
 /** 
 interface IProps {
@@ -90,10 +90,32 @@ const PackInfo: React.FC = () => {
     setProductisOversize(result);
   };
   */
+  //数据保留3位
+  const strToMoneyStr = function (value: string) {
+    // 删除数字和小数点以外的字符
+    let newValue = value.replace(/[^\d.]/g, '');
+    // 只保留第一个小数点
+    // newValue = newValue.replace(/\.{2,}/g, '.');
+    newValue = newValue.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.');
+    // 只保留两位小数
+    //newValue = newValue.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
+
+    newValue = newValue.replace(/^(.*\..{3}).*$/, '$1');
+
+    // 去掉整数部分前导的 0
+    if (newValue.indexOf('.') < 0 && newValue !== '') {
+      newValue = String(parseFloat(newValue));
+    }
+    // 第一位不能为小数点
+    if (newValue.indexOf('.') === 0) {
+      newValue = '0.';
+    }
+    return newValue;
+  };
 
 
   const limitedInput = function(val: string) {
-    return strToNaturalNumStr(val);
+    return strToMoneyStr(val);
   };
 
   // 验证重量是否大于68038g
@@ -104,6 +126,7 @@ const PackInfo: React.FC = () => {
     return Promise.resolve();
   };
   */
+
 
   return <div className={styles.packInfoBox}>
     <div className={styles.volume}>
