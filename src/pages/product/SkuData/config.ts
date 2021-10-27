@@ -221,7 +221,7 @@ export function sumVolumeOversize(unit: 'feet'|'m'|'cm'|'inch', data: { width: n
   
   if (
     arr[2] > 274
-    || ( arr[1] + arr[0] ) * 2 > 419
+    || ( arr[1] + arr[0] ) * 2 + arr[2] > 419
   ) {
     return true;
   }

@@ -1104,7 +1104,7 @@ const AddSku: React.FC<IProps> = props => {
       width={580}
     >
       {
-        productvolumeisOversize ? <p>最长边超过274cm或(长度+围度)*2超过419cm</p> : ''        
+        productvolumeisOversize ? <p>最长边超过274cm或长度+围度超过419cm</p> : ''        
       }
       {
         packWeightisOversize ? <p>包装重量超过68038g</p> : ''
