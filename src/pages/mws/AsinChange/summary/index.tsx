@@ -22,6 +22,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     updateTime: '',
     tableErrorMsg: '',
   });
+  // 获取本地changeType
   const changeType = storage.get('changeType');
   const [sendState, setSendState] = useState({
     size: 20,
@@ -30,7 +31,9 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     dateStart: moment().subtract(29, 'days').format('YYYY-MM-DD'), //时间范围默认最近30天
     dateEnd: moment().format('YYYY-MM-DD'),
     cycle: '',
-    changeType: changeType.length === 0 ? ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'] : changeType, //如果changeType为空时默认选择
+    changeType: changeType === 'undefined' || changeType.length === 0 || !changeType
+      ? ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm']
+      : changeType, //如果changeType为空时，本地存储没有changeType时默认选择, 
   });
   const [searchValue, setSearchValue] = useState<string | undefined | string[]>('');
   const modifySendState = (params: API.IParams) => {
