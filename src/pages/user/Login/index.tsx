@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, message } from 'antd';
 import { connect } from 'dva';
-import { validate, getUrlParam } from '@/utils/utils';
+import { validate, getUrlParam, storage } from '@/utils/utils';
 import logo from '@/assets/logoWhite.png';
 import { IConnectProps } from '@/models/connect';
 import { ILogin } from '@/services/user';
@@ -71,6 +71,8 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
           if (res.data.action === 'register'){
             setRegSuccess(true);
           } else {
+            //登录成功本地存储changeType = []
+            storage.set('changeType', []);
             //登录成功
             dispatch({
               type: 'user/saveCurrentUser',
