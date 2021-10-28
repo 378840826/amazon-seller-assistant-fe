@@ -63,6 +63,7 @@ const AddSku: React.FC<IProps> = props => {
   const [supplierDownList, setsupplierDownList] = useState<Supplier.ISupplierList[]>([]);
   //供应商表格数据
   const [supplierTableData, setSupplierTableData] = useState<skuData.ISupplierDownList[]>([]);
+  const [isborder, setIsborder] = useState<boolean>(false);
 
   const [productvolumeisOversize, setProductvolumeisOversize] = useState<boolean>(false);
   const [packWeightisOversize, setPackWeightisOversize] = useState<boolean>(false);
@@ -502,8 +503,8 @@ const AddSku: React.FC<IProps> = props => {
     render(value: string, record: skuData.ISupplierDownList) {
       return (
         <Select
-          bordered={false} 
-          style={{ width: 225 }}
+          className={styles.select}
+          bordered={false}
           defaultValue={value} 
           onChange={(val) => supplierChange(record.supplierId, val)}>         
           {
@@ -545,13 +546,18 @@ const AddSku: React.FC<IProps> = props => {
     width: 292,
     render(value: string, record: skuData.ISupplierDownList) {
       return (
-        editable({
-          inputValue: value,
-          maxLength: 256,
-          confirmCallback: val => {
-            handleUpdatePlaceUrl({ supplierId: record.supplierId, val: val });
-          },
-        })
+        <div className={styles.placeUrl}>
+          {
+            editable({
+              inputValue: value,
+              maxLength: 256,
+              confirmCallback: val => {
+                handleUpdatePlaceUrl({ supplierId: record.supplierId, val: val });
+              },
+            })
+          }
+        </div>
+        
       );
     },
   }, {
@@ -564,7 +570,10 @@ const AddSku: React.FC<IProps> = props => {
       return (
         <Select 
           style={{ width: 90 }} 
-          defaultValue={value} 
+          defaultValue={value}
+          bordered={isborder}
+          onMouseEnter={() => setIsborder(true)}
+          onMouseLeave={() => setIsborder(false)}
           onChange={(val) => currencyTypeChange(record.supplierId, val)}>
           <Option value="人民币">人民币</Option>
           <Option value="美元">美元</Option>

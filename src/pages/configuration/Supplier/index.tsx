@@ -247,7 +247,7 @@ const SupplierList: React.FC = () => {
   }, {
     title: '备注',
     width: 230,
-    align: 'center',
+    align: 'left',
     dataIndex: 'remarkText',
     key: 'remarkText',
     render(value, record){
@@ -263,7 +263,7 @@ const SupplierList: React.FC = () => {
     },
   }, {
     title: '创建人',
-    width: 140,
+    width: 130,
     align: 'center',
     dataIndex: 'userName',
     key: 'userName',
@@ -301,14 +301,14 @@ const SupplierList: React.FC = () => {
   const tableConfig = {
     className: styles.table,
     scroll: {
-      y: 'calc(100vh - 270px)',
       x: 'max-content',
+      y: 'calc(100vh - 330px)',
     },
     dataSource: supplierList,
     columns: column,
     rowKey: (record: Supplier.ISupplierList) => String(record.id),
     locale: {
-      emptyText: <TableNotData hint="没有找到相关订单，请重新选择查询条件"/>,
+      emptyText: <TableNotData hint="没有找到相关数据，请重新选择查询条件"/>,
     },
     pagination: {
       pageSizeOptions: ['20', '50', '100'],
