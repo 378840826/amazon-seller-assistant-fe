@@ -38,6 +38,10 @@ export const states = [
 // 包装体积尺寸单位
 export const packSizeUnit = [
   {
+    label: '厘米',
+    value: 'cm',
+  },
+  {
     label: '英尺',
     value: 'feet',
   },
@@ -49,10 +53,7 @@ export const packSizeUnit = [
     label: '米',
     value: 'm',
   },
-  {
-    label: '厘米',
-    value: 'cm',
-  },
+  
 ];
 
 
@@ -148,6 +149,7 @@ export const shopDownlist = [
  */
 export function numberToinch(type: 'feet'|'m'|'cm'|'inch', number: number): number {
   switch (type) {
+  /** 
   case 'cm':
     return Math.round(number * 100 * 0.39) / 100;
   case 'feet':
@@ -157,6 +159,17 @@ export function numberToinch(type: 'feet'|'m'|'cm'|'inch', number: number): numb
   default:
     return number;
   }
+  */
+  case 'inch':
+    return number * 2.54;
+  case 'feet':
+    return number * 30.48;
+  case 'm':
+    return number * 100;
+  default:
+    return number;
+  }
+
 }
 
 /**
@@ -166,12 +179,12 @@ export function numberToinch(type: 'feet'|'m'|'cm'|'inch', number: number): numb
  */
 export function numberToPound(type: 'g'|'kg'|'ounce'|'pound', number: number): number {
   switch (type) {
-  case 'g':
-    return Math.round(number * 100 * 0.0022) / 100;
   case 'kg':
-    return number * 2.2;
+    return number * 1000;
   case 'ounce':
-    return Math.round(number * 100 * 0.0625) / 100;
+    return number * 28.34;
+  case 'pound':
+    return number * 453.59;
   default:
     return number;
   }
@@ -185,11 +198,14 @@ export function numberToPound(type: 'g'|'kg'|'ounce'|'pound', number: number): n
  * 长宽高 最小值超过8英寸 有oversize
  * 长宽高 中间值超过14英寸 有oversize
  * 
+ * 长宽高 最长边不超过274cm （次长边+最短边）x2<=419cm
+ * 
+ * 
  * @param width 长度
  * @param wide 宽度
  * @param height 高度
  */
-export function sumVolumeOversize(unit: 'feet'|'m'|'cm'|'inch', data: { width: number; wide: number; height: number } ): ''|'oversize' {
+export function sumVolumeOversize(unit: 'feet'|'m'|'cm'|'inch', data: { width: number; wide: number; height: number } ): false|true {
   let {
     width = 0,
     wide = 0,
@@ -204,27 +220,24 @@ export function sumVolumeOversize(unit: 'feet'|'m'|'cm'|'inch', data: { width: n
   });
   
   if (
-    arr[2] > 18
-    || arr[1] > 14
-    || arr[0] > 8
+    arr[2] > 274
+    || ( arr[1] + arr[0] ) * 2 + arr[2] > 419
   ) {
-    return 'oversize';
+    return true;
   }
-  return '';
+  return false;
 }
 
 /**
  * 计算包装重量、商品重量是否有oversize
  *  
- * 超过20磅就有
+ * 超过就有
  * 
  * @param width 长度
  * @param wide 宽度
  * @param height 高度
  */
-export function sumWeightOversize(unit: 'g'|'kg'|'ounce'|'pound', number: number ): ''|'oversize' {
+export function sumWeightOversize(unit: 'g'|'kg'|'ounce'|'pound', number: number ): false|true {
   number = numberToPound(unit, Number(number));
-  return number > 20 ? 'oversize' : '';
+  return number > 68038 ? true : false;
 }
-
-

@@ -115,11 +115,12 @@ const Columns = (props: IProps) => {
           title={`长度：${commodityLong || ' - '} \n宽度：${commodityWide || ' - '} \n高度：${commodityHigh || ' - '}`}
         >
           <p>{`${commodityLong || ' - '}*${commodityWide || ' - '}*${commodityHigh || ' - '} ${getPsLabel(commodityType)}`}</p>
-          <span className="secondary-text">{sumVolumeOversize(commodityType, {
-            width: commodityLong,
-            wide: commodityWide,
-            height: commodityHigh,
-          })}</span>
+          <span className="secondary-text">{
+            sumVolumeOversize(commodityType, {
+              width: commodityLong,
+              wide: commodityWide,
+              height: commodityHigh,
+            })}</span>
         </div>;
       },
     },
@@ -148,11 +149,12 @@ const Columns = (props: IProps) => {
           title={`长度：${packingLong || ' - '} \n宽度：${packingWide || ' - '} \n高度：${packingHigh || ' - '}`}
         >
           <p>{`${packingLong || ' - '}*${packingWide || ' - '}*${packingHigh || ' - '} ${getPsLabel(packingType || ' - ')}`}</p>
-          <span className="secondary-text">{sumVolumeOversize(packingType, {
-            width: packingLong,
-            wide: packingWide,
-            height: packingHigh,
-          })}</span>
+          <span className="secondary-text">{
+            sumVolumeOversize(packingType, {
+              width: packingLong,
+              wide: packingWide,
+              height: packingHigh,
+            }) ? 'oversize' : ''}</span>
         </div>;
       },
     },
@@ -165,7 +167,8 @@ const Columns = (props: IProps) => {
       render(val: number, record: skuData.IRecord) {
         return <div className={styles.weightCol}>
           <p>{`${val || ' - '}${getWeightLabel(record.packingWeightType)}`}</p>
-          <span className="secondary-text">{sumWeightOversize(record.packingWeightType, val)}</span>
+          <span className="secondary-text">{
+            sumWeightOversize(record.packingWeightType, val) ? 'oversize' : ''}</span>
         </div>;
       },
     },
@@ -174,6 +177,7 @@ const Columns = (props: IProps) => {
       align: 'center',
       width: 100,
       dataIndex: 'packingMaterial',
+      render: (val: string) => (val === 'other' ? '其他' : val),
     },
     {
       title: '易碎品',
