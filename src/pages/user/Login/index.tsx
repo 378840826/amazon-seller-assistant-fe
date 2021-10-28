@@ -71,12 +71,6 @@ const Login: React.FC<IConnectProps> = function ({ dispatch }) {
           if (res.data.action === 'register'){
             setRegSuccess(true);
           } else {
-            //登录成功本地存储changeType = []
-            const changeType = storage.get('changeType');
-            if (changeType === 'undefined') {
-              storage.set('changeType', []);
-            }
-            
             //登录成功
             dispatch({
               type: 'user/saveCurrentUser',

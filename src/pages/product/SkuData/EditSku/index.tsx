@@ -11,15 +11,14 @@ import styles from './index.less';
 import classnames from 'classnames';
 import { Modal, Form, Input, Radio, Upload, Tabs, message, Select, Button, Table } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-
 import { states, packWeightUnit, packSizeUnit, packTextureUnit, shopDownlist, sumVolumeOversize, sumWeightOversize } from '../config';
 import { useSelector, ConnectProps, IConfigurationBaseState, IWarehouseLocationState, useDispatch, ISupplierState } from 'umi';
-
 import PackInfo from './PackInfo';
 import CostPrice from './CostPrice';
 import TableNotData from '@/components/TableNotData';
 import { strToMoneyStr } from '@/utils/utils';
 import editable from '@/pages/components/EditableCell';
+
 
 interface IPage extends ConnectProps {
   configurationBase: IConfigurationBaseState;

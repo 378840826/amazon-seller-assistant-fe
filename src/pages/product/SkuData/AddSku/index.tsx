@@ -681,6 +681,13 @@ const AddSku: React.FC<IProps> = props => {
       const empyts = [null, undefined, ''];
       const reg = /^\d{10}$/;
 
+      datas.mskuProducts = mskuTableData;
+      datas.locations = locations;
+      datas.imageUrl = imageUrl;
+      datas.pimageUrl = packImage;
+      datas.suppliers = supplierTableData;
+
+
       if (empyts.includes(datas.sku)) {
         message.error('SKU不能为空');
         return;
@@ -845,15 +852,14 @@ const AddSku: React.FC<IProps> = props => {
       form.setFieldsValue({ mskuList: undefined });
     }
   };
-
-  //限制采购单价
+    //限制采购单价
   const priceLimit = function(_: any, value: string) {// eslint-disable-line
     if (Number(value) < 0 || Number(value) > 100000000) {
       return Promise.reject('最大输入值不超过10000 0000.00');
     }
     return Promise.resolve();
   };
-
+  
   const priceStrLimit = (value: string) => {
     return strToMoneyStr(value); 
   };
