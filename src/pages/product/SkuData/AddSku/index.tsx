@@ -505,13 +505,18 @@ const AddSku: React.FC<IProps> = props => {
     width: 133,
     render(value: number, record: skuData.ISupplierDownList) {
       return (
-        editable({
-          inputValue: String(value),
-          maxLength: 20,
-          confirmCallback: val => {
-            handleUpdatePrice({ supplierId: record.supplierId, val: Number(val) });
-          },
-        })        
+        <div>
+          {
+            editable({
+              inputValue: String(value),
+              maxLength: 20,
+              confirmCallback: val => {
+                handleUpdatePrice({ supplierId: record.supplierId, val: Number(val) });
+              },
+            })
+          }
+        </div>
+                
       );
     },
   }, {
@@ -522,13 +527,18 @@ const AddSku: React.FC<IProps> = props => {
     width: 292,
     render(value: string, record: skuData.ISupplierDownList) {
       return (
-        editable({
-          inputValue: value,
-          maxLength: 20,
-          confirmCallback: val => {
-            handleUpdatePlaceUrl({ supplierId: record.supplierId, val: val });
-          },
-        })        
+        <div className={styles.placeUrl}>
+          {
+            editable({
+              inputValue: value,
+              maxLength: 256,
+              confirmCallback: val => {
+                handleUpdatePlaceUrl({ supplierId: record.supplierId, val: val });
+              },
+            })
+          }
+        </div>
+                
       );
     },
   }, {
