@@ -90,7 +90,7 @@ const TablePage: React.FC<ITablePage> = (
       align: 'center',
       render: (text, record) => {
         return (
-          <RenderValue text={text} record={record}/>
+          <RenderValue text={text || '———'} record={record}/>
         );
       },
     },
@@ -101,7 +101,7 @@ const TablePage: React.FC<ITablePage> = (
       align: 'center',
       render: (text, record) => {
         return (
-          <RenderValue text={text} record={record}/>
+          <RenderValue text={text || '———'} record={record}/>
         );
       },
     },
