@@ -367,6 +367,10 @@ const AddSku: React.FC<IProps> = props => {
   };
   //供应商表格采购单价编辑
   const handleUpdatePrice = function(record: {supplierId: string; val: number}) {
+    if ( record.val > 100000000) {
+      message.error('采购单价最大输入值不超过10000 0000.00');
+      return;
+    }
     new Promise((resolve, reject) => {
       //找到对应的下标
       supplierTableData.forEach( () => {
@@ -477,13 +481,15 @@ const AddSku: React.FC<IProps> = props => {
     align: 'left',
     dataIndex: 'supplierName',
     key: 'supplierName',
-    width: 240,
+    width: 270,
     render(value: string, record: skuData.ISupplierDownList) {
       return (
         <Select 
           bordered={false} 
           defaultValue={value}
           className={styles.select}
+          dropdownClassName={styles.SelectDropdown}
+          dropdownMatchSelectWidth={false}
           onChange={(val) => supplierChange(record.supplierId, val)}>         
           {
             supplierList.map((item, index) => {
@@ -502,7 +508,7 @@ const AddSku: React.FC<IProps> = props => {
     align: 'right',
     dataIndex: 'price',
     key: 'price',
-    width: 133,
+    width: 103,
     render(value: number, record: skuData.ISupplierDownList) {
       return (
         <div>
