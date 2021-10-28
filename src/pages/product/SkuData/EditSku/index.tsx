@@ -61,7 +61,7 @@ const AddSku: React.FC<IProps> = props => {
   const [supplierDownList, setsupplierDownList] = useState<Supplier.ISupplierList[]>([]);
   //供应商表格数据
   const [supplierTableData, setSupplierTableData] = useState<skuData.ISupplierDownList[]>([]);
-  const [isborder, setIsborder] = useState<boolean>(false);
+  //const [isborder, setIsborder] = useState<boolean>(false);
   //const [isbordersupplier, setIsbordersupplier] = useState<boolean>(false);
   
 
@@ -576,9 +576,9 @@ const AddSku: React.FC<IProps> = props => {
         <Select 
           style={{ width: 90 }} 
           defaultValue={value}
-          bordered={isborder}
-          onMouseEnter={() => setIsborder(true)}
-          onMouseLeave={() => setIsborder(false)}
+          bordered={false}
+          //onMouseEnter={() => setIsborder(true)}
+          //onMouseLeave={() => setIsborder(false)}
           onChange={(val) => currencyTypeChange(record.supplierId, val)}>
           <Option value="人民币">人民币</Option>
           <Option value="美元">美元</Option>
