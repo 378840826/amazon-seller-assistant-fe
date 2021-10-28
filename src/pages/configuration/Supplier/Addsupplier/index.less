@@ -5,6 +5,27 @@
   :global(.ant-modal-body) {
     text-align: left;
     padding: 10px 14px;
+    max-height: 700px;
+    overflow: auto;
+  }
+
+  :global(.ant-modal-footer) {
+    border-top: 0;
+    padding-top: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  :global(.ant-modal-close) {
+    :hover {
+      color: @error-color;
+    }
+  }
+
+  :global {
+    button {
+      margin: 0 20px;
+    }
   }
 
   .title {
@@ -58,8 +79,9 @@
 
     .delespan .addspan {
       width: 28px;
-      line-height: 19px;
+      line-height: 30px;
       font-size: 14px;
+      margin-top: 4px;
     }
 
     .delespan {
@@ -96,7 +118,7 @@
     }
 
     :global(.ant-input-affix-wrapper > input.ant-input) {
-      width: 228px;
+      width: 200px;
       height: 28px;
       border-radius: 4px;
       padding: 0;
