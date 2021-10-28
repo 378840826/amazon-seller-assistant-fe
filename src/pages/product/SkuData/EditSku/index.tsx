@@ -497,6 +497,7 @@ const AddSku: React.FC<IProps> = props => {
     render(value: string, record: skuData.ISupplierDownList) {
       return (
         <Select
+          className={styles.select}
           bordered={false}
           defaultValue={value} 
           onChange={(val) => supplierChange(record.supplierId, val)}>         
