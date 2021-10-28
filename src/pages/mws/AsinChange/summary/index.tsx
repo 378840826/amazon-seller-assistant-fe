@@ -22,7 +22,7 @@ const Summary: React.FC<ISummary> = ({ StoreId, dispatch }) => {
     updateTime: '',
     tableErrorMsg: '',
   });
-  const changeType = storage.get('changeType') || ['changeImage', 'changeTitle', 'changeDeal', 'changeCoupon', 'changeVariants', 'changeBundle', 'changeBP', 'changeProm'];
+  const changeType = storage.get('changeType');
   const [sendState, setSendState] = useState({
     size: 20,
     current: 1,
