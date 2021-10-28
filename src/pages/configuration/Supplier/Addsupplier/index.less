@@ -1,0 +1,127 @@
+.modal {
+  text-align: left;
+  line-height: 30px;
+
+  :global(.ant-modal-body) {
+    text-align: left;
+    padding: 10px 14px;
+    max-height: 700px;
+    overflow: auto;
+  }
+
+  :global(.ant-modal-footer) {
+    border-top: 0;
+    padding-top: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  :global(.ant-modal-close) {
+    :hover {
+      color: @error-color;
+    }
+  }
+
+  :global {
+    button {
+      margin: 0 20px;
+    }
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+    color: @heading-color;
+    line-height: 21px;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: bold;
+    color: @heading-color;
+    line-height: 19px;
+    padding: 14px 0;
+  }
+
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
+
+    .singleItem {
+      display: flex;
+      width: 415px;
+    }
+
+    span {
+      display: inline-block;
+    }
+
+    .leftspan {
+      width: 90px;
+    }
+
+    .centerspan {
+      width: 70px;
+    }
+
+    .rightspan {
+      width: 42px;
+      margin-left: 90px;
+    }
+
+    .paymentspan {
+      width: 80px;
+    }
+
+    .numspan {
+      width: 23px;
+    }
+
+    .delespan .addspan {
+      width: 28px;
+      line-height: 30px;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .delespan {
+      color: @error-color;
+      margin-left: 20px;
+    }
+
+    .addspan {
+      color: @link-color;
+      margin-left: 14px;
+    }
+
+    .searchList {
+      width: 280px;
+      height: 30px;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .icon {
+      width: 5px;
+      height: 5px;
+      color: @error-color;
+    }
+
+    :global(.ant-input) {
+      width: 280px;
+      height: 30px;
+      border-radius: 4px;
+      padding: 0 14px;
+    }
+
+    :global(.ant-input-affix-wrapper) {
+      padding: 0 14px;
+    }
+
+    :global(.ant-input-affix-wrapper > input.ant-input) {
+      width: 200px;
+      height: 28px;
+      border-radius: 4px;
+      padding: 0;
+    }
+  }
+}

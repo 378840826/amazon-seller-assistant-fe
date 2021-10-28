@@ -144,6 +144,7 @@ const navigation: INavigation[] = [
       { title: '仓库地址', path: configuration.warehouse },
       { title: '物流方式', path: configuration.logistics },
       { title: '库位管理', path: configuration.storageLocation },
+      { title: '供应商管理', path: configuration.supplier },
     ],
   },
 ];
