@@ -27,7 +27,7 @@ const SupplierList: React.FC = () => {
   //列表信息
   const supplierList = useSelector((state: IPage) => state.supplier.supplierList);
   //子账号信息
-  const userList = useSelector((state: IPage) => state.supplier.userList);
+  //const userList = useSelector((state: IPage) => state.supplier.userList);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   //编辑弹框
   const [editVisible, setEditVisible] = useState<boolean>(false);
@@ -379,14 +379,14 @@ const SupplierList: React.FC = () => {
       modalVisible &&
         <Addsupplier 
           onCancel={ () => setModalVisible(!modalVisible)} 
-          userList={userList}  
+          //userList={userList}  
           addSupplierSuccess={addSupplierSuccess}></Addsupplier>      
     }
     {
       editVisible &&
         <EditSupplier 
           onCancel={ () => setEditVisible(!editVisible)} 
-          userList={userList}  
+          //userList={userList}  
           editSupplierSuccess={editSupplierSuccess}
           initdata={initdata}/>
     }

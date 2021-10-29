@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './index.less';
-import { Input, Form, Modal, Radio, Popconfirm, message, Select, Divider } from 'antd';
+import { Input, Form, Modal, Radio, Popconfirm, message } from 'antd';
 import { useDispatch } from 'umi';
 import { strToMoneyStr, strToUnsignedIntStr } from '@/utils/utils';
 
 const { Item } = Form;
-const { Option } = Select;
+//const { Option } = Select;
 
 interface IProps {
   onCancel: () => void;
-  userList: Array<API.IUserList>;
+  //userList: Array<API.IUserList>;
   addSupplierSuccess: () => void ;
 }
 
@@ -19,24 +19,26 @@ const AddSupplier: React.FC<IProps> = props => {
 
   const dispatch = useDispatch();
 
-  const { onCancel, userList, addSupplierSuccess } = props;
+  const { onCancel, addSupplierSuccess } = props;
   const [isAddCollection, setIsAddCollection] = useState<boolean>(false);
   const [isAddWord, setIsAddWord] = useState<boolean>(false);
-  const [buyerNameValue, setBuyerNameValue] = useState<string>('');
-  const [usersList, setUsersList] = useState<string[]>([]);
+  //const [buyerNameValue, setBuyerNameValue] = useState<string>('');
+  //const [usersList, setUsersList] = useState<string[]>([]);
 
   //是否月结
   const [isPayByMonthly, setIsPayMonthly] = useState<string>('now');
   //初始化值
+  /** 
   useEffect(() => {
     userList.map(item => {
       usersList.push(item.username);
       setUsersList([...usersList]);
     });  
   }, []);//eslint-disable-line react-hooks/exhaustive-deps
+  */
 
   const initialValues = {
-    buyerName: userList[0].username,
+    //buyerName: userList[0].username,
     settlementType: 'now',
     state: 'enabled',
     collectionCreateQos: [{
@@ -47,6 +49,7 @@ const AddSupplier: React.FC<IProps> = props => {
   };
 
   //自定义采购员
+  /** 
   const onbuyerNameChange = (event: any) => { // eslint-disable-line
     setBuyerNameValue(event.target.value);
   };
@@ -60,6 +63,7 @@ const AddSupplier: React.FC<IProps> = props => {
     setUsersList([...usersList]);
     setBuyerNameValue('');
   };
+  */
 
   //添加供应商表单改变
   const modalFormChange = () => {
@@ -100,13 +104,18 @@ const AddSupplier: React.FC<IProps> = props => {
     const phonereg = /^\d{11}$/;
     const qqreg = /^[1-9][0-9]{5,10}$/;
     const emailreg = /^\s*([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\s*/;
-    const wechatreg = /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/;
+    const wechatreg = /^[a-zA-Z0-9_-]{6,20}$/;
     if (!data.name) {
       message.error('供应商名称不能为空');
       return;
     }
     if (emptys.includes(data.contactsName)){
       message.error('联系人不能为空');
+      return;
+    }
+
+    if (emptys.includes(data.buyerName)){
+      message.error('采购员不能为空');
       return;
     }
 
@@ -246,15 +255,25 @@ const AddSupplier: React.FC<IProps> = props => {
         <div className={styles.singleItem}>
           <span className={styles.centerspan}>采购员：
             <span className={styles.icon}>*</span></span>
-          <Item name="buyerName">
-            <Select 
+          <Item name="buyerName" normalize={removeSpace} rules={[{
+            required: true,
+            message: '采购员不能为空',
+          }, {
+            max: 40,
+            message: '采购员长度不超过40',
+          }]}>
+            <Input/>
+            {/**
+             * <Select 
               className={styles.searchList}
               dropdownRender={menu => (
                 <div>
                   {menu}
                   <Divider style={{ margin: '4px 0' }} />
                   <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                    <Input style={{ flex: 'auto' }} value={buyerNameValue} onChange={onbuyerNameChange} placeholder="请输入采购员名称"/>
+                    <Input 
+                      style={{ flex: 'auto' }} 
+                      value={buyerNameValue} onChange={onbuyerNameChange} placeholder="请输入采购员名称"/>
                     <a
                       style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
                       onClick={addbuyerNameItem}
@@ -271,6 +290,7 @@ const AddSupplier: React.FC<IProps> = props => {
                 })
               }      
             </Select>
+             */}            
           </Item>
         </div>
         <div className={styles.singleItem}>
@@ -326,7 +346,7 @@ const AddSupplier: React.FC<IProps> = props => {
         <div className={styles.singleItem}>
           <span className={styles.centerspan}>微信：</span>
           <Item name="wechat" normalize={removeSpace} rules={[{
-            pattern: /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/,
+            pattern: /^[a-zA-Z0-9_-]{6,20}$/,
             message: '请输入正确格式的微信号',
           }]}>
             <Input/>
