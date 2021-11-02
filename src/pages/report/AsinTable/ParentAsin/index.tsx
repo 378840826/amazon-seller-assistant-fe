@@ -49,7 +49,7 @@ interface IProps {
   messageprofit: boolean;
   messagead: boolean;
   isShow: boolean;
-  messageLength: [];
+  messageLength: string[];
 }
 
 const { adinTableCalendar } = storageKeys;

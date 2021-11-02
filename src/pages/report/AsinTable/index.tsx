@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
-import { Link, useDispatch, useSelector } from 'umi';
+import { useDispatch, useSelector } from 'umi';
 
 import {
   Tabs,
 } from 'antd';
 import ChildAsin from './ChildAsin';
 import ParentAsin from './ParentAsin';
-import { Iconfont, storage } from '@/utils/utils';
+import { storage } from '@/utils/utils';
 import { storageKeys } from '@/utils/huang';
 import { getCalendarFields } from './config';
 
