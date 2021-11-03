@@ -455,7 +455,7 @@ const AsinBase: React.FC = () => {
                 })
               }
             </div>
-            <div className={styles.sellers}>
+            <div className={styles.variant}>
               <div className={styles.left}>
                 <p>Color：{asinInfo?.color ? asinInfo?.color : '—'}</p>
                 <p>包装重量：{asinInfo?.shippingWeight ? asinInfo?.shippingWeight : '—'}</p>
