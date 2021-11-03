@@ -79,5 +79,9 @@ declare namespace AsinBase {
     }[];
     skus: [];
     productAsinSkuVo: IProductAsinSkuVo;
+    size: string;
+    color: string;
+    shippingWeight: string;
+    productDimensions: string;
   }
 }
