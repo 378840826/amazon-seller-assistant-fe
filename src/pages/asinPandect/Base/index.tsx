@@ -455,6 +455,16 @@ const AsinBase: React.FC = () => {
                 })
               }
             </div>
+            <div className={styles.sellers}>
+              <div className={styles.left}>
+                <p>Color：{asinInfo?.color ? asinInfo?.color : '—'}</p>
+                <p>包装重量：{asinInfo?.shippingWeight ? asinInfo?.shippingWeight : '—'}</p>
+              </div>
+              <div className={styles.right}>
+                <p>Size：{asinInfo?.size ? asinInfo?.size : '—'}</p>
+                <span>包装尺寸：{asinInfo?.productDimensions ? asinInfo?.productDimensions : '—'}</span>
+              </div>
+            </div>
           </div>
         </header>
         <main className={styles.datas}>
