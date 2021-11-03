@@ -20,6 +20,7 @@ import {
   Radio,
   Input,
   Form,
+  Button,
 } from 'antd';
 import {
   QuestionCircleOutlined,
@@ -266,6 +267,34 @@ const AsinBase: React.FC = () => {
     };
     new Promise((resolve, reject) => {
       dispatch({
+        type: 'asinBase/priceEstimated',
+        resolve,
+        reject,
+        payload,
+      });
+    }).then(datas => {
+      const {
+        data,
+      } = datas as {
+        data: AsinBase.IProductAsinSkuVo;
+      };
+      setPriceEs(data);
+    }).catch(err => {
+      console.error(err);
+    });
+  };
+
+  // 提交修改表单
+  const onFinish = () => {
+    const payload = {
+      headersParams: {
+        StoreId: currentShop.id,
+      },
+      sku: defaultSku,
+      ...form.getFieldsValue(),
+    };
+    new Promise((resolve, reject) => {
+      dispatch({
         type: 'asinBase/updatePriceEstimated',
         resolve,
         reject,
@@ -473,12 +502,21 @@ const AsinBase: React.FC = () => {
             <div className={styles.profit}>
               <Form form={form} 
                 onChange={formChange}
+                onFinish={onFinish}
                 name="asinTable"
                 initialValues={{ remember: true }}
                 id="asinTable"
               >
-                <h2 onClick={formChange}>利润估算：</h2>
-
+                <h2>
+                  利润估算：
+                  <Tooltip title="点击右侧按钮，支持同步售价 成本，到商品列表">
+                    <QuestionCircleOutlined className={styles.icon}/>
+                  </Tooltip>
+                  &nbsp;
+                  <Button type="primary" onClick={onFinish}>
+                   同步到商品列表
+                  </Button>
+                </h2>      
                 <div className={styles.common}>
                   <label className={styles.label}>
                     <span className={styles.labelText}>售价：</span>
@@ -637,6 +675,11 @@ const AsinBase: React.FC = () => {
                     }
                   </span>
                 </div>
+                {/* <Form.Item >
+                  <Button type="primary" htmlType="submit">
+                   同步商品列表
+                  </Button>
+                </Form.Item> */}
               </Form>
             </div>
             <div className={styles.costPrice}>
