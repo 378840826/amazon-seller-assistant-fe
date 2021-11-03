@@ -96,7 +96,7 @@ export default {
     const list = (new Array(10)).fill('').map((_: '', i: number) => {
       return {
         ...item,
-        storeId: `1${i}`,
+        storeId: `126114038166494413${i}`,
       };
     });
     setTimeout(() => {
@@ -154,8 +154,8 @@ export default {
           },
           storeDatas: [
             {
-              storeId: '1',
-              storeName: '店铺名称1',
+              storeId: '3',
+              storeName: '店铺名称3',
               marketplace: 'JP',
               currency: '￥',
               totalSales: null,

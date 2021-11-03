@@ -1,0 +1,20 @@
+.container {
+  padding: 0 20px;
+
+  :global {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td,
+    .ant-table tfoot > tr > th,
+    .ant-table tfoot > tr > td {
+      padding: 11px 6px;
+    }
+
+    .ant-table tr:nth-child(odd) {
+      background: @simple-table-header-bg;
+    }
+
+    .ant-table-container {
+      border: 1px solid #e7eaec;
+    }
+  }
+}

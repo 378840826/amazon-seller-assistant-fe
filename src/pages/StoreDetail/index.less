@@ -1,0 +1,72 @@
+.page {
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0;
+
+    & > div {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .content {
+    background: #fff;
+
+    .contentHead {
+      padding: 6px 20px 20px 20px;
+    }
+  }
+
+  .headRight > * {
+    margin-left: 10px;
+  }
+
+  .pageTitle {
+    font-size: @font-size-lg;
+    border-left: 4px solid @primary-color;
+    line-height: @font-size-lg;
+    padding-left: 8px;
+  }
+
+  .notBind {
+    font-size: @font-size-sm;
+    color: @text-color-secondary;
+  }
+
+  .updateTime {
+    font-size: @font-size-sm;
+  }
+
+  .iconZhankai {
+    margin-left: 2px;
+    transform: rotate(-90deg);
+    font-size: 11px;
+    color: @link-color;
+  }
+
+  .DefinedCalendar {
+    width: 280px;
+  }
+
+  .tabsContainer {
+    padding-bottom: 20px;
+  }
+
+  .Tabs {
+    :global {
+      .ant-tabs-nav-wrap {
+        margin: 0 20px;
+      }
+
+      .ant-tabs-tab {
+        padding-bottom: 2px;
+      }
+
+      .ant-tabs-top > .ant-tabs-nav {
+        margin: 10px 0;
+      }
+    }
+  }
+}

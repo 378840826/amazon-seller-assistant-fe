@@ -3,7 +3,8 @@
  * 全部列
  */
 import React from 'react';
-import { Button, Space } from 'antd';
+import { Link } from 'umi';
+import { Space } from 'antd';
 import classnames from 'classnames';
 import { ColumnProps } from 'antd/es/table';
 import { SortOrder } from 'antd/es/table/interface';
@@ -326,11 +327,10 @@ export const getColumns = (params: {
           width: 130,
           align: 'left',
           fixed: 'left',
-          render: (val: string) => (
-            <Button type="link" className={styles.storeName}>
-              { val }
-            </Button>
-          ),
+          render: (val: string, record: StoreReport.IStoreReport) => {
+            const url = `/overview/shop/detail?storeId=${record.storeId}`;
+            return <Link to={url}>{ val }</Link>;
+          },
         },
       ] as any,
     },
@@ -437,8 +437,9 @@ export const getColumns = (params: {
           width: 40,
           align: 'center',
           fixed: 'right',
-          render: () => {
-            return <Button type="link" className={styles.detailBtn}>详情</Button>;
+          render: (_: undefined, record: StoreReport.IStoreReport) => {
+            const url = `/overview/shop/detail?storeId=${record.storeId}`;
+            return <Link className={styles.detailBtn} to={url}>详情</Link>;
           },
         },
       ] as any,

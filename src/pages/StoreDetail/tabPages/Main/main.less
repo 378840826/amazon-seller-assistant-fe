@@ -1,0 +1,37 @@
+.container {
+  margin: 0;
+}
+
+.tofuContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chartsContainer {
+  :global {
+    .ant-tabs-top > .ant-tabs-nav::before {
+      content: none;
+    }
+
+    .ant-tabs-tab {
+      margin-right: 20px;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+}
+
+.dateToobar {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+
+  & > * {
+    margin-left: 20px;
+  }
+}
+
+.RadioGroup {
+  display: block;
+  text-align: center;
+}

@@ -1,0 +1,71 @@
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+
+  a {
+    &:nth-child(1) .blockVal {
+      color: @link-color;
+    }
+
+    &:nth-child(2) .blockVal {
+      color: @text-color-down;
+    }
+
+    &:nth-child(3) .blockVal {
+      color: @text-color-up;
+    }
+
+    &:nth-child(4) .blockVal {
+      color: #ff9200;
+    }
+
+    &:nth-child(5) .blockVal {
+      color: @text-color-down;
+    }
+
+    &:nth-child(6) .blockVal {
+      color: #786cff;
+    }
+
+    &:nth-child(7) .blockVal {
+      color: #cf59ff;
+    }
+  }
+}
+
+.title {
+  color: @heading-color;
+  font-weight: bold;
+}
+
+.block {
+  margin-right: 20px;
+  margin-bottom: 14px;
+  width: 200px;
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: #f7f7f7;
+  color: @heading-color;
+
+  .blockVal {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  :global {
+    .anticon {
+      color: @text-color-secondary;
+    }
+  }
+}
+
+a .block:hover {
+  background: #fff;
+  box-shadow: 0 0 6px 0 rgb(199, 199, 199, 0.5);
+  color: @text-color;
+}
