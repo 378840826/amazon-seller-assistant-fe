@@ -7,7 +7,6 @@ import { getLabel, getLabelEnglish, getCalendarFields } from '../config';
 import {
   useDispatch,
   useSelector,
-  Link,
 } from 'umi';
 import { Iconfont, storage } from '@/utils/utils';
 // import { colsWidth } from './config';
@@ -21,6 +20,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { parentAsinCols } from './cols';
 import CustomCol from './CustomCol';
 import Filtern from './Filtern';
+import Message from '../components/Message';
 import {
   Menu,
   Button,
@@ -666,66 +666,19 @@ const ChildAsin: React.FC<IProps> = props => {
       </div>
 
       <div className={commonStyles.rightLayout}>
-        <div className={styles.messageIcon}>
-          <div className={styles.iconfont} onClick={clickmessageIcon}>
-            <div
-              className={styles.qty}
-              style={{ 
-                display: visible ? 'none' : 'block',
-              }}
-            >
-              {messageLength.length}</div>
-            <Iconfont 
-              type="icon-message1" 
-              className={`
-              ${styles.icon} 
-              ${visible ? styles.active : ''}
-              ${isShow ? '' : 'none'}
-            `}
-            />
-          </div>
-          
-          <div 
-            className={`${styles.messageBox}`} 
-            style={{
-              display: visible ? 'block' : 'none',
-            }}
-          >
-            <div className={`${styles.base} ${styles.data}`} style={{
-              display: messagedata ? 'block' : 'none',
-              marginTop: '10px',
-            }}>
-              <p>为保证数据完整，请导入每天的Business Report</p>
-              <footer>
-                <span className={styles.ignore} 
-                  onClick={() => setMessagedata(!messagedata)}>忽略</span>
-                <Link className={styles.to} to="/report/import" target="_blank">去导入</Link>
-              </footer>
-            </div>
-
-            <div className={`${styles.base} ${styles.profit}`} style={{
-              display: messageprofit ? 'block' : 'none',
-            }}>
-              <p>为提高利润统计的准确性，请在商品列表导入成本、运费</p>
-              <footer>
-                <span className={styles.ignore}
-                  onClick={() => setMessageProfit(!messageprofit)}>忽略</span>
-                <Link className={styles.to} to="/product/list" target="_blank">去导入</Link>
-              </footer>
-            </div>
-
-            <div className={`${styles.base} ${styles.ad}`} style={{
-              display: messagead ? 'block' : 'none',
-            }}>
-              <p>未完成广告授权</p>
-              <footer>
-                <span className={styles.ignore} 
-                  onClick={() => setMessageAd(!messagead)}>忽略</span>
-                <Link className={styles.to} to="/shop/list" target="_blank">去授权</Link>
-              </footer>
-            </div>
-          </div>
-        </div>
+        <Message
+          clickmessageIcon={clickmessageIcon}
+          visible={visible}
+          setMessagedata={setMessagedata}
+          messagedata={messagedata}
+          setMessageProfit={setMessageProfit}
+          messageprofit={messageprofit}
+          setMessageAd={setMessageAd}
+          messagead={messagead}
+          isShow={isShow}
+          messageLength={messageLength}
+          marginRight={4}
+        />
         <div className={commonStyles.calendar}>
           <DefinedCalendar 
             itemKey={calendar} 
