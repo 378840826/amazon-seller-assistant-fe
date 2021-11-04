@@ -20,6 +20,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { parentAsinCols } from './cols';
 import CustomCol from './CustomCol';
 import Filtern from './Filtern';
+import Message from '../components/Message';
 import {
   Menu,
   Button,
@@ -39,6 +40,16 @@ interface IProps {
   receptionMessage: (messageprofit: boolean) => void;
   canlendarCallback: (calendar: string) => void;
   parentAsin: string;
+  clickmessageIcon: () => void;
+  visible: boolean;
+  setMessagedata: Function;
+  setMessageProfit: Function;
+  setMessageAd: Function;
+  messagedata: boolean;
+  messageprofit: boolean;
+  messagead: boolean;
+  isShow: boolean;
+  messageLength: string[];
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -47,6 +58,16 @@ const ChildAsin: React.FC<IProps> = props => {
     tabValue,
     receptionMessage,
     parentAsin,
+    clickmessageIcon,
+    visible,
+    setMessagedata,
+    setMessageProfit,
+    setMessageAd,
+    messagedata,
+    messageprofit,
+    messagead,
+    isShow,
+    messageLength,
   } = props;
   // 店铺
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -54,8 +75,6 @@ const ChildAsin: React.FC<IProps> = props => {
     (state: AsinTable.IDvaState) => state.asinTable.parentCustomcol
   );
   const functionCount = useSelector((state: IConnectState) => state.user.currentUser.memberFunctionalSurplus.find(item => item.functionName === 'ASIN报表导出')?.frequency || 0);  
-
-
   // hooks
   const [searchForm] = Form.useForm();
   const dispatch = useDispatch();
@@ -647,6 +666,19 @@ const ChildAsin: React.FC<IProps> = props => {
       </div>
 
       <div className={commonStyles.rightLayout}>
+        <Message
+          clickmessageIcon={clickmessageIcon}
+          visible={visible}
+          setMessagedata={setMessagedata}
+          messagedata={messagedata}
+          setMessageProfit={setMessageProfit}
+          messageprofit={messageprofit}
+          setMessageAd={setMessageAd}
+          messagead={messagead}
+          isShow={isShow}
+          messageLength={messageLength}
+          marginRight={4}
+        />
         <div className={commonStyles.calendar}>
           <DefinedCalendar 
             itemKey={calendar} 

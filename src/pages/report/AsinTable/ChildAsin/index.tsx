@@ -20,6 +20,7 @@ import Summary from './Summary';
 import { childAsinCols } from './cols';
 import CustomCol from './CustomCol';
 import Filtern from './Filtern';
+import Message from '../components/Message';
 import {
   Menu,
   Button,
@@ -42,6 +43,16 @@ interface IProps {
   receptionMessage: (messageprofit: boolean) => void;
   canlendarCallback: (calendar: string) => void;
   setTabTag: ({ tag, asin }: ITags) => void;
+  clickmessageIcon: () => void;
+  visible: boolean;
+  setMessagedata: Function;
+  setMessageProfit: Function;
+  setMessageAd: Function;
+  messagedata: boolean;
+  messageprofit: boolean;
+  messagead: boolean;
+  isShow: boolean;
+  messageLength: string[];
 }
 
 const { adinTableCalendar } = storageKeys;
@@ -50,6 +61,16 @@ const ChildAsin: React.FC<IProps> = props => {
     tabValue,
     receptionMessage,
     setTabTag,
+    clickmessageIcon,
+    visible,
+    setMessagedata,
+    setMessageProfit,
+    setMessageAd,
+    messagedata,
+    messageprofit,
+    messagead,
+    isShow,
+    messageLength,
   } = props;
   // dva
   const currentShop = useSelector((state: Global.IGlobalShopType) => state.global.shop.current);
@@ -690,6 +711,19 @@ const ChildAsin: React.FC<IProps> = props => {
       </div>
 
       <div className={commonStyles.rightLayout}>
+        <Message
+          clickmessageIcon={clickmessageIcon}
+          visible={visible}
+          setMessagedata={setMessagedata}
+          messagedata={messagedata}
+          setMessageProfit={setMessageProfit}
+          messageprofit={messageprofit}
+          setMessageAd={setMessageAd}
+          messagead={messagead}
+          isShow={isShow}
+          messageLength={messageLength}
+          marginRight={19}
+        />
         <div className={commonStyles.ratioSwitch}>
           <span className={commonStyles.text}>环比：</span>
           <Switch
