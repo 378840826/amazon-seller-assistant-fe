@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './index.less';
-import { Link, useDispatch, useSelector } from 'umi';
+import { useDispatch, useSelector } from 'umi';
 
 import {
   Tabs,
 } from 'antd';
 import ChildAsin from './ChildAsin';
 import ParentAsin from './ParentAsin';
-import { Iconfont, storage } from '@/utils/utils';
+import { storage } from '@/utils/utils';
 import { storageKeys } from '@/utils/huang';
 import { getCalendarFields } from './config';
 
@@ -52,6 +52,17 @@ const AsinTable = () => {
     tag: 'child',
     asin: '',
   });
+  // 计算没导入的数量
+  const messageLength = [];
+  if (messagedataAsync) {
+    messageLength.push('messagedataAsync');
+  }
+  if (messageprofitAsync) {
+    messageLength.push('messageprofitAsync');
+  }
+  if (messageadAsync) {
+    messageLength.push('messageadAsync');
+  }
   //商品父ASIN 跳转过来传接收参数
   useEffect(() => {
     if (history.state && history.state.state && history.state.state.tag) {
@@ -101,6 +112,7 @@ const AsinTable = () => {
         setMessagedata(true);
         setIsShow(true);
         setMessagedataAsync(true);
+        messageLength.push(messageadAsync, messagedata);
         // 数据导入齐全
       } else {
         setMessagedata(false);
@@ -112,6 +124,7 @@ const AsinTable = () => {
         setMessageAd(true);
         setIsShow(true);
         setMessageadAsync(true);
+        messageLength.push(messagead);
       } else {
         // 已通过MWS绑定店铺并且完成广告授权
         setMessageAd(false);
@@ -142,6 +155,7 @@ const AsinTable = () => {
   function tabCallback(key: string) {
     setCurrentTab(key);
     setTabTag({ ...tabTag, tag: key });
+    setVisible(false);
     if (key === 'child') {
       setTabTag({
         tag: 'child',
@@ -171,65 +185,34 @@ const AsinTable = () => {
       receptionMessage={receptionMessage} 
       canlendarCallback={canlendarCallback}
       setTabTag={setTabTag}
+      clickmessageIcon={clickmessageIcon}
+      visible={visible}
+      setMessagedata={setMessagedata}
+      messagedata={messagedata}
+      setMessageProfit={setMessageProfit}
+      messageprofit={messageprofit}
+      setMessageAd={setMessageAd}
+      messagead={messagead}
+      isShow={isShow}
+      messageLength={messageLength}
     /> : 
       <ParentAsin 
         tabValue={tabTag.tag} 
         receptionMessage={receptionMessage} 
         canlendarCallback={canlendarCallback}
         parentAsin={tabTag.asin}
+        clickmessageIcon={clickmessageIcon}
+        visible={visible}
+        setMessagedata={setMessagedata}
+        messagedata={messagedata}
+        setMessageProfit={setMessageProfit}
+        messageprofit={messageprofit}
+        setMessageAd={setMessageAd}
+        messagead={messagead}
+        isShow={isShow}
+        messageLength={messageLength}
       />
     }
-
-    <div className={styles.messageIcon}>
-      <Iconfont 
-        type="icon-xiazai41" 
-        className={`
-          ${styles.icon} 
-          ${visible ? styles.active : ''}
-          ${isShow ? '' : 'none'}
-        `}
-        onClick={clickmessageIcon}
-      />
-      <div 
-        className={`${styles.messageBox}`} 
-        style={{
-          display: visible ? 'block' : 'none',
-        }}
-      >
-        <div className={`${styles.base} ${styles.data}`} style={{
-          display: messagedata ? 'block' : 'none',
-        }}>
-          <p>为保证数据完整，请导入每天的Business Report</p>
-          <footer>
-            <span className={styles.ignore} 
-              onClick={() => setMessagedata(!messagedata)}>忽略</span>
-            <Link className={styles.to} to="/report/import" target="_blank">去导入</Link>
-          </footer>
-        </div>
-
-        <div className={`${styles.base} ${styles.profit}`} style={{
-          display: messageprofit ? 'block' : 'none',
-        }}>
-          <p>为提高利润统计的准确性，请在商品列表导入成本、运费</p>
-          <footer>
-            <span className={styles.ignore}
-              onClick={() => setMessageProfit(!messageprofit)}>忽略</span>
-            <Link className={styles.to} to="/product/list" target="_blank">去导入</Link>
-          </footer>
-        </div>
-
-        <div className={`${styles.base} ${styles.ad}`} style={{
-          display: messagead ? 'block' : 'none',
-        }}>
-          <p>未完成广告授权</p>
-          <footer>
-            <span className={styles.ignore} 
-              onClick={() => setMessageAd(!messagead)}>忽略</span>
-            <Link className={styles.to} to="/shop/list" target="_blank">去授权</Link>
-          </footer>
-        </div>
-      </div>
-    </div>
   </div>;
 };
 
