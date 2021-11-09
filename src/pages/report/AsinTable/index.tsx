@@ -112,7 +112,6 @@ const AsinTable = () => {
         setMessagedata(true);
         setIsShow(true);
         setMessagedataAsync(true);
-        messageLength.push(messageadAsync, messagedata);
         // 数据导入齐全
       } else {
         setMessagedata(false);
@@ -124,7 +123,6 @@ const AsinTable = () => {
         setMessageAd(true);
         setIsShow(true);
         setMessageadAsync(true);
-        messageLength.push(messagead);
       } else {
         // 已通过MWS绑定店铺并且完成广告授权
         setMessageAd(false);
