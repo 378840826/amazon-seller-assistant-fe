@@ -434,12 +434,11 @@ const Header: React.FC = () => {
           visible={visible.batchSearch}
           onVisibleChange={flag => setVisible({ ...visible, batchSearch: flag })}
         >
-          <Button type="primary">
+          <Button>
             批量查询 {visible.batchSearch ? <UpOutlined /> : <DownOutlined />}
           </Button>
         </Dropdown>
         <Button
-          type="primary"
           className={styles.btnFiltrate}
           onClick={handleClickFiltrate}
         >

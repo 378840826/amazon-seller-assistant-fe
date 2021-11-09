@@ -247,7 +247,7 @@ const Header: React.FC = () => {
         visible={batchVisible}
         onVisibleChange={flag => setBatchVisible(flag)}
       >
-        <Button type="primary">
+        <Button>
           批量查询 {batchVisible ? <UpOutlined /> : <DownOutlined />}
         </Button>
       </Dropdown>
@@ -260,7 +260,7 @@ const Header: React.FC = () => {
         arrow
         onVisibleChange={flag => switchBatchSettingVisible(flag)}
       >
-        <Button type="primary">
+        <Button>
           批量设置规则 {batchSettingVisible ? <UpOutlined /> : <DownOutlined />}
         </Button>
       </Dropdown>
@@ -271,7 +271,7 @@ const Header: React.FC = () => {
         className={createTagVisible ? styles.active : ''}
         onVisibleChange={flag => setCreateTagVisible(flag)}
       >
-        <Button type="primary">
+        <Button>
           创建标签 {createTagVisible ? <UpOutlined /> : <DownOutlined />}
         </Button>
       </Dropdown>
