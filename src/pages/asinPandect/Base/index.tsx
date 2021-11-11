@@ -519,7 +519,7 @@ const AsinBase: React.FC = () => {
               >
                 <h2>
                   利润估算：
-                  <Tooltip title="点击右侧按钮，支持同步售价 成本，到商品列表">
+                  <Tooltip title="点击右侧按钮，支持同步售价 成本，到商品列表，且售价将更新到亚马逊；">
                     <QuestionCircleOutlined className={styles.icon}/>
                   </Tooltip>
                   &nbsp;
