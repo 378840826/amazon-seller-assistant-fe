@@ -1,101 +1,106 @@
 .messageIcon {
-    position: relative;
-    .qty {
-      position: absolute;
-      top: -9px;
-      right: -9px;
-      width: 18px;
-      height: 18px;
-      line-height: 18px;
-      font-size: 12px;
-      text-align: center;
-      background: #E00000;
-      color: #F8F8F8;
-      border-radius: 50%;
-      font-family: MicrosoftYaHei;
-    }
-    .iconfont {
-      width: 30px;
-      height: 30px;
-      border: 1px solid #D9D9D9;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .icon {
-      cursor: pointer;
-      color: @text-color-secondary;
-      &:hover {
-        color: @warning-color;
-      }
-    }
-  
-    .icon.active {
+  position: relative;
+
+  .qty {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 12px;
+    text-align: center;
+    background: #e00000;
+    color: #f8f8f8;
+    border-radius: 50%;
+    //font-family: MicrosoftYaHei;
+  }
+
+  .iconfont {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon {
+    cursor: pointer;
+    color: @text-color-secondary;
+
+    &:hover {
       color: @warning-color;
     }
-  
-    .messageBox {
-      position: absolute;
-      right: -180px;
-      z-index: 1055;
-      .base {
-        height: 92px;
-        background-color: #fff;
-        box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
-        margin-left: auto;
+  }
+
+  .icon.active {
+    color: @warning-color;
+  }
+
+  .messageBox {
+    position: absolute;
+    right: -180px;
+    z-index: 1055;
+
+    .base {
+      height: 92px;
+      background-color: #fff;
+      box-shadow: 0 3px 13px 0 rgba(215, 215, 215, 0.75);
+      margin-left: auto;
+      text-align: center;
+      border-radius: @border-radius-base;
+      transition: all 0.3s;
+
+      p {
+        padding: 20px 0 10px;
         text-align: center;
-        border-radius: @border-radius-base;
+        color: @heading-color;
+      }
+
+      button {
+        border: 0;
+        box-shadow: none;
+      }
+
+      span.ignore {
+        color: @text-color-secondary;
+        padding-right: 12px;
+        cursor: pointer;
         transition: all 0.3s;
-  
-        p {
-          padding: 20px 0 10px;
-          text-align: center;
-          color: @heading-color;
-        }
-  
-        button {
-          border: 0;
-          box-shadow: none;
-        }
-  
-        span.ignore {
-          color: @text-color-secondary;
-          padding-right: 12px;
-          cursor: pointer;
-          transition: all 0.3s;
-  
-          &:hover {
-            opacity: 0.8;
-          }
-        }
-  
-        .to {
-          color: @link-color;
-          padding-left: 12px;
-          cursor: pointer;
-          transition: all 0.3s;
-  
-          &:hover {
-            color: @primary-color;
-          }
+
+        &:hover {
+          opacity: 0.8;
         }
       }
-  
-      .base:not(:first-child) {
-        margin-top: 10px;
-      }
-  
-      .data {
-        width: 390px;
-      }
-  
-      .profit {
-        width: 390px;
-      }
-  
-      .ad {
-        width: 390px;
+
+      .to {
+        color: @link-color;
+        padding-left: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          color: @primary-color;
+        }
       }
     }
+
+    .base:not(:first-child) {
+      margin-top: 10px;
+    }
+
+    .data {
+      width: 390px;
+    }
+
+    .profit {
+      width: 390px;
+    }
+
+    .ad {
+      width: 390px;
+    }
   }
+}
