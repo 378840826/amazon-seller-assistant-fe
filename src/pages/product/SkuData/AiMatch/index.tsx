@@ -118,6 +118,7 @@ const AiMatch: React.FC<IProps> = props => {
         <p>• 店铺绑定后，系统自动同步店铺的Merchant SKU，点击“开始匹配”，
           系统按照以下规则进行SKU和Merchant SKU的智能匹配，把SKU和Merchant SKU关联起来；</p>
         <p>• 建议每次添加SKU，使用此智能匹配功能；</p>
+        <p>• 匹配规则是按输入的规则去截取Merchant SKU的字符串，跟已上传的SKU精准匹配，即截取内容跟SKU完全相同，才算匹配成功；</p>
         <p>• 命名不规律，导致Merchant SKU和SKU无法匹配，则需要手动匹配；</p>
       </header>
       <Form 
