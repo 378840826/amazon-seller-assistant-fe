@@ -87,6 +87,7 @@
   }
 
   .content {
+    //display: flex;
     position: relative;
   }
 
@@ -99,7 +100,7 @@
   .rightLayout {
     padding-top: 5px;
     position: absolute;
-    right: 25px;
+    right: 100px;
     top: 0;
   }
 
@@ -110,6 +111,164 @@
     button {
       margin: 0 8px;
     }
+  }
+}
+
+.repeateskumodal {
+  :global {
+    .ant-modal-body {
+      padding: 20px;
+      text-align: left;
+      height: 440px;
+    }
+
+    .ant-modal-close {
+      :hover {
+        color: @error-color;
+      }
+    }
+
+    .ant-space-vertical {
+      margin-top: 10px;
+    }
+
+    .ant-modal-footer {
+      text-align: center;
+      border-top: 0;
+      padding: 0 16px 20px 16px;
+    }
+
+    .ant-modal-footer .ant-btn + .ant-btn:not(.ant-dropdown-trigger) {
+      margin-left: 20px;
+    }
+  }
+
+  .span {
+    font-size: 14px;
+    line-height: 19px;
+    color: @heading-color;
+  }
+
+  .table {
+    margin: 14px 0;
+    height: 264px;
+
+    th {
+      height: 44px !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      background-color: #f3f3f3 !important;
+    }
+
+    tr:hover td {
+      background-color: @simple-table-header-bg !important;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    :global {
+      .ant-table-body {
+        border: 1px solid @divider-line-color;
+        border-top: 0;
+        overflow-y: auto !important;
+      }
+
+      .ant-table-tbody > tr > td {
+        padding: 13px 16px;
+      }
+    }
+  }
+
+  .handleCol {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+}
+
+.clus {
+  font-size: 16px;
+  font-weight: bold;
+  color: @heading-color;
+  line-height: 21px;
+  margin-bottom: 16px;
+}
+
+.num {
+  color: #0083ff;
+}
+
+.showcovermodal {
+  :global {
+    .ant-modal-body {
+      padding: 20px;
+      text-align: left;
+    }
+
+    .ant-modal-close {
+      :hover {
+        color: @error-color;
+      }
+    }
+  }
+
+  .span {
+    font-size: 14px;
+    line-height: 19px;
+    color: @heading-color;
+  }
+
+  .table {
+    margin: 14px 0;
+    height: 264px;
+
+    th {
+      height: 44px !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      background-color: #f3f3f3 !important;
+    }
+
+    tr:hover td {
+      background-color: @simple-table-header-bg !important;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    :global {
+      .ant-table-body {
+        border: 1px solid @divider-line-color;
+        border-top: 0;
+        overflow-y: auto !important;
+      }
+
+      .ant-table-tbody > tr > td {
+        padding: 13px 16px;
+      }
+    }
+  }
+
+  .handleCol {
+    color: @error-color;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff000d;
+    }
+  }
+
+  .button {
+    display: flex;
+    justify-content: center;
+    height: 30px;
+    margin-top: 20px;
   }
 }
 

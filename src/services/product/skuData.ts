@@ -60,6 +60,13 @@ export async function uploadBatchSKU(data: API.IParams) {
   );
 }
 
+//覆盖重复的sku
+export async function coverSKU(data: API.IParams) {
+  return request('/api/mws/shipment/sku/product/update/skuProducts', { 
+    method: 'POST',
+    data,
+  });
+}
 
 // 批量删除SKU
 export async function batchDelete(data: API.IParams) {

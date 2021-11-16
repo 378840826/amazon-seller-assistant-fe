@@ -223,6 +223,7 @@ const SkuData: React.FC = () => {
       columnWidth: 38,
       onChange (selectedRowKeys: TableRowSelection<string>) {
         setSelectedSkuId([...selectedRowKeys as string[]]);
+
       },
     } as {},
     rowKey: (record: { id: string }) => record.id, // 选中ID
