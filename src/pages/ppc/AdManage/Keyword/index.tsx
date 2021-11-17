@@ -4,7 +4,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
-import { Select, Button, Modal, message, Table, Tabs, Input, Checkbox } from 'antd';
+import { Select, Button, Modal, message, Table, Tabs, Input, Checkbox, Switch } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
@@ -103,6 +103,8 @@ const Keyword: React.FC = function() {
   const [selectedKeywordsList, setSelectedKeywordsList] = useState<IKeyword[]>([]);
   // 已选关键词的勾选，形式为 keywordText-matchType，和 Table 的 rowKey 一致
   const [checkedSelectedIds, setCheckedSelectedIds] = useState<string[]>([]);
+  // 控制环比开关
+  const [ratio, setRatio] = useState<boolean>(false);
   // 待选关键词的匹配方式,默认全选
   const [candidateMatchTypes, setCandidateMatchType] = useState<API.AdKeywordMatchType[]>([
     'broad', 'phrase', 'exact', 
@@ -1120,6 +1122,7 @@ const Keyword: React.FC = function() {
       order,
       marketplace,
       currency,
+      ratio,
     }),
     
     {
@@ -1274,6 +1277,13 @@ const Keyword: React.FC = function() {
           </div>
         </div>
         <div>
+          <div className={styles.ratioSwitch}>
+            <span className={styles.text}>环比：</span>
+            <Switch
+              checked={ratio}
+              onClick={() => setRatio(!ratio)}
+            />
+          </div>
           <DefinedCalendar 
             itemKey={calendarDefaultKey}
             storageKey={calendarStorageBaseKey}
