@@ -256,9 +256,10 @@ export function getStatisticsCols(
     order: Order;
     marketplace: API.Site;
     currency: string;
+    ratio: boolean;
   }
 ) {
-  const { total, sort, order, marketplace, currency } = params;
+  const { total, sort, order, marketplace, currency, ratio } = params;
   // 合计数据格式化
   const formatTotal = {
     impressions: toThousands(Number(total.impressions)),
@@ -275,7 +276,7 @@ export function getStatisticsCols(
   };
   return [
     {
-      title: '销售额',
+      title: React.createElement('div', null, '销售额'),
       dataIndex: 'sales',
       key: 'sales',
       align: 'right',
@@ -294,7 +295,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.salesRatio, decimals: 2 }));
-            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), ratio ? rate : '');
           },
         },
       ],
@@ -318,7 +319,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.orderNumRatio, decimals: 2 }));
-            return React.createElement('div', null, value, rate);
+            return React.createElement('div', null, value, ratio ? rate : '');
           },
         },
       ],
@@ -342,7 +343,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.cpcRatio, decimals: 2 }));
-            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), ratio ? rate : '');
           },
         },
       ],
@@ -366,7 +367,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.cpaRatio, decimals: 2 }));
-            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), ratio ? rate : '');
           },
         },
       ],
@@ -390,7 +391,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.spendRatio, decimals: 2 }));
-            return React.createElement('div', null, getShowPrice(value, marketplace, currency), rate);
+            return React.createElement('div', null, getShowPrice(value, marketplace, currency), ratio ? rate : '');
           },
         },
       ],
@@ -414,7 +415,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.acosRatio, decimals: 2 }));
-            return React.createElement('div', null, numberToPercent(value), rate);
+            return React.createElement('div', null, numberToPercent(value), ratio ? rate : '');
           },
         },
       ],
@@ -438,7 +439,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.roasRatio, decimals: 2 }));
-            return React.createElement('div', null, value ? value.toFixed(2) : '—', rate);
+            return React.createElement('div', null, value ? value.toFixed(2) : '—', ratio ? rate : '');
           },
         },
       ],
@@ -463,7 +464,7 @@ export function getStatisticsCols(
               null,
               Rate({ value: record.impressionsRatio, decimals: 2 }),
             );
-            return React.createElement('div', null, value, rate);
+            return React.createElement('div', null, value, ratio ? rate : '');
           },
         },
       ],
@@ -487,7 +488,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.clicksRatio, decimals: 2 }));
-            return React.createElement('div', null, value, rate);
+            return React.createElement('div', null, value, ratio ? rate : '');
           },
         },
       ],
@@ -511,7 +512,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.ctrRatio, decimals: 2 }));
-            return React.createElement('div', null, numberToPercent(value), rate);
+            return React.createElement('div', null, numberToPercent(value), ratio ? rate : '');
           },
         },
       ],
@@ -535,7 +536,7 @@ export function getStatisticsCols(
               'div',
               null,
               Rate({ value: record.conversionsRateRatio, decimals: 2 }));
-            return React.createElement('div', null, numberToPercent(value), rate);
+            return React.createElement('div', null, numberToPercent(value), ratio ? rate : '');
           },
         },
       ],
