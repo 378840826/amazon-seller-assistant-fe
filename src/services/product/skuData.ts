@@ -7,10 +7,10 @@
 import request from '@/utils/request';
 
 // 获取sku列表
-export async function getskuList(params: API.IParams) {
+export async function getskuList(data: API.IParams) {
   return request('/api/mws/shipment/sku/product/list', {
-    // method: 'POST',
-    params,
+    method: 'POST',
+    data,
   });
 }
 
