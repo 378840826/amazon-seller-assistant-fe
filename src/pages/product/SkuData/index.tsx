@@ -22,6 +22,7 @@ import BatchRelevance from './BatchRelevance';
 import BatchSKU from './BatchSKU';
 import TableNotData from '@/components/TableNotData';
 import BatchUpdateState from './BatchUpdateState';
+import JsExportExcel from 'js-export-excel';
 
 interface IPage extends ConnectProps {
   supplier: ISupplierState;
@@ -38,6 +39,11 @@ const SkuData: React.FC = () => {
   const [state, setState] = useState<string|null>(null);
   const [code, setCode] = useState<string|null>(null);
   const [selectedSkuId, setSelectedSkuId] = useState<string[]>([]);
+  //获取到的数据拼接
+  //const [totaldata, setTotaldata] = useState<skuData.IRecord[]>([]);
+  //勾选中的数据
+  //const [checkedData, setCheckedData] = useState<skuData.IRecord[]>([]);
+
 
   //const [supplierDownList, setsupplierDownList] = useState<Supplier.ISupplierList[]>([]);
 
@@ -46,9 +52,10 @@ const SkuData: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const request = useCallback((params = { currentPage: 1, pageSize: 20 }) => {
+  const request = useCallback((params = { currentPage: 1, pageSize: 20, ids: [] }) => {
     let payload: any = { }; // eslint-disable-line
-    payload = Object.assign({ state, code }, payload, params);
+
+    payload = Object.assign({ state, code }, payload, params );
     
     payload.state === undefined && (payload.state = null);
 
@@ -91,6 +98,7 @@ const SkuData: React.FC = () => {
     }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, state, code]);
 
+
   //获取供应商下拉列表
 
   const getdownSupplier = useCallback(() => {
@@ -126,6 +134,27 @@ const SkuData: React.FC = () => {
     request();
     getdownSupplier();//eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [request]);
+
+  /** 
+  useEffect(() => {
+    if (data.length <= 0) {
+      return;
+    }
+    if (totaldata.length <= 0) {
+      setTotaldata([...data]);
+    }
+    data.map((item) => {
+      //去重
+      const repeateIndex = totaldata.findIndex(childItem => childItem.id === item.id);
+      if (repeateIndex <= -1) {
+        totaldata.push(item);
+      }
+    });
+    setTotaldata([...totaldata]);
+    //console.log(totaldata, `totaldata`);
+    //eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, [data, request]);
+  */
 
   const searchProduct = function(val: string, event: any) { // eslint-disable-line
     // 限制清空按钮
@@ -197,6 +226,90 @@ const SkuData: React.FC = () => {
       },
     });
   };
+  //批量导出按钮
+  const batchexport = (id?: string) => {
+    
+    if (!id && !selectedSkuId.length) {
+      message.warning('请先勾选要导出的SKU');
+      return;
+    }
+    const ids = id ? [id] : selectedSkuId;
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: 'skuData/getskuList',
+        reject,
+        resolve,
+        payload: {
+          ids: ids,
+          code: null,
+          state: null,
+          currentPage: 1,
+          pageSize: 100,
+        },
+      });
+    }).then(datas => {
+      setLoading(false);
+      const {
+        code,
+        data,
+        message: msg,
+      } = datas as {
+        code: number;
+        message?: string;
+        data: {
+          page: {
+            records: skuData.IRecord[];
+          };
+        };
+      };
+
+      if (code === 200) {
+        const option = { };
+        option.fileName = '批量导出SKU';
+        option.datas = [{
+          sheetData: data.page.records,
+          sheetName: 'sheet',
+          sheetFilter: ['sku', 'nameNa',
+            '', '', '', '', '', '',
+            'commodityWeight', 'purchasingCost', '', '', '', '',
+            '', '', '', '', '', '', 
+            'supplierName', '', 'placeUrl', '', 'state', '', 
+            '', '', '', '', 'customsCode', 'packingMaterial', 'packagingCost', 
+            'packingWeight', '', '', '', '', '', 
+            'price', '', '', '', '', '',
+          ],
+          sheetHeader: ['SKU', '产品名称',
+            'SKU别名', '属性名1', '属性值1', '属性名2', '属性值2', 'SKU属性编号',
+            '产品重量(g)', '采购单价', 'SKU属性别名', '仓库名称1', '库存数量1', '货位1',
+            '仓库名称2', '库存数量2', '货位2', '产品体积(长*宽*高)CM', '产品特点', '备注', 
+            '供应商名称', '最小采购量(MOQ)', '采购链接', '分类', '状态', '特性标签', 
+            '中文配货名称', '英文配货名称', '中文报关名', '英文报关名', '海关编码(HS code)', '包装材料名称', '包装成本(CNY)', 
+            '包装重量(g)', '包装尺寸（长*宽*高）CM', '产品首图', '业务开发员', '采购询价员', '采购员', 
+            '指导价', '当前成本', '平均成本', '采购备注', '材质', '用途',
+          ],
+        }];
+        //执行导出
+        const toExcel = new JsExportExcel(option);
+        toExcel.saveExcel();
+        return;
+      }
+      message.error(msg || 'SKU资料管理列表请求失败！');
+    });
+    /** 
+    if (!id && !selectedSkuId.length) {
+      message.warning('请先勾选要导出的SKU');
+      return;
+    }
+    const ids = id ? [id] : selectedSkuId;
+    //选中的问题
+    ids.map(item => {
+      const dd = totaldata.findIndex(childItem => childItem.id === item);
+      checkedData.push(totaldata[dd]);
+    });
+    setCheckedData([...checkedData]);
+    console.log(checkedData);
+    */
+  };
 
   const tableConfig = {
     pagination: {
@@ -249,6 +362,7 @@ const SkuData: React.FC = () => {
       <Button onClick={() => setAiVisible(!aiVisible)}>SKU智能匹配</Button>
       <BatchUpdateState ids={selectedSkuId} successCallback={batchStateSuccessCallback}/>
       <Button onClick={() => handleBatchDel()}>批量删除</Button>
+      <Button onClick={() => batchexport()}>批量导出</Button>
       <Select style={{ width: 116 }} placeholder="状态" allowClear onChange={(val: string) => setState(val)}>
         {states.map((item, index) => {
           return <Select.Option key={index} value={item.value}>{item.label}</Select.Option>;

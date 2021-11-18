@@ -178,8 +178,10 @@ const BatchSKU: React.FC<IProps> = (props) => {
   
       if (code === 200) {
         message.success('导入成功!');
+        //导入成功为总数量，跳过0
+        setSuccessSKU(skuTotal);
         //跳过数量
-        setRepeateSKUTotal(num as number);
+        setRepeateSKUTotal(0 as number);
         //表格增加更新数量
         tabledatasource.push({ num: num, importdata: '更新产品' });
         setTabledatasource([...tabledatasource]);
