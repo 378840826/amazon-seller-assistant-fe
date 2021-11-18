@@ -4,7 +4,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'umi';
-import { Select, Button, Modal, message } from 'antd';
+import { Select, Button, Modal, message, Switch } from 'antd';
 import { ColumnProps } from 'antd/es/table';
 import { IConnectState } from '@/models/connect';
 import { defaultFiltrateParams } from '@/models/adManage';
@@ -84,6 +84,8 @@ const Targeting: React.FC = function() {
     targetId: '',
     targetName: '',
   });
+  // 控制环比开关
+  const [ratio, setRatio] = useState<boolean>(false);
 
   useEffect(() => {
     if (currentShopId !== '-1') {
@@ -513,6 +515,7 @@ const Targeting: React.FC = function() {
       order,
       marketplace,
       currency,
+      ratio,
     }),
     
     {
@@ -657,6 +660,13 @@ const Targeting: React.FC = function() {
           </div>
         </div>
         <div>
+          <div className={commonStyles.ratioSwitch}>
+            <span className={commonStyles.text}>环比：</span>
+            <Switch
+              checked={ratio}
+              onClick={() => setRatio(!ratio)}
+            />
+          </div>
           <DefinedCalendar 
             itemKey={calendarDefaultKey}
             storageKey={calendarStorageBaseKey}
