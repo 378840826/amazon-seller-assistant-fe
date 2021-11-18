@@ -1277,8 +1277,8 @@ const Keyword: React.FC = function() {
           </div>
         </div>
         <div>
-          <div className={styles.ratioSwitch}>
-            <span className={styles.text}>环比：</span>
+          <div className={commonStyles.ratioSwitch}>
+            <span className={commonStyles.text}>环比：</span>
             <Switch
               checked={ratio}
               onClick={() => setRatio(!ratio)}

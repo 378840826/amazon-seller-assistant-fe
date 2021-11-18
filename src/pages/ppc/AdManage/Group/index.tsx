@@ -66,6 +66,8 @@ const Group: React.FC = function() {
     groupId: '',
     groupName: '',
   });
+  // 控制环比开关
+  const [ratio, setRatio] = useState<boolean>(false);
 
   useEffect(() => {
     if (currentShopId !== '-1') {
@@ -551,6 +553,7 @@ const Group: React.FC = function() {
       order,
       marketplace,
       currency,
+      ratio,
     }),
 
     {
