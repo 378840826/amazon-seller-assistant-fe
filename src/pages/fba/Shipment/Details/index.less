@@ -503,11 +503,13 @@
       }
 
       .lebal {
+        margin-top: 5px;
+        margin-bottom: 6px;
         display: flex;
         justify-content: center;
       }
 
-      .flexcenter {
+      .flexcenterpre {
         display: flex;
         justify-content: center;
       }
@@ -528,50 +530,6 @@
     color: @heading-color;
     line-height: 21px;
     text-align: left;
-  }
-
-  .a4 {
-    width: 1050px;
-    height: 566px;
-    border-radius: 4px;
-    margin-top: 11px;
-    border: 1px solid #d9d9d9;
-    overflow-y: scroll;
-    overflow-x: hidden;
-
-    .a4content {
-      width: 1050px;
-      height: 1600px;
-
-      .flex {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: left;
-      }
-
-      .flexcenter {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .divlebal {
-        text-align: left;
-        font-size: 14px;
-        font-family: MicrosoftYaHei, sans-serif;
-        color: @heading-color;
-        line-height: 18px;
-
-        .centerlebal {
-          display: flex;
-          flex-direction: row;
-          -ms-flex-align: center;
-          justify-content: center;
-        }
-      }
-    }
   }
 
   .productCol {
@@ -688,4 +646,17 @@
     padding-top: 15px;
     padding-bottom: 15px;
   }
+}
+
+.firstdiv {
+  width: 1050px;
+  display: flex;
+  justify-content: left;
+  flex-wrap: wrap;
+}
+
+.flexcenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
