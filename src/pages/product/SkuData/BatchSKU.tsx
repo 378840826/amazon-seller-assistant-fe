@@ -95,7 +95,7 @@ const BatchSKU: React.FC<IProps> = (props) => {
       const {
         code,
         data: { 
-          error = [],
+          errors = [],
           repeatImportSkuProducts = [],
           num = 0,
         } = {},
@@ -103,7 +103,7 @@ const BatchSKU: React.FC<IProps> = (props) => {
         code: number;
         num: number;
         data: {
-          error: string[];
+          errors: string[];
           repeatImportSkuProducts: IRepeatImportSkuProduct[];
           num: number;
         };
@@ -126,12 +126,12 @@ const BatchSKU: React.FC<IProps> = (props) => {
       }
   
       Modal.error({
-        title: '导入失败！',
+        title: '导入失败',
         width: 500,
         zIndex: 9999999,
         icon: <></>,
         content: <div className={styles.errorBox}>
-          {error && error.map((item: string, i: number) => <p key={i}>{item}</p>)}
+          {errors && errors.map((item: string, i: number) => <p key={i}>{item}</p>)}
         </div>,
         onOk() {
           setVisible(true);
