@@ -19,6 +19,7 @@ import {
   aiSKU,
   batchUpdateState,
   updateSku,
+  coverSKU,
 } from '@/services/product/skuData';
 
 interface ISkuDataModel {
@@ -35,6 +36,7 @@ interface ISkuDataModel {
     aiSKU: Effect;
     batchUpdateState: Effect;
     updateSku: Effect;
+    coverSKU: Effect;
   };
 }
 
@@ -95,6 +97,15 @@ const skuData: ISkuDataModel = {
     *uploadBatchSKU({ payload, reject, resolve }, { call }) {
       try {
         const res = yield call(uploadBatchSKU, payload);
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    },
+    //覆盖SKU
+    *coverSKU({ payload, reject, resolve }, { call }){
+      try {
+        const res = yield call(coverSKU, payload);
         resolve(res);
       } catch (err) {
         reject(err);
