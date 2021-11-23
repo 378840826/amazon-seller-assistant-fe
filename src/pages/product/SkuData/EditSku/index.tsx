@@ -378,6 +378,7 @@ const AddSku: React.FC<IProps> = props => {
         currencyType: currencyType,
         price: supplierprice,
         placeUrl: placeUrl,
+        isDefault: false,
       });
     });
     setSupplierTableData([...supplierTableData]);
@@ -444,6 +445,32 @@ const AddSku: React.FC<IProps> = props => {
     supplierTableData[supplierTableIndex].currencyType = value;
     setSupplierTableData([...supplierTableData]);
     
+  };
+  //设置默认供应商
+  const setdefault = (supplierId: string) => {
+
+    const defaultindex = 
+      supplierTableData.findIndex(childrenitem => childrenitem.supplierId === supplierId);
+    //弹框确认 
+    Modal.confirm({
+      title: `确定设置为首选供应商吗`,
+      icon: null,
+      maskClosable: true,
+      centered: true,
+      onOk() {
+        //增加一个属性
+        supplierTableData[defaultindex].isDefault = true;
+        //其他的设置为false；
+        supplierTableData.forEach((item, index) => {
+          if (index === defaultindex) {
+            item.isDefault = true;
+          } else {
+            item.isDefault = false;
+          }         
+        });
+        setSupplierTableData([...supplierTableData]);  
+      },
+    });
   };
    
   const supplierChange = (supplierId: string, value: string) => {
@@ -553,7 +580,7 @@ const AddSku: React.FC<IProps> = props => {
     align: 'left',
     dataIndex: 'placeUrl',
     key: 'placeUrl',
-    width: 292,
+    width: 262,
     render(value: string, record: skuData.ISupplierDownList) {
       return (
         <div className={styles.placeUrl}>
@@ -596,11 +623,16 @@ const AddSku: React.FC<IProps> = props => {
   }, {
     title: '操作',
     align: 'center',
-    width: 56,
+    width: 86,
     render(_: any, record: skuData.ISupplierDownList) { // eslint-disable-line
-      return <span 
-        onClick={() => deletesupplier(record.supplierId)} 
-        className={styles.handleCol}>删除</span>;
+      return (<>
+        <span 
+          onClick={() => deletesupplier(record.supplierId)} 
+          className={styles.handleCol}>删除</span>
+        <span 
+          className={record.isDefault ? styles.defaultspan : styles.nodefaultspan}
+          onClick={() => setdefault(record.supplierId)}>设置默认</span>
+      </>);
     },
   }];
 
@@ -726,6 +758,8 @@ const AddSku: React.FC<IProps> = props => {
       let datas = form.getFieldsValue();
       datas = Object.assign({}, initData, datas);
       // = [null, undefined, ''];
+      const empyts = [null, undefined, ''];
+      const reg = /^\d{10}$/;
       datas.id = initData.id;
       datas.mskuProducts = mskuTableData;
       datas.locations = locations;
@@ -749,6 +783,61 @@ const AddSku: React.FC<IProps> = props => {
         return;
       }
       */
+      if (empyts.includes(datas.sku)) {
+        message.error('SKU不能为空');
+        return;
+      }
+      if (datas.sku.length >= 40){
+        message.error('SKU长度不能超过40');
+        return;
+      }
+
+      if (empyts.includes(datas.nameNa)) {
+        message.error('中文品名不能为空');
+        return;
+      }
+      if (datas.nameNa.length >= 80){
+        message.error('中文品名长度不能超过80');
+        return;
+      }
+      if (empyts.includes(datas.category)) {
+        message.error('品类不能为空');
+        return;
+      }
+      if (datas.category.length >= 40){
+        message.error('品类长度不能超过80');
+        return;
+      }
+
+      if (empyts.includes(datas.nameUs)) {
+        message.error('英文品名不能为空');
+        return;
+      }
+      if (datas.nameUs.length >= 200){
+        message.error('英文品名长度不能超过200');
+        return;
+      }
+      if (datas.salesman?.length >= 200){
+        message.error('业务开发员长度不能超过200');
+        return;
+      }
+      if (datas.enquiryMan?.length >= 200){
+        message.error('采购询价员长度不能超过200');
+        return;
+      }
+      if (datas.purchaseMan?.length >= 200){
+        message.error('采购员长度不能超过200');
+        return;
+      }
+
+      if (empyts.includes(datas.packingWeight)) {
+        message.error('包装重量不能为空');
+        return;
+      }
+      if (datas.customsCode && !reg.test(datas.customsCode)){
+        message.error('海外编码为10位纯数字');
+        return;
+      }
 
       // 包装重量重量是否大于68038
       const weightresult = sumWeightOversize(datas.packingWeightType, datas.packingWeight);
@@ -884,6 +973,12 @@ const AddSku: React.FC<IProps> = props => {
     return strToMoneyStr(value); 
   };
 
+  //清空两端空格
+  const removeSpace = function(val: string){
+    const newValue = val.replace(/(^\s*)|(\s*$)/g, '');
+    return newValue ? String(newValue) : '';   
+  };
+
   return <div>
     <span 
       onClick={() => setVisible(!visible)} 
@@ -913,7 +1008,7 @@ const AddSku: React.FC<IProps> = props => {
         >
           <div className={styles.base}>
             <div className={styles.leftLayout}>
-              <Item name="sku" label="SKU：" rules={[{
+              <Item name="sku" label="SKU：" normalize={removeSpace} rules={[{
                 required: true,
                 message: 'SKU不能为空',
               }, {
@@ -922,7 +1017,7 @@ const AddSku: React.FC<IProps> = props => {
               }]}>
                 <Input />
               </Item>
-              <Item name="nameUs" label="英文品名：" rules={[{
+              <Item name="nameUs" label="英文品名：" normalize={removeSpace} rules={[{
                 required: true,
                 message: '英文品名不能为空',
               }, {
@@ -931,9 +1026,15 @@ const AddSku: React.FC<IProps> = props => {
               }]}>
                 <Input />
               </Item>
-              <Item name="customsCode" label="海外编码：" rules={[{
+              <Item name="customsCode" label="海外编码：" normalize={removeSpace} rules={[{
                 pattern: /^\d{10}$/,
                 message: '海外编码为10位纯数字',
+              }]}>
+                <Input />
+              </Item>
+              <Item name="enquiryMan" label="采购询价员：" normalize={removeSpace} rules={[{
+                max: 200,
+                message: '采购询价员长度不超过200',
               }]}>
                 <Input />
               </Item>
@@ -942,7 +1043,7 @@ const AddSku: React.FC<IProps> = props => {
               </Item>
             </div>
             <div className={styles.centerLayout}>
-              <Item name="nameNa" label="中文品名：" rules={[{
+              <Item name="nameNa" label="中文品名："normalize={removeSpace} rules={[{
                 required: true,
                 message: '中文品名不能为空',
               }, {
@@ -951,7 +1052,7 @@ const AddSku: React.FC<IProps> = props => {
               }]}>
                 <Input />
               </Item>
-              <Item name="category" label="品类：" rules={[{
+              <Item name="category" label="品类：" normalize={removeSpace} rules={[{
                 required: true,
                 message: '品类不能为空',
               }, {
@@ -960,9 +1061,15 @@ const AddSku: React.FC<IProps> = props => {
               }]}>
                 <Input />
               </Item>
-              <Item name="salesman" label="开发业务员：" rules={[{
+              <Item name="salesman" label="业务开发员：" normalize={removeSpace} rules={[{
                 max: 200,
-                message: '开发业务员长度不能超过200个字符',
+                message: '业务开发员长度不能超过200个字符',
+              }]}>
+                <Input />
+              </Item>
+              <Item name="purchaseMan" label="采购员：" normalize={removeSpace} rules={[{
+                max: 200,
+                message: '采购员长度不能超过200',
               }]}>
                 <Input />
               </Item>
