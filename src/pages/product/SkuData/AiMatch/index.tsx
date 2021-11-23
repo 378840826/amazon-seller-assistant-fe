@@ -15,6 +15,7 @@ import { strToNaturalNumStr } from '@/utils/utils';
 interface IProps {
   visible: boolean;
   onCancel: () => void;
+  successmatch: () => void;
 }
 
 interface IPage extends ConnectProps {
@@ -23,7 +24,7 @@ interface IPage extends ConnectProps {
 
 const { Item } = Form;
 const AiMatch: React.FC<IProps> = props => {
-  const { visible, onCancel } = props;
+  const { visible, onCancel, successmatch } = props;
 
   const shops = useSelector((state: IPage) => state.configurationBase.shops);
   const [radio, setRadio] = useState<string>('match1');
@@ -100,6 +101,8 @@ const AiMatch: React.FC<IProps> = props => {
 
         if (code === 200) {
           message.success(msg || '匹配成功！');
+          //匹配成功之后刷新
+          successmatch();
           onCancel();
           return;
         }
