@@ -812,11 +812,13 @@ const AddSku: React.FC<IProps> = props => {
         return;
       }
       //如果没有设置供应商首选项，则第一个为首选项
-      
-      const defaultsupplier = supplierTableData.some(childItem => childItem.isDefault);
-      if (!defaultsupplier) {
-        supplierTableData[0].isDefault = true;
-        setSupplierTableData([...supplierTableData]);
+      //首先要考虑是否有供应商
+      if (supplierTableData.length > 0) {
+        const defaultsupplier = supplierTableData.some(childItem => childItem.isDefault);
+        if (!defaultsupplier) {
+          supplierTableData[0].isDefault = true;
+          setSupplierTableData([...supplierTableData]);
+        }
       }
 
       submitConfirm();
