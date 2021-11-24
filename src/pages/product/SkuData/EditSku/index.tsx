@@ -886,6 +886,14 @@ const AddSku: React.FC<IProps> = props => {
         return;
       }
 
+      if (supplierTableData.length > 0) {
+        const defaultsupplier = supplierTableData.some(childItem => childItem.isDefault);
+        if (!defaultsupplier) {
+          supplierTableData[0].isDefault = true;
+          setSupplierTableData([...supplierTableData]);
+        }
+      }
+
       submitConfirm();
     },
   };
