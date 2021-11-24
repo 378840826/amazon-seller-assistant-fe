@@ -352,6 +352,7 @@ const AddSku: React.FC<IProps> = props => {
         currencyType: currencyType,
         price: prices,
         placeUrl: placeUrl,
+        isDefault: false,
       });
     });
     setSupplierTableData([...supplierTableData]);
@@ -402,6 +403,32 @@ const AddSku: React.FC<IProps> = props => {
       }
     }
     setSupplierTableData([...supplierTableData]);
+  };
+  //设置默认供应商
+  const setdefault = (supplierId: string) => {
+
+    const defaultindex = 
+      supplierTableData.findIndex(childrenitem => childrenitem.supplierId === supplierId);
+    //弹框确认  
+    Modal.confirm({
+      title: `确定设置为首选供应商吗`,
+      icon: null,
+      maskClosable: true,
+      centered: true,
+      onOk() {
+        //增加一个属性
+        supplierTableData[defaultindex].isDefault = true;
+        //其他的设置为false；
+        supplierTableData.forEach((item, index) => {
+          if (index === defaultindex) {
+            item.isDefault = true;
+          } else {
+            item.isDefault = false;
+          }         
+        });
+        setSupplierTableData([...supplierTableData]);  
+      },
+    });
   };
   
   //供应商币种编辑
@@ -537,7 +564,7 @@ const AddSku: React.FC<IProps> = props => {
     align: 'left',
     dataIndex: 'placeUrl',
     key: 'placeUrl',
-    width: 292,
+    width: 262,
     render(value: string, record: skuData.ISupplierDownList) {
       return (
         <div className={styles.placeUrl}>
@@ -580,11 +607,16 @@ const AddSku: React.FC<IProps> = props => {
   }, {
     title: '操作',
     align: 'center',
-    width: 56,
+    width: 86,
     render(_: any, record: skuData.ISupplierDownList) { // eslint-disable-line
-      return <span 
-        onClick={() => deletesupplier(record.supplierId)} 
-        className={styles.handleCol}>删除</span>;
+      return (<>
+        <span 
+          onClick={() => deletesupplier(record.supplierId)} 
+          className={styles.handleCol}>删除</span>
+        <span 
+          className={record.isDefault ? styles.defaultspan : styles.nodefaultspan}
+          onClick={() => setdefault(record.supplierId)}>设置默认</span>
+      </>);
     },
   }];
 
@@ -723,7 +755,15 @@ const AddSku: React.FC<IProps> = props => {
         return;
       }
       if (datas.salesman?.length >= 200){
-        message.error('业务员长度不能超过200');
+        message.error('业务开发员长度不能超过200');
+        return;
+      }
+      if (datas.enquiryMan?.length >= 200){
+        message.error('采购询价员长度不能超过200');
+        return;
+      }
+      if (datas.purchaseMan?.length >= 200){
+        message.error('采购员长度不能超过200');
         return;
       }
 
@@ -770,6 +810,15 @@ const AddSku: React.FC<IProps> = props => {
       if (weightresult || volumnResult) {
         setIsOversize(true);
         return;
+      }
+      //如果没有设置供应商首选项，则第一个为首选项
+      //首先要考虑是否有供应商
+      if (supplierTableData.length > 0) {
+        const defaultsupplier = supplierTableData.some(childItem => childItem.isDefault);
+        if (!defaultsupplier) {
+          supplierTableData[0].isDefault = true;
+          setSupplierTableData([...supplierTableData]);
+        }
       }
 
       submitConfirm();
@@ -914,6 +963,12 @@ const AddSku: React.FC<IProps> = props => {
               }]}>
                 <Input />
               </Item>
+              <Item name="enquiryMan" label="采购询价员：" normalize={removeSpace} rules={[{
+                max: 200,
+                message: '采购询价员长度不超过200',
+              }]}>
+                <Input />
+              </Item>
               <Item className={styles.state} name="state" label="状态：">
                 <Radio.Group options={states}></Radio.Group>
               </Item>
@@ -937,9 +992,15 @@ const AddSku: React.FC<IProps> = props => {
               }]}>
                 <Input />
               </Item>
-              <Item name="salesman" label="开发业务员：" normalize={removeSpace} rules={[{
+              <Item name="salesman" label="业务开发员：" normalize={removeSpace} rules={[{
                 max: 200,
-                message: '开发业务员长度不能超过200',
+                message: '业务开发员长度不能超过200',
+              }]}>
+                <Input />
+              </Item>
+              <Item name="purchaseMan" label="采购员：" normalize={removeSpace} rules={[{
+                max: 200,
+                message: '采购员长度不能超过200',
               }]}>
                 <Input />
               </Item>
