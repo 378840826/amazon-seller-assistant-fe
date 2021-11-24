@@ -47,6 +47,8 @@ declare namespace skuData {
     locationNos: ILocations[];
     suppliers: ISupplierDownList[];
     pimageUrl: string;
+    isMatching: boolean;
+
   }
 
   interface IAddMskuCallbackParams {
@@ -74,5 +76,6 @@ declare namespace skuData {
     currencyType: string;//链接
     price: number;//价格
     placeUrl: string;//下单链接
+    isDefault: boolean;//设置默认值
   }
 }

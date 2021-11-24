@@ -264,19 +264,34 @@ const SkuData: React.FC = () => {
       };
 
       if (code === 200) {
+
+        //数据处理一下，给首选供应商撸出来
+        
+        const dd = data.page.records.map(item => {
+          const defaultsupplier = item.suppliers.find(childItem => childItem.isDefault === true);
+          console.log(defaultsupplier, `defaultsupplier`);
+          return Object.assign(
+            item, 
+            { supplierName: defaultsupplier?.supplierName }, 
+            { buyprice: defaultsupplier?.price }, 
+            { placeUrl: defaultsupplier?.placeUrl },
+            { locationNo: item.locationNos[0]?.warehouseName as string });
+        });
+        
+
         const option = { };
         option.fileName = '批量导出SKU';
         option.datas = [{
-          sheetData: data.page.records,
+          sheetData: dd,
           sheetName: 'sheet',
           sheetFilter: ['sku', 'nameNa',
             '', '', '', '', '', '',
-            'commodityWeight', 'purchasingCost', '', '', '', '',
+            '', 'buyprice', '', 'locationNo', '', '',
             '', '', '', '', '', '', 
-            'supplierName', '', 'placeUrl', '', 'state', '', 
-            '', '', '', '', 'customsCode', 'packingMaterial', 'packagingCost', 
-            'packingWeight', '', '', '', '', '', 
-            'price', '', '', '', '', '',
+            'supplierName', '', 'placeUrl', 'category', '', '', 
+            '', '', '', '', '', '', '', 
+            '', '', '', 'salesman', 'enquiryMan', 'purchaseMan', 
+            '', '', '', '', '', '',
           ],
           sheetHeader: ['SKU', '产品名称',
             'SKU别名', '属性名1', '属性值1', '属性名2', '属性值2', 'SKU属性编号',
@@ -378,7 +393,10 @@ const SkuData: React.FC = () => {
         setCode(sku);
       }}
     />
-    <AiMatch visible={aiVisible} onCancel={() => setAiVisible(false)}/>
+    <AiMatch 
+      visible={aiVisible} 
+      onCancel={() => setAiVisible(false)} 
+      successmatch={() => request()}/>
   </div>;
 };
 

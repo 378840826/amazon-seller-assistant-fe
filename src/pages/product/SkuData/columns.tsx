@@ -7,7 +7,7 @@
 import React from 'react';
 import styles from './index.less';
 import GoodsImg from '@/pages/components/GoodsImg';
-import { sumVolumeOversize, sumWeightOversize, packSizeUnit, packWeightUnit } from './config';
+import { sumWeightOversize, packSizeUnit, packWeightUnit } from './config';
 import moment from 'moment';
 import EditSku from './EditSku';
 
@@ -92,14 +92,14 @@ const Columns = (props: IProps) => {
     {
       title: '中文品名',
       align: 'center',
-      width: 100,
+      width: 280,
       dataIndex: 'nameNa',
       key: 'nameNa',
     },
     {
       title: '英文品名',
       align: 'center',
-      width: 100,
+      width: 250,
       dataIndex: 'nameUs',
       key: 'nameUs',
     },
@@ -115,13 +115,7 @@ const Columns = (props: IProps) => {
           className={styles.productInfo} 
           title={`长度：${commodityLong || ' - '} \n宽度：${commodityWide || ' - '} \n高度：${commodityHigh || ' - '}`}
         >
-          <p>{`${commodityLong || ' - '}*${commodityWide || ' - '}*${commodityHigh || ' - '} ${getPsLabel(commodityType)}`}</p>
-          <span className="secondary-text">{
-            sumVolumeOversize(commodityType, {
-              width: commodityLong,
-              wide: commodityWide,
-              height: commodityHigh,
-            })}</span>
+          <p className="secondary-text">{`${commodityLong || ' - '}*${commodityWide || ' - '}*${commodityHigh || ' - '} ${getPsLabel(commodityType)}`}</p>
         </div>;
       },
     },
@@ -141,7 +135,7 @@ const Columns = (props: IProps) => {
     {
       title: '包装体积',
       align: 'center',
-      width: 100,
+      width: 150,
       dataIndex: 'name',
       render(_: string, record: skuData.IRecord) {
         const { packingLong, packingWide, packingHigh, packingType } = record;
@@ -150,26 +144,36 @@ const Columns = (props: IProps) => {
           title={`长度：${packingLong || ' - '} \n宽度：${packingWide || ' - '} \n高度：${packingHigh || ' - '}`}
         >
           <p>{`${packingLong || ' - '}*${packingWide || ' - '}*${packingHigh || ' - '} ${getPsLabel(packingType || ' - ')}`}</p>
-          <span className="secondary-text">{
-            sumVolumeOversize(packingType, {
-              width: packingLong,
-              wide: packingWide,
-              height: packingHigh,
-            }) ? 'oversize' : ''}</span>
+          <span className={styles.span}>
+            {
+              record.isMatching && (packingLong || packingLong || packingHigh ? '' 
+                : 'SKU智能匹配数据不完整，请手动补充完整')
+            }
+            {
+              record.isMatching || (packingLong || packingLong || packingHigh ? '' 
+                : '数据缺失，请先完成【SKU智能匹配】，或手动补充完整')
+            }
+          </span>
         </div>;
       },
     },
     {
       title: '包装重量',
       align: 'center',
-      width: 100,
+      width: 150,
       dataIndex: 'packingWeight',
       key: 'packingWeight',
       render(val: number, record: skuData.IRecord) {
         return <div className={styles.weightCol}>
           <p>{`${val || ' - '}${getWeightLabel(record.packingWeightType)}`}</p>
-          <span className="secondary-text">{
-            sumWeightOversize(record.packingWeightType, val) ? 'oversize' : ''}</span>
+          <span className={styles.span}>
+            {
+              record.isMatching && (val ? '' : 'SKU智能匹配数据不完整，请手动补充完整')
+            }
+            {
+              record.isMatching || (val ? '' : '数据缺失，请先完成【SKU智能匹配】，或手动补充完整')
+            }
+          </span>
         </div>;
       },
     },
