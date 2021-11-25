@@ -1107,8 +1107,8 @@ const AdManageModel: IAdManageModelType = {
         name: group.name,
         defaultBid: group.defaultBid,
         budgetLimit: group.budgetLimit,
-        startDate: group.startTime,
-        endDate: group.endTime,
+        startTime: group.startTime,
+        endTime: group.endTime,
         // cpc参数后端校验用，没有实际作用
         cpc: group.cpc,
         ...payload,
