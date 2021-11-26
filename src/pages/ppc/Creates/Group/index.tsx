@@ -265,6 +265,12 @@ const Group: React.FC = () => {
       return;
     }
 
+    if (data.status) {
+      data.status = 'enabled';
+    } else {
+      data.status = 'paused';
+    }
+
     // 删除多余数据
     // (putMathod === 'auto' || manualType !== 'keyword') && delete data.keywords;
     delete data.auto;
@@ -318,6 +324,7 @@ const Group: React.FC = () => {
       labelAlign="left"
       initialValues={{
         switch: true,
+        status: true,
         other: {
           bidType: 'auto',
         },
@@ -407,6 +414,18 @@ const Group: React.FC = () => {
       <div className={styles.timing}>
         <Item name="switch" label="时间：" className={styles.switch} valuePropName="checked">
           <Switch className="h-switch"/>
+        </Item>
+        <Item
+          name="status" 
+          label="状态："
+          // wrapperCol= {{ offset: 4, span: 4 }}
+          className={styles.status} 
+          valuePropName="checked">
+          <Switch
+            className={styles.statusSwitch}
+            checkedChildren="开启"
+            unCheckedChildren="暂停"
+          />
         </Item>
         <TimeSelectTable getValues={v => activeTime = v} />
       </div>
