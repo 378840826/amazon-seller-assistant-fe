@@ -314,7 +314,13 @@ const AddSku: React.FC<IProps> = props => {
   // 添加库位号
   const addbedNumber = function() {
     const datas = form.getFieldsValue();
+    const emptys = [undefined, null, '', []];
 
+    if (emptys.includes(datas.warehouseName)) {
+      message.error('请选择仓库');
+      return;
+    }
+    
     if (datas.locationNo.length <= 0) {
       message.error('请选择库位号');
       return;

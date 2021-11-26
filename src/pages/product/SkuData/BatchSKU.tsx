@@ -187,6 +187,7 @@ const BatchSKU: React.FC<IProps> = (props) => {
         setTabledatasource([...tabledatasource]);
         //打开展示弹框
         setIscovervisible(true);
+        request();
         return;
       }
       message.error(msg || '覆盖SKU失败!');
