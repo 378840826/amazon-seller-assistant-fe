@@ -296,6 +296,9 @@ const AddSku: React.FC<IProps> = props => {
   // 添加库位号
   const addbedNumber = function() {
     const datas = form.getFieldsValue();
+    if (datas.locationNo.length <= 0) {
+      message.error('请选择库位号');
+    }
     const locationNos = datas.locationNo; // 库位号
     
 
@@ -360,6 +363,10 @@ const AddSku: React.FC<IProps> = props => {
 
   //供应商表格下单链接编辑
   const handleUpdatePlaceUrl = function(record: {supplierId: string; val: string}) {
+    if (!record.val) {
+      message.error('下单链接不能为空');
+      return;
+    }
     new Promise((resolve, reject) => {
       //找到对应的下标
       supplierTableData.forEach( () => {
@@ -375,6 +382,10 @@ const AddSku: React.FC<IProps> = props => {
   };
   //供应商表格采购单价编辑
   const handleUpdatePrice = function(record: {supplierId: string; val: number}) {
+    if (!record.val) {
+      message.error('采购单价不能为空');
+      return;
+    }
     if ( record.val > 100000000) {
       message.error('采购单价最大输入值不超过10000 0000.00');
       return;

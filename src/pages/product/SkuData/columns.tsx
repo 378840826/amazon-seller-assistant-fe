@@ -7,7 +7,7 @@
 import React from 'react';
 import styles from './index.less';
 import GoodsImg from '@/pages/components/GoodsImg';
-import { sumWeightOversize, packSizeUnit, packWeightUnit } from './config';
+import { sumVolumeOversize, sumWeightOversize, packSizeUnit, packWeightUnit } from './config';
 import moment from 'moment';
 import EditSku from './EditSku';
 
@@ -144,6 +144,12 @@ const Columns = (props: IProps) => {
           title={`长度：${packingLong || ' - '} \n宽度：${packingWide || ' - '} \n高度：${packingHigh || ' - '}`}
         >
           <p>{`${packingLong || ' - '}*${packingWide || ' - '}*${packingHigh || ' - '} ${getPsLabel(packingType || ' - ')}`}</p>
+          <span className="secondary-text">{
+            sumVolumeOversize(packingType, {
+              width: packingLong,
+              wide: packingWide,
+              height: packingHigh,
+            }) ? 'oversize' : ''}</span>
           <span className={styles.span}>
             {
               record.isMatching && (packingLong || packingLong || packingHigh ? '' 
@@ -166,7 +172,9 @@ const Columns = (props: IProps) => {
       render(val: number, record: skuData.IRecord) {
         return <div className={styles.weightCol}>
           <p>{`${val || ' - '}${getWeightLabel(record.packingWeightType)}`}</p>
-          <span className={styles.span}>
+          <span className="secondary-text">{
+            sumWeightOversize(record.packingWeightType, val) ? 'oversize' : ''}</span>
+          <span className={styles.span}>           
             {
               record.isMatching && (val ? '' : 'SKU智能匹配数据不完整，请手动补充完整')
             }
