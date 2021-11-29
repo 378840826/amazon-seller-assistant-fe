@@ -314,7 +314,12 @@ const BatchSKU: React.FC<IProps> = (props) => {
       visible={modalvisible}
       centered
       width={910}
-      onCancel={() => setModalvisible(false)}
+      onCancel={() => {
+        setModalvisible(false);
+        //打开导入成功的弹框
+        setIscovervisible(true);
+
+      }}
       onOk={coverrepeateSKU}
       className={styles.repeateskumodal}
     >
@@ -366,6 +371,7 @@ const BatchSKU: React.FC<IProps> = (props) => {
         //刷新数据
         request();
       }}
+      cancelText="关闭"
       okText="SKU智能匹配"
       onOk={() => {
         //关闭当前弹框
