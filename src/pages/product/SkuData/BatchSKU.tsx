@@ -366,6 +366,7 @@ const BatchSKU: React.FC<IProps> = (props) => {
         //刷新数据
         request();
       }}
+      cancelText="关闭"
       okText="SKU智能匹配"
       onOk={() => {
         //关闭当前弹框
