@@ -128,6 +128,13 @@ const Group: React.FC<IProps> = props => {
       <Item name="switch" label="时间：" className={styles.switch} valuePropName="checked">
         <Switch className="h-switch"/>
       </Item>
+      <Item name="status" label="状态：" className={styles.status} valuePropName="checked">
+        <Switch
+          className={styles.statusSwitch}
+          checkedChildren="开启"
+          unCheckedChildren="暂停"
+        />
+      </Item>
       <TimeSelectTable getValues={v => getTimingData(v)} />
     </div>
   </div>;
