@@ -13,6 +13,7 @@ import { Button, Popover, Upload, message, Modal, Table, Radio, Space } from 'an
 import { useDispatch } from 'umi';
 import { UploadFile, RcFile } from 'antd/lib/upload/interface';
 import TableNotData from '@/components/TableNotData';
+import AiMatch from './AiMatch';
 
 
 interface IProps {
@@ -51,8 +52,10 @@ const BatchSKU: React.FC<IProps> = (props) => {
   //const [skipSKUnum, setSkipSKUnum] = useState<number>(0);
   //表格数据
   const [tabledatasource, setTabledatasource] = useState<ITableDataSource[]>([]);
-
-
+  //导入成功无重复的弹框
+  const [successbatchmodal, setSuccessbatchmodal] = useState<boolean>(false);
+  //智能匹配弹框
+  const [aiVisible, setAiVisible] = useState<boolean>(false); // 智能匹配显隐
   const dispatch = useDispatch();
   
 
@@ -112,6 +115,19 @@ const BatchSKU: React.FC<IProps> = (props) => {
       if (code === 200) {
         setFileList([...[]]);
         //message.success('导入成功!');
+        //判断当error为空字符串且repeatImportSkuProducts为空字符串时，有导入成功的弹框
+        if (repeatImportSkuProducts.length <= 0 && errors.length <= 0) {
+          //导入成功的数量，总数量
+          setSkuTotal(num as number);
+          //表格信息
+          setTabledatasource([{ num: num, importdata: '新增商品' }]);
+          //打开导入成功的弹框
+          setSuccessbatchmodal(true);
+          //关闭批量导入弹框
+          setVisible(false);
+          return;
+        }
+        
         if (repeatImportSkuProducts.length > 0) {
           setRepeatSkuData([...repeatImportSkuProducts]);
           setSkuTotal(num as number);
@@ -298,7 +314,12 @@ const BatchSKU: React.FC<IProps> = (props) => {
       visible={modalvisible}
       centered
       width={910}
-      onCancel={() => setModalvisible(false)}
+      onCancel={() => {
+        setModalvisible(false);
+        //打开导入成功的弹框
+        setIscovervisible(true);
+
+      }}
       onOk={coverrepeateSKU}
       className={styles.repeateskumodal}
     >
@@ -340,6 +361,40 @@ const BatchSKU: React.FC<IProps> = (props) => {
         <Button type="primary" onClick={() => setIscovervisible(false)}>关闭</Button>
       </div>    
     </Modal>
+    <Modal 
+      visible={successbatchmodal}
+      centered
+      width={602}
+      className={styles.showcovermodal}
+      onCancel={() => {
+        setSuccessbatchmodal(false);
+        //刷新数据
+        request();
+      }}
+      cancelText="关闭"
+      okText="SKU智能匹配"
+      onOk={() => {
+        //关闭当前弹框
+        setSuccessbatchmodal(false);
+        //打开智能匹配弹框
+        setAiVisible(true);
+      }}>
+      <p className={styles.clus}>商品导入完成</p>
+      <span>本次导入Excel文件中包含</span>
+      <span>{skuTotal}</span>
+      <span>个商品，成功导入</span>
+      <span>{skuTotal}</span>
+      <span>个，跳过0个</span>
+      <Table {...covertableConfig}></Table>
+
+    </Modal>
+    <AiMatch 
+      visible={aiVisible} 
+      onCancel={() => {
+        setAiVisible(false);
+        request();
+      }}
+      successmatch={() => request()}/>
   </>);
 };
 
