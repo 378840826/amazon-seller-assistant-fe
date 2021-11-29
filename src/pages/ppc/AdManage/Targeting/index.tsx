@@ -663,6 +663,7 @@ const Targeting: React.FC = function() {
           <div className={commonStyles.ratioSwitch}>
             <span className={commonStyles.text}>环比：</span>
             <Switch
+              className={commonStyles.switch}
               checked={ratio}
               onClick={() => setRatio(!ratio)}
             />
