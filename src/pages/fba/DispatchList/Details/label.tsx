@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, PureComponent } from 'react';
 import styles from './index.less';
-import { Radio, Modal, Table, Form, Input, message, Popconfirm } from 'antd';
+import { Radio, Modal, Table, Form, Input, message, Popconfirm, Select } from 'antd';
 import { history } from 'umi';
 import { strToUnsignedIntStr } from '@/utils/utils';
 import { product } from '@/utils/routes';
@@ -26,6 +26,7 @@ interface IProps{
 interface ILebal extends DispatchList.IProductVos{
     issuuednumdata: number[];
 }
+
 interface IPreviewdata{
     isPrintSKU: boolean;
     isPrintProductname: boolean;
@@ -36,13 +37,17 @@ interface IPreviewdata{
     lebalwidthprops: number;
     columnnumprops: number;
     lebalheightprops: number;
+    printHeight: number;
 }
+
 interface IPrint {
     tabledata: ILebal[];
     previewdata: IPreviewdata;
     selfdata: string[];
 }
 
+const correspondingWight = 1050; //A4纸宽对应的px值；
+const correspondingHeight = 1560;
 //连接打印机的打印页面
 class Printpage extends PureComponent<IPrint>{
   constructor(props: IPrint){
@@ -60,60 +65,62 @@ class Printpage extends PureComponent<IPrint>{
         lebalwidthprops,
         isPrintProductname,
         columnnumprops,
-        lebalheightprops,
         isPrintNameNa,
         isPrintMSKU,
+        printHeight,
       },
     } = this.props;
-    return (<div className={styles.printstyle}>
-      <div className={styles.firstdiv}>
+    return (
+      <div className={styles.firstdiv}>    
         {
           tabledata.map((item, index) => {
-            return (                                 
+            return (
               item.issuuednumdata.map((key, i) => {
                 return (
-                  <div
-                    style={{ width: columnnumprops, height: lebalheightprops }} 
-                    className={styles.flex}
-                    key={`${index}-${i}`}
+                  <div 
+                    key={`${index}-${i}`} 
+                    className={styles.flexcenter}
+                    style={{ width: columnnumprops, height: printHeight, overflow: 'hidden' }}
                   >
-                    <div style={{ width: lebalwidthprops, height: lebalheightprops, overflow: 'hidden' }} className={styles.divlebal}>
-                      <div className={styles.centerlebal} key={i}>
+                    <div className="lebaldiv" style={{ width: lebalwidthprops, height: printHeight }}>
+                      <div className={styles.flexcenter}>
                         <Barcode 
                           fontSize={barcodeFontsize} 
                           value={item.fnsku} 
                           barcodewidthprops={barcodewidthprops} 
-                          id={`${item.id}`}>
-                        </Barcode> 
+                          id={`${item.id}`}/>
                       </div>
-                      <div className={styles.textcenter}>
+                      <div className={styles.flexcenter}>
                         {isPrintProductname ? item.itemName : ''}
                       </div>
-                      <div className={styles.textcenter}>
+                      <div className={styles.flexcenter}>
                         {isPrintNameNa ? item.nameNa : ''}
                       </div>
-                      <div className={styles.textcenter}>
+                      <div className={styles.flexcenter}>
                         {isPrintSKU ? item.sku : ''}
                       </div>
-                      <div className={styles.textcenter}>
+                      <div className={styles.flexcenter}>
                         {isPrintMSKU ? item.sellerSku : ''}
                       </div>
                       {
                         selfdata.map((item, index) => {
-                          return <div key={index} className={styles.textcenter}>{item}</div>;
+                          return <div key={index} className={styles.flexcenter}>{item}</div>;
                         })
-                      }                     
-                      <div>Made in China</div>
-                    </div>                                                  
-                  </div>);
+                      }
+                      <div className={styles.flexcenter}>Made in CHina</div>
+                    </div>
+                  </div>
+                );
               })
             );
           })
-        }             
-      </div>           
-    </div>);   
+        }
+      </div>
+    );
   }
 }
+
+const { Option } = Select;
 const Lebal: React.FC<IProps> = (props) => {
   const {
     modalData: {
@@ -134,7 +141,7 @@ const Lebal: React.FC<IProps> = (props) => {
   const [isPrintMSKU, setIsPrintMSKU] = useState<boolean>(false);
   const [isPrintNameNa, setIsPritNameNa] = useState<boolean>(false);
 
-  const [printTemplate, setPrintTemplate] = useState<boolean>(false);
+  //const [printTemplate, setPrintTemplate] = useState<boolean>(false);
   //是否有提示语
   const [isinclus, setIsinclus] = useState<string>('');
   const [barcodeinclus, setBarcodeinclus] = useState<string>('');
@@ -160,6 +167,7 @@ const Lebal: React.FC<IProps> = (props) => {
     lebalheightprops: 200,
     isPrintNameNa: false,
     isPrintMSKU: false,
+    printHeight: 50,
   });
 
   //传给条形码的值
@@ -167,9 +175,11 @@ const Lebal: React.FC<IProps> = (props) => {
   const [barcodewidthprops, setBarcodewidthprops] = useState<number>(250);
 
   //传给标签大小的值
-  const [lebalwidthprops, setLebalwidthprops] = useState<number>(250);
-  const [columnnumprops, setColumnnumprops] = useState<number>(262);
-  const [lebalheightprops, setLebalheightprops] = useState<number>(200);
+  const [lebalwidthprops, setLebalwidthprops] = useState<number>(350);
+  const [columnnumprops, setColumnnumprops] = useState<number>(350);
+  //const [lebalheightprops, setLebalheightprops] = useState<number>(200);
+  const [printHeight, setPrintHeight] = useState<number>(156);
+  //const [printWidth, setPrintWidth] = useState<number>(42);
 
   //表单默认值，传给打印模板的值
   const formInitialValue = ({
@@ -177,12 +187,12 @@ const Lebal: React.FC<IProps> = (props) => {
     isPrintSKU: false,
     isPrintMSKU: false,
     isPrintNameNa: false,
-    lebalheight: 40,
+    lebalheight: '10',
     lebalwidth: 50,
     barcodeWidth: 50,
     barcodeFontsize: 20,
     unitnum: 1,
-    columnnum: 4,  
+    columnnum: 3,  
   }); 
 
   //点击修改打印数量的回调
@@ -230,13 +240,17 @@ const Lebal: React.FC<IProps> = (props) => {
         
     //传给打印预览的值
     setLebalwidthprops(lebalwidth * 5);
-    setColumnnumprops(Math.floor(1050 / columnnum));
-    setLebalheightprops(lebalheight * 5);
-
+    setColumnnumprops(Math.floor( correspondingWight / columnnum));
+    //setLebalheightprops(lebalheight * 5);
+    //是否打印文字内容
     setIsPrintProductname(isPrintProductname);
     setIsPrintSKU(isPrintSKU);
     setIsPrintMSKU(isPrintMSKU);
     setIsPritNameNa(isPrintNameNa);
+
+    //标签的高
+    setPrintHeight(correspondingHeight / lebalheight );
+
         
     if (lebalwidth * 5 < barcodeWidth * 5){
       setBarcodeinclus('条码宽度应小于标签宽度');            
@@ -342,6 +356,27 @@ const Lebal: React.FC<IProps> = (props) => {
   const limitedInput = function(val: string) {
     return strToUnsignedIntStr(val);
   };
+ 
+  const pagestyle = `
+  @page {
+    size: auto;
+    margin: 40px 40px;
+  }
+  @media print {
+    html, body {
+    height: initial !important;
+    overflow: initial !important;
+    -webkit-print-color-adjust: exact;
+  }
+}
+`;
+
+  //点击打印预览的回调
+  const handleprint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: pagestyle,
+  });
+
   const modleonok = () => {     
     if (isinclus === '' 
           && barcodeinclus === '' 
@@ -353,9 +388,10 @@ const Lebal: React.FC<IProps> = (props) => {
         barcodewidthprops: barcodewidthprops,
         lebalwidthprops: lebalwidthprops,
         columnnumprops: columnnumprops,
-        lebalheightprops: lebalheightprops,
+        lebalheightprops: printHeight,
         isPrintMSKU: isPrintMSKU,
         isPrintNameNa: isPrintNameNa,
+        printHeight: printHeight,
       }); 
       const datas = tabledata.map((item) => {
         const dd = new Array(item.issuedNum * 1);
@@ -364,22 +400,15 @@ const Lebal: React.FC<IProps> = (props) => {
         }
         return Object.assign(item, { issuuednumdata: dd });    
       });
-      setTabledata(datas); 
-      setPrintTemplate(!printTemplate);               
+      setTabledata(datas);
+      setSkuVisible(false);
+      setIsAddSelfcontent(false);
+      //setPrintTemplate(!printTemplate);
+      setTimeout(() => {
+        handleprint && handleprint();
+      }, 1000);        
     }
   };
-  //打印样式
-  const pagestyle = `
-      @media print {
-        section {page-break-before: always;}
-        h1 {page-break-after: always;}
-        .aaa {page-break-inside: avoid; color: red;}
-      }`;
-  //点击打印预览的回调
-  const handleprint = useReactToPrint({
-    content: () => componentRef.current,
-    pageStyle: pagestyle,
-  });
    
   return (
     <div>
@@ -402,12 +431,19 @@ const Lebal: React.FC<IProps> = (props) => {
                 <span className={styles.span} style={{ width: 80 }}>标签尺寸：</span>  
                 <span>高:</span>
                 <Item name="lebalheight" normalize={limitedInput}> 
-                  <Input placeholder="高"></Input>
+                  <Select>
+                    <Option value="3">100</Option>
+                    <Option value="4">75</Option>
+                    <Option value="6">50</Option>
+                    <Option value="8">37.5</Option>
+                    <Option value="10">30</Option>
+                    <Option value="12">25</Option>
+                  </Select>
                 </Item >
                 <span>mm</span>
                 <span style={{ marginLeft: 5 }}>宽</span>
                 <Item name="lebalwidth" normalize={limitedInput} >
-                  <Input placeholder="宽"/>
+                  <Input/>
                 </Item>
                 <span>mm</span>
                 <span className={styles.inclus}>{isinclus}</span>            
@@ -536,8 +572,7 @@ const Lebal: React.FC<IProps> = (props) => {
                           <Item name={`text${index}`}>
                             <Input className={styles.text}/>
                           </Item>                           
-                        </div>;
-                                                
+                        </div>;                                               
                       })
                     }                                                       
                   </div>
@@ -561,107 +596,49 @@ const Lebal: React.FC<IProps> = (props) => {
           <div className={styles.right}>
             <div className={styles.title} >标签预览</div>
             <div className={styles.border}>
-              <div style={{ width: lebalwidthprops, height: lebalheightprops, overflow: 'hidden' }}>
-                <div className={styles.lebal}>                   
-                  <Barcode 
-                    fontSize={barcodeFontsizeprops} 
-                    value={recordData.fnsku} 
-                    barcodewidthprops={barcodewidthprops} 
-                    id={`${recordData.id}`}></Barcode>
+              <div 
+                style={{ width: lebalwidthprops, height: printHeight }} 
+                className={styles.flexcenterpre}
+              >
+                <div>
+                  <div className={styles.lebal}>
+                    <Barcode 
+                      fontSize={barcodeFontsizeprops} 
+                      value={recordData.fnsku} 
+                      barcodewidthprops={barcodewidthprops} 
+                      id={`${recordData.id}`}></Barcode>
+                  </div>
+                  <div className={styles.flexcenterpre}>
+                    {isPrintProductname ? recordData.itemName : ''}
+                  </div>
+                  <div className={styles.flexcenterpre}>
+                    {isPrintNameNa ? recordData.nameNa : ''}
+                  </div>
+                  <div className={styles.flexcenterpre}>
+                    {isPrintSKU ? recordData.sku : ''}
+                  </div>
+                  <div className={styles.flexcenterpre}>
+                    {isPrintMSKU ? recordData.sellerSku : ''}
+                  </div>
+                  {
+                    selfdata.map((item, index) => {
+                      return <div key={index} className={styles.flexcenterpre}>{item}</div>;
+                    })
+                  }
+                  <div className={styles.flexcenterpre}>Made in CHina</div>
                 </div>
-                <div className={styles.flexcenter}>
-                  {isPrintProductname ? recordData.itemName : ''}
-                </div>
-                <div className={styles.flexcenter}>
-                  {isPrintNameNa ? recordData.nameNa : ''}
-                </div>
-                <div className={styles.flexcenter}>
-                  {isPrintSKU ? recordData.sku : ''}
-                </div>
-                <div className={styles.flexcenter}>
-                  {isPrintMSKU ? recordData.sellerSku : ''}
-                </div>
-                {
-                  selfdata.map((item, index) => {
-                    return <div key={index} className={styles.flexcenter}>{item}</div>;
-                  })
-                }
-                <div className={styles.divheight}>Made in CHina</div>
               </div>
             </div>
           </div>              
         </div>
       </Modal>
-      <Modal
-        visible={printTemplate}
-        centered
-        maskClosable={false}
-        mask={true}
-        maskStyle={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
-        onCancel={() => {
-          setPrintTemplate(!printTemplate);
-        }}
-        onOk={handleprint}               
-        className={styles.lebalmodal}
-        width={1100}
-      >
-        <div className={styles.title}>打印预览</div>
-        <div className={styles.a4}>
-          <div className={styles.a4content}>
-            <div className={styles.flex}>
-              {
-                tabledata.map((item, index) => {
-                  return (                                 
-                    item.issuuednumdata.map((key, i) => {
-                      return (
-                        <div
-                          style={{ width: columnnumprops, height: lebalheightprops }} 
-                          className={styles.flexcenter}
-                          key={`${index}-${i}`}
-                        >
-                          <div style={{ width: lebalwidthprops, height: lebalheightprops, overflow: 'hidden' }} className={styles.divlebal}>
-                            <div className={styles.centerlebal} key={i}>                     
-                              <Barcode 
-                                fontSize={barcodeFontsizeprops} 
-                                value={item.fnsku} 
-                                barcodewidthprops={barcodewidthprops} 
-                                id={`${item.id}`}></Barcode>                             
-                            </div>
-                            <div className={styles.centerlebal} >
-                              {isPrintProductname ? recordData.itemName : ''}
-                            </div >
-                            <div className={styles.centerlebal} >
-                              {isPrintNameNa ? recordData.nameNa : ''}
-                            </div>
-                            <div className={styles.centerlebal} >
-                              {isPrintSKU ? recordData.sku : ''}
-                            </div >
-                            <div className={styles.centerlebal} >
-                              {isPrintMSKU ? recordData.sellerSku : ''}
-                            </div>
-                            {
-                              selfdata.map((item, index) => {
-                                return <div key={index} className={styles.centerlebal}>{item}</div>;
-                              })
-                            }
-                            <div>Made in China</div>
-                          </div>                                                  
-                        </div>);
-                    })
-                  );
-                })
-              }                         
-            </div>
-          </div>                
-        </div>               
-        <div style={{ display: 'none' }}>
-          <Printpage 
-            ref={componentRef} 
-            tabledata={tabledata} 
-            previewdata={previewdata} 
-            selfdata={selfdata}></Printpage>
-        </div>               
-      </Modal>           
-    </div>);     
+      <div style={{ display: 'none' }}>
+        <Printpage 
+          ref={componentRef}
+          tabledata={tabledata} 
+          previewdata={previewdata} 
+          selfdata={selfdata}></Printpage>
+      </div>           
+    </div>); 
 };
 export default Lebal;
