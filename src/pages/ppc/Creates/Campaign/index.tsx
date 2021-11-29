@@ -239,6 +239,12 @@ const CampaignAdd = () => {
         return;
       }
 
+      if (reqData.adGroup.status) {
+        reqData.status = 'enabled';
+      } else {
+        reqData.status = 'paused';
+      }
+
       // 接口要求 activeTime 等数据放到 adGroup 中
       reqData.adGroup.activeTime = reqData.activeTime || {};
       reqData.adGroup.activeTime.startDate = reqData.adGroup.startDate;
@@ -255,6 +261,7 @@ const CampaignAdd = () => {
       delete reqData.adGroup.other;
       delete reqData.adGroup.bidType;
       delete reqData.adGroup.switch;
+      delete reqData.adGroup.status;
       delete reqData.adGroup.other;
 
       new Promise((resolve, reject) => {
@@ -394,6 +401,7 @@ const CampaignAdd = () => {
           name="atuoGroupForm"
           initialValues={{
             switch: true,
+            status: true,
             other: {
               bidType: 'auto',
             },

@@ -418,7 +418,6 @@ const Group: React.FC = () => {
         <Item
           name="status" 
           label="状态："
-          // wrapperCol= {{ offset: 4, span: 4 }}
           className={styles.status} 
           valuePropName="checked">
           <Switch
