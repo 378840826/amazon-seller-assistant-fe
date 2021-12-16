@@ -17,19 +17,27 @@ export function getDefinedCalendarFiltrateParams(dates: DefinedCalendar.IChangeP
   };
 }
 
-// 单元格数据
+// 单元格数据，货币，百分比，数字每 3 位加逗号
 export function renderTdNumValue(params: {
   value?: number | string | null;
   prefix?: string;
   suffix?: string;
+  /** 是否精确到 0.01 */
+  isFraction?: boolean;
 }) {
-  const { value, prefix, suffix } = params;
+  const { value, prefix, suffix, isFraction } = params;
+  // 空
   if ([null, undefined, '', NaN].includes(value)) {
     return '—';
   }
-  if (!prefix && !suffix) {
-    return value;
+  // 整数
+  if (!prefix && !suffix && !isFraction) {
+    const floatVlaue = Number(value).toLocaleString();
+    return floatVlaue;
   }
-  const v = Number(value).toFixed(2);
+  // 小数
+  const v = Number(value).toLocaleString(
+    undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+  );
   return `${prefix || ''}${v || '—'}${suffix || ''}`;
 }

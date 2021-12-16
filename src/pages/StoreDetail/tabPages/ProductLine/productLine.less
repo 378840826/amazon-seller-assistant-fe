@@ -1,0 +1,79 @@
+.container {
+  padding: 0 20px;
+
+  :global {
+    .ant-table-thead > tr > th {
+      padding: 4px 6px;
+    }
+  }
+}
+
+.radioContainer {
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.title {
+  color: @heading-color;
+  font-size: @font-size-base;
+  font-weight: bold;
+}
+
+.histogramContainer {
+  display: flex;
+  justify-content: space-between;
+
+  & > div {
+    width: 30%;
+  }
+}
+
+.histogramItemContainer {
+  display: flex;
+}
+
+.labelContainer {
+  display: flex;
+}
+
+.tagContainer,
+.valueContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 48px 0;
+  justify-content: space-around;
+  height: 380px;
+
+  * {
+    white-space: nowrap;
+    padding: 0;
+    height: auto;
+    font-size: @font-size-sm;
+    text-align: left;
+  }
+}
+
+.tagContainer {
+  margin-right: 10px;
+  color: @link-color;
+  cursor: pointer;
+
+  & > *:hover {
+    color: #299fff;
+  }
+}
+
+.tableToolBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+  span {
+    color: @text-color-secondary;
+  }
+}
+
+.detailBtn {
+  color: @btn-text-color;
+}

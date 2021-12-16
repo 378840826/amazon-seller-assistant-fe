@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 16px 0;
+    margin: 10px 0;
 
     & > div {
       display: flex;
@@ -46,7 +46,7 @@
     color: @link-color;
   }
 
-  .DefinedCalendar {
+  .BiweeklyRangePicker {
     width: 280px;
   }
 
@@ -55,6 +55,12 @@
   }
 
   .Tabs {
+    .notBind {
+      font-size: 16px;
+      text-align: center;
+      margin: 50px;
+    }
+
     :global {
       .ant-tabs-nav-wrap {
         margin: 0 20px;
@@ -66,6 +72,17 @@
 
       .ant-tabs-top > .ant-tabs-nav {
         margin: 10px 0;
+      }
+    }
+
+    .returnAnalysisTab {
+      position: relative;
+
+      span {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        color: @text-color-secondary;
       }
     }
   }

@@ -45,11 +45,19 @@ declare namespace StoreDetail {
     clicks: number;
     ctr: number;
     adConversionsRate: number;
+    returnReasonProportion: number;
+    returnReason: string;
+    proportion: number;
+  }
+
+  interface IProductLineData {
+    tag: string;
   }
 
   // 折线图数据
   interface IPolylineData {
-    [key: string]: { value: number; time: string }[];
+    [key: string]: string[] | number[];
+    polylineX: string[];
   }
 
   // 统计周期

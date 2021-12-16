@@ -1,0 +1,43 @@
+.container {
+  padding: 0 20px;
+}
+
+.tooltipContainer {
+  display: flex;
+  flex-direction: column;
+  color: @text-color;
+  padding: 16px;
+
+  & > div {
+    height: 14px;
+    line-height: 14px;
+    display: flex;
+    margin: 4px 0;
+    cursor: pointer;
+  }
+
+  .seriesName {
+    margin-left: 24px;
+  }
+
+  .value {
+    color: @heading-color;
+  }
+
+  i {
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 50%;
+
+    &.salesIcon {
+      background: #49b5ff;
+    }
+
+    &.inventoryIcon {
+      background: #ffaf4d;
+    }
+  }
+}

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Table } from 'antd';
-import { ColumnProps } from 'antd/es/table';
+import { ColumnProps, TableProps } from 'antd/es/table';
 import TableNotData from '@/components/TableNotData';
 import styles from './index.less';
 
@@ -17,6 +17,8 @@ interface IProps<T> {
   // 翻页回调
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (p: any) => void;
+  scroll?: TableProps<T>['scroll'];
+  rowKey?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,6 +31,8 @@ const MyTable: React.FC<IProps<any>> = function(props) {
     current,
     size,
     onChange,
+    scroll,
+    rowKey,
   } = props;
 
   // 分页器配置
@@ -54,12 +58,13 @@ const MyTable: React.FC<IProps<any>> = function(props) {
       <Table
         scroll={{
           x: 'max-content',
-          y: 331,
+          y: 340,
           scrollToFirstRowOnChange: true,
+          ...scroll,
         }}
         loading={loading}
         columns={columns}
-        rowKey="time"
+        rowKey={rowKey || 'cycleDate'}
         dataSource={dataSource}
         locale={{ emptyText: <TableNotData style={{ padding: 40 }} hint="没有找到相关数据" /> }}
         pagination={{ ...paginationProps, size: 'default' }}

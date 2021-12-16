@@ -3,10 +3,9 @@
  */
 import React from 'react';
 import { useSelector } from 'umi';
-import { Tooltip } from 'antd';
 import { IConnectState } from '@/models/connect';
-import { groups } from '../CustomBlock';
-import GoodsIcon from '@/pages/components/GoodsIcon';
+import { groups } from '../components/CustomBlock';
+import MyIcon from '@/pages/components/GoodsIcon';
 import styles from './index.less';
 import { AssignmentKeyName } from '../utils';
 
@@ -33,19 +32,20 @@ const queryDict = {
 
 const SkuAsinBlock: React.FC = () => {
   const pageData = useSelector((state: IConnectState) => state.storeDetail);
-  const { customBlock, baseData: { sku, asin } } = pageData;
+  const { customBlock, baseData: { skuInfoTofu, asinInfoTofu } } = pageData;
 
   // 单个简单豆腐块
-  function renderSimpleBlock(name: string, value: number) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function renderSimpleBlock(name: string, value: any) {
     const item = (
       <div className={styles.block} key={name}>
         <div>
           {name}
           {
-            queryDict[name] && <Tooltip title={queryDict[name]}>{GoodsIcon.question('')}</Tooltip>
+            queryDict[name] && MyIcon.question(queryDict[name])
           }
         </div>
-        <div className={styles.blockVal}>{value}</div>
+        <div className={styles.blockVal}>{[null, undefined, ''].includes(value) ? '—' : value}</div>
       </div>
     );
     return (
@@ -61,8 +61,8 @@ const SkuAsinBlock: React.FC = () => {
         <div className={styles.title}>SKU</div>
         <div className={styles.container}>
           {
-            groups.SKU.map(name => {
-              const value = sku[AssignmentKeyName[name]];
+            ['SKU总数'].concat(groups.SKU).map(name => {
+              const value = skuInfoTofu[AssignmentKeyName[name]];
               return customBlock[name] && renderSimpleBlock(name, value);
             })
           }
@@ -72,8 +72,8 @@ const SkuAsinBlock: React.FC = () => {
         <div className={styles.title}>ASIN</div>
         <div className={styles.container}>
           {
-            groups.ASIN.map(name => {
-              const value = asin[AssignmentKeyName[name]];
+            ['ASIN总数'].concat(groups.ASIN).map(name => {
+              const value = asinInfoTofu[AssignmentKeyName[name]];
               return customBlock[name] && renderSimpleBlock(name, value);
             })
           }

@@ -3,6 +3,11 @@
   display: flex;
   flex-wrap: wrap;
 
+  & > * {
+    margin-right: 20px;
+    margin-bottom: 14px;
+  }
+
   a {
     &:nth-child(1) .blockVal {
       color: @link-color;
@@ -40,8 +45,6 @@
 }
 
 .block {
-  margin-right: 20px;
-  margin-bottom: 14px;
   width: 200px;
   height: 64px;
   display: flex;

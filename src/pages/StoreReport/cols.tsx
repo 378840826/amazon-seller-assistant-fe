@@ -439,7 +439,7 @@ export const getColumns = (params: {
           fixed: 'right',
           render: (_: undefined, record: StoreReport.IStoreReport) => {
             const url = `/overview/shop/detail?storeId=${record.storeId}`;
-            return <Link className={styles.detailBtn} to={url}>详情</Link>;
+            return <Link target="_blank" className={styles.detailBtn} to={url}>详情</Link>;
           },
         },
       ] as any,

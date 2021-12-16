@@ -27,6 +27,8 @@ export default {
   '@border-color-base': '#d9d9d9',
   // 分割线色
   '@divider-line-color': '#eee',
+  // 分隔线
+  '@divider-line': '1px solid #eee',
 
   /* 文本颜色 */
   // 标题色

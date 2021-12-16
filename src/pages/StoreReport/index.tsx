@@ -11,9 +11,7 @@ import CustomCols from './CustomCols';
 import { getColumns } from './cols';
 import styles from './index.less';
 import { SortOrder } from 'antd/es/table/interface';
-import DefinedCalendar from '@/components/DefinedCalendar';
-import definedCalendarSelectList from './DefinedCalendarSelectList';
-import { getDefinedCalendarFiltrateParams } from './utils';
+import BiweeklyRangePicker, { IChangeDates } from '@/pages/components/BiweeklyRangePicker';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -34,10 +32,7 @@ const StoreReport: React.FC = () => {
   // 环比开关
   const [ratioSwitchChecked, setRatioSwitchChecked] = useState<boolean>(false);
   // 日期
-  const calendarStorageBaseKey = 'storeReport';
-  const [calendarDefaultKey, setCalendarDefaultKey] = useState<string>(
-    storage.get(`${calendarStorageBaseKey}_dc_itemKey`) || '7'
-  );
+  const calendarStorageBaseKey = 'storeReport_dateRange';
   // 导出按钮 loading
   const [exportBtnLoading, setExportBtnLoading] = useState<boolean>(false);
 
@@ -48,15 +43,15 @@ const StoreReport: React.FC = () => {
       callback: requestErrorFeedback,
     });
     // 日期范围
-    const { startDate, endDate } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
-    const dateParams = getDefinedCalendarFiltrateParams({
-      dateStart: startDate, dateEnd: endDate, selectItemKey: calendarDefaultKey,
-    });
-    // 获取列表
+    // const { startDate, endDate } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
+    const { startDate, endDate, selectedKey } = storage.get(calendarStorageBaseKey);
     dispatch({
       type: 'storeReport/fetchList',
-      payload: dateParams,
-      callback: requestErrorFeedback,
+      payload: {
+        startTime: startDate,
+        endTime: endDate,
+        timeMethod: selectedKey,
+      },
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -92,7 +87,6 @@ const StoreReport: React.FC = () => {
   // 筛选参数变化
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleFormChange(value: any) {
-    console.log('handleFormChange', value);
     // 需要重新请求筛选项
     dispatch({
       type: 'storeReport/fetchRegionSiteStore',
@@ -120,12 +114,15 @@ const StoreReport: React.FC = () => {
   }
 
   // 日期改变
-  function handleDateRangeChange(dates: DefinedCalendar.IChangeParams) {
-    const { selectItemKey } = dates;
-    setCalendarDefaultKey(selectItemKey);
+  function handleDateRangeChange(dates: IChangeDates) {
+    const { startDate, endDate, selectedKey } = dates;
     dispatch({
       type: 'storeReport/fetchList',
-      payload: getDefinedCalendarFiltrateParams(dates),
+      payload: {
+        startTime: startDate,
+        endTime: endDate,
+        timeMethod: selectedKey,
+      },
       callback: requestErrorFeedback,
     });
   }
@@ -180,7 +177,7 @@ const StoreReport: React.FC = () => {
           onValuesChange={handleFormChange}
           form={form} 
           initialValues={{
-            currency: '0',
+            currency: 'original',
           }}
         >
           <Item name="region">
@@ -212,28 +209,27 @@ const StoreReport: React.FC = () => {
           </Item>
           <Item name="currency">
             <Select className={styles.Select}>
-              <Option value="0">原币种</Option>
-              <Option value="1">人民币</Option>
+              <Option value="original">原币种</Option>
+              <Option value="rmb">人民币</Option>
             </Select>
           </Item>
         </Form>
         <div className={styles.toolBarRight}>
-          <span>环比：
+          <span className={styles.ratioSwitchContainer}>
+            <span>环比：</span>
             <Switch
               className={styles.ratioSwitch}
               checked={ratioSwitchChecked}
               onChange={v => setRatioSwitchChecked(v)}
             />
           </span>
-          <DefinedCalendar 
-            itemKey={calendarDefaultKey}
-            storageKey={calendarStorageBaseKey}
-            index={1}
-            change={handleDateRangeChange}
-            className={styles.DefinedCalendar}
-            selectList={definedCalendarSelectList}
+          <BiweeklyRangePicker 
+            defaultSelectedKey={'30'}
+            localStorageKey={calendarStorageBaseKey}
+            onChange={handleDateRangeChange}
+            containerClassName={styles.BiweeklyRangePicker}
           />
-          <Button loading={exportBtnLoading}>
+          <Button loading={exportBtnLoading} disabled>
             <a download href={getDownloadUrl()} onClick={() => handleClickDownload()}>导出</a>
           </Button>
           <CustomCols colsItems={customCols} />

@@ -160,7 +160,7 @@ export default {
               currency: '￥',
               totalSales: null,
               totalSalesRingRatio: -3.1,
-              totalOrderQuantity: 4,
+              totalOrderQuantity: 4567890,
               totalOrderQuantityRingRatio: 5,
               totalSalesQuantity: 6,
               totalSalesQuantityRingRatio: 7,

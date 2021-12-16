@@ -90,7 +90,7 @@ const StoreReportModel: IStoreReportModelType = {
     // 查询参数
     searchParams: {
       order: null,
-      currency: 0,
+      currency: 'original',
     },
     // 地区、站点、店铺
     regionSiteStore: {
@@ -127,7 +127,7 @@ const StoreReportModel: IStoreReportModelType = {
 
     // 获取地区/站点/店铺
     *fetchRegionSiteStore({ payload, callback }, { call, put }) {
-      const res = yield call(queryRegionSiteStore, payload);
+      const res = yield call(queryRegionSiteStore, { region: null, ...payload });
       if (res.code === 200) {
         const { data } = res;
         yield put({
@@ -141,7 +141,6 @@ const StoreReportModel: IStoreReportModelType = {
     // 排序
     *sortList({ payload }, { put, select }) {
       const { order, sort } = payload;
-      console.log('排序', sort, order);
       const records = yield select((state: IConnectState) => state.storeReport.list.records);
       const sortRecords = [...records].sort((a, b) => {
         const nunA = Number(a[sort] || 0);

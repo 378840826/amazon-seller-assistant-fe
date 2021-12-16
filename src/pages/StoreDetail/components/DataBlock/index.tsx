@@ -2,8 +2,7 @@
  * 单个数据豆腐块
  */
 import React from 'react';
-import { Tooltip } from 'antd';
-import GoodsIcon from '@/pages/components/GoodsIcon';
+import MyIcon from '@/pages/components/GoodsIcon';
 import Rate from '@/components/Rate';
 import styles from './index.less';
 
@@ -39,7 +38,7 @@ const DataBlock: React.FC<IProps> = props => {
         <div className={styles.value}>{value}</div>
         <div className={styles.name}>
           {name}
-          { hint && <Tooltip title={hint}>{GoodsIcon.question('')}</Tooltip> }
+          { hint && MyIcon.question(hint) }
         </div>
       </div>
       <div>

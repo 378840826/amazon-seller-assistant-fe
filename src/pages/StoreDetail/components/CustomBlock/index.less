@@ -3,20 +3,31 @@
   flex-direction: column;
   justify-content: space-between;
   width: 500px;
-  height: 680px;
   background-color: #fff;
-  padding: 14px;
   box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+}
 
-  .row {
-    display: flex;
-    justify-content: space-between;
-  }
+.checkAllContainer {
+  border-bottom: @divider-line;
+  padding: 8px 14px;
+}
+
+.checkboxContainer {
+  display: flex;
+  justify-content: space-between;
+  height: 610px;
+  padding: 8px 14px;
+}
+
+.col {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .group {
   display: flex;
-  flex: 1;
+  // flex: 1;
   flex-direction: column;
 
   & > * {
