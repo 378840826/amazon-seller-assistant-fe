@@ -14,7 +14,7 @@ import MyIcon from '@/pages/components/GoodsIcon';
 import SkuAsinBlock from './SkuAsinBlock';
 import Main from './tabPages/Main/main';
 import B2B from './tabPages/B2B/b2b';
-import ReturnAnalysis from './tabPages/ReturnAnalysis/ReturnAnalysis';
+import ReturnAnalysis from './tabPages/ReturnAnalysis/returnAnalysis';
 // import Cost from './tabPages/Cost/cost';
 // import ProductLine from './tabPages/ProductLine/productLine';
 // import Ad from './tabPages/Ad/ad';
