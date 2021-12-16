@@ -1,0 +1,57 @@
+.container {
+  padding: 0 20px;
+
+  .title {
+    color: @heading-color;
+    font-weight: bold;
+  }
+
+  :global {
+    .ant-table-tbody > tr > td,
+    .ant-table tfoot > tr > th,
+    .ant-table tfoot > tr > td {
+      padding: 6px;
+    }
+
+    .ant-table-thead > tr > th {
+      padding: 4px 6px;
+      background: #f1f3f4;
+    }
+
+    .ant-table-container {
+      border: 1px solid #e7eaec;
+    }
+  }
+}
+
+.tableAndPieContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.pieChartContainer {
+  margin-right: 80px;
+  width: 800px;
+}
+
+.pieNotData {
+  width: 100%;
+  margin-top: 60px;
+  text-align: center;
+}
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.tofuContainer {
+  display: flex;
+  flex-wrap: wrap;
+
+  & > * {
+    margin-right: 20px;
+  }
+}

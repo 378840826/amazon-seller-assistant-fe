@@ -1,0 +1,108 @@
+.container {
+  background-color: #fff;
+  position: relative;
+
+  .showDateContainer {
+    position: relative;
+  }
+
+  .showDate {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 16px 0 13px;
+    justify-content: space-between;
+  }
+
+  .Input {
+    width: 100%;
+    background: transparent;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    z-index: 2;
+  }
+
+  // 图标
+  .icon {
+    font-size: 12px;
+    color: #bfbfbf;
+  }
+
+  .calendarIcon {
+    right: 16px;
+  }
+
+  .arrowIcon {
+    font-size: @font-size-base !important;
+  }
+
+  .startDate,
+  .endDate {
+    color: @text-color;
+  }
+}
+
+// 下拉列表文字居中
+.menuItem {
+  text-align: center;
+}
+
+.DatePicker {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  opacity: 0;
+}
+
+// 用周选择器伪装成双周选择器
+.biweeklyCalendar {
+  :global {
+    // hover 周
+    .ant-picker-week-panel-row:hover {
+      td {
+        background: #f5f5f5;
+      }
+      // hover 周的下一周
+      & + .ant-picker-week-panel-row {
+        td {
+          background: #f5f5f5;
+        }
+        // 如果下一周是选中周，则不改变
+        &.ant-picker-week-panel-row-selected {
+          td {
+            background: @primary-color;
+          }
+        }
+      }
+    }
+
+    .ant-picker-week-panel-row-selected {
+      // 选中的周 hover
+      &:hover {
+        td {
+          background: @primary-color;
+        }
+        // 选中的周的下一周 hover
+        & + .ant-picker-week-panel-row td {
+          background: @primary-color;
+        }
+      }
+
+      // 选中的周的下一周
+      & + .ant-picker-week-panel-row {
+        td {
+          background: @primary-color;
+
+          .ant-picker-cell-inner {
+            color: #fff;
+          }
+
+          &.ant-picker-cell-week {
+            color: rgba(255, 255, 255, 0.5);
+          }
+        }
+      }
+    }
+  }
+}
