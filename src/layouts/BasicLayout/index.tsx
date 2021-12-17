@@ -112,9 +112,11 @@ const BasicLayout: React.FC = props => {
     dispatch({
       type: 'user/fetchCurrent',
     });
+    /** 
     dispatch({
       type: 'global/fetchUnreadNotices',
     });
+    */
   }, [dispatch]);
   
   return (
