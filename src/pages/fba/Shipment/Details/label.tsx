@@ -18,7 +18,7 @@ interface IProps{
     };
     onCancle: () => void;
     data: Shipment.IProductList[]; 
-    site: API.Site; 
+    site: API.Site;
 }
 
 interface ILebal extends Shipment.IProductList{
@@ -159,6 +159,8 @@ const Lebal: React.FC<IProps> = (props) => {
   const [isAddSelfcontent, setIsAddSelfcontent] = useState<boolean>(false);
 
   const [printHeight, setPrintHeight] = useState<number>(156);
+  //优化一下卡顿问题
+  const [printvisible, setPrintvisible] = useState<boolean>(false); 
     
   //传给打印预览的值
   const [previewdata, setPreviewdata] = useState<IPreviewdata>({
@@ -384,6 +386,7 @@ const Lebal: React.FC<IProps> = (props) => {
   });
 
   const modleonok = () => {
+    setPrintvisible(true);
     if (isinclus === '' 
           && barcodeinclus === '' 
             && tabledata.some( item => item.declareNum * 1 !== 0)){
@@ -638,15 +641,17 @@ const Lebal: React.FC<IProps> = (props) => {
             </div>
           </div>              
         </div>
-      </Modal>     
-      <div style={{ display: 'none' }}>
-        <Printpage 
-          ref={componentRef} 
-          tabledata={tabledata} 
-          previewdata={previewdata} 
-          selfdata={selfdata}
-        />
-      </div>            
+      </Modal>
+      {
+        printvisible ? <div style={{ display: 'none' }}>
+          <Printpage 
+            ref={componentRef} 
+            tabledata={tabledata} 
+            previewdata={previewdata} 
+            selfdata={selfdata}
+          />     
+        </div> : null
+      }             
     </div>);     
 };
 export default Lebal;
