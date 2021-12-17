@@ -40,18 +40,28 @@ const StoreReport: React.FC = () => {
     // 获取地区/站点/店铺
     dispatch({
       type: 'storeReport/fetchRegionSiteStore',
+      payload: {},
       callback: requestErrorFeedback,
     });
     // 日期范围
-    // const { startDate, endDate } = storage.get(`${calendarStorageBaseKey}_dc_dateRange`);
     const { startDate, endDate, selectedKey } = storage.get(calendarStorageBaseKey);
-    dispatch({
-      type: 'storeReport/fetchList',
-      payload: {
+    let payload;
+    // timeMethod 参数在特定情况下才需要， 不然后端会报错
+    if (['WEEK', 'BIWEEKLY', 'MONTH', 'SEASON'].includes(selectedKey.toUpperCase())) {
+      payload = {
         startTime: startDate,
         endTime: endDate,
         timeMethod: selectedKey,
-      },
+      };
+    } else {
+      payload = {
+        startTime: startDate,
+        endTime: endDate,
+      };
+    }
+    dispatch({
+      type: 'storeReport/fetchList',
+      payload,
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -86,15 +96,16 @@ const StoreReport: React.FC = () => {
 
   // 筛选参数变化
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleFormChange(value: any) {
-    // 需要重新请求筛选项
-    dispatch({
-      type: 'storeReport/fetchRegionSiteStore',
-      payload: value,
-      callback: requestErrorFeedback,
-    });
-    // 获取列表
-    const formValues = form.getFieldsValue();
+  function handleFormChange(value: any, formValues: any) {
+    // 非切换币种时（切换地区站点店铺时）
+    if (value.currency === undefined) {
+      // 重新请求地区站点店铺筛选项
+      dispatch({
+        type: 'storeReport/fetchRegionSiteStore',
+        payload: value,
+        callback: requestErrorFeedback,
+      });
+    }
     dispatch({
       type: 'storeReport/fetchList',
       payload: { ...value, ...formValues },
@@ -116,13 +127,23 @@ const StoreReport: React.FC = () => {
   // 日期改变
   function handleDateRangeChange(dates: IChangeDates) {
     const { startDate, endDate, selectedKey } = dates;
-    dispatch({
-      type: 'storeReport/fetchList',
-      payload: {
+    let payload;
+    // timeMethod 参数在特定情况下才需要给后端， 不然后端会报错
+    if (['WEEK', 'BIWEEKLY', 'MONTH', 'SEASON'].includes(selectedKey.toUpperCase())) {
+      payload = {
         startTime: startDate,
         endTime: endDate,
         timeMethod: selectedKey,
-      },
+      };
+    } else {
+      payload = {
+        startTime: startDate,
+        endTime: endDate,
+      };
+    }
+    dispatch({
+      type: 'storeReport/fetchList',
+      payload,
       callback: requestErrorFeedback,
     });
   }

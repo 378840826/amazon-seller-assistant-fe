@@ -101,7 +101,7 @@ const Page: React.FC = () => {
     );
   }
 
-  // 特殊处理
+  // 特殊处理折线图的参数 dataTypes 和 colors
   function getChartTypeAndColor() {
     const dataTypes = Object.keys(tofuChecked).filter(key => tofuChecked[key].checked);
     const colors = dataTypes.map(name => tofuChecked[name].color);
