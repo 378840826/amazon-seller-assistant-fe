@@ -79,10 +79,10 @@ const Product: React.FC<IProps> = props => {
           itemName,
           asin1,
           sku,
-          //url,
+          url,
         } = record;
         return <div className={styles.productCol}>
-          
+          <GoodsImg src={url} alt="商品" width={40}/>       
           <div className={styles.details}>
             <a href={getAmazonAsinUrl(val, site)} 
               className={styles.title}

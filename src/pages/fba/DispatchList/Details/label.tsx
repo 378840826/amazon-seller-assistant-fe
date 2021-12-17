@@ -181,6 +181,9 @@ const Lebal: React.FC<IProps> = (props) => {
   const [printHeight, setPrintHeight] = useState<number>(156);
   //const [printWidth, setPrintWidth] = useState<number>(42);
 
+  //优化一下卡顿问题
+  const [printvisible, setPrintvisible] = useState<boolean>(false);
+
   //表单默认值，传给打印模板的值
   const formInitialValue = ({
     isPrintProductname: false,
@@ -377,7 +380,8 @@ const Lebal: React.FC<IProps> = (props) => {
     pageStyle: pagestyle,
   });
 
-  const modleonok = () => {     
+  const modleonok = () => {  
+    setPrintvisible(true);   
     if (isinclus === '' 
           && barcodeinclus === '' 
             && tabledata.some( item => item.issuedNum * 1 !== 0)){
@@ -632,13 +636,15 @@ const Lebal: React.FC<IProps> = (props) => {
           </div>              
         </div>
       </Modal>
-      <div style={{ display: 'none' }}>
-        <Printpage 
-          ref={componentRef}
-          tabledata={tabledata} 
-          previewdata={previewdata} 
-          selfdata={selfdata}></Printpage>
-      </div>           
+      {
+        printvisible ? <div style={{ display: 'none' }}>      
+          <Printpage 
+            ref={componentRef}
+            tabledata={tabledata} 
+            previewdata={previewdata} 
+            selfdata={selfdata}></Printpage>
+        </div> : null
+      }           
     </div>); 
 };
 export default Lebal;
