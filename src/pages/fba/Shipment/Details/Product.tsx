@@ -158,7 +158,7 @@ const Product: React.FC<IProps> = props => {
       render: (id: string, record: Shipment.IProductList ) => (
         <>
           <span className={styles.handleCol} onClick={() => {
-            setLabelModalData({ modalvisible: true, recordData: record }); 
+            setLabelModalData({ modalvisible: true, recordData: record });
           }}>打印标签</span>
           <span className={styles.handleCol} onClick={() => message.warning('功能未开放')}>创建加工单</span>
           <span className={styles.handleCol} onClick={() => delProduct(id)}>删除</span>
@@ -183,12 +183,14 @@ const Product: React.FC<IProps> = props => {
     <Lebal 
       site={site} 
       data={[lebalModalData.recordData]} 
-      modalData={lebalModalData} 
+      modalData={lebalModalData}
       onCancle={() => {
         lebalModalData.modalvisible = false; 
         setLabelModalData({ ...lebalModalData });
       }}
     />
+  
+    
   </>;
 };
 
