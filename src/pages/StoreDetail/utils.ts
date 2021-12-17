@@ -1,4 +1,4 @@
-// key: name
+// key: name。 后端接口还未定，所有字段从这个表获取，等后端定字段后修改这个表就行
 const keyToNameDict = {
   // sku
   'totalSku': 'SKU总数',
@@ -9,7 +9,7 @@ const keyToNameDict = {
   'fbmActiveSku': 'FBM-active-SKU',
   'fbmInactiveSku': 'FBM-Inactive-SKU',
   // asin
-  'asinTotal': 'ASIN总数',
+  'totalAsin': 'ASIN总数',
   'buyboxAsin': 'Buybox-ASIN',
   'notBuyboxAsin': '非Buybox-ASIN',
   'dynamicSalesRate': '动销率',

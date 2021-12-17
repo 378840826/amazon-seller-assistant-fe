@@ -127,12 +127,32 @@ const StoreReportModel: IStoreReportModelType = {
 
     // 获取地区/站点/店铺
     *fetchRegionSiteStore({ payload, callback }, { call, put }) {
-      const res = yield call(queryRegionSiteStore, { region: null, ...payload });
+      const res = yield call(queryRegionSiteStore, { ...payload });
       if (res.code === 200) {
         const { data } = res;
+        let updateData = {};
+        // 特殊的联动逻辑
+        if (payload.storeName) {
+          updateData = {
+            marketplaceList: data.marketplaceList,
+            regionList: data.regionList,
+          };
+        } else if (payload.marketplace) {
+          updateData = {
+            regionList: data.regionList,
+            storeNameList: data.storeNameList,
+          };
+        } else if (payload.region) {
+          updateData = {
+            marketplaceList: data.marketplaceList,
+            storeNameList: data.storeNameList,
+          };
+        } else {
+          updateData = data;
+        }
         yield put({
           type: 'updateRegionSiteStore',
-          payload: data,
+          payload: updateData,
         });
       }
       callback && callback(res.code, res.message);
@@ -188,7 +208,9 @@ const StoreReportModel: IStoreReportModelType = {
 
     // 更新地区/站点、店铺
     updateRegionSiteStore(state, { payload }) {
-      state.regionSiteStore = payload;
+      payload.marketplaceList && (state.regionSiteStore.marketplaceList = payload.marketplaceList);
+      payload.regionList && (state.regionSiteStore.regionList = payload.regionList);
+      payload.storeNameList && (state.regionSiteStore.storeNameList = payload.storeNameList);
     },
   },
 };
