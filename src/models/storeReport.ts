@@ -127,12 +127,15 @@ const StoreReportModel: IStoreReportModelType = {
 
     // 获取地区/站点/店铺
     *fetchRegionSiteStore({ payload, callback }, { call, put }) {
-      const res = yield call(queryRegionSiteStore, { region: null, ...payload });
+      const res = yield call(queryRegionSiteStore, { ...payload.values });
       if (res.code === 200) {
         const { data } = res;
         yield put({
           type: 'updateRegionSiteStore',
-          payload: data,
+          payload: {
+            data,
+            changeValueObj: payload.changeValueObj,
+          },
         });
       }
       callback && callback(res.code, res.message);
@@ -188,7 +191,41 @@ const StoreReportModel: IStoreReportModelType = {
 
     // 更新地区/站点、店铺
     updateRegionSiteStore(state, { payload }) {
-      state.regionSiteStore = payload;
+      const { changeValueObj, data } = payload;
+      // 排序
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const compare = (a: any, b: any) => {
+        if (a.region) {
+          return a.region > b.region ? 1 : -1;
+        }
+        return a > b ? 1 : -1;
+      };
+      // 如果更新了一个条件(并且不是清除这个条件)，那么就只更新另外两个筛选的下拉框，此条件的下拉框保持不变
+      if (changeValueObj) {
+        const [key, value] = Object.entries(changeValueObj)[0];
+        if (value) {
+          switch (key) {
+          case 'marketplace':
+            state.regionSiteStore.regionList = data.regionList.sort(compare);
+            state.regionSiteStore.storeNameList = data.storeNameList.sort(compare);
+            break;
+          case 'region':
+            state.regionSiteStore.marketplaceList = data.marketplaceList.sort(compare);
+            state.regionSiteStore.storeNameList = data.storeNameList.sort(compare);
+            break;
+          case 'storeName':
+            state.regionSiteStore.marketplaceList = data.marketplaceList.sort(compare);
+            state.regionSiteStore.regionList = data.regionList.sort(compare);
+            break;
+          default:
+            break;
+          }
+          return;
+        }
+      }
+      state.regionSiteStore.marketplaceList = data.marketplaceList.sort(compare);
+      state.regionSiteStore.regionList = data.regionList.sort(compare);
+      state.regionSiteStore.storeNameList = data.storeNameList.sort(compare);
     },
   },
 };

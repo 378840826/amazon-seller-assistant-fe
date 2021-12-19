@@ -16,7 +16,7 @@ export const moneyFormatNames = [
 // 需要转成百分比的字段
 export const percentageFormatNames = ['转化率', 'B2B销售额占比', '毛利率', '退货率'];
 
-// 提供数据源选择的字段（选择 全部、FBA、FBM、B2B）
+// 提供细分数据源选择的字段（选择 全部、FBA、FBM、B2B）
 export const multiDataOrigin = ['总订单量', '总销量', '总销售额'];
 
 // 折线图颜色
@@ -31,7 +31,5 @@ export const showPreviousPeriodKey = [
   'biweekly',
   'month',
   'quarter',
-  'lastYear',
-  'year',
-  '7', '15', '30', '60', '90', '180', '365',
+  '7', '15', '30', '60', '90', '180',
 ];
