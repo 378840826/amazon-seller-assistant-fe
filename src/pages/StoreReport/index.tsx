@@ -102,7 +102,12 @@ const StoreReport: React.FC = () => {
       // 重新请求地区站点店铺筛选项
       dispatch({
         type: 'storeReport/fetchRegionSiteStore',
-        payload: value,
+        payload: {
+          // 全部参数
+          values: formValues,
+          // 本次改变的参数
+          changeValueObj: value,
+        },
         callback: requestErrorFeedback,
       });
     }

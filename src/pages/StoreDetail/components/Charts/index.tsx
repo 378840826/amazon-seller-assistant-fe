@@ -16,12 +16,14 @@ interface IProps {
   dataSource: {
     [key: string]: StoreDetail.IPolylineData;
   };
-  // dataTypes = tofuChecked
+  // dataTypes 就是 tofuChecked 主要作用是确定顺序也就是确定和豆腐块相同的颜色(可优化为豆腐块信息和颜色绑定，不依赖点击顺序)
   dataTypes: string[];
   currency: string;
   loading?: boolean;
   colors: string[];
   style?: React.CSSProperties;
+  // 整体表现模块的折线图有细分数据源选择，需要特殊处理
+  dataOrigin?: StoreDetail.DataOrigin;
 }
 
 // 上年同期的颜色
@@ -30,11 +32,59 @@ const firstHalfClolrs = ['#6FE09C', '#FE8484'];
 const firstWeekOrMonthHalfColors = ['#759FFF', '#0CE0DE'];
 // 销售额超过此数据量时，不用柱状图改用用折线图
 const barMaxLength = 60;
+// 整体表现模块有细分数据源选择的字段名称
+const specificNames = ['总订单量', '总销量', '总销售额'];
+
+// 获取 X 轴的数据
+function getPolylineXData(dataSource: { [key: string]: StoreDetail.IPolylineData }) {
+  const { firstHalf, firstWeekOrMonthHalf, thisPeriod } = dataSource;
+  // 优先从本期拿，本期没返回数据有再从上年同期拿，没有再从上期
+  if (thisPeriod.polylineX.length) {
+    return thisPeriod.polylineX;
+  }
+  if (firstHalf && firstHalf.polylineX.length) {
+    return firstHalf.polylineX;
+  }
+  if (firstWeekOrMonthHalf && firstWeekOrMonthHalf.polylineX.length) {
+    return firstWeekOrMonthHalf.polylineX;
+  }
+  return [];
+}
+
+// 获取要显示的字段 key
+function getShowKeys(dataSource: { [key: string]: StoreDetail.IPolylineData }) {
+  const { firstHalf, firstWeekOrMonthHalf, thisPeriod } = dataSource;
+  let obj = {};
+  // 优先从本期拿，本期没返回数据有再从上年同期拿，没有再从上期
+  if (thisPeriod.polylineX.length) {
+    obj = thisPeriod;
+  }
+  if (firstHalf && firstHalf.polylineX.length) {
+    obj = firstHalf;
+  }
+  if (firstWeekOrMonthHalf && firstWeekOrMonthHalf.polylineX.length) {
+    obj = firstWeekOrMonthHalf;
+  }
+  const showKeys = Object.keys(obj).filter(key => key !== 'polylineX' && key);
+  return showKeys;
+}
 
 const Charts: React.FC<IProps> = props => {
-  const { dataSource, dataTypes, currency, loading, colors, style } = props;
+  const { dataSource, dataTypes, currency, loading, colors, style, dataOrigin } = props;
   const { firstHalf, firstWeekOrMonthHalf, thisPeriod } = dataSource;
-  const showKeys = Object.keys(thisPeriod).filter(key => key !== 'polylineX' && key);
+  // 要显示的字段 key
+  const showKeys = getShowKeys(dataSource);
+  // x 轴的数据
+  const polylineXData = getPolylineXData(dataSource);
+  const dataTypeNames = [...dataTypes];
+  // 如果选择了整体表现模块的细分数据源时，需要对 dataTypeNames 进行特殊处理，例如从 总XXX 改为 FBAXXX
+  if (dataOrigin) {
+    dataTypes.forEach((name, i) => {
+      if (specificNames.includes(name)) {
+        dataTypeNames[i] = `${dataOrigin.toUpperCase()}${name.slice(1)}`;
+      }
+    });
+  }
 
   // 获取 X 时间轴的配置
   function getXAxisOption() {
@@ -49,8 +99,7 @@ const Charts: React.FC<IProps> = props => {
         inside: true,
       },
       axisLabel: { color: '#666' },
-      // data: thisPeriod.polylineX,
-      data: thisPeriod.polylineX.map(item => {
+      data: polylineXData.map(item => {
         return day.getNowFormatTime('MM-DD', new Date(item));
       }),
     };
@@ -99,7 +148,7 @@ const Charts: React.FC<IProps> = props => {
         return formatterResult;
       };
       // 坐标标签的颜色
-      const colorIndex = dataTypes.findIndex(n => n === name);
+      const colorIndex = dataTypeNames.findIndex(n => n === name);
       yAxisList[index] = {
         ...yAxisItem,
         position: index ? 'right' : 'left',
@@ -122,10 +171,10 @@ const Charts: React.FC<IProps> = props => {
       const arr: echarts.EChartOption.Series[] = [];
       keys.forEach((key, index) => {
         const name = AssignmentKeyName.getName(key);
-        if (!dataTypes.includes(name)) {
+        if (!dataTypeNames.includes(name)) {
           return;
         }
-        const colorIndex = dataTypes.findIndex(n => n === name);
+        const colorIndex = dataTypeNames.findIndex(n => n === name);
         const options = {
           name,
           data: datas[key],
@@ -149,7 +198,7 @@ const Charts: React.FC<IProps> = props => {
       return arr;
     };
     const series: echarts.EChartOption.Series[] = [];
-    series.push(...getOption(thisPeriod, colors));
+    thisPeriod && series.push(...getOption(thisPeriod, colors));
     firstHalf && series.push(...getOption(firstHalf, firstHalfClolrs));
     firstWeekOrMonthHalf && series.push(
       ...getOption(firstWeekOrMonthHalf, firstWeekOrMonthHalfColors)
@@ -225,19 +274,19 @@ const Charts: React.FC<IProps> = props => {
           firstWeekOrMonthHalf.polylineX[index];
           const allData = {};
           // 本期，需要从源数据中获取，因为无法通过 seriesName 和 axisValue 来确定在 paramsList 中的位置
-          allData[thisPeriodTime] = showKeys.map(k => {
+          thisPeriodTime && (allData[thisPeriodTime] = showKeys.map(k => {
             const name = AssignmentKeyName.getName(k);
-            const colorIndex = dataTypes.findIndex(n => n === name);
+            const colorIndex = dataTypeNames.findIndex(n => n === name);
             return {
               seriesName: name,
               value: thisPeriod[k][index],
               color: colors[colorIndex],
             };
-          });
+          }));
           // 上年同期，需要从源数据中获取，因为无法通过 seriesName 和 axisValue 来确定在 paramsList 中的位置
           firstHalfTime && (allData[firstHalfTime] = showKeys.map(k => {
             const name = AssignmentKeyName.getName(k);
-            const colorIndex = dataTypes.findIndex(n => n === name);
+            const colorIndex = dataTypeNames.findIndex(n => n === name);
             return {
               seriesName: name,
               value: firstHalf[k][index],
@@ -247,7 +296,7 @@ const Charts: React.FC<IProps> = props => {
           // 上周/月同期，需要从源数据中获取，因为无法通过 seriesName 和 axisValue 来确定在 paramsList 中的位置
           firstWeekOrMonthHalfTime && (allData[firstWeekOrMonthHalfTime] = showKeys.map(k => {
             const name = AssignmentKeyName.getName(k);
-            const colorIndex = dataTypes.findIndex(n => n === name);
+            const colorIndex = dataTypeNames.findIndex(n => n === name);
             return {
               seriesName: name,
               value: firstWeekOrMonthHalf[k][index],
