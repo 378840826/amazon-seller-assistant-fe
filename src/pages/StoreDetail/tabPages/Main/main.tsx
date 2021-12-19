@@ -365,6 +365,7 @@ const Page: React.FC = () => {
               tab={<Spin spinning={chartType === 'table' && loading.polyline}>图</Spin>}
             >
               <Charts
+                dataOrigin={dataOrigin}
                 dataSource={chartDataSource}
                 dataTypes={tofuChecked}
                 currency={currency}
