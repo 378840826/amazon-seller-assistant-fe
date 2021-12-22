@@ -1,7 +1,7 @@
 /*
  * 店铺报表
  */
-import React, { useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'umi';
 import { Form, Select, Table, Switch, Button } from 'antd';
 import PageTitleRightInfo from '@/pages/components/PageTitleRightInfo';
@@ -35,6 +35,8 @@ const StoreReport: React.FC = () => {
   const calendarStorageBaseKey = 'storeReport_dateRange';
   // 导出按钮 loading
   const [exportBtnLoading, setExportBtnLoading] = useState<boolean>(false);
+  // 表格勾选ids
+  const [checkedIds, setCheckedIds] = useState< ReactText[]>([]);
 
   useEffect(() => {
     // 获取地区/站点/店铺
@@ -45,26 +47,25 @@ const StoreReport: React.FC = () => {
     });
     // 日期范围
     const { startDate, endDate, selectedKey } = storage.get(calendarStorageBaseKey);
-    let payload;
     // timeMethod 参数在特定情况下才需要， 不然后端会报错
-    if (['WEEK', 'BIWEEKLY', 'MONTH', 'SEASON'].includes(selectedKey.toUpperCase())) {
-      payload = {
-        startTime: startDate,
-        endTime: endDate,
-        timeMethod: selectedKey,
-      };
-    } else {
-      payload = {
-        startTime: startDate,
-        endTime: endDate,
-      };
-    }
+    const timeMethod = ['WEEK', 'BIWEEKLY', 'MONTH', 'QUARTER'].includes(selectedKey.toUpperCase())
+      ? selectedKey : undefined;
+    const payload = {
+      startTime: startDate,
+      endTime: endDate,
+      timeMethod,
+    };
     dispatch({
       type: 'storeReport/fetchList',
       payload,
+      callback: requestErrorFeedback,
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  useEffect(() => {
+    setCheckedIds(records.map(r => r.storeId));
+  }, [records]);
 
   // 特殊处理表格的样式，后续优化
   useEffect(() => {
@@ -132,20 +133,14 @@ const StoreReport: React.FC = () => {
   // 日期改变
   function handleDateRangeChange(dates: IChangeDates) {
     const { startDate, endDate, selectedKey } = dates;
-    let payload;
-    // timeMethod 参数在特定情况下才需要给后端， 不然后端会报错
-    if (['WEEK', 'BIWEEKLY', 'MONTH', 'SEASON'].includes(selectedKey.toUpperCase())) {
-      payload = {
-        startTime: startDate,
-        endTime: endDate,
-        timeMethod: selectedKey,
-      };
-    } else {
-      payload = {
-        startTime: startDate,
-        endTime: endDate,
-      };
-    }
+    // timeMethod 参数在特定情况下才需要， 不然后端会报错
+    const timeMethod = ['WEEK', 'BIWEEKLY', 'MONTH', 'QUARTER'].includes(selectedKey.toUpperCase())
+      ? selectedKey : undefined;
+    const payload = {
+      startTime: startDate,
+      endTime: endDate,
+      timeMethod,
+    };
     dispatch({
       type: 'storeReport/fetchList',
       payload,
@@ -191,6 +186,21 @@ const StoreReport: React.FC = () => {
     showSorterTooltip: false,
     scroll: { x: 'max-content', y: 'calc(100vh - 300px)', scrollToFirstRowOnChange: true },
     pagination: false,
+    rowSelection: {
+      fixed: true,
+      selectedRowKeys: checkedIds,
+      columnWidth: 36,
+      onChange: (selectedRowKeys: ReactText[]) => {
+        setCheckedIds(selectedRowKeys);
+        dispatch({
+          type: 'storeReport/fetchTotalIndicators',
+          payload: {
+            storeIds: selectedRowKeys,
+          },
+          callback: requestErrorFeedback,
+        });
+      },
+    },
   };
 
   return (

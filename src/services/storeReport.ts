@@ -1,9 +1,9 @@
 import request from '@/utils/request';
 
-export async function queryList(params: API.IParams) {
+export async function queryList(data: API.IParams) {
   return request('/api/mws/store-report/list', {
-  // return request('/api/mws/profit/store/list', {
-    params,
+    method: 'POST',
+    data,
   });
 }
 
