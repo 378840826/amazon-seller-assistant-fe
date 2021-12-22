@@ -166,6 +166,20 @@ const StoreReportModel: IStoreReportModelType = {
         payload: sortRecords,
       });
     },
+
+    // 获取合计数据
+    *fetchTotalIndicators({ payload, callback }, { call, put, select }) {
+      const params = yield select((state: IConnectState) => state.storeReport.searchParams);
+      const res = yield call(queryList, { ...params, ...payload });
+      if (res.code === 200) {
+        const { data } = res;
+        yield put({
+          type: 'updateTotalIndicators',
+          payload: data.totalIndicators,
+        });
+      }
+      callback && callback(res.code, res.message);
+    },
   },
 
   reducers: {
@@ -200,6 +214,10 @@ const StoreReportModel: IStoreReportModelType = {
         }
         return a > b ? 1 : -1;
       };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const desc = (a: any, b: any) => {
+        return a < b ? 1 : -1;
+      };
       // 如果更新了一个条件(并且不是清除这个条件)，那么就只更新另外两个筛选的下拉框，此条件的下拉框保持不变
       if (changeValueObj) {
         const [key, value] = Object.entries(changeValueObj)[0];
@@ -210,11 +228,11 @@ const StoreReportModel: IStoreReportModelType = {
             state.regionSiteStore.storeNameList = data.storeNameList.sort(compare);
             break;
           case 'region':
-            state.regionSiteStore.marketplaceList = data.marketplaceList.sort(compare);
+            state.regionSiteStore.marketplaceList = data.marketplaceList.sort(desc);
             state.regionSiteStore.storeNameList = data.storeNameList.sort(compare);
             break;
           case 'storeName':
-            state.regionSiteStore.marketplaceList = data.marketplaceList.sort(compare);
+            state.regionSiteStore.marketplaceList = data.marketplaceList.sort(desc);
             state.regionSiteStore.regionList = data.regionList.sort(compare);
             break;
           default:
@@ -223,9 +241,14 @@ const StoreReportModel: IStoreReportModelType = {
           return;
         }
       }
-      state.regionSiteStore.marketplaceList = data.marketplaceList.sort(compare);
+      state.regionSiteStore.marketplaceList = data.marketplaceList.sort(desc);
       state.regionSiteStore.regionList = data.regionList.sort(compare);
       state.regionSiteStore.storeNameList = data.storeNameList.sort(compare);
+    },
+
+    // 更新合计数据
+    updateTotalIndicators(state, { payload }) {
+      state.list.totalIndicators = payload;
     },
   },
 };

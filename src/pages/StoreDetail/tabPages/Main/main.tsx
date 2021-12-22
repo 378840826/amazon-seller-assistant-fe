@@ -58,6 +58,11 @@ const Page: React.FC = () => {
   // 查询条件改变，刷新豆腐块数据、折线图、表格
   useEffect(() => {
     if (searchParams.startTime && searchParams.endTime) {
+      // 上期是否显示（当日期范围选择 365 今年 去年等时，不显示上期数据，但后端会传回来上期数据）
+      // 当日期范围是不显示上期时
+      if (!showPreviousPeriodKey.includes(searchParams.timeMethod)) {
+        setShowPrevious(false);
+      }
       // 折线图
       dispatch({
         type: 'storeDetail/fetchMainPolyline',
