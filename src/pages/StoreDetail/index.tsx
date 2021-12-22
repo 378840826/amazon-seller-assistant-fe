@@ -53,13 +53,16 @@ const StoreDetail: React.FC = () => {
       } else {
         // 日期范围
         const { startDate, endDate, selectedKey } = storage.get(calendarStorageBaseKey);
+        // timeMethod 参数在特定情况下才需要， 不然后端会报错
+        const timeMethod = ['WEEK', 'BIWEEKLY', 'MONTH', 'QUARTER'].includes(selectedKey.toUpperCase())
+          ? selectedKey : undefined;
         dispatch({
           type: 'storeDetail/fetchBaseData',
           payload: {
             headersParams,
             startTime: startDate,
             endTime: endDate,
-            timeMethod: selectedKey,
+            timeMethod,
           },
         });
       }
@@ -75,12 +78,15 @@ const StoreDetail: React.FC = () => {
   // 日期改变
   function handleDateRangeChange(dates: IChangeDates) {
     const { startDate, endDate, selectedKey } = dates;
+    // timeMethod 参数在特定情况下才需要， 不然后端会报错
+    const timeMethod = ['WEEK', 'BIWEEKLY', 'MONTH', 'QUARTER'].includes(selectedKey.toUpperCase())
+      ? selectedKey : undefined;
     dispatch({
       type: 'storeDetail/fetchBaseData',
       payload: {
         startTime: startDate,
         endTime: endDate,
-        timeMethod: selectedKey,
+        timeMethod,
       },
       callback: requestErrorFeedback,
     });
