@@ -1,6 +1,8 @@
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { IGoodsListModelState } from './goodsList';
 import { IReplenishmentModelState } from './replenishment';
+import { IStoreReportModelState } from './storeReport';
+import { IStoreDetailModelState } from './storeDetail';
 import { IBsModelState } from './bs';
 import { IBiBoardModelState } from './biBoard';
 import { IAdManage } from './adManage';
@@ -45,6 +47,8 @@ export interface IConnectState {
   global: IGlobalModelState;
   goodsList: IGoodsListModelState;
   replenishment: IReplenishmentModelState;
+  storeReport: IStoreReportModelState;
+  storeDetail: IStoreDetailModelState;
   bs: IBsModelState;
   biBoard: IBiBoardModelState;
   adManage: IAdManage;

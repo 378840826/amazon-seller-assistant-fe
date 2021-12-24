@@ -23,6 +23,7 @@ export const configHiddenShopSelectorUrl = [
   '/shop/list',
   '/shop/bind',
   '/overview',
+  '/overview/shop',
   '/ppc/overview',
   '/ppc/auth',
   '/center',
@@ -57,6 +58,7 @@ export const configUnshownPageTitleUrl = [
   '/ppc/manage',
   '/ppc/manage/group/target',
   '/ppc/manage/group/timer',
+  '/overview/shop/detail',
   // 因 bs导入 页面标题需要特殊的样式
   '/report/import',
   '/competitor/list',
@@ -153,7 +155,8 @@ export default [
     wrappers: ['../layouts/BasicLayout/guard.tsx'],
     routes: [
       { title: '数据大盘', path: '/overview', component: './UncompletedPage' }, // 数据大盘不需要店铺，可以抽出去
-      { title: '店铺报告', path: '/overview/shop', component: './UncompletedPage' },
+      { title: '店铺报表', path: '/overview/shop', component: './StoreReport' },
+      { title: '店铺概况', path: '/overview/shop/detail', component: './StoreDetail' },
       { title: 'BI诊断', path: '/overview/bi', component: './BiBoard' },
     ],
   },

@@ -161,6 +161,10 @@ export function getRangeDate(query: string|number, isMoment = true) {
     start = moment().tz(timezone).startOf('quarter').format('YYYY-MM-DD');
     end = moment().tz(timezone).endOf('quarter').format('YYYY-MM-DD');
     break;
+  case 'yesterday': // 昨天
+    start = moment().tz(timezone).subtract(1, 'days').format('YYYY-MM-DD');
+    end = moment().tz(timezone).subtract(1, 'days').format('YYYY-MM-DD');
+    break;
   default: // 最近N天
     start = moment().tz(timezone).subtract(query as number - 1, 'day');
     end = moment().tz(timezone);

@@ -1,0 +1,43 @@
+.block {
+  // 边框重叠
+  margin: -1px;
+  padding: 10px;
+  width: 309px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  font-size: @font-size-sm;
+  border: 2px solid #eee;
+  cursor: pointer;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &:hover {
+    background: #f7f7f7;
+  }
+
+  :global {
+    .anticon {
+      color: @text-color-secondary;
+    }
+  }
+}
+
+.value {
+  font-size: @font-size-lg;
+  color: #333;
+}
+
+.name {
+  color: #666;
+}
+
+.label {
+  color: #999;
+}

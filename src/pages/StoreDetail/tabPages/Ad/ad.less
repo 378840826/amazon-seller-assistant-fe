@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  padding: 0 20px;
+
+  .left {
+    padding-right: 20px;
+    flex: 3;
+    overflow: hidden;
+    border-right: @divider-line;
+
+    .doughnutContainer {
+      display: flex;
+      height: 80px;
+
+      & > div {
+        display: inline-block;
+        width: 310px;
+      }
+    }
+  }
+
+  .right {
+    padding-left: 20px;
+    flex: 1;
+    min-width: 480px;
+
+    & > div {
+      margin-bottom: 30px;
+    }
+
+    .title {
+      color: @heading-color;
+      font-weight: bold;
+    }
+
+    .pieContainer {
+      height: 148px;
+    }
+  }
+
+  .channelTable {
+    margin-top: 10px;
+
+    :global {
+      .ant-table-container {
+        border: 1px solid #e7eaec;
+      }
+
+      .ant-table-thead > tr > th,
+      .ant-table-tbody > tr > td,
+      .ant-table tfoot > tr > th,
+      .ant-table tfoot > tr > td {
+        padding: 4px 6px;
+      }
+    }
+  }
+
+  :global {
+    .ant-table-thead > tr > th {
+      padding: 4px 6px;
+      background: #f1f3f4;
+    }
+
+    .ant-collapse > .ant-collapse-item {
+      margin-bottom: 16px;
+
+      & > .ant-collapse-content > .ant-collapse-content-box {
+        padding: 0;
+      }
+
+      & > .ant-collapse-header {
+        padding: 0;
+        margin-bottom: 6px;
+        color: @heading-color;
+        font-weight: bold;
+
+        .ant-collapse-arrow {
+          padding: 0;
+          left: 60px;
+          top: 5px;
+          color: #ccc;
+        }
+      }
+    }
+  }
+}

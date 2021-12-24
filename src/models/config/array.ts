@@ -18,4 +18,5 @@ export const notTagShopHint = [
   '/shop/list',
   '/shop/bind', 
   '/sub-account',
+  '/overview/shop',
 ];
