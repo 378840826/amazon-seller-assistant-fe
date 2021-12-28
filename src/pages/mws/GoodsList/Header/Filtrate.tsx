@@ -209,6 +209,26 @@ const Filtrate: React.FC<IProps> = props => {
         { getFiltrateSelectItem('分组', 'groupId', groupsOptions) }
         <Col span={6}>
           <FormItem
+            label="Buybox"
+            name="buybox"
+            labelAlign="left"
+            labelCol={{ span: 6 }}
+            style={{ marginBottom: 0 }}
+          >
+            <RadioGroup>
+              <Radio value={undefined}>全部</Radio>
+              <Radio value="true">是</Radio>
+              <Radio value="false">否</Radio>
+            </RadioGroup>
+          </FormItem>
+        </Col>
+      </Row>
+      <Row gutter={{ xl: 48, xxl: 96 }}>
+        { getFiltrateRangeItem(getCurrencyLabel('利润'), 'profit', 'minusMoney') }
+        { getFiltrateRangeItem(getCurrencyLabel('利润率'), 'profitMargin', 'minusMoney') }
+        { getFiltrateSelectItem('调价规则', 'ruleId', rulesOptions) }
+        <Col span={6}>
+          <FormItem
             className={styles.statusFormItem}
             label="状态"
             name="status"
@@ -226,18 +246,11 @@ const Filtrate: React.FC<IProps> = props => {
           </FormItem>
         </Col>
       </Row>
-      <Row gutter={{ xl: 48, xxl: 96 }}>
-        { getFiltrateRangeItem(getCurrencyLabel('利润'), 'profit', 'minusMoney') }
-        { getFiltrateRangeItem(getCurrencyLabel('利润率'), 'profitMargin', 'minusMoney') }
-        { getFiltrateSelectItem('调价规则', 'ruleId', rulesOptions) }
-        <Col span={6}>
-          <div className={styles.filtrateBtns}>
-            <Button onClick={handleClickFiltrate}>取消</Button>
-            <Button type="primary" htmlType="submit">确定</Button>
-            <Button className={styles.btnEmpty} type="link" onClick={handleClickFormEmpty}>清空</Button>
-          </div>
-        </Col>
-      </Row>
+      <div className={styles.filtrateBtns}>
+        <Button onClick={handleClickFiltrate}>取消</Button>
+        <Button type="primary" htmlType="submit">确定</Button>
+        <Button className={styles.btnEmpty} type="link" onClick={handleClickFormEmpty}>清空</Button>
+      </div>
     </Form>
   );
 };

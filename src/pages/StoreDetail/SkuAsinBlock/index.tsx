@@ -19,8 +19,8 @@ const urlDict = {
   'FBM-active-SKU': '/product/list?status=Active&fulfillmentChannel=FBM',
   'FBM-Inactive-SKU': '/product/list?status=Inactive&fulfillmentChannel=FBM',
   'ASIN总数': '/product/list',
-  // 'Buybox-ASIN': '/product/list?buybox=true',
-  // '非Buybox-ASIN': '/product/list?buybox=false',
+  'Buybox-ASIN': '/product/list?buybox=true',
+  '非Buybox-ASIN': '/product/list?buybox=false',
 };
 
 // 问号
