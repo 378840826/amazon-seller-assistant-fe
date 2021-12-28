@@ -279,6 +279,9 @@ const Header: React.FC = () => {
     case 'adjustSwitch':
       name = value === 'true' ? '开' : '关';
       break;
+    case 'buybox':
+      name = value === 'true' ? '是' : '否';
+      break;
     case 'fulfillmentChannel':
       name = value;
       break;
@@ -344,6 +347,7 @@ const Header: React.FC = () => {
         status: '状态',
         code: '批量查询',
         search: '查询',
+        buybox: 'Buybox',
       };
       const obj: {
         [key: string]: (Array<ParamsValue>) | undefined;
