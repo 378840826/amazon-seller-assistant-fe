@@ -56,7 +56,7 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
                 {
                   id > 0 && 
                 <div className={styles.logined}>
-                  <Link to="/overview/bi" className={[styles.loginedButton, styles.buttons].join(' ')}>
+                  <Link to="/overview/shop" className={[styles.loginedButton, styles.buttons].join(' ')}>
                     <div className={styles.font}>立即体验</div>
                     <div className={styles.icon}>
                       <Iconfont className={styles.iconfont} type="icon-2"/>
