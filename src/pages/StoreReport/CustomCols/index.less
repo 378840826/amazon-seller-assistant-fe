@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+  height: 514px;
+  background-color: #fff;
+  padding: 14px;
+  box-shadow: 0 3px 13px 0 rgba(231, 231, 231, 0.75);
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    line-height: 26px;
+  }
+}
+
+.title {
+  color: @heading-color-secondary;
+  font-weight: bold;
+}
+
+:global {
+  .ant-checkbox {
+    transform: scale(0.875);
+  }
+
+  .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+    margin-left: 0;
+  }
+}

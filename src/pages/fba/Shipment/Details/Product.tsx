@@ -39,6 +39,7 @@ const Product: React.FC<IProps> = props => {
     delProduct,
   } = props;
 
+
   const [lebalModalData, setLabelModalData] = useState<ILabelType>({
     modalvisible: false,
     recordData: {
@@ -81,7 +82,7 @@ const Product: React.FC<IProps> = props => {
           url,
         } = record;
         return <div className={styles.productCol}>
-          <GoodsImg src={url} alt="商品" width={40}/>
+          <GoodsImg src={url} alt="商品" width={40}/>       
           <div className={styles.details}>
             <a href={getAmazonAsinUrl(val, site)} 
               className={styles.title}
@@ -157,7 +158,7 @@ const Product: React.FC<IProps> = props => {
       render: (id: string, record: Shipment.IProductList ) => (
         <>
           <span className={styles.handleCol} onClick={() => {
-            setLabelModalData({ modalvisible: true, recordData: record }); 
+            setLabelModalData({ modalvisible: true, recordData: record });
           }}>打印标签</span>
           <span className={styles.handleCol} onClick={() => message.warning('功能未开放')}>创建加工单</span>
           <span className={styles.handleCol} onClick={() => delProduct(id)}>删除</span>
@@ -182,12 +183,14 @@ const Product: React.FC<IProps> = props => {
     <Lebal 
       site={site} 
       data={[lebalModalData.recordData]} 
-      modalData={lebalModalData} 
+      modalData={lebalModalData}
       onCancle={() => {
         lebalModalData.modalvisible = false; 
         setLabelModalData({ ...lebalModalData });
       }}
     />
+  
+    
   </>;
 };
 

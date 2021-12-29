@@ -209,12 +209,14 @@ const Details: React.FC<IProps> = function(props) {
         data: Shipment.IShipmentDetails;
       };
 
-      setLoading(false);
+      
       if (code === 200) {
+        
         setData({ ...data });
         setProduct([...data.productItemVos]);
         setLog([...data.shipmentModifies]);
         setShipmentProductDeleteIds([]);
+        setLoading(false);
         return;
       }
       message.error(msg || '获取shipemet详情失败，请重试！');
@@ -420,7 +422,7 @@ const Details: React.FC<IProps> = function(props) {
             onClick={() => setNav('log')}
             >操作日志</span>
           </nav>
-          <Button onClick={batchPrintClick} type="primary" className={styles.batchbutton}>批量打印标签</Button>
+          <Button onClick={batchPrintClick} type="primary" className={styles.batchbutton}>批量打印标签</Button>         
           <Lebal 
             site={site} 
             data={product} 

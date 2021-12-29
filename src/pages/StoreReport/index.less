@@ -1,0 +1,294 @@
+.container {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+
+  // 页面标题附加内容
+  .pageTitleAddition {
+    position: absolute;
+    top: -31px;
+    left: 71px;
+    color: @text-color-secondary;
+    font-size: @font-size-sm;
+  }
+
+  // 工具栏
+  .toolBar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    // 工具栏右侧
+    .toolBarRight {
+      display: flex;
+      align-items: center;
+
+      & > * {
+        margin-left: 10px;
+      }
+    }
+
+    // 周期日期选择器
+    .BiweeklyRangePicker {
+      width: 280px;
+    }
+  }
+
+  .Form {
+    display: flex;
+
+    & > * {
+      margin-right: 10px;
+      margin-bottom: 0;
+    }
+
+    .Select {
+      width: 110px;
+    }
+
+    .storeNameSelect {
+      width: 200px;
+    }
+  }
+
+  // 环比开关
+  .ratioSwitchContainer {
+    display: flex;
+  }
+
+  .ratioSwitch {
+    transform: scale(0.909);
+  }
+
+  // 分级表头子表头
+  .onlySubTitle {
+    &::after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      width: 88%;
+      height: 1px;
+      top: 0;
+      right: 0;
+      background: #ccc;
+    }
+  }
+
+  // 分级表头有两个子标头
+  .leftSubTitle {
+    &::after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      width: 88%;
+      height: 1px;
+      top: 0;
+      right: 0;
+      background: #ccc;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      width: 1px;
+      height: 100%;
+      right: 0;
+      background: #ccc;
+    }
+  }
+
+  .rightSubTitle {
+    &::after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      width: 88%;
+      height: 1px;
+      top: 0;
+      left: 0;
+      background: #ccc;
+    }
+  }
+
+  .marketplaceCol {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  // 国旗
+  .flag {
+    display: block;
+    flex-shrink: 0;
+    background-image: url('~@/assets/nation.png');
+    width: 28px;
+    height: 16px;
+  }
+
+  .flag-JP {
+    background-position: -37px -13px;
+  }
+
+  .flag-UK {
+    background-position: -438px -13px;
+  }
+
+  .flag-US {
+    background-position: -95px -13px;
+  }
+
+  .flag-CA {
+    background-position: -152px -13px;
+  }
+
+  .flag-DE {
+    background-position: -267px -13px;
+  }
+
+  .flag-ES {
+    background-position: -324px -13px;
+  }
+
+  .flag-FR {
+    background-position: -209px -13px;
+  }
+
+  .flag-IT {
+    background-position: -381px -13px;
+  }
+
+  .spacePlaceholder {
+    height: 20px;
+  }
+
+  :global {
+    // 表格
+    .ant-table {
+      .ant-table-thead > tr > th,
+      .ant-table tfoot > tr > th,
+      .ant-table tfoot > tr > td {
+        padding: 1px 12px;
+      }
+
+      .ant-table-tbody > tr > td {
+        padding: 8px 12px;
+      }
+
+      .ant-table-thead > tr > th {
+        height: 42px;
+      }
+
+      .ant-table-column-sorters {
+        padding: 0;
+        user-select: none;
+
+        & > span {
+          white-space: nowrap;
+        }
+      }
+
+      .ant-table-container {
+        border: 1px solid #e7eaec;
+      }
+    }
+
+    // 合计行
+    .ant-table-thead tr:last-child th {
+      background: #fff;
+    }
+
+    // 合计行的复选框列特殊处理
+    .ant-table .ant-table-thead {
+      tr:first-child th:first-child {
+        padding: 0;
+      }
+
+      .ant-table-selection::after {
+        // content: '合计';
+        // line-height: 40px;
+        content: '';
+        display: block;
+        width: 100%;
+        height: 40px;
+        background: #fff;
+      }
+
+      .ant-table-selection {
+        width: 100%;
+      }
+
+      .ant-table-selection label {
+        padding: 11px 0;
+      }
+    }
+  }
+
+  // 分级表头-双表头
+  .thTwoChild {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+
+    .borderBottom {
+      border-bottom: 1px solid #ccc;
+    }
+  }
+
+  // 分级表头-三表头
+  .thThreeChild {
+    cursor: pointer;
+    user-select: none;
+
+    & > *:first-child {
+      display: block;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+
+  // 三字段 td
+  .threeTdSpace {
+    display: flex;
+  }
+
+  .threeChildren {
+    display: flex;
+    justify-content: center;
+
+    & > * {
+      width: 50%;
+    }
+
+    & > *:last-child {
+      margin-left: 10px;
+    }
+  }
+
+  .textRight {
+    align-items: end;
+    justify-content: flex-end;
+
+    & > * {
+      justify-content: flex-end;
+    }
+  }
+
+  // 隐藏的数据
+  .hide {
+    opacity: 0;
+    height: 0;
+  }
+
+  .detailBtn {
+    display: inline-block;
+    padding: 0;
+    width: 30px;
+    color: @btn-text-color;
+
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
