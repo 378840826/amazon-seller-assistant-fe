@@ -29,7 +29,7 @@ const GlobalHeaderRight: React.FC<ICenterConnectProps> = ({ user }) => {
         <>
           <Avatar />
           <Link
-            to="/overview/bi"
+            to="/overview/shop"
             className={styles.link_into}
             style={{ marginLeft: 50, marginRight: 5, fontSize: 16 }}
           >
