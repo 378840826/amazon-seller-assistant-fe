@@ -416,6 +416,7 @@ const Lebal: React.FC<IProps> = (props) => {
 
       setTimeout(() => {
         handleprint && handleprint();
+        setPrintvisible(false);
       }, 1000);
     }   
   };
