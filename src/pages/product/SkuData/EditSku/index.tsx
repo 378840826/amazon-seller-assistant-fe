@@ -815,8 +815,8 @@ const AddSku: React.FC<IProps> = props => {
         message.error('中文品名不能为空');
         return;
       }
-      if (datas.nameNa.length >= 80){
-        message.error('中文品名长度不能超过80');
+      if (datas.nameNa.length >= 255){
+        message.error('中文品名长度不能超过255');
         return;
       }
       if (empyts.includes(datas.category)) {
@@ -1074,8 +1074,8 @@ const AddSku: React.FC<IProps> = props => {
                 required: true,
                 message: '中文品名不能为空',
               }, {
-                max: 80,
-                message: '中文品名长度不能超过80个字符',
+                max: 255,
+                message: '中文品名长度不能超过255个字符',
               }]}>
                 <Input />
               </Item>
