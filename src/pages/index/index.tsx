@@ -85,7 +85,7 @@ const Home: React.FC<ICenterConnectProps> = function( { user } ) {
             <div className={styles.part2}>
               <div className={styles.intro}>功能介绍</div>
               <Tabs className="__index_tabs" defaultActiveKey="1" >
-                <TabPane className={styles.__index_tabPane} tab="数据大盘" key="1">
+                <TabPane className={styles.__index_tabPane} tab="销售大盘" key="1">
                   <Data/>
                 </TabPane>
                 <TabPane className={styles.__index_tabPane} tab="ASIN动态" key="2">

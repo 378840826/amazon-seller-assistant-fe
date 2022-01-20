@@ -16,7 +16,7 @@ const Data: React.FC<ICenterConnectProps> = function( { user } ){
   return (
     <div className={styl.data_wrap}>
       <div className={styl.left}>
-        <div className={styl.title}>数据大盘</div>
+        <div className={styl.title}>销售大盘</div>
         <div className={styl.contentContainer}>                            
           <div className={styl.content}>1、对接亚马逊官方接口，安全值得信赖； </div>
           <div className={styl.content}>2、多店铺数据全范围展示，您的江山一览无遗；</div>
