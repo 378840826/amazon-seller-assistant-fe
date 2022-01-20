@@ -55,15 +55,12 @@ const SalesOverview: React.FC = () => {
 
   useEffect(() => {
     const { startDate, endDate, selectedKey } = storage.get(calendarStorageKey);
-    // timeMethod 参数在特定情况下才需要， 不然后端会报错
-    const timeMethod = ['WEEK', 'BIWEEKLY', 'MONTH', 'QUARTER'].includes(selectedKey.toUpperCase())
-      ? selectedKey : undefined;
     dispatch({
       type: 'salesOverview/updateSearchParams',
       payload: {
         startTime: startDate,
         endTime: endDate,
-        timeMethod,
+        timeMethod: selectedKey,
       },
     });
   }, [dispatch]);
@@ -115,13 +112,10 @@ const SalesOverview: React.FC = () => {
   // 日期改变
   function handleDateRangeChange(dates: IChangeDates) {
     const { startDate, endDate, selectedKey } = dates;
-    // timeMethod 参数在特定情况下才需要， 不然后端会报错
-    const timeMethod = ['WEEK', 'BIWEEKLY', 'MONTH', 'QUARTER'].includes(selectedKey.toUpperCase())
-      ? selectedKey : undefined;
     const payload = {
       startTime: startDate,
       endTime: endDate,
-      timeMethod,
+      timeMethod: selectedKey,
     };
     dispatch({
       type: 'salesOverview/updateSearchParams',
