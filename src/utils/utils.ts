@@ -49,6 +49,18 @@ export const marketplaceIdDict = {
   JP: 'A1VC38T7YXB528',
 };
 
+// marketplace 中文名称
+export const marketplaceToChineseDict = {
+  US: '美国',
+  CA: '加拿大',
+  UK: '英国',
+  ES: '西班牙',
+  IT: '意大利',
+  FR: '法国',
+  DE: '德国',
+  JP: '日本',
+};
+
 // 获取亚马逊店铺首页链接
 export const getAmazonShopPageUrl = function (state: API.Site, sellerId: string): string {
   const baseUrl = getAmazonBaseUrl(state);

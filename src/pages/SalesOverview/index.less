@@ -1,0 +1,124 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+
+  .pageTitle {
+    font-size: @font-size-lg;
+    border-left: 4px solid @primary-color;
+    line-height: @font-size-lg;
+    padding-left: 8px;
+  }
+
+  .explain,
+  .notBind {
+    font-size: @font-size-sm;
+    color: @text-color-secondary;
+    white-space: nowrap;
+  }
+
+  .notBindShopNames {
+    display: inline-block;
+    max-width: 480px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+
+  .updateTime {
+    font-size: @font-size-sm;
+  }
+
+  .iconZhankai {
+    margin-left: 2px;
+    transform: rotate(-90deg);
+    font-size: 11px;
+    color: @link-color;
+  }
+}
+
+.container {
+  position: relative;
+  display: flex;
+  background: #fff;
+}
+
+.left {
+  width: 400px;
+  border-right: 2px solid @divider-line-color;
+}
+
+.right {
+  padding: 20px;
+  width: 100%;
+  height: calc(100vh - 130px);
+  overflow: auto;
+}
+
+.tofuContainer {
+  margin-bottom: 50px;
+
+  & > *:last-child {
+    border-bottom: 2px solid @divider-line-color;
+  }
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 14px 14px 14px;
+
+  .Select {
+    width: 90px;
+  }
+
+  .BiweeklyRangePicker {
+    width: 250px;
+  }
+}
+
+.info {
+  background: #fafafa;
+  color: @text-color-secondary;
+  font-size: @font-size-sm;
+
+  .currentTime {
+    padding: 6px 12px;
+  }
+
+  .exchangeRate {
+    display: flex;
+    padding: 6px 12px;
+    border-top: @divider-line;
+  }
+
+  .exchangeRateTitle {
+    white-space: nowrap;
+  }
+
+  .exchangeRateValue {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+
+    & > * {
+      text-align: center;
+    }
+  }
+}
+
+.chartsToobar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  & > * {
+    margin-left: 20px;
+  }
+}
