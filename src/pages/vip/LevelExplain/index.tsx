@@ -123,7 +123,7 @@ const LevelExplain: React.FC = () => {
               <td>{shortBar}</td>
             </tr>
             <tr>
-              <td>数据大盘</td>
+              <td>销售大盘</td>
               <td>{free}</td>
               <td>{free}</td>
               <td>{free}</td>

@@ -3,6 +3,7 @@ import { IGoodsListModelState } from './goodsList';
 import { IReplenishmentModelState } from './replenishment';
 import { IStoreReportModelState } from './storeReport';
 import { IStoreDetailModelState } from './storeDetail';
+import { ISalesOverviewModelState } from './salesOverview';
 import { IBsModelState } from './bs';
 import { IBiBoardModelState } from './biBoard';
 import { IAdManage } from './adManage';
@@ -49,6 +50,7 @@ export interface IConnectState {
   replenishment: IReplenishmentModelState;
   storeReport: IStoreReportModelState;
   storeDetail: IStoreDetailModelState;
+  salesOverview: ISalesOverviewModelState;
   bs: IBsModelState;
   biBoard: IBiBoardModelState;
   adManage: IAdManage;
