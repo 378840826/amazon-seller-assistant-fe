@@ -109,6 +109,11 @@ const SalesOverview: React.FC = () => {
     return r;
   }, [previousYear, showPrevious, polyline]);
 
+  // 未授权广告的店铺，拼接成站点-店铺字符串
+  const noBindAdShopString = useMemo(() => (
+    noBindAdShopList.map(item => `${item.marketplace}-${item.storeName}`).join('、')
+  ), [noBindAdShopList]);
+
   // 日期改变
   function handleDateRangeChange(dates: IChangeDates) {
     const { startDate, endDate, selectedKey } = dates;
@@ -242,8 +247,8 @@ const SalesOverview: React.FC = () => {
             noBindAdShopList.length &&
             <div className={styles.notBind}>
               （店铺
-              <span className={styles.notBindShopNames}>
-                { noBindAdShopList.map(item => `${item.marketplace}-${item.storeName}、`) }
+              <span className={styles.notBindShopNames} title={noBindAdShopString}>
+                { noBindAdShopString }
               </span>
               未完成广告授权，为保证数据完整，请前往
               <Link to="/shop/list">

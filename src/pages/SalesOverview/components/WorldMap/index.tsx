@@ -71,6 +71,8 @@ const barGroupWidth = Math.floor(windowWidth / 80);
 const WorldMap: React.FC<IProps> = props => {
   const { data, dataTypes, currency, colors } = props;
   const uniqueDataTypes = Array.from(new Set(dataTypes));
+  // 返回数据中的国家
+  const resMarketplaceArr = data.map(item => item.marketplace);
 
   const histogramData = useMemo(() => {
     // 后端返回的可能不完整的数据
@@ -78,7 +80,6 @@ const WorldMap: React.FC<IProps> = props => {
       name: marketplaceToChineseDict[item.marketplace],
       ...item,
     }));
-    const resMarketplaceArr = data.map(item => item.marketplace);
     // 完整的空数据中，替换后端返回的数据，组成完整的数据，避免更新echarts时合并数据后有旧数据
     // 在增加‘勾选店铺’功能后需要优化，否则未勾选的店铺将显示空数据而不是不显示
     return defaultData.map((item, i) => {
@@ -87,7 +88,7 @@ const WorldMap: React.FC<IProps> = props => {
       }
       return defaultData[i];
     });
-  }, [data]);
+  }, [data, resMarketplaceArr]);
 
   // 找出相同字段的最大值
   function getMaxData(key: string) {
@@ -239,8 +240,10 @@ const WorldMap: React.FC<IProps> = props => {
               color: '#0083ff',
             },
           },
-          // data: histogramData.map(item => ({ ...item, selected: true })),
-          data: histogramData,
+          data: histogramData.map(
+            item => ({ ...item, selected: resMarketplaceArr.includes(item.marketplace) })
+          ),
+          // data: histogramData,
         },
       ],
       tooltip: {
@@ -295,7 +298,6 @@ const WorldMap: React.FC<IProps> = props => {
           }
         },
       },
-      // 待删除
       xAxis: [],
       yAxis: [],
       grid: [],
