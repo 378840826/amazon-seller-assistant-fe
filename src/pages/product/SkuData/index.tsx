@@ -215,10 +215,10 @@ const SkuData: React.FC = () => {
           const {
             code,
             message: msg,
-          } = datas as Global.IBaseResponse;
+          } = datas as Global.IBaseResponse; 
           if (code === 200) {
             message.success(msg || '操作成功');
-            request();
+            request({ currentPage: current, pageSize });
             return;
           }
           message.error(msg || '操作失败');
