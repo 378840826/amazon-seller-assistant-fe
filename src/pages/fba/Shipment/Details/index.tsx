@@ -46,6 +46,7 @@ interface IPage extends ConnectProps {
 
 interface IPrintProps {
   data: Shipment.IShipmentDetails;
+  combined: number;
 }
 interface ILabelType {
   modalvisible: boolean;
@@ -79,7 +80,10 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
         productItemVos,
         areCasesRequired,
       },
+      combined,
+
     } = this.props;
+
     return (<div className={styles.printtable}>
       <table>
         <thead>
@@ -119,6 +123,12 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
               </tr>
             ))
           }
+          <tr>
+            <td>合计</td>
+            <td>{combined}</td>
+            <td colSpan={4}></td>
+          </tr>
+          
         </thead>
       </table>
     </div>);
@@ -165,6 +175,8 @@ const Details: React.FC<IProps> = function(props) {
   });
 
   const [shipmentProductDeleteIds, setShipmentProductDeleteIds] = useState<string[]>([]);
+  //合计申报量
+  const [combined, setCombined] = useState<number>(0);
 
 
   const componentRef = useRef<any>(); // eslint-disable-line
@@ -174,8 +186,24 @@ const Details: React.FC<IProps> = function(props) {
   //打印清单
   const printlist = useReactToPrint({
     content: () => componentRef.current,
+    onBeforePrint: () => {
+      // 点击打印关闭弹窗
+      onCancel();
+    },
     pageStyle: pageStyle,
   });
+
+  //加上合计
+  const printlists = async() => {  
+    let sum = 0;
+    await data.productItemVos.forEach(item => {
+      sum += item.declareNum * 1;
+    });
+
+    setCombined(sum);
+    printlist && printlist();
+  
+  };
 
   useEffect(() => {
     data && form.setFieldsValue({
@@ -404,6 +432,7 @@ const Details: React.FC<IProps> = function(props) {
                 data.txtUrl ? <a href={data.txtUrl} download>点击下载</a> : '未上传'
               }
             </div>
+            
           </div>
         </Form>
 
@@ -454,10 +483,10 @@ const Details: React.FC<IProps> = function(props) {
         <footer className={styles.btns}>
           <Button onClick={onCancel}>取消</Button>
           <Button onClick={handleSave} type="primary">保存</Button>
-          <Button onClick={printlist} type="primary">打印清单</Button>
+          <Button onClick={printlists} type="primary">打印清单</Button>
         </footer>
         <div style={{ display: 'none' }}>
-          <ComponentToPrint ref={componentRef} data={data} />
+          <ComponentToPrint ref={componentRef} data={data} combined={combined} />
         </div>
       </Spin>
     </Modal>

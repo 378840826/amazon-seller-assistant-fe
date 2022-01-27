@@ -37,7 +37,8 @@ interface IProps {
 }
 
 interface IPrintProps {
-  data: DispatchList.IDispatchDetail; 
+  data: DispatchList.IDispatchDetail;
+  combined: number;
 }
 
 interface ILabelType {
@@ -74,6 +75,7 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
         productItemVos, 
         shipmentName,
       }, 
+      combined,
     } = this.props;
     return (
       <div className={styles.printtable}>
@@ -133,6 +135,11 @@ class ComponentToPrint extends PureComponent<IPrintProps> {
                 );
               })
             }
+            <tr>
+              <td>合计</td>
+              <td>{combined}</td>
+              <td colSpan={5}></td>
+            </tr>
           </tbody>
         </table>
       </div>);
@@ -164,6 +171,10 @@ const Details: React.FC<IProps> = function(props) {
   const 
     [printdata, setPrintdata] = 
       useState<DispatchList.IDispatchDetail>({} as DispatchList.IDispatchDetail);
+
+  //合计申报量
+  const [combined, setCombined] = useState<number>(0);
+
   const componentRef = useRef<any>(); // eslint-disable-line
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -173,6 +184,18 @@ const Details: React.FC<IProps> = function(props) {
     },
     pageStyle: pageStyle,
   });
+
+  //加上合计
+  const printlists = async() => {  
+    let sum = 0;
+    await productVos.forEach(item => {
+      sum += Number(item.declareNum);
+    });
+
+    setCombined(sum);
+    handlePrint && handlePrint();
+  
+  };
 
   const [lebalModalData, setLabelModalData] = useState<ILabelType>({
     modalvisible: false,
@@ -404,11 +427,11 @@ const Details: React.FC<IProps> = function(props) {
       <footer className={styles.btns}>
         <Button onClick={onCancel}>取消</Button>
         <Button onClick={handleSave} type="primary">保存</Button>
-        <Button onClick={handlePrint} type="primary">打印发货单</Button>
+        <Button onClick={printlists} type="primary">打印发货单</Button>
       </footer>
 
       <div style={{ display: 'none' }}>
-        <ComponentToPrint ref={componentRef} data={printdata} />
+        <ComponentToPrint ref={componentRef} data={printdata} combined={combined}/>
       </div>
     </Modal>
   </div>;
