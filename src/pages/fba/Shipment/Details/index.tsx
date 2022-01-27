@@ -186,10 +186,7 @@ const Details: React.FC<IProps> = function(props) {
   //打印清单
   const printlist = useReactToPrint({
     content: () => componentRef.current,
-    onBeforePrint: () => {
-      // 点击打印关闭弹窗
-      onCancel();
-    },
+    
     pageStyle: pageStyle,
   });
 

@@ -178,10 +178,7 @@ const Details: React.FC<IProps> = function(props) {
   const componentRef = useRef<any>(); // eslint-disable-line
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    onBeforePrint: () => {
-      // 点击打印关闭弹窗
-      onCancel();
-    },
+    
     pageStyle: pageStyle,
   });
 
